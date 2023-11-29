@@ -530,7 +530,7 @@ var outcomes = [
     {
         "priorities": [
             {
-                "category": "Ecological health"
+                "category": "Waterways"
             },
             {
                 "category": "Threatened Species"
@@ -538,13 +538,13 @@ var outcomes = [
         ],
         "targeted": true,
         "shortDescription": "Ecological health",
-        "category": "Ecological health",
+        "category": "Waterways",
         "outcome": "The ecological health and condition of waterways is improved and/or repaired to benefit native plants and animals (including threatened species), threatened ecological communities, and the ecological character of Ramsar sites, in urban, outer urban /peri-urban and regional centres"
     },
     {
         "priorities": [
             {
-                "category": "River health"
+                "category": "Waterways"
             }
         ],
         "targeted": true,
@@ -553,17 +553,17 @@ var outcomes = [
         "outcome": "The health and qualities of waterways is improved and/or repaired to benefit local communities in urban, outer urban /peri-urban and regional centres."
     },
     {
-        "category": "Water quality improvements",
+        "category": "Threatened Species",
         "type": "medium",
         "outcome": "By 30 June 2028, there is measurable repair of waterway habitats (in-stream and terrestrial) to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
     },
     {
-        "category": "Water quality improvements",
+        "category": "Threatened Species",
         "type": "medium",
         "outcome": "By 30 June 2028, there is measurable repair of water quality, hydrology and in stream connectivity to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
     },
     {
-        "category": "Water quality improvements",
+        "category": "Threatened Species",
         "type": "medium",
         "outcome": "By June 2028 there is a measurable improvement to the services provided by urban green and blue space to benefit local communities in urban, outer urban /peri-urban and regional centres."
     },
@@ -571,299 +571,151 @@ var outcomes = [
 
 var priorities = [
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Saltwater Creek, Cairns"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Bulimba Creek"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Cubberla Creek"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Bremer River"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Saltwater Creek, Gold Coast"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Fig Tree Creek, Yeppoon"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Downfall Creek"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Dowse Lagoon"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "McCready's Creek, Mackay"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Slacks Creek"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Lake Macquarie"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Hawkesbury River"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Tuggerah Lakes"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Shoalhaven and Crookshaven Rivers"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Cooks River"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Canberra Waterways"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Peter Hopper Lake"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Moonee Ponds Creek"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Karaaf Wetlands"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "KooyongKoot (Tooronga Park wetland)"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Diamond Creek"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Yarra Flats"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Elster Creek"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Redan Wetlands and Yarrowee River"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Werribee River"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Darebin Creek"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Merri Creek"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Gardiners Creek"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Derwent River"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Tamar Estuary"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Onkaparinga River"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Pedler Creek"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Brownhill Creek"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Port River"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Sturt River"
     },
     {
-        "category": "Ecological health",
+        "category": "Waterways",
         "priority": "Swan and Canning Rivers"
     },
     {
-        "category": "Ecological health",
-        "priority": "Darwin creeks (Rapid Creek, Mitchell Creek, Ludmilla Creek and Sandy Creek)"
-    },
-    {
-        "category": "River health",
-        "priority": "Saltwater Creek, Cairns"
-    },
-    {
-        "category": "River health",
-        "priority": "Bulimba Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Cubberla Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Bremer River"
-    },
-    {
-        "category": "River health",
-        "priority": "Saltwater Creek, Gold Coast"
-    },
-    {
-        "category": "River health",
-        "priority": "Fig Tree Creek, Yeppoon"
-    },
-    {
-        "category": "River health",
-        "priority": "Downfall Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Dowse Lagoon"
-    },
-    {
-        "category": "River health",
-        "priority": "McCready's Creek, Mackay"
-    },
-    {
-        "category": "River health",
-        "priority": "Slacks Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Lake Macquarie"
-    },
-    {
-        "category": "River health",
-        "priority": "Hawkesbury River"
-    },
-    {
-        "category": "River health",
-        "priority": "Tuggerah Lakes"
-    },
-    {
-        "category": "River health",
-        "priority": "Shoalhaven and Crookshaven Rivers"
-    },
-    {
-        "category": "River health",
-        "priority": "Cooks River"
-    },
-    {
-        "category": "River health",
-        "priority": "Canberra Waterways"
-    },
-    {
-        "category": "River health",
-        "priority": "Peter Hopper Lake"
-    },
-    {
-        "category": "River health",
-        "priority": "Moonee Ponds Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Karaaf Wetlands"
-    },
-    {
-        "category": "River health",
-        "priority": "KooyongKoot (Tooronga Park wetland)"
-    },
-    {
-        "category": "River health",
-        "priority": "Diamond Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Yarra Flats"
-    },
-    {
-        "category": "River health",
-        "priority": "Elster Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Redan Wetlands and Yarrowee River"
-    },
-    {
-        "category": "River health",
-        "priority": "Werribee River"
-    },
-    {
-        "category": "River health",
-        "priority": "Darebin Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Merri Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Gardiners Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Derwent River"
-    },
-    {
-        "category": "River health",
-        "priority": "Tamar Estuary"
-    },
-    {
-        "category": "River health",
-        "priority": "Onkaparinga River"
-    },
-    {
-        "category": "River health",
-        "priority": "Pedler Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Brownhill Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Port River"
-    },
-    {
-        "category": "River health",
-        "priority": "Sturt River"
-    },
-    {
-        "category": "River health",
-        "priority": "Swan and Canning Rivers"
-    },
-    {
-        "category": "River health",
+        "category": "Waterways",
         "priority": "Darwin creeks (Rapid Creek, Mitchell Creek, Ludmilla Creek and Sandy Creek)"
     }
 ];

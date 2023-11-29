@@ -1,333 +1,41 @@
 var mus = [
-    'Burdekin',
-    'Burnett Mary',
-    'Cape York',
-    'Condamine',
-    'Desert Channels',
-    'Fitzroy',
-    'Mackay Whitsunday',
-    'Maranoa Balonne and Border Rivers',
-    'Northern Gulf',
-    'South East Queensland',
-    'Southern Gulf',
-    'South West Queensland',
-    'Wet Tropics'
+    {mu:'Northern Territory', priorities: ['Darwin (Rapid Creek, Mitchell Creek, Ludmilla Creek and Sandy Creek)']},
+    {mu:'Corangamite', priorities: ['Kaaraf Wetlands', 'Redan Wetlands and Yarrowee River']},
+    {mu:'Swan Region', priorities: ['Swan and Canning Rivers - Swan River at Bayswater', 'Swan and Canning Rivers - Swan/Canning Estuary Foreshore', 'Swan and Canning Rivers – Canning River and tributaries']},
+    {mu:'Fitzroy', priorities: ['Fig Tree Creek, Yeppoon']},
+    {mu:'Mackay Whitsunday', priorities: ['McCready\'s Creek, Mackay']},
+    {mu:'Adelaide and Mount Lofty Ranges', priorities: ['Onkaparinga River (a)', 'Pedler Creek', 'Brownhill Keswick Creeks (a)', 'Brownhill Creek (b)', 'Port River Foreshore - shoreline', 'Port River Estuary', 'Onkaparinga River (b)', 'Sturt River - Warrappendi', 'Sturt River - Riverside Drive', 'Sturt River - Oxbow']},
+    {mu:'South NRM Region', priorities: ['Derwent River', 'Tamar Estuary']},
+    {mu:'Port Phillip and Western Port', priorities: ['Peter Hopper Lake', 'Moonee Ponds Creek (a) - Maribyrnong', 'Moonee Ponds Creek (b) – Strathmore to Pascoe Vale', 'KooyongKoot (Tooronga Park wetland)', 'Diamond Creek', 'Yarra Flats', 'Elster Creek', 'Werribee River', 'Darebin Creek', 'Merri Creek', 'Gardiners Creek / KooongKoot waterway']},
+    {mu:'ACT', priorities: ['ACT Urban Waterways', 'Jerrabomberra Creek']},
+    {mu:'South West Queensland', priorities: ['Bulimba Creek', 'Cubberla Creek', 'Bremer River, Ipswich', 'Saltwater Creek, Gold Coast', 'Downfall Creek', 'Dowse Lagoon', 'Brisbane River', 'Slacks Creek']},
+    {mu:'Wet Tropics', priorities: ['Saltwater Creek, Cairns']},
+    {mu:'Hunter', priorities: ['Lake Macquarie (Waterways of Dora Creek, Cockle Creek and Slatey Creek)']},
+    {mu:'Greater Sydney', priorities: ['Hawkesbury River', 'Tuggerah Lakes', 'Cooks River']},
+    {mu:'South East NSW', priorities:['Shoalhaven and Crookshaven Rivers']},
 ];
 
-var priorities = [
-    {
-        "category": "Ecological health",
-        "priority": "Saltwater Creek, Cairns"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Bulimba Creek"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Cubberla Creek"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Bremer River"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Saltwater Creek, Gold Coast"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Fig Tree Creek, Yeppoon"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Downfall Creek"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Dowse Lagoon"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "McCready's Creek, Mackay"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Slacks Creek"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Lake Macquarie"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Hawkesbury River"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Tuggerah Lakes"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Shoalhaven and Crookshaven Rivers"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Cooks River"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Canberra Waterways"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Peter Hopper Lake"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Moonee Ponds Creek"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Karaaf Wetlands"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "KooyongKoot (Tooronga Park wetland)"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Diamond Creek"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Yarra Flats"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Elster Creek"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Redan Wetlands and Yarrowee River"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Werribee River"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Darebin Creek"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Merri Creek"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Gardiners Creek"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Derwent River"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Tamar Estuary"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Onkaparinga River"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Pedler Creek"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Brownhill Creek"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Port River"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Sturt River"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Swan and Canning Rivers"
-    },
-    {
-        "category": "Ecological health",
-        "priority": "Darwin creeks (Rapid Creek, Mitchell Creek, Ludmilla Creek and Sandy Creek)"
-    },
-    {
-        "category": "River health",
-        "priority": "Saltwater Creek, Cairns"
-    },
-    {
-        "category": "River health",
-        "priority": "Bulimba Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Cubberla Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Bremer River"
-    },
-    {
-        "category": "River health",
-        "priority": "Saltwater Creek, Gold Coast"
-    },
-    {
-        "category": "River health",
-        "priority": "Fig Tree Creek, Yeppoon"
-    },
-    {
-        "category": "River health",
-        "priority": "Downfall Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Dowse Lagoon"
-    },
-    {
-        "category": "River health",
-        "priority": "McCready's Creek, Mackay"
-    },
-    {
-        "category": "River health",
-        "priority": "Slacks Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Lake Macquarie"
-    },
-    {
-        "category": "River health",
-        "priority": "Hawkesbury River"
-    },
-    {
-        "category": "River health",
-        "priority": "Tuggerah Lakes"
-    },
-    {
-        "category": "River health",
-        "priority": "Shoalhaven and Crookshaven Rivers"
-    },
-    {
-        "category": "River health",
-        "priority": "Cooks River"
-    },
-    {
-        "category": "River health",
-        "priority": "Canberra Waterways"
-    },
-    {
-        "category": "River health",
-        "priority": "Peter Hopper Lake"
-    },
-    {
-        "category": "River health",
-        "priority": "Moonee Ponds Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Karaaf Wetlands"
-    },
-    {
-        "category": "River health",
-        "priority": "KooyongKoot (Tooronga Park wetland)"
-    },
-    {
-        "category": "River health",
-        "priority": "Diamond Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Yarra Flats"
-    },
-    {
-        "category": "River health",
-        "priority": "Elster Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Redan Wetlands and Yarrowee River"
-    },
-    {
-        "category": "River health",
-        "priority": "Werribee River"
-    },
-    {
-        "category": "River health",
-        "priority": "Darebin Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Merri Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Gardiners Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Derwent River"
-    },
-    {
-        "category": "River health",
-        "priority": "Tamar Estuary"
-    },
-    {
-        "category": "River health",
-        "priority": "Onkaparinga River"
-    },
-    {
-        "category": "River health",
-        "priority": "Pedler Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Brownhill Creek"
-    },
-    {
-        "category": "River health",
-        "priority": "Port River"
-    },
-    {
-        "category": "River health",
-        "priority": "Sturt River"
-    },
-    {
-        "category": "River health",
-        "priority": "Swan and Canning Rivers"
-    },
-    {
-        "category": "River health",
-        "priority": "Darwin creeks (Rapid Creek, Mitchell Creek, Ludmilla Creek and Sandy Creek)"
-    }
-];
+const category = 'Waterways';
 
 for (var i = 0; i < mus.length; i++) {
-    let mu = db.managementUnit.findOne({name:mus[i]});
+    let mu = db.managementUnit.findOne({name:mus[i].mu});
     print("Checking priorities for "+mu.name);
+
+    // Remove other "Waterways" priorities
+
     let changed = false;
-    for (let j=0; j<priorities.length; j++) {
+    for (let j=0; j<mus[i].priorities.length; j++) {
         let found = false;
         for (let k=0; k<mu.priorities.length; k++) {
-            if (mu.priorities[k].category == priorities[j].category && mu.priorities[k].priority == priorities[j].priority) {
+            if (mu.priorities[k].category == category && mu.priorities[k].priority == mus[i].priorities[j].priority) {
                 print("Already exists: " + priorities[j].priority);
                 found = true;
                 break;
             }
+
         }
         if (!found) {
-            mu.priorities.push(priorities[j]);
+            mu.priorities.push({category:category, priority:mus[i].priorities[j]});
             changed = true;
         }
     }
