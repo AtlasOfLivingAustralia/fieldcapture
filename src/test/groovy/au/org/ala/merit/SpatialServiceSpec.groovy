@@ -38,7 +38,7 @@ class SpatialServiceSpec extends Specification implements AutowiredTest{
         Integer status = service.deleteFromSpatialPortal(pid)
 
         then:
-        1 * webService.doDelete("/shape/upload/$pid") >> HttpStatus.SC_OK
+        1 * webService.doDelete("/shape/upload/$pid", true) >> HttpStatus.SC_OK
         status == HttpStatus.SC_OK
     }
 
@@ -53,7 +53,7 @@ class SpatialServiceSpec extends Specification implements AutowiredTest{
         Map result = service.uploadShapefile(file)
 
         then:
-        1 * webService.postMultipart("/shape/upload/shp?user_id=$userId&api_key=${config.api_key}", [:], file) >> [statusCode:HttpStatus.SC_OK, resp:resp]
+        1 * webService.postMultipart("/shape/upload/shp", [:], file, 'files', true) >> [statusCode:HttpStatus.SC_OK, resp:resp]
         result.statusCode == HttpStatus.SC_OK
         result.resp == resp
 
@@ -73,7 +73,7 @@ class SpatialServiceSpec extends Specification implements AutowiredTest{
         Map result = service.createObjectFromShapefileFeature(shapefileId, featureId, name, description)
 
         then:
-        1 * webService.doPost("/shape/upload/shp/$shapefileId/$featureId", [user_id:userId, api_key:config.api_key, name:name, description:description]) >> [statusCode:HttpStatus.SC_OK, resp:resp]
+        1 * webService.doPost("/shape/upload/shp/$shapefileId/$featureId", [user_id:userId, name:name, description:description], true) >> [statusCode:HttpStatus.SC_OK, resp:resp]
         result.statusCode == HttpStatus.SC_OK
         result.resp == resp
 

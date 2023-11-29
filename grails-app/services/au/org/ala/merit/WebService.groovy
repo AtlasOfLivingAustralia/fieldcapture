@@ -15,6 +15,7 @@
 
 package au.org.ala.merit
 
+import au.org.ala.ws.tokens.TokenService
 import grails.converters.JSON
 import grails.core.GrailsApplication
 import grails.web.http.HttpHeaders
@@ -39,6 +40,8 @@ import javax.servlet.http.HttpServletResponse
  */
 @Slf4j
 class WebService {
+
+    TokenService tokenService
 
     // Used to avoid a circular dependency during initialisation
     def getUserService() {
@@ -99,14 +102,25 @@ class WebService {
         grailsApplication.config.getProperty('webservice.connectTimeout', Integer, 2000)
     }
 
-    private URLConnection configureConnection(String url, boolean includeUserId, Integer timeout = null) {
+    private URLConnection configureConnection(String url, boolean includeUserId, Integer timeout = null, boolean useToken = false) {
         URLConnection conn = createAndConfigureConnection(url, timeout)
-        conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'));
+        if (!useToken) {
+            conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'))
+        }
+        else {
+            conn.setRequestProperty("Authorization", getToken())
+        }
+
+
         def user = getUserService().getUser()
         if (user) {
             conn.setRequestProperty(grailsApplication.config.getProperty('app.http.header.userId'), user.userId)
         }
         conn
+    }
+
+    private String getToken() {
+        tokenService.getAuthToken(false)?.toAuthorizationHeader()
     }
 
     private URLConnection createAndConfigureConnection(String url, Integer timeout = null) {
@@ -352,20 +366,26 @@ class WebService {
         }
     }
 
-    def doPost(String url, Map postBody) {
+    def doPost(String url, Map postBody, boolean useToken = false) {
         def conn = null
         def charEncoding = 'utf-8'
         try {
             conn = new URL(url).openConnection()
             conn.setDoOutput(true)
             conn.setRequestProperty("Content-Type", "application/json;charset=${charEncoding}");
-            conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'));
-
+            if (useToken) {
+                conn.setRequestProperty("Authorization", getToken())
+            }
+            else {
+                conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'));
+            }
             def user = getUserService().getUser()
             if (user) {
                 conn.setRequestProperty(grailsApplication.config.getProperty('app.http.header.userId'), user.userId) // used by ecodata
                 conn.setRequestProperty("Cookie", "ALA-Auth="+java.net.URLEncoder.encode(user.userName, charEncoding)) // used by specieslist
             }
+
+
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), charEncoding)
             wr.write((postBody as JSON).toString())
             wr.flush()
@@ -389,17 +409,26 @@ class WebService {
         }
     }
 
-    def doDelete(String url) {
-        url += (url.indexOf('?') == -1 ? '?' : '&') + "api_key=${grailsApplication.config.getProperty('api_key')}"
+    def doDelete(String url, boolean useToken = false) {
+        if (!useToken) {
+            url += (url.indexOf('?') == -1 ? '?' : '&') + "api_key=${grailsApplication.config.getProperty('api_key')}"
+        }
+
         def conn = null
         try {
             conn = new URL(url).openConnection()
             conn.setRequestMethod("DELETE")
-            conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'));
+            if (useToken) {
+                conn.setRequestProperty("Authorization", getToken())
+            }
+            else {
+                conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'))
+            }
             def user = getUserService().getUser()
             if (user) {
                 conn.setRequestProperty(grailsApplication.config.getProperty('app.http.header.userId'), user.userId)
             }
+
             return conn.getResponseCode()
         } catch(Exception e){
             println e.message
@@ -418,9 +447,9 @@ class WebService {
      * @param file the Multipart file object to forward.
      * @return [status:<request status>, content:<The response content from the server, assumed to be JSON>
      */
-    def postMultipart(url, Map params, MultipartFile file, fileParam = 'files') {
+    def postMultipart(url, Map params, MultipartFile file, fileParam = 'files', boolean useToken = false) {
 
-        postMultipart(url, params, file.inputStream, file.contentType, file.originalFilename, fileParam)
+        postMultipart(url, params, file.inputStream, file.contentType, file.originalFilename, fileParam, null, useToken)
     }
 
     /**
@@ -434,7 +463,7 @@ class WebService {
      * @param successHandler optional callback for a successful service invocation.  If not supplied, a Map will be returned.
      * @return [status:<request status>, content:<The response content from the server, assumed to be JSON>
      */
-    def postMultipart(url, Map params, InputStream contentIn, contentType, originalFilename, fileParamName = 'files', Closure successHandler = null) {
+    def postMultipart(url, Map params, InputStream contentIn, contentType, originalFilename, fileParamName = 'files', Closure successHandler = null, boolean useToken = false) {
 
         def result = [:]
         def user = userService.getUser()
@@ -449,13 +478,19 @@ class WebService {
                     content.addPart(key, new StringBody(value.toString()))
                 }
             }
-            headers.'Authorization' = grailsApplication.config.getProperty('api_key')
+            if (useToken) {
+                headers.'Authorization' = getToken()
+            }
+            else {
+                headers.'Authorization' = grailsApplication.config.getProperty('api_key')
+            }
             if (user) {
                 headers[grailsApplication.config.getProperty('app.http.header.userId')] = user.userId
             }
             else {
                 log.warn("No user associated with request: ${url}")
             }
+
             request.setEntity(content)
 
             if (successHandler) {
