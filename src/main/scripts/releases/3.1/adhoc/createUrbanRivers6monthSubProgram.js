@@ -741,6 +741,7 @@ subprograms.forEach(function (subprogram){
         var p = program.next();
         print("sub program ID: " + p.programId)
         db.program.updateOne({programId:p.programId}, {$set:{config:config, outcomes:outcomes, priorities:priorities}});
+        useNhtServiceLabels(p.name);
     }
 });
 
