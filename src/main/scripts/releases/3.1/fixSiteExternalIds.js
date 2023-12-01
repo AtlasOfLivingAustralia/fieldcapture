@@ -18,3 +18,13 @@ while (sites.hasNext()) {
 
     audit(site, site.siteId, 'au.org.ala.ecodata.Site', adminUserId);
 }
+
+sites = db.site.find({externalId:{$ne:null}});
+while (sites.hasNext()) {
+    let site = sites.next();
+    site.externalIds = [{idType:'UNSPECIFIED', externalId: site.externalId}];
+    delete site.externalId;
+    db.site.replaceOne({_id:site._id}, site);
+
+    audit(site, site.siteId, 'au.org.ala.ecodata.Site', adminUserId);
+}

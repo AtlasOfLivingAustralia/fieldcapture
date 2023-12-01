@@ -1047,7 +1047,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         };
         sitesViewModel.typeFilter.subscribe(function(filterValue) {
 
-            if (filterValue == 'Both') {
+            if (filterValue == 'All') {
                 filterValue = "";  // Clear the search.
             }
             $sitesTable.DataTable().column(2).search(filterValue).draw();

@@ -29,7 +29,7 @@
                 <tr>
                     <th><input type="checkbox" id="select-all-sites"></th>
                     <th></th>
-                    <th>Type <fc:iconHelp html="true">Planning site (P) or Reporting site (R)</fc:iconHelp><br/>
+                    <th>Type <fc:iconHelp html="true">Planning site (P), Reporting site (R) or EMSA site created with the Monitor app (E)</fc:iconHelp><br/>
                         <select data-bind="value:typeFilter, options:typeOptions">
 
                         </select>
@@ -52,7 +52,7 @@
                             </span>
                         </g:if>
                     </td>
-                    <td data-bind="text:type == 'compound' ? 'R' : 'P', title:type == 'compound' ? 'Reporting site' :  'Planning site'">
+                    <td data-bind="text:filterType, title:filterTypeTitle">
                     </td>
 
                     <td>
