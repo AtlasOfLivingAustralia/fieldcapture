@@ -9,10 +9,10 @@
     <tbody data-bind="foreach: rows">
     <tr class="header">
         <th class="code"></th>
-        <th class="outcome required">Outcome statement/s</th>
+        <th class="outcome required">${outcomeStatementHeading ?: 'Outcome Statement/s'}</th>
         <th class="monitoring-data required">Baseline data <g:if test="${baselineDataHelpText}"><fc:iconHelp>${baselineDataHelpText}</fc:iconHelp></g:if></th>
         <th class="baseline required">Baseline data description <g:if test="${baselineDataDescriptionHelpText}"><fc:iconHelp>${baselineDataDescriptionHelpText}</fc:iconHelp></g:if></th>
-        <th class="service required">Project Service / Target Measure/s <g:if test="${baselineHelpText}"><fc:iconHelp>${baselineServiceHelpText}</fc:iconHelp></g:if></th>
+        <th class="service required">${servicesHeading ?: 'Project service / Target measure/s'}<g:if test="${baselineHelpText}"><fc:iconHelp>${baselineServiceHelpText}</fc:iconHelp></g:if></th>
         <th class="baseline-method required">Select the method used to obtain the baseline, or how the baseline will be established if ‘Other’<fc:iconHelp html="true">${baselineMethodHelpText ?: "Describe the project baseline(s) units of measure or data which will be used to report progress towards this project's outcomes (short-term, medium-term and 5 year program outcome), and the monitoring design."}</fc:iconHelp></th>
         <th class="baseline-evidence required">Evidence to be retained <g:if test="${evidenceHelpText}"><fc:iconHelp>${evidenceHelpText}</fc:iconHelp></g:if></th>
         <th class="remove"></th>
