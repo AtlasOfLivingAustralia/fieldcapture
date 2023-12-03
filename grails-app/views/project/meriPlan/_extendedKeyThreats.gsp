@@ -9,7 +9,7 @@
     <thead>
     <tr>
         <th class="index"></th>
-        <th class="related-outcomes required">${outcomeStatementHeading ?: 'Outcome Statement/s'}</th>
+        <th class="related-outcomes required">${outcomeStatementHeading ?: 'Outcome statement/s'}</th>
         <th class="threat-code required">Threats / Threatening processes</th>
         <th class="threat required">Description <fc:iconHelp>${threatHelpText ?: "Describe the key threats (or key threatening processes) to the primary investment priority"}</fc:iconHelp></th>
         <th class="services required">${servicesHeading ?: 'Project service / Target measure/s to address threats'}<fc:iconHelp>${servicesHelpText ?: "Project Services/Target measures selected in this section will be pre-populated into the Project services and targets and Project service forecasts tables"}</fc:iconHelp></th>
