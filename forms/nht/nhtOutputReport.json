@@ -18159,10 +18159,26 @@
                           "context-path": "owner.custom.dataSets"
                         },
                         "filter": {
-                          "expression": "serviceId == 23 and progress == 'finished'"
+                          "namespace": "dataSet",
+                          "expression": "dataSet.serviceId == 23 and dataSet.progress == 'finished' and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
-                    }
+                    },
+                    "behaviour": [
+                      {
+                        "type": "pre_populate",
+                        "config": {
+                          "source": {
+                            "context-path": "owner.custom.dataSets"
+                          },
+                          "find": {
+                            "namespace": "dataSet",
+                            "expression": "dataSet.dataSetId == dataSetId"
+                          },
+                          "target": "$data"
+                        }
+                      }
+                    ]
                   },
                   {
                     "columns": [
@@ -18226,6 +18242,9 @@
                     "name": "investmentPriorities2",
                     "dataType": "stringList",
                     "validate": "required",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.investmentPriorities"
+                    },
                     "constraints": {
                       "type": "pre-populated",
                       "config": {
@@ -18608,8 +18627,6 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaselineInvoiced",
-            "validate": "required,min[0]",
-            "defaultValue": 1,
             "validate": [
               {
                 "param": {
@@ -18618,7 +18635,8 @@
                 },
                 "rule": "max"
               }
-            ]
+            ],
+            "defaultValue": 1
           },
           {
             "dataType": "number",
@@ -18633,7 +18651,6 @@
             "dataType": "number",
             "name": "totalSurveyIndicatorInvoiced",
             "defaultValue": 1,
-            "validate": "required,min[0]",
             "validate": [
               {
                 "param": {
@@ -24648,10 +24665,26 @@
                           "context-path": "owner.custom.dataSets"
                         },
                         "filter": {
-                          "expression": "serviceId == 29 and progress == 'finished'"
+                          "namespace": "dataSet",
+                          "expression": "dataSet.serviceId == 29 and dataSet.progress == 'finished' and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
-                    }
+                    },
+                    "behaviour": [
+                      {
+                        "type": "pre_populate",
+                        "config": {
+                          "source": {
+                            "context-path": "owner.custom.dataSets"
+                          },
+                          "find": {
+                            "namespace": "dataSet",
+                            "expression": "dataSet.dataSetId == dataSetId"
+                          },
+                          "target": "$data"
+                        }
+                      }
+                    ]
                   },
                   {
                     "dataType": "text",
@@ -24690,6 +24723,9 @@
                     "name": "investmentPriorities2",
                     "dataType": "stringList",
                     "validate": "required",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.investmentPriorities"
+                    },
                     "constraints": {
                       "type": "pre-populated",
                       "config": {
@@ -25077,8 +25113,6 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaselineInvoiced",
-            "validate": "required,min[0]",
-            "defaultValue": 1,
             "validate": [
               {
                 "param": {
@@ -25087,7 +25121,8 @@
                 },
                 "rule": "max"
               }
-            ]
+            ],
+            "defaultValue": 1
           },
           {
             "dataType": "number",
@@ -25101,8 +25136,6 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicatorInvoiced",
-            "validate": "required,min[0]",
-            "defaultValue": 1,
             "validate": [
               {
                 "param": {
@@ -25111,7 +25144,8 @@
                 },
                 "rule": "max"
               }
-            ]
+            ],
+            "defaultValue": 1
           },
           {
             "dataType": "number",
