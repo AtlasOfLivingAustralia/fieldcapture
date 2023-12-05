@@ -5,13 +5,13 @@
     <thead>
     <tr>
         <th class="index"></th>
-        <th class="baseline">Monitoring indicator</th>
+        <th class="baseline">Monitoring methodology</th>
         <g:if test="${extendedMonitoring}">
-            <th class="monitoring-service">Service / Target Measure</th>
+            <th class="monitoring-service">Project service / Target measure/s</th>
         </g:if>
-        <th class="baseline-method">Monitoring approach</th>
+        <th class="baseline-method">Monitoring method</th>
         <g:if test="${extendedMonitoring}">
-            <th class="monitoring-evidence">Evidence</th>
+            <th class="monitoring-evidence">Evidence to be retained</th>
         </g:if>
     </tr>
     </thead>

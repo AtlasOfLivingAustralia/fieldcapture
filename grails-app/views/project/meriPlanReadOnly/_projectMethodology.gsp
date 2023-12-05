@@ -4,7 +4,7 @@
 <table class="table">
     <thead>
     <tr>
-        <th>Project methodology</th>
+        <th>Project delivery assumptions</th>
     </tr>
     </thead>
     <tbody>

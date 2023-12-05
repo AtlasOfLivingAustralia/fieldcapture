@@ -11,9 +11,14 @@
         <g:else>
             <th class="code"></th>
         </g:else>
-        <th class="outcome">Outcome statement/s</th>
+        <g:if test="${outcomeType == 'mid'}">
+            <th class="outcome">Medium-term outcome statement/s</th>
+        </g:if>
+        <g:else>
+            <th class="outcome">Short-term outcome statement/s</th>
+        </g:else>
         <g:if test="${extendedOutcomes}">
-            <th class="investment-priority">Investment Priority</th>
+            <th class="investment-priority">Investment priority</th>
             <th class="program-outcome">Related program outcome/s</th>
         </g:if>
     </tr>

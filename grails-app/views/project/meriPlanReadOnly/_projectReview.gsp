@@ -1,7 +1,7 @@
 <table class="table">
     <thead>
     <tr>
-        <th>Project Review, Evaluation and Improvement Methodology and Approach</th>
+        <th>Project review, improvement and evaluation methodology and approach</th>
     </tr>
     </thead>
     <tbody>

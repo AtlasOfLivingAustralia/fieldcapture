@@ -6,8 +6,13 @@
     <thead>
     <tr>
         <th class="code"></th>
-        <th class="outcome">Outcome statement/s</th>
-        <th class="investment-priority">Investment Priority</th>
+        <g:if test="${outcomeType == 'mid'}">
+            <th class="outcome">Medium-term outcome statement/s</th>
+        </g:if>
+        <g:else>
+            <th class="outcome">Short-term outcome statement/s</th>
+        </g:else>
+        <th class="investment-priority">Investment priority</th>
         <th class="program-outcome">Related program outcome/s</th>
     </tr>
     </thead>

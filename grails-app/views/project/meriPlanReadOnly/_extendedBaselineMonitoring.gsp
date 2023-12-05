@@ -9,7 +9,7 @@
     <tbody data-bind="foreach: rows">
     <tr class="header">
         <th class="code"></th>
-        <th class="outcome required">Outcome statement</th>
+        <th class="outcome required">Outcome statement/s</th>
         <th class="monitoring-data required">Baseline data <g:if test="${baselineDataHelpText}"><fc:iconHelp>${baselineDataHelpText}</fc:iconHelp></g:if></th>
         <th class="baseline required">Baseline data description <g:if test="${baselineDataDescriptionHelpText}"><fc:iconHelp>${baselineDataDescriptionHelpText}</fc:iconHelp></g:if></th>
         <th class="service required">Project Service / Target Measure/s <g:if test="${baselineHelpText}"><fc:iconHelp>${baselineServiceHelpText}</fc:iconHelp></g:if></th>
