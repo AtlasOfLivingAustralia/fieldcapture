@@ -19304,10 +19304,26 @@
                           "context-path": "owner.custom.dataSets"
                         },
                         "filter": {
-                          "expression": "serviceId == 24 and progress == 'finished'"
+                          "namespace": "dataSet",
+                          "expression": "dataSet.serviceId == 24 and dataSet.progress == 'finished' and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
-                    }
+                    },
+                    "behaviour": [
+                      {
+                        "type": "pre_populate",
+                        "config": {
+                          "source": {
+                            "context-path": "owner.custom.dataSets"
+                          },
+                          "find": {
+                            "namespace": "dataSet",
+                            "expression": "dataSet.dataSetId == dataSetId"
+                          },
+                          "target": "$data"
+                        }
+                      }
+                    ]
                   },
                   {
                     "columns": [
@@ -19400,6 +19416,9 @@
                     "name": "investmentPriorities2",
                     "dataType": "stringList",
                     "validate": "required",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.investmentPriorities"
+                    },
                     "constraints": {
                       "type": "pre-populated",
                       "config": {
