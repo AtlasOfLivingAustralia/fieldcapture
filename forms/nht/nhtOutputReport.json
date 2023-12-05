@@ -25756,22 +25756,19 @@
               },
               {
                 "dataType": "text",
+                "name": "baselineOrIndicatorSurvey",
+                "description": "",
+                "constraints": [
+                  "Baseline",
+                  "Indicator"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
                 "name": "surveyObjective",
                 "description": "What the survey aim to capture? How will the information obtained from the survey be used?",
                 "validate": "required,maxSize[3000]"
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfSurveys",
-                "validate": "required,min[1],max[1]",
-                "defaultValue": 1,
-                "readonly": true
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfSurveysInvoiced",
-                "validate": "required,min[0],max[1]",
-                "defaultValue": 1
               },
               {
                 "dataType": "list",
@@ -25792,23 +25789,26 @@
                           "context-path": "owner.custom.dataSets"
                         },
                         "filter": {
-                          "expression": "serviceId == 30 and progress == 'finished'"
+                          "namespace": "dataSet",
+                          "expression": "dataSet.serviceId == 30 and dataSet.progress == 'finished' and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
-                    }
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "baselineOrIndicatorSurvey",
-                    "description": "",
-                    "constraints": [
-                      "Baseline",
-                      "Indicator"
-                    ],
-                    "validate": "required",
-                    "computed": {
-                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); baselineIndicatorMapping.lookupValue(x.type)"
-                    }
+                    },
+                    "behaviour": [
+                      {
+                        "type": "pre_populate",
+                        "config": {
+                          "source": {
+                            "context-path": "owner.custom.dataSets"
+                          },
+                          "find": {
+                            "namespace": "dataSet",
+                            "expression": "dataSet.dataSetId == dataSetId"
+                          },
+                          "target": "$data"
+                        }
+                      }
+                    ]
                   },
                   {
                     "name": "projectBaselines",
@@ -25834,6 +25834,9 @@
                     "name": "investmentPriorities2",
                     "dataType": "stringList",
                     "validate": "required",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.investmentPriorities"
+                    },
                     "constraints": {
                       "type": "pre-populated",
                       "config": {
@@ -26221,6 +26224,52 @@
             }
           },
           {
+            "dataType": "number",
+            "name": "totalSurveyBaseline",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(soilTestingSurveys, \"baselineOrIndicatorSurvey\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalSurveyBaselineInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalSurveyBaseline",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 1
+          },
+          {
+            "dataType": "number",
+            "name": "totalSurveyIndicator",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(soilTestingSurveys, \"baselineOrIndicatorSurvey\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalSurveyIndicatorInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalSurveyBaseline",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 1
+          },
+          {
             "dataType": "text",
             "name": "comments",
             "validate": "maxSize[1500]"
@@ -26329,6 +26378,72 @@
                 ]
               },
               {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "literal",
+                    "source": "<h3>Totals Summary</h3>"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "col",
+                    "css": "span4 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(i) Total Number of baseline fauna surveys completed for this reporting period",
+                            "source": "totalSurveyBaseline",
+                            "type": "number"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(ii) Total Number of baseline fauna surveys <u><i>invoiced</i></u> for this reporting period",
+                            "source": "totalSurveyBaselineInvoiced",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span4 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(iii)  Total Number of  indicator fauna surveys completed for this reporting period",
+                            "source": "totalSurveyIndicator",
+                            "type": "number"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(iv) Total Number of indicator fauna surveys <u><i>invoiced</i></u> for this reporting period",
+                            "source": "totalSurveyIndicatorInvoiced",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
                 "addRowText": "Add survey",
                 "removeRowText": "Delete this survey",
                 "userAddedRows": true,
@@ -26352,20 +26467,9 @@
                         "type": "col",
                         "items": [
                           {
-                            "preLabel": "How many surveys were completed?",
-                            "source": "numberOfSurveys",
-                            "type": "number",
-                            "readonly": "readonly"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "preLabel": "How many surveys will you be invoicing for?",
-                            "source": "numberOfSurveysInvoiced",
-                            "type": "number"
+                            "source": "baselineOrIndicatorSurvey",
+                            "type": "selectOne",
+                            "preLabel": "Baseline survey or indicator (follow-up) survey?"
                           }
                         ]
                       }
@@ -26407,22 +26511,6 @@
                       {
                         "type": "row",
                         "items": [
-                          {
-                            "type": "col",
-                            "css": "span3 col-border-right",
-                            "items": [
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "source": "baselineOrIndicatorSurvey",
-                                    "type": "selectOne",
-                                    "preLabel": "Baseline survey or indicator (follow-up) survey?"
-                                  }
-                                ]
-                              }
-                            ]
-                          },
                           {
                             "type": "col",
                             "css": "span3 col-border-right",
