@@ -4,7 +4,7 @@
     <thead>
 
     <tr>
-        <th class="outcome-priority">Secondary outcome(s)</th>
+        <th class="outcome-priority">${outcomePriority ?:"Secondary outcome(s)"}</th>
         <th class="priority">${ priority ?:"Secondary Investment Priorities"}</th>
     </tr>
     </thead>
