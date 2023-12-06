@@ -16,14 +16,18 @@ class NHTOutputReportData extends ReportData {
 
     Map getContextData(Map project) {
         // Side effect - filter data sets.
-        project.custom.dataSets = new JSONArray(project.custom.dataSets?.findAll {
+        List eligibleDataSets = project.custom?.dataSets?.findAll {
             // This is a side effect and a workaround for the problem that selected outcomes
             // are an array and the knockout binding doesn't support arrays as a value.
             if (it.projectOutcomes) {
                 it.outcomesLabel = new ArrayList(it.projectOutcomes).join(',')
             }
             it.progress == ActivityService.PROGRESS_FINISHED
-        })
+        }
+        if (project.custom) {
+            project.custom.dataSets = new JSONArray(eligibleDataSets ?: [])
+        }
+
         return [
             protocols:projectService.listProjectProtocols(project).collect {
                 [label: it.name, value: it.externalId]
