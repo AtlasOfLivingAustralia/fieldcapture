@@ -4,7 +4,7 @@
 <table class="table">
     <thead>
     <tr>
-        <th>Project delivery assumptions</th>
+        <th class="required">${tableHeading ?: "Project delivery assumptions"}</th>
     </tr>
     </thead>
     <tbody>

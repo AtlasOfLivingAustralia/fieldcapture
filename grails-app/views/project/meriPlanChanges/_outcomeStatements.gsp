@@ -6,12 +6,7 @@
     <thead>
     <tr>
         <th class="code"></th>
-        <g:if test="${outcomeType == 'mid'}">
-            <th class="outcome">Medium-term outcome statement/s</th>
-        </g:if>
-        <g:else>
-            <th class="outcome">Short-term outcome statement/s</th>
-        </g:else>
+        <th class="outcome">${subtitle ?: ""} </th>
         <th class="investment-priority">Investment priority</th>
         <th class="program-outcome">Related program outcome/s</th>
     </tr>
