@@ -567,6 +567,21 @@ var outcomes = [
         "type": "medium",
         "outcome": "By June 2028 there is a measurable improvement to the services provided by urban green and blue space to benefit local communities in urban, outer urban /peri-urban and regional centres."
     },
+    {
+        "category": "River health",
+        "type": "short",
+        "outcome": "By 30 June 2025, there is measurable repair of waterway habitats (in-stream and terrestrial) to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
+    },
+    {
+        "category":"River health",
+        "type": "short",
+        "outcome": " By 30 June 2025, there is measurable repair of water quality, hydrology and in stream connectivity to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
+    },
+    {
+        "category":"River health",
+        "type": "short",
+        "outcome": "By June 2025 there is a measurable improvement to the services provided by urban green and blue space to benefit local communities in urban, outer urban /peri-urban and regional centres."
+    }
 ];
 
 var priorities = [
