@@ -735,7 +735,9 @@ var priorities = [
     }
 ];
 
-let parentProgram = "Urban rivers";
+//Create the parent program
+let programName = "Urban Rivers and Catchments Program";
+var parentProgram = createOrFindProgram(programName);
 var subprograms = ["Urban Rivers and Catchments round one - Final report"]
 
 var parent = db.program.find({name: parentProgram}).next();

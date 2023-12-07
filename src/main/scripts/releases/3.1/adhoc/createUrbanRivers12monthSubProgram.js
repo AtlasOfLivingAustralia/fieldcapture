@@ -733,8 +733,10 @@ var priorities = [
     }
 ];
 
-let parentProgram = "Urban rivers";
-var subprograms = ["Urban Rivers and Catchments round one - 12 month report"]
+//Create the parent program
+let programName = "Urban Rivers and Catchments Program";
+var parentProgram = createOrFindProgram(programName);
+var subprograms = ["URCP round 1 election commitments - 12 month reports"]
 
 var parent = db.program.find({name: parentProgram}).next();
 subprograms.forEach(function (subProgram){
