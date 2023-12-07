@@ -839,22 +839,7 @@ class ProjectController {
         render result as JSON
     }
 
-    private ReportData reportDataForProject(Map config, String activityType) {
-        ReportData reportData = null
-        String reportDataBeanName = config.reportData?[activityType] ?: null
-        if (reportDataBeanName) {
-            if (grailsApplication.mainContext.containsBean(reportDataBeanName)) {
-                reportData = grailsApplication.mainContext.getBean(reportDataBeanName)
-            }
-            else {
-                log.warn("Unable to find reportData bean "+reportDataBeanName+" for project "+projectId+" and activity type "+model.activity.type+" using default")
-            }
-        }
-        if (!reportData) {
-            reportData = new ReportData()
-        }
-        reportData
-    }
+
 
     private Map activityReportModel(String projectId, String reportId, ReportMode mode, Integer formVersion = null) {
 
@@ -862,7 +847,7 @@ class ProjectController {
         List sites = project.remove('sites')
         Map config = projectService.getProgramConfiguration(project)
         Map model = reportService.activityReportModel(reportId, mode, formVersion)
-        ReportData reportData = reportDataForProject(config, model.activity.type)
+        ReportData reportData = projectService.reportDataForProject(config, model.activity.type)
 
         model.metaModel = projectService.filterOutputModel(model.metaModel, project, model.activity)
 

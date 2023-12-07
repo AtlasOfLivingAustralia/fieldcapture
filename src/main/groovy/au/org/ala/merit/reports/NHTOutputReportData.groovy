@@ -1,7 +1,9 @@
 package au.org.ala.merit.reports
 
+import au.org.ala.ecodata.forms.ActivityFormService
 import au.org.ala.merit.ActivityService
 import au.org.ala.merit.ProjectService
+import groovy.util.logging.Slf4j
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 /**
  * Custom data for the NHT Output Report.
  */
+@Slf4j
 class NHTOutputReportData extends ReportData {
 
     @Autowired
@@ -49,4 +52,5 @@ class NHTOutputReportData extends ReportData {
         }
         extraData
     }
+
 }
