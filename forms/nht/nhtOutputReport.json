@@ -13138,19 +13138,6 @@
                     "name": "habitatConditionSurveySpeciesTable"
                   },
                   {
-                    "dataType": "text",
-                    "name": "baselineOrIndicatorSurvey",
-                    "description": "",
-                    "constraints": [
-                      "Baseline",
-                      "Indicator"
-                    ],
-                    "validate": "required",
-                    "computed": {
-                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); baselineIndicatorMapping.lookupValue(x.type)"
-                    }
-                  },
-                  {
                     "name": "projectBaselines",
                     "dataType": "stringList",
                     "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
@@ -13835,22 +13822,6 @@
                       {
                         "type": "row",
                         "items": [
-                          {
-                            "type": "col",
-                            "css": "span3 col-border-right",
-                            "items": [
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "source": "baselineOrIndicatorSurvey",
-                                    "type": "selectOne",
-                                    "preLabel": "Baseline survey or indicator (follow-up) survey?"
-                                  }
-                                ]
-                              }
-                            ]
-                          },
                           {
                             "type": "col",
                             "css": "span3 col-border-right",
@@ -20147,6 +20118,7 @@
                                 "items": [
                                   {
                                     "preLabel": "Actual area (ha) covered by plant survival survey",
+                                    "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
                                     "source": "areaTreatedHa",
                                     "type": "number",
                                     "displayOptions": {
@@ -20186,7 +20158,8 @@
                                 "type": "row",
                                 "items": [
                                   {
-                                    "preLabel": "Invoiced area (ha) of pest animal-free enclosure",
+                                    "preLabel": "Invoiced area (ha) of plant survival survey",
+                                    "helpText": "Enter the amount you will invoice for during this reporting period.",
                                     "source": "areaInvoicedTreatedHa",
                                     "type": "number",
                                     "displayOptions": {
@@ -26416,7 +26389,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "(i) Total Number of baseline fauna surveys completed for this reporting period",
+                            "preLabel": "(i) Total Number of baseline soil testing surveys completed for this reporting period",
                             "source": "totalSurveyBaseline",
                             "type": "number"
                           }
@@ -26426,7 +26399,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "(ii) Total Number of baseline fauna surveys <u><i>invoiced</i></u> for this reporting period",
+                            "preLabel": "(ii) Total Number of baseline soil testing surveys <u><i>invoiced</i></u> for this reporting period",
                             "source": "totalSurveyBaselineInvoiced",
                             "type": "number"
                           }
@@ -26442,7 +26415,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "(iii)  Total Number of  indicator fauna surveys completed for this reporting period",
+                            "preLabel": "(iii)  Total Number of  indicator soil testing surveys completed for this reporting period",
                             "source": "totalSurveyIndicator",
                             "type": "number"
                           }
@@ -26452,7 +26425,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "(iv) Total Number of indicator fauna surveys <u><i>invoiced</i></u> for this reporting period",
+                            "preLabel": "(iv) Total Number of indicator soil testing surveys <u><i>invoiced</i></u> for this reporting period",
                             "source": "totalSurveyIndicatorInvoiced",
                             "type": "number"
                           }
