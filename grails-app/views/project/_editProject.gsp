@@ -70,7 +70,9 @@
 <div class="row mb-2">
     <div class="col-sm-12">
         <div class="control-group">
-            <label for="description" class="control-label">Project description</label>
+            <label for="description" class="control-label">Project description
+                <fc:iconHelp helpTextCode="project.description.help"></fc:iconHelp>
+            </label>
             <div class="controls">
                 <textarea data-bind="value:description" class="form-control form-control-sm input-large" id="description" rows="3" cols="50"></textarea>
             </div>
