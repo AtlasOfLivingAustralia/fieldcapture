@@ -739,19 +739,11 @@ var priorities = [
 
 //Create the parent program
 let programName = "Urban Rivers and Catchments Program";
-var parentProgram = createOrFindProgram(programName);
+var parent = createOrFindProgram(programName);
 var subprograms = ["URCP round 1 election commitments - 6 month reports"]
 
-var parent = db.program.find({name: parentProgram}).next();
 subprograms.forEach(function (subProgram){
-    var now = ISODate();
-    var p = {name: subProgram, programId: UUID.generate(), dateCreated: now, lastUpdate: now, parent: parent._id, status: "active"}
-    var program = db.program.find({name: subProgram})
-    if (!program.hasNext()) {
-        db.program.insertOne(p);
-    } else {
-        print("Program Already Exist: " + subProgram)
-    }
+    createOrFindProgram(subProgram, parent._id);
 });
 
 subprograms.forEach(function (subprogram){
