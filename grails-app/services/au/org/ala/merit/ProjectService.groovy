@@ -21,6 +21,7 @@ import org.joda.time.Interval
 import org.joda.time.Period
 
 import java.text.SimpleDateFormat
+import java.util.concurrent.locks.Lock
 
 @Slf4j
 class ProjectService  {
@@ -44,6 +45,7 @@ class ProjectService  {
     def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService, commonService
     ProjectConfigurationService projectConfigurationService
     def programService
+    LockService lockService
 
     def get(id, levelOfDetail = "", includeDeleted = false) {
 
@@ -414,18 +416,39 @@ class ProjectService  {
         userCanEdit
     }
 
+    def lockMeriPlanForEditing(String projectId) {
+        def project = get(projectId)
+        if (!project.planStatus || project.planStatus == PLAN_NOT_APPROVED) {
+            def resp = lockService.lock(projectId)
+            if (resp.resp && !resp.resp.error) {
+                return [message:'success']
+            }
+            else {
+                return [error:resp?.resp?.error]
+            }
+        }
+        return [error:'Invalid plan status']
+    }
+
     def submitPlan(String projectId) {
         def project = get(projectId)
 
         if (!project.planStatus || project.planStatus == PLAN_NOT_APPROVED) {
-            def resp = update(projectId, [planStatus:PLAN_SUBMITTED])
-            if (resp.resp && !resp.resp.error) {
-
-                sendEmail({ProgramConfig programConfig -> programConfig.getPlanSubmittedTemplate()}, project, RoleService.PROJECT_ADMIN_ROLE)
-                return [message:'success']
+            if (project.lock && project.lock?.userId != userService.getCurrentUserId()) {
+                return [error:'MERI plan is locked by another user']
             }
             else {
-                return [error:"Update failed: ${resp?.resp?.error}"]
+                if (project.lock) {
+                    lockService.unlock(projectId)
+                }
+                def resp = update(projectId, [planStatus: PLAN_SUBMITTED])
+                if (resp.resp && !resp.resp.error) {
+
+                    sendEmail({ ProgramConfig programConfig -> programConfig.getPlanSubmittedTemplate() }, project, RoleService.PROJECT_ADMIN_ROLE)
+                    return [message: 'success']
+                } else {
+                    return [error: "Update failed: ${resp?.resp?.error}"]
+                }
             }
         }
         return [error:'Invalid plan status']

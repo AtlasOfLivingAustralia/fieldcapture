@@ -14,6 +14,7 @@ class ActivityService {
 
     def webService, grailsApplication, metadataService, reportService, projectService, emailService, userService
     ActivityFormService activityFormService
+    LockService lockService
 
     public static final String PROGRESS_PLANNED = 'planned'
     public static final String PROGRESS_FINISHED = 'finished'
@@ -178,27 +179,19 @@ class ActivityService {
     }
 
     Map lock(String activityId) {
-        String path = "lock/lock/"+activityId
-        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+path,[:])
+       lockService.lock(activityId)
     }
 
     Map lock(Map activity) {
-        lock(activity.activityId)
+        lockService.lock(activity.activityId)
     }
 
     Map unlock(String activityId, Boolean force = false) {
-        String path = "lock/unlock/"+activityId
-        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+path,[force:force])
+        lockService.unlock(activityId, force)
     }
 
     void stealLock(String activityId, String activityUrl) {
-        Map activity = get(activityId)
-        Map result = [error:'No lock']
-        if (activity.lock) {
-            result = unlock(activityId, true)
-            emailService.sendLockStolenEmail(activity.lock, activityUrl)
-        }
-        result
+        lockService.stealLock(activityId, activityUrl)
     }
 
     def isReport(activity) {

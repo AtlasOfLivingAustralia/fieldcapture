@@ -35,6 +35,7 @@ class ProjectController {
     def projectService, metadataService, commonService, activityService, userService, webService, roleService
     def siteService, documentService, reportService, blogService
     GrailsApplication grailsApplication
+    LockService lockService
 
     private def espOverview(Map project, Map user, ProgramConfig config) {
 
@@ -606,6 +607,16 @@ class ProjectController {
         render result as JSON
     }
 
+
+    @PreAuthorise(accessLevel = "admin")
+    def lockMeriPlan(String id) {
+        Map result = projectService.lockMeriPlanForEditing(id)
+        if (result.error) {
+            flash.message = "An error occurred while attempting to lock the MERI Plan: ${result.error}"
+        }
+        redirect action:'index', id:id
+    }
+
     @PreAuthorise(accessLevel = 'caseManager')
     def ajaxUnlockPlanForCorrection(String id) {
         def result = projectService.unlockPlanForCorrection(id, params.declaration)
@@ -816,6 +827,18 @@ class ProjectController {
         render result as JSON
     }
 
+    @PreAuthorise(accessLevel = 'editor')
+    def removeMeriPlanEditLock(String id) {
+        lockService.unlock(id)
+        redirect action:'index', id:id
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def overrideMeriPlanLockAndEdit(String id) {
+        lockService.stealLock(id)
+        redirect action:'index', id:id
+
+    }
     @PreAuthorise(accessLevel = 'editor')
     def overrideLockAndEdit(String id, String reportId) {
         reportService.overrideLock(reportId, g.createLink(action:'viewReport', id:id, params:[reportId:reportId], absolute: true))
