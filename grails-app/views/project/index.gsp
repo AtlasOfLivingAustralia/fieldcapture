@@ -302,8 +302,8 @@ var config = {
     config.themes = themes;
             var services = <fc:modelAsJavascript model="${config.services}" default="[]"/>;
 
-    config.useAlaMap = ${Boolean.valueOf(projectContent.site.useAlaMap)};
-    config.showSiteType = ${Boolean.valueOf(projectContent.site.showSiteType)};
+    config.useAlaMap = ${Boolean.valueOf(projectContent.site?.useAlaMap)};
+    config.showSiteType = ${Boolean.valueOf(projectContent.site?.showSiteType)};
     config.services = services;
 
     config.useRlpTemplate = ${config.getProjectTemplate() == au.org.ala.merit.config.ProgramConfig.ProjectTemplate.RLP};

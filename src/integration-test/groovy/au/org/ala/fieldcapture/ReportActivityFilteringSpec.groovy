@@ -114,6 +114,19 @@ class ReportActivityFilteringSpec extends StubbedCasSpec {
 
         waitFor { at RlpProjectPage }
         def meriPlan = openMeriPlanEditTab()
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        meriPlan = openMeriPlanEditTab()
+
+        then:
+        // The page will reload and we look for the banner confirming the user holds the lock to proceed
+        waitFor {
+            meriPlan.holdsEditLock()
+        }
+
+        when:
         meriPlan.checkActivity('activity 2')
         meriPlan.save()
 
