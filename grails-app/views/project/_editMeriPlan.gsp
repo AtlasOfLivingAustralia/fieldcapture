@@ -182,7 +182,7 @@
 		<div data-bind="if:isPlanEditable()" class="row mb-2">
 			<div class="col-sm-12 pl-3 pr-3">
 				<div class="alert alert-danger report-locked">
-					<p class="text-dark">You must unlock the plan to edit it, and when finished you must save your work by pressing the ‘save’ button below otherwise your work will not be saved. Do not close or press back on your browser to exit or your work will be lost.</p>
+					<p class="text-dark">You must unlock the plan to edit it, and when finished you must save your work by pressing the "Save changes and finish editing" or the "Submit for approval" button below otherwise your work will not be saved. Do not close or press back on your browser to exit or your work will be lost.</p>
 					<a id="lockMeriPlan" href="${createLink(action:'lockMeriPlan', id:project.projectId)}"><button type="button" class="btn btn-sm btn-danger"><i class="fa fa-edit"></i> Lock for Editing</button></a>
 				</div>
 			</div>
@@ -192,7 +192,7 @@
 	<div class="row space-after">
 		<div class="col-sm-12 pl-3 pr-3">
 			<div class="alert alert-danger meri-lock-held">
-				<p class="text-dark"><i class="fa fa-lock"></i> You currently hold an editing lock for this MERI plan.  No other users will be able to edit the plan until you release the lock using "Save and Unlock" or "Cancel" buttons.  You cannot submit the MERI plan while it is locked.</p>
+				<p class="text-dark"><i class="fa fa-lock"></i> You currently hold an editing lock for this MERI plan.  No other users will be able to edit the plan until you release the lock using "Save changes and finish editing", "Submit for approval", or "Cancel" buttons.</p>
 			</div>
 		</div>
 		<div class="col-sm-12">

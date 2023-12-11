@@ -45,6 +45,13 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         when:
         to RlpProjectPage, projectId
         def meriPlan = openMeriPlanEditTab()
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
 
         meriPlan.projectName = "MERI plan edited name"
         meriPlan.projectDescription = "MERI plan edited description"
@@ -102,9 +109,9 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.keyThreats[0].threatCode = 'Key threat 2'
         meriPlan.keyThreats[0].threat = "Threat 1"
         meriPlan.keyThreats[0].intervention = "Intervention 1"
+        meriPlan.keyThreats[0].relatedOutcomes = ['ST1']
         meriPlan.keyThreats[0].targetMeasures = ['score_42']
         meriPlan.keyThreats[0].evidence = "Evidence 1"
-        meriPlan.keyThreats[0].relatedOutcomes = ['ST1']
         meriPlan.projectMethodology = "Project assumptions 1"
 
         meriPlan.projectPartnerships[0].name = 'partner name'
@@ -164,7 +171,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
             meriPlan.serviceOutcomeTargets.serviceAndTargets[1].service == "Weed distribution survey"
             meriPlan.serviceOutcomeTargets.serviceAndTargets[1].targetMeasure == "Area (ha) surveyed for weeds"
 
-            meriPlan.serviceOutcomeTargets.outcomeTargets[0].outcomes == ["ST1"]
+            meriPlan.serviceOutcomeTargets.outcomeTargets[0].outcomes == ["ST1", "MT1"]
             meriPlan.serviceOutcomeTargets.outcomeTargets[1].outcomes == ["MT1"]
         }
 
@@ -318,7 +325,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlanView.nationalAndRegionalPlans[0].documentUrl.text() == "http://www.test.org"
         meriPlanView.serviceOutcomeTargets.serviceAndTargets[0].service.text() == "Collecting, or synthesising baseline data"
         meriPlanView.serviceOutcomeTargets.serviceAndTargets[0].targetMeasure.text() == "Number of baseline data sets collected and/or synthesised"
-        meriPlanView.serviceOutcomeTargets.outcomeTargets[0].outcomes.text() == "ST1"
+        meriPlanView.serviceOutcomeTargets.outcomeTargets[0].outcomes.text() == "ST1,MT1"
         meriPlanView.serviceOutcomeTargets.outcomeTargets[0].target.text() == "2"
         meriPlanView.serviceOutcomeTargets.serviceAndTargets[1].service.text() == "Weed distribution survey"
         meriPlanView.serviceOutcomeTargets.serviceAndTargets[1].targetMeasure.text() == "Area (ha) surveyed for weeds"
@@ -450,6 +457,13 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.availableObjectives() == ['objective 1', 'objective 2', 'objective 3']
 
         when:
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
         meriPlan.checkObjective("objective 2")
         meriPlan.monitoringIndicators[0].indicator = "indicator 1"
         meriPlan.monitoringIndicators[0].approach = "approach 1"
@@ -538,6 +552,13 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.availableObjectives() == ['objective 1', 'objective 2', 'objective 3', 'Other']
 
         when:
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
         meriPlan.assets[0].description = "asset 1"
         meriPlan.checkObjective("objective 2")
         waitFor {
@@ -683,6 +704,13 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
 
         when:
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
         meriPlan.assets[0].description = "asset 1"
         meriPlan.shortTermOutcomes[0].outcome.value("outcome 1")
         waitFor {
