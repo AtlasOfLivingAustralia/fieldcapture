@@ -416,10 +416,10 @@ class ProjectService  {
         userCanEdit
     }
 
-    def lockMeriPlanForEditing(String projectId) {
-        def project = get(projectId)
+    Map lockMeriPlanForEditing(String projectId) {
+        Map project = get(projectId)
         if (!project.planStatus || project.planStatus == PLAN_NOT_APPROVED) {
-            def resp = lockService.lock(projectId)
+            Map resp = lockService.lock(projectId)
             if (resp.resp && !resp.resp.error) {
                 return [message:'success']
             }
@@ -429,6 +429,15 @@ class ProjectService  {
         }
         return [error:'Invalid plan status']
     }
+
+    Map overrideLock(String projectId, String entityUrl) {
+        Map project = get(projectId)
+        lockService.stealLock(projectId, project, entityUrl, SettingPageType.PROJECT_LOCK_STOLEN_EMAIL_SUBJECT, SettingPageType.PROJECT_LOCK_STOLEN_EMAIL)
+        // This is done in the projectService instead of the lockService as the
+        // same use case for an Activity has the lock aquired as a part of the redirect
+        lockService.lock(projectId)
+    }
+
 
     def submitPlan(String projectId) {
         def project = get(projectId)

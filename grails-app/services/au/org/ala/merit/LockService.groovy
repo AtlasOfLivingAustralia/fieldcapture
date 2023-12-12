@@ -19,12 +19,11 @@ class LockService {
         webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+path,[force:force])
     }
 
-    Map stealLock(String entityId, String url) {
-        Map activity = get(entityId)
+    Map stealLock(String entityId, Map entity, String url, SettingPageType emailSubjectTemplate, SettingPageType emailBodyTemplate) {
         Map result = [error:'No lock']
-        if (activity.lock) {
+        if (entity.lock) {
             result = unlock(entityId, true)
-            emailService.sendLockStolenEmail(activity.lock, url)
+            emailService.sendLockStolenEmail(entity.lock, url, emailSubjectTemplate, emailBodyTemplate)
         }
         result
     }

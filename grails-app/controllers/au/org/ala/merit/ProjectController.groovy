@@ -835,7 +835,8 @@ class ProjectController {
 
     @PreAuthorise(accessLevel = 'admin')
     def overrideMeriPlanLockAndEdit(String id) {
-        lockService.stealLock(id)
+        String url = g.createLink(action:'index', id:id)
+        projectService.overrideLock(id, url)
         redirect action:'index', id:id
 
     }

@@ -1,8 +1,6 @@
 package au.org.ala.merit
 
 import au.org.ala.ecodata.forms.ActivityFormService
-import au.org.ala.merit.DateUtils
-import grails.converters.JSON
 import grails.plugin.cache.Cacheable
 import groovy.util.logging.Slf4j
 import org.joda.time.DateTime
@@ -191,7 +189,8 @@ class ActivityService {
     }
 
     void stealLock(String activityId, String activityUrl) {
-        lockService.stealLock(activityId, activityUrl)
+        Map activity = get(activityId)
+        lockService.stealLock(activityId, activity, activityUrl, SettingPageType.ACTIVITY_LOCK_STOLEN_EMAIL_SUBJECT, SettingPageType.ACTIVITY_LOCK_STOLEN_EMAIL)
     }
 
     def isReport(activity) {
