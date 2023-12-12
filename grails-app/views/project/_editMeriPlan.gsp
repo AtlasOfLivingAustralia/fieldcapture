@@ -172,7 +172,7 @@
 				<div class="alert alert-danger meri-locked">
 					<p class="text-dark">This form has been locked for editing by <fc:userDisplayName userId="${project.lock.userId}" defaultValue="an unknown user"/> since ${au.org.ala.merit.DateUtils.displayFormatWithTime(project.lock.dateCreated)}</p>
 					<p class="text-dark">To edit anyway, click the button below.  Note that if the user is currently making edits, those edits will be lost.</p>
-					<a href="${createLink(action:'overrideLockAndEdit', id:project.projectId)}"><button type="button" class="btn btn-sm btn-danger"><i class="fa fa-edit"></i> Edit Anyway</button></a>
+					<a href="${createLink(action:'overrideMeriPlanLockAndEdit', id:project.projectId)}"><button type="button" class="btn btn-sm btn-danger"><i class="fa fa-edit"></i> Edit Anyway</button></a>
 
 				</div>
 			</div>
