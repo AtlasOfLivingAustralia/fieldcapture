@@ -470,7 +470,7 @@ class EditableMeriPlan extends Module {
     }
 
     boolean holdsEditLock() {
-        saveButton.displayed
+        $('div.meri-lock-held').displayed
     }
 
 }
