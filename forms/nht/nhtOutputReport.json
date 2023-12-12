@@ -13122,22 +13122,6 @@
                     ]
                   },
                   {
-                    "columns": [
-                      {
-                        "dataType": "species",
-                        "name": "species",
-                        "validate": "required"
-                      },
-                      {
-                        "dataType": "text",
-                        "name": "habitatCondition",
-                        "validate": "maxSize[300]"
-                      }
-                    ],
-                    "dataType": "list",
-                    "name": "habitatConditionSurveySpeciesTable"
-                  },
-                  {
                     "name": "projectBaselines",
                     "dataType": "stringList",
                     "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
@@ -13433,6 +13417,39 @@
                       "No"
                     ],
                     "validate": "required"
+                  },
+                  {
+                    "columns": [
+                      {
+                        "dataType": "species",
+                        "name": "species",
+                        "validate": "required"
+                      },
+                      {
+                        "dataType": "text",
+                        "name": "typesOfHabitat",
+                        "description": "",
+                        "constraints": [
+                          "Desert",
+                          "Grassland/Savanna",
+                          "Bush/Forest",
+                          "Subterranean",
+                          "Marsh/Swamps",
+                          "Rivers/Streams/Wetlands",
+                          "Coastal areas",
+                          "Marine areas",
+                          "Other"
+                        ],
+                        "validate": "required"
+                      },
+                      {
+                        "dataType": "text",
+                        "name": "habitatCondition",
+                        "validate": "maxSize[300]"
+                      }
+                    ],
+                    "dataType": "list",
+                    "name": "habitatConditionSurveySpeciesTable"
                   }
                 ],
                 "minSize": 1
@@ -14064,13 +14081,13 @@
                       {
                         "columns": [
                           {
-                            "width": "60%",
-                            "source": "species",
-                            "title": "Type of habitat",
-                            "type": "speciesSelect"
+                            "width": "40%",
+                            "source": "typesOfHabitat",
+                            "title": "Types of habitat",
+                            "type": "selectOne"
                           },
                           {
-                            "width": "40%",
+                            "width": "60%",
                             "source": "habitatCondition",
                             "title": "Condition of habitat",
                             "type": "text"
