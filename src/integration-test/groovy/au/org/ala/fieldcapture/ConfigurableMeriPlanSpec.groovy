@@ -766,6 +766,13 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         when:
         def meriPlan = openMeriPlanEditTab()
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
 
         meriPlan.primaryOutcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
         waitFor {
@@ -842,6 +849,13 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         when:
         def meriPlan = openMeriPlanEditTab()
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
 
         meriPlan.primaryOutcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
         waitFor {
