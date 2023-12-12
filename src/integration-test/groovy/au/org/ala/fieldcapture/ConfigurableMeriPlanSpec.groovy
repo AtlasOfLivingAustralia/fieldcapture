@@ -106,10 +106,11 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         }
 
         when:
+        meriPlan.keyThreats[0].relatedOutcomes = ['ST1']
         meriPlan.keyThreats[0].threatCode = 'Key threat 2'
         meriPlan.keyThreats[0].threat = "Threat 1"
         meriPlan.keyThreats[0].intervention = "Intervention 1"
-        meriPlan.keyThreats[0].relatedOutcomes = ['ST1']
+
         meriPlan.keyThreats[0].targetMeasures = ['score_42']
         meriPlan.keyThreats[0].evidence = "Evidence 1"
         meriPlan.projectMethodology = "Project assumptions 1"
