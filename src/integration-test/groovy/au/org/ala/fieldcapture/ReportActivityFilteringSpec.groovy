@@ -115,9 +115,13 @@ class ReportActivityFilteringSpec extends StubbedCasSpec {
         waitFor { at RlpProjectPage }
         def meriPlan = openMeriPlanEditTab()
         meriPlan.aquireEditLock()
+
+        then:
         waitFor {
             hasBeenReloaded()
         }
+
+        when:
         meriPlan = openMeriPlanEditTab()
 
         then:
