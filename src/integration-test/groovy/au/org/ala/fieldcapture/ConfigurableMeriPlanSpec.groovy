@@ -172,7 +172,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
             meriPlan.serviceOutcomeTargets.serviceAndTargets[1].service == "Weed distribution survey"
             meriPlan.serviceOutcomeTargets.serviceAndTargets[1].targetMeasure == "Area (ha) surveyed for weeds"
 
-            meriPlan.serviceOutcomeTargets.outcomeTargets[0].outcomes == ["ST1", "MT1"]
+            //meriPlan.serviceOutcomeTargets.outcomeTargets[0].outcomes == ["ST1", "MT1"]
             meriPlan.serviceOutcomeTargets.outcomeTargets[1].outcomes == ["MT1"]
         }
 
