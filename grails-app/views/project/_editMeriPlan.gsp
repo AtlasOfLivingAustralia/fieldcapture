@@ -70,13 +70,13 @@
 <g:render template="/shared/declaration" model="[divId:'unlockPlan',  declarationType:au.org.ala.merit.SettingPageType.UNLOCK_PLAN_DECLARATION]"/>
 <g:render template="meriPlanApprovalModal"/>
 <div class="row mb-4">
-	<div class="col-sm-5">
+	<div class="col-sm-3">
 		<div class="control-group">
 			<span class="badge text-white" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass"></span>
 			<span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
 		</div>
 	</div>
-	<div class="col-sm-7 ml-auto">
+	<div class="meri-buttons col-sm-9 ml-auto">
 		<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Display Printable MERI Plan</button>
 
 
@@ -89,6 +89,7 @@
 
 		<a class="btn btn-info btn-sm meri-history-toggle" data-bind="click:toggleMeriPlanHistory, text:meriPlanHistoryVisible() ? 'Hide approval history' : 'Show approval history'">Show MERI plan approvals</a>
 </g:if>
+
 	</div>
 </div>
 
