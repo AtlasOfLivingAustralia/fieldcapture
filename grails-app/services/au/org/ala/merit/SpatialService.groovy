@@ -25,8 +25,8 @@ class SpatialService {
      */
     Integer deleteFromSpatialPortal(String pid) {
         String url = "${grailsApplication.config.getProperty('spatial.layersUrl')}${DELETE_SHAPE_PATH}/$pid"
-        boolean useToken = grailsApplication.config.getProperty('spatial.useToken', Boolean.class, true)
-        webService.doDelete(url, useToken)
+
+        webService.doDelete(url, true)
     }
 
     /**
@@ -42,15 +42,8 @@ class SpatialService {
      */
     Map uploadShapefile(MultipartFile shapefile) {
         String url = "${grailsApplication.config.getProperty('spatial.layersUrl')}${UPLOAD_SHAPE_PATH}"
-        boolean useToken = grailsApplication.config.getProperty('spatial.useToken', Boolean.class, true)
-        if (useToken) {
-            webService.postMultipart(url, [:], shapefile, 'files', true)
-        }
-        else {
-            url += "?user_id=${userId}&api_key=${grailsApplication.config.getProperty('api_key')}"
-            webService.postMultipart(url, [:], shapefile)
-        }
 
+        webService.postMultipart(url, [:], shapefile, 'files', true)
     }
 
     /**
@@ -71,12 +64,8 @@ class SpatialService {
         Map site = [name:objectName, description: objectDescription, user_id:userId]
 
         String url = "${baseUrl}/${shapeFileId}/${featureId}"
-        boolean useToken = grailsApplication.config.getProperty('spatial.useToken', Boolean.class, true)
-        if (!useToken) {
-            site.api_key = grailsApplication.config.getProperty('api_key')
-        }
 
-        webService.doPost(url, site, useToken)
+        webService.doPost(url, site, true)
     }
 
     /**
