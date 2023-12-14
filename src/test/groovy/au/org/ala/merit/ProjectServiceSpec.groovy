@@ -1565,6 +1565,25 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         result == ['1':1, '2':2, '3':0]
     }
 
+    def "Plot Selection / Visits should not be displayed in data sets"() {
+        setup:
+        List dataSets = [
+                [name:'Plot Selection', dataSetId:'d1', protocol:'1'],
+                [name:'Plot Layout and Visit', dataSetId:'d2', protocol:'2'],
+                [name:'Not a plot selection', dataSetId:'d3', protocol:'3']
+
+        ]
+
+        when:
+        service.filterDataSetSummaries(dataSets)
+
+        then:
+        1 * activityService.monitoringProtocolForms() >> [[externalId:'1', name:"Plot Selection"], [externalId:'2', name: "Plot Layout and Visit"]]
+        and:
+        dataSets.size() == 1
+        dataSets[0].name == 'Not a plot selection'
+    }
+
     private Map setupActivityModelForFiltering(List services) {
         Map activityModel = [name:'output', outputs:[]]
         services.each {

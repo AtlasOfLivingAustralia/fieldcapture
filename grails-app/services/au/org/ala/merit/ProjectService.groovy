@@ -62,6 +62,16 @@ class ProjectService  {
 
     }
 
+    void filterDataSetSummaries(List dataSetSummaries) {
+        List protocolNamesToHide = grailsApplication.config.getProperty('hidden.dataSet.protocols', List.class, ['Plot Selection', 'Plot Layout and Visit'])
+        List<Map> forms = activityService.monitoringProtocolForms()
+
+        dataSetSummaries.removeAll { Map dataSetSummary ->
+            Map protocolForm = forms.find{it.externalId == dataSetSummary.protocol}
+            protocolForm && (protocolForm.name in protocolNamesToHide)
+        }
+    }
+
     /**
      * Returns a filtered project view based on user needs.  This will be implemented in ecodata as a part of the
      * API changes but for now implementing it here is OK
