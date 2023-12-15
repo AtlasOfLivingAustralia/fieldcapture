@@ -7,7 +7,9 @@ let programName = "Saving Native Species";
 var parentProgram = createOrFindProgram(programName);
 
 var subprograms = ["Tracking Species Trajectories"]
-createNewProgram(programName, subprograms);
+subprograms.forEach(function (subProgram){
+    createOrFindProgram(subProgram, parentProgram._id);
+});
 
 
 var programConfig = {
@@ -1119,6 +1121,10 @@ var programConfig = {
             "priority": "Leadbeater’s Possum Gymnobelideus leadbeateri"
         },
         {
+            "category": "Priority Threatened Species Primary",
+            "priority": "Leaf-scaled Seasnake - Aipysurus foliosquama"
+        },
+        {
             "category": "Reptiles",
             "priority": "Leaf-Scaled Seasnake – Aipysurus foliosquama"
         },
@@ -1579,6 +1585,10 @@ var programConfig = {
             "priority": "Smooth Davidson's Plum Davidsonia johnsonii"
         },
         {
+            "category": "Priority Threatened Species Primary",
+            "priority": "Southern Bent Wing Bat (Miniopterus orianae bassanii)\n"
+        },
+        {
             "category": "Frogs",
             "priority": "Southern Corroboree Frog Pseudophryne corroboree"
         },
@@ -1817,42 +1827,6 @@ var programConfig = {
         {
             "category": "High Risk Species",
             "priority": "Yinnietharra Rock-dragon Ctenophorus yinnietharra"
-        },
-        {
-            "category": "Priority Threatened Species Primary",
-            "priority": "Princess parrot (Polytelis alexandrea)"
-        },
-        {
-            "category": "Priority Threatened Species Primary",
-            "priority": "Assassin spider (Zephyrarchaea austini)"
-        },
-        {
-            "category": "Priority Threatened Species Primary",
-            "priority": "Ammonite snail (Ammoniropa vigens)"
-        },
-        {
-            "category": "Priority Threatened Species Primary",
-            "priority": "Red goshawk (Erythrotriorchis radiatus)"
-        },
-        {
-            "category": "Priority Threatened Species Primary",
-            "priority": "Short-nosed sea snake (Aipysurus apraefrontalis)"
-        },
-        {
-            "category": "Priority Threatened Species Primary",
-            "priority": "Leaf-scaled sea snake (Aipysurus foliosquama)"
-        },
-        {
-            "category": "Priority Threatened Species Primary",
-            "priority": "New holland mouse, Pookila (Pseudomys novaehollandiae)"
-        },
-        {
-            "category": "Priority Threatened Species Primary",
-            "priority": "Spectacled flying fox (Pteropus conspicillatus)"
-        },
-        {
-            "category": "Priority Threatened Species Primary",
-            "priority": "Southern Bent Wing Bat (Miniopterus orianae bassanii)\n"
         }
     ]
 };
@@ -1969,11 +1943,8 @@ subprograms.forEach(function (subprogram){
     var program = db.program.find({name: subprogram});
     while(program.hasNext()){
         var p = program.next();
-        if (p.name === subprogram){
-            p.config = programConfig.config
-            p.priorities = programConfig.priorities
-            p.outcomes = outcomes;
-        }
-        db.program.save(p);
+        print("sub program ID: " + p.programId)
+        db.program.updateOne({programId:p.programId}, {$set:{config:programConfig.config, outcomes:outcomes, priorities:programConfig.priorities}});
+        useNhtServiceLabels(p.name);
     }
 });
