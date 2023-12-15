@@ -16,7 +16,7 @@
 </g:if>
 <g:else>
 <h4>Project name</h4>
-    <span style="display:none" class="original" data-bind="text:detailsChanged.name"></span>
+    <span style="display:none" class="original" data-bind="text:details.name"></span>
     <span style="display:none" class="changed" data-bind="text:detailsChanged.name"></span>
     <span wrap class="diff1"></span>
 </g:else>
