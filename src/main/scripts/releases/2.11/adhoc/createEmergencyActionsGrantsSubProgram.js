@@ -7,26 +7,9 @@ var userId = '129333';
 let programName = "Saving Native Species";
 var parentProgram = createOrFindProgram(programName);
 
-let refProgram = "Threatened Species Strategy Action Plan Priority Species";
 var subprograms = ["Emergency Actions for Threatened Species"]
-
-subprograms.forEach(function (subProgram) {
-    var now = ISODate();
-    var newProgram = db.program.find({name: refProgram}).next();
-    delete newProgram._id
-    delete newProgram.programId
-    newProgram.name = subProgram
-    newProgram.programId = UUID.generate()
-    newProgram.dateCreated = now
-    newProgram.lastUpdated = now
-    newProgram.status = "active"
-    newProgram.parent = parentProgram._id
-    var program = db.program.find({name: subProgram})
-    if (!program.hasNext()) {
-        db.program.insert(newProgram);
-    } else {
-        print("Program Already Exist: " + subProgram)
-    }
+subprograms.forEach(function (subProgram){
+    createOrFindProgram(subProgram, parentProgram._id);
 });
 
 var projectConfig = {
@@ -546,6 +529,26 @@ var outcomes = [
         "category": "environment",
         "supportsMultiplePrioritiesAsSecondary": false,
         "outcome": "1. Species and Landscapes (Long term): Threatened Species (TS) - New extinctions of plants and animals are prevented"
+    },
+    {
+        "type": "short",
+        "category": "Emergency actions related outcome",
+        "outcome": "All priority species are on track for improved trajectory"
+    },
+    {
+        "type": "short",
+        "category": "Emergency actions related outcome",
+        "outcome": "Implementation of priority actions for priority species is tracked and published"
+    },
+    {
+        "type": "short",
+        "category": "Emergency actions related outcome",
+        "outcome": "Species at high risk of imminent extinction are identified and supported to persist"
+    },
+    {
+        "type": "short",
+        "category": "Emergency actions related outcome",
+        "outcome": "National conservation planning for threatened species and ecological communities is contemporary, effective and fit-for-purpose"
     }
 ]
 
@@ -554,10 +557,8 @@ subprograms.forEach(function (subprogram){
     var program = db.program.find({name: subprogram});
     while(program.hasNext()){
         var p = program.next();
-        if (p.name === "Emergency Actions for Threatened Species"){
-            p.config = projectConfig.config
-            p.priorities = projectConfig.priorities
-        }
-        db.program.save(p);
+        print("sub program ID: " + p.programId)
+        db.program.updateOne({programId:p.programId}, {$set:{config:projectConfig.config, outcomes:outcomes, priorities:projectConfig.priorities}});
+        useNhtServiceLabels(p.name);
     }
 });
