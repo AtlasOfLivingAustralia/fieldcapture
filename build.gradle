@@ -98,7 +98,7 @@ dependencies {
     implementation 'dk.glasius:external-config:3.0.0'
     implementation "org.grails.plugins:ala-auth:$alaSecurityLibsVersion"
     // Needs to be left at 2.0 until we finish replacing pdfgen HTML report generation
-    implementation "org.grails.plugins:ala-ws-security-plugin:2.0"
+    implementation "org.grails.plugins:ala-ws-security-plugin:$alaSecurityLibsVersion"
     implementation "org.grails.plugins:ala-ws-plugin:$alaSecurityLibsVersion"
     implementation "au.org.ala:userdetails-service-client:$alaSecurityLibsVersion"
     implementation "com.github.ben-manes.caffeine:caffeine:3.1.6"

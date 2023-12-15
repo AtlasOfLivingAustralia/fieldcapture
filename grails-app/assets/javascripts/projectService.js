@@ -70,35 +70,38 @@ function ProjectService(project, options) {
         }
     };
 
+    self.saveProjectDataWithoutValidation = function (jsData) {
+        // this call to stringify will make sure that undefined values are propagated to
+        // the update call - otherwise it is impossible to erase fields
+        var json = JSON.stringify(jsData, function (key, value) {
+            return value === undefined ? "" : value;
+        });
+
+        blockUIWithMessage("Saving....");
+        $.ajax({
+            url: config.projectUpdateUrl,
+            type: 'POST',
+            data: json,
+            contentType: 'application/json'
+        }).done(function (data) {
+            if (data.error) {
+                $.unblockUI();
+                showAlert("Failed to save settings: " + data.detail + ' \n' + data.error,
+                    "alert-error", "save-result-placeholder");
+            } else {
+                blockUIWithMessage("Refreshing page...");
+                showAlert("Project settings saved", "alert-success", "save-result-placeholder");
+                window.location.reload();
+            }
+        }).fail(function (data) {
+            $.unblockUI();
+            alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
+        });
+    }
+
     self.saveProjectData = function (jsData) {
         if ($('#settings-validation').validationEngine('validate')) {
-
-            // this call to stringify will make sure that undefined values are propagated to
-            // the update call - otherwise it is impossible to erase fields
-            var json = JSON.stringify(jsData, function (key, value) {
-                return value === undefined ? "" : value;
-            });
-
-            blockUIWithMessage("Saving....");
-            $.ajax({
-                url: config.projectUpdateUrl,
-                type: 'POST',
-                data: json,
-                contentType: 'application/json'
-            }).done(function(data) {
-                if (data.error) {
-                    $.unblockUI();
-                    showAlert("Failed to save settings: " + data.detail + ' \n' + data.error,
-                        "alert-error","save-result-placeholder");
-                } else {
-                    blockUIWithMessage("Refreshing page...");
-                    showAlert("Project settings saved","alert-success","save-result-placeholder");
-                    window.location.reload();
-                }
-            }).fail(function(data) {
-                $.unblockUI();
-                alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
-            });
+            self.saveProjectDataWithoutValidation(jsData);
         }
     };
 

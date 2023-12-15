@@ -2095,5 +2095,4 @@ class ProjectService  {
     List fetchDataSetRecords (String projectId, String dataSetId) {
         webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + "project/$projectId/dataSet/$dataSetId/records")
     }
-
 }

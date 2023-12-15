@@ -8401,7 +8401,11 @@
                   {
                     "columns": [
                       {
-                        "dataType": "species",
+                        "dataType": "text",
+                        "name": "occurrenceID"
+                      },
+                      {
+                        "dataType": "text",
                         "name": "species",
                         "validate": "required"
                       },
@@ -8422,6 +8426,51 @@
                     ],
                     "dataType": "list",
                     "name": "faunaSurveySpeciesTable"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "faunaSurveySpeciesTablePrePopulator",
+                    "behaviour": [
+                      {
+                        "type": "pre_populate",
+                        "config": {
+                          "mapping": [
+                            {
+                              "source-path": "occurrenceID",
+                              "target": "occurrenceID"
+                            },
+                            {
+                              "source-path": "scientificName",
+                              "target": "species"
+                            },
+                            {
+                              "source-path": "individualsOrGroups",
+                              "target": "individualsOrGroups"
+                            },
+                            {
+                              "source-path": "individualCount",
+                              "target": "numberOfIndividualsOrGroups"
+                            }
+                          ],
+                          "source": {
+                            "params": [
+                              {
+                                "expression": "dataSetId",
+                                "name": "dataSetId",
+                                "type": "computed"
+                              },
+                              {
+                                "expression": "owner.projectId",
+                                "name": "projectId",
+                                "type": "computed"
+                              }
+                            ],
+                            "url": "/project/dataSetSpeciesRecords"
+                          },
+                          "target": "faunaSurveySpeciesTable"
+                        }
+                      }
+                    ]
                   },
                   {
                     "dataType": "text",
@@ -9286,7 +9335,7 @@
                             "width": "55%",
                             "source": "species",
                             "title": "Target species recorded",
-                            "type": "speciesSelect"
+                            "type": "text"
                           },
                           {
                             "width": "25%",

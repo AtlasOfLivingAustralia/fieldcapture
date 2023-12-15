@@ -9,6 +9,16 @@
     </div>
 </div>
 <div class="row mb-2">
+    <div class="col-sm-12">
+        <label for="name" class="control-label">Harvest records to ALA</label>
+        <div class="controls">
+            <div>
+                <select class="form-control form-control-sm input-large" data-bind="options: transients.yesNoOptions, value: transients.alaHarvest, optionsCaption: 'Please select'"></select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mb-2">
     <div class="col-sm-6">
         <label class="control-label" for="organisation">Search for an organisation</label>
         <input type="text" class="form-control form-control-sm input-medium" id="organisation" placeholder="Search organisations..."
