@@ -837,8 +837,8 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
             self.services = new ServicesViewModel(o.serviceIds, config.services, project.outputTargets, budgetHeaders);
         }
 
-        self.description = ko.observable(project.description);
-        self.name = ko.observable(project.name);
+        self.description = ko.observable(o.description);
+        self.name = ko.observable(o.name);
         self.programName = config.programName;
         self.projectEvaluationApproach = ko.observable(o.projectEvaluationApproach);
         self.relatedProjects = ko.observable(o.relatedProjects);

@@ -22,7 +22,7 @@
           {
             "name": "nhtCommunications",
             "dataType": "text",
-            "description": "This <u>does not</u> include communication activities undertaken under the 'Communication Materials' Project Service or regional capacity service. All Communication Materials must correctly acknowledge Australian Government funding.",
+            "description": "This <u>does not</u> include communication activities undertaken under the 'Communication Materials' Project Service or regional capacity service. Refer to the Project Services  and Overheads (PS&O) service summary to clarify what type of communications activity is paid under the PS&O service. All Communication Materials must correctly acknowledge Australian Government funding.",
             "validate": "required",
             "constraints": [
               "Yes",
@@ -33,12 +33,18 @@
             "name": "yesCommunicationsMaterial",
             "dataType": "text",
             "validate": "required,maxSize[300]",
+            "description": "Upload documents by clicking onto the 'Attach Document' button or provide a link in the free text field.",
             "behaviour": [
               {
                 "condition": "nhtCommunications == \"Yes\"",
                 "type": "enable"
               }
             ]
+          },
+          {
+            "dataType": "document",
+            "name": "attachments",
+            "description": "Please attach any Evidence of Service Delivery here."
           }
         ],
         "viewModel": [
@@ -60,6 +66,27 @@
                 "type": "textarea",
                 "source": "yesCommunicationsMaterial",
                 "preLabel": "If yes, please provide link or copy of the material."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "nhtCommunications == \"Yes\""
+              }
+            ],
+            "items": [
+              {
+                "type": "col",
+                "items": [
+                  {
+                    "title": "Attached documents",
+                    "source": "attachments",
+                    "type": "document"
+                  }
+                ]
               }
             ]
           }
@@ -110,6 +137,16 @@
                 "dataType": "number",
                 "name": "engagementNoParticipants",
                 "validate": "required"
+              },
+              {
+                "dataType": "date",
+                "name": "activityDateFrom",
+                "validate": "required"
+              },
+              {
+                "dataType": "date",
+                "name": "activityDateTo",
+                "validate": "required"
               }
             ]
           },
@@ -152,7 +189,8 @@
               {
                 "type": "table",
                 "source": "engagementDetails",
-                "title": "<b>Please list community engagement activities undertaken, including the title, description, and the number of participants for each activity undertaken in this reporting period, if any.</b>",
+                "title": "<b>Please list community engagement activities undertaken, including the title, description, and the number of participants for each activity undertaken in this reporting period, if any.</b><br>This does not include engagement activities undertaken in community/stakeholder engagement service or regional capacity service. The Register of Engagement must be retained as evidence.",
+                "preLabel": "If yes, please provide link or copy of the material.",
                 "userAddedRows": true,
                 "columns": [
                   {
@@ -170,6 +208,7 @@
                   {
                     "type": "textarea",
                     "source": "engagementPurpose",
+                    "width": "25%",
                     "title": "Purpose",
                     "rows": 4
                   },
@@ -178,6 +217,18 @@
                     "type": "number",
                     "width": "10%",
                     "title": "Number of participants"
+                  },
+                  {
+                    "title": "Activity Date from",
+                    "source": "activityDateFrom",
+                    "type": "date",
+                    "width": "10%"
+                  },
+                  {
+                    "title": "Activity Date to",
+                    "source": "activityDateTo",
+                    "type": "date",
+                    "width": "10%"
                   }
                 ]
               }
@@ -214,7 +265,7 @@
           {
             "name": "yesUndergoneReview",
             "dataType": "text",
-            "validate": "required,maxSize[300]",
+            "validate": "required,maxSize[4000]",
             "behaviour": [
               {
                 "condition": "undergoneReview == \"Yes\"",
@@ -235,7 +286,7 @@
             "constraints": [
               "Yes",
               "No",
-              "NA"
+              "Not Applicable"
             ]
           },
           {
@@ -245,11 +296,22 @@
             "constraints": [
               "Yes",
               "No",
-              "NA"
+              "Not Applicable"
             ]
           },
           {
-            "name": "yesPlansDeveloped",
+            "name": "planName",
+            "dataType": "text",
+            "validate": "required,maxSize[100]",
+            "behaviour": [
+              {
+                "condition": "plansDeveloped == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "planPurpose",
             "dataType": "text",
             "validate": "required,maxSize[300]",
             "behaviour": [
@@ -266,7 +328,7 @@
             "constraints": [
               "Yes",
               "No",
-              "NA"
+              "Not Applicable"
             ]
           },
           {
@@ -281,7 +343,18 @@
                     "condition": "facilitatedPlanningMeetings == \"Yes\""
                   }
                 ],
-                "name": "meetingDate",
+                "name": "meetingDateFrom",
+                "validate": "required"
+              },
+              {
+                "dataType": "date",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "facilitatedPlanningMeetings == \"Yes\""
+                  }
+                ],
+                "name": "meetingDateTo",
                 "validate": "required"
               },
               {
@@ -292,8 +365,19 @@
                     "condition": "facilitatedPlanningMeetings == \"Yes\""
                   }
                 ],
+                "name": "meetingName",
+                "validate": "required,maxSize[100]"
+              },
+              {
+                "dataType": "text",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "facilitatedPlanningMeetings == \"Yes\""
+                  }
+                ],
                 "name": "meetingDescription",
-                "validate": "required"
+                "validate": "required,maxSize[4000]"
               }
             ]
           },
@@ -378,9 +462,16 @@
             "type": "row",
             "items": [
               {
+                "css": "span3",
+                "type": "text",
+                "source": "planName",
+                "preLabel": "Name of plan"
+              },
+              {
+                "css": "span6",
                 "type": "textarea",
-                "source": "yesPlansDeveloped",
-                "preLabel": "If yes, please provide name and purpose of plan."
+                "source": "planPurpose",
+                "preLabel": "Purpose of plan"
               }
             ]
           },
@@ -403,10 +494,22 @@
                 "userAddedRows": true,
                 "columns": [
                   {
-                    "source": "meetingDate",
+                    "source": "meetingDateFrom",
                     "type": "date",
                     "width": "10%",
-                    "title": "Meeting/Workshop Date"
+                    "title": "Date from"
+                  },
+                  {
+                    "source": "meetingDateTo",
+                    "type": "date",
+                    "width": "10%",
+                    "title": "Date to"
+                  },
+                  {
+                    "type": "text",
+                    "source": "meetingName",
+                    "title": "Name of event",
+                    "rows": 4
                   },
                   {
                     "type": "textarea",
@@ -516,7 +619,7 @@
             "constraints": [
               "Yes",
               "No",
-              "NA"
+              "Not Applicable"
             ]
           },
           {
@@ -585,7 +688,7 @@
             ],
             "items": [
               {
-                "source": "<span class=\"preLabel required\"><label><i>If not, provide notification as outlined in the Deed of Standing offer clause 42.3 Notifying the customer.</i>",
+                "source": "<span class=\"preLabel required\"><label><i>If no, provide notification as outlined in the Deed of Standing offer clause 42.3 Notifying the customer.</i>",
                 "type": "literal"
               }
             ]
@@ -946,34 +1049,77 @@
             "validate": "maxSize[3000]"
           },
           {
+            "name": "relatedOutcomes",
+            "dataType": "text",
+            "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
+            "validate": "required",
+            "constraints": {
+              "textProperty": "label",
+              "valueProperty": "value",
+              "type": "pre-populated",
+              "config": {
+                "source": {
+                  "context-path": "outcomes"
+                }
+              }
+            }
+          },
+          {
+            "name": "investmentPriorities2",
+            "dataType": "stringList",
+            "validate": "required",
+            "constraints": {
+              "type": "pre-populated",
+              "config": {
+                "source": {
+                  "params": [
+                    {
+                      "expression": "owner.projectId",
+                      "name": "id",
+                      "type": "computed"
+                    }
+                  ],
+                  "url": "/project/listProjectInvestmentPriorities/"
+                }
+              }
+            }
+          },
+          {
+            "dataType": "text",
+            "name": "otherInvestmentPriority",
+            "behaviour": [
+              {
+                "type": "enable",
+                "condition": "\"Other\" in investmentPriorities2"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "invoicingThisActivity",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
             "columns": [
               {
                 "dataType": "text",
                 "name": "communicationMaterialType",
                 "constraints": [
-                  "Advertising",
-                  "Book",
-                  "Brochures",
-                  "Extension materials",
-                  "Fliers",
-                  "Media release",
-                  "Report",
-                  "Social media posts",
-                  "Videos",
-                  "Other"
+                  "Booklets",
+                  "Educational/Interpretive Signage",
+                  "Fact Sheets/Brochures",
+                  "Videos"
                 ],
                 "validate": "required"
               },
               {
-                "dataType": "text",
-                "name": "otherCommunicationMaterialType",
-                "behaviour": [
-                  {
-                    "condition": "communicationMaterialType == \"Other\"",
-                    "type": "enable"
-                  }
-                ],
-                "validate": "required,maxSize[100]"
+                "dataType": "date",
+                "name": "communicationDate",
+                "validate": "required"
               },
               {
                 "dataType": "number",
@@ -984,7 +1130,8 @@
               {
                 "dataType": "text",
                 "name": "communicationMaterialPurpose",
-                "validate": "required,maxSize[300]"
+                "validate": "required,maxSize[300]",
+                "description": "e.g. public awareness, warnings, advertisements"
               }
             ],
             "dataType": "list",
@@ -1149,6 +1296,68 @@
             ]
           },
           {
+            "type": "row",
+            "items": [
+              {
+                "css": "span3",
+                "type": "col",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "source": "relatedOutcomes",
+                        "type": "selectOne",
+                        "preLabel": "Which outcome statement/s does this activity relate to?"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span3 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "source": "investmentPriorities2",
+                        "preLabel": "Which investment priority does this activity relate to?",
+                        "type": "select2Many"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "source": "otherInvestmentPriority",
+                        "type": "text"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "css": "span3",
+                "type": "col",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "source": "invoicingThisActivity",
+                        "preLabel": "Are you invoicing for this activity in this reporting period?",
+                        "type": "selectOne"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
             "type": "section",
             "items": [
               {
@@ -1160,19 +1369,19 @@
                     "type": "select2"
                   },
                   {
-                    "width": "25%",
-                    "source": "otherCommunicationMaterialType",
-                    "title": "Type of communication material published (if Other)",
-                    "type": "textarea"
+                    "width": "15%",
+                    "source": "communicationDate",
+                    "title": "Date",
+                    "type": "date"
                   },
                   {
-                    "width": "15%",
+                    "width": "20%",
                     "source": "numberOfCommunicationMaterialsPublished",
                     "title": "Number of communication materials published",
                     "type": "number"
                   },
                   {
-                    "width": "35%",
+                    "width": "40%",
                     "source": "communicationMaterialPurpose",
                     "title": "Purpose of communication material",
                     "type": "textarea"
@@ -1346,17 +1555,69 @@
             "validate": "maxSize[3000]"
           },
           {
+            "name": "relatedOutcomes",
+            "dataType": "text",
+            "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
+            "validate": "required",
+            "constraints": {
+              "textProperty": "label",
+              "valueProperty": "value",
+              "type": "pre-populated",
+              "config": {
+                "source": {
+                  "context-path": "outcomes"
+                }
+              }
+            }
+          },
+          {
+            "name": "investmentPriorities2",
+            "dataType": "stringList",
+            "validate": "required",
+            "constraints": {
+              "type": "pre-populated",
+              "config": {
+                "source": {
+                  "params": [
+                    {
+                      "expression": "owner.projectId",
+                      "name": "id",
+                      "type": "computed"
+                    }
+                  ],
+                  "url": "/project/listProjectInvestmentPriorities/"
+                }
+              }
+            }
+          },
+          {
+            "dataType": "text",
+            "name": "otherInvestmentPriority",
+            "behaviour": [
+              {
+                "type": "enable",
+                "condition": "\"Other\" in investmentPriorities2"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "invoicingThisActivity",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
             "columns": [
               {
                 "dataType": "text",
                 "name": "eventType",
                 "constraints": [
                   "Field days",
-                  "Training / workshop events",
-                  "Conferences / seminars",
-                  "One-on-one technical advice interactions",
-                  "On-ground trials / demonstrations",
-                  "On-ground works"
+                  "On-ground trials / demonstrations facilitated or hosted",
+                  "Training workshops hosted"
                 ],
                 "validate": "required"
               },
@@ -1406,62 +1667,14 @@
                 "validate": "required,maxSize[300]"
               },
               {
-                "name": "relatedOutcomes",
-                "dataType": "text",
-                "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
-                "validate": "required",
-                "constraints": {
-                  "textProperty": "label",
-                  "valueProperty": "label",
-                  "type": "pre-populated",
-                  "config": {
-                    "source": {
-                      "url": "/project/outcomesByScores",
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        },
-                        {
-                          "expression": "scores",
-                          "name": "scoreIds",
-                          "type": "computed"
-                        }
-                      ]
-                    }
-                  }
-                }
+                "dataType": "date",
+                "name": "dateFrom",
+                "validate": "required"
               },
               {
-                "name": "investmentPriorities2",
-                "dataType": "stringList",
-                "validate": "required",
-                "constraints": {
-                  "type": "pre-populated",
-                  "config": {
-                    "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
-                    }
-                  }
-                }
-              },
-              {
-                "dataType": "text",
-                "name": "otherInvestmentPriority",
-                "behaviour": [
-                  {
-                    "type": "enable",
-                    "condition": "\"Other\" in investmentPriorities2"
-                  }
-                ]
+                "dataType": "date",
+                "name": "dateTo",
+                "validate": "required"
               }
             ],
             "dataType": "list",
@@ -1580,7 +1793,7 @@
           }
         ],
         "modelName": "NHT - Community engagement",
-        "title": "Community/stakeholder Engagement",
+        "title": "Community/Stakeholder Engagement",
         "viewModel": [
           {
             "type": "section",
@@ -1731,6 +1944,68 @@
                 ]
               },
               {
+                "type": "row",
+                "items": [
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "relatedOutcomes",
+                            "type": "selectOne",
+                            "preLabel": "Which outcome statement/s does this activity relate to?"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "investmentPriorities2",
+                            "preLabel": "Which investment priority does this activity relate to?",
+                            "type": "select2Many"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "otherInvestmentPriority",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "invoicingThisActivity",
+                            "preLabel": "Are you invoicing for this activity in this reporting period?",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
                 "columns": [
                   {
                     "width": "10%",
@@ -1741,7 +2016,7 @@
                   {
                     "width": "10%",
                     "source": "numberOfEvents",
-                    "title": "Number of Community / Stakeholder engagement type events",
+                    "title": "Number of engagement activities",
                     "type": "number"
                   },
                   {
@@ -1782,24 +2057,15 @@
                   },
                   {
                     "width": "10%",
-                    "type": "col",
-                    "title": "Which investment priority does this activity relate to?",
-                    "items": [
-                      {
-                        "source": "investmentPriorities2",
-                        "type": "select2Many"
-                      },
-                      {
-                        "source": "otherInvestmentPriority",
-                        "type": "text"
-                      }
-                    ]
+                    "source": "dateFrom",
+                    "title": "Date from",
+                    "type": "date"
                   },
                   {
-                    "source": "relatedOutcomes",
-                    "type": "selectOne",
                     "width": "10%",
-                    "title": "Which outcome statement/s relates to this survey?"
+                    "source": "dateTo",
+                    "title": "Date to",
+                    "type": "date"
                   }
                 ],
                 "userAddedRows": true,
@@ -13122,22 +13388,6 @@
                     ]
                   },
                   {
-                    "columns": [
-                      {
-                        "dataType": "species",
-                        "name": "species",
-                        "validate": "required"
-                      },
-                      {
-                        "dataType": "text",
-                        "name": "habitatCondition",
-                        "validate": "maxSize[300]"
-                      }
-                    ],
-                    "dataType": "list",
-                    "name": "habitatConditionSurveySpeciesTable"
-                  },
-                  {
                     "name": "projectBaselines",
                     "dataType": "stringList",
                     "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
@@ -13433,6 +13683,39 @@
                       "No"
                     ],
                     "validate": "required"
+                  },
+                  {
+                    "columns": [
+                      {
+                        "dataType": "species",
+                        "name": "species",
+                        "validate": "required"
+                      },
+                      {
+                        "dataType": "text",
+                        "name": "typesOfHabitat",
+                        "description": "",
+                        "constraints": [
+                          "Desert",
+                          "Grassland/Savanna",
+                          "Bush/Forest",
+                          "Subterranean",
+                          "Marsh/Swamps",
+                          "Rivers/Streams/Wetlands",
+                          "Coastal areas",
+                          "Marine areas",
+                          "Other"
+                        ],
+                        "validate": "required"
+                      },
+                      {
+                        "dataType": "text",
+                        "name": "habitatCondition",
+                        "validate": "maxSize[300]"
+                      }
+                    ],
+                    "dataType": "list",
+                    "name": "habitatConditionSurveySpeciesTable"
                   }
                 ],
                 "minSize": 1
@@ -14064,13 +14347,13 @@
                       {
                         "columns": [
                           {
-                            "width": "60%",
-                            "source": "species",
-                            "title": "Type of habitat",
-                            "type": "speciesSelect"
+                            "width": "40%",
+                            "source": "typesOfHabitat",
+                            "title": "Types of habitat",
+                            "type": "selectOne"
                           },
                           {
-                            "width": "40%",
+                            "width": "60%",
                             "source": "habitatCondition",
                             "title": "Condition of habitat",
                             "type": "text"

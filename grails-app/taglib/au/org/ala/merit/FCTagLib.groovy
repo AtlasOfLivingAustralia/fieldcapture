@@ -901,6 +901,27 @@ class FCTagLib {
 
     }
 
+    def renderComparisonOutputTargets = { attrs ->
+
+        List original = attrs.original
+        List changed = attrs.changed
+        int i = attrs.i
+        String property = attrs.property
+
+        out << '<span class="original hide">'
+        if (original && original.size() > i) {
+            (attrs.property) ? out << original[i][property][0].collect{it}.join(',') : out << original[i][0]
+        }
+        out << '</span>'
+        out << '<span class="changed hide">'
+        if (changed && changed.size() > i) {
+            (attrs.property) ? out << changed[i][property][0].collect{it}.join(',') : out << changed[i][0]
+        }
+        out << '</span>'
+        out << '<span class="diff"></span>'
+
+    }
+
     def renderComparisonList = { attrs ->
 
         List original = attrs.original
@@ -910,20 +931,20 @@ class FCTagLib {
 
         out << '<span class="original hide">'
         if (original && original.size() > i) {
-            if (original[i][property]?[0] instanceof List) {
-                out << original[i][property][0].collect{it}.join(',')
+            if (original[i][property] instanceof List) {
+                out << original[i][property].collect{it}.join(',')
             } else {
-                out << original[i][property][0]
+                out << original[i][property]
             }
 
         }
         out << '</span>'
         out << '<span class="changed hide">'
         if (changed && changed.size() > i) {
-            if (changed[i][property]?[0] instanceof List) {
-                out << changed[i][property][0].collect{it}.join(',')
+            if (changed[i][property] instanceof List) {
+                out << changed[i][property].collect{it}.join(',')
             } else {
-                out << changed[i][property][0]
+                out << changed[i][property]
             }
         }
         out << '</span>'
