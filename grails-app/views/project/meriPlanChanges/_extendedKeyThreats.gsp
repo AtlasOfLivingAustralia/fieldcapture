@@ -24,7 +24,7 @@
         <tr>
             <td class="index"><span data-bind="text:${i}+1"></span></td>
             <td class="related-outcomes">
-                <fc:renderComparison changed="${changed.custom.details.threats.rows ?: []}" i="${i}" original="${project.custom.details.threats.rows ?: []}" property="relatedOutcomes"/>
+                <fc:renderComparisonList changed="${changed.custom.details.threats.rows ?: []}" i="${i}" original="${project.custom.details.threats.rows ?: []}" property="relatedOutcomes"/>
             </td>
             <td class="threat-code">
                 <fc:renderComparison changed="${changed.custom.details.threats.rows ?: []}" i="${i}" original="${project.custom.details.threats.rows ?: []}" property="threatCode"/>

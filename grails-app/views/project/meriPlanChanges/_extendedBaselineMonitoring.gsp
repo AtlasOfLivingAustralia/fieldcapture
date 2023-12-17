@@ -22,7 +22,7 @@
 
     <tr class="baseline-row">
         <td class="code"><fc:renderComparison changed="${changed.custom.details.baseline.rows ?: []}" i="${i}" original="${project.custom.details.baseline.rows ?: []}" property="code"/> </td>
-        <td class="outcome"><fc:renderComparison changed="${changed.custom.details.baseline.rows ?: []}" i="${i}" original="${project.custom.details.baseline.rows ?: []}" property="relatedOutcomes"/> </td>
+        <td class="outcome"><fc:renderComparisonList changed="${changed.custom.details.baseline.rows ?: []}" i="${i}" original="${project.custom.details.baseline.rows ?: []}" property="relatedOutcomes"/> </td>
         <td class="monitoring-data required"><fc:renderComparison changed="${changed.custom.details.baseline.rows ?: []}" i="${i}" original="${project.custom.details.baseline.rows ?: []}" property="monitoringDataStatus"/> </td>
         <td class="baseline"><fc:renderComparison changed="${changed.custom.details.baseline.rows ?: []}" i="${i}" original="${project.custom.details.baseline.rows ?: []}" property="baseline"/> </td>
         <td class="service"><fc:renderComparisonScoreLabel changed="${changed.custom.details.baseline.rows ?: []}" i="${i}" original="${project.custom.details.baseline.rows ?: []}" property="relatedTargetMeasures"/> </td>

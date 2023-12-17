@@ -30,10 +30,10 @@
     <tr class="outcome-target">
         <td class="index"></td>
         <td class="service">
-            <fc:renderComparisonList changed="${changed.outputTargets.outcomeTargets ?: []}" i="${i}" original="${project.outputTargets.outcomeTargets ?: []}" property="relatedOutcomes"/>
+            <fc:renderComparisonOutputTargets changed="${changed.outputTargets.outcomeTargets ?: []}" i="${i}" original="${project.outputTargets.outcomeTargets ?: []}" property="relatedOutcomes"/>
         </td>
         <td class="score">
-            <fc:renderComparisonList changed="${changed.outputTargets.outcomeTargets ?: []}" i="${i}" original="${project.outputTargets.outcomeTargets ?: []}" property="target"/>
+            <fc:renderComparisonOutputTargets changed="${changed.outputTargets.outcomeTargets ?: []}" i="${i}" original="${project.outputTargets.outcomeTargets ?: []}" property="target"/>
         </td>
     </tr>
     </g:each>
