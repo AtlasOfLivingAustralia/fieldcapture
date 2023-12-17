@@ -319,6 +319,7 @@ class EditableMeriPlan extends Module {
 
         toggleMeriPlanHistory(required:false){ $('[data-bind*="toggleMeriPlanHistory"]') }
         meriPlanHistory {module HistoryApprovedMeriPlansModule}
+        lockMeriPlanButton (required:false) { $('#lockMeriPlan') }
 
     }
 
@@ -461,6 +462,15 @@ class EditableMeriPlan extends Module {
         if (relatedProgramOutcome) {
             shortTermOutcomes[midTermOutcomeCount].relatedProgramOutcome.value(relatedProgramOutcome)
         }
+    }
+
+    /** Users of this method should waitFor hasBeenReloaded as this triggers a page reload */
+    void aquireEditLock() {
+        lockMeriPlanButton.click()
+    }
+
+    boolean holdsEditLock() {
+        $('div.meri-lock-held').displayed
     }
 
 }

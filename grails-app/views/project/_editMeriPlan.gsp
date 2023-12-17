@@ -70,18 +70,27 @@
 <g:render template="/shared/declaration" model="[divId:'unlockPlan',  declarationType:au.org.ala.merit.SettingPageType.UNLOCK_PLAN_DECLARATION]"/>
 <g:render template="meriPlanApprovalModal"/>
 <div class="row mb-4">
-	<div class="col-sm-6">
+	<div class="col-sm-3">
 		<div class="control-group">
 			<span class="badge text-white" style="font-size: 13px;" data-bind="text:meriPlanStatus().text, css:meriPlanStatus().badgeClass"></span>
 			<span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
 		</div>
 	</div>
+	<div class="meri-buttons col-sm-9 ml-auto">
+		<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Display Printable MERI Plan</button>
+
+
+	<g:if test="${showMeriPlanComparison}">
+
+		<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanChanges">Compare with the latest approved MERI Plan</button>
+
+	</g:if>
 <g:if test="${showMeriPlanHistory}">
-	<div class="col-sm-6">
-		<div class="pull-right"><a class="btn btn-info btn-sm meri-history-toggle" data-bind="click:toggleMeriPlanHistory, text:meriPlanHistoryVisible() ? 'Hide approval history' : 'Show approval history'">Show MERI plan approvals</a></div>
-	</div>
+
+		<a class="btn btn-info btn-sm meri-history-toggle" data-bind="click:toggleMeriPlanHistory, text:meriPlanHistoryVisible() ? 'Hide approval history' : 'Show approval history'">Show MERI plan approvals</a>
 </g:if>
 
+	</div>
 </div>
 
 <g:if test="${showMeriPlanHistory}">
@@ -157,20 +166,47 @@
 
 <g:if test="${projectContent.details.visible}">
 	<div class="save-details-result-placeholder"></div>
+
+	<g:if test="${project.lock && (project.lock.userId !=  user.userId)}">
+		<div class="row mb-2">
+			<div class="col-sm-12 pl-3 pr-3">
+				<div class="alert alert-danger meri-locked">
+					<p class="text-dark">This form has been locked for editing by <fc:userDisplayName userId="${project.lock.userId}" defaultValue="an unknown user"/> since ${au.org.ala.merit.DateUtils.displayFormatWithTime(project.lock.dateCreated)}</p>
+					<p class="text-dark">To edit anyway, click the button below.  Note that if the user is currently making edits, those edits will be lost.</p>
+					<a href="${createLink(action:'overrideMeriPlanLockAndEdit', id:project.projectId)}"><button type="button" class="btn btn-sm btn-danger"><i class="fa fa-edit"></i> Edit Anyway</button></a>
+
+				</div>
+			</div>
+		</div>
+	</g:if>
+	<g:if test="${!project.lock}">
+		<div data-bind="if:isPlanEditable()" class="row mb-2">
+			<div class="col-sm-12 pl-3 pr-3">
+				<div class="alert alert-danger report-locked">
+					<p class="text-dark">You must unlock the plan to edit it, and when finished you must save your work by pressing the "Save changes and finish editing" or the "Submit for approval" button below otherwise your work will not be saved. Do not close or press back on your browser to exit or your work will be lost.</p>
+					<a id="lockMeriPlan" href="${createLink(action:'lockMeriPlan', id:project.projectId)}"><button type="button" class="btn btn-sm btn-danger"><i class="fa fa-edit"></i> Lock for Editing</button></a>
+				</div>
+			</div>
+		</div>
+	</g:if>
+	<g:if test="${project.lock?.userId == user.userId}">
 	<div class="row space-after">
+		<div class="col-sm-12 pl-3 pr-3">
+			<div class="alert alert-danger meri-lock-held">
+				<p class="text-dark"><i class="fa fa-lock"></i> You currently hold an editing lock for this MERI plan.  No other users will be able to edit the plan until you release the lock using "Save changes and finish editing", "Submit for approval", or "Cancel" buttons.</p>
+			</div>
+		</div>
 		<div class="col-sm-12">
 			<div class="form-actions">
+
 				<div class="form-check">
 					<input type="checkbox" class="form-check-input" id="caseStudy" data-bind="checked: meriPlan().caseStudy, disable: isProjectDetailsLocked()">
 					<label for="caseStudy" class="form-check-label">&nbsp;Are you willing for your project to be used as a case study by the Department?</label>
 				</div>
 				<br/>
 				<button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" class="btn btn-sm btn-primary">Save changes</button>
+				<button type="button" data-bind="click: saveMeriPlanAndUnlock, disable: isProjectDetailsLocked()" class="btn btn-sm btn-primary">Save changes and finish editing</button>
 				<button type="button" class="btn btn-sm btn-danger" data-bind="click: cancelProjectDetailsEdits">Cancel</button>
-				<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Display Printable MERI Plan</button>
-				<g:if test="${showMeriPlanComparison}">
-					<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanChanges">Compare with the latest approved MERI Plan</button>
-				</g:if>
 
 				<!--  Admin - submit to approval. -->
 				<g:if test="${user?.isAdmin}">
@@ -206,7 +242,7 @@
 
 		</div>
 	</div>
-
+	</g:if>
 	<div class="controls">
 		<b>From: </b><span data-bind="text: plannedStartDate.formattedDate"></span>  <b>To: </b> <span data-bind="text: plannedEndDate.formattedDate"></span>
 	</div>
@@ -216,7 +252,7 @@
 </g:if>
 
 <div class="save-details-result-placeholder"></div>
-
+<g:if test="${project.lock && project.lock.userId ==  user.userId}">
 <div class="row space-after">
 	<div class="col-sm-12">
 		<div class="form-actions">
@@ -264,6 +300,7 @@
 
 	</div>
 </div>
+</g:if>
 
 <div id="floating-save" style="display:none;">
 	<div class="transparent-background"></div>

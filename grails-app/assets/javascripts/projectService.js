@@ -235,6 +235,10 @@ function ProjectService(project, options) {
         });
     };
 
+    self.isEditable = function() {
+        return (project.planStatus == PlanStatus.NOT_APPROVED || !project.planStatus);
+    }
+
     self.isSubmittedOrApproved = function() {
         return (project.planStatus == PlanStatus.APPROVED || project.planStatus == PlanStatus.SUBMITTED);
     };
@@ -251,7 +255,7 @@ function ProjectService(project, options) {
     };
 
     self.isProjectDetailsLocked = ko.computed(function () {
-            return self.isCompletedOrTerminated() || self.isSubmittedOrApproved();
+        return !config.userHoldsMeriPlanLock || self.isCompletedOrTerminated() || self.isSubmittedOrApproved();
     });
 
     self.isApproved = function() {

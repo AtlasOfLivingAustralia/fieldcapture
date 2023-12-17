@@ -215,6 +215,10 @@ function MERIPlan(project, projectService, config) {
         window.open(url,'meri-planchanges-report');
     };
 
+    self.isPlanEditable = function() {
+        return projectService.isEditable();
+    }
+
     self.unlockPlanForCorrection = function () {
 
         var $declaration = $(config.declarationModalSelector);
@@ -260,8 +264,7 @@ function MERIPlan(project, projectService, config) {
 
     self.cancelProjectDetailsEdits = function () {
         self.meriPlan().cancelAutosave();
-
-        document.location.reload(true);
+        self.unlockPlanAndReload("Reloading project...");
     };
 
     self.isProjectDetailsSaved = ko.computed(function () {
@@ -474,6 +477,10 @@ function MERIPlan(project, projectService, config) {
         self.saveMeriPlan(false);
     };
 
+    self.saveMeriPlanAndUnlock = function() {
+        self.saveMeriPlan(false, true);
+    }
+
 
     self.selectedOutcomes = ko.pureComputed(function() {
         var outcomes = [];
@@ -489,8 +496,12 @@ function MERIPlan(project, projectService, config) {
         return $('<span><strong>'+outcome.text+'</strong> - ' + (description || '<i>No outcome statement supplied</i>') +'</span>');
     }
 
+    self.unlockPlanAndReload = function(message) {
+        blockUIWithMessage(message);
+        window.location.href = config.removeMeriPlanEditLockUrl;
+    };
     // Save project details
-    self.saveMeriPlan = function(enableSubmit){
+    self.saveMeriPlan = function(enableSubmit, unlock){
 
         var meriPlan = self.meriPlan();
         meriPlan.status('active');
@@ -498,6 +509,9 @@ function MERIPlan(project, projectService, config) {
         blockUIWithMessage("Saving MERI Plan...");
         meriPlan.saveWithErrorDetection(function() {
 
+            if (unlock) {
+                self.unlockPlanAndReload("MERI Plan saved and unlocked.  Reloading project...");
+            }
             if(enableSubmit) {
                 var valid =  $('#project-details-validation').validationEngine('validate');
                 if (valid) {
@@ -654,6 +668,10 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
     self.isProjectDetailsLocked = ko.computed(function () {
         return projectService.isProjectDetailsLocked();
     });
+
+    self.editMeriPlan = function() {
+        window.location.href = config.editMeriPlanUrl;
+    };
     var riskModel;
     if (config.useRlpRisksModel) {
         riskModel = rlpRiskModel();
@@ -901,6 +919,10 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
         });
         return json;
     };
+
+    if (config.locked) {
+        autoSaveConfig.lockedEntity = project.projectId;
+    }
 
     autoSaveModel(
         self,

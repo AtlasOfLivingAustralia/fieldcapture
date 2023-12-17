@@ -221,6 +221,13 @@ class DatasetSpec extends StubbedCasSpec{
         when: "We update and save the MERI plan"
         openMERIPlanTab()
         def meriPlan = openMeriPlanEditTab()
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
         meriPlan.save()
 
         and: "We reload the page and reopen the data set summary tab"

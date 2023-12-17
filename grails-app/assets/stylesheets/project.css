@@ -352,3 +352,8 @@ li.select2-search input {
 .project-config-warning {
 	color: orange;
 }
+
+.meri-buttons .btn {
+	float: right;
+	margin-left: 5px;
+}

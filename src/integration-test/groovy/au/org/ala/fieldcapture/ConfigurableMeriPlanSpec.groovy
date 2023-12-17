@@ -45,6 +45,13 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         when:
         to RlpProjectPage, projectId
         def meriPlan = openMeriPlanEditTab()
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
 
         meriPlan.projectName = "MERI plan edited name"
         meriPlan.projectDescription = "MERI plan edited description"
@@ -99,12 +106,13 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         }
 
         when:
+        meriPlan.keyThreats[0].relatedOutcomes = ['ST1']
         meriPlan.keyThreats[0].threatCode = 'Key threat 2'
         meriPlan.keyThreats[0].threat = "Threat 1"
         meriPlan.keyThreats[0].intervention = "Intervention 1"
+
         meriPlan.keyThreats[0].targetMeasures = ['score_42']
         meriPlan.keyThreats[0].evidence = "Evidence 1"
-        meriPlan.keyThreats[0].relatedOutcomes = ['ST1']
         meriPlan.projectMethodology = "Project assumptions 1"
 
         meriPlan.projectPartnerships[0].name = 'partner name'
@@ -450,6 +458,13 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.availableObjectives() == ['objective 1', 'objective 2', 'objective 3']
 
         when:
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
         meriPlan.checkObjective("objective 2")
         meriPlan.monitoringIndicators[0].indicator = "indicator 1"
         meriPlan.monitoringIndicators[0].approach = "approach 1"
@@ -538,6 +553,13 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.availableObjectives() == ['objective 1', 'objective 2', 'objective 3', 'Other']
 
         when:
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
         meriPlan.assets[0].description = "asset 1"
         meriPlan.checkObjective("objective 2")
         waitFor {
@@ -683,6 +705,13 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
 
         when:
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
         meriPlan.assets[0].description = "asset 1"
         meriPlan.shortTermOutcomes[0].outcome.value("outcome 1")
         waitFor {
@@ -738,6 +767,13 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         when:
         def meriPlan = openMeriPlanEditTab()
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
 
         meriPlan.primaryOutcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
         waitFor {
@@ -814,6 +850,13 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         when:
         def meriPlan = openMeriPlanEditTab()
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
 
         meriPlan.primaryOutcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
         waitFor {
