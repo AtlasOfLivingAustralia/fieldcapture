@@ -190,11 +190,12 @@ class DatasetSpec extends StubbedCasSpec{
         set.endDate ="21-01-2022"
         set.addition = "Yes"
         set.threatenedSpeciesIndex = "Yes"
-        //set.format = "JSON"
-        //set.sensitivities =["Commercially sensitive", "Ecologically sensitive"]
-        //set.publicationUrl = "https://www.ala.org.au"
+        set.format = "JSON"
+        set.sensitivities =["Commercially sensitive", "Ecologically sensitive"]
         set.threatenedSpeciesDateOfUpload = '21-01-2021'
         set.dataSetSize = '200'
+        set.publicationUrl = "https://www.ala.org.au"
+
         set.createButton.click()
 
         then:
