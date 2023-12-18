@@ -54,15 +54,20 @@ class DataSetController {
         project.outputTargets?.each { Map outputTarget ->
             if (outputTarget.outcomeTargets) {
                 Map service = projectServices.find{it.scores?.find{score -> score.scoreId == outputTarget.scoreId}}
-                outputTarget.outcomeTargets.each {
-                    outcomeGroups << [
-                            scoreId:outputTarget.scoreId,
-                            serviceId: service.id,
-                            service: service.name,
-                            outcomes:it.relatedOutcomes,
-                            label:service.name+" "+it.relatedOutcomes
-                    ]
+                if (service) {
+                    outputTarget.outcomeTargets.each {
+                        outcomeGroups << [
+                                scoreId:outputTarget.scoreId,
+                                serviceId: service.id,
+                                service: service.name,
+                                outcomes:it.relatedOutcomes,
+                                label:service.name+" "+it.relatedOutcomes
+                        ]
+                    }
                 }
+                else {
+                    log.warn("No service found for scoreId ${outputTarget.scoreId} in project ${project.projectId}")
+                 }
             }
         }
 
