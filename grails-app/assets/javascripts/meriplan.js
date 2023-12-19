@@ -746,8 +746,7 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
     }
 
     self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
-    console.log(self.detailsLastUpdated());
-    console.log(project.custom.details.lastUpdated)
+
     self.isAgricultureProject = ko.computed(function () {
         var agricultureOutcomeStartIndex = 4;
         var selectedPrimaryOutcome = self.meriPlan().outcomes.primaryOutcome.description();

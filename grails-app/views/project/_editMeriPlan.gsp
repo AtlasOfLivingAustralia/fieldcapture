@@ -44,30 +44,7 @@
 </div>
 </script>
 <script id="editablePlanTmpl" type="text/html">
-<g:if test="${project.lock && (project.lock.userId !=  user.userId)}">
-		<div class="row mb-2">
-			<div class="col-sm-12 pl-3 pr-3">
-				<div class="alert alert-danger meri-locked">
-					<p class="text-dark">This form has been locked for editing by <fc:userDisplayName userId="${project.lock.userId}" defaultValue="an unknown user"/> since ${au.org.ala.merit.DateUtils.displayFormatWithTime(project.lock.dateCreated)}</p>
-					<p class="text-dark">To edit anyway, click the button below.  Note that if the user is currently making edits, those edits will be lost.</p>
-					<a href="${createLink(action:'overrideMeriPlanLockAndEdit', id:project.projectId)}"><button type="button" class="btn btn-sm btn-danger"><i class="fa fa-edit"></i> Edit Anyway</button></a>
 
-				</div>
-			</div>
-		</div>
-	</g:if>
-	<g:if test="${!project.lock}">
-		<div data-bind="if:isPlanEditable()" class="row mb-2">
-			<div class="col-sm-12 pl-3 pr-3">
-				<div class="alert alert-danger report-locked">
-					<p class="text-dark">You must unlock the plan to edit it, and when finished you must save your work by pressing the "Save changes and finish editing" or the "Submit for approval" button below otherwise your work will not be saved. Do not close or press back on your browser to exit or your work will be lost.</p>
-					<a id="lockMeriPlan" href="${createLink(action:'lockMeriPlan', id:project.projectId)}"><button type="button" class="btn btn-sm btn-danger"><i class="fa fa-edit"></i> Lock for Editing</button></a>
-				</div>
-			</div>
-		</div>
-		<div class="form-actions">Admin actions: <g:render template="submitMeriPlanButton"/></div>
-
-	</g:if>
 </script>
 <script id="completedProjectTmpl" type="text/html">
 <div class="required">
@@ -190,7 +167,35 @@
 <g:if test="${projectContent.details.visible}">
 	<div class="save-details-result-placeholder"></div>
 
+	<!-- ko if:isPlanEditable() -->
+	<g:if test="${project.lock && (project.lock.userId !=  user.userId)}">
+		<div class="row mb-2">
+			<div class="col-sm-12 pl-3 pr-3">
+				<div class="alert alert-danger meri-locked">
+					<p class="text-dark">This form has been locked for editing by <fc:userDisplayName userId="${project.lock.userId}" defaultValue="an unknown user"/> since ${au.org.ala.merit.DateUtils.displayFormatWithTime(project.lock.dateCreated)}</p>
+					<p class="text-dark">To edit anyway, click the button below.  Note that if the user is currently making edits, those edits will be lost.</p>
+					<a href="${createLink(action:'overrideMeriPlanLockAndEdit', id:project.projectId)}"><button type="button" class="btn btn-sm btn-danger"><i class="fa fa-edit"></i> Edit Anyway</button></a>
+
+				</div>
+			</div>
+		</div>
+	</g:if>
+	<g:if test="${!project.lock}">
+		<div data-bind="if:isPlanEditable()" class="row mb-2">
+			<div class="col-sm-12 pl-3 pr-3">
+				<div class="alert alert-danger report-locked">
+					<p class="text-dark">You must unlock the plan to edit it, and when finished you must save your work by pressing the "Save changes and finish editing" or the "Submit for approval" button below otherwise your work will not be saved. Do not close or press back on your browser to exit or your work will be lost.</p>
+					<a id="lockMeriPlan" href="${createLink(action:'lockMeriPlan', id:project.projectId)}"><button type="button" class="btn btn-sm btn-danger"><i class="fa fa-edit"></i> Lock for Editing</button></a>
+				</div>
+			</div>
+		</div>
+		<div class="form-actions">Admin actions: <g:render template="submitMeriPlanButton"/></div>
+
+	</g:if>
+	<!-- /ko -->
+        <!-- ko if:isPlanEditable() -->
 	<g:render template="meriPlanEditActions"/>
+	<!-- /ko -->
 
 	<div class="controls">
 		<b>From: </b><span data-bind="text: plannedStartDate.formattedDate"></span>  <b>To: </b> <span data-bind="text: plannedEndDate.formattedDate"></span>
@@ -201,7 +206,10 @@
 </g:if>
 
 <div class="save-details-result-placeholder"></div>
+
+
 	<g:render template="meriPlanEditActions"/>
+
 
 <div id="floating-save" style="display:none;">
 	<div class="transparent-background"></div>
