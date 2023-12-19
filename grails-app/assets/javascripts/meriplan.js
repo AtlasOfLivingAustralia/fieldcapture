@@ -500,25 +500,37 @@ function MERIPlan(project, projectService, config) {
         blockUIWithMessage(message);
         window.location.href = config.removeMeriPlanEditLockUrl;
     };
+
     // Save project details
     self.saveMeriPlan = function(enableSubmit, unlock){
 
         var meriPlan = self.meriPlan();
         meriPlan.status('active');
         meriPlan.lastUpdated = new Date().toISOStringNoMillis();
+
+        var valid = false;
+        // Only mark the plan as finished if the user has ticked the checkbox and the validation routine passes.
+        meriPlan.progress = ActivityProgress.started;
+
+        if (meriPlan.markAsFinished()) {
+            valid =  $('#project-details-validation').validationEngine('validate');
+            meriPlan.markAsFinished(valid);
+            meriPlan.progress = valid ? ActivityProgress.finished : ActivityProgress.started;
+        }
         blockUIWithMessage("Saving MERI Plan...");
+
         meriPlan.saveWithErrorDetection(function() {
 
             if (unlock) {
                 self.unlockPlanAndReload("MERI Plan saved and unlocked.  Reloading project...");
             }
             if(enableSubmit) {
-                var valid =  $('#project-details-validation').validationEngine('validate');
                 if (valid) {
                     blockUIWithMessage("Submitting MERI Plan...");
                     self.submitChanges();
                 }
                 else {
+
                     $.unblockUI();
                     bootbox.alert("Your MERI plan cannot be submitted until all validation errors are resolved");
                 }
@@ -734,6 +746,8 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
     }
 
     self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
+    console.log(self.detailsLastUpdated());
+    console.log(project.custom.details.lastUpdated)
     self.isAgricultureProject = ko.computed(function () {
         var agricultureOutcomeStartIndex = 4;
         var selectedPrimaryOutcome = self.meriPlan().outcomes.primaryOutcome.description();
@@ -849,6 +863,8 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
             }
         }
     }
+    self.progress = o.progress;
+    self.markAsFinished = ko.observable(o.progress == ActivityProgress.finished);
     self.activities = new ActivitiesViewModel(o.activities, config.programActivities || []);
     self.status = ko.observable(o.status);
     self.obligations = ko.observable(o.obligations);
