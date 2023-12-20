@@ -722,17 +722,18 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
      * @returns {string} A string containing the labels for the scoreIds
      */
     self.targetMeasureLabels = function(scoreIds) {
-        var result = '';
+        var labels = [];
+
         scoreIds = ko.utils.unwrapObservable(scoreIds);
         for (var i=0; i<scoreIds.length; i++) {
             var scoreId = scoreIds[i];
             for (var j=0; j<self.allTargetMeasures.length; j++) {
                 if (self.allTargetMeasures[j].scoreId == scoreId) {
-                    result = result + self.allTargetMeasures[j].label;
+                    labels.push(self.allTargetMeasures[j].label);
                 }
             }
         }
-        return result;
+        return labels;
     }
 
     _.extend(self, new Risks(project.risks, riskModel, disableFlag, config.risksStorageKey));

@@ -30,10 +30,10 @@
             </span>
         </td>
         <td class="service">
-            <span data-bind="text:$root.targetMeasureLabels(relatedTargetMeasures)"></span>
+            <g:render template="/project/meriPlanReadOnly/arrayAsList" model="${[source:'$root.targetMeasureLabels(relatedTargetMeasures)']}"/>
         </td>
         <td class="baseline-method">
-            <span data-bind="text:protocols"></span>
+            <g:render template="/project/meriPlanReadOnly/arrayAsList" model="${[source:'protocols']}"/>
             <br/>
             <span data-bind="visible:_.contains(protocols(), 'Other'), text: method"></span>
         </td>

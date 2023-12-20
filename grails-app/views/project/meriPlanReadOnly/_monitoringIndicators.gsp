@@ -21,12 +21,12 @@
         <td class="baseline"><span data-bind="text:data1"></span></td>
         <g:if test="${extendedMonitoring}">
             <td class="monitoring-service">
-                <span data-bind="text:$root.targetMeasureLabels(relatedTargetMeasures)"></span>
+                <g:render template="/project/meriPlanReadOnly/arrayAsList" model="${[source:'$root.targetMeasureLabels(relatedTargetMeasures)']}"/>
             </td>
         </g:if>
         <td class="monitoring-method">
         <g:if test="${extendedMonitoring}">
-            <span data-bind="text:protocols"></span>
+            <g:render template="/project/meriPlanReadOnly/arrayAsList" model="${[source:'protocols']}"/>
             <br/>
             <span data-bind="visible:_.contains(protocols(), 'Other'), text: data2"></span>
 
