@@ -26,9 +26,7 @@
         </g:if>
         <td class="monitoring-method">
         <g:if test="${extendedMonitoring}">
-            <g:render template="/project/meriPlanReadOnly/arrayAsList" model="${[source:'protocols']}"/>
-            <br/>
-            <span data-bind="visible:_.contains(protocols(), 'Other'), text: data2"></span>
+            <g:render template="/project/meriPlanReadOnly/arrayAsList" model="${[source:'protocols()', otherSource:'data2()']}"/>
 
         </g:if>
         <g:else>

@@ -33,9 +33,7 @@
             <g:render template="/project/meriPlanReadOnly/arrayAsList" model="${[source:'$root.targetMeasureLabels(relatedTargetMeasures)']}"/>
         </td>
         <td class="baseline-method">
-            <g:render template="/project/meriPlanReadOnly/arrayAsList" model="${[source:'protocols']}"/>
-            <br/>
-            <span data-bind="visible:_.contains(protocols(), 'Other'), text: method"></span>
+            <g:render template="/project/meriPlanReadOnly/arrayAsList" model="${[source:'protocols()', otherSource:'method()']}"/>
         </td>
         <td class="evidence">
             <span class="textarea-view" data-bind="text:evidence"></span>
