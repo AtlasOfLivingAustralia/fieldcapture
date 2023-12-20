@@ -10,9 +10,107 @@ const outcomes2ReportFormName = "NHT Outcomes 2 Report";
 
 var config =
     {
+        "meriPlanContents": [
+            {
+                "template": "name",
+                "model": {
+                    "tableFormatting": true
+                }
+            },
+            {
+                "template": "priorityPlace",
+                "model": {
+                    "priorityPlaceHelpText": "Priority places recognises that some threatened species share the same habitat, and that place-based action can support protection and recovery of more than one species.",
+                    "priorityPlaceLabel": "Does this project directly support a priority place?"
+                }
+            },
+            {
+                "template": "indigenousInvolvement"
+            },
+            {
+                "template": "description",
+                "model": {
+                    "tableFormatting": true,
+                    "maxSize": "1000",
+                    "placeholder": "Please provide a short description of this project. This project description will be visible on the project overview page in MERIT [Free text; limit response to 1000 characters (approx. 150 words)]"
+                }
+            },
+            {
+                "template": "programOutcome",
+                "model": {
+                    "maximumPriorities": "1000",
+                    "priorityHelpText": "Enter the primary investment priority for the primary outcome, noting only one can be selected."
+                }
+            },
+            {
+                "template": "additionalOutcomes",
+                "model": {
+                    "outcomePriority": "Additional outcome/s",
+                    "helpTextHeading": "If the project is not delivering additional benefits, delete the row using the 'x' in the right-most column.",
+                    "title": "Additional benefits",
+                    "priority": "Additional Investment Priorities",
+                    "priorityHelpText": "Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
+                }
+            },
+            {
+                "template": "outcomeStatements",
+                "model": {
+                    "outcomeType": "mid",
+                    "helpText": "Projects more than 3 years in duration must set medium-term Project outcomes achievable at project completion. Ensure proposed outcomes are measurable with consideration to the baseline and proposed monitoring regime",
+                    "minimumNumberOfOutcomes": 0,
+                    "subtitle": "Medium-term outcome statement/s",
+                    "title": "Project Outcomes",
+                    "extendedOutcomes": true
+                }
+            },
+            {
+                "template": "outcomeStatements",
+                "model": {
+                    "outcomeType": "short",
+                    "helpText": "Outline the degree of impact having undertaken the services for up to three years. Ensure the outcomes are measurable with consideration to the baseline and proposed monitoring regime",
+                    "subtitle": "Short-term outcome statement/s",
+                    "extendedOutcomes": true
+                }
+            },
+            {
+                "template": "extendedKeyThreats",
+                "model": {
+                    "servicesHelpText": "Project Services/Target measures selected in this section will be pre-populated into the Project services and targets and Project service forecasts tables",
+                    "threatHelpText": "Describe the key threats or key threatening processes to the investment priority",
+                    "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance",
+                    "interventionHelpText": "Describe the proposed method to address the threat or threatening process",
+                    "title": "Key threat(s) and/or key threatening processes"
+                }
+            },
+            {
+                "template": "projectMethodology",
+                "model": {
+                    "helpText": "Include all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not impacted by adverse weather conditions. Ensure what’s documented here aligns to those assumptions documented within the Project Logic.",
+                    "maxSize": "4000",
+                    "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])"
+                }
+            },
+            {
+                "template": "serviceOutcomeTargets",
+                "model": {
+                    "titleHelpText": "Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections",
+                    "title": "Project services and targets",
+                    "serviceName": "Service"
+                }
+            },
+            {
+                "template": "serviceForecasts",
+                "model": {
+                    "titleHelpText": "Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections"
+                },
+                "excludedModes": [
+                    "PRINT"
+                ]
+            }
+        ],
         "excludes": [],
         "programServiceConfig": {
-            "serviceFormName": serviceFormName,
+            "serviceFormName": "NHT Output Report",
             "programServices": [
                 {
                     "serviceTargets": [
@@ -36,9 +134,9 @@ var config =
                 },
                 {
                     "serviceTargets": [
-                        "aa0c6b29-285e-4344-987e-dfeaf1d95648",
                         "a9d98baa-b2ab-4428-82cf-d96185e63aa6",
-                        "c4ea5ce3-4a70-4df8-aff7-ffa929e7df61"
+                        "c4ea5ce3-4a70-4df8-aff7-ffa929e7df61",
+                        "dcf917dc-eaf7-49e2-ae7b-abf65edeedae"
                     ],
                     "serviceId": 4
                 },
@@ -174,7 +272,8 @@ var config =
                         "b9e710e4-7dd3-4acc-ac2c-c69f4bcb9787",
                         "00934509-f102-4d39-a043-7547a8ab9ac8",
                         "1021bec7-3836-4b33-90b4-76701efd4fe3",
-                        "4dad393e-cbf7-43dd-87bb-62ea8f8afcdd"
+                        "4dad393e-cbf7-43dd-87bb-62ea8f8afcdd",
+                        "7186117e-ac17-4ed9-8c9c-8ee1c3bf473b"
                     ],
                     "serviceId": 26
                 },
@@ -249,7 +348,8 @@ var config =
                     "serviceTargets": [
                         "3ec07754-4a7a-46fb-a76d-553921781716",
                         "fbc2dab8-7454-40f9-94f6-6bf258fcefff",
-                        "7186e284-0cb2-418e-a8cc-4343eb618140"
+                        "7186e284-0cb2-418e-a8cc-4343eb618140",
+                        "c7d0963e-2847-4f5f-8a1c-e149dfa4c9d1"
                     ],
                     "serviceId": 36
                 },
@@ -266,15 +366,14 @@ var config =
                     "serviceId": 44
                 }
             ]
-
         },
-        "visibility": "private",
+        "visibility": "public",
         "declarationPageType": "rdpReportDeclaration",
         "requiresActivityLocking": true,
         "supportsMeriPlanComparison": true,
         "projectTemplate": "rlp",
         "activityPeriodDescriptor": "Outputs report #",
-        "supportsParatoo": true,
+        "requireMeritAdminToReturnMeriPlan": true,
         "emailTemplates": {
             "reportSubmittedEmailTemplate": "RLP_REPORT_SUBMITTED_EMAIL_TEMPLATE",
             "reportReturnedEmailTemplate": "RLP_REPORT_RETURNED_EMAIL_TEMPLATE",
@@ -286,7 +385,6 @@ var config =
         "meriPlanTemplate": "configurableMeriPlan",
         "riskAndThreatTypes": [
             "Performance",
-            "Work Health and Safety",
             "People resources",
             "Financial",
             "External stakeholders",
@@ -295,17 +393,16 @@ var config =
         "projectReports": [
             {
                 "reportType": "Activity",
-                "reportsAlignedToCalendar": true,
                 "reportDescriptionFormat": "Year %5$s - %6$s %7$d Outputs Report",
                 "reportNameFormat": "Year %5$s - %6$s %7$d Outputs Report",
                 "reportingPeriodInMonths": 3,
                 "description": "",
-                "category": "Outputs Reporting",
-                "activityType": serviceFormName,
-                "canSubmitDuringReportingPeriod": true,
+                "minimumReportDurationInDays": 1,
                 "label": "Quarter",
-                "minimumReportDurationInDays": 1
-
+                "reportsAlignedToCalendar": true,
+                "category": "Outputs Reporting",
+                "activityType": "NHT Output Report",
+                "canSubmitDuringReportingPeriod": true
             },
             {
                 "firstReportingPeriodEnd": "2024-06-30T14:00:00Z",
@@ -313,254 +410,63 @@ var config =
                 "reportDescriptionFormat": "Annual Progress Report %2$tY - %3$tY for %4$s",
                 "reportNameFormat": "Annual Progress Report %2$tY - %3$tY",
                 "reportingPeriodInMonths": 12,
-                "category": "Annual Progress Reporting",
-                "activityType": annualReportFormName,
                 "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
+                "minimumReportDurationInDays": 1,
                 "label": "Annual",
-                "minimumReportDurationInDays": 1
-            },
-            {
-                "reportType": "Single",
-                "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
-                "minimumOwnerDurationInMonths": null,
-                "reportNameFormat": "Outcomes Report 1",
-                "reportingPeriodInMonths": 36,
-                "alignToOwnerStart":true,
-                "alignToOwnerEnd":true,
-                "multiple": false,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
-                "maximumOwnerDurationInMonths": 35,
-                "category": "Outcomes Report 1",
-                "reportsAlignedToCalendar": false,
-                "activityType": outcomes1ReportFormName,
-                "label":"Outcomes Report 1"
-            },
-            {
-                "reportType": "Single",
-                "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
-                "minimumOwnerDurationInMonths": 36,
-                "maximumOwnerDurationInMonths": 47,
-                "reportNameFormat": "Outcomes Report 1",
-                "reportingPeriodInMonths": 24,
-                "multiple": false,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
-                "category": "Outcomes Report 1",
-                "activityType": outcomes1ReportFormName,
-                "label": "Outcomes Report 1"
-            },
-            {
-                "reportType": "Single",
-                "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
-                "reportNameFormat": "Outcomes Report 1",
-                "reportingPeriodInMonths": 36,
-                "multiple": false,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
-                "minimumOwnerDurationInMonths": 48,
-                "calendarAlignmentMonth": 7,
-                "category": "Outcomes Report",
-                "reportsAlignedToCalendar": true,
-                "activityType": outcomes1ReportFormName,
-                "label": "Outcomes Report 1"
-            },
-            {
-                "reportType": "Single",
-                "reportDescriptionFormat": "Outcomes Report 2 for %4$s",
-                "minimumOwnerDurationInMonths": 36,
-                "reportNameFormat": "Outcomes Report 2",
-                "alignToOwnerStart":true,
-                "alignToOwnerEnd":true,
-                "multiple": false,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
-                "category": "Outcomes Report 2",
-                "activityType": outcomes2ReportFormName,
-                "label": "Outcomes Report 2"
+                "category": "Annual Progress Reporting",
+                "activityType": "NHT Annual Report"
             }
+        ],
+        "keyThreatCodes": [
+            "Climate Change - Changed flooding regime",
+            "Climate Change - Changed rainfall patterns",
+            "Climate Change - Sea level rises",
+            "Climate Change - Unexpected seasonal/temperature extremes",
+            "Disease/pathogens - Areas that are infected",
+            "Disease/pathogens - Possible infection of disease free areas",
+            "Fire - Inappropriate fire regime",
+            "Fire - Lack of protection for ecological assets during fire control activities",
+            "Genetics - Bottleneck/inbreeding",
+            "Habitat loss - Breeding place disturbance",
+            "Habitat loss - Dieback/senescence",
+            "Habitat loss - Feeding habitat loss/interference",
+            "Habitat loss - Habitat fragmentation",
+            "Habitat loss - Land clearing",
+            "Habitat loss - Loss of critical ecosystem service supporting habitat",
+            "Human interference - Fish and harvesting aquatic resources (commercial)",
+            "Human interference - Flow-on effects of housing development",
+            "Human interference - Illegal activities",
+            "Human interference - Industrial development",
+            "Human interference - Land use intensification",
+            "Human interference - Recreational fishing",
+            "Human interference - Recreational pressures",
+            "Human interference - Road/vehicle strike",
+            "Land management practices - Changes to hydrology and aquatic systems",
+            "Land management practices - Domestic grazing/stock impacts",
+            "Land management practices - Excess recharge of groundwater",
+            "Land management practices - Excess use (or over-use) of surface water or groundwater resources",
+            "Land management practices - Excessive fertiliser use",
+            "Land management practices - Inappropriate ground cover management",
+            "Land management practices - Runoff",
+            "Native fauna - Competition",
+            "Native fauna - Predation",
+            "Pest - Competition/exclusion",
+            "Pest - Disease transmission",
+            "Pest - Habitat degradation",
+            "Pest - Introduction of new pest animals",
+            "Pest - Predation",
+            "Pollution - Chemical",
+            "Pollution - Eutrophication/algal blooms",
+            "Pollution - Inappropriate waste disposal",
+            "Pollution - Sediment ",
+            "Population size/range - Low habitat area",
+            "Population size/range - Low population numbers",
+            "Weeds - Competition",
+            "Weeds - Introduction of new weed",
+            "Weeds - Spread of weeds from surrounding areas"
         ],
         "navigationMode": "returnToProject",
-        "supportsMeriPlanHistory": true,
-        "requireMeritAdminToReturnMeriPlan":true,
-        "meriPlanContents": [
-            {
-                "template": "name",
-                "model": {
-                    "tableFormatting": true
-                }
-            },
-            {
-                "template": "priorityPlace",
-                "model": {
-                    "priorityPlaceLabel":"Does this project directly support a priority place?",
-                    "priorityPlaceHelpText":"Priority places recognises that some threatened species share the same habitat, and that place-based action can support protection and recovery of more than one species."
-                }
-            },
-            {
-                "template": "indigenousInvolvement"
-            },
-            {
-                "template": "description",
-                "model": {
-                    "tableFormatting": true,
-                    "maxSize": "1000",
-                    "placeholder": "Please provide a short description of this project. This project description will be visible on the project overview page in MERIT [Free text; limit response to 1000 characters (approx. 150 words)]"
-                }
-            },
-            {
-                "template": "programOutcome",
-                "model": {
-                    "maximumPriorities": "1000",
-                    "priorityHelpText": "Enter the primary investment priority for the primary outcome, noting only one can be selected."
-                }
-            },
-            {
-                "template": "additionalOutcomes",
-                "model": {
-                    "title": "Additional benefits",
-                    "helpTextHeading":"If the project is not delivering additional benefits, delete the row using the 'x' in the right-most column.",
-                    "outcomePriority":"Additional outcome/s",
-                    "priority":"Additional Investment Priorities",
-                    "priorityHelpText":"Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
-                }
-            },
-            {
-                "template": "outcomeStatements",
-                "model": {
-                    "outcomeType": "mid",
-                    "subtitle": "Medium-term outcome statement/s",
-                    "title": "Project Outcomes",
-                    "extendedOutcomes": true,
-                    "helpText":"Projects more than 3 years in duration must set medium-term Project outcomes achievable at project completion. Ensure proposed outcomes are measurable with consideration to the baseline and proposed monitoring regime",
-                    "minimumNumberOfOutcomes": 0
-                }
-            },
-            {
-                "template": "outcomeStatements",
-                "model": {
-                    "outcomeType": "short",
-                    "helpText": "Outline the degree of impact having undertaken the services for up to three years. Ensure the outcomes are measurable with consideration to the baseline and proposed monitoring regime",
-                    "subtitle": "Short-term outcome statement/s",
-                    "extendedOutcomes": true
-                }
-            },
-            {
-                "template": "extendedKeyThreats",
-                "model": {
-                    "title":"Key threat(s) and/or key threatening processes",
-                    "threatHelpText":"Describe the key threats or key threatening processes to the investment priority",
-                    "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance",
-                    "interventionHelpText":"Describe the proposed method to address the threat or threatening process",
-                    "servicesHelpText": "Project Services/Target measures selected in this section will be pre-populated into the Project services and targets and Project service forecasts tables"
-                }
-            },
-            {
-                "template": "projectMethodology",
-                "model": {
-                    "maxSize": "4000",
-                    "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])",
-                    "helpText": "Include all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not impacted by adverse weather conditions. Ensure what’s documented here aligns to those assumptions documented within the Project Logic."
-                }
-            },
-            {
-                "template": "projectPartnerships",
-                "model": {
-                    "helpTextPartnerName":"Insert name of project partner. To be a project partner, they need to be actively involved in the planning or delivery of the project",
-                    "helpTextHeading":"Note: Not limited to key subcontractors."
-                }
-            },
-            {
-                "template": "extendedBaselineMonitoring",
-                "model": {
-                    "approachHeading": "Monitoring method",
-                    "indicatorHeading": "Monitoring methodology",
-                    "baselineDataHelpText": "Existing baseline data needs to be based on best practice methods and be compatible with the EMSA protocols.",
-                    "baselineDataDescriptionHelpText": "Describe the project baseline to be established, or the baseline data that currently exists",
-                    "baselineServiceHelpText": "Select the relevant Project Service(s)/Target measure(s) that will be used to support the development of the baseline",
-                    "monitoringServiceHelpText": "Select the relevant Project Services(s)/Target measure(s) that will be used to support ongoing monitoring",
-                    "baselineMethodHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
-                    "approachHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
-                    "titleHelpText": "Describe the Project Baseline(s) and ongoing monitoring which will be used to report progress towards this projects outcome(s).  Project Services/Target measures selected in this section will be pre-populated into the Project services and targets and Project service forecasts tables",
-                    "newIndicatorText": "New monitoring indicator",
-                    "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance"
-                }
-            },
-            {
-                "template": "projectReview",
-                "model": {
-                    "title": "Project review, improvement and evaluation methodology and approach (3000 character limit [approximately 500 words])"
-                }
-            },
-            {
-                "template": "nationalAndRegionalPlans",
-                "model": {
-                    "includeUrl": true,
-                    "headingTitle": "Conservation and management plans"
-                }
-            },
-            {
-                "template": "serviceOutcomeTargets",
-                "model": {
-                    "title": "Project services and targets",
-                    "serviceName": "Service",
-                    "titleHelpText":"Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections"
-                }
-            },
-            {
-                "template": "serviceForecasts",
-                "excludedModes":["PRINT"],
-                "model": {
-                    "titleHelpText":"Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections"
-                }
-
-            }
-        ],
-        keyThreatCodes: [
-            'Climate Change - Changed flooding regime',
-            'Climate Change - Changed rainfall patterns',
-            'Climate Change - Sea level rises',
-            'Climate Change - Unexpected seasonal/temperature extremes',
-            'Disease/pathogens - Areas that are infected',
-            'Disease/pathogens - Possible infection of disease free areas',
-            'Fire - Inappropriate fire regime',
-            'Fire - Lack of protection for ecological assets during fire control activities',
-            'Genetics - Bottleneck/inbreeding',
-            'Habitat loss - Breeding place disturbance',
-            'Habitat loss - Dieback/senescence',
-            'Habitat loss - Feeding habitat loss/interference',
-            'Habitat loss - Habitat fragmentation',
-            'Habitat loss - Land clearing',
-            'Habitat loss - Loss of critical ecosystem service supporting habitat',
-            'Human interference - Fish and harvesting aquatic resources (commercial)',
-            'Human interference - Flow-on effects of housing development',
-            'Human interference - Illegal activities',
-            'Human interference - Industrial development',
-            'Human interference - Land use intensification',
-            'Human interference - Recreational fishing',
-            'Human interference - Recreational pressures',
-            'Human interference - Road/vehicle strike',
-            'Land management practices - Changes to hydrology and aquatic systems',
-            'Land management practices - Domestic grazing/stock impacts',
-            'Land management practices - Excess recharge of groundwater',
-            'Land management practices - Excess use (or over-use) of surface water or groundwater resources',
-            'Land management practices - Excessive fertiliser use',
-            'Land management practices - Inappropriate ground cover management',
-            'Land management practices - Runoff',
-            'Native fauna - Competition',
-            'Native fauna - Predation',
-            'Pest - Competition/exclusion',
-            'Pest - Disease transmission',
-            'Pest - Habitat degradation',
-            'Pest - Introduction of new pest animals',
-            'Pest - Predation',
-            'Pollution - Chemical',
-            'Pollution - Eutrophication/algal blooms',
-            'Pollution - Inappropriate waste disposal',
-            'Pollution - Sediment ',
-            'Population size/range - Low habitat area',
-            'Population size/range - Low population numbers',
-            'Weeds - Competition',
-            'Weeds - Introduction of new weed',
-            'Weeds - Spread of weeds from surrounding areas'
-        ],
-        priorityPlaces: [
+        "priorityPlaces": [
             "Australian Alps – NSW/ACT/VIC",
             "Brigalow Country – QLD",
             "Bruny Island – TAS",
@@ -581,8 +487,9 @@ var config =
             "South East Coastal Ranges – NSW/VIC",
             "Southern Plains, including the Western Victorian volcanic plain and karst springs – VIC/SA",
             "Yampi Sounds and surrounds – WA"
-        ]
-
+        ],
+        "supportsParatoo": true,
+        "supportsMeriPlanHistory": true
     };
 
 
@@ -620,257 +527,35 @@ var outcomes = [
         "category": "Farmer Sector",
         "outcome": "3. Farmers are supported to drive agricultural growth, while adopting sustainable natural resource management practices that protect and conserve natural capital and biodiversity"
     },
-
-
     {
-        "category": "Threatened Species",
+        "category": "Agriculture Sector",
         "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Targeted threatened species (TS) are on track for improved trajectory"
+        "outcome": "1. The agriculture sector is adopting practices to reduce emissions and build resilience to climate change (Medium Term)"
     },
     {
-        "category": "Threatened Species",
+        "category": "Agriculture Sector",
         "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Species at high risk of imminent extinction are identified and supported to persist"
+        "outcome": "2. The agriculture sector is supported to harness carbon and biodiversity incentives and implement industry sustainability frameworks (Medium Term)"
     },
     {
-        "category": "Threatened Species",
+        "category": "Agriculture Sector",
         "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Priority species are being assisted to strengthen reliance and adaptive capacity for climate change"
+        "outcome": "3. Farmers are supported to drive agricultural growth, while adopting sustainable natural resource management practices that protect and conserve natural capital and biodiversity (Medium Term)"
     },
     {
-        "category": "Threatened Species",
-        "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Increased leadership and/or participation of First Nations people in the management and recovery of threatened species"
-    },
-    {
-        "category": "Threatened Species",
-        "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - The implementation of priority actions is leading to an improvement in the condition of targeted TECs and priority places"
-    },
-    {
-        "category": "Threatened Species",
-        "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - Resilience to climate change and extreme events has been increased"
-    },
-    {
-        "category": "Threatened Species",
-        "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - Increased leadership and/or participation of First Nations people in the management and recovery of threatened ecological communities and priority places"
-    },
-    {
-        "category": "World Heritage",
-        "type": "medium",
-        "outcome": "2. World Heritage Protection (Medium term): Threats to the outstanding universal value of world heritage properties listed for their natural heritage value have been reduced through the implementation of priority actions"
-    },
-    {
-        "category": "World Heritage",
-        "type": "medium",
-        "outcome": "2. World Heritage Protection (Medium term): Managing Threats - Threats from climate change, extreme events and invasive species have been reduced"
-    },
-    {
-        "category": "World Heritage",
-        "type": "medium",
-        "outcome": "2. World Heritage Protection (Medium term): Managing Threats - Threats from disease have been reduced"
-    },
-    {
-        "category": "World Heritage",
-        "type": "medium",
-        "outcome": "2. World Heritage Protection (Medium term): Managing Threats - Increased leadership and/or participation of First Nations people in the management of threats to World Heritage properties"
-    },
-    {
-        "category": "Threatened Species",
-        "type": "medium",
-        "outcome": "2. World Heritage Protection (Medium term): Improving land management practices and protecting habitat - Threats from inappropriate fire management are reduced"
-    },
-    {
-        "category": "World Heritage",
-        "type": "medium",
-        "outcome": "2. World Heritage Protection (Medium term): Improving land management practices and protecting habitat - Threats from inappropriate management of human impacts, climate change and extreme events are reduced"
-    },
-    {
-        "category": "World Heritage",
-        "type": "medium",
-        "outcome": "2. World Heritage Protection (Medium term): Improving land management practices and protecting habitat - Increased leadership and/or participation of First Nations people in the management and protection of World Heritage properties"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Priority actions at targeted Ramsar sites will reduce threats, restore or maintain ecological character and increase climate change resilience"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Managing Threats - The critical components, processes and services of the wetland actively maintained and/or improved"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Managing Threats - Absence/reduction of non-native species"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Managing Threats - Increased leadership and/or participation of First Nations people in the management of threats to Ramsar sites"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Managing Threats - Adaptive management planning and actions are building resilience to extreme climate events"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Wetland biota and/or abundance is maintained and improved"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Hydrological regimes have been restored and maintained"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Improved condition of wetland vegetation/habitat"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Quality of breeding, foraging and roosting habitat is improved"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Increased leadership and/or participation of First Nations people in the restoration and/or maintenance of the ecological character of Ramsar sites"
-    },
-    {
+        "category": "Agriculture Sector",
         "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Managing Threats - Pest predator an competitor species have been controlled or are under active, long-term control programs"
+        "outcome": "1. The agriculture sector is adopting practices to reduce emissions and build resilience to climate change (Short Term)"
     },
     {
+        "category": "Agriculture Sector",
         "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Managing Threats - Threats from disease have been contained, reduced or excluded"
+        "outcome": "2. The agriculture sector is supported to harness carbon and biodiversity incentives and implement industry sustainability frameworks (Short Term)"
     },
     {
+        "category": "Agriculture Sector",
         "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Land management practices have improved"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Quality of (TS/TECs) habitat has improved"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Area/Extent of (TS/TECs) habitat has increased"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Increased connectivity between patches"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Quality of breeding and foraging habitat is improved   "
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Creating insurance populations - Existing populations have been protected"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Creating insurance populations - Re-introductions have enhanced wild populations"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in recovery activities"
-    },
-    {
-        "type": "short",
-        "category": "World Heritage",
-        "outcome": "2. World Heritage Protection (Short term): Managing threats - Pest predator and competitor species have been controlled"
-    },
-    {
-        "type": "short",
-        "category": "World Heritage",
-        "outcome": "2. World Heritage Protection (Short term): Managing threats -Threats from disease have been contained or reduced"
-    },
-    {
-        "type": "short",
-        "category": "World Heritage",
-        "outcome": "2. World Heritage Protection (Short term): Improving land management practices and protecting habitat - Inappropriate fire regimes have been reduced or halted"
-    },
-    {
-        "type": "short",
-        "category": "World Heritage",
-        "outcome": "2. World Heritage Protection (Short term): Improving land management practices and protecting habitat - Land management practices have improved (within and around heritage properties)"
-    },
-    {
-        "type": "short",
-        "category": "World Heritage",
-        "outcome": "2. World Heritage Protection (Short term): Improving land management practices and protecting habitat - Actions to reduce nutrient levels have been implemented, and nutrient levels are beginning to stabilise/improve "
-    },
-    {
-        "type": "short",
-        "category": "World Heritage",
-        "outcome": "2. World Heritage Protection (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway"
-    },
-    {
-        "type": "short",
-        "category": "World Heritage",
-        "outcome": "2. World Heritage Protection (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in management and protection activities"
-    },
-    {
-        "type": "short",
-        "category": "Ramsar",
-        "outcome": "3. Ramsar Wetland Protection (Short term): Managing threats -  Inappropriate land management practices have decreased within the catchment"
-    },
-    {
-        "type": "short",
-        "category": "Ramsar",
-        "outcome": "3. Ramsar Wetland Protection (Short term): Managing Threats - Pest predator and competitor species have been controlled "
-    },
-    {
-        "type": "short",
-        "category": "Ramsar",
-        "outcome": "3. Ramsar Wetland Protection (Short term):  Managing Threats - Appropriate fire management regimes within and external to site"
-    },
-    {
-        "type": "short",
-        "category": "Ramsar",
-        "outcome": "3. Ramsar Wetland Protection (Short term): Protecting and Improving Habitat - Area and quality of suitable wetland habitat has increased and/or is maintained"
-    },
-    {
-        "type": "short",
-        "category": "Ramsar",
-        "outcome": "3. Ramsar Wetland Protection (Short term): Protecting and Improving Habitat - Water quality has been stabilised and/or improved  "
-    },
-    {
-        "type": "short",
-        "category": "Ramsar",
-        "outcome": "3. Ramsar Wetland Protection (Short term): Protecting and Improving Habitat - Improved access control to protect sensitive species and habitats"
-    },
-    {
-        "type": "short",
-        "category": "Ramsar",
-        "outcome": "3. Ramsar Wetland Protection (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway to improve and/or maintain the ecological character of Ramsar sites "
-    },
-    {
-        "type": "short",
-        "category": "Ramsar",
-        "outcome": "3. Ramsar Wetland Protection (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in restoration, maintenance and protection activities"
+        "outcome": "3. Farmers are supported to drive agricultural growth, while adopting sustainable natural resource management practices that protect and conserve natural capital and biodiversity (Short Term)"
     }
 ];
 
@@ -2198,22 +1883,56 @@ var priorities = [
     {
         "category": "Ramsar",
         "priority": "Ginini Flats Wetland Complex"
+    },
+    {
+        "category": "Agriculture Sector Adopting Practices",
+        "priority": "Climate change adaptation"
+    },
+    {
+        "category": "Agriculture Sector Adopting Practices",
+        "priority": "On-farm emissions reduction practices"
+    },
+    {
+        "category": "Agriculture Sector",
+        "priority": "Carbon and biodiversity market information"
+    },
+    {
+        "category": "Agriculture Sector",
+        "priority": "Sustainability framework engagement"
+    },
+    {
+        "category": "Agriculture Sector",
+        "priority": "Market access and traceability"
+    },
+    {
+        "category": "Farmer Sector",
+        "priority": "Native vegetation and biodiversity on-farm"
+    },
+    {
+        "category": "Farmer Sector",
+        "priority": "Soil carbon"
+    },
+    {
+        "category": "Farmer Sector",
+        "priority": "Soil erosion"
+    },
+    {
+        "category": "Farmer Sector",
+        "priority": "Soil acidification"
+    },
+    {
+        "category": "Farmer Sector",
+        "priority": "Sustainable agriculture practices"
     }
 ];
 
-let parentProgram = "Natural Heritage Trust";
-var subprograms = ["Sustainable Agriculture Facilitators"]
+//Create the parent program
+let programName = "Natural Heritage Trust";
+var parent = createOrFindProgram(programName);
+var subprograms = ["Climate-Smart Agriculture Program - Sustainable Agriculture Facilitators"]
 
-var parent = db.program.find({name: parentProgram}).next();
 subprograms.forEach(function (subProgram){
-    var now = ISODate();
-    var p = {name: subProgram, programId: UUID.generate(), dateCreated: now, lastUpdate: now, parent: parent._id, status: "active"}
-    var program = db.program.find({name: subProgram})
-    if (!program.hasNext()) {
-        db.program.insertOne(p);
-    } else {
-        print("Program Already Exist: " + subProgram)
-    }
+    createOrFindProgram(subProgram, parent._id);
 });
 
 subprograms.forEach(function (subprogram){

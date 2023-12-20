@@ -851,8 +851,13 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
             self.services = new ServicesViewModel(o.serviceIds, config.services, project.outputTargets, budgetHeaders);
         }
 
-        self.description = ko.observable(project.description);
         self.name = ko.observable(project.name);
+        self.description = ko.observable(project.description);
+        /* this is a quick workaround to make the MERIPLAN comparison work, using the name field above will not render the comparison
+        but it's needed in the DatasetSpec integration test, it will fail otherwise due to blank project name. */
+        self.nameComparison = ko.observable(o.name);
+        self.descriptionComparison = ko.observable(o.description);
+
         self.programName = config.programName;
         self.projectEvaluationApproach = ko.observable(o.projectEvaluationApproach);
         self.relatedProjects = ko.observable(o.relatedProjects);
