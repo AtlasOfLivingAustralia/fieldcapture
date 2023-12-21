@@ -78,7 +78,7 @@ function createProgramAsCopy(name, nameOfProgramToCopy) {
  */
 function useNhtServiceLabels(programName, programNameToCopy) {
 
-    programNameToCopy = programNameToCopy || 'Recovery Actions for Species and Landscapes';
+    programNameToCopy = programNameToCopy || 'RASL - Recovery Actions for Species and Landscapes';
     var programToCopyLabels = db.program.findOne({name: programNameToCopy});
     let program = db.program.findOne({name: programName});
     let services = db.service.find({programLabels: {$ne: null}});

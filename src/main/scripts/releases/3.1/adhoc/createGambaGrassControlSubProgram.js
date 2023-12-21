@@ -10,9 +10,132 @@ const outcomes2ReportFormName = "NHT Outcomes 2 Report";
 
 var config =
     {
+        "meriPlanContents": [
+            {
+                "template": "name",
+                "model": {
+                    "tableFormatting": true
+                }
+            },
+            {
+                "template": "priorityPlace",
+                "model": {
+                    "priorityPlaceHelpText": "Priority places recognises that some threatened species share the same habitat, and that place-based action can support protection and recovery of more than one species.",
+                    "priorityPlaceLabel": "Does this project directly support a priority place?"
+                }
+            },
+            {
+                "template": "indigenousInvolvement"
+            },
+            {
+                "template": "description",
+                "model": {
+                    "tableFormatting": true,
+                    "maxSize": "1000",
+                    "placeholder": "Please provide a short description of this project. This project description will be visible on the project overview page in MERIT [Free text; limit response to 1000 characters (approx. 150 words)]"
+                }
+            },
+            {
+                "template": "programOutcome",
+                "model": {
+                    "maximumPriorities": "1000",
+                    "priorityHelpText": "Enter the primary investment priority for the primary outcome, noting only one can be selected."
+                }
+            },
+            {
+                "template": "additionalOutcomes",
+                "model": {
+                    "outcomePriority": "Additional outcome/s",
+                    "helpTextHeading": "If the project is not delivering additional benefits, delete the row using the 'x' in the right-most column.",
+                    "title": "Additional benefits",
+                    "priority": "Additional Investment Priorities",
+                    "priorityHelpText": "Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
+                }
+            },
+            {
+                "template": "outcomeStatements",
+                "model": {
+                    "outcomeType": "short",
+                    "helpText": "Outline the degree of impact having undertaken the services for up to three years. Ensure the outcomes are measurable with consideration to the baseline and proposed monitoring regime",
+                    "subtitle": "Short-term outcome statement/s",
+                    "extendedOutcomes": true
+                }
+            },
+            {
+                "template": "extendedKeyThreats",
+                "model": {
+                    "servicesHelpText": "Project Services/Target measures selected in this section will be pre-populated into the Project services and targets and Project service forecasts tables",
+                    "threatHelpText": "Describe the key threats or key threatening processes to the investment priority",
+                    "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance",
+                    "interventionHelpText": "Describe the proposed method to address the threat or threatening process",
+                    "title": "Key threat(s) and/or key threatening processes"
+                }
+            },
+            {
+                "template": "projectMethodology",
+                "model": {
+                    "helpText": "Include all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not impacted by adverse weather conditions. Ensure what’s documented here aligns to those assumptions documented within the Project Logic.",
+                    "maxSize": "4000",
+                    "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])"
+                }
+            },
+            {
+                "template": "projectPartnerships",
+                "model": {
+                    "helpTextHeading": "Note: Not limited to key subcontractors.",
+                    "helpTextPartnerName": "Insert name of project partner. To be a project partner, they need to be actively involved in the planning or delivery of the project"
+                }
+            },
+            {
+                "template": "extendedBaselineMonitoring",
+                "model": {
+                    "approachHeading": "Monitoring method",
+                    "indicatorHeading": "Monitoring methodology",
+                    "monitoringServiceHelpText": "Select the relevant Project Services(s)/Target measure(s) that will be used to support ongoing monitoring",
+                    "baselineDataDescriptionHelpText": "Describe the project baseline to be established, or the baseline data that currently exists",
+                    "baselineMethodHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
+                    "baselineDataHelpText": "Existing baseline data needs to be based on best practice methods and be compatible with the EMSA protocols.",
+                    "approachHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
+                    "titleHelpText": "Describe the Project Baseline(s) and ongoing monitoring which will be used to report progress towards this projects outcome(s).  Project Services/Target measures selected in this section will be pre-populated into the Project services and targets and Project service forecasts tables",
+                    "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance",
+                    "baselineServiceHelpText": "Select the relevant Project Service(s)/Target measure(s) that will be used to support the development of the baseline",
+                    "newIndicatorText": "New monitoring indicator"
+                }
+            },
+            {
+                "template": "projectReview",
+                "model": {
+                    "title": "Project review, improvement and evaluation methodology and approach (3000 character limit [approximately 500 words])"
+                }
+            },
+            {
+                "template": "nationalAndRegionalPlans",
+                "model": {
+                    "includeUrl": true,
+                    "headingTitle": "Conservation and management plans"
+                }
+            },
+            {
+                "template": "serviceOutcomeTargets",
+                "model": {
+                    "titleHelpText": "Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections",
+                    "title": "Project services and targets",
+                    "serviceName": "Service"
+                }
+            },
+            {
+                "template": "serviceForecasts",
+                "model": {
+                    "titleHelpText": "Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections"
+                },
+                "excludedModes": [
+                    "PRINT"
+                ]
+            }
+        ],
         "excludes": [],
         "programServiceConfig": {
-            "serviceFormName": serviceFormName,
+            "serviceFormName": "NHT Output Report",
             "programServices": [
                 {
                     "serviceTargets": [
@@ -249,7 +372,8 @@ var config =
                     "serviceTargets": [
                         "3ec07754-4a7a-46fb-a76d-553921781716",
                         "fbc2dab8-7454-40f9-94f6-6bf258fcefff",
-                        "7186e284-0cb2-418e-a8cc-4343eb618140"
+                        "7186e284-0cb2-418e-a8cc-4343eb618140",
+                        "c7d0963e-2847-4f5f-8a1c-e149dfa4c9d1"
                     ],
                     "serviceId": 36
                 },
@@ -266,7 +390,6 @@ var config =
                     "serviceId": 44
                 }
             ]
-
         },
         "visibility": "public",
         "declarationPageType": "rdpReportDeclaration",
@@ -274,7 +397,7 @@ var config =
         "supportsMeriPlanComparison": true,
         "projectTemplate": "rlp",
         "activityPeriodDescriptor": "Outputs report #",
-        "supportsParatoo": true,
+        "requireMeritAdminToReturnMeriPlan": true,
         "emailTemplates": {
             "reportSubmittedEmailTemplate": "RLP_REPORT_SUBMITTED_EMAIL_TEMPLATE",
             "reportReturnedEmailTemplate": "RLP_REPORT_RETURNED_EMAIL_TEMPLATE",
@@ -295,7 +418,7 @@ var config =
         "projectReports": [
             {
                 "reportType": "Activity",
-                "firstReportingPeriodEnd": "2023-12-31T13:00:00Z",
+                "firstReportingPeriodEnd": "2023-06-30T14:00:00Z",
                 "reportDescriptionFormat": "Progress Report %1d",
                 "reportNameFormat": "Progress Report %1d",
                 "reportingPeriodInMonths": 6,
@@ -322,191 +445,56 @@ var config =
                 "alignToOwnerStart": true
             }
         ],
+        "keyThreatCodes": [
+            "Climate Change - Changed flooding regime",
+            "Climate Change - Changed rainfall patterns",
+            "Climate Change - Sea level rises",
+            "Climate Change - Unexpected seasonal/temperature extremes",
+            "Disease/pathogens - Areas that are infected",
+            "Disease/pathogens - Possible infection of disease free areas",
+            "Fire - Inappropriate fire regime",
+            "Fire - Lack of protection for ecological assets during fire control activities",
+            "Genetics - Bottleneck/inbreeding",
+            "Habitat loss - Breeding place disturbance",
+            "Habitat loss - Dieback/senescence",
+            "Habitat loss - Feeding habitat loss/interference",
+            "Habitat loss - Habitat fragmentation",
+            "Habitat loss - Land clearing",
+            "Habitat loss - Loss of critical ecosystem service supporting habitat",
+            "Human interference - Fish and harvesting aquatic resources (commercial)",
+            "Human interference - Flow-on effects of housing development",
+            "Human interference - Illegal activities",
+            "Human interference - Industrial development",
+            "Human interference - Land use intensification",
+            "Human interference - Recreational fishing",
+            "Human interference - Recreational pressures",
+            "Human interference - Road/vehicle strike",
+            "Land management practices - Changes to hydrology and aquatic systems",
+            "Land management practices - Domestic grazing/stock impacts",
+            "Land management practices - Excess recharge of groundwater",
+            "Land management practices - Excess use (or over-use) of surface water or groundwater resources",
+            "Land management practices - Excessive fertiliser use",
+            "Land management practices - Inappropriate ground cover management",
+            "Land management practices - Runoff",
+            "Native fauna - Competition",
+            "Native fauna - Predation",
+            "Pest - Competition/exclusion",
+            "Pest - Disease transmission",
+            "Pest - Habitat degradation",
+            "Pest - Introduction of new pest animals",
+            "Pest - Predation",
+            "Pollution - Chemical",
+            "Pollution - Eutrophication/algal blooms",
+            "Pollution - Inappropriate waste disposal",
+            "Pollution - Sediment ",
+            "Population size/range - Low habitat area",
+            "Population size/range - Low population numbers",
+            "Weeds - Competition",
+            "Weeds - Introduction of new weed",
+            "Weeds - Spread of weeds from surrounding areas"
+        ],
         "navigationMode": "returnToProject",
-        "supportsMeriPlanHistory": true,
-        "requireMeritAdminToReturnMeriPlan":true,
-        "meriPlanContents": [
-            {
-                "template": "name",
-                "model": {
-                    "tableFormatting": true
-                }
-            },
-            {
-                "template": "priorityPlace",
-                "model": {
-                    "priorityPlaceLabel":"Does this project directly support a priority place?",
-                    "priorityPlaceHelpText":"Priority places recognises that some threatened species share the same habitat, and that place-based action can support protection and recovery of more than one species."
-                }
-            },
-            {
-                "template": "indigenousInvolvement"
-            },
-            {
-                "template": "description",
-                "model": {
-                    "tableFormatting": true,
-                    "maxSize": "1000",
-                    "placeholder": "Please provide a short description of this project. This project description will be visible on the project overview page in MERIT [Free text; limit response to 1000 characters (approx. 150 words)]"
-                }
-            },
-            {
-                "template": "programOutcome",
-                "model": {
-                    "maximumPriorities": "1000",
-                    "priorityHelpText": "Enter the primary investment priority for the primary outcome, noting only one can be selected."
-                }
-            },
-            {
-                "template": "additionalOutcomes",
-                "model": {
-                    "title": "Additional benefits",
-                    "helpTextHeading":"If the project is not delivering additional benefits, delete the row using the 'x' in the right-most column.",
-                    "outcomePriority":"Additional outcome/s",
-                    "priority":"Additional Investment Priorities",
-                    "priorityHelpText":"Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
-                }
-            },
-            {
-                "template": "outcomeStatements",
-                "model": {
-                    "outcomeType": "mid",
-                    "subtitle": "Medium-term outcome statement/s",
-                    "title": "Project Outcomes",
-                    "extendedOutcomes": true,
-                    "helpText":"Projects more than 3 years in duration must set medium-term Project outcomes achievable at project completion. Ensure proposed outcomes are measurable with consideration to the baseline and proposed monitoring regime",
-                    "minimumNumberOfOutcomes": 0
-                }
-            },
-            {
-                "template": "outcomeStatements",
-                "model": {
-                    "outcomeType": "short",
-                    "helpText": "Outline the degree of impact having undertaken the services for up to three years. Ensure the outcomes are measurable with consideration to the baseline and proposed monitoring regime",
-                    "subtitle": "Short-term outcome statement/s",
-                    "extendedOutcomes": true
-                }
-            },
-            {
-                "template": "extendedKeyThreats",
-                "model": {
-                    "title":"Key threat(s) and/or key threatening processes",
-                    "threatHelpText":"Describe the key threats or key threatening processes to the investment priority",
-                    "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance",
-                    "interventionHelpText":"Describe the proposed method to address the threat or threatening process",
-                    "servicesHelpText": "Project Services/Target measures selected in this section will be pre-populated into the Project services and targets and Project service forecasts tables"
-                }
-            },
-            {
-                "template": "projectMethodology",
-                "model": {
-                    "maxSize": "4000",
-                    "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])",
-                    "helpText": "Include all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not impacted by adverse weather conditions. Ensure what’s documented here aligns to those assumptions documented within the Project Logic."
-                }
-            },
-            {
-                "template": "projectPartnerships",
-                "model": {
-                    "helpTextPartnerName":"Insert name of project partner. To be a project partner, they need to be actively involved in the planning or delivery of the project",
-                    "helpTextHeading":"Note: Not limited to key subcontractors."
-                }
-            },
-            {
-                "template": "extendedBaselineMonitoring",
-                "model": {
-                    "approachHeading": "Monitoring method",
-                    "indicatorHeading": "Monitoring methodology",
-                    "baselineDataHelpText": "Existing baseline data needs to be based on best practice methods and be compatible with the EMSA protocols.",
-                    "baselineDataDescriptionHelpText": "Describe the project baseline to be established, or the baseline data that currently exists",
-                    "baselineServiceHelpText": "Select the relevant Project Service(s)/Target measure(s) that will be used to support the development of the baseline",
-                    "monitoringServiceHelpText": "Select the relevant Project Services(s)/Target measure(s) that will be used to support ongoing monitoring",
-                    "baselineMethodHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
-                    "approachHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
-                    "titleHelpText": "Describe the Project Baseline(s) and ongoing monitoring which will be used to report progress towards this projects outcome(s).  Project Services/Target measures selected in this section will be pre-populated into the Project services and targets and Project service forecasts tables",
-                    "newIndicatorText": "New monitoring indicator",
-                    "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance"
-                }
-            },
-            {
-                "template": "projectReview",
-                "model": {
-                    "title": "Project review, improvement and evaluation methodology and approach (3000 character limit [approximately 500 words])"
-                }
-            },
-            {
-                "template": "nationalAndRegionalPlans",
-                "model": {
-                    "includeUrl": true,
-                    "headingTitle": "Conservation and management plans"
-                }
-            },
-            {
-                "template": "serviceOutcomeTargets",
-                "model": {
-                    "title": "Project services and targets",
-                    "serviceName": "Service",
-                    "titleHelpText":"Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections"
-                }
-            },
-            {
-                "template": "serviceForecasts",
-                "excludedModes":["PRINT"],
-                "model": {
-                    "titleHelpText":"Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections"
-                }
-
-            }
-        ],
-        keyThreatCodes: [
-            'Climate Change - Changed flooding regime',
-            'Climate Change - Changed rainfall patterns',
-            'Climate Change - Sea level rises',
-            'Climate Change - Unexpected seasonal/temperature extremes',
-            'Disease/pathogens - Areas that are infected',
-            'Disease/pathogens - Possible infection of disease free areas',
-            'Fire - Inappropriate fire regime',
-            'Fire - Lack of protection for ecological assets during fire control activities',
-            'Genetics - Bottleneck/inbreeding',
-            'Habitat loss - Breeding place disturbance',
-            'Habitat loss - Dieback/senescence',
-            'Habitat loss - Feeding habitat loss/interference',
-            'Habitat loss - Habitat fragmentation',
-            'Habitat loss - Land clearing',
-            'Habitat loss - Loss of critical ecosystem service supporting habitat',
-            'Human interference - Fish and harvesting aquatic resources (commercial)',
-            'Human interference - Flow-on effects of housing development',
-            'Human interference - Illegal activities',
-            'Human interference - Industrial development',
-            'Human interference - Land use intensification',
-            'Human interference - Recreational fishing',
-            'Human interference - Recreational pressures',
-            'Human interference - Road/vehicle strike',
-            'Land management practices - Changes to hydrology and aquatic systems',
-            'Land management practices - Domestic grazing/stock impacts',
-            'Land management practices - Excess recharge of groundwater',
-            'Land management practices - Excess use (or over-use) of surface water or groundwater resources',
-            'Land management practices - Excessive fertiliser use',
-            'Land management practices - Inappropriate ground cover management',
-            'Land management practices - Runoff',
-            'Native fauna - Competition',
-            'Native fauna - Predation',
-            'Pest - Competition/exclusion',
-            'Pest - Disease transmission',
-            'Pest - Habitat degradation',
-            'Pest - Introduction of new pest animals',
-            'Pest - Predation',
-            'Pollution - Chemical',
-            'Pollution - Eutrophication/algal blooms',
-            'Pollution - Inappropriate waste disposal',
-            'Pollution - Sediment ',
-            'Population size/range - Low habitat area',
-            'Population size/range - Low population numbers',
-            'Weeds - Competition',
-            'Weeds - Introduction of new weed',
-            'Weeds - Spread of weeds from surrounding areas'
-        ],
-        priorityPlaces: [
+        "priorityPlaces": [
             "Australian Alps – NSW/ACT/VIC",
             "Brigalow Country – QLD",
             "Bruny Island – TAS",
@@ -527,8 +515,9 @@ var config =
             "South East Coastal Ranges – NSW/VIC",
             "Southern Plains, including the Western Victorian volcanic plain and karst springs – VIC/SA",
             "Yampi Sounds and surrounds – WA"
-        ]
-
+        ],
+        "supportsParatoo": true,
+        "supportsMeriPlanHistory": true
     };
 
 
@@ -572,22 +561,25 @@ var priorities = [
     {
         "category": "Priority Threatened Species Primary",
         "priority": "Gamba Grass (Andropogon gayanus)"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Arnhem Plateau sandstone shrubland complex"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Kakadu and West Arnhem"
     }
 ];
 
-let parentProgram = "Saving Native Species";
+
+//Create the parent program
+let programName = "Saving Native Species";
+var parent = createOrFindProgram(programName);
 var subprograms = ["Gamba Grass Control"]
 
-var parent = db.program.find({name: parentProgram}).next();
 subprograms.forEach(function (subProgram){
-    var now = ISODate();
-    var p = {name: subProgram, programId: UUID.generate(), dateCreated: now, lastUpdate: now, parent: parent._id, status: "active"}
-    var program = db.program.find({name: subProgram})
-    if (!program.hasNext()) {
-        db.program.insertOne(p);
-    } else {
-        print("Program Already Exist: " + subProgram)
-    }
+    createOrFindProgram(subProgram, parent._id);
 });
 
 subprograms.forEach(function (subprogram){
@@ -596,7 +588,7 @@ subprograms.forEach(function (subprogram){
         var p = program.next();
         print("sub program ID: " + p.programId)
         db.program.updateOne({programId:p.programId}, {$set:{config:config, outcomes:outcomes, priorities:priorities}});
+        useNhtServiceLabels(p.name);
     }
 });
-
 
