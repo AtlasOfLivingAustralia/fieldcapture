@@ -192,13 +192,19 @@ class DatasetSpec extends StubbedCasSpec{
         set.threatenedSpeciesIndex = "Yes"
         set.format = "JSON"
         set.sensitivities =["Commercially sensitive", "Ecologically sensitive"]
-        set.publicationUrl = "https://www.ala.org.au"
         set.threatenedSpeciesDateOfUpload = '21-01-2021'
         set.dataSetSize = '200'
+        set.publicationUrl = "https://www.ala.org.au"
+
         set.createButton.click()
 
         then:
-        waitFor { at RlpProjectPage }
+        waitFor {
+            // This test is failing sometimes on actions due to what seems to be a validation error - trying to track it down.
+            println js.exec("return \$('div.formError').next()")?.collect{[it.getAttribute('name'), it.getAttribute('id'), it.getAttribute('data-bind')]}
+
+            at RlpProjectPage
+        }
         waitFor {$("#project-data-sets .fa-edit").displayed}
         $('[data-bind*="text: progress"]').displayed
         $('[data-bind*="text: progress"]').text() == "finished"

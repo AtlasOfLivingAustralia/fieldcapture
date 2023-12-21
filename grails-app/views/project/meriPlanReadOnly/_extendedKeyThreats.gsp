@@ -31,7 +31,7 @@
             </span>
         </td>
         <td class="services">
-            <span data-bind="text:$root.targetMeasureLabels(relatedTargetMeasures)"></span>
+            <g:render template="/project/meriPlanReadOnly/arrayAsList" model="${[source:'$root.targetMeasureLabels(relatedTargetMeasures)']}"/>
         </td>
         <td class="intervention">
             <span class="textarea-view" data-bind="text: intervention"></span>

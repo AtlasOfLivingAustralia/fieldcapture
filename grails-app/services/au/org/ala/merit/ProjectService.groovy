@@ -357,7 +357,7 @@ class ProjectService  {
             // the "custom" Map which can contain properties "details" (the MERI plan) and "dataSets" (data set summaries)
             // The longer term solution for this is to model Projects explicitly/correctly in ecodata
             if (projectDetails.custom) {
-                projectDetails.custom.details?.lastUpdated = DateUtils.format(new Date())
+                projectDetails.custom.details?.lastUpdated = DateUtils.formatAsISOStringNoMillis(new Date())
 
                 Map custom = currentProject.custom ?: [:]
                 custom.putAll(projectDetails.custom)

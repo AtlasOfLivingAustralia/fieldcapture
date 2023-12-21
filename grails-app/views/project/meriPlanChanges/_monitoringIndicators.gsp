@@ -20,10 +20,10 @@
     <g:each in="${(0..<1)}" var="i">
     <tr>
         <td class="index"><span data-bind="text: ${i}+1"></span></td>
-        <td class="baseline"><fc:renderComparisonMonitoring changed="${changed.custom.details.monitoring.rows ?: []}" i="${i}" code="${code}" original="${project.custom.details.monitoring.rows ?: []}" property="data1"/></td>
-        <td class="monitoring-service"><fc:renderComparisonMonitoring changed="${changed.custom.details.monitoring.rows ?: []}" i="${i}" code="${code}" original="${project.custom.details.monitoring.rows ?: []}" property="relatedTargetMeasures"/></td>
-        <td class="monitoring-method"><fc:renderComparisonMonitoring changed="${changed.custom.details.monitoring.rows ?: []}" i="${i}" code="${code}" original="${project.custom.details.monitoring.rows ?: []}" property="protocols"/></td>
-        <td class="monitoring-evidence"><fc:renderComparisonMonitoring changed="${changed.custom.details.monitoring.rows ?: []}" i="${i}" code="${code}" original="${project.custom.details.monitoring.rows ?: []}" property="evidence"/></td>
+        <td class="baseline"><fc:renderComparisonMonitoring config="${config}" changed="${changed.custom.details.monitoring.rows ?: []}" i="${i}" code="${code}" original="${project.custom.details.monitoring.rows ?: []}" property="data1"/></td>
+        <td class="monitoring-service"><fc:renderComparisonMonitoring config="${config}" changed="${changed.custom.details.monitoring.rows ?: []}" i="${i}" code="${code}" original="${project.custom.details.monitoring.rows ?: []}" property="relatedTargetMeasures"/></td>
+        <td class="monitoring-method"><fc:renderComparisonMonitoring config="${config}" changed="${changed.custom.details.monitoring.rows ?: []}" i="${i}" code="${code}" original="${project.custom.details.monitoring.rows ?: []}" property="protocols"/></td>
+        <td class="monitoring-evidence"><fc:renderComparisonMonitoring config="${config}" changed="${changed.custom.details.monitoring.rows ?: []}" i="${i}" code="${code}" original="${project.custom.details.monitoring.rows ?: []}" property="evidence"/></td>
     </tr>
     </g:each>
     </tbody>

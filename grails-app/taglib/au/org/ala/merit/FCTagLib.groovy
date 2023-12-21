@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.cas.util.AuthenticationCookieUtils
+import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.web.AuthService
 import bootstrap.Attribute
 import com.naleid.grails.MarkdownService
@@ -932,7 +933,7 @@ class FCTagLib {
         out << '<span class="original hide">'
         if (original && original.size() > i) {
             if (original[i][property] instanceof List) {
-                out << original[i][property].collect{it}.join(',')
+                out << original[i][property].collect{it}.join(', ')
             } else {
                 out << original[i][property]
             }
@@ -942,7 +943,7 @@ class FCTagLib {
         out << '<span class="changed hide">'
         if (changed && changed.size() > i) {
             if (changed[i][property] instanceof List) {
-                out << changed[i][property].collect{it}.join(',')
+                out << changed[i][property].collect{it}.join(', ')
             } else {
                 out << changed[i][property]
             }
@@ -959,6 +960,7 @@ class FCTagLib {
         List changed = attrs.changed
         int i = attrs.i
         String property = attrs.property
+        ProgramConfig config = attrs.config
 
         def origMonitoringList = original
         def resultOrigMonitoringList = []
@@ -979,7 +981,7 @@ class FCTagLib {
         out << '<span class="original hide">'
         if (resultOrigMonitoringList && resultOrigMonitoringList.size() > i) {
             if (property == 'relatedTargetMeasures') {
-                out << getScoreLabels(resultOrigMonitoringList[property]).labels
+                out << getScoreLabels(resultOrigMonitoringList[property], config)
             } else {
                 if (resultOrigMonitoringList[property] instanceof List) {
                     out << resultOrigMonitoringList[property].collect{it}.join(',')
@@ -994,7 +996,7 @@ class FCTagLib {
         out << '<span class="changed hide">'
         if (resultChangedMonitoringList && resultChangedMonitoringList.size() > i) {
             if (property == 'relatedTargetMeasures') {
-                out << getScoreLabels(resultChangedMonitoringList[property]).labels
+                out << getScoreLabels(resultChangedMonitoringList[property], config)
             } else {
                 if (resultChangedMonitoringList[property] instanceof List) {
                     out << resultChangedMonitoringList[property].collect{it}.join(',')
@@ -1014,11 +1016,12 @@ class FCTagLib {
         List changed = attrs.changed
         int i = attrs.i
         String property = attrs.property
+        ProgramConfig config = attrs.config
 
         try {
             out << '<span class="original hide">'
             if (original && original.size() > i) {
-                out << getScoreLabels(original[i][property]).labels
+                out << getScoreLabels(original[i][property], config)
             }
             out << '</span>'
         } catch(Exception e) {
@@ -1027,7 +1030,7 @@ class FCTagLib {
 
         out << '<span class="changed hide">'
         if (changed && changed.size() > i) {
-            out << getScoreLabels(changed[i][property]).labels
+            out << getScoreLabels(changed[i][property], config)
         }
         out << '</span>'
 
@@ -1035,17 +1038,17 @@ class FCTagLib {
 
     }
 
-    def renderComparisonOutputType = { attrs ->
+    def renderComparisonService = { attrs ->
 
         List original = attrs.original
         List changed = attrs.changed
         int i = attrs.i
-        String property = attrs.property
+        ProgramConfig programConfig = attrs.programConfig
 
         try {
             out << '<span class="original hide">'
             if (original && original.size() > i) {
-                out << getScoreLabels(original[i][property]).outputTypes
+                out << serviceLabel(original[i].scoreId, programConfig)
             }
             out << '</span>'
 
@@ -1055,12 +1058,21 @@ class FCTagLib {
 
         out << '<span class="changed hide">'
         if (changed && changed.size() > i) {
-            out << getScoreLabels(changed[i][property]).outputTypes
+            out << serviceLabel(changed[i].scoreId, programConfig)
         }
         out << '</span>'
 
         out << '<span class="diff"></span>'
 
+    }
+
+    private static String serviceLabel(String scoreId, ProgramConfig programConfig) {
+        Map service = programConfig.services.find { Map service ->
+            service.scores.find{ Map score ->
+                score.scoreId == scoreId
+            }
+        }
+        service?.name ?: 'Unsupported service'
     }
 
     def status = { attrs ->
@@ -1177,28 +1189,29 @@ class FCTagLib {
         }, null)
     }
 
-    private Map getScoreLabels(def scoreIds) {
-        List<Map> scores = metadataService.getOutputTargetScores()
-        List outputTypes = []
+    private static String getScoreLabels(def scoreIds, ProgramConfig config) {
         List labels = []
         if (scoreIds instanceof List) {
             for (String scoreId : scoreIds) {
-                scores.each {
-                    if (scoreId == it.scoreId) {
-                        outputTypes.add(it.outputType)
-                        labels.add(it.label)
-                    }
-                }
+                labels.add(scoreLabel(scoreId, config))
             }
         } else {
-            scores.each {
-                if (scoreIds == it.scoreId) {
-                    outputTypes.add(it.outputType)
-                    labels.add(it.label)
-                }
-            }
+            labels.add(scoreLabel(scoreIds, config))
         }
 
-        return [outputTypes:outputTypes.join(","), labels:labels.join(",")]
+        return labels.join(', ')
+    }
+
+    private static String scoreLabel(String scoreId, ProgramConfig config) {
+        String label
+        config.services.find { Map service ->
+            service.scores.find{ Map score ->
+                if (score.scoreId == scoreId) {
+                    label = score.label
+                }
+                label
+            }
+        }
+        label ?: 'Unsupported target measure'
     }
 }
