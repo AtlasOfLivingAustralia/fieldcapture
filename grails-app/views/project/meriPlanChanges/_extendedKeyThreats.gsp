@@ -33,7 +33,7 @@
                 <fc:renderComparison changed="${changed.custom.details.threats.rows ?: []}" i="${i}" original="${project.custom.details.threats.rows ?: []}" property="threat"/>
             </td>
             <td class="services">
-                <fc:renderComparisonScoreLabel changed="${changed.custom.details.threats.rows ?: []}" i="${i}" original="${project.custom.details.threats.rows ?: []}" property="relatedTargetMeasures"/>
+                <fc:renderComparisonScoreLabel config="${config}" changed="${changed.custom.details.threats.rows ?: []}" i="${i}" original="${project.custom.details.threats.rows ?: []}" property="relatedTargetMeasures"/>
             </td>
             <td class="intervention">
                 <fc:renderComparison changed="${changed.custom.details.threats.rows ?: []}" i="${i}" original="${project.custom.details.threats.rows ?: []}" property="intervention"/>
