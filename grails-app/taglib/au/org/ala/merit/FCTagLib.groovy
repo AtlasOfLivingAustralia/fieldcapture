@@ -933,7 +933,7 @@ class FCTagLib {
         out << '<span class="original hide">'
         if (original && original.size() > i) {
             if (original[i][property] instanceof List) {
-                out << original[i][property].collect{it}.join(', ')
+                out << fakeBulletedList(original[i][property])
             } else {
                 out << original[i][property]
             }
@@ -943,7 +943,7 @@ class FCTagLib {
         out << '<span class="changed hide">'
         if (changed && changed.size() > i) {
             if (changed[i][property] instanceof List) {
-                out << changed[i][property].collect{it}.join(', ')
+                out << fakeBulletedList(changed[i][property])
             } else {
                 out << changed[i][property]
             }
@@ -1017,7 +1017,6 @@ class FCTagLib {
         int i = attrs.i
         String property = attrs.property
         ProgramConfig config = attrs.config
-
         try {
             out << '<span class="original hide">'
             if (original && original.size() > i) {
@@ -1199,7 +1198,40 @@ class FCTagLib {
             labels.add(scoreLabel(scoreIds, config))
         }
 
-        return labels.join(', ')
+        return fakeBulletedList(labels)
+    }
+
+    private static String fakeBulletedList(List items, int spaceAfterCharacterCount = 20) {
+        String result = ''
+        if (items.size() == 1) {
+            result = items[0]
+        } else {
+            for (int i=0; i<items.size(); i++) {
+                String item = items[i]
+                result += '\u2022&nbsp;'
+
+                // replace any space characters in blocks of 20 characters or so with non-breaking spaces
+                // to fake formatting a bulleted list.
+                int count = 0
+                item.tokenize(' \t').eachWithIndex { String word, int index ->
+                    count += word.length()
+                    result += word
+                    if (count < spaceAfterCharacterCount) {
+                        result += '&nbsp;'
+                    }
+                    else {
+                        result += ' '
+                        count = 0
+                    }
+                }
+
+                if (i<items.size() -1) {
+                    result += ', '
+                }
+            }
+
+        }
+        result
     }
 
     private static String scoreLabel(String scoreId, ProgramConfig config) {
