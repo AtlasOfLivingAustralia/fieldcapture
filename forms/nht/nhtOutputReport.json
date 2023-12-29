@@ -11873,7 +11873,7 @@
                 "name": "areaPreparedHa",
                 "decimalPlaces": 3,
                 "units": "ha",
-                "validate": "required,min[0]"
+                "validate": "min[0]"
               },
               {
                 "defaultValue": {
@@ -12007,6 +12007,29 @@
             }
           },
           {
+            "dataType": "number",
+            "name": "totalNoDaysCulturalPractices",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(firstNationAreasControlled, \"noDaysConductingCulturalPractices\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalNoDaysCulturalPracticesInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalNoDaysCulturalPractices",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 1
+          },
+          {
             "dataType": "text",
             "name": "comments",
             "validate": "maxSize[1500]"
@@ -12097,6 +12120,46 @@
             "disableTableUpload": false,
             "source": "",
             "type": "table"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Totals Summary</h3>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(i) Total number of days conducting cultural practices during this reporting period",
+                        "source": "totalNoDaysCulturalPractices",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(ii) Total number of days conducting cultural practices <b><i>invoiced</i></b> for during this reporting period",
+                        "source": "totalNoDaysCulturalPracticesInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           },
           {
             "addRowText": "Add a new controlled area",
@@ -14032,7 +14095,7 @@
                   {
                     "name": "relatedOutcomes",
                     "dataType": "text",
-                    "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
+                    "description": "More than one outcome could be selected.",
                     "validate": "required",
                     "constraints": {
                       "textProperty": "label",
@@ -14072,6 +14135,98 @@
             "computed": {
               "expression": "count(habitatAugmentationAreas, \"relatedOutcomes\")"
             }
+          },
+          {
+            "dataType": "number",
+            "name": "totalAreaAugmentationInitial",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(habitatAugmentationAreas, \"areaImplementedHa\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalAreaAugmentationInitialInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalAreaAugmentationInitial",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 1
+          },
+          {
+            "dataType": "number",
+            "name": "totalAreaAugmentationMaintained",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(habitatAugmentationAreas, \"areaImplementedHa\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalAreaAugmentationMaintainedInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalAreaAugmentationMaintained",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 1
+          },
+          {
+            "dataType": "number",
+            "name": "totalStructuresInstalledInitial",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(habitatAugmentationAreas, \"noStructuresInstalled\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalStructuresInstalledInitialInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalStructuresInstalledInitial",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 1
+          },
+          {
+            "dataType": "number",
+            "name": "totalStructuresInstalledMaintained",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(habitatAugmentationAreas, \"noStructuresInstalled\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalStructuresInstalledMaintainedInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalStructuresInstalledMaintained",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 1
           },
           {
             "dataType": "text",
@@ -14165,6 +14320,124 @@
             "disableTableUpload": false,
             "source": "",
             "type": "table"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Totals Summary</h3>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(i) Total area (ha) of augmentation during this reporting period (Initial)",
+                        "source": "totalAreaAugmentationInitial",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(ii) Total area (ha) of debris removal <b><u>invoiced</b></u> for this reporting period (Initial)",
+                        "source": "totalAreaAugmentationInitialInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(iii) Total area (ha) of augmentation during this reporting period (maintained)",
+                        "source": "totalAreaAugmentationMaintained",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(iv) Total area (ha) of augmentation <b><u>invoiced</b></u> for during this reporting period (maintained)",
+                        "source": "totalAreaAugmentationMaintainedInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(v) Number of locations where structures installed during this reporting period (Initial)",
+                        "source": "totalStructuresInstalledInitial",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(vi) Number of locations where structures installed <b><u>invoiced</b></u> for during this reporting period (Initial)",
+                        "source": "totalStructuresInstalledInitialInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(vii) Number of locations where structures installed during this reporting period (maintained)",
+                        "source": "totalStructuresInstalledMaintained",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(viii) Number of locations where structures installed <b><u>invoiced</b></u> for during this reporting period (maintained)",
+                        "source": "totalStructuresInstalledMaintainedInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           },
           {
             "preLabel": "Number of Habitat Augmentation surveys conducted:",
@@ -14414,6 +14687,12 @@
               {
                 "columns": [
                   {
+                    "width": "15%",
+                    "source": "relatedOutcomes",
+                    "type": "selectOne",
+                    "title": "Which outcome statement/s relates to this survey?"
+                  },
+                  {
                     "title": "Activity start date",
                     "source": "activitiesStartDate",
                     "type": "date",
@@ -14486,12 +14765,6 @@
                     "source": "investmentPrioritiesActivityRelates",
                     "title": "Which investment priority does this activity relate to?",
                     "type": "text"
-                  },
-                  {
-                    "width": "15%",
-                    "source": "relatedOutcomes",
-                    "type": "selectOne",
-                    "title": "Which outcome statement/s relates to this survey?"
                   }
                 ],
                 "userAddedRows": false,
