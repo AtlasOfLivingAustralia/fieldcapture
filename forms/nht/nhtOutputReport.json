@@ -15993,7 +15993,7 @@
     {
       "collapsedByDefault": false,
       "template": {
-        "title": "Identifying the location of potential sites",
+        "title": "Identifying and Prioritising the Location of Potential Sites",
         "modelName": "NHT - Identifying sites",
         "dataModel": [
           {
@@ -16356,6 +16356,29 @@
             }
           },
           {
+            "dataType": "number",
+            "name": "totalPotentialSites",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(potentialSiteSurveys, \"numberPotentialSitesAssessed\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalPotentialSitesInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalPotentialSites",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 1
+          },
+          {
             "dataType": "text",
             "name": "comments",
             "validate": "maxSize[1500]"
@@ -16448,6 +16471,46 @@
                 "disableTableUpload": false,
                 "source": "",
                 "type": "table"
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "literal",
+                    "source": "<h3>Totals Summary</h3>"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "col",
+                    "css": "span4 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(i) Total number of potential sites assessed during this reporting period",
+                            "source": "totalPotentialSites",
+                            "type": "number"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(ii) Total number of potential sites assessed <b><i>invoiced</i></b> for during this reporting period",
+                            "source": "totalPotentialSitesInvoiced",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
               },
               {
                 "preLabel": "Number of Potential sites conducted:",
@@ -16727,7 +16790,7 @@
       "templateName": "nhtIdentifyingSites",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Identifying the location of potential sites",
+      "title": "Identifying and Prioritising the Location of Potential Sites",
       "collapsibleHeading": null,
       "name": "NHT - Identifying sites",
       "description": null
@@ -16823,298 +16886,330 @@
                 "validate": "required"
               },
               {
-                "columns": [
+                "dataType": "feature",
+                "name": "sitesTreated",
+                "validate": "required"
+              },
+              {
+                "computed": {
+                  "expression": "$geom.areaHa(sitesTreated)"
+                },
+                "dataType": "number",
+                "name": "calculatedAreaTreatedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "behaviour": [
                   {
-                    "dataType": "feature",
-                    "name": "sitesTreated",
-                    "validate": "required"
-                  },
-                  {
-                    "computed": {
-                      "expression": "$geom.areaHa(sitesTreated)"
-                    },
-                    "dataType": "number",
-                    "name": "calculatedAreaTreatedHa",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "behaviour": [
-                      {
-                        "condition": "areaInvoicedTreatedHa > 0",
-                        "type": "conditional_validation",
-                        "value": {
-                          "message": "The managed area must be mapped",
-                          "validate": "required,min[0.0001]"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "computed": {
-                      "expression": "$geom.lengthKm(sitesTreated)"
-                    },
-                    "dataType": "number",
-                    "name": "calculatedLengthTreatedKm",
-                    "units": "km",
-                    "decimalPlaces": 3,
-                    "behaviour": [
-                      {
-                        "condition": "lengthTreatedKm > 0",
-                        "type": "conditional_validation",
-                        "value": {
-                          "message": "The managed length must be mapped",
-                          "validate": "required,min[0.0001]"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "defaultValue": {
-                      "type": "computed",
-                      "expression": "calculatedAreaTreatedHa"
-                    },
-                    "dataType": "number",
-                    "name": "areaTreatedHa",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "validate": "required,min[0]"
-                  },
-                  {
-                    "defaultValue": {
-                      "type": "computed",
-                      "expression": "calculatedLengthTreatedKm"
-                    },
-                    "dataType": "number",
-                    "name": "lengthTreatedKm",
-                    "units": "km",
-                    "decimalPlaces": 3,
-                    "validate": "required,min[0]"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "mappingNotAlignedReason",
-                    "constraints": [
-                      "Mapped area simplifies more complex area/s where work was undertaken during this period",
-                      "Other"
-                    ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
-                        "type": "visible"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "mappingNotAlignedComments",
-                    "validate": "required,maxSize[100]",
-                    "behaviour": [
-                      {
-                        "type": "visible",
-                        "condition": "\"Other\" == mappingNotAlignedReason"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "document",
-                    "name": "extraMappingDetails",
-                    "validate": "required",
-                    "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
-                    "behaviour": [
-                      {
-                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
-                        "type": "visible"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "areaInvoicedTreatedHa",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "validate": [
-                      {
-                        "rule": "required"
-                      },
-                      {
-                        "rule": "min[0]"
-                      },
-                      {
-                        "rule": "max",
-                        "param": {
-                          "type": "computed",
-                          "expression": "areaTreatedHa"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedNotActualReason",
-                    "constraints": [
-                      "Work was undertaken over a greater area than will be invoiced for",
-                      "Other"
-                    ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
-                        "type": "visible"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedNotActualComments",
-                    "behaviour": [
-                      {
-                        "type": "visible",
-                        "condition": "\"Other\" == invoicedNotActualReason"
-                      }
-                    ],
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "defaultValue": {
-                      "type": "computed",
-                      "expression": "$geom.lengthKm(sitesTreated)"
-                    },
-                    "dataType": "number",
-                    "name": "lengthTreatedKm",
-                    "units": "km",
-                    "decimalPlaces": 3,
-                    "validate": [
-                      {
-                        "rule": "min",
-                        "param": {
-                          "type": "computed",
-                          "expression": "$geom.lengthKm(sitesTreated)*0.9"
-                        }
-                      },
-                      {
-                        "rule": "max",
-                        "param": {
-                          "type": "computed",
-                          "expression": "$geom.lengthKm(sitesTreated)*1.1"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "fireManagementType",
-                    "description": "",
-                    "constraints": [
-                      "Cultural burn",
-                      "Ecological burn",
-                      "Grading",
-                      "Hazard reduction burn",
-                      "Herbicide",
-                      "Slashing",
-                      "Other"
-                    ],
-                    "validate": "required"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "otherFireManagementType",
-                    "behaviour": [
-                      {
-                        "condition": "fireManagementType == \"Other\"",
-                        "type": "enable"
-                      }
-                    ],
-                    "validate": "required,maxSize[100]"
-                  },
-                  {
-                    "dataType": "feature",
-                    "name": "sitesBenefittedByFireAction"
-                  },
-                  {
-                    "computed": {
-                      "expression": "$geom.areaHa(sitesBenefittedByFireAction)"
-                    },
-                    "dataType": "number",
-                    "name": "areaBenefittedByFireActionHa"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "evidenceOfBenefit",
-                    "validate": "maxSize[300]"
-                  },
-                  {
-                    "name": "investmentPriorities2",
-                    "dataType": "stringList",
-                    "validate": "required",
-                    "constraints": {
-                      "type": "pre-populated",
-                      "config": {
-                        "source": {
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            }
-                          ],
-                          "url": "/project/listProjectInvestmentPriorities/"
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "otherInvestmentPriority",
-                    "behaviour": [
-                      {
-                        "type": "enable",
-                        "condition": "\"Other\" in investmentPriorities2"
-                      }
-                    ]
-                  },
-                  {
-                    "name": "relatedOutcomes",
-                    "dataType": "text",
-                    "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
-                    "validate": "required",
-                    "constraints": {
-                      "textProperty": "label",
-                      "valueProperty": "label",
-                      "type": "pre-populated",
-                      "config": {
-                        "source": {
-                          "url": "/project/outcomesByScores",
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            },
-                            {
-                              "expression": "scores",
-                              "name": "scoreIds",
-                              "type": "computed"
-                            }
-                          ]
-                        }
-                      }
+                    "condition": "areaInvoicedTreatedHa > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The managed area must be mapped",
+                      "validate": "required,min[0.0001]"
                     }
                   }
+                ]
+              },
+              {
+                "computed": {
+                  "expression": "$geom.lengthKm(sitesTreated)"
+                },
+                "dataType": "number",
+                "name": "calculatedLengthTreatedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "lengthTreatedKm > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The managed length must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "calculatedAreaTreatedHa"
+                },
+                "dataType": "number",
+                "name": "areaTreatedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "calculatedLengthTreatedKm"
+                },
+                "dataType": "number",
+                "name": "lengthTreatedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
                 ],
-                "dataType": "list",
-                "name": "fireManagementDetails"
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
+                    "type": "visible"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "validate": "required,maxSize[100]",
+                "behaviour": [
+                  {
+                    "type": "visible",
+                    "condition": "\"Other\" == mappingNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "validate": "required",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                    "type": "visible"
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "areaInvoicedTreatedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "areaTreatedHa"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualReason",
+                "constraints": [
+                  "Work was undertaken over a greater area than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                    "type": "visible"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualComments",
+                "behaviour": [
+                  {
+                    "type": "visible",
+                    "condition": "\"Other\" == invoicedNotActualReason"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "$geom.lengthKm(sitesTreated)"
+                },
+                "dataType": "number",
+                "name": "lengthTreatedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "min",
+                    "param": {
+                      "type": "computed",
+                      "expression": "$geom.lengthKm(sitesTreated)*0.9"
+                    }
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "$geom.lengthKm(sitesTreated)*1.1"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "fireManagementType",
+                "description": "",
+                "constraints": [
+                  "Cultural burn",
+                  "Ecological burn",
+                  "Grading",
+                  "Hazard reduction burn",
+                  "Herbicide",
+                  "Slashing",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "otherFireManagementType",
+                "behaviour": [
+                  {
+                    "condition": "fireManagementType == \"Other\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,maxSize[100]"
+              },
+              {
+                "dataType": "feature",
+                "name": "sitesBenefittedByFireAction"
+              },
+              {
+                "computed": {
+                  "expression": "$geom.areaHa(sitesBenefittedByFireAction)"
+                },
+                "dataType": "number",
+                "name": "areaBenefittedByFireActionHa"
+              },
+              {
+                "dataType": "text",
+                "name": "evidenceOfBenefit",
+                "validate": "maxSize[300]"
+              },
+              {
+                "name": "investmentPriorities2",
+                "dataType": "stringList",
+                "validate": "required",
+                "constraints": {
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        }
+                      ],
+                      "url": "/project/listProjectInvestmentPriorities/"
+                    }
+                  }
+                }
+              },
+              {
+                "dataType": "text",
+                "name": "otherInvestmentPriority",
+                "behaviour": [
+                  {
+                    "type": "enable",
+                    "condition": "\"Other\" in investmentPriorities2"
+                  }
+                ]
+              },
+              {
+                "name": "relatedOutcomes",
+                "dataType": "text",
+                "description": "More than one outcome could be selected.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "label",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "url": "/project/outcomesByScores",
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        },
+                        {
+                          "expression": "scores",
+                          "name": "scoreIds",
+                          "type": "computed"
+                        }
+                      ]
+                    }
+                  }
+                }
               }
             ],
             "dataType": "list",
-            "name": "areasControlled"
+            "name": "fireManagementDetails"
           },
           {
-            "name": "fireMgmtCountHeader",
-            "type": "number",
+            "dataType": "number",
+            "name": "totalAreaTreatedFireMgmtInitial",
+            "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(areasControlled, \"relatedOutcomes\")"
+              "expression": "sum(fireManagementDetails, \"areaTreatedHa\")"
             }
+          },
+          {
+            "dataType": "number",
+            "name": "totalAreaTreatedFireMgmtInitialInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalAreaTreatedFireMgmtInitial",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 1
+          },
+          {
+            "dataType": "number",
+            "name": "totalAreaTreatedFireMgmtFollowup",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(fireManagementDetails, \"areaTreatedHa\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalAreaTreatedFireMgmtFollowupInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalAreaTreatedFireMgmtFollowup",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 1
           },
           {
             "dataType": "text",
@@ -17210,219 +17305,266 @@
             "type": "table"
           },
           {
-            "preLabel": "Number of Fire Management Actions surveys conducted:",
-            "noEdit": true,
-            "type": "number",
-            "source": "fireMgmtCountHeader"
-          },
-          {
-            "addRowText": "Add a new controlled area",
-            "userAddedRows": true,
-            "source": "areasControlled",
-            "type": "repeat",
+            "type": "row",
             "items": [
               {
-                "type": "row",
-                "css": "border-bottom",
+                "type": "literal",
+                "source": "<h3>Totals Summary</h3>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
                 "items": [
                   {
-                    "preLabel": "Initial or follow-up?",
-                    "css": "span3",
-                    "source": "initialOrFollowup",
-                    "type": "selectOne"
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(i) Total area (ha) treated by fire management action/s during this reporting period (Initial)",
+                        "source": "totalAreaTreatedFireMgmtInitial",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(ii) Total area (ha) treated by fire management action/s <b><i>invoiced</i></b> for during this reporting period (Initial)",
+                        "source": "totalAreaTreatedFireMgmtInitialInvoiced",
+                        "type": "number"
+                      }
+                    ]
                   }
                 ]
               },
               {
-                "columns": [
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
                   {
-                    "width": "10%",
-                    "title": "Site/s treated by fire management action",
-                    "type": "col",
+                    "type": "row",
                     "items": [
                       {
-                        "source": "sitesTreated",
-                        "type": "feature"
-                      },
-                      {
-                        "source": "calculatedAreaTreatedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        },
-                        "readonly": "readonly"
-                      },
-                      {
-                        "source": "calculatedLengthTreatedKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        },
-                        "readonly": "readonly"
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Please attach mapping details",
-                            "source": "extraMappingDetails",
-                            "type": "document"
-                          }
-                        ]
+                        "preLabel": "(iii) Total area (ha) treated by fire management action/s during this reporting period (follow up)",
+                        "source": "totalAreaTreatedFireMgmtFollowup",
+                        "type": "number"
                       }
                     ]
                   },
                   {
-                    "width": "10%",
-                    "type": "col",
-                    "title": "Actual area (ha) / length (km) treated by managment action",
-                    "helpText": "Enter the amount you will invoice for during this reporting period.",
+                    "type": "row",
                     "items": [
                       {
-                        "source": "areaTreatedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      },
-                      {
-                        "source": "lengthTreatedKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Reason for actual being different to mapped amount",
-                            "source": "mappingNotAlignedReason",
-                            "type": "selectOne"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                            "source": "mappingNotAlignedComments",
-                            "type": "textarea",
-                            "rows": 5
-                          }
-                        ]
+                        "preLabel": "(iv) Total area (ha) treated by fire management action/s invoiced for during this reporting period (follow up)",
+                        "source": "totalAreaTreatedFireMgmtFollowupInvoiced",
+                        "type": "number"
                       }
                     ]
-                  },
-                  {
-                    "width": "10%",
-                    "type": "col",
-                    "title": "Invoiced area (ha) treated by management action",
-                    "helpText": "Enter the amount you will invoice for during this reporting period.",
-                    "items": [
-                      {
-                        "source": "areaInvoicedTreatedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Reason for invoiced amount being different to actual amount",
-                            "source": "invoicedNotActualReason",
-                            "type": "selectOne"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                            "source": "invoicedNotActualComments",
-                            "type": "textarea",
-                            "rows": 5
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "width": "10%",
-                    "title": "Type of fire management action",
-                    "type": "col",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "fireManagementType",
-                            "type": "select2"
-                          }
-                        ]
-                      },
-                      {
-                        "source": "otherFireManagementType",
-                        "type": "text"
-                      }
-                    ]
-                  },
-                  {
-                    "width": "15%",
-                    "type": "col",
-                    "title": "Please map any off-site area/s if they benefitted from this fire management action",
-                    "items": [
-                      {
-                        "source": "sitesBenefittedByFireAction",
-                        "type": "feature",
-                        "title": "Please map any off-site area/s if they benefitted from this fire management action"
-                      },
-                      {
-                        "source": "areaBenefittedByFireActionHa",
-                        "type": "number",
-                        "readonly": "readonly",
-                        "title": "Area (ha) protected by fire management action"
-                      }
-                    ]
-                  },
-                  {
-                    "width": "15%",
-                    "source": "evidenceOfBenefit",
-                    "type": "textarea",
-                    "rows": 3,
-                    "title": "If off-site area was mapped please provide a description on the evidence available to reflect this benefit"
-                  },
-                  {
-                    "width": "15%",
-                    "type": "col",
-                    "title": "Which investment priority does this activity relate to?",
-                    "items": [
-                      {
-                        "source": "investmentPriorities2",
-                        "type": "select2Many"
-                      },
-                      {
-                        "source": "otherInvestmentPriority",
-                        "type": "text"
-                      }
-                    ]
-                  },
-                  {
-                    "width": "15%",
-                    "source": "relatedOutcomes",
-                    "type": "selectOne",
-                    "title": "Which outcome statement/s relates to this survey?"
                   }
-                ],
-                "userAddedRows": true,
-                "source": "fireManagementDetails",
-                "type": "table"
+                ]
               }
             ]
+          },
+
+          {
+            "columns": [
+              {
+                "width": "10%",
+                "source": "initialOrFollowup",
+                "type": "selectOne",
+                "title": "Initial or follow-up?"
+              },
+              {
+                "width": "15%",
+                "source": "relatedOutcomes",
+                "type": "selectOne",
+                "title": "Which outcome statement/s does this activity relate to?"
+              },
+              {
+                "width": "10%",
+                "title": "Site/s treated by fire management action",
+                "type": "col",
+                "items": [
+                  {
+                    "source": "sitesTreated",
+                    "type": "feature"
+                  },
+                  {
+                    "source": "calculatedAreaTreatedHa",
+                    "type": "number",
+                    "displayOptions": {
+                      "displayUnits": true
+                    },
+                    "readonly": "readonly"
+                  },
+                  {
+                    "source": "calculatedLengthTreatedKm",
+                    "type": "number",
+                    "displayOptions": {
+                      "displayUnits": true
+                    },
+                    "readonly": "readonly"
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "Please attach mapping details",
+                        "source": "extraMappingDetails",
+                        "type": "document"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "width": "10%",
+                "type": "col",
+                "title": "Actual area (ha) / length (km) treated by managment action",
+                "helpText": "Enter the amount you will invoice for during this reporting period.",
+                "items": [
+                  {
+                    "source": "areaTreatedHa",
+                    "type": "number",
+                    "displayOptions": {
+                      "displayUnits": true
+                    }
+                  },
+                  {
+                    "source": "lengthTreatedKm",
+                    "type": "number",
+                    "displayOptions": {
+                      "displayUnits": true
+                    }
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "Reason for actual being different to mapped amount",
+                        "source": "mappingNotAlignedReason",
+                        "type": "selectOne"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                        "source": "mappingNotAlignedComments",
+                        "type": "textarea",
+                        "rows": 5
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "width": "10%",
+                "type": "col",
+                "title": "Invoiced area (ha) treated by management action",
+                "helpText": "Enter the amount you will invoice for during this reporting period.",
+                "items": [
+                  {
+                    "source": "areaInvoicedTreatedHa",
+                    "type": "number",
+                    "displayOptions": {
+                      "displayUnits": true
+                    }
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "Reason for invoiced amount being different to actual amount",
+                        "source": "invoicedNotActualReason",
+                        "type": "selectOne"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                        "source": "invoicedNotActualComments",
+                        "type": "textarea",
+                        "rows": 5
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "width": "10%",
+                "title": "Type of fire management action",
+                "type": "col",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "source": "fireManagementType",
+                        "type": "select2"
+                      }
+                    ]
+                  },
+                  {
+                    "source": "otherFireManagementType",
+                    "type": "text"
+                  }
+                ]
+              },
+              {
+                "width": "10%",
+                "type": "col",
+                "title": "Please map any off-site area/s if they benefitted from this fire management action",
+                "items": [
+                  {
+                    "source": "sitesBenefittedByFireAction",
+                    "type": "feature",
+                    "title": "Please map any off-site area/s if they benefitted from this fire management action"
+                  },
+                  {
+                    "source": "areaBenefittedByFireActionHa",
+                    "type": "number",
+                    "readonly": "readonly",
+                    "title": "Area (ha) protected by fire management action"
+                  }
+                ]
+              },
+              {
+                "width": "10%",
+                "source": "evidenceOfBenefit",
+                "type": "textarea",
+                "rows": 3,
+                "title": "If off-site area was mapped please provide a description on the evidence available to reflect this benefit"
+              },
+              {
+                "width": "15%",
+                "type": "col",
+                "title": "Which investment priority does this activity relate to?",
+                "items": [
+                  {
+                    "source": "investmentPriorities2",
+                    "type": "select2Many"
+                  },
+                  {
+                    "source": "otherInvestmentPriority",
+                    "type": "text"
+                  }
+                ]
+              }
+            ],
+            "userAddedRows": true,
+            "source": "fireManagementDetails",
+            "type": "table"
           },
           {
             "type": "row",
