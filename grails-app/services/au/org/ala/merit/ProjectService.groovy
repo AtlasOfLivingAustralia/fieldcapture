@@ -2103,9 +2103,11 @@ class ProjectService  {
         if(!dataSet.dataCollectionOngoing) {
             dataSet.dataCollectionOngoing = false
         }
+        dataSet.lastUpdated = DateUtils.formatAsISOStringNoMillis(new Date())
 
         if (!dataSet.dataSetId) {
             dataSet.dataSetId = UUID.randomUUID().toString()
+            dataSet.dateCreated = DateUtils.formatAsISOStringNoMillis(new Date())
             project.custom.dataSets << dataSet
         }
         else {

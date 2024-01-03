@@ -1129,6 +1129,28 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         var projectService = new ProjectService({}, config);
         var viewModel = new DataSetsViewModel(project.custom && project.custom.dataSets, projectService, dataSetsConfig);
         ko.applyBindings(viewModel, $(dataSetsConfig.dataSetsSelector)[0]);
+        var dataTableConfig = {
+            sortable:false,
+            columnDefs: [
+                {
+                    target: 0,
+                    sortable: false
+                },
+                {
+                    target: 3,
+                    visible: false,
+                    searchable: false
+                },
+                {
+                    target: 2,
+                    orderData: 3
+                }
+            ],
+            order: [3, 'desc']
+        };
+
+        $(dataSetsConfig.dataSetsSelector).find('table').dataTable(dataTableConfig);
+
     };
 
     self.initialiseAdminTab = function() {

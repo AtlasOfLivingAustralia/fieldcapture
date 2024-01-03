@@ -9,11 +9,13 @@
             </div>
         </div>
     </div>
-    <table class="table table-striped">
+    <table class="table table-striped w-100" data-bind="dataTable:dataTableConfig">
         <thead>
         <tr>
             <th class="actions">Actions</th>
             <th class="dataset-name">Title</th>
+            <th class="date-created">Date Created</th>
+            <th class="date-created-hidden">Date Created (ISO format)</th>
             <th class="created-in">Created in</th>
             <th class="dataset-progress">Status</th>
         </tr>
@@ -32,6 +34,8 @@
                 </a>
             </td>
             <td class="dataset-name" data-bind="text:name"></td>
+            <td class="date-created" data-bind="text:dateCreated.formattedDate"></td>
+            <td class="date-created-hidden" data-bind="text:dateCreated"></td>
             <td class="created-in" data-bind="text:createdIn"></td>
             <td><button type="button" class="btn btn-sm" data-bind="activityProgress:progress">
                 <span data-bind="text: progress"></span>

@@ -21,19 +21,21 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
     self.newDataSet = function() {
         window.location.href = config.newDataSetUrl;
     };
-
+    
     /** View model backing for a single row in the data set summary table */
     function DataSetSummary(dataSet) {
 
-        this.editUrl = config.editDataSetUrl + '?dataSetId='+dataSet.dataSetId;
-        this.viewUrl = config.viewDataSetUrl + '?dataSetId='+dataSet.dataSetId;
+        this.editUrl = config.editDataSetUrl + '?dataSetId=' + dataSet.dataSetId;
+        this.viewUrl = config.viewDataSetUrl + '?dataSetId=' + dataSet.dataSetId;
         this.name = dataSet.name;
         this.createdIn = dataSet.collectionApp === MONITOR_APP ? MONITOR_APP : 'MERIT';
         this.progress = dataSet.progress;
-        this.deleteDataSet = function() {
-            bootbox.confirm("Are you sure?", function(yes) {
+        this.dateCreated = ko.observable(dataSet.dateCreated).extend({simpleDate: false});
+        this.lastUpdated = ko.observable(dataSet.lastUpdated).extend({simpleDate: false});
+        this.deleteDataSet = function () {
+            bootbox.confirm("Are you sure?", function (yes) {
                 if (yes) {
-                    projectService.deleteDataSet(dataSet.dataSetId).done(function() {
+                    projectService.deleteDataSet(dataSet.dataSetId).done(function () {
                         blockUIWithMessage("Refreshing page...");
                         window.location.href = config.returnToUrl;
                     });
