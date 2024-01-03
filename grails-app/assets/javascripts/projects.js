@@ -1145,12 +1145,22 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
                 {
                     target: 2,
                     orderData: 3
+                },
+                {
+                    target: 5,
+                    visible: false,
+                    searchable: false
+                },
+                {
+                    target: 4,
+                    orderData: 5
                 }
             ],
             order: [3, 'desc']
         };
         if (!viewModel.supportsDateColumn) {
             dataTableConfig.columnDefs[2].visible = false;
+            dataTableConfig.columnDefs[4].visible = false;
             dataTableConfig.order = [1, 'asc'];
         }
 
