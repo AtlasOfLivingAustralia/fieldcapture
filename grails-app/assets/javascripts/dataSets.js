@@ -21,7 +21,11 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
     self.newDataSet = function() {
         window.location.href = config.newDataSetUrl;
     };
-    
+
+    /** Only new data sets will have a created date, return true if any of the data sets have one */
+    self.supportsDateColumn = _.find(dataSets, function(dataSet) {
+        return dataSet.dateCreated;
+    })
     /** View model backing for a single row in the data set summary table */
     function DataSetSummary(dataSet) {
 

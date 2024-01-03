@@ -1129,6 +1129,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         var projectService = new ProjectService({}, config);
         var viewModel = new DataSetsViewModel(project.custom && project.custom.dataSets, projectService, dataSetsConfig);
         ko.applyBindings(viewModel, $(dataSetsConfig.dataSetsSelector)[0]);
+
         var dataTableConfig = {
             sortable:false,
             columnDefs: [
@@ -1148,6 +1149,10 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             ],
             order: [3, 'desc']
         };
+        if (!viewModel.supportsDateColumn) {
+            dataTableConfig.columnDefs[2].visible = false;
+            dataTableConfig.order = [1, 'asc'];
+        }
 
         $(dataSetsConfig.dataSetsSelector).find('table').dataTable(dataTableConfig);
 
