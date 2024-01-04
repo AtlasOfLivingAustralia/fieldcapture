@@ -1687,7 +1687,7 @@
             "decimalPlaces": 0,
             "defaultValue": 1,
             "computed": {
-              "expression": "count(events, \"eventType\")"
+              "expression": "sum(events, \"eventType == 'Field days' ? 1 : 0\")"
             }
           },
           {
@@ -1712,7 +1712,7 @@
             "decimalPlaces": 0,
             "defaultValue": 1,
             "computed": {
-              "expression": "count(events, \"eventType\")"
+              "expression": "sum(events, \"eventType == 'Training workshops hosted' ? 1 : 0\")"
             }
           },
           {
@@ -1737,7 +1737,7 @@
             "decimalPlaces": 0,
             "defaultValue": 1,
             "computed": {
-              "expression": "count(events, \"eventType\")"
+              "expression": "sum(events, \"eventType == 'On-ground trials / demonstrations facilitated or hosted' ? 1 : 0\")"
             }
           },
           {
@@ -1749,6 +1749,32 @@
               {
                 "param": {
                   "expression": "totalNumberOnGroundTrials",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ]
+          },
+          {
+            "dataType": "number",
+            "name": "totalNumberEngagementHeld",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "defaultValue": 1,
+            "computed": {
+              "expression": "sum(events, \"numberOfEvents\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalNumberEngagementHeldInvoiced",
+            "description": "Number of events invoiced for this reporting period.",
+            "validate": "required,min[0]",
+            "defaultValue": 1,
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalNumberEngagementHeld",
                   "type": "computed"
                 },
                 "rule": "max"
@@ -1935,6 +1961,32 @@
                           {
                             "preLabel": "(vi) Total Number of on-ground trials / demonstrations <u><i>invoiced</i></u> for this reporting period",
                             "source": "totalNumberOnGroundTrialsInvoiced",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span4 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(vii) Total number of engagement activities held/attended",
+                            "source": "totalNumberEngagementHeld",
+                            "type": "number"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(viii) Total number of engagement activities invoiced for this reporting period",
+                            "source": "totalNumberEngagementHeldInvoiced",
                             "type": "number"
                           }
                         ]
