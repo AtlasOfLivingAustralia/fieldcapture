@@ -9,7 +9,7 @@
             </div>
         </div>
     </div>
-    <table class="table table-striped w-100" data-bind="dataTable:dataTableConfig, css: { 'dataset-summary-with-dates':supportsDateColumn, 'data-dataset-summary':!supportsDateColumn }">
+    <table class="table table-striped w-100" data-bind="dataTable:dataTableConfig, css: { 'dataset-summary-with-dates':supportsDateColumn, 'dataset-summary':!supportsDateColumn }">
         <thead>
         <tr>
             <th class="actions">Actions</th>

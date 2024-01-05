@@ -43,7 +43,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         this.progress = dataSet.progress;
         this.dateCreated = ko.observable(dataSet.dateCreated).extend({simpleDate: false});
         this.lastUpdated = ko.observable(dataSet.lastUpdated).extend({simpleDate: false});
-        this.service = serviceName(dataSet.serviceId) || 'Unsupported service';
+        this.service = dataSet.serviceId ? (serviceName(dataSet.serviceId) || 'Unsupported service') : '';
 
         this.deleteDataSet = function () {
             bootbox.confirm("Are you sure?", function (yes) {

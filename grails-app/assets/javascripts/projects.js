@@ -1132,11 +1132,14 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         ko.applyBindings(viewModel, $(dataSetsConfig.dataSetsSelector)[0]);
 
         var dataTableConfig = {
-            sortable:false,
             columnDefs: [
                 {
                     target: 0,
                     sortable: false
+                },
+                {
+                    target: 1,
+                    sortable: true
                 },
                 {
                     target: 2,
@@ -1144,6 +1147,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
                 },
                 {
                     target: 3,
+                    sortable: true,
                     orderData: 4
                 },
                 {
@@ -1152,7 +1156,8 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
                     searchable: false
                 },
                 {
-                    target: 4,
+                    target: 5,
+                    sortable:true,
                     orderData: 6
                 },
                 {
@@ -1167,7 +1172,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         if (!viewModel.supportsDateColumn) {
             dataTableConfig.columnDefs[2].visible = false;
             dataTableConfig.columnDefs[3].visible = false;
-            dataTableConfig.columnDefs[4].visible = false;
+            dataTableConfig.columnDefs[5].visible = false;
             dataTableConfig.order = [1, 'asc'];
         }
 
