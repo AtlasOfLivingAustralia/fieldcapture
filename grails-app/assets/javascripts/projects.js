@@ -1119,6 +1119,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
 
     self.initialiseDataSets = function() {
         var dataSetsConfig = {
+            services: config.services,
             dataSetsSelector: config.dataSetsSelector || '#project-data-sets',
             newDataSetUrl:  config.newDataSetUrl,
             editDataSetUrl: config.editDataSetUrl,
@@ -1138,28 +1139,34 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
                     sortable: false
                 },
                 {
-                    target: 3,
-                    visible: false,
-                    searchable: false
-                },
-                {
                     target: 2,
-                    orderData: 3
+                    visible: true
                 },
                 {
-                    target: 5,
+                    target: 3,
+                    orderData: 4
+                },
+                {
+                    target: 4,
                     visible: false,
                     searchable: false
                 },
                 {
                     target: 4,
-                    orderData: 5
-                }
+                    orderData: 6
+                },
+                {
+                    target: 6,
+                    visible: false,
+                    searchable: false
+                },
+
             ],
             order: [3, 'desc']
         };
         if (!viewModel.supportsDateColumn) {
             dataTableConfig.columnDefs[2].visible = false;
+            dataTableConfig.columnDefs[3].visible = false;
             dataTableConfig.columnDefs[4].visible = false;
             dataTableConfig.order = [1, 'asc'];
         }
