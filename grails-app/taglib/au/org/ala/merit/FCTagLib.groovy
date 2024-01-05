@@ -981,7 +981,7 @@ class FCTagLib {
         out << '<span class="original hide">'
         if (resultOrigMonitoringList && resultOrigMonitoringList.size() > i) {
             if (property == 'relatedTargetMeasures') {
-                out << getScoreLabels(resultOrigMonitoringList[property], config)
+                out << getScoreLabels(resultOrigMonitoringList[property], config, true)
             } else {
                 if (resultOrigMonitoringList[property] instanceof List) {
                     out << resultOrigMonitoringList[property].collect{it}.join(',')
@@ -996,7 +996,7 @@ class FCTagLib {
         out << '<span class="changed hide">'
         if (resultChangedMonitoringList && resultChangedMonitoringList.size() > i) {
             if (property == 'relatedTargetMeasures') {
-                out << getScoreLabels(resultChangedMonitoringList[property], config)
+                out << getScoreLabels(resultChangedMonitoringList[property], config, true)
             } else {
                 if (resultChangedMonitoringList[property] instanceof List) {
                     out << resultChangedMonitoringList[property].collect{it}.join(',')
@@ -1015,12 +1015,13 @@ class FCTagLib {
         List original = attrs.original
         List changed = attrs.changed
         int i = attrs.i
+        boolean includeService = attrs.includeService
         String property = attrs.property
         ProgramConfig config = attrs.config
         try {
             out << '<span class="original hide">'
             if (original && original.size() > i) {
-                out << getScoreLabels(original[i][property], config)
+                out << getScoreLabels(original[i][property], config, includeService)
             }
             out << '</span>'
         } catch(Exception e) {
@@ -1029,7 +1030,7 @@ class FCTagLib {
 
         out << '<span class="changed hide">'
         if (changed && changed.size() > i) {
-            out << getScoreLabels(changed[i][property], config)
+            out << getScoreLabels(changed[i][property], config, includeService)
         }
         out << '</span>'
 
@@ -1188,14 +1189,14 @@ class FCTagLib {
         }, null)
     }
 
-    private static String getScoreLabels(def scoreIds, ProgramConfig config) {
+    private static String getScoreLabels(def scoreIds, ProgramConfig config, Boolean includeService) {
         List labels = []
         if (scoreIds instanceof List) {
             for (String scoreId : scoreIds) {
-                labels.add(scoreLabel(scoreId, config))
+                labels.add(scoreLabel(scoreId, config, includeService))
             }
         } else {
-            labels.add(scoreLabel(scoreIds, config))
+            labels.add(scoreLabel(scoreIds, config, includeService))
         }
 
         return fakeBulletedList(labels)
@@ -1234,12 +1235,15 @@ class FCTagLib {
         result
     }
 
-    private static String scoreLabel(String scoreId, ProgramConfig config) {
+    private static String scoreLabel(String scoreId, ProgramConfig config, Boolean includeService) {
         String label
         config.services.find { Map service ->
             service.scores.find{ Map score ->
                 if (score.scoreId == scoreId) {
                     label = score.label
+                    if (includeService) {
+                        label = (service?.name ?: 'Unsupported service') + ' - ' + (label ?: 'Unsupported target measure')
+                    }
                 }
                 label
             }
