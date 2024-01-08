@@ -2921,7 +2921,7 @@
             "dataType": "number",
             "name": "totalLengthStructuresInstalled",
             "validate": "required,min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(controllingAccessAreasControlled, \"lengthInstalledKmForControlAccess\")"
             }
@@ -2944,7 +2944,7 @@
             "dataType": "number",
             "name": "totalAreaStructuresInstalled",
             "validate": "required,min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(controllingAccessAreasControlled, \"areaInstalledHaForControlAccess\")"
             }
@@ -4303,7 +4303,7 @@
             "dataType": "number",
             "name": "totalAreaPestAnimalsTreatedInitial",
             "validate": "required,min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(areasControlled, \"areaControlledHa\")"
             }
@@ -4326,7 +4326,7 @@
             "dataType": "number",
             "name": "totalAreaPestAnimalsTreatedFollowUp",
             "validate": "required,min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(areasControlled, \"areaControlledHa\")"
             }
@@ -4349,7 +4349,7 @@
             "dataType": "number",
             "name": "totalLengthPestAnimalsTreatedInitial",
             "validate": "required,min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(areasControlled, \"lengthControlledKm\")"
             }
@@ -4372,7 +4372,7 @@
             "dataType": "number",
             "name": "totalLengthPestAnimalsTreatedFollowUp",
             "validate": "required,min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(areasControlled, \"lengthControlledKm\")"
             }
@@ -5127,77 +5127,110 @@
               },
               {
                 "dataType": "feature",
-                "name": "clearedSites"
+                "name": "sitesImplementedForDebrisRemoval",
+                "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.",
+                "validate": "required"
               },
               {
-                "computed": {
-                  "expression": "$geom.areaHa(clearedSites)"
-                },
                 "dataType": "number",
-                "name": "calculatedDebrisRemovedHa",
+                "name": "siteCalculatedAreaHa",
+                "computed": {
+                  "expression": "$geom.areaHa(sitesImplementedForDebrisRemoval)"
+                },
                 "units": "ha",
                 "decimalPlaces": 3,
                 "behaviour": [
                   {
-                    "condition": "areaOfRemovedDebrisInvoicedHa > 0",
+                    "condition": "areaInvoicedHa > 0",
                     "type": "conditional_validation",
                     "value": {
-                      "message": "The cleared area must be mapped",
+                      "message": "The controlled area must be mapped",
                       "validate": "required,min[0.0001]"
                     }
                   }
                 ]
               },
               {
-                "computed": {
-                  "expression": "$geom.lengthKm(clearedSites)"
-                },
                 "dataType": "number",
-                "name": "calculatedDebrisRemovedKm",
+                "name": "siteCalculatedLengthKm",
+                "computed": {
+                  "expression": "$geom.lengthKm(sitesImplementedForDebrisRemoval)"
+                },
                 "units": "km",
                 "decimalPlaces": 3,
                 "behaviour": [
                   {
-                    "condition": "debrisRemovedKm > 0",
+                    "condition": "lengthInvoicedKm > 0",
                     "type": "conditional_validation",
                     "value": {
-                      "message": "",
+                      "message": "The controlled length must be mapped",
                       "validate": "required,min[0.0001]"
                     }
                   }
                 ]
               },
               {
-                "defaultValue": {
-                  "type": "computed",
-                  "expression": "calculatedDebrisRemovedHa"
-                },
                 "dataType": "number",
+                "name": "areaControlledHa",
+                "description": "Manually enter correct figure for this reporting period if different to mapped value.",
+                "validate": "required,min[0]",
                 "units": "ha",
                 "decimalPlaces": 3,
-                "name": "debrisRemovedHa",
-                "validate": "required,min[0]"
-              },
-              {
                 "defaultValue": {
                   "type": "computed",
-                  "expression": "calculatedDebrisRemovedKm"
-                },
-                "dataType": "number",
-                "units": "km",
-                "decimalPlaces": 3,
-                "name": "debrisRemovedKm",
-                "validate": "required,min[0]"
+                  "expression": "siteCalculatedAreaHa"
+                }
               },
               {
-                "dataType": "document",
-                "name": "extraMappingDetails",
-                "validate": "required",
-                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
-                "behaviour": [
+                "dataType": "number",
+                "name": "lengthControlledKm",
+                "validate": "required,min[0]",
+                "units": "km",
+                "decimalPlaces": 3,
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "$geom.lengthKm(sitesImplementedForDebrisRemoval)"
+                }
+              },
+              {
+                "dataType": "number",
+                "name": "areaInvoicedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": [
                   {
-                    "condition": "not (within(debrisRemovedHa, calculatedDebrisRemovedHa, 0.1)) or roundTo(debrisRemovedHa, 2) != roundTo(areaOfRemovedDebrisInvoicedHa, 2)",
-                    "type": "visible"
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "areaControlledHa"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "lengthInvoicedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "lengthControlledKm"
+                    }
                   }
                 ]
               },
@@ -5211,8 +5244,8 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedDebrisRemovedHa, debrisRemovedHa, 0.1))",
-                    "type": "visible"
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1))",
+                    "type": "if"
                   }
                 ]
               },
@@ -5222,47 +5255,34 @@
                 "validate": "required,maxSize[100]",
                 "behaviour": [
                   {
-                    "type": "visible",
-                    "condition": "\"Other\" == mappingNotAlignedReason"
+                    "type": "if",
+                    "condition": "not within(areaControlledHa, siteCalculatedAreaHa, 0.1) and \"Other\" == mappingNotAlignedReason"
                   }
                 ]
               },
               {
-                "dataType": "number",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "name": "areaOfRemovedDebrisInvoicedHa",
-                "validate": [
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex length/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
                   {
-                    "rule": "min[0]"
-                  },
-                  {
-                    "rule": "max",
-                    "param": {
-                      "type": "computed",
-                      "expression": "debrisRemovedHa"
-                    }
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
+                    "type": "if"
                   }
                 ]
               },
               {
-                "dataType": "number",
-                "name": "areaOfRemovedDebrisInvoicedKm",
-                "decimalPlaces": 3,
-                "units": "km",
-                "validate": [
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedComments",
+                "validate": "required,maxSize[100]",
+                "behaviour": [
                   {
-                    "rule": "required"
-                  },
-                  {
-                    "rule": "min[0]"
-                  },
-                  {
-                    "param": {
-                      "expression": "debrisRemovedKm",
-                      "type": "computed"
-                    },
-                    "rule": "max"
+                    "type": "if",
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) and \"Other\" == mappingLengthNotAlignedReason"
                   }
                 ]
               },
@@ -5276,8 +5296,8 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "roundTo(debrisRemovedHa, 2) != roundTo(areaOfRemovedDebrisInvoicedHa, 2) or roundTo(debrisRemovedKm, 2) != roundTo(areaOfRemovedDebrisInvoicedKm, 2)",
-                    "type": "visible"
+                    "condition": "roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "type": "if"
                   }
                 ]
               },
@@ -5286,11 +5306,347 @@
                 "name": "invoicedNotActualComments",
                 "behaviour": [
                   {
-                    "type": "visible",
-                    "condition": "\"Other\" == invoicedNotActualReason"
+                    "type": "if",
+                    "condition": "roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2) and \"Other\" == invoicedNotActualReason"
                   }
                 ],
                 "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedLengthNotActualReason",
+                "constraints": [
+                  "Work was undertaken over a greater length than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(lengthControlledKm, 2) != roundTo(lengthInvoicedKm, 2)",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedLengthNotActualComments",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "roundTo(lengthControlledKm, 2) != roundTo(lengthInvoicedKm, 2) and \"Other\" == invoicedLengthNotActualReason"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "validate": "required",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1)) or roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "areaControlledHa",
+                "validate": "required,min[0]",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "$geom.areaHa(sitesImplementedForDebrisRemoval)"
+                }
+              },
+              {
+                "dataType": "number",
+                "name": "lengthControlledKm",
+                "validate": "required,min[0]",
+                "units": "km",
+                "decimalPlaces": 3,
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "$geom.lengthKm(sitesImplementedForDebrisRemoval)"
+                }
+              },
+              {
+                "dataType": "number",
+                "name": "areaInvoicedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "areaControlledHa"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "lengthInvoicedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "lengthControlledKm"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "validate": "required,maxSize[100]",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "not within(areaControlledHa, siteCalculatedAreaHa, 0.1) and \"Other\" == mappingNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex length/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedComments",
+                "validate": "required,maxSize[100]",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) and \"Other\" == mappingLengthNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "areaInvoicedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "areaControlledHa"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "lengthInvoicedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "lengthControlledKm"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "validate": "required,maxSize[100]",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "not within(areaControlledHa, siteCalculatedAreaHa, 0.1) and \"Other\" == mappingNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex length/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedComments",
+                "validate": "required,maxSize[100]",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) and \"Other\" == mappingLengthNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualReason",
+                "constraints": [
+                  "Work was undertaken over a greater area than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualComments",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2) and \"Other\" == invoicedNotActualReason"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedLengthNotActualReason",
+                "constraints": [
+                  "Work was undertaken over a greater length than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(lengthControlledKm, 2) != roundTo(lengthInvoicedKm, 2)",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedLengthNotActualComments",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "roundTo(lengthControlledKm, 2) != roundTo(lengthInvoicedKm, 2) and \"Other\" == invoicedLengthNotActualReason"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "name": "relatedOutcomes",
+                "dataType": "text",
+                "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "outcomes"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "investmentPriorities2",
+                "dataType": "stringList",
+                "validate": "required",
+                "constraints": {
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        }
+                      ],
+                      "url": "/project/listProjectInvestmentPriorities/"
+                    }
+                  }
+                }
               },
               {
                 "dataType": "text",
@@ -5304,112 +5660,73 @@
               },
               {
                 "dataType": "text",
-                "name": "teqDebrisRemoval",
-                "description": "",
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "debrisType",
-                "description": "",
+                "name": "invoicingThisActivity",
                 "constraints": [
-                  "Building & Industrial waste",
-                  "Domestic waste",
-                  "Green waste",
-                  "Other"
+                  "Yes",
+                  "No"
                 ],
                 "validate": "required"
               },
               {
-                "dataType": "text",
-                "name": "otherDebrisType",
-                "description": "if Other",
-                "behaviour": [
+                "columns": [
                   {
-                    "condition": "debrisType == \"Other\"",
-                    "type": "visible"
+                    "dataType": "text",
+                    "name": "teqDebrisRemoval",
+                    "description": "",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "debrisType",
+                    "description": "",
+                    "constraints": [
+                      "Building & Industrial waste",
+                      "Domestic waste",
+                      "Green waste",
+                      "Other"
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "otherDebrisType",
+                    "description": "if Other",
+                    "behaviour": [
+                      {
+                        "condition": "debrisType == \"Other\"",
+                        "type": "visible"
+                      }
+                    ],
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "validated": "required,min[0]",
+                    "dataType": "number",
+                    "name": "weightOfDebrisTonnes",
+                    "units": "tonnes"
+                  },
+                  {
+                    "validated": "required,min[0]",
+                    "dataType": "number",
+                    "name": "volumeRemovedM3",
+                    "units": "m3"
                   }
                 ],
-                "validate": "required,maxSize[300]"
-              },
-              {
-                "validated": "required,min[0]",
-                "dataType": "number",
-                "name": "weightOfDebrisTonnes",
-                "units": "tonnes"
-              },
-              {
-                "validated": "required,min[0]",
-                "dataType": "number",
-                "name": "volumeRemovedM3",
-                "units": "m3"
+                "dataType": "list",
+                "name": "debrisRemovalDetails"
               }
             ],
             "dataType": "list",
-            "name": "debrisRemovalDetails"
+            "name": "debrisRemovalAreasControlled"
           },
-          {
-            "name": "relatedOutcomes",
-            "dataType": "text",
-            "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
-            "validate": "required",
-            "constraints": {
-              "textProperty": "label",
-              "valueProperty": "value",
-              "type": "pre-populated",
-              "config": {
-                "source": {
-                  "context-path": "outcomes"
-                }
-              }
-            }
-          },
-          {
-            "name": "investmentPriorities2",
-            "dataType": "stringList",
-            "validate": "required",
-            "constraints": {
-              "type": "pre-populated",
-              "config": {
-                "source": {
-                  "params": [
-                    {
-                      "expression": "owner.projectId",
-                      "name": "id",
-                      "type": "computed"
-                    }
-                  ],
-                  "url": "/project/listProjectInvestmentPriorities/"
-                }
-              }
-            }
-          },
-          {
-            "dataType": "text",
-            "name": "otherInvestmentPriority",
-            "behaviour": [
-              {
-                "type": "enable",
-                "condition": "\"Other\" in investmentPriorities2"
-              }
-            ]
-          },
-          {
-            "dataType": "text",
-            "name": "invoicingThisActivity",
-            "constraints": [
-              "Yes",
-              "No"
-            ],
-            "validate": "required"
-          },
+
           {
             "dataType": "number",
             "name": "totalAreaDebrisRemovedInitial",
             "validate": "required,min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
-              "expression": "sum(debrisRemovalDetails, \"debrisRemovedHa\")"
+              "expression": "sum(debrisRemovalAreasControlled, \"initialOrFollowup == 'Initial' ? areaControlledHa : 0\")"
             }
           },
           {
@@ -5424,15 +5741,15 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
             "name": "totalLengthDebrisRemovedInitial",
             "validate": "required,min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
-              "expression": "sum(debrisRemovalDetails, \"debrisRemovedKm\")"
+              "expression": "sum(debrisRemovalAreasControlled, \"initialOrFollowup == 'Initial' ? lengthControlledKm : 0\")"
             }
           },
           {
@@ -5447,15 +5764,15 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
             "name": "totalAreaDebrisRemovedFollowup",
             "validate": "required,min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
-              "expression": "sum(debrisRemovalDetails, \"debrisRemovedHa\")"
+              "expression": "sum(debrisRemovalAreasControlled, \"initialOrFollowup == 'Follow-up' ? areaControlledHa : 0\")"
             }
           },
           {
@@ -5470,15 +5787,15 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
             "name": "totalLengthDebrisRemovedFollowup",
             "validate": "required,min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
-              "expression": "sum(debrisRemovalDetails, \"debrisRemovedKm\")"
+              "expression": "sum(debrisRemovalAreasControlled, \"initialOrFollowup == 'Follow-up' ? lengthControlledKm : 0\")"
             }
           },
           {
@@ -5493,7 +5810,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -5533,7 +5850,7 @@
           }
         ],
         "modelName": "NHT - Debris removal",
-        "title": "Debris Demoval",
+        "title": "Debris Removal",
         "viewModel": [
           {
             "columns": [
@@ -5589,7 +5906,7 @@
             "type": "table"
           },
           {
-            "type": "section",
+            "type": "row",
             "items": [
               {
                 "type": "literal",
@@ -5707,244 +6024,344 @@
             ]
           },
           {
-            "type": "row",
+            "addRowText": "Add a new controlled area",
+            "userAddedRows": true,
+            "source": "debrisRemovalAreasControlled",
+            "type": "repeat",
             "items": [
               {
-                "css": "span3",
-                "type": "col",
+                "type": "row",
                 "items": [
                   {
-                    "type": "row",
+                    "css": "span3",
+                    "type": "col",
                     "items": [
                       {
-                        "source": "relatedOutcomes",
-                        "type": "selectOne",
-                        "preLabel": "Which outcome statement/s does this activity relate to?"
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "relatedOutcomes",
+                            "type": "selectOne",
+                            "preLabel": "Which outcome statement/s does this activity relate to?"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "investmentPriorities2",
+                            "preLabel": "Which investment priority does this activity relate to?",
+                            "type": "select2Many"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "otherInvestmentPriority",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "invoicingThisActivity",
+                            "preLabel": "Are you invoicing for this activity in this reporting period?",
+                            "type": "selectOne"
+                          }
+                        ]
                       }
                     ]
                   }
                 ]
               },
               {
-                "type": "col",
-                "css": "span3 col-border-right",
+                "type": "row",
+                "css": "border-bottom",
                 "items": [
                   {
-                    "type": "row",
+                    "preLabel": "Initial or follow-up activity?",
+                    "css": "span3",
+                    "source": "initialOrFollowup",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "css": "border-bottom",
+                "items": [
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
-                        "source": "investmentPriorities2",
-                        "preLabel": "Which investment priority does this activity relate to?",
-                        "type": "select2Many"
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "sitesImplementedForDebrisRemoval",
+                            "type": "feature",
+                            "preLabel": "Site/s where debris removal was implemented"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "siteCalculatedAreaHa",
+                            "type": "number",
+                            "readonly": true,
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "siteCalculatedLengthKm",
+                            "type": "number",
+                            "readonly": true,
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Please attach mapping details",
+                            "source": "extraMappingDetails",
+                            "type": "document"
+                          }
+                        ]
                       }
                     ]
                   },
                   {
-                    "type": "row",
+                    "type": "col",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
-                        "source": "otherInvestmentPriority",
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Actual area (ha) of debris removed",
+                            "source": "areaControlledHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for actual area being different to mapped amount",
+                            "source": "mappingNotAlignedReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping area didn't align with the invoiced amount",
+                            "source": "mappingNotAlignedComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Actual length (km) of debris removed",
+                            "source": "lengthControlledKm",
+                            "type": "number",
+                            "validate": "required",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for actual length being different to mapped amount",
+                            "source": "mappingLengthNotAlignedReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping length didn't align with the invoiced amount",
+                            "source": "mappingLengthNotAlignedComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Invoiced area (ha) of debris removed",
+                            "helpText": "",
+                            "source": "areaInvoicedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for invoiced amount being different to actual amount",
+                            "source": "invoicedNotActualReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "invoicedNotActualComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Invoiced length (km) of debris removed",
+                            "helpText": "",
+                            "source": "lengthInvoicedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for invoiced amount being different to actual amount",
+                            "source": "invoicedLengthNotActualReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "invoicedLengthNotActualComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "columns": [
+                  {
+                    "width": "30%",
+                    "source": "teqDebrisRemoval",
+                    "title": "Technique used to remove debris",
+                    "type": "textarea",
+                    "rows": 5
+                  },
+                  {
+                    "width": "30%",
+                    "title": "Type of debris removed",
+                    "type": "col",
+                    "validate": "required",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "debrisType",
+                            "type": "select2"
+                          }
+                        ]
+                      },
+                      {
+                        "source": "otherDebrisType",
                         "type": "text"
                       }
                     ]
-                  }
-                ]
-              },
-              {
-                "css": "span3",
-                "type": "col",
-                "items": [
+                  },
                   {
-                    "type": "row",
-                    "items": [
-                      {
-                        "source": "invoicingThisActivity",
-                        "preLabel": "Are you invoicing for this activity in this reporting period?",
-                        "type": "selectOne"
-                      }
-                    ]
+                    "width": "20%",
+                    "source": "weightOfDebrisTonnes",
+                    "title": "Weight (tonnes) of debris removed",
+                    "type": "number"
+                  },
+                  {
+                    "width": "20%",
+                    "source": "volumeRemovedM3",
+                    "title": "Volume (m3) of debris removed",
+                    "type": "number"
                   }
-                ]
+                ],
+                "userAddedRows": true,
+                "source": "debrisRemovalDetails",
+                "type": "table"
               }
             ]
           },
-          {
-            "columns": [
-              {
-                "width": "10%",
-                "source": "initialOrFollowup",
-                "title": "Initial or follow-up activity?",
-                "type": "selectOne"
-              },
-              {
-                "width": "15%",
-                "title": "Site/s where debris removal was implemented",
-                "type": "col",
-                "helpText": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.",
-                "items": [
-                  {
-                    "type": "feature",
-                    "source": "clearedSites"
-                  },
-                  {
-                    "source": "calculatedDebrisRemovedHa",
-                    "readonly": "readonly",
-                    "type": "number",
-                    "displayOptions": {
-                      "displayUnits": true
-                    }
-                  },
-                  {
-                    "source": "calculatedDebrisRemovedKm",
-                    "readonly": "readonly",
-                    "type": "number",
-                    "displayOptions": {
-                      "displayUnits": true
-                    }
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "Please attach mapping details",
-                        "source": "extraMappingDetails",
-                        "type": "document"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "width": "15%",
-                "type": "col",
-                "title": "Actual area (ha) / length (km) of debris removed",
-                "helpText": "Enter the amount which were actually removed during this reporting period.",
-                "items": [
-                  {
-                    "source": "debrisRemovedHa",
-                    "type": "number",
-                    "displayOptions": {
-                      "displayUnits": true
-                    }
-                  },
-                  {
-                    "source": "debrisRemovedKm",
-                    "type": "number",
-                    "displayOptions": {
-                      "displayUnits": true
-                    }
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "Reason for actual being different to mapped amount",
-                        "source": "mappingNotAlignedReason",
-                        "type": "selectOne"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                        "source": "mappingNotAlignedComments",
-                        "type": "textarea",
-                        "rows": 5
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "width": "15%",
-                "type": "col",
-                "title": "Invoiced area (ha) of debris removed",
-                "helpText": "Enter the amount you will invoice for during this reporting period.",
-                "items": [
-                  {
-                    "source": "areaOfRemovedDebrisInvoicedHa",
-                    "type": "number",
-                    "displayOptions": {
-                      "displayUnits": true
-                    }
-                  },
-                  {
-                    "source": "areaOfRemovedDebrisInvoicedKm",
-                    "type": "number",
-                    "displayOptions": {
-                      "displayUnits": true
-                    }
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "Reason for invoiced amount being different to actual amount",
-                        "source": "invoicedNotActualReason",
-                        "type": "selectOne"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                        "source": "invoicedNotActualComments",
-                        "type": "textarea",
-                        "rows": 5
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "width": "15%",
-                "source": "teqDebrisRemoval",
-                "title": "Technique used to remove debris",
-                "type": "textarea",
-                "rows": 5
-              },
-              {
-                "width": "10%",
-                "title": "Type of debris removed",
-                "type": "col",
-                "validate": "required",
-                "items": [
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "source": "debrisType",
-                        "type": "select2"
-                      }
-                    ]
-                  },
-                  {
-                    "source": "otherDebrisType",
-                    "type": "text"
-                  }
-                ]
-              },
-              {
-                "width": "10%",
-                "source": "weightOfDebrisTonnes",
-                "title": "Weight (tonnes) of debris removed",
-                "type": "number"
-              },
-              {
-                "width": "10%",
-                "source": "volumeRemovedM3",
-                "title": "Volume (m3) of debris removed",
-                "type": "number"
-              }
-            ],
-            "userAddedRows": true,
-            "source": "debrisRemovalDetails",
-            "type": "table"
-          },
+
           {
             "type": "row",
             "items": [
