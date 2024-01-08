@@ -208,9 +208,10 @@ var Master = function (activityId, config) {
             dirtyFlag: ko.simpleDirtyFlag,
             viewRootElementId: 'ko' + options.namespace
         };
+        context.lifecycleState = ko.observable('initialising');
         var config = _.defaults(options, defaults);
         var viewModel = new config.constructorFunction(output, config.model.dataModel, context, config);
-
+        context.lifecycleState('modelCreated');
         viewModel.initialise(output.data).done(function () {
 
             // Check for locally saved data for this output - this will happen in the event of a session timeout
@@ -232,6 +233,8 @@ var Master = function (activityId, config) {
 
             // register with the master controller so this model can participate in the save cycle
             self.register(viewModel, viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
+
+            context.lifecycleState('initialised');
 
         });
     }
