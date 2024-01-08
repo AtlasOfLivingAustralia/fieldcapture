@@ -1119,6 +1119,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
 
     self.initialiseDataSets = function() {
         var dataSetsConfig = {
+            services: config.services,
             dataSetsSelector: config.dataSetsSelector || '#project-data-sets',
             newDataSetUrl:  config.newDataSetUrl,
             editDataSetUrl: config.editDataSetUrl,
@@ -1129,6 +1130,54 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         var projectService = new ProjectService({}, config);
         var viewModel = new DataSetsViewModel(project.custom && project.custom.dataSets, projectService, dataSetsConfig);
         ko.applyBindings(viewModel, $(dataSetsConfig.dataSetsSelector)[0]);
+
+        var dataTableConfig = {
+            columnDefs: [
+                {
+                    target: 0,
+                    sortable: false
+                },
+                {
+                    target: 1,
+                    sortable: true
+                },
+                {
+                    target: 2,
+                    visible: true
+                },
+                {
+                    target: 3,
+                    sortable: true,
+                    orderData: 4
+                },
+                {
+                    target: 4,
+                    visible: false,
+                    searchable: false
+                },
+                {
+                    target: 5,
+                    sortable:true,
+                    orderData: 6
+                },
+                {
+                    target: 6,
+                    visible: false,
+                    searchable: false
+                },
+
+            ],
+            order: [3, 'desc']
+        };
+        if (!viewModel.supportsDateColumn) {
+            dataTableConfig.columnDefs[2].visible = false;
+            dataTableConfig.columnDefs[3].visible = false;
+            dataTableConfig.columnDefs[5].visible = false;
+            dataTableConfig.order = [1, 'asc'];
+        }
+
+        $(dataSetsConfig.dataSetsSelector).find('table').dataTable(dataTableConfig);
+
     };
 
     self.initialiseAdminTab = function() {

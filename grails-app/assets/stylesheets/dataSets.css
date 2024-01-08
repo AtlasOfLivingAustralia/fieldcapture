@@ -6,21 +6,38 @@
 *= require_self
 */
 
-table td.actions, table th.actions {
-    width:10%;
+table.dataset-summary td.actions, table.dataset-summary th.actions {
+    width:3em;
 }
-table td.dataset-name, table th.dataset-name {
+table.dataset-summary td.dataset-name, table.dataset-summary th.dataset-name {
     width:65%;
 }
-table td.report-start, table th.report-start {
+table.dataset-summary td.report-start, table.dataset-summary th.report-start {
     width:15%;
 }
-div.otherPriority, div.other {
-    margin-top: 5px;
-}
-table td.dataset-progress, table th.dataset-progress {
+
+table.dataset-summary td.dataset-progress, table.dataset-summary th.dataset-progress {
     width:10em;
 }
+
+table.dataset-summary-with-dates td.actions, table.dataset-summary-with-dates th.actions {
+    width:3em;
+}
+table.dataset-summary-with-dates td.dataset-name, table.dataset-summary-with-dates th.dataset-name {
+    width:40%;
+}
+
+table.dataset-summary-with-dates td.service, table.dataset-summary-with-dates th.service {
+    width:25%;
+}
+table.dataset-summary td.dataset-progress, table.dataset-summary th.dataset-progress {
+    width:10em;
+}
+
 #dataCollectionOngoingDiv {
     margin-top: 10px;
+}
+
+div.otherPriority, div.other {
+    margin-top: 5px;
 }

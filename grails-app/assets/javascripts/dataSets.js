@@ -22,18 +22,33 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         window.location.href = config.newDataSetUrl;
     };
 
+    /** Only new data sets will have a created date, return true if any of the data sets have one */
+    self.supportsDateColumn = _.find(dataSets, function(dataSet) {
+        return dataSet.dateCreated;
+    });
+    function serviceName(serviceId) {
+        var service = _.find(config.services || [], function(service) {
+            return service.id == serviceId
+        });
+        return (service && service.name);
+    }
+
     /** View model backing for a single row in the data set summary table */
     function DataSetSummary(dataSet) {
 
-        this.editUrl = config.editDataSetUrl + '?dataSetId='+dataSet.dataSetId;
-        this.viewUrl = config.viewDataSetUrl + '?dataSetId='+dataSet.dataSetId;
+        this.editUrl = config.editDataSetUrl + '?dataSetId=' + dataSet.dataSetId;
+        this.viewUrl = config.viewDataSetUrl + '?dataSetId=' + dataSet.dataSetId;
         this.name = dataSet.name;
         this.createdIn = dataSet.collectionApp === MONITOR_APP ? MONITOR_APP : 'MERIT';
         this.progress = dataSet.progress;
-        this.deleteDataSet = function() {
-            bootbox.confirm("Are you sure?", function(yes) {
+        this.dateCreated = ko.observable(dataSet.dateCreated).extend({simpleDate: false});
+        this.lastUpdated = ko.observable(dataSet.lastUpdated).extend({simpleDate: false});
+        this.service = dataSet.serviceId ? (serviceName(dataSet.serviceId) || 'Unsupported service') : '';
+
+        this.deleteDataSet = function () {
+            bootbox.confirm("Are you sure?", function (yes) {
                 if (yes) {
-                    projectService.deleteDataSet(dataSet.dataSetId).done(function() {
+                    projectService.deleteDataSet(dataSet.dataSetId).done(function () {
                         blockUIWithMessage("Refreshing page...");
                         window.location.href = config.returnToUrl;
                     });

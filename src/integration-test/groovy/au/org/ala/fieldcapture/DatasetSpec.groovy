@@ -127,8 +127,12 @@ class DatasetSpec extends StubbedCasSpec{
         waitFor 10, {
             hasBeenReloaded()
         }
+        when:
+        def dataSetSummary = openDataSetSummaryTab()
+
+        then:
         waitFor 10, {
-           $('#project-data-sets tbody[data-bind*=dataSets] tr').size() == 0
+           dataSetSummary.dataSetSummaryCount() == 0
         }
 
     }
