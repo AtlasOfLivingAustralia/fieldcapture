@@ -6515,281 +6515,659 @@
             "validate": "maxSize[3000]"
           },
           {
-            "dataType": "text",
-            "name": "initialOrFollowup",
-            "constraints": [
-              "Initial",
-              "Follow-up"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "feature",
-            "name": "existingErosionSites"
-          },
-          {
-            "defaultValue": {
-              "expression": "$geom.areaHa(existingErosionSites)",
-              "type": "computed"
-            },
-            "dataType": "number",
-            "name": "existingErosionAreaHa",
-            "units": "ha",
-            "decimalPlaces": 3,
-            "validate": "min[0]"
-          },
-          {
-            "dataType": "feature",
-            "name": "sitesManaged"
-          },
-          {
-            "computed": {
-              "expression": "$geom.areaHa(sitesManaged)"
-            },
-            "dataType": "number",
-            "name": "calculatedAreaOfErosionControlHa",
-            "units": "ha",
-            "decimalPlaces": 3,
-            "behaviour": [
-              {
-                "condition": "areaOfErosionControlInvoicedHa > 0",
-                "type": "conditional_validation",
-                "value": {
-                  "message": "The controlled area must be mapped",
-                  "validate": "required,min[0.0001]"
-                }
-              }
-            ]
-          },
-          {
-            "computed": {
-              "expression": "$geom.lengthKm(sitesManaged)"
-            },
-            "dataType": "number",
-            "name": "calculatedLengthOfErosionControlKm",
-            "units": "km",
-            "decimalPlaces": 3,
-            "behaviour": [
-              {
-                "condition": "lengthOfErosionControlInvoicedKm > 0",
-                "type": "conditional_validation",
-                "value": {
-                  "message": "The controlled length must be mapped",
-                  "validate": "required,min[0.0001]"
-                }
-              }
-            ]
-          },
-          {
-            "dataType": "document",
-            "name": "extraMappingDetails",
-            "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
-            "behaviour": [
-              {
-                "condition": "not (within(areaOfErosionControlHa, calculatedAreaOfErosionControlHa, 0.1) and within(lengthOfErosionControlKm, calculatedLengthOfErosionControlKm, 0.1)) or roundTo(areaOfErosionControlHa, 2) != roundTo(areaOfErosionControlInvoicedHa, 2) or roundTo(lengthOfErosionControlKm, 2) != roundTo(lengthOfErosionControlInvoicedKm, 2)",
-                "type": "visible"
-              }
-            ],
-            "validate": "required"
-          },
-          {
-            "defaultValue": {
-              "expression": "$geom.areaHa(sitesManaged)",
-              "type": "computed"
-            },
-            "dataType": "number",
-            "name": "areaOfErosionControlHa",
-            "units": "ha",
-            "decimalPlaces": 3,
-            "validate": "required,min[0]"
-          },
-          {
-            "defaultValue": {
-              "expression": "$geom.lengthKm(sitesManaged)",
-              "type": "computed"
-            },
-            "dataType": "number",
-            "name": "lengthOfErosionControlKm",
-            "units": "km",
-            "decimalPlaces": 3,
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "number",
-            "name": "areaOfErosionControlInvoicedHa",
-            "units": "ha",
-            "decimalPlaces": 3,
-            "validate": [
-              {
-                "rule": "required"
-              },
-              {
-                "rule": "min[0]"
-              },
-              {
-                "param": {
-                  "expression": "areaOfErosionControlHa",
-                  "type": "computed"
-                },
-                "rule": "max"
-              }
-            ]
-          },
-          {
-            "dataType": "number",
-            "name": "lengthOfErosionControlInvoicedKm",
-            "units": "km",
-            "decimalPlaces": 3,
-            "validate": [
-              {
-                "rule": "required"
-              },
-              {
-                "rule": "min[0]"
-              },
-              {
-                "param": {
-                  "expression": "lengthOfErosionControlKm",
-                  "type": "computed"
-                },
-                "rule": "max"
-              }
-            ]
-          },
-          {
-            "dataType": "text",
-            "name": "mappingNotAlignedReason",
-            "behaviour": [
-              {
-                "condition": "not (within(areaOfErosionControlHa, calculatedAreaOfErosionControlHa, 0.1) and within(lengthOfErosionControlKm, calculatedLengthOfErosionControlKm, 0.1))",
-                "type": "visible"
-              }
-            ],
-            "constraints": [
-              "Mapped area simplifies more complex area/s where work was undertaken during this period",
-              "Other"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "mappingNotAlignedComments",
-            "behaviour": [
-              {
-                "condition": "\"Other\" == mappingNotAlignedReason",
-                "type": "visible"
-              }
-            ],
-            "validate": "required,maxSize[300]"
-          },
-          {
-            "dataType": "text",
-            "name": "invoicedNotActualReason",
-            "behaviour": [
-              {
-                "condition": "roundTo(areaOfErosionControlHa, 2) != roundTo(areaOfErosionControlInvoicedHa, 2) or roundTo(lengthOfErosionControlKm, 2) != roundTo(lengthOfErosionControlInvoicedKm, 2)",
-                "type": "visible"
-              }
-            ],
-            "constraints": [
-              "Work was undertaken over a greater area than will be invoiced for",
-              "Other"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "invoicedNotActualComments",
-            "behaviour": [
-              {
-                "condition": "\"Other\" == invoicedNotActualReason",
-                "type": "visible"
-              }
-            ],
-            "validate": "required,maxSize[300]"
-          },
-          {
             "columns": [
               {
-                "dataType": "date",
-                "name": "dateFrom",
-                "validate": "required"
-              },
-              {
-                "dataType": "date",
-                "name": "dateTo",
-                "validate": "required"
-              },
-              {
                 "dataType": "text",
-                "name": "treatmentObjective",
-                "validate": "required"
-              },
-              {
-                "dataType": "number",
-                "name": "numberInstalled",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "text",
-                "name": "erosionManagementMethod",
+                "name": "initialOrFollowup",
                 "constraints": [
-                  "Alternative watering point",
-                  "Erosion control structures",
-                  "Farming practice change",
-                  "Fencing",
-                  "Revegetation",
-                  "Terracing",
-                  "Vegetated waterway (bioswale)",
-                  "Windbreaks",
-                  "Other"
+                  "Initial",
+                  "Follow-up"
                 ],
                 "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "otherErosionManagementMethod",
-                "behaviour": [
-                  {
-                    "condition": "erosionManagementMethod == \"Other\"",
-                    "type": "visible"
-                  }
-                ],
-                "validate": "required,max[300]"
-              },
-              {
-                "dataType": "number",
-                "name": "numberDaysCollecting",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "text",
-                "name": "threatenedEcologicalCommunity",
-                "validate": "maxSize[300]"
               },
               {
                 "dataType": "feature",
-                "name": "sitesBenefittingFromErosionControl"
+                "name": "existingErosionSites"
               },
               {
                 "defaultValue": {
-                  "expression": "$geom.areaHa(sitesBenefittingFromErosionControl)",
+                  "expression": "$geom.areaHa(existingErosionSites)",
                   "type": "computed"
                 },
                 "dataType": "number",
-                "name": "areaBenefitingHa",
+                "name": "existingErosionAreaHa",
+                "units": "ha",
                 "decimalPlaces": 3,
-                "units": "ha"
+                "validate": "min[0]"
+              },
+              {
+                "dataType": "feature",
+                "name": "sitesUndertakenForErosionControl",
+                "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.",
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "siteCalculatedAreaHa",
+                "computed": {
+                  "expression": "$geom.areaHa(sitesUndertakenForErosionControl)"
+                },
+                "units": "ha",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "areaInvoicedHa > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The controlled area must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "siteCalculatedLengthKm",
+                "computed": {
+                  "expression": "$geom.lengthKm(sitesUndertakenForErosionControl)"
+                },
+                "units": "km",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "lengthInvoicedKm > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The controlled length must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "areaControlledHa",
+                "description": "Manually enter correct figure for this reporting period if different to mapped value.",
+                "validate": "required,min[0]",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "siteCalculatedAreaHa"
+                }
+              },
+              {
+                "dataType": "number",
+                "name": "lengthControlledKm",
+                "validate": "required,min[0]",
+                "units": "km",
+                "decimalPlaces": 3,
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "$geom.lengthKm(sitesUndertakenForErosionControl)"
+                }
+              },
+              {
+                "dataType": "number",
+                "name": "areaInvoicedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "areaControlledHa"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "lengthInvoicedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "lengthControlledKm"
+                    }
+                  }
+                ]
               },
               {
                 "dataType": "text",
-                "name": "evidenceOfBenefit",
-                "validate": "maxSize[300]"
+                "name": "mappingNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "validate": "required,maxSize[100]",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "not within(areaControlledHa, siteCalculatedAreaHa, 0.1) and \"Other\" == mappingNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex length/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedComments",
+                "validate": "required,maxSize[100]",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) and \"Other\" == mappingLengthNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualReason",
+                "constraints": [
+                  "Work was undertaken over a greater area than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualComments",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2) and \"Other\" == invoicedNotActualReason"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedLengthNotActualReason",
+                "constraints": [
+                  "Work was undertaken over a greater length than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(lengthControlledKm, 2) != roundTo(lengthInvoicedKm, 2)",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedLengthNotActualComments",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "roundTo(lengthControlledKm, 2) != roundTo(lengthInvoicedKm, 2) and \"Other\" == invoicedLengthNotActualReason"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "validate": "required",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1)) or roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "areaControlledHa",
+                "validate": "required,min[0]",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "$geom.areaHa(sitesUndertakenForErosionControl)"
+                }
+              },
+              {
+                "dataType": "number",
+                "name": "lengthControlledKm",
+                "validate": "required,min[0]",
+                "units": "km",
+                "decimalPlaces": 3,
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "$geom.lengthKm(sitesUndertakenForErosionControl)"
+                }
+              },
+              {
+                "dataType": "number",
+                "name": "areaInvoicedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "areaControlledHa"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "lengthInvoicedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "lengthControlledKm"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "validate": "required,maxSize[100]",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "not within(areaControlledHa, siteCalculatedAreaHa, 0.1) and \"Other\" == mappingNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex length/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedComments",
+                "validate": "required,maxSize[100]",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) and \"Other\" == mappingLengthNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "areaInvoicedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "areaControlledHa"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "lengthInvoicedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "lengthControlledKm"
+                    }
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "validate": "required,maxSize[100]",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "not within(areaControlledHa, siteCalculatedAreaHa, 0.1) and \"Other\" == mappingNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex length/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingLengthNotAlignedComments",
+                "validate": "required,maxSize[100]",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "not (within(lengthControlledKm, siteCalculatedLengthKm, 0.1)) and \"Other\" == mappingLengthNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualReason",
+                "constraints": [
+                  "Work was undertaken over a greater area than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualComments",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2) and \"Other\" == invoicedNotActualReason"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedLengthNotActualReason",
+                "constraints": [
+                  "Work was undertaken over a greater length than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(lengthControlledKm, 2) != roundTo(lengthInvoicedKm, 2)",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedLengthNotActualComments",
+                "behaviour": [
+                  {
+                    "type": "if",
+                    "condition": "roundTo(lengthControlledKm, 2) != roundTo(lengthInvoicedKm, 2) and \"Other\" == invoicedLengthNotActualReason"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "name": "relatedOutcomes",
+                "dataType": "text",
+                "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "outcomes"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "investmentPriorities2",
+                "dataType": "stringList",
+                "validate": "required",
+                "constraints": {
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        }
+                      ],
+                      "url": "/project/listProjectInvestmentPriorities/"
+                    }
+                  }
+                }
+              },
+              {
+                "dataType": "text",
+                "name": "otherInvestmentPriority",
+                "behaviour": [
+                  {
+                    "type": "enable",
+                    "condition": "\"Other\" in investmentPriorities2"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicingThisActivity",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
+                "validate": "required"
+              },
+              {
+                "columns": [
+                  {
+                    "dataType": "date",
+                    "name": "dateFrom",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "dateTo",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "treatmentObjective",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "numberInstalled",
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "erosionManagementMethod",
+                    "constraints": [
+                      "Alternative watering point",
+                      "Erosion control structures",
+                      "Farming practice change",
+                      "Fencing",
+                      "Revegetation",
+                      "Terracing",
+                      "Vegetated waterway (bioswale)",
+                      "Windbreaks",
+                      "Other"
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "otherErosionManagementMethod",
+                    "behaviour": [
+                      {
+                        "condition": "erosionManagementMethod == \"Other\"",
+                        "type": "visible"
+                      }
+                    ],
+                    "validate": "required,max[300]"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "numberDaysCollecting",
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "threatenedEcologicalCommunity",
+                    "validate": "maxSize[300]"
+                  },
+                  {
+                    "dataType": "feature",
+                    "name": "sitesBenefittingFromErosionControl"
+                  },
+                  {
+                    "defaultValue": {
+                      "expression": "$geom.areaHa(sitesBenefittingFromErosionControl)",
+                      "type": "computed"
+                    },
+                    "dataType": "number",
+                    "name": "areaBenefitingHa",
+                    "decimalPlaces": 3,
+                    "units": "ha"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "evidenceOfBenefit",
+                    "validate": "maxSize[300]"
+                  }
+                ],
+                "dataType": "list",
+                "name": "erosionManagementDetails",
+                "minSize": 0
               }
             ],
             "dataType": "list",
-            "name": "erosionManagementDetails",
-            "minSize": 0
+            "name": "erosionManagementAreasControlled"
           },
           {
             "name": "relatedOutcomes",
@@ -6848,11 +7226,29 @@
           },
           {
             "dataType": "number",
+            "name": "totalNoAreaOfErosionControl",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(erosionManagementAreasControlled, \"areaControlledHa\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalNoLengthOfErosionControl",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(erosionManagementAreasControlled, \"lengthControlledKm\")"
+            }
+          },
+          {
+            "dataType": "number",
             "name": "totalLengthStreamCoastlineInitial",
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(erosionManagementDetails, \"areaOfErosionControlHa\")"
+              "expression": "sum(erosionManagementAreasControlled, \"initialOrFollowup == 'Initial' ? lengthControlledKm : 0\")"
             }
           },
           {
@@ -6861,14 +7257,14 @@
             "validate": [
               {
                 "param": {
-                  "expression": "totalLengthStreamCoastlineInitial."
+                  "expression": "totalLengthStreamCoastlineInitial"
                 ,
                   "type": "computed"
                 },
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
@@ -6876,7 +7272,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(erosionManagementDetails, \"areaOfErosionControlHa\")"
+              "expression": "sum(erosionManagementAreasControlled, \"initialOrFollowup == 'Follow-up' ? lengthControlledKm : 0\")"
             }
           },
           {
@@ -6891,7 +7287,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
@@ -6899,7 +7295,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(erosionManagementDetails, \"areaOfErosionControlHa\")"
+              "expression": "sum(erosionManagementAreasControlled, \"initialOrFollowup == 'Initial' ? areaControlledHa : 0\")"
             }
           },
           {
@@ -6914,7 +7310,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
@@ -6922,7 +7318,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(erosionManagementDetails, \"areaOfErosionControlHa\")"
+              "expression": "sum(erosionManagementAreasControlled, \"initialOrFollowup == 'Follow-up' ? areaControlledHa : 0\")"
             }
           },
           {
@@ -6937,7 +7333,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -6979,6 +7375,15 @@
         "modelName": "NHT - Erosion Management",
         "title": "Erosion Management",
         "viewModel": [
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Participation information</h3>"
+              }
+            ]
+          },
           {
             "columns": [
               {
@@ -7036,11 +7441,220 @@
             "type": "row",
             "items": [
               {
+                "type": "literal",
+                "source": "<h3>Totals Summary</h3>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(i) Total number of area (ha) of erosion control for this reporting period",
+                        "source": "totalNoAreaOfErosionControl",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(ii) Total number of length (km) of erosion control for this reporting period",
+                        "source": "totalNoLengthOfErosionControl",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(iii) Total length (km) of stream/coastline treated for erosion for this reporting period (Initial)",
+                        "source": "totalLengthStreamCoastlineInitial",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(iv) Total length (km) of stream/coastline treated for erosion <u><i>invoiced</i></u> for this reporting period (Initial)",
+                        "source": "totalLengthStreamCoastlineInitialInvoice",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(v) Total length (km) of stream/coastline treated for erosion for this reporting period (follow up)",
+                        "source": "totalLengthStreamCoastlineFollowup",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(vi) Total length (km) of stream/coastline treated for erosion <u><i>invoiced</i></u> for this reporting period (follow up)",
+                        "source": "totalLengthStreamCoastlineInvoicedFollowup",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(vii) Total area (ha) of erosion control for this reporting period (Initial)",
+                        "source": "totalAreaErosionControlInitial",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(viii) Total area (ha) of erosion control <u><i>invoiced</i></u> for this reporting period (Initial)",
+                        "source": "totalAreaErosionControlInvoicedInitial",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(ix) Total area (ha) of erosion control for this reporting period (follow up)",
+                        "source": "totalAreaErosionControlFollowup",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(x) Total area (ha) of erosion control <u><i>invoiced</i></u> for this reporting period (follow up)",
+                        "source": "totalAreaErosionControlInvoicedFollowup",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "addRowText": "Add a new controlled area",
+            "userAddedRows": true,
+            "source": "erosionManagementAreasControlled",
+            "type": "repeat",
+            "items": [
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "relatedOutcomes",
+                            "type": "selectOne",
+                            "preLabel": "Which outcome statement/s does this activity relate to?"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "investmentPriorities2",
+                            "preLabel": "Which investment priority does this activity relate to?",
+                            "type": "select2Many"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "otherInvestmentPriority",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "invoicingThisActivity",
+                            "preLabel": "Are you invoicing for this activity in this reporting period?",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
                 "type": "row",
                 "css": "border-bottom",
                 "items": [
                   {
-                    "preLabel": "Initial or follow-up activity?",
+                    "preLabel": "Initial or follow-up control?",
                     "css": "span3",
                     "source": "initialOrFollowup",
                     "type": "selectOne"
@@ -7088,7 +7702,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "sitesManaged",
+                            "source": "sitesUndertakenForErosionControl",
                             "type": "feature",
                             "preLabel": "Site/s of erosion control"
                           }
@@ -7098,9 +7712,9 @@
                         "type": "row",
                         "items": [
                           {
-                            "readonly": "readonly",
-                            "source": "calculatedAreaOfErosionControlHa",
+                            "source": "siteCalculatedAreaHa",
                             "type": "number",
+                            "readonly": true,
                             "displayOptions": {
                               "displayUnits": true
                             }
@@ -7111,9 +7725,9 @@
                         "type": "row",
                         "items": [
                           {
-                            "readonly": "readonly",
-                            "source": "calculatedLengthOfErosionControlKm",
+                            "source": "siteCalculatedLengthKm",
                             "type": "number",
+                            "readonly": true,
                             "displayOptions": {
                               "displayUnits": true
                             }
@@ -7140,9 +7754,8 @@
                         "type": "row",
                         "items": [
                           {
-                            "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
-                            "preLabel": "Actual area (ha) / length (km) of erosion control",
-                            "source": "areaOfErosionControlHa",
+                            "preLabel": "Actual area (ha) of erosion control",
+                            "source": "areaControlledHa",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -7154,19 +7767,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "lengthOfErosionControlKm",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Reason for actual being different to mapped amount",
+                            "preLabel": "Reason for actual area being different to mapped amount",
                             "source": "mappingNotAlignedReason",
                             "type": "selectOne"
                           }
@@ -7176,8 +7777,43 @@
                         "type": "row",
                         "items": [
                           {
-                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "placeholder": "Please enter the reason/s the mapping area didn't align with the invoiced amount",
                             "source": "mappingNotAlignedComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Actual length (km) of erosion control",
+                            "source": "lengthControlledKm",
+                            "type": "number",
+                            "validate": "required",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for actual length being different to mapped amount",
+                            "source": "mappingLengthNotAlignedReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping length didn't align with the invoiced amount",
+                            "source": "mappingLengthNotAlignedComments",
                             "type": "textarea",
                             "rows": 5
                           }
@@ -7193,21 +7829,9 @@
                         "type": "row",
                         "items": [
                           {
-                            "helpText": "Enter the amount you will invoice for during this reporting period.",
-                            "preLabel": "Invoiced area (ha) / length (km) of erosion control",
-                            "source": "areaOfErosionControlInvoicedHa",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "lengthOfErosionControlInvoicedKm",
+                            "preLabel": "Invoiced area (ha) of erosion control",
+                            "helpText": "",
+                            "source": "areaInvoicedHa",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -7231,7 +7855,43 @@
                           {
                             "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
                             "source": "invoicedNotActualComments",
-                            "type": "textarea"
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Invoiced length (km) of erosion control",
+                            "helpText": "",
+                            "source": "lengthInvoicedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for invoiced amount being different to actual amount",
+                            "source": "invoicedLengthNotActualReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "invoicedLengthNotActualComments",
+                            "type": "textarea",
+                            "rows": 5
                           }
                         ]
                       }
@@ -7239,6 +7899,7 @@
                   }
                 ]
               },
+
               {
                 "columns": [
                   {
@@ -7335,7 +7996,10 @@
                 "userAddedRows": true,
                 "source": "erosionManagementDetails",
                 "type": "table"
-              },
+              }
+            ]
+          },
+
               {
                 "type": "row",
                 "items": [
@@ -7398,8 +8062,7 @@
                   }
                 ]
               }
-            ]
-          }
+
         ]
       },
       "modelName": null,
@@ -8125,124 +8788,6 @@
                         "source": "invoicingThisActivity",
                         "preLabel": "Are you invoicing for this activity in this reporting period?",
                         "type": "selectOne"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "literal",
-                "source": "<h3>Totals Summary</h3>"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "col",
-                "css": "span4 col-border-right",
-                "items": [
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(i) Total length (km) of stream/coastline treated for erosion for this reporting period (Initial)",
-                        "source": "totalLengthStreamCoastlineInitial",
-                        "type": "number"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(ii) Total length (km) of stream/coastline treated for erosion <b><i>invoiced</i></b> for this reporting period (Initial)",
-                        "source": "totalLengthStreamCoastlineInvoicedInitial",
-                        "type": "number"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "col",
-                "css": "span4 col-border-right",
-                "items": [
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(iii) Total length (km) of stream/coastline treated for erosion for this reporting period (follow up)",
-                        "source": "totalLengthStreamCoastlineFollowup",
-                        "type": "number"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(iv) Total length (km) of stream/coastline treated for erosion <b><i>invoiced</i></b> for this reporting period (follow up)",
-                        "source": "totalLengthStreamCoastlineInvoicedFollowup",
-                        "type": "number"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "col",
-                "css": "span4 col-border-right",
-                "items": [
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(v) Total area (ha) of erosion control for this reporting period (Initial)",
-                        "source": "totalAreaErosionControlInitial",
-                        "type": "number"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(vi) Total area (ha) of erosion control <b><i>invoiced</i></b> for this reporting period (Initial)",
-                        "source": "totalAreaErosionControlInvoicedInitial",
-                        "type": "number"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "col",
-                "css": "span4 col-border-right",
-                "items": [
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(vii) Total area (ha) of erosion control for this reporting period (follow up)",
-                        "source": "totalAreaErosionControlFollowup",
-                        "type": "number"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(viii) Total area (ha) of erosion control <b><i>invoiced</i></b> for this reporting period (follow up)",
-                        "source": "totalAreaErosionControlInvoicedFollowup",
-                        "type": "number"
                       }
                     ]
                   }
@@ -9096,7 +9641,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total number of captive breeding and release, translocation or re-introduction programs newly established <b><i>invoiced</i></b> for this reporting period",
+                        "preLabel": "(ii) Total number of captive breeding and release, translocation or re-introduction programs newly established <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalCaptiveBreedingEstablishedInvoiced",
                         "type": "number"
                       }
@@ -9122,7 +9667,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iv) Total number of captive breeding and release, translocation or re-introduction programs maintained <b><i>invoiced</i></b> for this reporting period",
+                        "preLabel": "(iv) Total number of captive breeding and release, translocation or re-introduction programs maintained <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalCaptiveBreedingMaintainedInvoiced",
                         "type": "number"
                       }
@@ -10166,7 +10711,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total area (ha) covered by conservation agreements <b><i>invoiced</i></b> for during this reporting period (Established)",
+                        "preLabel": "(ii) Total area (ha) covered by conservation agreements <u><i>invoiced</i></u> for during this reporting period (Established)",
                         "source": "totalAreaConservationAgreementsInvoiced",
                         "type": "number"
                       }
@@ -10192,7 +10737,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iv) Total Area (ha) where implementation activities conducted <b><i>invoiced</i></b> for during this reporting period (Implementation/Stewardship)",
+                        "preLabel": "(iv) Total Area (ha) where implementation activities conducted <u><i>invoiced</i></u> for during this reporting period (Implementation/Stewardship)",
                         "source": "totalAreaActivitiesConductedInvoiced",
                         "type": "number"
                       }
@@ -13273,7 +13818,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total number of days conducting cultural practices <b><i>invoiced</i></b> for during this reporting period",
+                        "preLabel": "(ii) Total number of days conducting cultural practices <u><i>invoiced</i></u> for during this reporting period",
                         "source": "totalNoDaysCulturalPracticesInvoiced",
                         "type": "number"
                       }
@@ -14219,7 +14764,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
@@ -14242,7 +14787,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -15473,7 +16018,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total area (ha) of augmentation <b><i>invoiced</i></b> for during this reporting period (Initial)",
+                        "preLabel": "(ii) Total area (ha) of augmentation <u><i>invoiced</i></u> for during this reporting period (Initial)",
                         "source": "totalAreaAugmentationInitialInvoiced",
                         "type": "number"
                       }
@@ -17624,7 +18169,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "(ii) Total number of potential sites assessed <b><i>invoiced</i></b> for during this reporting period",
+                            "preLabel": "(ii) Total number of potential sites assessed <u><i>invoiced</i></u> for during this reporting period",
                             "source": "totalPotentialSitesInvoiced",
                             "type": "number"
                           }
@@ -18456,7 +19001,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total area (ha) treated by fire management action/s <b><i>invoiced</i></b> for during this reporting period (Initial)",
+                        "preLabel": "(ii) Total area (ha) treated by fire management action/s <u><i>invoiced</i></u> for during this reporting period (Initial)",
                         "source": "totalAreaTreatedFireMgmtInitialInvoiced",
                         "type": "number"
                       }
@@ -20087,7 +20632,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total area (ha) covered by practice change <b><i>invoiced</i></b> for during this reporting period (Initial)",
+                        "preLabel": "(ii) Total area (ha) covered by practice change <u><i>invoiced</i></u> for during this reporting period (Initial)",
                         "source": "totalAreaPracticeChangeInitialInvoiced",
                         "type": "number"
                       }
@@ -20113,7 +20658,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iv) Total area (ha) covered by practice change <b><i>invoiced</i></b> for during this reporting period (follow up)",
+                        "preLabel": "(iv) Total area (ha) covered by practice change <u><i>invoiced</i></u> for during this reporting period (follow up)",
                         "source": "totalAreaPracticeChangeInvoicedFollowup",
                         "type": "number"
                       }
@@ -21062,7 +21607,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total area (ha) for disease treatment/prevention <b><i>invoiced</i></b> for this reporting period (Initial)",
+                        "preLabel": "(ii) Total area (ha) for disease treatment/prevention <u><i>invoiced</i></u> for this reporting period (Initial)",
                         "source": "totalAreaDiseaseManagementInitialInvoiced",
                         "type": "number"
                       }
@@ -21088,7 +21633,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iv) Total Area (ha) for disease treatment/prevention <b><i>invoiced</i></b> for this reporting period (follow up)",
+                        "preLabel": "(iv) Total Area (ha) for disease treatment/prevention <u><i>invoiced</i></u> for this reporting period (follow up)",
                         "source": "totalAreaDiseaseManagementInvoicedFollowup",
                         "type": "number"
                       }
@@ -21114,7 +21659,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vi) Total length (km) for disease treatment/prevention <b><i>invoiced</i></b> for this reporting period (Initial)",
+                        "preLabel": "(vi) Total length (km) for disease treatment/prevention <u><i>invoiced</i></u> for this reporting period (Initial)",
                         "source": "totalLengthDiseaseManagementInvoicedInitial",
                         "type": "number"
                       }
@@ -21140,7 +21685,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(viii) Total length (km) for disease treatment/prevention <b><i>invoiced</i></b> for this reporting period (follow up)",
+                        "preLabel": "(viii) Total length (km) for disease treatment/prevention <u><i>invoiced</i></u> for this reporting period (follow up)",
                         "source": "totalLengthDiseaseManagementInvoicedFollowup",
                         "type": "number"
                       }
