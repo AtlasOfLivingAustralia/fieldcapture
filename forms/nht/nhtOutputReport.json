@@ -1203,6 +1203,15 @@
         "title": "Communication Materials",
         "viewModel": [
           {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Participation information</h3>"
+              }
+            ]
+          },
+          {
             "columns": [
               {
                 "width": "10%",
@@ -1821,6 +1830,15 @@
         "modelName": "NHT - Community engagement",
         "title": "Community/Stakeholder Engagement",
         "viewModel": [
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Participation information</h3>"
+              }
+            ]
+          },
           {
             "columns": [
               {
@@ -3003,6 +3021,15 @@
         "modelName": "NHT - Controlling access",
         "title": "Controlling Access",
         "viewModel": [
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Participation information</h3>"
+              }
+            ]
+          },
           {
             "columns": [
               {
@@ -4425,6 +4452,15 @@
         "modelName": "NHT - Pest animal management",
         "title": "Controlling Pest Animals",
         "viewModel": [
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Participation information</h3>"
+              }
+            ]
+          },
           {
             "columns": [
               {
@@ -5852,6 +5888,15 @@
         "modelName": "NHT - Debris removal",
         "title": "Debris Removal",
         "viewModel": [
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Participation information</h3>"
+              }
+            ]
+          },
           {
             "columns": [
               {
@@ -8166,25 +8211,8 @@
               },
               {
                 "dataType": "number",
-                "name": "numberOfEnclosuresEstablished",
-                "validate": "required",
-                "behaviour": [
-                  {
-                    "type": "enable_and_clear",
-                    "condition": "newOrMaintained == \"Newly established\""
-                  }
-                ]
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfEnclosuresMaintained",
-                "validate": "required",
-                "behaviour": [
-                  {
-                    "type": "enable_and_clear",
-                    "condition": "newOrMaintained == \"Maintained\""
-                  }
-                ]
+                "name": "numberOfPestFreeEnclosures",
+                "validate": "required"
               },
               {
                 "dataType": "number",
@@ -8194,11 +8222,11 @@
               },
               {
                 "dataType": "feature",
-                "name": "siteOfEnclosures"
+                "name": "sitesForPestAnimalFreeEnclosures"
               },
               {
                 "computed": {
-                  "expression": "$geom.areaHa(siteOfEnclosures)"
+                  "expression": "$geom.areaHa(sitesForPestAnimalFreeEnclosures)"
                 },
                 "dataType": "number",
                 "name": "calculatedAreaOfEnclosuresHa",
@@ -8217,7 +8245,7 @@
               },
               {
                 "defaultValue": {
-                  "expression": "$geom.areaHa(siteOfEnclosures)",
+                  "expression": "$geom.areaHa(sitesForPestAnimalFreeEnclosures)",
                   "type": "computed"
                 },
                 "dataType": "number",
@@ -8354,86 +8382,86 @@
                 ],
                 "dataType": "list",
                 "name": "speciesProtected"
+              },
+              {
+                "name": "relatedOutcomes",
+                "dataType": "text",
+                "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "outcomes"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "investmentPriorities2",
+                "dataType": "stringList",
+                "validate": "required",
+                "constraints": {
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        }
+                      ],
+                      "url": "/project/listProjectInvestmentPriorities/"
+                    }
+                  }
+                }
+              },
+              {
+                "dataType": "text",
+                "name": "otherInvestmentPriority",
+                "behaviour": [
+                  {
+                    "type": "enable",
+                    "condition": "\"Other\" in investmentPriorities2"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicingThisActivity",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
+                "validate": "required"
               }
             ],
             "dataType": "list",
             "name": "enclosureDetails"
           },
           {
-            "name": "relatedOutcomes",
-            "dataType": "text",
-            "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
-            "validate": "required",
-            "constraints": {
-              "textProperty": "label",
-              "valueProperty": "value",
-              "type": "pre-populated",
-              "config": {
-                "source": {
-                  "context-path": "outcomes"
-                }
-              }
-            }
-          },
-          {
-            "name": "investmentPriorities2",
-            "dataType": "stringList",
-            "validate": "required",
-            "constraints": {
-              "type": "pre-populated",
-              "config": {
-                "source": {
-                  "params": [
-                    {
-                      "expression": "owner.projectId",
-                      "name": "id",
-                      "type": "computed"
-                    }
-                  ],
-                  "url": "/project/listProjectInvestmentPriorities/"
-                }
-              }
-            }
-          },
-          {
-            "dataType": "text",
-            "name": "otherInvestmentPriority",
-            "behaviour": [
-              {
-                "type": "enable",
-                "condition": "\"Other\" in investmentPriorities2"
-              }
-            ]
-          },
-          {
-            "dataType": "text",
-            "name": "invoicingThisActivity",
-            "constraints": [
-              "Yes",
-              "No"
-            ],
-            "validate": "required"
-          },
-          {
             "dataType": "number",
-            "name": "totalFeralFreeSurveyEstablished",
+            "name": "totalNoPestFreeSurveyEstablished",
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "defaultValue": 0,
             "computed": {
-              "expression": "sum(enclosureDetails, \"numberOfEnclosuresEstablished\")"
+              "expression": "sum(enclosureDetails, \"newOrMaintained == 'Newly established' ? numberOfPestFreeEnclosures : 0\")"
             }
           },
           {
             "dataType": "number",
-            "name": "totalFeralFreeSurveyEstablishedInvoiced",
+            "name": "totalNoPestFreeSurveyEstablishedInvoiced",
             "description": "The total invoiced must be the same or less than the total amount delivered.",
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "validate": [
               {
                 "param": {
-                  "expression": "totalFeralFreeSurveyEstablished",
+                  "expression": "totalNoPestFreeSurveyEstablished",
                   "type": "computed"
                 },
                 "rule": "max"
@@ -8442,17 +8470,17 @@
           },
           {
             "dataType": "number",
-            "name": "totalFeralFreeSurveyMaintained",
+            "name": "totalNoPestFreeSurveyMaintained",
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "defaultValue": 0,
             "computed": {
-              "expression": "sum(enclosureDetails, \"numberOfEnclosuresMaintained\")"
+              "expression": "sum(enclosureDetails, \"newOrMaintained == 'Maintained' ? numberOfPestFreeEnclosures : 0\")"
             }
           },
           {
             "dataType": "number",
-            "name": "totalFeralFreeSurveyMaintainedInvoiced",
+            "name": "totalNoPestFreeSurveyMaintainedInvoiced",
             "description": "The total invoiced must be the same or less than the total amount delivered.",
             "validate": "required,min[0]",
             "decimalPlaces": 0,
@@ -8460,7 +8488,7 @@
             "validate": [
               {
                 "param": {
-                  "expression": "totalFeralFreeSurveyMaintained",
+                  "expression": "totalNoPestFreeSurveyMaintained",
                   "type": "computed"
                 },
                 "rule": "max"
@@ -8469,7 +8497,7 @@
           },
           {
             "dataType": "number",
-            "name": "totalFeralFreeSurveyNumberDays",
+            "name": "totalNoDaysMaintainingPestFree",
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "defaultValue": 1,
@@ -8479,14 +8507,14 @@
           },
           {
             "dataType": "number",
-            "name": "totalFeralFreeSurveyNumberDaysInvoiced",
+            "name": "totalNoDaysMaintainingPestFreeInvoiced",
             "description": "The total invoiced must be the same or less than the total amount delivered.",
             "decimalPlaces": 0,
             "defaultValue": 0,
             "validate": [
               {
                 "param": {
-                  "expression": "totalFeralFreeSurveyNumberDays",
+                  "expression": "totalNoDaysMaintainingPestFree",
                   "type": "computed"
                 },
                 "rule": "max"
@@ -8495,17 +8523,17 @@
           },
           {
             "dataType": "number",
-            "name": "totalFeralFreeSurveyArea",
+            "name": "totalAreaPestFreeSurveyInitial",
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "defaultValue": 0,
             "computed": {
-              "expression": "sum(enclosureDetails, \"areaInvoicedHa\")"
+              "expression": "sum(enclosureDetails, \"newOrMaintained == 'Newly established' ? areaOfEnclosuresHa : 0\")"
             }
           },
           {
             "dataType": "number",
-            "name": "totalFeralFreeSurveyAreaInvoiced",
+            "name": "totalAreaPestFreeSurveyInitialInvoiced",
             "description": "The total invoiced must be the same or less than the total amount delivered.",
             "validate": "required,min[0]",
             "decimalPlaces": 0,
@@ -8513,7 +8541,34 @@
             "validate": [
               {
                 "param": {
-                  "expression": "totalFeralFreeSurveyArea",
+                  "expression": "totalAreaPestFreeSurveyInitial",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ]
+          },
+          {
+            "dataType": "number",
+            "name": "totalAreaPestFreeSurveyMaintained",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "defaultValue": 0,
+            "computed": {
+              "expression": "sum(enclosureDetails, \"newOrMaintained == 'Maintained' ? areaOfEnclosuresHa : 0\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalAreaPestFreeSurveyMaintainedInvoiced",
+            "description": "The total invoiced must be the same or less than the total amount delivered.",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "defaultValue": 0,
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalAreaPestFreeSurveyMaintained",
                   "type": "computed"
                 },
                 "rule": "max"
@@ -8560,6 +8615,15 @@
         "modelName": "NHT - Maintaining feral free enclosures",
         "title": "Establishing and Maintaining Pest Animal-free Enclosures",
         "viewModel": [
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Participation information</h3>"
+              }
+            ]
+          },
           {
             "columns": [
               {
@@ -8633,8 +8697,8 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i)  Total number of pest animal-free enclosures newly established for this reporting period",
-                        "source": "totalFeralFreeSurveyEstablished",
+                        "preLabel": "(i)  Total number of pest animal-free enclosures (newly established) for this reporting period",
+                        "source": "totalNoPestFreeSurveyEstablished",
                         "type": "number"
                       }
                     ]
@@ -8643,8 +8707,8 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total number of newly established pest animal-free enclosures <u><i>invoiced</i></u> for this reporting period",
-                        "source": "totalFeralFreeSurveyEstablishedInvoiced",
+                        "preLabel": "(ii) Total number of pest animal-free enclosures (newly established) <u><i>invoiced</i></u> for this reporting period",
+                        "source": "totalNoPestFreeSurveyEstablishedInvoiced",
                         "type": "number",
                         "readonly": false
                       }
@@ -8660,8 +8724,8 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iii)  Total number of pest animal-free enclosures maintained for this reporting period",
-                        "source": "totalFeralFreeSurveyMaintained",
+                        "preLabel": "(iii)  Total number of pest animal-free enclosures (maintained) for this reporting period",
+                        "source": "totalNoPestFreeSurveyMaintained",
                         "type": "number"
                       }
                     ]
@@ -8670,8 +8734,8 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iv) Total number of maintained pest animal-free enclosures <u><i>invoiced</i></u> for this reporting period",
-                        "source": "totalFeralFreeSurveyMaintainedInvoiced",
+                        "preLabel": "(iv) Total number of pest animal-free enclosures (maintained) <u><i>invoiced</i></u> for this reporting period",
+                        "source": "totalNoPestFreeSurveyMaintainedInvoiced",
                         "type": "number",
                         "readonly": false
                       }
@@ -8688,7 +8752,7 @@
                     "items": [
                       {
                         "preLabel": "(v) Total number of days maintaining pest animal-free enclosures for this reporting period",
-                        "source": "totalFeralFreeSurveyNumberDays",
+                        "source": "totalNoDaysMaintainingPestFree",
                         "type": "number"
                       }
                     ]
@@ -8698,7 +8762,7 @@
                     "items": [
                       {
                         "preLabel": "(vi) Total number of days maintaining pest animal-free enclosures <u><i>invoiced</i></u> for this reporting period",
-                        "source": "totalFeralFreeSurveyNumberDaysInvoiced",
+                        "source": "totalNoDaysMaintainingPestFreeInvoiced",
                         "type": "number"
                       }
                     ]
@@ -8713,8 +8777,8 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vii) Total number of area (ha) of pest animal-free enclosure for this reporting period",
-                        "source": "totalFeralFreeSurveyArea",
+                        "preLabel": "(vii) Total area (ha) of pest animal-free enclosures (newly established) for this reporting period",
+                        "source": "totalAreaPestFreeSurveyInitial",
                         "type": "number"
                       }
                     ]
@@ -8723,30 +8787,9 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(viii) Total number of area (ha) of pest animal-free enclosure <u><i>invoiced</i></u> for this reporting period",
-                        "source": "totalFeralFreeSurveyAreaInvoiced",
+                        "preLabel": "(viii) Total area (ha) of pest animal-free enclosures (newly established) <u><i>invoiced</i></u> for this reporting period",
+                        "source": "totalAreaPestFreeSurveyInitialInvoiced",
                         "type": "number"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span3",
-                "type": "col",
-                "items": [
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "source": "relatedOutcomes",
-                        "type": "selectOne",
-                        "preLabel": "Which outcome statement/s does this activity relate to?"
                       }
                     ]
                   }
@@ -8760,9 +8803,9 @@
                     "type": "row",
                     "items": [
                       {
-                        "source": "investmentPriorities2",
-                        "preLabel": "Which investment priority does this activity relate to?",
-                        "type": "select2Many"
+                        "preLabel": "(ix) Total area (ha) of pest animal-free enclosures (maintained) for this reporting period",
+                        "source": "totalAreaPestFreeSurveyMaintained",
+                        "type": "number"
                       }
                     ]
                   },
@@ -8770,86 +8813,9 @@
                     "type": "row",
                     "items": [
                       {
-                        "source": "otherInvestmentPriority",
-                        "type": "text"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "css": "span3",
-                "type": "col",
-                "items": [
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "source": "invoicingThisActivity",
-                        "preLabel": "Are you invoicing for this activity in this reporting period?",
-                        "type": "selectOne"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span3",
-                "type": "col",
-                "items": [
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "source": "relatedOutcomes",
-                        "type": "selectOne",
-                        "preLabel": "Which outcome statement/s does this activity relate to?"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "col",
-                "css": "span3 col-border-right",
-                "items": [
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "source": "investmentPriorities2",
-                        "preLabel": "Which investment priority does this activity relate to?",
-                        "type": "select2Many"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "source": "otherInvestmentPriority",
-                        "type": "text"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "css": "span3",
-                "type": "col",
-                "items": [
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "source": "invoicingThisActivity",
-                        "preLabel": "Are you invoicing for this activity in this reporting period?",
-                        "type": "selectOne"
+                        "preLabel": "(x) Total area (ha) of pest animal-free enclosures (maintained) <u><i>invoiced</i></u> for this reporting period",
+                        "source": "totalAreaPestFreeSurveyMaintainedInvoiced",
+                        "type": "number"
                       }
                     ]
                   }
@@ -8867,6 +8833,68 @@
                 "type": "repeat",
                 "items": [
                   {
+                    "type": "row",
+                    "items": [
+                      {
+                        "css": "span3",
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "relatedOutcomes",
+                                "type": "selectOne",
+                                "preLabel": "Which outcome statement/s does this activity relate to?"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "investmentPriorities2",
+                                "preLabel": "Which investment priority does this activity relate to?",
+                                "type": "select2Many"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "otherInvestmentPriority",
+                                "type": "text"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "css": "span3",
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "invoicingThisActivity",
+                                "preLabel": "Are you invoicing for this activity in this reporting period?",
+                                "type": "selectOne"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
                     "css": "border-bottom",
                     "type": "row",
                     "items": [
@@ -8877,15 +8905,9 @@
                         "type": "selectOne"
                       },
                       {
-                        "preLabel": "Number of pest animal-free enclosures newly <u>established</u>",
+                        "preLabel": "Number of pest animal-free enclosures",
                         "css": "span3",
-                        "source": "numberOfEnclosuresEstablished",
-                        "type": "number"
-                      },
-                      {
-                        "preLabel": "Number of pest animal-free enclosures <u>maintained</u>",
-                        "css": "span3",
-                        "source": "numberOfEnclosuresMaintained",
+                        "source": "numberOfPestFreeEnclosures",
                         "type": "number"
                       },
                       {
@@ -8908,7 +8930,7 @@
                             "items": [
                               {
                                 "preLabel": "Site/s (ha) of pest animal-free enclosure",
-                                "source": "siteOfEnclosures",
+                                "source": "sitesForPestAnimalFreeEnclosures",
                                 "type": "feature"
                               }
                             ]
@@ -9558,6 +9580,15 @@
         "modelName": "NHT - Establishing ex-situ breeding programs",
         "title": "Captive Breeding, Translocation or Re-introduction Program",
         "viewModel": [
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Participation information</h3>"
+              }
+            ]
+          },
           {
             "columns": [
               {
