@@ -31175,14 +31175,22 @@
                       {
                         "type": "pre_populate",
                         "config": {
+                          "waitForInitialisation": true,
                           "source": {
-                            "context-path": "owner.custom.dataSets"
+                            "url": "/site/geojson",
+                            "params": [
+                              {
+                                "expression": "x=find(owner.custom.dataSets, \"dataSetId\", dataSetId); x.siteId",
+                                "name": "id",
+                                "type": "computed",
+                                "required": true
+                              }
+                            ]
                           },
-                          "find": {
-                            "namespace": "dataSet",
-                            "expression": "dataSet.dataSetId == dataSetId"
-                          },
-                          "target": "$data"
+                          "target":  {
+                            "type": "singleValue",
+                            "name": "sitesCoveredForWaterQuality"
+                          }
                         }
                       }
                     ]
@@ -31273,45 +31281,21 @@
                   },
                   {
                     "dataType": "feature",
-                    "name": "sitesTreated",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.",
-                    "computed": {
-                      "defer": true,
-                      "source": {
-                        "url": "/site/geojson",
-                        "params": [
-                          {
-                            "expression": "x=find(owner.custom.dataSets, \"dataSetId\", dataSetId); x.siteId",
-                            "name": "id",
-                            "type": "computed",
-                            "required": true
-                          }
-                        ]
-                      }
-                    }
+                    "name": "sitesCoveredForWaterQuality",
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
                   },
                   {
                     "computed": {
-                      "expression": "$geom.areaHa(sitesTreated)"
+                      "expression": "$geom.areaHa(sitesCoveredForWaterQuality)"
                     },
                     "dataType": "number",
                     "name": "calculatedAreaTreatedHa",
                     "units": "ha",
-                    "decimalPlaces": 3,
-                    "behaviour": [
-                      {
-                        "condition": "areaInvoicedTreatedHa > 0",
-                        "type": "conditional_validation",
-                        "value": {
-                          "message": "The managed area must be mapped",
-                          "validate": "required,min[0.0001]"
-                        }
-                      }
-                    ]
+                    "decimalPlaces": 3
                   },
                   {
                     "computed": {
-                      "expression": "$geom.lengthKm(sitesTreated)"
+                      "expression": "$geom.lengthKm(sitesCoveredForWaterQuality)"
                     },
                     "dataType": "number",
                     "name": "calculatedLengthTreatedKm",
@@ -31373,59 +31357,15 @@
                     "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                     "behaviour": [
                       {
-                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
                         "type": "visible"
                       }
                     ]
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "areaInvoicedTreatedHa",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "validate": [
-                      {
-                        "rule": "min[0]"
-                      },
-                      {
-                        "rule": "max",
-                        "param": {
-                          "type": "computed",
-                          "expression": "areaTreatedHa"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedNotActualReason",
-                    "constraints": [
-                      "Work was undertaken over a greater area than will be invoiced for",
-                      "Other"
-                    ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
-                        "type": "visible"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedNotActualComments",
-                    "behaviour": [
-                      {
-                        "type": "visible",
-                        "condition": "\"Other\" == invoicedNotActualReason"
-                      }
-                    ],
-                    "validate": "required,maxSize[300]"
                   },
                   {
                     "defaultValue": {
                       "type": "computed",
-                      "expression": "$geom.lengthKm(sitesTreated)"
+                      "expression": "$geom.lengthKm(sitesCoveredForWaterQuality)"
                     },
                     "dataType": "number",
                     "name": "lengthTreatedKm",
@@ -31436,14 +31376,14 @@
                         "rule": "min",
                         "param": {
                           "type": "computed",
-                          "expression": "$geom.lengthKm(sitesTreated)*0.9"
+                          "expression": "$geom.lengthKm(sitesCoveredForWaterQuality)*0.9"
                         }
                       },
                       {
                         "rule": "max",
                         "param": {
                           "type": "computed",
-                          "expression": "$geom.lengthKm(sitesTreated)*1.1"
+                          "expression": "$geom.lengthKm(sitesCoveredForWaterQuality)*1.1"
                         }
                       }
                     ]
@@ -31985,7 +31925,7 @@
                                 "items": [
                                   {
                                     "preLabel": "Sites covered by water quality survey",
-                                    "source": "sitesTreated",
+                                    "source": "sitesCoveredForWaterQuality",
                                     "type": "feature"
                                   }
                                 ]
@@ -32318,14 +32258,22 @@
                       {
                         "type": "pre_populate",
                         "config": {
+                          "waitForInitialisation": true,
                           "source": {
-                            "context-path": "owner.custom.dataSets"
+                            "url": "/site/geojson",
+                            "params": [
+                              {
+                                "expression": "x=find(owner.custom.dataSets, \"dataSetId\", dataSetId); x.siteId",
+                                "name": "id",
+                                "type": "computed",
+                                "required": true
+                              }
+                            ]
                           },
-                          "find": {
-                            "namespace": "dataSet",
-                            "expression": "dataSet.dataSetId == dataSetId"
-                          },
-                          "target": "$data"
+                          "target":  {
+                            "type": "singleValue",
+                            "name": "sitesCoveredForWeedDistribution"
+                          }
                         }
                       }
                     ]
@@ -32451,45 +32399,21 @@
                   },
                   {
                     "dataType": "feature",
-                    "name": "sitesTreated",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.",
-                    "computed": {
-                      "defer": true,
-                      "source": {
-                        "url": "/site/geojson",
-                        "params": [
-                          {
-                            "expression": "x=find(owner.custom.dataSets, \"dataSetId\", dataSetId); x.siteId",
-                            "name": "id",
-                            "type": "computed",
-                            "required": true
-                          }
-                        ]
-                      }
-                    }
+                    "name": "sitesCoveredForWeedDistribution",
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
                   },
                   {
                     "computed": {
-                      "expression": "$geom.areaHa(sitesTreated)"
+                      "expression": "$geom.areaHa(sitesCoveredForWeedDistribution)"
                     },
                     "dataType": "number",
                     "name": "calculatedAreaTreatedHa",
                     "units": "ha",
-                    "decimalPlaces": 3,
-                    "behaviour": [
-                      {
-                        "condition": "areaInvoicedTreatedHa > 0",
-                        "type": "conditional_validation",
-                        "value": {
-                          "message": "The managed area must be mapped",
-                          "validate": "required,min[0.0001]"
-                        }
-                      }
-                    ]
+                    "decimalPlaces": 3
                   },
                   {
                     "computed": {
-                      "expression": "$geom.lengthKm(sitesTreated)"
+                      "expression": "$geom.lengthKm(sitesCoveredForWeedDistribution)"
                     },
                     "dataType": "number",
                     "name": "calculatedLengthTreatedKm",
@@ -32551,59 +32475,15 @@
                     "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                     "behaviour": [
                       {
-                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
+                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
                         "type": "visible"
                       }
                     ]
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "areaInvoicedTreatedHa",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "validate": [
-                      {
-                        "rule": "min[0]"
-                      },
-                      {
-                        "rule": "max",
-                        "param": {
-                          "type": "computed",
-                          "expression": "areaTreatedHa"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedNotActualReason",
-                    "constraints": [
-                      "Work was undertaken over a greater area than will be invoiced for",
-                      "Other"
-                    ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
-                        "type": "visible"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedNotActualComments",
-                    "behaviour": [
-                      {
-                        "type": "visible",
-                        "condition": "\"Other\" == invoicedNotActualReason"
-                      }
-                    ],
-                    "validate": "required,maxSize[300]"
                   },
                   {
                     "defaultValue": {
                       "type": "computed",
-                      "expression": "$geom.lengthKm(sitesTreated)"
+                      "expression": "$geom.lengthKm(sitesCoveredForWeedDistribution)"
                     },
                     "dataType": "number",
                     "name": "lengthTreatedKm",
@@ -32614,14 +32494,14 @@
                         "rule": "min",
                         "param": {
                           "type": "computed",
-                          "expression": "$geom.lengthKm(sitesTreated)*0.9"
+                          "expression": "$geom.lengthKm(sitesCoveredForWeedDistribution)*0.9"
                         }
                       },
                       {
                         "rule": "max",
                         "param": {
                           "type": "computed",
-                          "expression": "$geom.lengthKm(sitesTreated)*1.1"
+                          "expression": "$geom.lengthKm(sitesCoveredForWeedDistribution)*1.1"
                         }
                       }
                     ]
@@ -33148,7 +33028,7 @@
                                 "items": [
                                   {
                                     "preLabel": "Sites covered by weed distribution survey",
-                                    "source": "sitesTreated",
+                                    "source": "sitesCoveredForWeedDistribution",
                                     "type": "feature"
                                   }
                                 ]
