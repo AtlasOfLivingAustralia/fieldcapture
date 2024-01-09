@@ -14335,14 +14335,22 @@
                       {
                         "type": "pre_populate",
                         "config": {
+                          "waitForInitialisation": true,
                           "source": {
-                            "context-path": "owner.custom.dataSets"
+                            "url": "/site/geojson",
+                            "params": [
+                              {
+                                "expression": "x=find(owner.custom.dataSets, \"dataSetId\", dataSetId); x.siteId",
+                                "name": "id",
+                                "type": "computed",
+                                "required": true
+                              }
+                            ]
                           },
-                          "find": {
-                            "namespace": "dataSet",
-                            "expression": "dataSet.dataSetId == dataSetId"
-                          },
-                          "target": "$data"
+                          "target":  {
+                            "type": "singleValue",
+                            "name": "sitesTreated"
+                          }
                         }
                       }
                     ]
@@ -14451,21 +14459,9 @@
                   {
                     "dataType": "feature",
                     "name": "sitesTreated",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.",
-                    "computed": {
-                      "defer": true,
-                      "source": {
-                        "url": "/site/geojson",
-                        "params": [
-                          {
-                            "expression": "x=find(owner.custom.dataSets, \"dataSetId\", dataSetId); x.siteId",
-                            "name": "id",
-                            "type": "computed",
-                            "required": true
-                          }
-                        ]
-                      }
-                    }
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+
+
                   },
                   {
                     "computed": {
