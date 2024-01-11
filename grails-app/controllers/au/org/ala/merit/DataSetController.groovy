@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.merit.PreAuthorise
 import au.org.ala.merit.ProjectService
+import au.org.ala.merit.config.ProgramConfig
 import grails.converters.JSON
 import org.springframework.http.HttpStatus
 
@@ -28,7 +29,7 @@ class DataSetController {
         if (!project) {
             return [projectId:projectId, project: null]
         }
-        Map config = projectService.getProgramConfiguration(project)
+        ProgramConfig config = projectService.getProgramConfiguration(project)
         String programName = config.program?.name ?: project.associatedSubProgram
         List outcomes = projectService.getAllProjectOutcomes(project)
         if (!outcomes) {
@@ -57,7 +58,6 @@ class DataSetController {
                 if (service) {
                     outputTarget.outcomeTargets.each {
                         outcomeGroups << [
-                                scoreId:outputTarget.scoreId,
                                 serviceId: service.id,
                                 service: service.name,
                                 outcomes:it.relatedOutcomes,
@@ -70,6 +70,7 @@ class DataSetController {
                  }
             }
         }
+        outcomeGroups = outcomeGroups.findAll{it.outcomes}.unique{it.label}.sort{it.label}
 
         List projectBaselines = projectService.listProjectBaselines(project)
         projectBaselines = projectBaselines?.collect{
@@ -84,7 +85,7 @@ class DataSetController {
         }
         projectProtocols << [label:'Other', value:'other']
 
-        [projectId:projectId, programName:programName, priorities:priorities, outcomes: outcomes, project:project, projectOutcomes:outcomeGroups, projectBaselines:projectBaselines, projectProtocols:projectProtocols]
+        [projectId:projectId, programName:programName, supportsOutcomeTargets:config.supportsOutcomeTargets(), priorities:priorities, outcomes: outcomes, project:project, projectOutcomes:outcomeGroups, projectBaselines:projectBaselines, projectProtocols:projectProtocols]
     }
 
     // Note that authorization is done against a project, so the project id must be supplied to the method.

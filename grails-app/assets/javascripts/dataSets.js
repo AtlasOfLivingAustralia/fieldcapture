@@ -102,17 +102,24 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.baselines = ko.observableArray(dataSet.baselines);
     self.otherDataSetType = ko.observable(dataSet.otherDataSetType);
     self.term = ko.observable(dataSet.term);
-    self.serviceAndOutcomes = ko.observable(_.find(options.projectOutcomes || [], function(outcome) {
+    var selectedServiceAndOutcome = _.find(options.projectOutcomes || [], function(outcome) {
         return outcome.serviceId == dataSet.serviceId && _.isEqual(outcome.outcomes, dataSet.projectOutcomes);
-    }));
+    });
+    self.serviceAndOutcomes = ko.observable(selectedServiceAndOutcome.label);
     self.projectProtocols = config.projectProtocols;
     self.protocol = ko.observable(dataSet.protocol);
     self.projectOutcomeList = ko.observableArray(options.projectOutcomes);
     self.serviceId = ko.computed(function() {
-        return self.serviceAndOutcomes() && self.serviceAndOutcomes().serviceId;
+        var selectedOutcome = _.find(options.projectOutcomes || [], function(serviceAndOutcome) {
+            return serviceAndOutcome.label == self.serviceAndOutcomes();
+        });
+        return selectedOutcome && selectedOutcome.serviceId;
     });
     self.projectOutcomes = ko.computed(function() {
-        return self.serviceAndOutcomes() && self.serviceAndOutcomes().outcomes;
+        var selectedOutcome = _.find(options.projectOutcomes || [], function(serviceAndOutcome) {
+            return serviceAndOutcome.label == self.serviceAndOutcomes();
+        });
+        return selectedOutcome && selectedOutcome.outcomes;
     });
     if (dataSet.measurementTypes && !_.isArray(dataSet.measurementTypes)) {
         dataSet.measurementTypes = [dataSet.measurementTypes];
