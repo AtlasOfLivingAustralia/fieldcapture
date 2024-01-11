@@ -11483,79 +11483,99 @@
             }
           },
           {
-            "dataType": "text",
-            "name": "participationIndividualsOrGroups",
-            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
-            "constraints": [
-              "Individuals",
-              "Groups"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "participationIndividualNumber",
-            "behaviour": [
+            "columns": [
               {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
+                "dataType": "text",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
               }
             ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "participationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "firstNationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "firstNationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "participationDetails",
-            "validate": "maxSize[3000]"
+            "dataType": "list",
+            "name": "participationInformationTable"
           },
           {
             "dataType": "number",
@@ -11563,7 +11583,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(farmManagementSurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "sum(farmManagementSurveys, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
             }
           },
           {
@@ -11578,15 +11598,15 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
-            "validate": "required,min[0],max[1]",
+            "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(farmManagementSurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "sum(farmManagementSurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
             }
           },
           {
@@ -11601,7 +11621,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -11660,7 +11680,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -11676,7 +11696,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -11699,7 +11719,7 @@
                 ],
                 "userAddedRows": false,
                 "disableTableUpload": false,
-                "source": "",
+                "source": "participationInformationTable",
                 "type": "table"
               },
               {
@@ -12524,87 +12544,99 @@
             }
           },
           {
-            "dataType": "text",
-            "name": "participationIndividualsOrGroups",
-            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
-            "constraints": [
-              "Individuals",
-              "Groups"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "participationIndividualNumber",
-            "behaviour": [
+            "columns": [
               {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
+                "dataType": "text",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
               }
             ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "participationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "firstNationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "firstNationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "participationDetails",
-            "validate": "maxSize[3000]"
-          },
-          {
-            "name": "numberFloraSurveysConducted",
-            "type": "number",
-            "decimalPlaces": 0,
-            "computed": {
-              "expression": "count(faunaSurveys, \"projectBaselines\")"
-            }
+            "dataType": "list",
+            "name": "participationInformationTable"
           },
           {
             "dataType": "number",
@@ -12612,7 +12644,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(faunaSurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "sum(faunaSurveys, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
             }
           },
           {
@@ -12627,7 +12659,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
@@ -12635,7 +12667,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(faunaSurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "sum(faunaSurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
             }
           },
           {
@@ -12644,13 +12676,13 @@
             "validate": [
               {
                 "param": {
-                  "expression": "totalSurveyBaseline",
+                  "expression": "totalSurveyIndicator",
                   "type": "computed"
                 },
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -12709,7 +12741,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -12725,7 +12757,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -12748,7 +12780,7 @@
                 ],
                 "userAddedRows": false,
                 "disableTableUpload": false,
-                "source": "",
+                "source": "participationInformationTable",
                 "type": "table"
               },
               {
@@ -14507,87 +14539,99 @@
             }
           },
           {
-            "dataType": "text",
-            "name": "participationIndividualsOrGroups",
-            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
-            "constraints": [
-              "Individuals",
-              "Groups"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "participationIndividualNumber",
-            "behaviour": [
+            "columns": [
               {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
+                "dataType": "text",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
               }
             ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "participationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "firstNationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "firstNationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "participationDetails",
-            "validate": "maxSize[3000]"
-          },
-          {
-            "name": "numberFloraSurveysConducted",
-            "type": "number",
-            "decimalPlaces": 0,
-            "computed": {
-              "expression": "count(floraSurveys, \"projectBaselines\")"
-            }
+            "dataType": "list",
+            "name": "participationInformationTable"
           },
           {
             "dataType": "number",
@@ -14595,7 +14639,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(floraSurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "sum(floraSurveys, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
             }
           },
           {
@@ -14618,12 +14662,13 @@
             "validate": "required,min[0],max[1]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(floraSurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "sum(floraSurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
             }
           },
           {
             "dataType": "number",
             "name": "totalSurveyIndicatorInvoiced",
+            "defaultValue": 0,
             "validate": [
               {
                 "param": {
@@ -14632,8 +14677,7 @@
                 },
                 "rule": "max"
               }
-            ],
-            "defaultValue": 0
+            ]
           },
           {
             "dataType": "text",
@@ -14692,7 +14736,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -14708,7 +14752,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -14731,7 +14775,7 @@
                 ],
                 "userAddedRows": false,
                 "disableTableUpload": false,
-                "source": "",
+                "source": "participationInformationTable",
                 "type": "table"
               },
               {
@@ -16745,87 +16789,99 @@
             }
           },
           {
-            "dataType": "text",
-            "name": "participationIndividualsOrGroups",
-            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
-            "constraints": [
-              "Individuals",
-              "Groups"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "participationIndividualNumber",
-            "behaviour": [
+            "columns": [
               {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
+                "dataType": "text",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
               }
             ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "participationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "firstNationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "firstNationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "participationDetails",
-            "validate": "maxSize[3000]"
-          },
-          {
-            "name": "numberhabitatConditionSurveysConducted",
-            "type": "number",
-            "decimalPlaces": 0,
-            "computed": {
-              "expression": "count(habitatConditionSurveys, \"baselineOrIndicatorSurvey\")"
-            }
+            "dataType": "list",
+            "name": "participationInformationTable"
           },
           {
             "dataType": "number",
@@ -16833,7 +16889,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(habitatConditionSurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "sum(habitatConditionSurveys, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
             }
           },
           {
@@ -16848,7 +16904,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
@@ -16856,7 +16912,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(habitatConditionSurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "sum(habitatConditionSurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
             }
           },
           {
@@ -16865,13 +16921,13 @@
             "validate": [
               {
                 "param": {
-                  "expression": "totalSurveyBaseline",
+                  "expression": "totalSurveyIndicator",
                   "type": "computed"
                 },
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -16930,7 +16986,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -16946,7 +17002,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -16969,7 +17025,7 @@
                 ],
                 "userAddedRows": false,
                 "disableTableUpload": false,
-                "source": "",
+                "source": "participationInformationTable",
                 "type": "table"
               },
               {
@@ -22232,87 +22288,99 @@
             }
           },
           {
-            "dataType": "text",
-            "name": "participationIndividualsOrGroups",
-            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
-            "constraints": [
-              "Individuals",
-              "Groups"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "participationIndividualNumber",
-            "behaviour": [
+            "columns": [
               {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
+                "dataType": "text",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
               }
             ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "participationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "firstNationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "firstNationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "participationDetails",
-            "validate": "maxSize[3000]"
-          },
-          {
-            "name": "numberFloraSurveysConducted",
-            "type": "number",
-            "decimalPlaces": 0,
-            "computed": {
-              "expression": "count(pestAnimalSurveys, \"baselineOrIndicatorSurvey\")"
-            }
+            "dataType": "list",
+            "name": "participationInformationTable"
           },
           {
             "dataType": "number",
@@ -22320,7 +22388,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(pestAnimalSurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "sum(pestAnimalSurveys, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
             }
           },
           {
@@ -22335,7 +22403,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
@@ -22343,13 +22411,13 @@
             "validate": "required,min[0],max[1]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(pestAnimalSurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "sum(pestAnimalSurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
             }
           },
           {
             "dataType": "number",
             "name": "totalSurveyIndicatorInvoiced",
-            "defaultValue": 1,
+            "defaultValue": 0,
             "validate": [
               {
                 "param": {
@@ -22417,7 +22485,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -22433,7 +22501,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -22456,7 +22524,7 @@
                 ],
                 "userAddedRows": false,
                 "disableTableUpload": false,
-                "source": "",
+                "source": "participationInformationTable",
                 "type": "table"
               },
               {
@@ -23390,87 +23458,99 @@
             }
           },
           {
-            "dataType": "text",
-            "name": "participationIndividualsOrGroups",
-            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
-            "constraints": [
-              "Individuals",
-              "Groups"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "participationIndividualNumber",
-            "behaviour": [
+            "columns": [
               {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
+                "dataType": "text",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
               }
             ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "participationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "firstNationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "firstNationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "participationDetails",
-            "validate": "maxSize[3000]"
-          },
-          {
-            "name": "numberFloraSurveysConducted",
-            "type": "number",
-            "decimalPlaces": 0,
-            "computed": {
-              "expression": "count(plantSurvivalSurveys, \"projectBaselines\")"
-            }
+            "dataType": "list",
+            "name": "participationInformationTable"
           },
           {
             "dataType": "number",
@@ -23478,14 +23558,12 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(plantSurvivalSurveys, \"projectBaselines\")"
+              "expression": "sum(plantSurvivalSurveys, \"1\")"
             }
           },
           {
             "dataType": "number",
             "name": "totalSurveyIndicatorInvoiced",
-            "validate": "required,min[0],max[1]",
-            "defaultValue": 1,
             "validate": [
               {
                 "param": {
@@ -23494,7 +23572,8 @@
                 },
                 "rule": "max"
               }
-            ]
+            ],
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -23553,7 +23632,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -23569,7 +23648,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -23592,7 +23671,7 @@
                 ],
                 "userAddedRows": false,
                 "disableTableUpload": false,
-                "source": "",
+                "source": "participationInformationTable",
                 "type": "table"
               },
               {
@@ -28663,87 +28742,99 @@
             }
           },
           {
-            "dataType": "text",
-            "name": "participationIndividualsOrGroups",
-            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
-            "constraints": [
-              "Individuals",
-              "Groups"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "participationIndividualNumber",
-            "behaviour": [
+            "columns": [
               {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
+                "dataType": "text",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
               }
             ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "participationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "firstNationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "firstNationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "participationDetails",
-            "validate": "maxSize[3000]"
-          },
-          {
-            "name": "numberFloraSurveysConducted",
-            "type": "number",
-            "decimalPlaces": 0,
-            "computed": {
-              "expression": "count(skillsAndKnowledgeSurveys, \"baselineOrIndicatorSurvey\")"
-            }
+            "dataType": "list",
+            "name": "participationInformationTable"
           },
           {
             "dataType": "number",
@@ -28751,7 +28842,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(skillsAndKnowledgeSurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "sum(skillsAndKnowledgeSurveys, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
             }
           },
           {
@@ -28766,7 +28857,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
@@ -28774,7 +28865,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(skillsAndKnowledgeSurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "sum(skillsAndKnowledgeSurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
             }
           },
           {
@@ -28783,13 +28874,13 @@
             "validate": [
               {
                 "param": {
-                  "expression": "totalSurveyBaseline",
+                  "expression": "totalSurveyIndicator",
                   "type": "computed"
                 },
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
@@ -28854,7 +28945,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -28870,7 +28961,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -28893,7 +28984,7 @@
                 ],
                 "userAddedRows": false,
                 "disableTableUpload": false,
-                "source": "",
+                "source": "participationInformationTable",
                 "type": "table"
               },
               {
@@ -29905,13 +29996,13 @@
             "validate": [
               {
                 "param": {
-                  "expression": "totalSurveyBaseline",
+                  "expression": "totalSurveyIndicator",
                   "type": "computed"
                 },
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -31470,96 +31561,107 @@
             }
           },
           {
-            "dataType": "text",
-            "name": "participationIndividualsOrGroups",
-            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
-            "constraints": [
-              "Individuals",
-              "Groups"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "participationIndividualNumber",
-            "behaviour": [
+            "columns": [
               {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
+                "dataType": "text",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
               }
             ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "participationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "firstNationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "firstNationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "participationDetails",
-            "validate": "maxSize[3000]"
-          },
-          {
-            "name": "numberFloraSurveysConducted",
-            "type": "number",
-            "decimalPlaces": 0,
-            "computed": {
-              "expression": "count(waterQualitySurveys, \"baselineOrIndicatorSurvey\")"
-            }
+            "dataType": "list",
+            "name": "participationInformationTable"
           },
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
             "validate": "required,min[0]",
             "decimalPlaces": 0,
-            "defaultValue": 1,
             "computed": {
-              "expression": "count(waterQualitySurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "sum(waterQualitySurveys, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
             }
           },
           {
@@ -31574,16 +31676,15 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
             "validate": "required,min[0]",
             "decimalPlaces": 0,
-            "defaultValue": 1,
             "computed": {
-              "expression": "count(waterQualitySurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "sum(waterQualitySurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
             }
           },
           {
@@ -31592,13 +31693,13 @@
             "validate": [
               {
                 "param": {
-                  "expression": "totalSurveyBaseline",
+                  "expression": "totalSurveyIndicator",
                   "type": "computed"
                 },
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -31657,7 +31758,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -31673,7 +31774,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -31696,7 +31797,7 @@
                 ],
                 "userAddedRows": false,
                 "disableTableUpload": false,
-                "source": "",
+                "source": "participationInformationTable",
                 "type": "table"
               },
               {
@@ -32573,96 +32674,107 @@
             }
           },
           {
-            "dataType": "text",
-            "name": "participationIndividualsOrGroups",
-            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
-            "constraints": [
-              "Individuals",
-              "Groups"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "participationIndividualNumber",
-            "behaviour": [
+            "columns": [
               {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
+                "dataType": "text",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
               }
             ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "participationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "firstNationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "firstNationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "participationDetails",
-            "validate": "maxSize[3000]"
-          },
-          {
-            "name": "numberFloraSurveysConducted",
-            "type": "number",
-            "decimalPlaces": 0,
-            "computed": {
-              "expression": "count(weedSurveys, \"baselineOrIndicatorSurvey\")"
-            }
+            "dataType": "list",
+            "name": "participationInformationTable"
           },
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
             "validate": "required,min[0]",
             "decimalPlaces": 0,
-            "defaultValue": 1,
             "computed": {
-              "expression": "count(weedSurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "sum(weedSurveys, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
             }
           },
           {
@@ -32677,16 +32789,15 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
             "validate": "required,min[0]",
             "decimalPlaces": 0,
-            "defaultValue": 1,
             "computed": {
-              "expression": "count(weedSurveys, \"baselineOrIndicatorSurvey\")"
+              "expression": "sum(weedSurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
             }
           },
           {
@@ -32695,13 +32806,13 @@
             "validate": [
               {
                 "param": {
-                  "expression": "totalSurveyBaseline",
+                  "expression": "totalSurveyIndicator",
                   "type": "computed"
                 },
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -32760,7 +32871,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -32776,7 +32887,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -32799,7 +32910,7 @@
                 ],
                 "userAddedRows": false,
                 "disableTableUpload": false,
-                "source": "",
+                "source": "participationInformationTable",
                 "type": "table"
               },
               {
