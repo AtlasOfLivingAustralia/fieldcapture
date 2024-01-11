@@ -24,9 +24,12 @@ class NhtOutputReportDataSpec extends Specification {
 
         then:
         1 * projectService.listProjectProtocols(project) >> protocols
-        contextData.protocols.size() == 1
+        contextData.protocols.size() == 2
         contextData.protocols[0].label == 'test'
         contextData.protocols[0].value == 'e1'
+        contextData.protocols[1].label == 'Other'
+        contextData.protocols[1].value == 'other'
+
         project.custom == null
 
     }

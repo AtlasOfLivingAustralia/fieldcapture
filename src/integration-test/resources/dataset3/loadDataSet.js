@@ -1050,7 +1050,24 @@ createProject({
     managementUnitId: "bushfireManagement1",
     custom: {
         details: {
+            programServiceConfig: {
+                serviceFormName: "Outputs Report",
+                programServices: [
+                    {
+                        "serviceTargets": [
+                            "score_42"
+                        ],
+                        "serviceId": NumberInt(1)
+                    }
+                ]
+            },
             outcomes: {
+                shortTermOutcomes: [{
+                    "code":"ST1",
+                    "description": "Short term outcome 1",
+                    "assets": [],
+                    "relatedOutcome":"Program short term outcome 1"}
+                ],
                 otherOutcomes: ["Partnerships and engagement is built between stakeholders responsible for managing natural resources",
                     "More primary producers adopt risk management practices to improve their sustainability and resilience",
                     "More primary producers and agricultural communities are experimenting with adaptive or transformative NRM practices, systems and approaches that link and contribute to building drought resilience"]
@@ -1063,7 +1080,14 @@ createProject({
                 ]
             }
         }
-    }
+    },
+    outputTargets: [
+        {
+            scoreId:'score_42',
+            target:'10',
+            outcomeTargets:[{relatedOutcomes:['ST1'], target:'10'}]
+        }
+    ]
 })
 
 db.userPermission.insert({
