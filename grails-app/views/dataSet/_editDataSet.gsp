@@ -48,8 +48,8 @@
         </div>
 
     </div>
-%{--    Support for legacy data set summaries --}%
-    <!-- ko if:term() -->
+%{--    Support for legacy data set summaries / projects without outcome targets --}%
+    <g:if test="${!supportsOutcomeTargets}">
     <div class="form-group row">
         <label for="term" class="col-sm-5 col-form-label">7. Is this data being collected for reporting against short or medium term outcome statements?</label>
         <div class="col-sm-7">
@@ -61,17 +61,16 @@
             </select>
         </div>
     </div>
-    <!-- /ko -->
+    </g:if>
+    <g:else>
 
-    <!-- ko if:!term() -->
     <div class="form-group row">
-        <label for="projectOutcomes" class="col-sm-5 col-form-label">7. Which project service and outcome/s does this data set support? </label>
+    <label for="projectOutcomes" class="col-sm-5 col-form-label required">7. Which project service and outcome/s does this data set support? <br/>  <b><i>This data set summary will only be able to be invoiced for the service selected here</i></b>.</label>
         <div class="col-sm-7">
-            <select id="projectOutcomes" class="form-control" data-bind="options:projectOutcomeList, optionsText:'label', optionsCaption:'Please select...', value:serviceAndOutcomes"></select>
-
+            <select id="projectOutcomes" class="form-control" data-bind="options:projectOutcomeList, optionsText:'label', optionsValue: 'label', optionsCaption:'Please select...', value:serviceAndOutcomes" data-validation-engine="validate[required]"></select>
         </div>
     </div>
-    <!-- /ko -->
+    </g:else>
 
     <div class="form-group row">
         <label for="type" class="col-sm-5 col-form-label required">8a. Is this (a) a baseline dataset associated with a project outcome i.e. against which, change will be measured, (b) a project progress dataset that is tracking change against an established project baseline dataset or (c) a standalone, foundational dataset to inform future management interventions?</label>

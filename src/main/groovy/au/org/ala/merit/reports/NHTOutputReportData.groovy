@@ -28,10 +28,12 @@ class NHTOutputReportData extends ReportData {
             project.custom.dataSets = new JSONArray(eligibleDataSets ?: [])
         }
 
+        List protocols = projectService.listProjectProtocols(project).collect {
+            [label: it.name, value: it.externalId]
+        }
+        protocols << [label:'Other', value:'other']
         return [
-            protocols:projectService.listProjectProtocols(project).collect {
-                [label: it.name, value: it.externalId]
-            }
+            protocols:protocols
         ]
     }
 
