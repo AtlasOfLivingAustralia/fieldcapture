@@ -105,7 +105,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     var selectedServiceAndOutcome = _.find(options.projectOutcomes || [], function(outcome) {
         return outcome.serviceId == dataSet.serviceId && _.isEqual(outcome.outcomes, dataSet.projectOutcomes);
     });
-    self.serviceAndOutcomes = ko.observable(selectedServiceAndOutcome.label);
+    self.serviceAndOutcomes = ko.observable(selectedServiceAndOutcome && selectedServiceAndOutcome.label);
     self.projectProtocols = config.projectProtocols;
     self.protocol = ko.observable(dataSet.protocol);
     self.projectOutcomeList = ko.observableArray(options.projectOutcomes);

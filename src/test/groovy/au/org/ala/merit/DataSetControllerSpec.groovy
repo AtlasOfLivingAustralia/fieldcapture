@@ -42,7 +42,7 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         1 * projectService.listProjectProtocols(project) >> [["name":"p1", "externalId":"p1"]]
         1 * projectService.listProjectBaselines(project) >> [["code":"b1", baseline:"a baseline"]]
 
-        model == [project:project, projectId:'p1', programName:"program 1", programConfig:programConfig,
+        model == [project:project, projectId:'p1', programName:"program 1", supportsOutcomeTargets:false,
                   priorities:["p1"], outcomes:["1", "2"], projectOutcomes:[],
                     projectBaselines:[[label:"b1 - a baseline", value:"b1"]],
                     projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']]]
@@ -74,7 +74,7 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         setup:
         List existingDataSets = [[name:'data set 1', dataSetId:'d1'], [name:'data set 2', dataSetId:'d2'], [name:'data set 3', dataSetId:'d3']]
         Map project = [projectId:'p1', custom:[dataSets:existingDataSets]]
-        Map programConfig = [program:[name:"program 1"]]
+        Map programConfig = [program:[name:"program 1"], meriPlanContents:[[template:'serviceOutcomeTargets']]]
         when:
         Map model = controller.edit('p1', 'd2')
 
@@ -87,7 +87,7 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         1 * projectService.listProjectBaselines(project) >> [["code":"b1", baseline:"a baseline"]]
 
 
-        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"], programConfig: programConfig,
+        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"], supportsOutcomeTargets: true,
                   outcomes:["1", "2"], projectOutcomes:[], dataSet:existingDataSets[1],
                   projectBaselines:[[label:"b1 - a baseline", value:"b1"]],
                   projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']]]
@@ -152,7 +152,7 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         1 * projectService.listProjectBaselines(project) >> [["code":"b1", baseline:"a baseline"]]
 
 
-        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"], programConfig: programConfig,
+        model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"], supportsOutcomeTargets: false,
                   outcomes:["1", "2"], projectOutcomes:[], dataSet:existingDataSets[1],
                   projectBaselines:[[label:"b1 - a baseline", value:"b1"]],
                   projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']]]
