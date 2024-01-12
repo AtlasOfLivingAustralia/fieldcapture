@@ -13611,7 +13611,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -15556,11 +15556,6 @@
                 "validate": "required"
               },
               {
-                "dataType": "number",
-                "name": "invoiceLocationsStructures",
-                "validate": "required"
-              },
-              {
                 "columns": [
                   {
                     "dataType": "date",
@@ -15623,56 +15618,69 @@
                     "dataType": "text",
                     "name": "evidenceOfBenefit",
                     "validate": "maxSize[300]"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "investmentPrioritiesActivityRelates",
-                    "description": "",
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "name": "relatedOutcomes",
-                    "dataType": "text",
-                    "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
-                    "validate": "required",
-                    "constraints": {
-                      "textProperty": "label",
-                      "valueProperty": "label",
-                      "type": "pre-populated",
-                      "config": {
-                        "source": {
-                          "url": "/project/outcomesByScores",
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            },
-                            {
-                              "expression": "scores",
-                              "name": "scoreIds",
-                              "type": "computed"
-                            }
-                          ]
-                        }
-                      }
-                    }
                   }
                 ],
                 "dataType": "list",
                 "name": "habitatAugmentationDetails"
+              },
+              {
+                "name": "relatedOutcomes",
+                "dataType": "text",
+                "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "outcomes"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "investmentPriorities2",
+                "dataType": "stringList",
+                "validate": "required",
+                "constraints": {
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        }
+                      ],
+                      "url": "/project/listProjectInvestmentPriorities/"
+                    }
+                  }
+                }
+              },
+              {
+                "dataType": "text",
+                "name": "otherInvestmentPriority",
+                "behaviour": [
+                  {
+                    "type": "enable",
+                    "condition": "\"Other\" in investmentPriorities2"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicingThisActivity",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
+                "validate": "required"
               }
             ],
             "dataType": "list",
             "name": "habitatAugmentationAreas"
-          },
-          {
-            "name": "habitatSurveyCountHeader",
-            "type": "number",
-            "decimalPlaces": 0,
-            "computed": {
-              "expression": "count(habitatAugmentationAreas, \"relatedOutcomes\")"
-            }
           },
           {
             "dataType": "number",
@@ -15695,7 +15703,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
@@ -15703,7 +15711,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(habitatAugmentationAreas, \"areaImplementedHa\")"
+              "expression": "sum(habitatAugmentationAreas, \"initialOrMaintained == 'Maintained' ? areaImplementedHa : 0\")"
             }
           },
           {
@@ -15718,7 +15726,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
@@ -15726,7 +15734,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(habitatAugmentationAreas, \"noStructuresInstalled\")"
+              "expression": "sum(habitatAugmentationAreas, \"initialOrMaintained == 'Initial' ? noStructuresInstalled : 0\")"
             }
           },
           {
@@ -15741,7 +15749,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
@@ -15749,7 +15757,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(habitatAugmentationAreas, \"noStructuresInstalled\")"
+              "expression": "sum(habitatAugmentationAreas, \"initialOrMaintained == 'Maintained' ? noStructuresInstalled : 0\")"
             }
           },
           {
@@ -15764,7 +15772,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -15806,6 +15814,15 @@
         "modelName": "NHT - Habitat augmentation",
         "title": "Habitat Augmentation",
         "viewModel": [
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Participation information</h3>"
+              }
+            ]
+          },
           {
             "columns": [
               {
@@ -15864,7 +15881,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<h3>Totals Summary X</h3>"
+                "source": "<h3>Totals Summary</h3>"
               }
             ]
           },
@@ -15879,7 +15896,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total area (ha) of augmentation during this reporting period (Initial)",
+                        "preLabel": "(i) Total area (ha) of augmentation (initial) during this reporting period",
                         "source": "totalAreaAugmentationInitial",
                         "type": "number"
                       }
@@ -15889,7 +15906,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total area (ha) of augmentation <u><i>invoiced</i></u> for during this reporting period (Initial)",
+                        "preLabel": "(ii) Total area (ha) of augmentation (initial) <u><i>invoiced</i></u> for during this reporting period",
                         "source": "totalAreaAugmentationInitialInvoiced",
                         "type": "number"
                       }
@@ -15905,7 +15922,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iii) Total area (ha) of augmentation during this reporting period (maintained)",
+                        "preLabel": "(iii) Total area (ha) of augmentation (maintained) during this reporting period",
                         "source": "totalAreaAugmentationMaintained",
                         "type": "number"
                       }
@@ -15915,7 +15932,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iv) Total area (ha) of augmentation <b><u>invoiced</b></u> for during this reporting period (maintained)",
+                        "preLabel": "(iv) Total area (ha) of augmentation (maintained) <u><i>invoiced</i></u> for during this reporting period",
                         "source": "totalAreaAugmentationMaintainedInvoiced",
                         "type": "number"
                       }
@@ -15931,7 +15948,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(v) Number of locations where structures installed during this reporting period (Initial)",
+                        "preLabel": "(v) Number of locations where structures installed (initial) during this reporting period",
                         "source": "totalStructuresInstalledInitial",
                         "type": "number"
                       }
@@ -15941,7 +15958,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vi) Number of locations where structures installed <b><u>invoiced</b></u> for during this reporting period (Initial)",
+                        "preLabel": "(vi) Number of locations where structures installed (initial) <u><i>invoiced</i></u> for during this reporting period",
                         "source": "totalStructuresInstalledInitialInvoiced",
                         "type": "number"
                       }
@@ -15957,7 +15974,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vii) Number of locations where structures installed during this reporting period (maintained)",
+                        "preLabel": "(vii) Number of locations where structures installed (maintained) during this reporting period",
                         "source": "totalStructuresInstalledMaintained",
                         "type": "number"
                       }
@@ -15967,7 +15984,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(viii) Number of locations where structures installed <b><u>invoiced</b></u> for during this reporting period (maintained)",
+                        "preLabel": "(viii) Number of locations where structures installed (maintained) <u><i>invoiced</i></u> for during this reporting period",
                         "source": "totalStructuresInstalledMaintainedInvoiced",
                         "type": "number"
                       }
@@ -15978,12 +15995,6 @@
             ]
           },
           {
-            "preLabel": "Number of Habitat Augmentation surveys conducted:",
-            "noEdit": true,
-            "type": "number",
-            "source": "habitatSurveyCountHeader"
-          },
-          {
             "addRowText": "Add a new controlled area",
             "userAddedRows": true,
             "source": "habitatAugmentationAreas",
@@ -15991,13 +16002,63 @@
             "items": [
               {
                 "type": "row",
-                "css": "border-bottom",
                 "items": [
                   {
-                    "preLabel": "Initial or Maintenance Treatment?",
-                    "css": "span3",
-                    "source": "initialOrMaintained",
-                    "type": "selectOne"
+                    "css": "span3 col-border-right",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "relatedOutcomes",
+                            "type": "selectOne",
+                            "preLabel": "Which outcome statement/s does this activity relate to?"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "investmentPriorities2",
+                            "preLabel": "Which investment priority does this activity relate to?",
+                            "type": "select2Many"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "otherInvestmentPriority",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span3 col-border-right",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "invoicingThisActivity",
+                            "preLabel": "Are you invoicing for this activity in this reporting period?",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               },
@@ -16007,7 +16068,45 @@
                 "items": [
                   {
                     "type": "col",
-                    "css": "span2 col-border-right",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "initialOrMaintained",
+                            "preLabel": "Initial or Maintenance Treatment?",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "noStructuresInstalled",
+                            "preLabel": "Number of structures installed/maintained",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "css": "border-bottom",
+                "items": [
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
                         "type": "row",
@@ -16059,7 +16158,7 @@
                   },
                   {
                     "type": "col",
-                    "css": "span2 col-border-right",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
                         "type": "row",
@@ -16114,7 +16213,7 @@
                   },
                   {
                     "type": "col",
-                    "css": "span2 col-border-right",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
                         "type": "row",
@@ -16187,49 +16286,11 @@
                         ]
                       }
                     ]
-                  },
-                  {
-                    "type": "col",
-                    "css": "span2 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "noStructuresInstalled",
-                            "preLabel": "Number of structures installed/maintained",
-                            "type": "number"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "col",
-                    "css": "span2 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "invoiceLocationsStructures",
-                            "preLabel": "Invoiced number of locations where structures were installed/maintained",
-                            "type": "number"
-                          }
-                        ]
-                      }
-                    ]
                   }
                 ]
               },
               {
                 "columns": [
-                  {
-                    "width": "15%",
-                    "source": "relatedOutcomes",
-                    "type": "selectOne",
-                    "title": "Which outcome statement/s relates to this survey?"
-                  },
                   {
                     "title": "Activity start date",
                     "source": "activitiesStartDate",
@@ -16243,7 +16304,7 @@
                     "width": "10%"
                   },
                   {
-                    "width": "10%",
+                    "width": "20%",
                     "title": "Type of habitat augmentation / installed",
                     "type": "col",
                     "items": [
@@ -16268,7 +16329,7 @@
                     ]
                   },
                   {
-                    "width": "15%",
+                    "width": "25%",
                     "source": "habitatAugmentationObjective",
                     "title": "Purpose of habitat augmentation",
                     "type": "textarea"
@@ -16293,16 +16354,10 @@
                     ]
                   },
                   {
-                    "width": "15%",
+                    "width": "20%",
                     "source": "evidenceOfBenefit",
                     "title": "If off-site area was mapped please provide a description on the evidence available to reflect this benefit",
                     "type": "textarea"
-                  },
-                  {
-                    "width": "15%",
-                    "source": "investmentPrioritiesActivityRelates",
-                    "title": "Which investment priority does this activity relate to?",
-                    "type": "text"
                   }
                 ],
                 "userAddedRows": false,
