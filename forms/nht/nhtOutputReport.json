@@ -9148,7 +9148,7 @@
     },
     {
       "collapsedByDefault": false,
-      "template": {
+      "template":   {
         "dataModel": [
           {
             "dataType": "text",
@@ -9228,6 +9228,61 @@
           {
             "columns": [
               {
+                "name": "relatedOutcomes",
+                "dataType": "text",
+                "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "outcomes"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "investmentPriorities2",
+                "dataType": "stringList",
+                "validate": "required",
+                "constraints": {
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        }
+                      ],
+                      "url": "/project/listProjectInvestmentPriorities/"
+                    }
+                  }
+                }
+              },
+              {
+                "dataType": "text",
+                "name": "otherInvestmentPriority",
+                "behaviour": [
+                  {
+                    "type": "enable",
+                    "condition": "\"Other\" in investmentPriorities2"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicingThisActivity",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
+                "validate": "required"
+              },
+              {
                 "dataType": "text",
                 "name": "activityType",
                 "constraints": [
@@ -9262,16 +9317,6 @@
                 "constraints": [
                   "Newly established",
                   "Maintained"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "invoicingThisActivity",
-                "description": "Number of Captive Breeding, Translocation or Re-introduction breeding programs established or maintained being invoiced for this reporting period.",
-                "constraints": [
-                  "Yes",
-                  "No"
                 ],
                 "validate": "required"
               },
@@ -9327,76 +9372,18 @@
                 ]
               },
               {
-                "name": "relatedOutcomes",
-                "dataType": "text",
-                "description": "More than one outcome could be selected.",
-                "validate": "required",
-                "constraints": {
-                  "textProperty": "label",
-                  "valueProperty": "label",
-                  "type": "pre-populated",
-                  "config": {
-                    "source": {
-                      "url": "/project/outcomesByScores",
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        },
-                        {
-                          "expression": "scores",
-                          "name": "scoreIds",
-                          "type": "computed"
-                        }
-                      ]
-                    }
-                  }
-                }
-              },
-              {
-                "dataType": "date",
-                "name": "activitiesStartDate",
-                "description": "Specific the dates these events were held on.",
-                "validate": "required"
-              },
-              {
-                "dataType": "date",
-                "name": "activitiesEndDate",
-                "description": "Specific the dates these events were held on.",
-                "validate": "required"
-              },
-              {
                 "columns": [
                   {
-                    "name": "investmentPriorities2",
-                    "dataType": "stringList",
-                    "validate": "required",
-                    "constraints": {
-                      "type": "pre-populated",
-                      "config": {
-                        "source": {
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            }
-                          ],
-                          "url": "/project/listProjectInvestmentPriorities/"
-                        }
-                      }
-                    }
+                    "dataType": "date",
+                    "name": "activitiesStartDate",
+                    "description": "Specific the dates these events were held on.",
+                    "validate": "required"
                   },
                   {
-                    "dataType": "text",
-                    "name": "otherInvestmentPriority",
-                    "behaviour": [
-                      {
-                        "type": "enable",
-                        "condition": "\"Other\" in investmentPriorities2"
-                      }
-                    ]
+                    "dataType": "date",
+                    "name": "activitiesEndDate",
+                    "description": "Specific the dates these events were held on.",
+                    "validate": "required"
                   },
                   {
                     "dataType": "text",
@@ -9500,7 +9487,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(breedingProgramDetails, \"numberOfCaptiveBreeding\")"
+              "expression": "sum(breedingProgramDetails, \"newOrMaintained == 'Newly established' ? numberOfCaptiveBreeding : 0\")"
             }
           },
           {
@@ -9515,7 +9502,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
@@ -9523,7 +9510,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(breedingProgramDetails, \"numberOfCaptiveBreeding\")"
+              "expression": "sum(breedingProgramDetails, \"newOrMaintained == 'Maintained' ? numberOfCaptiveBreeding : 0\")"
             }
           },
           {
@@ -9538,7 +9525,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -9662,7 +9649,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total number of captive breeding and release, translocation or re-introduction programs newly established for this reporting period",
+                        "preLabel": "(i) Total number of captive breeding and release, translocation or re-introduction programs (newly established) for this reporting period",
                         "source": "totalCaptiveBreedingEstablished",
                         "type": "number"
                       }
@@ -9672,7 +9659,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total number of captive breeding and release, translocation or re-introduction programs newly established <u><i>invoiced</i></u> for this reporting period",
+                        "preLabel": "(ii) Total number of captive breeding and release, translocation or re-introduction programs (newly established) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalCaptiveBreedingEstablishedInvoiced",
                         "type": "number"
                       }
@@ -9688,7 +9675,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iii) Total number of captive breeding and release, translocation or re-introduction programs maintained for this reporting period",
+                        "preLabel": "(iii) Total number of captive breeding and release, translocation or re-introduction programs (maintained) for this reporting period",
                         "source": "totalCaptiveBreedingMaintained",
                         "type": "number"
                       }
@@ -9698,7 +9685,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iv) Total number of captive breeding and release, translocation or re-introduction programs maintained <u><i>invoiced</i></u> for this reporting period",
+                        "preLabel": "(iv) Total number of captive breeding and release, translocation or re-introduction programs (maintained) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalCaptiveBreedingMaintainedInvoiced",
                         "type": "number"
                       }
@@ -9717,6 +9704,68 @@
                 "source": "breedingProgramDetails",
                 "type": "repeat",
                 "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "css": "span3",
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "relatedOutcomes",
+                                "type": "selectOne",
+                                "preLabel": "Which outcome statement/s does this activity relate to?"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "investmentPriorities2",
+                                "preLabel": "Which investment priority does this activity relate to?",
+                                "type": "select2Many"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "otherInvestmentPriority",
+                                "type": "text"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "css": "span3",
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "invoicingThisActivity",
+                                "preLabel": "Are you invoicing for this activity in this reporting period?",
+                                "type": "selectOne"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
                   {
                     "type": "row",
                     "css": "border-bottom",
@@ -9779,22 +9828,6 @@
                               {
                                 "preLabel": "Ex-situ / In-situ",
                                 "source": "inSituExSitu",
-                                "type": "selectOne"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "css": "span3",
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "invoicingThisActivity",
-                                "preLabel": "Are you invoicing for this activity in this reporting period?",
                                 "type": "selectOne"
                               }
                             ]
@@ -9874,54 +9907,6 @@
                             ]
                           }
                         ]
-                      },
-                      {
-                        "type": "col",
-                        "css": "span3 col-border-right",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "relatedOutcomes",
-                                "type": "selectOne",
-                                "preLabel": "Which outcome statement/s does this activity relate to?"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "col",
-                        "css": "span3 col-border-right",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Activity start date",
-                                "source": "activitiesStartDate",
-                                "type": "date"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "col",
-                        "css": "span3 col-border-right",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "preLabel": "Activity end date",
-                                "source": "activitiesEndDate",
-                                "type": "date"
-                              }
-                            ]
-                          }
-                        ]
                       }
                     ]
                   },
@@ -9929,20 +9914,16 @@
                     "addRowText": "Add a species",
                     "columns": [
                       {
-                        "width": "20%",
-                        "type": "col",
-                        "title": "Investment priority species",
-                        "helpText": "The listed Investment priority species should be identified as primary investment priority in the MERI Plan and only fauna species are eligible under this service.",
-                        "items": [
-                          {
-                            "source": "investmentPriorities2",
-                            "type": "select2Many"
-                          },
-                          {
-                            "source": "otherInvestmentPriority",
-                            "type": "text"
-                          }
-                        ]
+                        "width": "10%",
+                        "source": "activitiesStartDate",
+                        "type": "date",
+                        "title": "Activity start date"
+                      },
+                      {
+                        "width": "10%",
+                        "source": "activitiesEndDate",
+                        "type": "date",
+                        "title": "Activity end date"
                       },
                       {
                         "width": "10%",
@@ -15652,7 +15633,7 @@
                   {
                     "name": "relatedOutcomes",
                     "dataType": "text",
-                    "description": "More than one outcome could be selected.",
+                    "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
                     "validate": "required",
                     "constraints": {
                       "textProperty": "label",
@@ -18655,7 +18636,7 @@
               {
                 "name": "relatedOutcomes",
                 "dataType": "text",
-                "description": "More than one outcome could be selected.",
+                "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
                 "validate": "required",
                 "constraints": {
                   "textProperty": "label",
@@ -20300,7 +20281,7 @@
           {
             "name": "relatedOutcomes",
             "dataType": "text",
-            "description": "More than one outcome could be selected.",
+            "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
             "validate": "required",
             "constraints": {
               "textProperty": "label",
