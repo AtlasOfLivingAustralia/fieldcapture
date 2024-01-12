@@ -82,6 +82,7 @@ function MERIPlan(project, projectService, config) {
             self.meriPlan().services.addServiceTarget(serviceTarget);
         });
         self.risks.load(meriPlan.risks);
+        self.applyAutoSave();
         self.attachFloatingSave();
 
     };
@@ -549,11 +550,7 @@ function MERIPlan(project, projectService, config) {
 
     };
 
-    if (!projectService.isProjectDetailsLocked()) {
-        // This was in DetailsViewModel to support the (never released) MERI plan load function.
-        // It's been moved back here as having in the DetailsViewModel was causing issues with the new MERI
-        // plan because orphaned services get detected as dirty and the user is prompted to save them, even when
-        // the page is in read only mode.
+    self.applyAutoSave = function() {
         autoSaveModel(
             self.meriPlan(),
             config.projectUpdateUrl,
@@ -570,6 +567,14 @@ function MERIPlan(project, projectService, config) {
                 dirtyFlagRateLimitMs: 500,
                 healthCheckUrl: config.healthCheckUrl
             });
+    }
+
+    if (!projectService.isProjectDetailsLocked()) {
+        // This was in DetailsViewModel to support the (never released) MERI plan load function.
+        // It's been moved back here as having in the DetailsViewModel was causing issues with the new MERI
+        // plan because orphaned services get detected as dirty and the user is prompted to save them, even when
+        // the page is in read only mode.
+        self.applyAutoSave();
     }
     var $floatingSave = $('#floating-save');
     var floatingSaveVisible = false;
