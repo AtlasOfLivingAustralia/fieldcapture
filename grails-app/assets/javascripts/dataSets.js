@@ -72,7 +72,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
  */
 var DataSetViewModel = function(dataSet, projectService, options) {
     var self = this;
-
+    var config = _.defaults({validationContainerSelector:'.validationEngineContainer'}, options);
     dataSet = dataSet || {};
     self.dataSetId = dataSet.dataSetId;
     self.surveyId = dataSet.surveyId; // Data set summaries created by a submission from the Monitor app will have a surveyId
@@ -210,7 +210,6 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     }
 
     self.attachValidation = function () {
-        var config = _.defaults({validationContainerSelector:'.validationEngineContainer'}, options);
         $(config.validationContainerSelector).validationEngine();
     }
 };
