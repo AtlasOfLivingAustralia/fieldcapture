@@ -58,6 +58,7 @@
     var viewModel = new DataSetViewModel(dataSet, projectService, fcConfig);
     $.fn.select2.defaults.set( "theme", "bootstrap" );
     ko.applyBindings(viewModel);
+    viewModel.attachValidation();
 </script>
 <asset:deferredScripts/>
 </body>

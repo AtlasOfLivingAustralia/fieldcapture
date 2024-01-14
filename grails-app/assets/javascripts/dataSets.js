@@ -73,9 +73,6 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
 var DataSetViewModel = function(dataSet, projectService, options) {
     var self = this;
 
-    var config = _.defaults({validationContainerSelector:'.validationEngineContainer'}, options);
-    $(config.validationContainerSelector).validationEngine();
-
     dataSet = dataSet || {};
     self.dataSetId = dataSet.dataSetId;
     self.surveyId = dataSet.surveyId; // Data set summaries created by a submission from the Monitor app will have a surveyId
@@ -150,7 +147,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.threatenedSpeciesIndex = ko.observable(dataSet.threatenedSpeciesIndex);
     self.threatenedSpeciesIndexUploadDate = ko.observable(dataSet.threatenedSpeciesIndexUploadDate).extend({simpleDate:false});
     self.publicationUrl = ko.observable(dataSet.publicationUrl);
-    self.format = ko.observable(dataSet.format);
+    self.format = ko.observable();
     self.collectionApp.subscribe(function(collectionApp) {
         if (collectionApp == MONITOR_APP) {
             self.format('Database Table');
@@ -162,11 +159,15 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     if (dataSet.sensitivities && !_.isArray(dataSet.sensitivities)) {
         dataSet.sensitivities = [dataSet.sensitivities];
     }
+
     self.sizeInKB = ko.observable(dataSet.sizeInKB);
     self.sizeUnknown = ko.observable(dataSet.sizeUnknown);
     self.format.subscribe(function(format) {
-        self.sizeUnknown(['Database Table', 'Database View', 'ESRI REST'].indexOf(format) >=0);
+        if (!self.sizeInKB()) {
+            self.sizeUnknown(['Database Table', 'Database View', 'ESRI REST'].indexOf(format) >=0);
+        }
     });
+    self.format(dataSet.format);
     self.sensitivities = ko.observableArray(dataSet.sensitivities);
     self.otherSensitivity = ko.observable(dataSet.otherSensitivity);
     self.progress = ko.observable(dataSet.progress);
@@ -206,5 +207,10 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.cancel = function() {
         // return to project
         window.location.href = config.returnToUrl;
+    }
+
+    self.attachValidation = function () {
+        var config = _.defaults({validationContainerSelector:'.validationEngineContainer'}, options);
+        $(config.validationContainerSelector).validationEngine();
     }
 };
