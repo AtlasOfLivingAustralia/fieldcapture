@@ -47,7 +47,7 @@
             <select multiple class="form-control form-control-sm" data-bind="options:availableOutcomes, multiSelect2:{value:relatedOutcomes, templateResult:$root.renderOutcome, tags:false}, disable: $root.isProjectDetailsLocked()">
             </select>
         </td>
-        <td class="score"><input type="number" class="form-control form-control-sm" data-bind="value:target, disable: $root.isProjectDetailsLocked()"></td>
+        <td class="score"><input type="number" class="form-control form-control-sm" data-bind="value:target, disable: $root.isProjectDetailsLocked()" data-validation-engine="validate[required,min[validate[min[0.01]]"></td>
         <td>
             <span data-bind="if:!$root.isProjectDetailsLocked()">
             <i class="fa fa-remove" data-bind="click:$parent.removeOutcomeTarget, disable: $root.isProjectDetailsLocked()"></i>
