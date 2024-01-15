@@ -11417,9 +11417,12 @@
                     }
                   },
                   {
-                    "dataType": "text",
+                    "dataType": "stringList",
                     "description": "Describe the technique (if Other) was selected.",
                     "name": "otherEmsaProtocol",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
+                    },
                     "behaviour": [
                       {
                         "condition": "emsaProtocol == \"other\"",
@@ -12045,7 +12048,7 @@
                                   {
                                     "preLabel": "Survey technique (if Other)",
                                     "source": "otherEmsaProtocol",
-                                    "type": "text"
+                                    "type": "select2Many"
                                   }
                                 ]
                               }
@@ -12478,9 +12481,12 @@
                     }
                   },
                   {
-                    "dataType": "text",
+                    "dataType": "stringList",
                     "description": "Describe the technique (if Other) was selected.",
                     "name": "otherEmsaProtocol",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
+                    },
                     "behaviour": [
                       {
                         "condition": "emsaProtocol == \"other\"",
@@ -13106,7 +13112,7 @@
                                   {
                                     "preLabel": "Survey technique (if Other)",
                                     "source": "otherEmsaProtocol",
-                                    "type": "text"
+                                    "type": "select2Many"
                                   }
                                 ]
                               }
@@ -14473,9 +14479,12 @@
                     }
                   },
                   {
-                    "dataType": "text",
+                    "dataType": "stringList",
                     "description": "Describe the technique (if Other) was selected.",
                     "name": "otherEmsaProtocol",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
+                    },
                     "behaviour": [
                       {
                         "condition": "emsaProtocol == \"other\"",
@@ -15101,7 +15110,7 @@
                                   {
                                     "preLabel": "Survey technique (if Other)",
                                     "source": "otherEmsaProtocol",
-                                    "type": "text"
+                                    "type": "select2Many"
                                   }
                                 ]
                               }
@@ -16690,9 +16699,12 @@
                     }
                   },
                   {
-                    "dataType": "text",
+                    "dataType": "stringList",
                     "description": "Describe the technique (if Other) was selected.",
                     "name": "otherEmsaProtocol",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
+                    },
                     "behaviour": [
                       {
                         "condition": "emsaProtocol == \"other\"",
@@ -17351,7 +17363,7 @@
                                   {
                                     "preLabel": "Survey technique (if Other)",
                                     "source": "otherEmsaProtocol",
-                                    "type": "text"
+                                    "type": "select2Many"
                                   }
                                 ]
                               }
@@ -22222,9 +22234,12 @@
                     }
                   },
                   {
-                    "dataType": "text",
+                    "dataType": "stringList",
                     "description": "Describe the technique (if Other) was selected.",
                     "name": "otherEmsaProtocol",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
+                    },
                     "behaviour": [
                       {
                         "condition": "emsaProtocol == \"other\"",
@@ -22850,7 +22865,7 @@
                                   {
                                     "preLabel": "Survey technique (if Other)",
                                     "source": "otherEmsaProtocol",
-                                    "type": "text"
+                                    "type": "select2Many"
                                   }
                                 ]
                               }
@@ -23392,9 +23407,12 @@
                     }
                   },
                   {
-                    "dataType": "text",
+                    "dataType": "stringList",
                     "description": "Describe the technique (if Other) was selected.",
                     "name": "otherEmsaProtocol",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
+                    },
                     "behaviour": [
                       {
                         "condition": "emsaProtocol == \"other\"",
@@ -23984,7 +24002,7 @@
                                   {
                                     "preLabel": "Survey technique (if Other)",
                                     "source": "otherEmsaProtocol",
-                                    "type": "text"
+                                    "type": "select2Many"
                                   }
                                 ]
                               }
@@ -28671,9 +28689,12 @@
                     }
                   },
                   {
-                    "dataType": "text",
+                    "dataType": "stringList",
                     "description": "Describe the technique (if Other) was selected.",
                     "name": "otherEmsaProtocol",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
+                    },
                     "behaviour": [
                       {
                         "condition": "emsaProtocol == \"other\"",
@@ -29310,7 +29331,7 @@
                                   {
                                     "preLabel": "Survey technique (if Other)",
                                     "source": "otherEmsaProtocol",
-                                    "type": "text"
+                                    "type": "select2Many"
                                   }
                                 ]
                               }
@@ -29792,9 +29813,12 @@
                     }
                   },
                   {
-                    "dataType": "text",
+                    "dataType": "stringList",
                     "description": "Describe the technique (if Other) was selected.",
                     "name": "otherEmsaProtocol",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
+                    },
                     "behaviour": [
                       {
                         "condition": "emsaProtocol == \"other\"",
@@ -30426,7 +30450,7 @@
                                   {
                                     "preLabel": "Survey technique (if Other)",
                                     "source": "otherEmsaProtocol",
-                                    "type": "text"
+                                    "type": "select2Many"
                                   }
                                 ]
                               }
@@ -32608,9 +32632,12 @@
                     }
                   },
                   {
-                    "dataType": "text",
+                    "dataType": "stringList",
                     "description": "Describe the technique (if Other) was selected.",
                     "name": "otherEmsaProtocol",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
+                    },
                     "behaviour": [
                       {
                         "condition": "emsaProtocol == \"other\"",
@@ -33236,7 +33263,7 @@
                                   {
                                     "preLabel": "Survey technique (if Other)",
                                     "source": "otherEmsaProtocol",
-                                    "type": "text"
+                                    "type": "select2Many"
                                   }
                                 ]
                               }
