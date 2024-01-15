@@ -11423,12 +11423,6 @@
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
                     },
-                    "behaviour": [
-                      {
-                        "condition": "emsaProtocol == \"other\"",
-                        "type": "enable_and_clear"
-                      }
-                    ],
                     "validate": "required"
                   },
                   {
@@ -12487,12 +12481,6 @@
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
                     },
-                    "behaviour": [
-                      {
-                        "condition": "emsaProtocol == \"other\"",
-                        "type": "enable_and_clear"
-                      }
-                    ],
                     "validate": "required"
                   },
                   {
@@ -14485,12 +14473,6 @@
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
                     },
-                    "behaviour": [
-                      {
-                        "condition": "emsaProtocol == \"other\"",
-                        "type": "enable_and_clear"
-                      }
-                    ],
                     "validate": "required"
                   },
                   {
@@ -16705,12 +16687,6 @@
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
                     },
-                    "behaviour": [
-                      {
-                        "condition": "emsaProtocol == \"other\"",
-                        "type": "enable_and_clear"
-                      }
-                    ],
                     "validate": "required"
                   },
                   {
@@ -22240,12 +22216,6 @@
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
                     },
-                    "behaviour": [
-                      {
-                        "condition": "emsaProtocol == \"other\"",
-                        "type": "enable_and_clear"
-                      }
-                    ],
                     "validate": "required"
                   },
                   {
@@ -23413,12 +23383,6 @@
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
                     },
-                    "behaviour": [
-                      {
-                        "condition": "emsaProtocol == \"other\"",
-                        "type": "enable_and_clear"
-                      }
-                    ],
                     "validate": "required"
                   },
                   {
@@ -28695,12 +28659,6 @@
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
                     },
-                    "behaviour": [
-                      {
-                        "condition": "emsaProtocol == \"other\"",
-                        "type": "enable_and_clear"
-                      }
-                    ],
                     "validate": "required"
                   },
                   {
@@ -29819,12 +29777,6 @@
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
                     },
-                    "behaviour": [
-                      {
-                        "condition": "emsaProtocol == \"other\"",
-                        "type": "enable_and_clear"
-                      }
-                    ],
                     "validate": "required"
                   },
                   {
@@ -32638,12 +32590,6 @@
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
                     },
-                    "behaviour": [
-                      {
-                        "condition": "emsaProtocol == \"other\"",
-                        "type": "enable_and_clear"
-                      }
-                    ],
                     "validate": "required"
                   },
                   {
