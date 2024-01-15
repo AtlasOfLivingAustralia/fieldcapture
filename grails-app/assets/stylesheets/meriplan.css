@@ -509,3 +509,8 @@ input#changeProjectStartDate {
 .meri-plan .textarea-view {
     white-space: pre-wrap;
 }
+
+.meri-plan .meriList {
+    margin-left: 0;
+    padding-left: 1rem;
+}

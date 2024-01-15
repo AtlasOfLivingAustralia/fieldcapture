@@ -10,7 +10,7 @@
                 <g:if test="${monitoringValidation}">
                     <th class="baseline required">${indicatorHeading} <g:if test="${indicatorHelpText}"><fc:iconHelp title="${indicatorHeading}">${indicatorHelpText}</fc:iconHelp></g:if></th>
                     <g:if test="${extendedMonitoring}">
-                        <th class="monitoring-service required">Project Service / Target Measure/s <g:if test="${monitoringServiceHelpText}"><fc:iconHelp html="true">${monitoringServiceHelpText}</fc:iconHelp></g:if></th>
+                        <th class="monitoring-service required">${monitoringServicesHeading ?: 'Project service / Target measure/s'} <g:if test="${monitoringServiceHelpText}"><fc:iconHelp html="true">${monitoringServiceHelpText}</fc:iconHelp></g:if></th>
                     </g:if>
                     <th class="baseline-method required">${approachHeading} <g:if test="${approachHelpText}"><fc:iconHelp html="true" title="${approachHeading}">${approachHelpText}</fc:iconHelp></g:if></th>
                     <g:if test="${extendedMonitoring}">

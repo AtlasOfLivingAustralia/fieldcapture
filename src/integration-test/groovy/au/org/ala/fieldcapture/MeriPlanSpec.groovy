@@ -64,6 +64,14 @@ class MeriPlanSpec extends StubbedCasSpec {
         meriPlan != null
 
         when:
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
+
         meriPlan.primaryOutcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
         waitFor {
             meriPlan.primaryPriority.find('[value="Ginini Flats Wetland Complex"')
@@ -235,6 +243,13 @@ class MeriPlanSpec extends StubbedCasSpec {
 
         when:
         def meriPlan = openMeriPlanEditTab()
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
 
         then: "The primary outcome will default to the program default"
         waitFor {

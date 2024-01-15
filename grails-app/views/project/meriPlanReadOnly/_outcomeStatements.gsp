@@ -11,9 +11,9 @@
         <g:else>
             <th class="code"></th>
         </g:else>
-        <th class="outcome">Outcome statement/s</th>
+        <th class="outcome">${subtitle ?: ""} </th>
         <g:if test="${extendedOutcomes}">
-            <th class="investment-priority">Investment Priority</th>
+            <th class="investment-priority">Investment priority</th>
             <th class="program-outcome">Related program outcome/s</th>
         </g:if>
     </tr>

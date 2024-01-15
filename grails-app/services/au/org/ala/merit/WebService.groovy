@@ -374,7 +374,7 @@ class WebService {
             conn.setDoOutput(true)
             conn.setRequestProperty("Content-Type", "application/json;charset=${charEncoding}");
             if (useToken) {
-                conn.setRequestProperty("Authorization", getToken())
+                addTokenHeader(conn)
             }
             else {
                 conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'));
@@ -419,7 +419,7 @@ class WebService {
             conn = new URL(url).openConnection()
             conn.setRequestMethod("DELETE")
             if (useToken) {
-                conn.setRequestProperty("Authorization", getToken())
+                addTokenHeader(conn)
             }
             else {
                 conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'))
@@ -479,7 +479,12 @@ class WebService {
                 }
             }
             if (useToken) {
-                headers.'Authorization' = getToken()
+                if (grailsApplication.config.getProperty('spatial.supports_jwt', Boolean.class, true)) {
+                    headers.'Authorization' = getToken()
+                }
+                else {
+                    headers.'apiKey' = grailsApplication.config.getProperty('api_key')
+                }
             }
             else {
                 headers.'Authorization' = grailsApplication.config.getProperty('api_key')
@@ -522,6 +527,15 @@ class WebService {
             }
         }
         result
+    }
+
+    private void addTokenHeader(conn) {
+        if (grailsApplication.config.getProperty('spatial.supports_jwt', Boolean.class, true)) {
+            conn.setRequestProperty("Authorization", getToken())
+        }
+        else {
+            conn.setRequestProperty("apiKey", grailsApplication.config.getProperty('api_key'));
+        }
     }
 }
 

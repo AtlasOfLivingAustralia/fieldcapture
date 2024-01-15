@@ -18,7 +18,7 @@
         </g:else>
         <th class="outcome required">${subtitle ?: ""} <g:if test="${helpText}"><fc:iconHelp html="true" container="body">${helpText}</fc:iconHelp></g:if> </th>
         <g:if test="${extendedOutcomes}">
-            <th class="investment-priority required">Investment Priority</th>
+            <th class="investment-priority required">${investmentPriorityHeading ?: 'Investment priority'}</th>
             <th class="program-outcome required">Related program outcome</th>
         </g:if>
         <th class="remove"></th>

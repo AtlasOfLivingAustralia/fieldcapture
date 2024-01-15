@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.cas.util.AuthenticationCookieUtils
+import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.web.AuthService
 import bootstrap.Attribute
 import com.naleid.grails.MarkdownService
@@ -901,6 +902,27 @@ class FCTagLib {
 
     }
 
+    def renderComparisonOutputTargets = { attrs ->
+
+        List original = attrs.original
+        List changed = attrs.changed
+        int i = attrs.i
+        String property = attrs.property
+
+        out << '<span class="original hide">'
+        if (original && original.size() > i) {
+            (attrs.property) ? out << original[i][property][0].collect{it}.join(',') : out << original[i][0]
+        }
+        out << '</span>'
+        out << '<span class="changed hide">'
+        if (changed && changed.size() > i) {
+            (attrs.property) ? out << changed[i][property][0].collect{it}.join(',') : out << changed[i][0]
+        }
+        out << '</span>'
+        out << '<span class="diff"></span>'
+
+    }
+
     def renderComparisonList = { attrs ->
 
         List original = attrs.original
@@ -910,20 +932,20 @@ class FCTagLib {
 
         out << '<span class="original hide">'
         if (original && original.size() > i) {
-            if (original[i][property]?[0] instanceof List) {
-                out << original[i][property][0].collect{it}.join(',')
+            if (original[i][property] instanceof List) {
+                out << fakeBulletedList(original[i][property])
             } else {
-                out << original[i][property][0]
+                out << original[i][property]
             }
 
         }
         out << '</span>'
         out << '<span class="changed hide">'
         if (changed && changed.size() > i) {
-            if (changed[i][property]?[0] instanceof List) {
-                out << changed[i][property][0].collect{it}.join(',')
+            if (changed[i][property] instanceof List) {
+                out << fakeBulletedList(changed[i][property])
             } else {
-                out << changed[i][property][0]
+                out << changed[i][property]
             }
         }
         out << '</span>'
@@ -938,6 +960,7 @@ class FCTagLib {
         List changed = attrs.changed
         int i = attrs.i
         String property = attrs.property
+        ProgramConfig config = attrs.config
 
         def origMonitoringList = original
         def resultOrigMonitoringList = []
@@ -958,7 +981,7 @@ class FCTagLib {
         out << '<span class="original hide">'
         if (resultOrigMonitoringList && resultOrigMonitoringList.size() > i) {
             if (property == 'relatedTargetMeasures') {
-                out << getScoreLabels(resultOrigMonitoringList[property]).labels
+                out << getScoreLabels(resultOrigMonitoringList[property], config, true)
             } else {
                 if (resultOrigMonitoringList[property] instanceof List) {
                     out << resultOrigMonitoringList[property].collect{it}.join(',')
@@ -973,7 +996,7 @@ class FCTagLib {
         out << '<span class="changed hide">'
         if (resultChangedMonitoringList && resultChangedMonitoringList.size() > i) {
             if (property == 'relatedTargetMeasures') {
-                out << getScoreLabels(resultChangedMonitoringList[property]).labels
+                out << getScoreLabels(resultChangedMonitoringList[property], config, true)
             } else {
                 if (resultChangedMonitoringList[property] instanceof List) {
                     out << resultChangedMonitoringList[property].collect{it}.join(',')
@@ -992,12 +1015,13 @@ class FCTagLib {
         List original = attrs.original
         List changed = attrs.changed
         int i = attrs.i
+        boolean includeService = attrs.includeService
         String property = attrs.property
-
+        ProgramConfig config = attrs.config
         try {
             out << '<span class="original hide">'
             if (original && original.size() > i) {
-                out << getScoreLabels(original[i][property]).labels
+                out << getScoreLabels(original[i][property], config, includeService)
             }
             out << '</span>'
         } catch(Exception e) {
@@ -1006,7 +1030,7 @@ class FCTagLib {
 
         out << '<span class="changed hide">'
         if (changed && changed.size() > i) {
-            out << getScoreLabels(changed[i][property]).labels
+            out << getScoreLabels(changed[i][property], config, includeService)
         }
         out << '</span>'
 
@@ -1014,17 +1038,17 @@ class FCTagLib {
 
     }
 
-    def renderComparisonOutputType = { attrs ->
+    def renderComparisonService = { attrs ->
 
         List original = attrs.original
         List changed = attrs.changed
         int i = attrs.i
-        String property = attrs.property
+        ProgramConfig programConfig = attrs.programConfig
 
         try {
             out << '<span class="original hide">'
             if (original && original.size() > i) {
-                out << getScoreLabels(original[i][property]).outputTypes
+                out << serviceLabel(original[i].scoreId, programConfig)
             }
             out << '</span>'
 
@@ -1034,12 +1058,21 @@ class FCTagLib {
 
         out << '<span class="changed hide">'
         if (changed && changed.size() > i) {
-            out << getScoreLabels(changed[i][property]).outputTypes
+            out << serviceLabel(changed[i].scoreId, programConfig)
         }
         out << '</span>'
 
         out << '<span class="diff"></span>'
 
+    }
+
+    private static String serviceLabel(String scoreId, ProgramConfig programConfig) {
+        Map service = programConfig.services.find { Map service ->
+            service.scores.find{ Map score ->
+                score.scoreId == scoreId
+            }
+        }
+        service?.name ?: 'Unsupported service'
     }
 
     def status = { attrs ->
@@ -1156,28 +1189,65 @@ class FCTagLib {
         }, null)
     }
 
-    private Map getScoreLabels(def scoreIds) {
-        List<Map> scores = metadataService.getOutputTargetScores()
-        List outputTypes = []
+    private static String getScoreLabels(def scoreIds, ProgramConfig config, Boolean includeService) {
         List labels = []
         if (scoreIds instanceof List) {
             for (String scoreId : scoreIds) {
-                scores.each {
-                    if (scoreId == it.scoreId) {
-                        outputTypes.add(it.outputType)
-                        labels.add(it.label)
-                    }
-                }
+                labels.add(scoreLabel(scoreId, config, includeService))
             }
         } else {
-            scores.each {
-                if (scoreIds == it.scoreId) {
-                    outputTypes.add(it.outputType)
-                    labels.add(it.label)
-                }
-            }
+            labels.add(scoreLabel(scoreIds, config, includeService))
         }
 
-        return [outputTypes:outputTypes.join(","), labels:labels.join(",")]
+        return fakeBulletedList(labels)
+    }
+
+    private static String fakeBulletedList(List items, int spaceAfterCharacterCount = 20) {
+        String result = ''
+        if (items.size() == 1) {
+            result = items[0]
+        } else {
+            for (int i=0; i<items.size(); i++) {
+                String item = items[i]
+                result += '\u2022&nbsp;'
+
+                // replace any space characters in blocks of 20 characters or so with non-breaking spaces
+                // to fake formatting a bulleted list.
+                int count = 0
+                item.tokenize(' \t').eachWithIndex { String word, int index ->
+                    count += word.length()
+                    result += word
+                    if (count < spaceAfterCharacterCount) {
+                        result += '&nbsp;'
+                    }
+                    else {
+                        result += ' '
+                        count = 0
+                    }
+                }
+
+                if (i<items.size() -1) {
+                    result += ', '
+                }
+            }
+
+        }
+        result
+    }
+
+    private static String scoreLabel(String scoreId, ProgramConfig config, Boolean includeService) {
+        String label
+        config.services.find { Map service ->
+            service.scores.find{ Map score ->
+                if (score.scoreId == scoreId) {
+                    label = score.label
+                    if (includeService) {
+                        label = (service?.name ?: 'Unsupported service') + ' - ' + (label ?: 'Unsupported target measure')
+                    }
+                }
+                label
+            }
+        }
+        label ?: 'Unsupported target measure'
     }
 }

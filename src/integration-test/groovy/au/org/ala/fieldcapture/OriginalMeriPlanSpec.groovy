@@ -26,6 +26,13 @@ class OriginalMeriPlanSpec extends StubbedCasSpec {
 
         when:
         def meriPlan = openMeriPlanEditTab()
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
 
         then:
         meriPlan != null

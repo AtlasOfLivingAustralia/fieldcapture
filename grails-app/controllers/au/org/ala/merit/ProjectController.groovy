@@ -35,6 +35,7 @@ class ProjectController {
     def projectService, metadataService, commonService, activityService, userService, webService, roleService
     def siteService, documentService, reportService, blogService
     GrailsApplication grailsApplication
+    LockService lockService
 
     private def espOverview(Map project, Map user, ProgramConfig config) {
 
@@ -191,6 +192,9 @@ class ProjectController {
         boolean adminTabVisible = user?.isEditor || user?.isAdmin || user?.isCaseManager || user?.hasViewAccess
         boolean showMeriPlanHistory = config.supportsMeriPlanHistory && userService.userIsSiteAdmin()
         boolean datasetsVisible = config.includesContent(ProgramConfig.ProjectContent.DATA_SETS) && userHasViewAccess
+        if (datasetsVisible && project.custom?.dataSets) {
+            projectService.filterDataSetSummaries(project.custom?.dataSets)
+        }
         def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates, outcomes:project.outcomes, objectives:config.program?.config?.objectives],
                      documents      : [label: 'Documents', visible: config.includesContent(ProgramConfig.ProjectContent.DOCUMENTS), type: 'tab', user:user, template:'docs', activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
                      details        : [label: 'MERI Plan', default: false, disabled: !meriPlanEnabled, visible: meriPlanVisible, meriPlanVisibleToUser: meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: true, project:project, type: 'tab', template:'viewMeriPlan', meriPlanTemplate:MERI_PLAN_TEMPLATE+'View', config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
@@ -606,6 +610,16 @@ class ProjectController {
         render result as JSON
     }
 
+
+    @PreAuthorise(accessLevel = "admin")
+    def lockMeriPlan(String id) {
+        Map result = projectService.lockMeriPlanForEditing(id)
+        if (result.error) {
+            flash.message = "An error occurred while attempting to lock the MERI Plan: ${result.error}"
+        }
+        redirect action:'index', id:id
+    }
+
     @PreAuthorise(accessLevel = 'caseManager')
     def ajaxUnlockPlanForCorrection(String id) {
         def result = projectService.unlockPlanForCorrection(id, params.declaration)
@@ -816,6 +830,19 @@ class ProjectController {
         render result as JSON
     }
 
+    @PreAuthorise(accessLevel = 'editor')
+    def removeMeriPlanEditLock(String id) {
+        lockService.unlock(id)
+        redirect action:'index', id:id
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def overrideMeriPlanLockAndEdit(String id) {
+        String url = g.createLink(action:'index', id:id)
+        projectService.overrideLock(id, url)
+        redirect action:'index', id:id
+
+    }
     @PreAuthorise(accessLevel = 'editor')
     def overrideLockAndEdit(String id, String reportId) {
         reportService.overrideLock(reportId, g.createLink(action:'viewReport', id:id, params:[reportId:reportId], absolute: true))

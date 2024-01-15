@@ -567,6 +567,21 @@ var outcomes = [
         "type": "medium",
         "outcome": "By June 2028 there is a measurable improvement to the services provided by urban green and blue space to benefit local communities in urban, outer urban /peri-urban and regional centres."
     },
+    {
+        "category": "River health",
+        "type": "short",
+        "outcome": "By 30 June 2025, there is measurable repair of waterway habitats (in-stream and terrestrial) to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
+    },
+    {
+        "category":"River health",
+        "type": "short",
+        "outcome": " By 30 June 2025, there is measurable repair of water quality, hydrology and in stream connectivity to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
+    },
+    {
+        "category":"River health",
+        "type": "short",
+        "outcome": "By June 2025 there is a measurable improvement to the services provided by urban green and blue space to benefit local communities in urban, outer urban /peri-urban and regional centres."
+    }
 ];
 
 var priorities = [
@@ -720,19 +735,13 @@ var priorities = [
     }
 ];
 
-let parentProgram = "Urban rivers";
+//Create the parent program
+let programName = "Urban Rivers and Catchments Program";
+var parent = createOrFindProgram(programName);
 var subprograms = ["Urban Rivers and Catchments round one - Final report"]
 
-var parent = db.program.find({name: parentProgram}).next();
 subprograms.forEach(function (subProgram){
-    var now = ISODate();
-    var p = {name: subProgram, programId: UUID.generate(), dateCreated: now, lastUpdate: now, parent: parent._id, status: "active"}
-    var program = db.program.find({name: subProgram})
-    if (!program.hasNext()) {
-        db.program.insertOne(p);
-    } else {
-        print("Program Already Exist: " + subProgram)
-    }
+    createOrFindProgram(subProgram, parent._id);
 });
 
 subprograms.forEach(function (subprogram){

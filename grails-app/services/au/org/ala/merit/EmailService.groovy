@@ -151,12 +151,12 @@ class EmailService {
         )
     }
 
-    def sendLockStolenEmail(Map lock, String url) {
+    def sendLockStolenEmail(Map lock, String url, SettingPageType emailSubjectTemplate, SettingPageType emailBodyTemplate) {
         def currentUser = userService.lookupUser(userService.currentUserId)
         def userHoldingLock = userService.lookupUser(lock.userId)
         createAndSend(
-                SettingPageType.LOCK_STOLEN_EMAIL_SUBJECT,
-                SettingPageType.LOCK_STOLEN_EMAIL,
+                SettingPageType.ACTIVITY_LOCK_STOLEN_EMAIL_SUBJECT,
+                SettingPageType.ACTIVITY_LOCK_STOLEN_EMAIL,
                 [user:currentUser.displayName, url:url],
                 [userHoldingLock.email],
                 [currentUser.email],

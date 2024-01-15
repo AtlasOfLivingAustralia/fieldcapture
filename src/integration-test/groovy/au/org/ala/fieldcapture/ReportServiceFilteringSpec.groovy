@@ -122,6 +122,13 @@ class ReportServiceFilteringSpec extends StubbedCasSpec {
 
         waitFor { at RlpProjectPage }
         def meriPlan = openMeriPlanEditTab()
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
         meriPlan.projectServices[0].selectService("Communication materials")
         meriPlan.projectServices[0].selectScore("Number of communication materials published")
         meriPlan.projectServices[0].targets = "5"

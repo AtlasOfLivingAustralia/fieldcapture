@@ -7,6 +7,8 @@ import org.joda.time.format.ISODateTimeFormat
 
 import java.text.SimpleDateFormat
 import java.time.Month
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 
 /**
  * Utilities for working with fieldcapture / ecodata ISO8601 dates.
@@ -21,7 +23,7 @@ class DateUtils {
     private static DateTimeFormatter DISPLAY_DATE_FORMATTER_WITH_TIME_NOSPACE = DateTimeFormat.forPattern("yyyyMMddHHmmss").withZone(DateTimeZone.default)
     private static DateTimeFormatter MONTH_ONLY_FORMATTER = DateTimeFormat.forPattern('MMMMM yyyy')
     private static DateTimeFormatter LOCAL_DATE_ISO_FORMAT = ISODateTimeFormat.date().withZone(DateTimeZone.default)
-
+    private static java.time.format.DateTimeFormatter ISO_DATE_FORMATTER = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
 
     /**
@@ -126,6 +128,11 @@ class DateUtils {
 
     static String format(DateTime date) {
         return DATE_FORMATTER.print(date)
+    }
+
+    static String formatAsISOStringNoMillis(Date date) {
+        ZonedDateTime dateTime = ZonedDateTime.ofInstant(date.toInstant(), ZoneOffset.UTC)
+        dateTime.format(ISO_DATE_FORMATTER)
     }
 
     static String format(DateTime date, String formatString) {
