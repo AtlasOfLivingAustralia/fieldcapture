@@ -275,6 +275,10 @@ function ProjectService(project, options) {
         return self.areExternalIdsValid(project.externalIds);
     };
 
+    self.isPlanComplete = function() {
+        return project.custom && project.custom.details && project.custom.details.progress == ActivityProgress.finished;
+    }
+
     /** The list of external ids needs to include at least one SAP Internal Order or one Tech One Project Code */
     self.areExternalIdsValid = function(externalIds) {
         var requiredIdTypes = ['INTERNAL_ORDER_NUMBER', 'TECH_ONE_CODE'];
