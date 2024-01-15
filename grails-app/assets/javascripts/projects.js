@@ -1185,8 +1185,12 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         var meriPlanSection = document.getElementById("edit-meri-plan");
         if (meriPlanSection) {
             ko.applyBindings(self.meriPlan, meriPlanSection);
-            self.meriPlan.meriPlan().dirtyFlag.reset();
-            self.meriPlan.attachFloatingSave();
+            // The dirty flag is only attached if the MERI plan is in edit mode.
+            if (self.meriPlan.meriPlan().dirtyFlag) {
+                self.meriPlan.meriPlan().dirtyFlag.reset();
+                self.meriPlan.attachFloatingSave();
+            }
+
         }
 
         // When the MERI plan is approved, the announcements move to their own section, otherwise they
