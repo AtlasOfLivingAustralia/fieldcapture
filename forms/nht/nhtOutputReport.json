@@ -11422,7 +11422,7 @@
                     "name": "otherEmsaProtocol",
                     "behaviour": [
                       {
-                        "condition": "emsaProtocol == \"Other\"",
+                        "condition": "emsaProtocol == \"other\"",
                         "type": "enable_and_clear"
                       }
                     ],
@@ -12483,7 +12483,7 @@
                     "name": "otherEmsaProtocol",
                     "behaviour": [
                       {
-                        "condition": "emsaProtocol == \"Other\"",
+                        "condition": "emsaProtocol == \"other\"",
                         "type": "enable_and_clear"
                       }
                     ],
@@ -14478,7 +14478,7 @@
                     "name": "otherEmsaProtocol",
                     "behaviour": [
                       {
-                        "condition": "emsaProtocol == \"Other\"",
+                        "condition": "emsaProtocol == \"other\"",
                         "type": "enable_and_clear"
                       }
                     ],
@@ -16750,7 +16750,7 @@
                     "name": "otherEmsaProtocol",
                     "behaviour": [
                       {
-                        "condition": "emsaProtocol == \"Other\"",
+                        "condition": "emsaProtocol == \"other\"",
                         "type": "enable_and_clear"
                       }
                     ],
@@ -22282,7 +22282,7 @@
                     "name": "otherEmsaProtocol",
                     "behaviour": [
                       {
-                        "condition": "emsaProtocol == \"Other\"",
+                        "condition": "emsaProtocol == \"other\"",
                         "type": "enable_and_clear"
                       }
                     ],
@@ -23452,7 +23452,7 @@
                     "name": "otherEmsaProtocol",
                     "behaviour": [
                       {
-                        "condition": "emsaProtocol == \"Other\"",
+                        "condition": "emsaProtocol == \"other\"",
                         "type": "enable_and_clear"
                       }
                     ],
@@ -28731,7 +28731,7 @@
                     "name": "otherEmsaProtocol",
                     "behaviour": [
                       {
-                        "condition": "emsaProtocol == \"Other\"",
+                        "condition": "emsaProtocol == \"other\"",
                         "type": "enable_and_clear"
                       }
                     ],
@@ -29852,7 +29852,7 @@
                     "name": "otherEmsaProtocol",
                     "behaviour": [
                       {
-                        "condition": "emsaProtocol == \"Other\"",
+                        "condition": "emsaProtocol == \"other\"",
                         "type": "enable_and_clear"
                       }
                     ],
@@ -32668,7 +32668,7 @@
                     "name": "otherEmsaProtocol",
                     "behaviour": [
                       {
-                        "condition": "emsaProtocol == \"Other\"",
+                        "condition": "emsaProtocol == \"other\"",
                         "type": "enable_and_clear"
                       }
                     ],
