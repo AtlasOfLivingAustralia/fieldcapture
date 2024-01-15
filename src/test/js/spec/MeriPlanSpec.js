@@ -195,7 +195,8 @@ describe("Loading the MERI plan is handled correctly", function () {
             plannedStartDate:'2018-07-01T00:00:00Z',
             plannedEndDate:'2021-06-30T00:00:00Z'
         };
-        var projectService = new ProjectService(project, {});
+
+        var projectService = new ProjectService(project, {userHoldsMeriPlanLock:true});
 
         var viewModel = new MERIPlan(project, projectService, config);
 

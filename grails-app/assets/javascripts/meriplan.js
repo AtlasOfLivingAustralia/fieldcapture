@@ -82,6 +82,7 @@ function MERIPlan(project, projectService, config) {
             self.meriPlan().services.addServiceTarget(serviceTarget);
         });
         self.risks.load(meriPlan.risks);
+        self.applyAutoSave();
         self.attachFloatingSave();
 
     };
@@ -549,6 +550,32 @@ function MERIPlan(project, projectService, config) {
 
     };
 
+    self.applyAutoSave = function() {
+        autoSaveModel(
+            self.meriPlan(),
+            config.projectUpdateUrl,
+            {
+                storageKey: config.meriStorageKey || 'meriPlan-' + project.projectId,
+                autoSaveIntervalInSeconds: config.autoSaveIntervalInSeconds || 60,
+                restoredDataWarningSelector: '#restoredData',
+                resultsMessageSelector: '.save-details-result-placeholder',
+                timeoutMessageSelector: '#timeoutMessage',
+                errorMessage: "Failed to save MERI Plan: ",
+                successMessage: 'MERI Plan saved',
+                preventNavigationIfDirty: true,
+                defaultDirtyFlag: ko.dirtyFlag,
+                dirtyFlagRateLimitMs: 500,
+                healthCheckUrl: config.healthCheckUrl
+            });
+    }
+
+    if (!projectService.isProjectDetailsLocked()) {
+        // This was in DetailsViewModel to support the (never released) MERI plan load function.
+        // It's been moved back here as having in the DetailsViewModel was causing issues with the new MERI
+        // plan because orphaned services get detected as dirty and the user is prompted to save them, even when
+        // the page is in read only mode.
+        self.applyAutoSave();
+    }
     var $floatingSave = $('#floating-save');
     var floatingSaveVisible = false;
     function checkSaveStatus(dirty) {
@@ -944,23 +971,6 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
     if (config.locked) {
         autoSaveConfig.lockedEntity = project.projectId;
     }
-
-    autoSaveModel(
-        self,
-        config.projectUpdateUrl,
-        {
-            storageKey:config.meriStorageKey || 'meriPlan-'+project.projectId,
-            autoSaveIntervalInSeconds:config.autoSaveIntervalInSeconds || 60,
-            restoredDataWarningSelector:'#restoredData',
-            resultsMessageSelector:'.save-details-result-placeholder',
-            timeoutMessageSelector:'#timeoutMessage',
-            errorMessage:"Failed to save MERI Plan: ",
-            successMessage: 'MERI Plan saved',
-            preventNavigationIfDirty:true,
-            defaultDirtyFlag:ko.dirtyFlag,
-            dirtyFlagRateLimitMs: 500,
-            healthCheckUrl:config.healthCheckUrl
-        });
 };
 
 /** Removes nulls from arrays after toJSON is called */
