@@ -523,7 +523,13 @@ function MERIPlan(project, projectService, config) {
         meriPlan.saveWithErrorDetection(function() {
 
             if (unlock) {
-                self.unlockPlanAndReload("MERI Plan saved and unlocked.  Reloading project...");
+                if (valid) {
+                    self.unlockPlanAndReload("MERI Plan saved and unlocked.  Reloading project...");
+                }
+                else {
+                    $.unblockUI();
+                    bootbox.alert("Your MERI plan cannot be marked as complete until all validation errors are resolved");
+                }
             }
             if(enableSubmit) {
                 if (valid) {
@@ -531,7 +537,6 @@ function MERIPlan(project, projectService, config) {
                     self.submitChanges();
                 }
                 else {
-
                     $.unblockUI();
                     bootbox.alert("Your MERI plan cannot be submitted until all validation errors are resolved");
                 }
@@ -698,6 +703,9 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
                 result = {text: 'This plan has been approved', badgeClass: 'badge-success'};
             } else if (projectService.isSubmitted()) {
                 result = {text: 'This plan has been submitted for approval', badgeClass: 'badge-info'};
+            }
+            else if (!projectService.isPlanComplete()) {
+                result = {text: 'This plan has not been completed', badgeClass: 'badge-warning'};
             }
         }
         return result;
