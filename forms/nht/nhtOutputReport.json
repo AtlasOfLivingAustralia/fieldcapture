@@ -21144,174 +21144,6 @@
               {
                 "columns": [
                   {
-                    "dataType": "feature",
-                    "name": "siteTreated"
-                  },
-                  {
-                    "defaultValue": {
-                      "expression": "$geom.areaHa(siteTreated)",
-                      "type": "computed"
-                    },
-                    "dataType": "number",
-                    "name": "calculatedAreaTreatedHa",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "behaviour": [
-                      {
-                        "condition": "areaTreatedInvoicedHa > 0",
-                        "type": "conditional_validation",
-                        "value": {
-                          "message": "The managed area must be mapped",
-                          "validate": "required,min[0.0001]"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "computed": {
-                      "expression": "$geom.lengthKm(siteTreated)"
-                    },
-                    "dataType": "number",
-                    "name": "calculatedLengthTreatedKm",
-                    "units": "km",
-                    "decimalPlaces": 3,
-                    "behaviour": [
-                      {
-                        "condition": "lengthTreatedKm > 0",
-                        "type": "conditional_validation",
-                        "value": {
-                          "message": "The managed length must be mapped",
-                          "validate": "required,min[0.0001]"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "defaultValue": {
-                      "expression": "calculatedAreaTreatedHa",
-                      "type": "computed"
-                    },
-                    "dataType": "number",
-                    "name": "areaTreatedHa",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "validate": "required,min[0]"
-                  },
-                  {
-                    "defaultValue": {
-                      "expression": "calculatedLengthTreatedKm",
-                      "type": "computed"
-                    },
-                    "dataType": "number",
-                    "name": "lengthTreatedKm",
-                    "units": "km",
-                    "decimalPlaces": 3,
-                    "validate": "required,min[0]"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "mappingNotAlignedReason",
-                    "behaviour": [
-                      {
-                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
-                        "type": "visible"
-                      }
-                    ],
-                    "constraints": [
-                      "Mapped area simplifies more complex area/s where work was undertaken during this period",
-                      "Other"
-                    ],
-                    "validate": "required"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "mappingNotAlignedComments",
-                    "behaviour": [
-                      {
-                        "condition": "\"Other\" == mappingNotAlignedReason",
-                        "type": "visible"
-                      }
-                    ],
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "dataType": "document",
-                    "name": "extraMappingDetails",
-                    "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
-                    "behaviour": [
-                      {
-                        "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaTreatedInvoicedHa, 2)",
-                        "type": "visible"
-                      }
-                    ],
-                    "validate": "required"
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "areaTreatedInvoicedHa",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "validate": [
-                      {
-                        "rule": "min[0]"
-                      },
-                      {
-                        "param": {
-                          "expression": "areaTreatedHa",
-                          "type": "computed"
-                        },
-                        "rule": "max"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "areaTreatedInvoicedKm",
-                    "units": "km",
-                    "decimalPlaces": 3,
-                    "validate": [
-                      {
-                        "rule": "required"
-                      },
-                      {
-                        "rule": "min[0]"
-                      },
-                      {
-                        "param": {
-                          "expression": "lengthTreatedKm",
-                          "type": "computed"
-                        },
-                        "rule": "max"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedNotActualReason",
-                    "behaviour": [
-                      {
-                        "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaTreatedInvoicedHa, 2) or roundTo(lengthTreatedKm, 2) != roundTo(areaTreatedInvoicedKm, 2)",
-                        "type": "visible"
-                      }
-                    ],
-                    "constraints": [
-                      "Work was undertaken over a greater area than will be invoiced for",
-                      "Other"
-                    ],
-                    "validate": "required"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedNotActualComments",
-                    "behaviour": [
-                      {
-                        "condition": "\"Other\" == invoicedNotActualReason",
-                        "type": "visible"
-                      }
-                    ],
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
                     "dataType": "text",
                     "name": "targetDisease",
                     "description": "",
@@ -21440,6 +21272,174 @@
                   "No"
                 ],
                 "validate": "required"
+              },
+              {
+                "dataType": "feature",
+                "name": "sitesCoveredForLandManagement"
+              },
+              {
+                "defaultValue": {
+                  "expression": "$geom.areaHa(sitesCoveredForLandManagement)",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "calculatedAreaTreatedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "areaTreatedInvoicedHa > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The managed area must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "computed": {
+                  "expression": "$geom.lengthKm(sitesCoveredForLandManagement)"
+                },
+                "dataType": "number",
+                "name": "calculatedLengthTreatedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "lengthTreatedKm > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The managed length must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "defaultValue": {
+                  "expression": "calculatedAreaTreatedHa",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "areaTreatedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "defaultValue": {
+                  "expression": "calculatedLengthTreatedKm",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "lengthTreatedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "behaviour": [
+                  {
+                    "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
+                    "type": "visible"
+                  }
+                ],
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == mappingNotAlignedReason",
+                    "type": "visible"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaTreatedInvoicedHa, 2)",
+                    "type": "visible"
+                  }
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "areaTreatedInvoicedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "areaTreatedHa",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "areaTreatedInvoicedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "lengthTreatedKm",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualReason",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaTreatedInvoicedHa, 2) or roundTo(lengthTreatedKm, 2) != roundTo(areaTreatedInvoicedKm, 2)",
+                    "type": "visible"
+                  }
+                ],
+                "constraints": [
+                  "Work was undertaken over a greater area than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualComments",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == invoicedNotActualReason",
+                    "type": "visible"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
               }
             ],
             "dataType": "list",
@@ -21459,7 +21459,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(debrisRemovalDetails, \"debrisRemovedHa\")"
+              "expression": "sum(diseaseManagementAreasControlled, \"initialOrFollowup == 'Initial' ? areaTreatedHa : 0\")"
             }
           },
           {
@@ -21474,7 +21474,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
@@ -21482,7 +21482,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(debrisRemovalDetails, \"debrisRemovedKm\")"
+              "expression": "sum(diseaseManagementAreasControlled, \"initialOrFollowup == 'Follow-up' ? areaTreatedHa : 0\")"
             }
           },
           {
@@ -21497,7 +21497,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
@@ -21505,7 +21505,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(debrisRemovalDetails, \"debrisRemovedHa\")"
+              "expression": "sum(diseaseManagementAreasControlled, \"initialOrFollowup == 'Initial' ? lengthTreatedKm : 0\")"
             }
           },
           {
@@ -21520,7 +21520,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "number",
@@ -21528,7 +21528,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(debrisRemovalDetails, \"debrisRemovedKm\")"
+              "expression": "sum(diseaseManagementAreasControlled, \"initialOrFollowup == 'Follow-up' ? lengthTreatedKm : 0\")"
             }
           },
           {
@@ -21543,7 +21543,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 1
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -21658,7 +21658,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total area (ha) for disease treatment/prevention for this reporting period (Initial)",
+                        "preLabel": "(i) Total area (ha) for disease treatment/prevention (initial) for this reporting period",
                         "source": "totalAreaDiseaseManagementInitial",
                         "type": "number"
                       }
@@ -21668,7 +21668,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total area (ha) for disease treatment/prevention <u><i>invoiced</i></u> for this reporting period (Initial)",
+                        "preLabel": "(ii) Total area (ha) for disease treatment/prevention (initial) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalAreaDiseaseManagementInitialInvoiced",
                         "type": "number"
                       }
@@ -21684,7 +21684,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iii) Total area (ha) for disease treatment/prevention for this reporting period (follow up)",
+                        "preLabel": "(iii) Total area (ha) for disease treatment/prevention (follow up) for this reporting period",
                         "source": "totalAreaDiseaseManagementFollowup",
                         "type": "number"
                       }
@@ -21694,7 +21694,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iv) Total Area (ha) for disease treatment/prevention <u><i>invoiced</i></u> for this reporting period (follow up)",
+                        "preLabel": "(iv) Total Area (ha) for disease treatment/prevention (follow up) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalAreaDiseaseManagementInvoicedFollowup",
                         "type": "number"
                       }
@@ -21710,7 +21710,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(v) Total length (km) for disease treatment/prevention for this reporting period (Initial)",
+                        "preLabel": "(v) Total length (km) for disease treatment/prevention (initial) for this reporting period",
                         "source": "totalLengthDiseaseManagementInitial",
                         "type": "number"
                       }
@@ -21720,7 +21720,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vi) Total length (km) for disease treatment/prevention <u><i>invoiced</i></u> for this reporting period (Initial)",
+                        "preLabel": "(vi) Total length (km) for disease treatment/prevention (initial) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalLengthDiseaseManagementInvoicedInitial",
                         "type": "number"
                       }
@@ -21736,7 +21736,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vii) Total length (km) for disease treatment/prevention for this reporting period (follow up)",
+                        "preLabel": "(vii) Total length (km) for disease treatment/prevention (follow up) for this reporting period",
                         "source": "totalLengthDiseaseManagementFollowup",
                         "type": "number"
                       }
@@ -21746,7 +21746,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(viii) Total length (km) for disease treatment/prevention <u><i>invoiced</i></u> for this reporting period (follow up)",
+                        "preLabel": "(viii) Total length (km) for disease treatment/prevention (follow up) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalLengthDiseaseManagementInvoicedFollowup",
                         "type": "number"
                       }
@@ -21837,31 +21837,48 @@
                 ]
               },
               {
-                "columns": [
+                "type": "row",
+                "css": "border-bottom",
+                "items": [
                   {
-                    "width": "15%",
                     "type": "col",
-                    "title": "Site/s where disease managed",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
-                        "source": "siteTreated",
-                        "type": "feature"
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "sitesCoveredForLandManagement",
+                            "type": "feature",
+                            "preLabel": "Site/s where disease managed"
+                          }
+                        ]
                       },
                       {
-                        "readonly": "readonly",
-                        "source": "calculatedAreaTreatedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "calculatedAreaTreatedHa",
+                            "type": "number",
+                            "readonly": true,
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
-                        "readonly": "readonly",
-                        "source": "calculatedLengthTreatedKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "calculatedLengthTreatedKm",
+                            "type": "number",
+                            "readonly": true,
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
                         "type": "row",
@@ -21876,24 +21893,36 @@
                     ]
                   },
                   {
-                    "helpText": "Enter the amount you will invoice for during this reporting period.",
-                    "width": "15%",
                     "type": "col",
-                    "title": "Actual area (ha) / length (km) where disease has been managed",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
-                        "source": "areaTreatedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Actual area (ha) / length (km) where disease has been managed",
+                            "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
+                            "source": "areaTreatedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
-                        "source": "lengthTreatedKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "",
+                            "source": "lengthTreatedKm",
+                            "type": "number",
+                            "validate": "required",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
                         "type": "row",
@@ -21919,24 +21948,31 @@
                     ]
                   },
                   {
-                    "helpText": "Enter the amount you will invoice for during this reporting period.",
-                    "width": "15%",
                     "type": "col",
-                    "title": "Invoiced area (ha) / length (km) where disease has been managed",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
-                        "source": "areaTreatedInvoicedHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Invoiced area (ha) / length (km) where disease has been managed",
+                            "helpText": "Enter the amount you will invoice for during this reporting period.",
+                            "source": "areaTreatedInvoicedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
                         "type": "row",
                         "items": [
                           {
+                            "preLabel": "",
                             "source": "areaTreatedInvoicedKm",
                             "type": "number",
+                            "validate": "required",
                             "displayOptions": {
                               "displayUnits": true
                             }
@@ -21965,15 +22001,19 @@
                         ]
                       }
                     ]
-                  },
+                  }
+                ]
+              },
+              {
+                "columns": [
                   {
-                    "width": "10%",
+                    "width": "25%",
                     "source": "targetDisease",
                     "title": "Disease treated",
                     "type": "text"
                   },
                   {
-                    "width": "10%",
+                    "width": "25%",
                     "type": "col",
                     "title": "Type of management method / treatment",
                     "items": [
@@ -21994,13 +22034,13 @@
                     ]
                   },
                   {
-                    "width": "20%",
+                    "width": "30%",
                     "source": "treatmentObjective",
                     "title": "Management method / treatment objective",
                     "type": "textarea"
                   },
                   {
-                    "width": "15%",
+                    "width": "20%",
                     "type": "col",
                     "title": "Please map any off-site area/s if they have also benefitted from this disease management",
                     "items": [
