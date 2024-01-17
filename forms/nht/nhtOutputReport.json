@@ -21446,14 +21446,6 @@
             "name": "diseaseManagementAreasControlled"
           },
           {
-            "name": "diseaseSurveyCountHeader",
-            "type": "number",
-            "decimalPlaces": 0,
-            "computed": {
-              "expression": "count(diseaseManagementAreasControlled, \"relatedOutcomes\")"
-            }
-          },
-          {
             "dataType": "number",
             "name": "totalAreaDiseaseManagementInitial",
             "validate": "required,min[0]",
@@ -25589,7 +25581,7 @@
               }
             ],
             "dataType": "list",
-            "name": "weedTreatmentSites"
+            "name": "weedTreatmentAreasControlled"
           },
           {
             "dataType": "text",
@@ -25667,12 +25659,96 @@
             "validate": "maxSize[3000]"
           },
           {
-            "name": "surveyCountHeader",
-            "type": "number",
+            "dataType": "number",
+            "name": "totalAreaWeedsTreatedInitial",
+            "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(weedTreatmentSites, \"treatmentObjective\")"
+              "expression": "sum(weedTreatmentAreasControlled, \"initialOrFollowup == 'Initial' ? areaTreatedHa : 0\")"
             }
+          },
+          {
+            "dataType": "number",
+            "name": "totalAreaDiseaseManagementInitialInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalAreaWeedsTreatedInitial",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 0
+          },
+          {
+            "dataType": "number",
+            "name": "totalAreaWeedsTreatedFollowup",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(weedTreatmentAreasControlled, \"initialOrFollowup == 'Follow-up' ? areaTreatedHa : 0\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalAreaWeedsTreatedInvoicedFollowup",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalAreaWeedsTreatedFollowup",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 0
+          },
+          {
+            "dataType": "number",
+            "name": "totalLengthWeedsTreatedInitial",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(weedTreatmentAreasControlled, \"initialOrFollowup == 'Initial' ? lengthTreatedKm : 0\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalLengthWeedsTreatedInvoicedInitial",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalLengthWeedsTreatedInitial",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 0
+          },
+          {
+            "dataType": "number",
+            "name": "totalLengthWeedsTreatedFollowup",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(weedTreatmentAreasControlled, \"initialOrFollowup == 'Follow-up' ? lengthTreatedKm : 0\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalLengthWeedsTreatedInvoicedFollowup",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalLengthWeedsTreatedFollowup",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -25717,6 +25793,15 @@
           {
             "type": "section",
             "items": [
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "literal",
+                    "source": "<h3>Participation information</h3>"
+                  }
+                ]
+              },
               {
                 "columns": [
                   {
@@ -25771,15 +25856,127 @@
                 "type": "table"
               },
               {
-                "preLabel": "Number of Removing Weeds surveys conducted:",
-                "noEdit": true,
-                "type": "number",
-                "source": "surveyCountHeader"
+                "type": "row",
+                "items": [
+                  {
+                    "type": "literal",
+                    "source": "<h3>Totals Summary</h3>"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "col",
+                    "css": "span4 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(i) Total area (ha) treated for weeds (initial) for this reporting period",
+                            "source": "totalAreaWeedsTreatedInitial",
+                            "type": "number"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(ii) Total area (ha) treated for weeds (initial) <u><i>invoiced</i></u> for this reporting period",
+                            "source": "totalAreaWeedsTreatedInitialInvoiced",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span4 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(iii) Total area (ha) treated for weeds (follow-up) for this reporting period",
+                            "source": "totalAreaWeedsTreatedFollowup",
+                            "type": "number"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(iv) Total area (ha) treated for weeds (follow-up) <u><i>invoiced</i></u> for this reporting period",
+                            "source": "totalAreaWeedsTreatedInvoicedFollowup",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span4 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(v) Total length (km) treated for weeds (initial) for this reporting period",
+                            "source": "totalLengthWeedsTreatedInitial",
+                            "type": "number"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(vi) Total length (km) treated for weeds (initial) <u><i>invoiced</i></u> for this reporting period",
+                            "source": "totalLengthWeedsTreatedInvoicedInitial",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span4 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(vii) Total length (km) treated for weeds (follow-up) for this reporting period",
+                            "source": "totalLengthWeedsTreatedFollowup",
+                            "type": "number"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(viii) Total ength (km) treated for weeds (follow-up) <u><i>invoiced</i></u> for this reporting period",
+                            "source": "totalLengthWeedsTreatedInvoicedFollowup",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
               },
               {
                 "addRowText": "New weed removal site",
                 "userAddedRows": true,
-                "source": "weedTreatmentSites",
+                "source": "weedTreatmentAreasControlled",
                 "type": "repeat",
                 "items": [
                   {
