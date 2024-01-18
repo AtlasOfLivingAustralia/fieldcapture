@@ -512,8 +512,8 @@ function MERIPlan(project, projectService, config) {
         var valid = false;
         // Only mark the plan as finished if the user has ticked the checkbox and the validation routine passes.
         meriPlan.progress = ActivityProgress.started;
-
-        if (meriPlan.markAsFinished()) {
+        var markedAsFinished = meriPlan.markAsFinished();
+        if (markedAsFinished) {
             valid =  $('#project-details-validation').validationEngine('validate');
             meriPlan.markAsFinished(valid);
             meriPlan.progress = valid ? ActivityProgress.finished : ActivityProgress.started;
@@ -523,7 +523,7 @@ function MERIPlan(project, projectService, config) {
         meriPlan.saveWithErrorDetection(function() {
 
             if (unlock) {
-                if (valid) {
+                if (!markedAsFinished || valid) {
                     self.unlockPlanAndReload("MERI Plan saved and unlocked.  Reloading project...");
                 }
                 else {
