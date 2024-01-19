@@ -74,6 +74,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     var self = this;
     var config = _.defaults({validationContainerSelector:'.validationEngineContainer'}, options);
     dataSet = dataSet || {};
+    self.dateCreated = dataSet.dateCreated;
     self.dataSetId = dataSet.dataSetId;
     self.surveyId = dataSet.surveyId; // Data set summaries created by a submission from the Monitor app will have a surveyId
     self.name = ko.observable(dataSet.name );
