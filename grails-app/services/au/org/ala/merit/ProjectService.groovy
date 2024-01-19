@@ -511,7 +511,7 @@ class ProjectService  {
 
     def rejectPlan(String projectId) {
         def project = get(projectId)
-        if (requiresMERITAdminToModifyPlan(project) && !userService.userIsAlaOrFcAdmin()) {
+        if (project.planStatus == PLAN_APPROVED && requiresMERITAdminToModifyPlan(project) && !userService.userIsAlaOrFcAdmin()) {
             return [error: 'Only MERIT admins can return MERI plans for this program']
         }
         if (project.planStatus in [PLAN_SUBMITTED, PLAN_APPROVED]) {
