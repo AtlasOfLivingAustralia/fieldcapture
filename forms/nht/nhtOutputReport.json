@@ -1280,7 +1280,7 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
+            "disableTableUpload": true,
             "source": "participationInformationTable",
             "type": "table"
           },
@@ -1731,81 +1731,6 @@
           },
           {
             "dataType": "number",
-            "name": "totalNumberFieldDays",
-            "validate": "required,min[0]",
-            "decimalPlaces": 0,
-            "defaultValue": 1,
-            "computed": {
-              "expression": "sum(events, \"eventType == 'Field days' ? 1 : 0\")"
-            }
-          },
-          {
-            "dataType": "number",
-            "name": "totalNumberFieldDaysInvoiced",
-            "validate": "required,min[0]",
-            "defaultValue": 1,
-            "validate": [
-              {
-                "param": {
-                  "expression": "totalNumberFieldDays",
-                  "type": "computed"
-                },
-                "rule": "max"
-              }
-            ]
-          },
-          {
-            "dataType": "number",
-            "name": "totalNumberTrainingWorkshopEvents",
-            "validate": "required,min[0]",
-            "decimalPlaces": 0,
-            "defaultValue": 1,
-            "computed": {
-              "expression": "sum(events, \"eventType == 'Training workshops hosted' ? 1 : 0\")"
-            }
-          },
-          {
-            "dataType": "number",
-            "name": "totalNumberTrainingWorkshopEventsInvoiced",
-            "validate": "required,min[0]",
-            "defaultValue": 1,
-            "validate": [
-              {
-                "param": {
-                  "expression": "totalNumberTrainingWorkshopEvents",
-                  "type": "computed"
-                },
-                "rule": "max"
-              }
-            ]
-          },
-          {
-            "dataType": "number",
-            "name": "totalNumberOnGroundTrials",
-            "validate": "required,min[0]",
-            "decimalPlaces": 0,
-            "defaultValue": 1,
-            "computed": {
-              "expression": "sum(events, \"eventType == 'On-ground trials / demonstrations facilitated or hosted' ? 1 : 0\")"
-            }
-          },
-          {
-            "dataType": "number",
-            "name": "totalNumberOnGroundTrialsInvoiced",
-            "validate": "required,min[0]",
-            "defaultValue": 1,
-            "validate": [
-              {
-                "param": {
-                  "expression": "totalNumberOnGroundTrials",
-                  "type": "computed"
-                },
-                "rule": "max"
-              }
-            ]
-          },
-          {
-            "dataType": "number",
             "name": "totalNumberEngagementHeld",
             "validate": "required,min[0]",
             "decimalPlaces": 0,
@@ -1819,7 +1744,7 @@
             "name": "totalNumberEngagementHeldInvoiced",
             "description": "Number of events invoiced for this reporting period.",
             "validate": "required,min[0]",
-            "defaultValue": 1,
+            "defaultValue": 0,
             "validate": [
               {
                 "param": {
@@ -1928,7 +1853,7 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
+            "disableTableUpload": true,
             "source": "participationInformationTable",
             "type": "table"
           },
@@ -1952,85 +1877,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total Number of field days for this reporting period",
-                        "source": "totalNumberFieldDays",
-                        "type": "number"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(ii) Total Number of field days <u><i>invoiced</i></u> for this reporting period",
-                        "source": "totalNumberFieldDaysInvoiced",
-                        "type": "number"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "col",
-                "css": "span4 col-border-right",
-                "items": [
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(iii) Total Number of training / workshop events for this reporting period",
-                        "source": "totalNumberTrainingWorkshopEvents",
-                        "type": "number"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(iv) Total Number of training / workshop events <u><i>invoiced</i></u> for this reporting period",
-                        "source": "totalNumberTrainingWorkshopEventsInvoiced",
-                        "type": "number"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "col",
-                "css": "span4 col-border-right",
-                "items": [
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(v) Total Number of on-ground trials / demonstrations for this reporting period",
-                        "source": "totalNumberOnGroundTrials",
-                        "type": "number"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(vi) Total Number of on-ground trials / demonstrations <u><i>invoiced</i></u> for this reporting period",
-                        "source": "totalNumberOnGroundTrialsInvoiced",
-                        "type": "number"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "col",
-                "css": "span4 col-border-right",
-                "items": [
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(vii) Total number of engagement activities held/attended",
+                        "preLabel": "(i) Total number of engagement activities held/attended",
                         "source": "totalNumberEngagementHeld",
                         "type": "number"
                       }
@@ -2040,7 +1887,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(viii) Total number of engagement activities invoiced for this reporting period",
+                        "preLabel": "(ii) Total number of engagement activities invoiced for this reporting period",
                         "source": "totalNumberEngagementHeldInvoiced",
                         "type": "number"
                       }
@@ -3139,7 +2986,7 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
+            "disableTableUpload": true,
             "source": "participationInformationTable",
             "type": "table"
           },
@@ -3589,7 +3436,8 @@
                     "type": "date"
                   }
                 ],
-                "userAddedRows": true,
+                "userAddedRows": false,
+                "disableTableUpload": true,
                 "source": "accessControlDetails",
                 "type": "table"
               }
@@ -4590,7 +4438,7 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
+            "disableTableUpload": true,
             "source": "participationInformationTable",
             "type": "table"
           },
@@ -6046,7 +5894,7 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
+            "disableTableUpload": true,
             "source": "participationInformationTable",
             "type": "table"
           },
@@ -7598,7 +7446,7 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
+            "disableTableUpload": true,
             "source": "participationInformationTable",
             "type": "table"
           },
@@ -8813,7 +8661,7 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
+            "disableTableUpload": true,
             "source": "participationInformationTable",
             "type": "table"
           },
@@ -9785,7 +9633,7 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
+            "disableTableUpload": true,
             "source": "participationInformationTable",
             "type": "table"
           },
@@ -10789,7 +10637,7 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
+            "disableTableUpload": true,
             "source": "participationInformationTable",
             "type": "table"
           },
@@ -11869,7 +11717,7 @@
                   }
                 ],
                 "userAddedRows": false,
-                "disableTableUpload": false,
+                "disableTableUpload": true,
                 "source": "participationInformationTable",
                 "type": "table"
               },
@@ -12927,7 +12775,7 @@
                   }
                 ],
                 "userAddedRows": false,
-                "disableTableUpload": false,
+                "disableTableUpload": true,
                 "source": "participationInformationTable",
                 "type": "table"
               },
@@ -13898,7 +13746,7 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
+            "disableTableUpload": true,
             "source": "participationInformationTable",
             "type": "table"
           },
@@ -14949,7 +14797,7 @@
                   }
                 ],
                 "userAddedRows": false,
-                "disableTableUpload": false,
+                "disableTableUpload": true,
                 "source": "participationInformationTable",
                 "type": "table"
               },
@@ -16097,7 +15945,7 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
+            "disableTableUpload": true,
             "source": "participationInformationTable",
             "type": "table"
           },
@@ -17282,7 +17130,7 @@
                   }
                 ],
                 "userAddedRows": false,
-                "disableTableUpload": false,
+                "disableTableUpload": true,
                 "source": "participationInformationTable",
                 "type": "table"
               },
@@ -18261,7 +18109,7 @@
                   }
                 ],
                 "userAddedRows": false,
-                "disableTableUpload": false,
+                "disableTableUpload": true,
                 "source": "participationInformationTable",
                 "type": "table"
               },
@@ -19118,7 +18966,7 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
+            "disableTableUpload": true,
             "source": "participationInformationTable",
             "type": "table"
           },
@@ -20066,7 +19914,7 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
+            "disableTableUpload": true,
             "source": "participationInformationTable",
             "type": "table"
           },
@@ -20928,7 +20776,7 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
+            "disableTableUpload": true,
             "source": "participationInformationTable",
             "type": "table"
           },
@@ -23102,7 +22950,7 @@
                   }
                 ],
                 "userAddedRows": false,
-                "disableTableUpload": false,
+                "disableTableUpload": true,
                 "source": "participationInformationTable",
                 "type": "table"
               },
@@ -24246,7 +24094,7 @@
                   }
                 ],
                 "userAddedRows": false,
-                "disableTableUpload": false,
+                "disableTableUpload": true,
                 "source": "participationInformationTable",
                 "type": "table"
               },
@@ -29761,7 +29609,7 @@
                   }
                 ],
                 "userAddedRows": false,
-                "disableTableUpload": false,
+                "disableTableUpload": true,
                 "source": "participationInformationTable",
                 "type": "table"
               },
@@ -32571,7 +32419,7 @@
                   }
                 ],
                 "userAddedRows": false,
-                "disableTableUpload": false,
+                "disableTableUpload": true,
                 "source": "participationInformationTable",
                 "type": "table"
               },
@@ -33681,7 +33529,7 @@
                   }
                 ],
                 "userAddedRows": false,
-                "disableTableUpload": false,
+                "disableTableUpload": true,
                 "source": "participationInformationTable",
                 "type": "table"
               },
