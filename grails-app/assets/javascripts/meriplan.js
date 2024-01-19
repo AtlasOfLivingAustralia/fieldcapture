@@ -522,13 +522,12 @@ function MERIPlan(project, projectService, config) {
 
         meriPlan.saveWithErrorDetection(function() {
 
+            if (!valid && markedAsFinished && !enableSubmit) {
+                bootbox.alert("Your MERI plan cannot be marked as complete until all validation errors are resolved");
+            }
             if (unlock) {
                 if (!markedAsFinished || valid) {
                     self.unlockPlanAndReload("MERI Plan saved and unlocked.  Reloading project...");
-                }
-                else {
-                    $.unblockUI();
-                    bootbox.alert("Your MERI plan cannot be marked as complete until all validation errors are resolved");
                 }
             }
             if(enableSubmit) {

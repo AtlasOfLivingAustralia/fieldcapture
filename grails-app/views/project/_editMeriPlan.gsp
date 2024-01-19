@@ -189,7 +189,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="form-actions">Admin actions: <g:render template="submitMeriPlanButton"/></div>
+		<div class="form-actions">Admin actions: <g:render template="submitMeriPlanButton" model="${[clickCallback:'submitChanges']}"/></div>
 
 	</g:if>
 	<!-- /ko -->
