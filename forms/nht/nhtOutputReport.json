@@ -25704,6 +25704,15 @@
                 ]
               },
               {
+                "dataType": "text",
+                "name": "invoicingThisActivity",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
+                "validate": "required"
+              },
+              {
                 "columns": [
                   {
                     "dataType": "species",
@@ -25858,7 +25867,7 @@
           },
           {
             "dataType": "number",
-            "name": "totalAreaDiseaseManagementInitialInvoiced",
+            "name": "totalAreaWeedsTreatedInitialInvoiced",
             "validate": [
               {
                 "param": {
@@ -26169,6 +26178,68 @@
                 "type": "repeat",
                 "items": [
                   {
+                    "type": "row",
+                    "items": [
+                      {
+                        "css": "span3",
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "relatedOutcomes",
+                                "type": "selectOne",
+                                "preLabel": "Which outcome statement/s does this activity relate to?"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "investmentPriorities2",
+                                "preLabel": "Which investment priority does this activity relate to?",
+                                "type": "select2Many"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "otherInvestmentPriority",
+                                "type": "text"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "css": "span3",
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "invoicingThisActivity",
+                                "preLabel": "Are you invoicing for this activity in this reporting period?",
+                                "type": "selectOne"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
                     "css": "border-bottom",
                     "type": "row",
                     "items": [
@@ -26338,47 +26409,6 @@
                             ]
                           }
                         ]
-                      },
-                      {
-                        "type": "col",
-                        "css": "span3 col-border-right",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "relatedOutcomes",
-                                "type": "selectOne",
-                                "preLabel": "Which outcome statement/s relates to this survey?"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "col",
-                        "css": "span3 col-border-right",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "investmentPriorities2",
-                                "preLabel": "Which investment priority does this activity relate to?",
-                                "type": "select2Many"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "otherInvestmentPriority",
-                                "type": "text"
-                              }
-                            ]
-                          }
-                        ]
                       }
                     ]
                   },
@@ -26393,13 +26423,13 @@
                       {
                         "width": "22%",
                         "source": "threatenedEcologicalCommunity",
-                        "title": "Threatened Ecological Community (if applicable)",
+                        "title": "Threatened Ecological Communities (if applicable) benefitting from this activity",
                         "type": "text"
                       },
                       {
                         "width": "15%",
                         "source": "treatmentMethod",
-                        "title": "Type of treatment",
+                        "title": "'Type of treatment being used",
                         "type": "select2"
                       },
                       {
