@@ -17989,15 +17989,6 @@
           },
           {
             "dataType": "number",
-            "name": "totalPotentialSites",
-            "validate": "required,min[0]",
-            "decimalPlaces": 0,
-            "computed": {
-              "expression": "sum(potentialSiteSurveys, \"numberPotentialSitesAssessed\")"
-            }
-          },
-          {
-            "dataType": "number",
             "name": "totalPotentialSitesInvoiced",
             "validate": [
               {
@@ -18163,22 +18154,6 @@
                     "type": "row",
                     "css": "border-bottom",
                     "items": [
-                      {
-                        "type": "col",
-                        "css": "span2 col-border-right",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "numberPotentialSitesAssessed",
-                                "type": "number",
-                                "preLabel": "Number of potential sites identified and prioritised"
-                              }
-                            ]
-                          }
-                        ]
-                      },
                       {
                         "type": "col",
                         "css": "span2 col-border-right",
@@ -25782,79 +25757,99 @@
             "name": "weedTreatmentAreasControlled"
           },
           {
-            "dataType": "text",
-            "name": "participationIndividualsOrGroups",
-            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
-            "constraints": [
-              "Individuals",
-              "Groups"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "participationIndividualNumber",
-            "behaviour": [
+            "columns": [
               {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
+                "dataType": "text",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
               }
             ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "participationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "firstNationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "firstNationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "participationDetails",
-            "validate": "maxSize[3000]"
+            "dataType": "list",
+            "name": "participationInformationTable"
           },
           {
             "dataType": "number",
@@ -26000,6 +25995,7 @@
                   }
                 ]
               },
+
               {
                 "columns": [
                   {
@@ -26011,7 +26007,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)",
+                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -26027,7 +26023,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service ",
+                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -26049,8 +26045,8 @@
                   }
                 ],
                 "userAddedRows": false,
-                "disableTableUpload": false,
-                "source": "",
+                "disableTableUpload": true,
+                "source": "participationInformationTable",
                 "type": "table"
               },
               {
@@ -26531,79 +26527,99 @@
       "template": {
         "dataModel": [
           {
-            "dataType": "text",
-            "name": "participationIndividualsOrGroups",
-            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
-            "constraints": [
-              "Individuals",
-              "Groups"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "participationIndividualNumber",
-            "behaviour": [
+            "columns": [
               {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
+                "dataType": "text",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
               }
             ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "participationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "firstNationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "firstNationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "participationDetails",
-            "validate": "maxSize[3000]"
+            "dataType": "list",
+            "name": "participationInformationTable"
           },
           {
             "columns": [
@@ -26618,14 +26634,14 @@
               },
               {
                 "dataType": "feature",
-                "name": "sitesRevegetated"
+                "name": "sitesTreated"
               },
               {
+                "computed": {
+                  "expression": "$geom.areaHa(sitesTreated)"
+                },
                 "dataType": "number",
                 "name": "siteCalculatedAreaHa",
-                "computed": {
-                  "expression": "$geom.areaHa(sitesRevegetated)"
-                },
                 "units": "ha",
                 "decimalPlaces": 3,
                 "behaviour": [
@@ -26633,26 +26649,26 @@
                     "condition": "areaInvoicedHa > 0",
                     "type": "conditional_validation",
                     "value": {
-                      "message": "The revegetated area must be mapped",
+                      "message": "The treated area must be mapped",
                       "validate": "required,min[0.0001]"
                     }
                   }
                 ]
               },
               {
+                "computed": {
+                  "expression": "$geom.lengthKm(sitesTreated)"
+                },
                 "dataType": "number",
                 "name": "siteCalculatedLengthKm",
-                "computed": {
-                  "expression": "$geom.lengthKm(sitesRevegetated)"
-                },
                 "units": "km",
                 "decimalPlaces": 3,
                 "behaviour": [
                   {
-                    "condition": "lengthRevegetatedKm > 0",
+                    "condition": "lengthInvoicedKm > 0",
                     "type": "conditional_validation",
                     "value": {
-                      "message": "The revegetated length must be mapped",
+                      "message": "The treated length must be mapped",
                       "validate": "required,min[0.0001]"
                     }
                   }
@@ -26660,25 +26676,25 @@
               },
               {
                 "defaultValue": {
-                  "type": "computed",
-                  "expression": "siteCalculatedAreaHa"
+                  "expression": "$geom.areaHa(sitesTreated)",
+                  "type": "computed"
                 },
                 "dataType": "number",
-                "name": "areaRevegetatedHa",
-                "validate": "required,min[0]",
+                "name": "areaTreatedHa",
+                "units": "ha",
                 "decimalPlaces": 3,
-                "units": "ha"
+                "validate": "required,min[0]"
               },
               {
                 "defaultValue": {
-                  "type": "computed",
-                  "expression": "siteCalculatedLengthKm"
+                  "expression": "$geom.lengthKm(sitesTreated)",
+                  "type": "computed"
                 },
                 "dataType": "number",
-                "name": "lengthRevegetatedKm",
-                "validate": "required,min[0]",
+                "name": "lengthTreatedKm",
+                "units": "km",
                 "decimalPlaces": 3,
-                "units": "km"
+                "validate": "required,min[0]"
               },
               {
                 "dataType": "number",
@@ -26693,17 +26709,17 @@
                     "rule": "min[0]"
                   },
                   {
-                    "rule": "max",
                     "param": {
-                      "type": "computed",
-                      "expression": "areaRevegetatedHa"
-                    }
+                      "expression": "areaTreatedHa",
+                      "type": "computed"
+                    },
+                    "rule": "max"
                   }
                 ]
               },
               {
                 "dataType": "number",
-                "name": "areaInvoicedKm",
+                "name": "lengthInvoicedKm",
                 "units": "km",
                 "decimalPlaces": 3,
                 "validate": [
@@ -26715,7 +26731,7 @@
                   },
                   {
                     "param": {
-                      "expression": "lengthRevegetatedKm",
+                      "expression": "lengthTreatedKm",
                       "type": "computed"
                     },
                     "rule": "max"
@@ -26725,51 +26741,51 @@
               {
                 "dataType": "text",
                 "name": "mappingNotAlignedReason",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaTreatedHa, siteCalculatedAreaHa, 0.1) and within(lengthTreatedKm, siteCalculatedLengthKm, 0.1))",
+                    "type": "if"
+                  }
+                ],
                 "constraints": [
                   "Mapped area simplifies more complex area/s where work was undertaken during this period",
                   "Other"
                 ],
-                "validate": "required",
-                "behaviour": [
-                  {
-                    "condition": "not within(areaRevegetatedHa, siteCalculatedAreaHa, 0.1)",
-                    "type": "if"
-                  }
-                ]
+                "validate": "required"
               },
               {
                 "dataType": "text",
                 "name": "mappingNotAlignedComments",
-                "validate": "required,maxSize[100]",
                 "behaviour": [
                   {
-                    "type": "if",
-                    "condition": "\"Other\" == mappingNotAlignedReason"
+                    "condition": "\"Other\" == mappingNotAlignedReason",
+                    "type": "if"
                   }
-                ]
+                ],
+                "validate": "required,maxSize[300]"
               },
               {
                 "dataType": "text",
                 "name": "invoicedNotActualReason",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthTreatedKm, 2) != roundTo(lengthInvoicedKm, 2)",
+                    "type": "visible"
+                  }
+                ],
                 "constraints": [
                   "Work was undertaken over a greater area than will be invoiced for",
                   "Other"
                 ],
-                "validate": "required",
-                "behaviour": [
-                  {
-                    "condition": "roundTo(areaRevegetatedHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthRevegetatedKm, 2) != roundTo(areaInvoicedKm, 2)",
-                    "type": "visible"
-                  }
-                ]
+                "validate": "required"
               },
               {
                 "dataType": "text",
                 "name": "invoicedNotActualComments",
                 "behaviour": [
                   {
-                    "type": "if",
-                    "condition": "\"Other\" == invoicedNotActualReason"
+                    "condition": "\"Other\" == invoicedNotActualReason",
+                    "type": "if"
                   }
                 ],
                 "validate": "required,maxSize[300]"
@@ -26777,14 +26793,14 @@
               {
                 "dataType": "document",
                 "name": "extraMappingDetails",
-                "validate": "required",
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not within(areaRevegetatedHa, siteCalculatedAreaHa, 0.1) or roundTo(areaRevegetatedHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "condition": "not (within(areaTreatedHa, siteCalculatedAreaHa, 0.1) and within(lengthTreatedKm, siteCalculatedLengthKm, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthTreatedKm, 2) != roundTo(lengthInvoicedKm, 2)",
                     "type": "if"
                   }
-                ]
+                ],
+                "validate": "required"
               },
               {
                 "dataType": "feature",
@@ -26878,6 +26894,15 @@
                 ]
               },
               {
+                "dataType": "text",
+                "name": "invoicingThisActivity",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
+                "validate": "required"
+              },
+              {
                 "dataType": "date",
                 "name": "activitiesStartDate",
                 "description": "Specific the dates these events were held on.",
@@ -26938,15 +26963,53 @@
               }
             ],
             "dataType": "list",
-            "name": "revegetationArea"
+            "name": "revegetationAreasControlled"
           },
           {
-            "name": "revegetatingSurveyCountHeader",
-            "type": "number",
+            "dataType": "number",
+            "name": "totalAreaWeedsTreatedInitial",
+            "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(revegetationArea, \"revegetationObjective\")"
+              "expression": "sum(revegetationAreasControlled, \"initialOrMaintenance == 'Initial' ? areaTreatedHa : 0\")"
             }
+          },
+          {
+            "dataType": "number",
+            "name": "totalAreaWeedsTreatedInitialInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalAreaWeedsTreatedInitial",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 0
+          },
+          {
+            "dataType": "number",
+            "name": "totalAreaWeedsTreatedFollowup",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(revegetationAreasControlled, \"initialOrMaintenance == 'Maintenance' ? areaTreatedHa : 0\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalAreaWeedsTreatedInvoicedFollowup",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalAreaWeedsTreatedFollowup",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -26989,6 +27052,15 @@
         "title": "Revegetating Habitat",
         "viewModel": [
           {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Participation information</h3>"
+              }
+            ]
+          },
+          {
             "columns": [
               {
                 "width": "10%",
@@ -26999,7 +27071,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -27015,7 +27087,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -27037,22 +27109,144 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
-            "source": "",
+            "disableTableUpload": true,
+            "source": "participationInformationTable",
             "type": "table"
           },
           {
-            "preLabel": "Number of Revegetating Habitat surveys conducted:",
-            "noEdit": true,
-            "type": "number",
-            "source": "revegetatingSurveyCountHeader"
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Totals Summary</h3>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(i) Total area (ha) of habitat revegetated (initial) for this reporting period",
+                        "source": "totalAreaWeedsTreatedInitial",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(ii) Total area (ha) of habitat revegetated (initial) <u><i>invoiced</i></u> for this reporting period",
+                        "source": "totalAreaWeedsTreatedInitialInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(iii) Total area (ha) of habitat revegetated (maintenance) for this reporting period",
+                        "source": "totalAreaWeedsTreatedFollowup",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(iv) Total area (ha) of habitat revegetated (maintenance) <u><i>invoiced</i></u> for this reporting period",
+                        "source": "totalAreaWeedsTreatedInvoicedFollowup",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           },
           {
             "addRowText": "New area of revegetation",
             "userAddedRows": true,
-            "source": "revegetationArea",
+            "source": "revegetationAreasControlled",
             "type": "repeat",
             "items": [
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "relatedOutcomes",
+                            "type": "selectOne",
+                            "preLabel": "Which outcome statement/s does this activity relate to?"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "investmentPriorities2",
+                            "preLabel": "Which investment priority does this activity relate to?",
+                            "type": "select2Many"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "otherInvestmentPriority",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "invoicingThisActivity",
+                            "preLabel": "Are you invoicing for this activity in this reporting period?",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
               {
                 "type": "row",
                 "css": "border-bottom",
@@ -27067,37 +27261,46 @@
               },
               {
                 "type": "row",
-                "css": "border-bottom",
                 "items": [
                   {
-                    "type": "col",
                     "css": "span3 col-border-right",
+                    "type": "col",
                     "items": [
                       {
                         "type": "row",
                         "items": [
                           {
                             "preLabel": "Site/s being revegetated",
-                            "source": "sitesRevegetated",
+                            "source": "sitesTreated",
                             "type": "feature"
                           }
                         ]
                       },
                       {
-                        "source": "siteCalculatedAreaHa",
-                        "type": "number",
-                        "readonly": true,
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "readonly": true,
+                            "source": "siteCalculatedAreaHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
-                        "source": "siteCalculatedLengthKm",
-                        "type": "number",
-                        "readonly": true,
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "readonly": true,
+                            "source": "siteCalculatedLengthKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       },
                       {
                         "type": "row",
@@ -27112,8 +27315,8 @@
                     ]
                   },
                   {
+                    "css": "span4 col-border-right",
                     "type": "col",
-                    "css": "span3 col-border-right",
                     "items": [
                       {
                         "type": "row",
@@ -27121,7 +27324,7 @@
                           {
                             "preLabel": "Actual area (ha) / length (km) of habitat revegetated",
                             "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
-                            "source": "areaRevegetatedHa",
+                            "source": "areaTreatedHa",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -27133,8 +27336,9 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "lengthRevegetatedKm",
+                            "source": "lengthTreatedKm",
                             "type": "number",
+                            "validate": "required",
                             "displayOptions": {
                               "displayUnits": true
                             }
@@ -27165,8 +27369,8 @@
                     ]
                   },
                   {
+                    "css": "span4",
                     "type": "col",
-                    "css": "span3",
                     "items": [
                       {
                         "type": "row",
@@ -27184,16 +27388,12 @@
                         ]
                       },
                       {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "areaInvoicedKm",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
+                        "source": "lengthInvoicedKm",
+                        "type": "number",
+                        "validate": "required",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
                       },
                       {
                         "type": "row",
@@ -27217,6 +27417,43 @@
                         ]
                       }
                     ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "offSiteBenefitSites",
+                            "preLabel": "Please map any off-site area/s if they benefitted from this  revegetation activity",
+                            "type": "feature"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "offSiteBenefitAreaHa",
+                            "type": "number",
+                            "preLabel": "Area (ha) benefitting from revegetation activity"
+                          }
+                        ]
+                      }
+                    ]
                   },
                   {
                     "type": "col",
@@ -27226,18 +27463,9 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "investmentPriorities2",
-                            "preLabel": "Which investment priority does this activity relate to?",
-                            "type": "select2Many"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherInvestmentPriority",
-                            "type": "text"
+                            "source": "evidenceOfBenefit",
+                            "preLabel": "If off-site area was mapped please provide a description on the evidence available to reflect this benefit",
+                            "type": "textarea"
                           }
                         ]
                       }
@@ -27249,45 +27477,36 @@
                 "type": "row",
                 "items": [
                   {
-                    "preLabel": "Which outcome statement/s relates to this survey?",
                     "css": "span3",
-                    "source": "relatedOutcomes",
-                    "type": "selectOne"
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "activitiesStartDate",
+                            "type": "date",
+                            "preLabel": "Activity start date"
+                          }
+                        ]
+                      }
+                    ]
                   },
                   {
-                    "preLabel": "Activity start date",
-                    "css": "span3",
-                    "source": "activitiesStartDate",
-                    "type": "date"
-                  },
-                  {
-                    "preLabel": "Activity end date",
-                    "css": "span3",
-                    "source": "activitiesEndDate",
-                    "type": "date"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "Please map any off-site area/s if they benefitted from this  revegetation activity",
-                    "css": "span3",
-                    "source": "offSiteBenefitSites",
-                    "type": "feature"
-                  },
-                  {
-                    "preLabel": "Area (ha) benefitting from revegetation activity",
-                    "css": "span2",
-                    "source": "offSiteBenefitAreaHa",
-                    "type": "number"
-                  },
-                  {
-                    "preLabel": "If off-site area was mapped please provide a description on the evidence available to reflect this benefit.",
-                    "css": "span6",
-                    "source": "evidenceOfBenefit",
-                    "type": "textarea"
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "activitiesEndDate",
+                            "preLabel": "Activity start date",
+                            "type": "date"
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               },
@@ -27315,7 +27534,7 @@
                   {
                     "width": "20%",
                     "source": "threatenedEcologicalCommunity",
-                    "title": "Threatened ecological community (if applicable)",
+                    "title": "'Threatened Ecological Communities (if applicable) benefitting from this activity",
                     "type": "text"
                   },
                   {
