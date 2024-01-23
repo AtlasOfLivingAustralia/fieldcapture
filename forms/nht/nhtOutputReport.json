@@ -27634,88 +27634,269 @@
       "template": {
         "dataModel": [
           {
-            "dataType": "text",
-            "name": "participationIndividualsOrGroups",
-            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
-            "constraints": [
-              "Individuals",
-              "Groups"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "participationIndividualNumber",
-            "behaviour": [
+            "columns": [
               {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
+                "dataType": "text",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
               }
             ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "participationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "firstNationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "firstNationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "participationDetails",
-            "validate": "maxSize[3000]"
+            "dataType": "list",
+            "name": "participationInformationTable"
           },
           {
             "columns": [
               {
+                "dataType": "feature",
+                "name": "sitesTreated"
+              },
+              {
+                "computed": {
+                  "expression": "$geom.areaHa(sitesTreated)"
+                },
+                "dataType": "number",
+                "name": "siteCalculatedAreaHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "areaInvoicedHa > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The treated area must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "computed": {
+                  "expression": "$geom.lengthKm(sitesTreated)"
+                },
+                "dataType": "number",
+                "name": "siteCalculatedLengthKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "lengthInvoicedKm > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The treated length must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "defaultValue": {
+                  "expression": "$geom.areaHa(sitesTreated)",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "areaTreatedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "defaultValue": {
+                  "expression": "$geom.lengthKm(sitesTreated)",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "lengthTreatedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "number",
+                "name": "areaInvoicedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "areaTreatedHa",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "lengthInvoicedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "lengthTreatedKm",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
                 "dataType": "text",
-                "name": "initialOrMaintenance",
+                "name": "mappingNotAlignedReason",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaTreatedHa, siteCalculatedAreaHa, 0.1) and within(lengthTreatedKm, siteCalculatedLengthKm, 0.1))",
+                    "type": "if"
+                  }
+                ],
                 "constraints": [
-                  "Initial",
-                  "Maintenance"
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == mappingNotAlignedReason",
+                    "type": "if"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualReason",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthTreatedKm, 2) != roundTo(lengthInvoicedKm, 2)",
+                    "type": "visible"
+                  }
+                ],
+                "constraints": [
+                  "Work was undertaken over a greater area than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualComments",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == invoicedNotActualReason",
+                    "type": "if"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaTreatedHa, siteCalculatedAreaHa, 0.1) and within(lengthTreatedKm, siteCalculatedLengthKm, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthTreatedKm, 2) != roundTo(lengthInvoicedKm, 2)",
+                    "type": "if"
+                  }
                 ],
                 "validate": "required"
               },
@@ -27746,53 +27927,6 @@
                     }
                   }
                 }
-              },
-              {
-                "dataType": "feature",
-                "name": "siteSeedCollected",
-                "validate": "required"
-              },
-              {
-                "defaultValue": {
-                  "expression": "$geom.areaHa(siteSeedCollected)",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "calculatedAreaHabitatRevegetedHa",
-                "units": "ha",
-                "decimalPlaces": 3
-              },
-              {
-                "computed": {
-                  "expression": "$geom.lengthKm(siteSeedCollected)"
-                },
-                "dataType": "number",
-                "name": "calculatedLengthHabitatRevegetedKm",
-                "units": "km",
-                "decimalPlaces": 3
-              },
-              {
-                "defaultValue": {
-                  "expression": "calculatedAreaHabitatRevegetedHa",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "areaHabitatRevegetedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "date",
-                "name": "activitiesStartDate",
-                "description": "Specific the dates these events were held on.",
-                "validate": "required"
-              },
-              {
-                "dataType": "date",
-                "name": "activitiesEndDate",
-                "description": "Specific the dates these events were held on.",
-                "validate": "required"
               },
               {
                 "name": "investmentPriorities2",
@@ -27826,117 +27960,58 @@
               },
               {
                 "dataType": "text",
-                "name": "activityType",
+                "name": "invoicingThisActivity",
                 "constraints": [
-                  "Collecting",
-                  "Storing",
-                  "Propagating"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "activityPurpose",
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "materialType",
-                "constraints": [
-                  "Seeds",
-                  "Plant cuttings"
+                  "Yes",
+                  "No"
                 ],
                 "validate": "required"
               },
               {
                 "columns": [
                   {
+                    "dataType": "date",
+                    "name": "activitiesStartDate",
+                    "description": "Specific the dates these events were held on.",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "activitiesEndDate",
+                    "description": "Specific the dates these events were held on.",
+                    "validate": "required"
+                  },
+                  {
                     "dataType": "text",
-                    "name": "inKgSeedCollected",
+                    "name": "activityType",
                     "constraints": [
-                      "Individuals",
-                      "Kilograms"
+                      "Collecting",
+                      "Storing",
+                      "Propagating"
                     ],
                     "validate": "required"
                   },
                   {
-                    "dataType": "number",
-                    "name": "amountSeedCollected",
-                    "decimalPlaces": 5
+                    "dataType": "text",
+                    "name": "activityPurpose",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "materialType",
+                    "constraints": [
+                      "Seeds",
+                      "Plant cuttings"
+                    ],
+                    "validate": "required"
                   },
                   {
                     "dataType": "text",
                     "name": "otherSeedSources"
                   },
                   {
-                    "name": "noOfDaysPropagating",
-                    "dataType": "number"
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "numberOfSourcePlants"
-                  },
-                  {
                     "dataType": "text",
                     "name": "storingFacility"
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "noOfPlantsPropogated"
-                  },
-                  {
-                    "dataType": "feature",
-                    "name": "siteSeedSourced"
-                  },
-                  {
-                    "computed": {
-                      "expression": "$geom.areaHa(siteSeedSourced)"
-                    },
-                    "dataType": "number",
-                    "decimalPlaces": 3,
-                    "name": "siteSeedSourcedCalculatedAreaHa",
-                    "units": "ha",
-                    "behaviour": [
-                      {
-                        "condition": "areaInvoicedHa > 0",
-                        "type": "conditional_validation",
-                        "value": {
-                          "message": "The controlled area must be mapped",
-                          "validate": "required,min[0.0001]"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "computed": {
-                      "expression": "$geom.lengthKm(siteSeedSourced)"
-                    },
-                    "dataType": "number",
-                    "decimalPlaces": 3,
-                    "name": "siteSeedSourcedCalculatedLengthKm",
-                    "units": "km",
-                    "behaviour": [
-                      {
-                        "condition": "lengthInvoicedKm > 0",
-                        "type": "conditional_validation",
-                        "value": {
-                          "message": "The length controlled must be mapped",
-                          "validate": "required,min[0.001]"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "document",
-                    "name": "extraMappingDetails",
-                    "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
-                    "behaviour": [
-                      {
-                        "condition": "not (within(areaInstalledHa, siteSeedSourcedCalculatedAreaHa, 0.1) and within(lengthInstalledKm, siteSeedSourcedCalculatedLengthKm, 0.1)) or roundTo(areaInstalledHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthInstalledKm, 2) != roundTo(lengthInvoicedKm, 2)",
-                        "type": "visible"
-                      }
-                    ],
-                    "validate": "required"
                   },
                   {
                     "dataType": "text",
@@ -27946,32 +28021,137 @@
                 ],
                 "dataType": "list",
                 "name": "seedCollectionDetails"
+              },
+              {
+                "dataType": "species",
+                "name": "species",
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "inKgSeedCollected",
+                "constraints": [
+                  "Individuals",
+                  "Kilograms"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "amountSeedCollected",
+                "decimalPlaces": 5
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfDaysCollectingSeeds"
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfSourcePlants"
+              },
+              {
+                "dataType": "number",
+                "name": "noOfPlantsPropogated"
+              },
+              {
+                "name": "noOfDaysPropagating",
+                "dataType": "number"
               }
             ],
             "dataType": "list",
             "name": "areasOfSeedCollection"
           },
           {
-            "name": "siteSeedCountHeader",
-            "type": "number",
+            "dataType": "number",
+            "name": "totalAmountSeedsCuttingsCollected",
+            "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(areasOfSeedCollection, \"threatEcoCommunity\")"
+              "expression": "sum(areasOfSeedCollection, \"amountSeedCollected\")"
             }
           },
           {
-            "computed": {
-              "expression": "amountSeedCollected"
-            },
             "dataType": "number",
-            "name": "totalSeedCollected"
+            "name": "totalAmountSeedsCuttingsCollectedInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalAmountSeedsCuttingsCollected",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 0
           },
           {
-            "computed": {
-              "expression": "numberOfSourcePlants"
-            },
             "dataType": "number",
-            "name": "totalPlantsPropogated"
+            "name": "totalDaysSeedsCuttingsCollected",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(areasOfSeedCollection, \"numberOfDaysCollectingSeeds\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalDaysSeedsCuttingsCollectedInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalDaysSeedsCuttingsCollected",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 0
+          },
+          {
+            "dataType": "number",
+            "name": "totalDaysPropagating",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(areasOfSeedCollection, \"noOfDaysPropagating\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalDaysPropagatingInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalDaysPropagating",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 0
+          },
+          {
+            "dataType": "number",
+            "name": "totalPlantsPropagated",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(areasOfSeedCollection, \"noOfPlantsPropogated\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalPlantsPropagatedInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalPlantsPropagated",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -28011,8 +28191,17 @@
           }
         ],
         "modelName": "NHT - Seed Collection",
-        "title": "Seed Collecting",
+        "title": "Seed Collection and Propagation",
         "viewModel": [
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Participation information</h3>"
+              }
+            ]
+          },
           {
             "columns": [
               {
@@ -28024,7 +28213,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -28040,7 +28229,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -28062,15 +28251,127 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
-            "source": "",
+            "disableTableUpload": true,
+            "source": "participationInformationTable",
             "type": "table"
           },
           {
-            "preLabel": "Number of Seed Collection surveys conducted:",
-            "noEdit": true,
-            "type": "number",
-            "source": "siteSeedCountHeader"
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Totals Summary</h3>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(i) Total amount (grams)/number of seeds/cuttings collected for this reporting period",
+                        "source": "totalAmountSeedsCuttingsCollected",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(ii) Total amount (grams)/number of seeds/cuttings collected and <u><i>invoiced</i></u> for this reporting period",
+                        "source": "totalAmountSeedsCuttingsCollectedInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(iii) Total number of days collecting seeds/cuttings for this reporting period",
+                        "source": "totalDaysSeedsCuttingsCollected",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(iv) Total number of days collecting seeds/cuttings <u><i>invoiced</i></u> for this reporting period",
+                        "source": "totalDaysSeedsCuttingsCollectedInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(v) Total number of plants propagated for this reporting period",
+                        "source": "totalPlantsPropagated",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(vi) Total number of plants propagated <u><i>invoiced</i></u> for this reporting period",
+                        "source": "totalPlantsPropagatedInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(vii) Total number of days propagating for this reporting period",
+                        "source": "totalDaysPropagating",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(viii) Total number of days propagating <u><i>invoiced</i></u> for this reporting period",
+                        "source": "totalDaysPropagatingInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           },
           {
             "addRowText": "New area of seed collection",
@@ -28080,35 +28381,18 @@
             "items": [
               {
                 "type": "row",
-                "css": "border-bottom",
                 "items": [
                   {
-                    "type": "col",
                     "css": "span3 col-border-right",
+                    "type": "col",
                     "items": [
                       {
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Initial or maintenance activity?",
-                            "source": "initialOrMaintenance",
-                            "type": "selectOne"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "col",
-                    "css": "span3 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Which outcome statement/s relates to this survey?",
                             "source": "relatedOutcomes",
-                            "type": "selectOne"
+                            "type": "selectOne",
+                            "preLabel": "Which outcome statement/s does this activity relate to?"
                           }
                         ]
                       }
@@ -28122,40 +28406,8 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Site/s where collection/propagation was undertaken",
-                            "source": "siteSeedCollected",
-                            "type": "feature"
-                          }
-                        ]
-                      },
-                      {
-                        "source": "calculatedAreaHabitatRevegetedHa",
-                        "type": "number",
-                        "readonly": true,
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      },
-                      {
-                        "source": "calculatedLengthHabitatRevegetedKm",
-                        "type": "number",
-                        "readonly": true,
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "type": "col",
-                    "css": "span3 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Which investment priority does this activity relate to?",
                             "source": "investmentPriorities2",
+                            "preLabel": "Which investment priority does this activity relate to?",
                             "type": "select2Many"
                           }
                         ]
@@ -28170,6 +28422,22 @@
                         ]
                       }
                     ]
+                  },
+                  {
+                    "css": "span3 col-border-right",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "invoicingThisActivity",
+                            "preLabel": "Are you invoicing for this activity in this reporting period?",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               },
@@ -28177,96 +28445,25 @@
                 "type": "row",
                 "items": [
                   {
-                    "preLabel": "Activity start date",
-                    "css": "span2",
-                    "source": "activitiesStartDate",
-                    "type": "date"
-                  },
-                  {
-                    "preLabel": "Activity end date",
-                    "css": "span2",
-                    "source": "activitiesEndDate",
-                    "type": "date"
-                  },
-                  {
-                    "preLabel": "Type of activity",
-                    "css": "span2",
-                    "source": "activityType",
-                    "type": "selectOne"
-                  },
-                  {
-                    "preLabel": "Purpose of activity",
-                    "css": "span2",
-                    "source": "activityPurpose",
-                    "type": "text"
-                  },
-                  {
-                    "preLabel": "Type of material collected/stored or propagated",
-                    "css": "span2",
-                    "source": "materialType",
-                    "type": "selectOne"
-                  }
-                ]
-              },
-              {
-                "columns": [
-                  {
-                    "width": "10%",
-                    "source": "inKgSeedCollected",
-                    "title": "Individuals / Kilograms collected",
-                    "type": "selectOne"
-                  },
-                  {
-                    "width": "7%",
-                    "source": "amountSeedCollected",
-                    "title": "Amount collected",
-                    "type": "number"
-                  },
-                  {
-                    "width": "15%",
-                    "source": "otherSeedSources",
-                    "title": "Other seed sources (if applicable)",
-                    "type": "textarea"
-                  },
-                  {
-                    "width": "7%",
-                    "source": "numberOfSourcePlants",
-                    "title": "Number of source plants",
-                    "type": "number"
-                  },
-                  {
-                    "width": "15%",
-                    "source": "storingFacility",
-                    "title": "Name of storing facility",
-                    "type": "textarea"
-                  },
-                  {
-                    "width": "9%",
-                    "source": "noOfPlantsPropogated",
-                    "title": "Number of plants propogated",
-                    "type": "number"
-                  },
-                  {
-                    "width": "7%",
-                    "source": "noOfDaysPropagating",
-                    "title": "Number of days propagating",
-                    "type": "number"
-                  },
-                  {
-                    "width": "15%",
+                    "css": "span3 col-border-right",
                     "type": "col",
-                    "title": "Site/s where the seeds/plant cuttings were sourced from",
                     "items": [
                       {
-                        "source": "siteSeedSourced",
-                        "type": "feature"
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Site/s where collection/propagation was undertaken",
+                            "source": "sitesTreated",
+                            "type": "feature"
+                          }
+                        ]
                       },
                       {
                         "type": "row",
                         "items": [
                           {
                             "readonly": true,
-                            "source": "siteSeedSourcedCalculatedAreaHa",
+                            "source": "siteCalculatedAreaHa",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -28279,7 +28476,7 @@
                         "items": [
                           {
                             "readonly": true,
-                            "source": "siteSeedSourcedCalculatedLengthKm",
+                            "source": "siteCalculatedLengthKm",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -28300,13 +28497,281 @@
                     ]
                   },
                   {
+                    "css": "span4 col-border-right",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Actual Area (ha) where collection/propagation was undertaken",
+                            "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
+                            "source": "areaTreatedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "lengthTreatedKm",
+                            "type": "number",
+                            "validate": "required",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for actual being different to mapped amount",
+                            "source": "mappingNotAlignedReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "mappingNotAlignedComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span4",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Invoiced area (ha) of habitat revegetated",
+                            "helpText": "Enter the amount you will invoice for during this reporting period.",
+                            "source": "areaInvoicedHa",
+                            "type": "number",
+                            "validate": "required",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "source": "lengthInvoicedKm",
+                        "type": "number",
+                        "validate": "required",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for invoiced amount being different to actual amount",
+                            "source": "invoicedNotActualReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "invoicedNotActualComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "css": "span3 col-border-right",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "species",
+                            "type": "speciesSelect",
+                            "preLabel": "Target species recorded"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "inKgSeedCollected",
+                            "preLabel": "Individuals / Kilograms collected",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span3 col-border-right",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "amountSeedCollected",
+                            "preLabel": "Amount collected",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span3 col-border-right",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "numberOfDaysCollectingSeeds",
+                            "preLabel": "Number of days collecting seeds/cuttings",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span3 col-border-right",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "noOfPlantsPropogated",
+                            "preLabel": "Number of plants propogated",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span3 col-border-right",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "noOfDaysPropagating",
+                            "preLabel": "Number of days propagating",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span3 col-border-right",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "numberOfSourcePlants",
+                            "preLabel": "Number of source plants",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "columns": [
+                  {
+                    "width": "10%",
+                    "title": "Activity start date",
+                    "source": "activitiesStartDate",
+                    "type": "date"
+                  },
+                  {
+                    "width": "10%",
+                    "title": "Activity end date",
+                    "source": "activitiesEndDate",
+                    "type": "date"
+                  },
+                  {
+                    "width": "10%",
+                    "title": "Type of activity",
+                    "source": "activityType",
+                    "type": "selectOne"
+                  },
+                  {
+                    "width": "15%",
+                    "title": "Purpose of activity",
+                    "source": "activityPurpose",
+                    "type": "text"
+                  },
+                  {
+                    "width": "10%",
+                    "title": "Type of material collected/stored or propagated",
+                    "source": "materialType",
+                    "type": "selectOne"
+                  },
+                  {
+                    "width": "15%",
+                    "source": "otherSeedSources",
+                    "title": "Other seed sources (if applicable)",
+                    "type": "textarea"
+                  },
+                  {
+                    "width": "15%",
+                    "source": "storingFacility",
+                    "title": "Name of storing facility",
+                    "type": "textarea"
+                  },
+                  {
                     "width": "15%",
                     "source": "threatEcoCommunity",
-                    "title": "Threatened ecological communities (if applicable)",
+                    "title": "'Threatened Ecological Community (if applicable)where the seeds were sourced from",
                     "type": "textarea"
                   }
                 ],
-                "userAddedRows": true,
+                "userAddedRows": false,
+                "disableTableUpload": true,
                 "source": "seedCollectionDetails",
                 "type": "table"
               }
