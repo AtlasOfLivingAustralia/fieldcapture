@@ -268,7 +268,7 @@ var config =
             ]
 
         },
-        "visibility": "private",
+        "visibility": "public",
         "declarationPageType": "rdpReportDeclaration",
         "requiresActivityLocking": true,
         "supportsMeriPlanComparison": true,
@@ -433,17 +433,6 @@ var config =
                     "outcomePriority":"Additional outcome/s",
                     "priority":"Additional Investment Priorities",
                     "priorityHelpText":"Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
-                }
-            },
-            {
-                "template": "outcomeStatements",
-                "model": {
-                    "outcomeType": "mid",
-                    "subtitle": "Medium-term outcome statement/s",
-                    "title": "Project Outcomes",
-                    "extendedOutcomes": true,
-                    "helpText":"Projects more than 3 years in duration must set medium-term Project outcomes achievable at project completion. Ensure proposed outcomes are measurable with consideration to the baseline and proposed monitoring regime",
-                    "minimumNumberOfOutcomes": 0
                 }
             },
             {
