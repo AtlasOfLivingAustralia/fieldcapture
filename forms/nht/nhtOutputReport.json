@@ -28860,100 +28860,120 @@
       "template": {
         "dataModel": [
           {
-            "dataType": "text",
-            "name": "participationIndividualsOrGroups",
-            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
-            "constraints": [
-              "Individuals",
-              "Groups"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "participationIndividualNumber",
-            "behaviour": [
+            "columns": [
               {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
+                "dataType": "text",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
               }
             ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "participationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "firstNationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "firstNationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "participationDetails",
-            "validate": "maxSize[3000]"
+            "dataType": "list",
+            "name": "participationInformationTable"
           },
           {
             "columns": [
               {
                 "dataType": "feature",
-                "name": "sitesPrepared"
+                "name": "sitesTreated"
               },
               {
                 "computed": {
-                  "expression": "$geom.areaHa(sitesPrepared)"
+                  "expression": "$geom.areaHa(sitesTreated)"
                 },
                 "dataType": "number",
-                "name": "calculatedAreaPreparedHa",
+                "name": "siteCalculatedAreaHa",
                 "units": "ha",
                 "decimalPlaces": 3,
                 "behaviour": [
                   {
-                    "condition": "areaPreparedInvoicedHa > 0",
+                    "condition": "areaInvoicedHa > 0",
                     "type": "conditional_validation",
                     "value": {
-                      "message": "The prepared area must be mapped",
+                      "message": "The treated area must be mapped",
                       "validate": "required,min[0.0001]"
                     }
                   }
@@ -28961,18 +28981,18 @@
               },
               {
                 "computed": {
-                  "expression": "$geom.lengthKm(sitesPrepared)"
+                  "expression": "$geom.lengthKm(sitesTreated)"
                 },
                 "dataType": "number",
-                "name": "calculatedLengthPreparedKm",
+                "name": "siteCalculatedLengthKm",
                 "units": "km",
                 "decimalPlaces": 3,
                 "behaviour": [
                   {
-                    "condition": "lengthPreparedKm > 0",
+                    "condition": "lengthInvoicedKm > 0",
                     "type": "conditional_validation",
                     "value": {
-                      "message": "The prepared length must be mapped",
+                      "message": "The treated length must be mapped",
                       "validate": "required,min[0.0001]"
                     }
                   }
@@ -28980,33 +29000,75 @@
               },
               {
                 "defaultValue": {
-                  "expression": "calculatedAreaPreparedHa",
+                  "expression": "$geom.areaHa(sitesTreated)",
                   "type": "computed"
                 },
                 "dataType": "number",
-                "name": "areaPreparedHa",
-                "decimalPlaces": 3,
+                "name": "areaTreatedHa",
                 "units": "ha",
+                "decimalPlaces": 3,
                 "validate": "required,min[0]"
               },
               {
                 "defaultValue": {
-                  "expression": "calculatedLengthPreparedKm",
+                  "expression": "$geom.lengthKm(sitesTreated)",
                   "type": "computed"
                 },
                 "dataType": "number",
-                "name": "lengthPreparedKm",
+                "name": "lengthTreatedKm",
                 "units": "km",
                 "decimalPlaces": 3,
                 "validate": "required,min[0]"
+              },
+              {
+                "dataType": "number",
+                "name": "areaInvoicedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "areaTreatedHa",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "lengthInvoicedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "lengthTreatedKm",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
               },
               {
                 "dataType": "text",
                 "name": "mappingNotAlignedReason",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaPreparedHa, areaPreparedHa, 0.1))",
-                    "type": "visible"
+                    "condition": "not (within(areaTreatedHa, siteCalculatedAreaHa, 0.1) and within(lengthTreatedKm, siteCalculatedLengthKm, 0.1))",
+                    "type": "if"
                   }
                 ],
                 "constraints": [
@@ -29021,68 +29083,17 @@
                 "behaviour": [
                   {
                     "condition": "\"Other\" == mappingNotAlignedReason",
-                    "type": "visible"
+                    "type": "if"
                   }
                 ],
                 "validate": "required,maxSize[300]"
-              },
-              {
-                "dataType": "document",
-                "name": "extraMappingDetails",
-                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
-                "behaviour": [
-                  {
-                    "condition": "not (within(calculatedAreaPreparedHa, areaPreparedHa, 0.1)) or roundTo(areaPreparedHa, 2) != roundTo(areaPreparedInvoicedHa, 2)",
-                    "type": "visible"
-                  }
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "number",
-                "name": "areaPreparedInvoicedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": [
-                  {
-                    "rule": "min[0]"
-                  },
-                  {
-                    "param": {
-                      "expression": "areaPreparedHa",
-                      "type": "computed"
-                    },
-                    "rule": "max"
-                  }
-                ]
-              },
-              {
-                "dataType": "number",
-                "name": "areaPreparedInvoicedKm",
-                "units": "km",
-                "decimalPlaces": 3,
-                "validate": [
-                  {
-                    "rule": "required"
-                  },
-                  {
-                    "rule": "min[0]"
-                  },
-                  {
-                    "param": {
-                      "expression": "lengthPreparedKm",
-                      "type": "computed"
-                    },
-                    "rule": "max"
-                  }
-                ]
               },
               {
                 "dataType": "text",
                 "name": "invoicedNotActualReason",
                 "behaviour": [
                   {
-                    "condition": "roundTo(areaPreparedHa, 2) != roundTo(areaPreparedInvoicedHa, 2) or roundTo(lengthPreparedKm, 2) != roundTo(areaPreparedInvoicedKm, 2)",
+                    "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthTreatedKm, 2) != roundTo(lengthInvoicedKm, 2)",
                     "type": "visible"
                   }
                 ],
@@ -29098,31 +29109,37 @@
                 "behaviour": [
                   {
                     "condition": "\"Other\" == invoicedNotActualReason",
-                    "type": "visible"
+                    "type": "if"
                   }
                 ],
                 "validate": "required,maxSize[300]"
               },
               {
-                "dataType": "date",
-                "name": "activitiesStartDate",
-                "description": "Specific the dates these events were held on.",
-                "validate": "required"
-              },
-              {
-                "dataType": "date",
-                "name": "activitiesEndDate",
-                "description": "Specific the dates these events were held on.",
-                "validate": "required"
-              },
-              {
-                "dataType": "date",
-                "name": "activitiesEndDate",
-                "description": "",
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaTreatedHa, siteCalculatedAreaHa, 0.1) and within(lengthTreatedKm, siteCalculatedLengthKm, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthTreatedKm, 2) != roundTo(lengthInvoicedKm, 2)",
+                    "type": "if"
+                  }
+                ],
                 "validate": "required"
               },
               {
                 "columns": [
+                  {
+                    "dataType": "date",
+                    "name": "activitiesStartDate",
+                    "description": "Specific the dates these events were held on.",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "activitiesEndDate",
+                    "description": "Specific the dates these events were held on.",
+                    "validate": "required"
+                  },
                   {
                     "dataType": "number",
                     "name": "numberOfDaysPreparingSite",
@@ -29190,86 +29207,115 @@
                     "name": "purposeOfSitePreparation",
                     "description": "Please provide a brief description of how the work will benefit the area.",
                     "validate": "required"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "threatenedEcologicalCommunity",
-                    "description": "This free text field allows multiple TECs to be entered. They should be written as listed in EPBC, and separated by commas.",
-                    "validate": "maxSize[100]"
-                  },
-                  {
-                    "name": "relatedOutcomes",
-                    "dataType": "text",
-                    "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
-                    "validate": "required",
-                    "constraints": {
-                      "textProperty": "label",
-                      "valueProperty": "label",
-                      "type": "pre-populated",
-                      "config": {
-                        "source": {
-                          "url": "/project/outcomesByScores",
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            },
-                            {
-                              "expression": "scores",
-                              "name": "scoreIds",
-                              "type": "computed"
-                            }
-                          ]
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "name": "investmentPriorities2",
-                    "dataType": "stringList",
-                    "validate": "required",
-                    "constraints": {
-                      "type": "pre-populated",
-                      "config": {
-                        "source": {
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            }
-                          ],
-                          "url": "/project/listProjectInvestmentPriorities/"
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "otherInvestmentPriority",
-                    "behaviour": [
-                      {
-                        "type": "enable",
-                        "condition": "\"Other\" in investmentPriorities2"
-                      }
-                    ]
                   }
                 ],
                 "dataType": "list",
                 "name": "sitePreparationDetails"
+              },
+              {
+                "name": "relatedOutcomes",
+                "dataType": "text",
+                "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "outcomes"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "investmentPriorities2",
+                "dataType": "stringList",
+                "validate": "required",
+                "constraints": {
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        }
+                      ],
+                      "url": "/project/listProjectInvestmentPriorities/"
+                    }
+                  }
+                }
+              },
+              {
+                "dataType": "text",
+                "name": "otherInvestmentPriority",
+                "behaviour": [
+                  {
+                    "type": "enable",
+                    "condition": "\"Other\" in investmentPriorities2"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicingThisActivity",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
+                "validate": "required"
               }
             ],
             "dataType": "list",
-            "name": "sitePreparationDetails"
+            "name": "sitePreparationDetailsControlled"
           },
           {
-            "name": "sitePrepCountHeader",
-            "type": "number",
+            "dataType": "number",
+            "name": "totalAreaSitePreparation",
+            "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(sitePreparationDetails, \"threatenedEcologicalCommunity\")"
+              "expression": "sum(sitePreparationDetailsControlled, \"areaTreatedHa\")"
             }
+          },
+          {
+            "dataType": "number",
+            "name": "totalAreaSitePreparationInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalAreaSitePreparation",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 0
+          },
+          {
+            "dataType": "number",
+            "name": "totalLengthSitePreparation",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(sitePreparationDetailsControlled, \"lengthTreatedKm\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalLengthSitePreparationInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalLengthSitePreparation",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -29312,6 +29358,15 @@
         "title": "Site Preparation",
         "viewModel": [
           {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Participation information</h3>"
+              }
+            ]
+          },
+          {
             "columns": [
               {
                 "width": "10%",
@@ -29322,7 +29377,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -29338,7 +29393,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -29360,37 +29415,112 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
-            "source": "",
+            "disableTableUpload": true,
+            "source": "participationInformationTable",
             "type": "table"
           },
           {
-            "preLabel": "Number of Site Preparation surveys conducted:",
-            "noEdit": true,
-            "type": "number",
-            "source": "sitePrepCountHeader"
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Totals Summary</h3>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(i) Total area (ha) of site preparation for this reporting period",
+                        "source": "totalAreaSitePreparation",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(ii) Total area (ha) of site preparation <u><i>invoiced</i></u> for this reporting period",
+                        "source": "totalAreaSitePreparationInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(iii) Total length (km) of site preparation for this reporting period",
+                        "source": "totalLengthSitePreparation",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(iv) Total length (km) of site preparation <u><i>invoiced</i></u> for this reporting period",
+                        "source": "totalLengthSitePreparationInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           },
           {
             "addRowText": "Add a new controlled area",
             "userAddedRows": true,
-            "source": "sitePreparationDetails",
+            "source": "sitePreparationDetailsControlled",
             "type": "repeat",
             "items": [
               {
                 "type": "row",
-                "css": "border-bottom",
                 "items": [
                   {
+                    "css": "span3 col-border-right",
                     "type": "col",
-                    "css": "span2 col-border-right",
                     "items": [
                       {
                         "type": "row",
                         "items": [
                           {
-                            "source": "sitesPrepared",
-                            "type": "feature",
-                            "preLabel": "Site/s where preparation was undertaken"
+                            "source": "relatedOutcomes",
+                            "type": "selectOne",
+                            "preLabel": "Which outcome statement/s does this activity relate to?"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "investmentPriorities2",
+                            "preLabel": "Which investment priority does this activity relate to?",
+                            "type": "select2Many"
                           }
                         ]
                       },
@@ -29398,9 +29528,55 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "calculatedAreaPreparedHa",
-                            "type": "number",
+                            "source": "otherInvestmentPriority",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span3 col-border-right",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "invoicingThisActivity",
+                            "preLabel": "Are you invoicing for this activity in this reporting period?",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "css": "span3 col-border-right",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Site/s where preparation was undertaken",
+                            "source": "sitesTreated",
+                            "type": "feature"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
                             "readonly": true,
+                            "source": "siteCalculatedAreaHa",
+                            "type": "number",
                             "displayOptions": {
                               "displayUnits": true
                             }
@@ -29411,9 +29587,9 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "calculatedLengthPreparedKm",
-                            "type": "number",
                             "readonly": true,
+                            "source": "siteCalculatedLengthKm",
+                            "type": "number",
                             "displayOptions": {
                               "displayUnits": true
                             }
@@ -29433,8 +29609,8 @@
                     ]
                   },
                   {
+                    "css": "span4 col-border-right",
                     "type": "col",
-                    "css": "span3 col-border-right",
                     "items": [
                       {
                         "type": "row",
@@ -29442,7 +29618,7 @@
                           {
                             "preLabel": "Actual area (ha) / length (km) of site preparation",
                             "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
-                            "source": "areaPreparedHa",
+                            "source": "areaTreatedHa",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -29454,8 +29630,9 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "lengthPreparedKm",
+                            "source": "lengthTreatedKm",
                             "type": "number",
+                            "validate": "required",
                             "displayOptions": {
                               "displayUnits": true
                             }
@@ -29478,15 +29655,16 @@
                           {
                             "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
                             "source": "mappingNotAlignedComments",
-                            "type": "textarea"
+                            "type": "textarea",
+                            "rows": 5
                           }
                         ]
                       }
                     ]
                   },
                   {
+                    "css": "span4",
                     "type": "col",
-                    "css": "span3 col-border-right",
                     "items": [
                       {
                         "type": "row",
@@ -29494,8 +29672,9 @@
                           {
                             "preLabel": "Invoiced area (ha) of site preparation",
                             "helpText": "Enter the amount you will invoice for during this reporting period.",
-                            "source": "areaPreparedInvoicedHa",
+                            "source": "areaInvoicedHa",
                             "type": "number",
+                            "validate": "required",
                             "displayOptions": {
                               "displayUnits": true
                             }
@@ -29503,16 +29682,12 @@
                         ]
                       },
                       {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "areaPreparedInvoicedKm",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
+                        "source": "lengthInvoicedKm",
+                        "type": "number",
+                        "validate": "required",
+                        "displayOptions": {
+                          "displayUnits": true
+                        }
                       },
                       {
                         "type": "row",
@@ -29530,39 +29705,8 @@
                           {
                             "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
                             "source": "invoicedNotActualComments",
-                            "type": "textarea"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "col",
-                    "css": "span2 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Activity start date",
-                            "source": "activitiesStartDate",
-                            "type": "date"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "col",
-                    "css": "span2 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Activity end date",
-                            "source": "activitiesEndDate",
-                            "type": "date"
+                            "type": "textarea",
+                            "rows": 5
                           }
                         ]
                       }
@@ -29573,19 +29717,31 @@
               {
                 "columns": [
                   {
+                    "title": "Activity start date",
+                    "source": "activitiesStartDate",
+                    "type": "date",
+                    "width": "10%"
+                  },
+                  {
+                    "title": "Activity end date",
+                    "source": "activitiesEndDate",
+                    "type": "date",
+                    "width": "10%"
+                  },
+                  {
                     "width": "10%",
                     "source": "numberOfDaysPreparingSite",
                     "title": "Number of days in preparing site",
                     "type": "number"
                   },
                   {
-                    "width": "10%",
+                    "width": "20%",
                     "source": "industryType",
                     "title": "Industry type",
                     "type": "select2"
                   },
                   {
-                    "width": "15%",
+                    "width": "25%",
                     "type": "col",
                     "title": "Type of action",
                     "items": [
@@ -29606,37 +29762,10 @@
                     ]
                   },
                   {
-                    "width": "15%",
+                    "width": "25%",
                     "source": "purposeOfSitePreparation",
                     "title": "Aim of site preparation",
                     "type": "textarea"
-                  },
-                  {
-                    "width": "20%",
-                    "source": "threatenedEcologicalCommunity",
-                    "title": "Threatened ecological community (if applicable)",
-                    "type": "text"
-                  },
-                  {
-                    "source": "relatedOutcomes",
-                    "type": "selectOne",
-                    "width": "15%",
-                    "title": "Which outcome statement/s relates to this survey?"
-                  },
-                  {
-                    "width": "15%",
-                    "type": "col",
-                    "title": "Which investment priority does this activity relate to?",
-                    "items": [
-                      {
-                        "source": "investmentPriorities2",
-                        "type": "select2Many"
-                      },
-                      {
-                        "source": "otherInvestmentPriority",
-                        "type": "text"
-                      }
-                    ]
                   }
                 ],
                 "userAddedRows": true,
