@@ -34720,112 +34720,163 @@
       "template": {
         "dataModel": [
           {
-            "dataType": "text",
-            "name": "participationIndividualsOrGroups",
-            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
-            "constraints": [
-              "Individuals",
-              "Groups"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "participationIndividualNumber",
-            "behaviour": [
+            "columns": [
               {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
+                "dataType": "text",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
               }
             ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "participationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "firstNationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "firstNationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "participationDetails",
-            "validate": "maxSize[3000]"
+            "dataType": "list",
+            "name": "participationInformationTable"
           },
           {
             "columns": [
               {
-                "dataType": "number",
-                "name": "numberOfSaf",
-                "description": "",
-                "validate": "required,min[0]"
+                "name": "relatedOutcomes",
+                "dataType": "text",
+                "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "label",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "url": "/project/outcomesByScores",
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        },
+                        {
+                          "expression": "scores",
+                          "name": "scoreIds",
+                          "type": "computed"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "name": "investmentPriorities2",
+                "dataType": "stringList",
+                "validate": "required",
+                "constraints": {
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        }
+                      ],
+                      "url": "/project/listProjectInvestmentPriorities/"
+                    }
+                  }
+                }
               },
               {
                 "dataType": "text",
-                "name": "fullOrPartTime",
-                "constraints": [
-                  "Full-time",
-                  "Part-time"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfFteEachPos",
-                "description": "Note: Full-time recorded as 1. Part-time recorded as 0.6, 0.5 or 0.25",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfFteInvoicedFor",
-                "description": "",
-                "validate": "required,min[0]"
+                "name": "otherInvestmentPriority",
+                "behaviour": [
+                  {
+                    "type": "enable",
+                    "condition": "\"Other\" in investmentPriorities2"
+                  }
+                ]
               },
               {
                 "dataType": "text",
-                "name": "wasPositionVacant",
+                "name": "invoicingThisActivity",
                 "constraints": [
                   "Yes",
                   "No"
@@ -34833,83 +34884,126 @@
                 "validate": "required"
               },
               {
-                "name": "yesPositionVacant",
-                "dataType": "text",
-                "constraints": [
-                  "Yes",
-                  "No"
-                ],
-                "behaviour": [
+                "columns": [
                   {
-                    "condition": "wasPositionVacant == \"Yes\"",
-                    "type": "enable"
-                  }
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "noRecruitmentProcess",
-                "behaviour": [
+                    "dataType": "number",
+                    "name": "numberOfSaf",
+                    "description": "",
+                    "validate": "required,min[0]"
+                  },
                   {
-                    "condition": "yesPositionVacant == \"No\"",
-                    "type": "enable"
+                    "dataType": "text",
+                    "name": "fullOrPartTime",
+                    "constraints": [
+                      "Full-time",
+                      "Part-time"
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "numberOfFteEachPos",
+                    "description": "Note: Full-time recorded as 1. Part-time recorded as 0.6, 0.5 or 0.25",
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "numberOfFteInvoicedFor",
+                    "description": "",
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "wasPositionVacant",
+                    "constraints": [
+                      "Yes",
+                      "No"
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "name": "yesPositionVacant",
+                    "dataType": "text",
+                    "constraints": [
+                      "Yes",
+                      "No"
+                    ],
+                    "behaviour": [
+                      {
+                        "condition": "wasPositionVacant == \"Yes\"",
+                        "type": "enable"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "noRecruitmentProcess",
+                    "behaviour": [
+                      {
+                        "condition": "yesPositionVacant == \"No\"",
+                        "type": "enable"
+                      }
+                    ],
+                    "validate": "maxSize[300]"
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "expectedDatePositionFill"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "coveredInterimPosition",
+                    "validate": "maxSize[100]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "deliveryOrSubcontractorEmployed",
+                    "constraints": [
+                      "Delivery partner",
+                      "Subcontractor"
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "name": "subcontractorEmployed",
+                    "dataType": "text",
+                    "behaviour": [
+                      {
+                        "condition": "deliveryOrSubcontractorEmployed == \"Subcontractor\"",
+                        "type": "enable"
+                      }
+                    ]
                   }
                 ],
-                "validate": "maxSize[300]"
-              },
-              {
-                "dataType": "date",
-                "name": "expectedDatePositionFill"
-              },
-              {
-                "dataType": "text",
-                "name": "coveredInterimPosition",
-                "validate": "maxSize[100]"
-              },
-              {
-                "dataType": "text",
-                "name": "deliveryOrSubcontractorEmployed",
-                "constraints": [
-                  "Delivery partner",
-                  "Subcontractor"
-                ],
-                "validate": "required"
-              },
-              {
-                "name": "subcontractorEmployed",
-                "dataType": "text",
-                "behaviour": [
-                  {
-                    "condition": "deliveryOrSubcontractorEmployed == \"Subcontractor\"",
-                    "type": "enable"
-                  }
-                ]
-              },
-              {
-                "dataType": "number",
-                "name": "totalPeopleDelivering",
-                "description": "",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "number",
-                "name": "totalFirstNationDelivering",
-                "description": "",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "text",
-                "name": "noFirstNationParticipant",
-                "validate": "maxSize[300]"
-              },
-              {
-                "dataType": "text",
-                "name": "withFirstNationParticipant",
-                "validate": "maxSize[300]"
+                "dataType": "list",
+                "name": "sustainableAgricultureFacilitators"
               }
             ],
             "dataType": "list",
-            "name": "sustainableAgricultureFacilitators"
+            "name": "safAreasControlled"
+          },
+          {
+            "dataType": "number",
+            "name": "totalNumberFtes",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(safAreasControlled, \"relatedOutcomes\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalNumberFtesInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalNumberFtes",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -34952,6 +35046,15 @@
         "title": "Sustainable Agriculture Facilitators",
         "viewModel": [
           {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Participation information</h3>"
+              }
+            ]
+          },
+          {
             "columns": [
               {
                 "width": "10%",
@@ -34962,7 +35065,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -34978,7 +35081,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -35000,22 +35103,133 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
-            "source": "",
+            "disableTableUpload": true,
+            "source": "participationInformationTable",
             "type": "table"
           },
           {
             "type": "row",
             "items": [
               {
-                "source": "<b>Please note to add a row for the different employment category and FTE.</b>",
-                "type": "literal"
+                "type": "literal",
+                "source": "<h3>Totals Summary</h3>"
               }
             ]
           },
           {
-            "type": "section",
+            "type": "row",
             "items": [
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(i) Total number of FTE for this reporting period",
+                        "source": "totalNumberFtes",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(ii) Total number of FTE invoiced for this reporting period",
+                        "source": "totalNumberFtesInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "addRowText": "Add a new controlled area",
+            "userAddedRows": true,
+            "source": "safAreasControlled",
+            "type": "repeat",
+            "items": [
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "relatedOutcomes",
+                            "type": "selectOne",
+                            "preLabel": "Which outcome statement/s does this activity relate to?"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "investmentPriorities2",
+                            "preLabel": "Which investment priority does this activity relate to?",
+                            "type": "select2Many"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "otherInvestmentPriority",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "invoicingThisActivity",
+                            "preLabel": "Are you invoicing for this activity in this reporting period?",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "source": "<b>Please note to add a row for the different employment category and FTE.</b>",
+                    "type": "literal"
+                  }
+                ]
+              },
               {
                 "columns": [
                   {
@@ -35025,7 +35239,7 @@
                     "type": "number"
                   },
                   {
-                    "width": "5%",
+                    "width": "10%",
                     "source": "fullOrPartTime",
                     "title": "Full time or part-time employment",
                     "type": "selectOne"
@@ -35043,19 +35257,19 @@
                     "type": "number"
                   },
                   {
-                    "width": "5%",
+                    "width": "10%",
                     "source": "wasPositionVacant",
                     "title": "Was the position(s) vacant for any amount of time during the reporting period (not including leave)",
                     "type": "selectOne"
                   },
                   {
-                    "width": "5%",
+                    "width": "10%",
                     "source": "yesPositionVacant",
                     "title": "If yes, is there a recruitment process being run?",
                     "type": "selectOne"
                   },
                   {
-                    "width": "10%",
+                    "width": "15%",
                     "source": "noRecruitmentProcess",
                     "title": "If no, what are the reasons?",
                     "type": "text"
@@ -35073,46 +35287,28 @@
                     "type": "text"
                   },
                   {
-                    "width": "5%",
+                    "width": "10%",
                     "source": "deliveryOrSubcontractorEmployed",
                     "title": "Is the position employed by delivery partner or subcontractor?",
                     "type": "selectOne"
                   },
                   {
-                    "width": "5%",
+                    "width": "10%",
                     "source": "subcontractorEmployed",
                     "title": "If employed by subcontractor, please provide name of subcontractor",
                     "type": "text"
-                  },
-                  {
-                    "width": "5%",
-                    "source": "totalPeopleDelivering",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)",
-                    "type": "number"
-                  },
-                  {
-                    "width": "5%",
-                    "source": "totalFirstNationDelivering",
-                    "title": "Total number of First Nations people delivering this service",
-                    "type": "number"
-                  },
-                  {
-                    "width": "10%",
-                    "source": "noFirstNationParticipant",
-                    "title": "If no First Nations people participated in the delivery of this service, what are the reasons?",
-                    "type": "text"
-                  },
-                  {
-                    "width": "10%",
-                    "source": "withFirstNationParticipant",
-                    "title": "If there was First Nations people participation, please provide details",
-                    "type": "text"
                   }
                 ],
-                "userAddedRows": true,
+                "userAddedRows": false,
+                "disableTableUpload": true,
                 "source": "sustainableAgricultureFacilitators",
                 "type": "table"
-              },
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "items": [
               {
                 "type": "row",
                 "items": [
