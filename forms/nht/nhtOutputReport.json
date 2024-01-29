@@ -32263,82 +32263,169 @@
       "template": {
         "dataModel": [
           {
-            "dataType": "text",
-            "name": "participationIndividualsOrGroups",
-            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
-            "constraints": [
-              "Individuals",
-              "Groups"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "participationIndividualNumber",
-            "behaviour": [
+            "columns": [
               {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
+                "dataType": "text",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
               }
             ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "participationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "firstNationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "firstNationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "participationDetails",
-            "validate": "maxSize[3000]"
+            "dataType": "list",
+            "name": "participationInformationTable"
           },
           {
             "columns": [
+              {
+                "name": "relatedOutcomes",
+                "dataType": "text",
+                "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "label",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "url": "/project/outcomesByScores",
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        },
+                        {
+                          "expression": "scores",
+                          "name": "scoreIds",
+                          "type": "computed"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "name": "investmentPriorities2",
+                "dataType": "stringList",
+                "validate": "required",
+                "constraints": {
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        }
+                      ],
+                      "url": "/project/listProjectInvestmentPriorities/"
+                    }
+                  }
+                }
+              },
+              {
+                "dataType": "text",
+                "name": "otherInvestmentPriority",
+                "behaviour": [
+                  {
+                    "type": "enable",
+                    "condition": "\"Other\" in investmentPriorities2"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicingThisActivity",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
+                "validate": "required"
+              },
               {
                 "dataType": "text",
                 "name": "initialOrFollowup",
@@ -32355,90 +32442,343 @@
               },
               {
                 "dataType": "feature",
-                "name": "siteOfIntervention"
+                "name": "sitesTreatedSource"
               },
               {
-                "defaultValue": {
-                  "type": "computed",
-                  "expression": "$geom.areaHa(siteOfIntervention)"
+                "computed": {
+                  "expression": "$geom.areaHa(sitesTreatedSource)"
                 },
                 "dataType": "number",
-                "name": "areaOfInterventionHa",
-                "validate": [
+                "name": "siteCalculatedAreaHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "behaviour": [
                   {
-                    "rule": "min",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(siteOfIntervention)*0.9"
+                    "condition": "areaInvoicedHa > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The treated area must be mapped",
+                      "validate": "required,min[0.0001]"
                     }
-                  },
+                  }
+                ]
+              },
+              {
+                "computed": {
+                  "expression": "$geom.lengthKm(sitesTreatedSource)"
+                },
+                "dataType": "number",
+                "name": "siteCalculatedLengthKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "behaviour": [
                   {
-                    "rule": "max",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(siteOfIntervention)*1.1"
+                    "condition": "lengthInvoicedKm > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The treated length must be mapped",
+                      "validate": "required,min[0.0001]"
                     }
                   }
                 ]
               },
               {
                 "defaultValue": {
-                  "type": "computed",
-                  "expression": "$geom.lengthKm(siteOfIntervention)"
+                  "expression": "$geom.areaHa(sitesTreatedSource)",
+                  "type": "computed"
                 },
                 "dataType": "number",
-                "name": "lengthOfInterventionKm",
+                "name": "areaTreatedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "defaultValue": {
+                  "expression": "$geom.lengthKm(sitesTreatedSource)",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "lengthTreatedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "number",
+                "name": "areaInvoicedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
                 "validate": [
                   {
-                    "rule": "min",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.lengthKm(siteOfIntervention)*0.9"
-                    }
+                    "rule": "required"
                   },
                   {
-                    "rule": "max",
+                    "rule": "min[0]"
+                  },
+                  {
                     "param": {
-                      "type": "computed",
-                      "expression": "$geom.lengthKm(siteOfIntervention)*1.1"
-                    }
+                      "expression": "areaTreatedHa",
+                      "type": "computed"
+                    },
+                    "rule": "max"
                   }
                 ]
               },
               {
-                "dataType": "feature",
-                "name": "relocationSite",
-                "description": "If translocation is required please map site."
-              },
-              {
-                "defaultValue": {
-                  "type": "computed",
-                  "expression": "$geom.areaHa(relocationSite)"
-                },
                 "dataType": "number",
-                "name": "areaOfRelocationSiteHa",
+                "name": "lengthInvoicedKm",
+                "units": "km",
+                "decimalPlaces": 3,
                 "validate": [
                   {
-                    "rule": "min",
-                    "param": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(relocationSite)*0.9"
-                    }
+                    "rule": "required"
                   },
                   {
-                    "rule": "max",
+                    "rule": "min[0]"
+                  },
+                  {
                     "param": {
-                      "type": "computed",
-                      "expression": "$geom.areaHa(relocationSite)*1.1"
-                    }
+                      "expression": "lengthTreatedKm",
+                      "type": "computed"
+                    },
+                    "rule": "max"
                   }
                 ]
               },
               {
                 "dataType": "text",
-                "name": "purposeOfIntervention",
-                "description": "This field may be used to list What type of intervention is required. A list of multiple interventions need to be separated with a ';'.",
-                "validate": "required,maxSize[500]"
+                "name": "mappingNotAlignedReason",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaTreatedHa, siteCalculatedAreaHa, 0.1) and within(lengthTreatedKm, siteCalculatedLengthKm, 0.1))",
+                    "type": "if"
+                  }
+                ],
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == mappingNotAlignedReason",
+                    "type": "if"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualReason",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthTreatedKm, 2) != roundTo(lengthInvoicedKm, 2)",
+                    "type": "visible"
+                  }
+                ],
+                "constraints": [
+                  "Work was undertaken over a greater area than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualComments",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == invoicedNotActualReason",
+                    "type": "if"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaTreatedHa, siteCalculatedAreaHa, 0.1) and within(lengthTreatedKm, siteCalculatedLengthKm, 0.1))",
+                    "type": "if"
+                  }
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "feature",
+                "name": "sitesTreatedRelease"
+              },
+              {
+                "computed": {
+                  "expression": "$geom.areaHa(sitesTreatedRelease)"
+                },
+                "dataType": "number",
+                "name": "siteCalculatedAreaHaRelease",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "areaInvoicedHaRelease > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The treated area must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "computed": {
+                  "expression": "$geom.lengthKm(sitesTreatedRelease)"
+                },
+                "dataType": "number",
+                "name": "siteCalculatedLengthKmRelease",
+                "units": "km",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "lengthInvoicedKmRelease > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The treated length must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "defaultValue": {
+                  "expression": "$geom.areaHa(sitesTreatedRelease)",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "areaTreatedHaRelease",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "defaultValue": {
+                  "expression": "$geom.lengthKm(sitesTreatedRelease)",
+                  "type": "computed"
+                },
+                "dataType": "number",
+                "name": "lengthTreatedKmRelease",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "number",
+                "name": "areaInvoicedHaRelease",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "areaTreatedHaRelease",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "lengthInvoicedKmRelease",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "lengthTreatedKmRelease",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReasonRelease",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaTreatedHaRelease, siteCalculatedAreaHaRelease, 0.1) and within(lengthTreatedKmRelease, siteCalculatedLengthKmRelease, 0.1))",
+                    "type": "if"
+                  }
+                ],
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedCommentsRelease",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == mappingNotAlignedReasonRelease",
+                    "type": "if"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualReasonRelease",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(areaTreatedHaRelease, 2) != roundTo(areaInvoicedHaRelease, 2) or roundTo(lengthTreatedKmRelease, 2) != roundTo(lengthInvoicedKmRelease, 2)",
+                    "type": "visible"
+                  }
+                ],
+                "constraints": [
+                  "Work was undertaken over a greater area than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualCommentsRelease",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == invoicedNotActualReasonRelease",
+                    "type": "if"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetailsRelease",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaTreatedHaRelease, siteCalculatedAreaHaRelease, 0.1) and within(lengthTreatedKmRelease, siteCalculatedLengthKmRelease, 0.1))",
+                    "type": "if"
+                  }
+                ],
+                "validate": "required"
               },
               {
                 "columns": [
@@ -32453,64 +32793,6 @@
                     "name": "activitiesEndDate",
                     "description": "Specific the dates these events were held on.",
                     "validate": "required"
-                  },
-                  {
-                    "name": "relatedOutcomes",
-                    "dataType": "text",
-                    "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
-                    "validate": "required",
-                    "constraints": {
-                      "textProperty": "label",
-                      "valueProperty": "label",
-                      "type": "pre-populated",
-                      "config": {
-                        "source": {
-                          "url": "/project/outcomesByScores",
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            },
-                            {
-                              "expression": "scores",
-                              "name": "scoreIds",
-                              "type": "computed"
-                            }
-                          ]
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "name": "investmentPriorities2",
-                    "dataType": "stringList",
-                    "validate": "required",
-                    "constraints": {
-                      "type": "pre-populated",
-                      "config": {
-                        "source": {
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            }
-                          ],
-                          "url": "/project/listProjectInvestmentPriorities/"
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "otherInvestmentPriority",
-                    "behaviour": [
-                      {
-                        "type": "enable",
-                        "condition": "\"Other\" in investmentPriorities2"
-                      }
-                    ]
                   },
                   {
                     "dataType": "species",
@@ -32531,6 +32813,12 @@
                     "dataType": "number",
                     "name": "numberOfIndividualsInvolved",
                     "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "purposeOfIntervention",
+                    "description": "This field may be used to list What type of intervention is required. A list of multiple interventions need to be separated with a ';'.",
+                    "validate": "required,maxSize[500]"
                   }
                 ],
                 "dataType": "list",
@@ -32539,6 +32827,52 @@
             ],
             "dataType": "list",
             "name": "interventionDetails"
+          },
+          {
+            "dataType": "number",
+            "name": "totalNumberInterventionsInitial",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(interventionDetails, \"initialOrFollowup == 'Initial' ? numberOfInterventions : 0\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalNumberInterventionsInitialInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalNumberInterventionsInitial",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 0
+          },
+          {
+            "dataType": "number",
+            "name": "totalNumberInterventionsFollowUp",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(interventionDetails, \"initialOrFollowup == 'Follow-up' ? numberOfInterventions : 0\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalNumberInterventionsFollowUpInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalNumberInterventionsFollowUp",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -32581,6 +32915,15 @@
         "title": "Undertaking Emergency Interventions to Prevent Extinctions",
         "viewModel": [
           {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Participation information</h3>"
+              }
+            ]
+          },
+          {
             "columns": [
               {
                 "width": "10%",
@@ -32591,7 +32934,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -32607,7 +32950,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -32629,32 +32972,32 @@
               }
             ],
             "userAddedRows": false,
-            "disableTableUpload": false,
-            "source": "",
+            "disableTableUpload": true,
+            "source": "participationInformationTable",
             "type": "table"
           },
           {
-            "type": "section",
+            "type": "row",
             "items": [
               {
-                "addRowText": "Add intervention site",
-                "userAddedRows": true,
-                "source": "interventionDetails",
-                "type": "repeat",
+                "type": "literal",
+                "source": "<h3>Totals Summary</h3>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
                 "items": [
                   {
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "Initial or follow-up activity?",
-                        "css": "span2",
-                        "source": "initialOrFollowup",
-                        "type": "selectOne"
-                      },
-                      {
-                        "preLabel": "Number of interventions",
-                        "css": "span2",
-                        "source": "numberOfInterventions",
+                        "preLabel": "(i) Total number of interventions (initial) for this reporting period",
+                        "source": "totalNumberInterventionsInitial",
                         "type": "number"
                       }
                     ]
@@ -32663,132 +33006,145 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "Site/s where interventions occurred (source site)",
-                        "css": "span2",
-                        "source": "siteOfIntervention",
-                        "type": "feature"
-                      },
-                      {
-                        "preLabel": "Actual area (ha) where interventions occurred",
-                        "css": "span2",
-                        "source": "areaOfInterventionHa",
+                        "preLabel": "(ii) Total number of interventions (initial) <u><i>invoiced</i></u> for this reporting period",
+                        "source": "totalNumberInterventionsInitialInvoiced",
                         "type": "number"
-                      },
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
                       {
-                        "preLabel": "Actual area (ha) where interventions were relocated to (release site)",
-                        "css": "span2",
-                        "source": "relocationSite",
-                        "type": "feature"
-                      },
-                      {
-                        "preLabel": "Actual area (ha) where interventions occurred",
-                        "css": "span2",
-                        "source": "areaOfRelocationSiteHa",
+                        "preLabel": "(iii) Total number of interventions (follow-up) for this reporting period for this reporting period",
+                        "source": "totalNumberInterventionsFollowUp",
                         "type": "number"
-                      },
-                      {
-                        "preLabel": "Type and goal of intervention",
-                        "css": "span3",
-                        "source": "purposeOfIntervention",
-                        "type": "textarea",
-                        "rows": 3
                       }
                     ]
                   },
                   {
-                    "columns": [
+                    "type": "row",
+                    "items": [
                       {
-                        "title": "Activity start date",
-                        "source": "activitiesStartDate",
-                        "type": "date",
-                        "width": "10%"
-                      },
+                        "preLabel": "(iv) Total number of interventions (follow-up) <u><i>invoiced</i></u> for this reporting period",
+                        "source": "totalNumberInterventionsFollowUpInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "addRowText": "Add intervention site",
+            "userAddedRows": true,
+            "source": "interventionDetails",
+            "type": "repeat",
+            "items": [
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
                       {
-                        "title": "Activity end date",
-                        "source": "activitiesEndDate",
-                        "type": "date",
-                        "width": "10%"
-                      },
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "relatedOutcomes",
+                            "type": "selectOne",
+                            "preLabel": "Which outcome statement/s does this activity relate to?"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
                       {
-                        "width": "15%",
-                        "source": "relatedOutcomes",
-                        "type": "selectOne",
-                        "title": "Which outcome statement/s relates to this survey?"
-                      },
-                      {
-                        "width": "20%",
-                        "type": "col",
-                        "title": "Which investment priority does this activity relate to?",
+                        "type": "row",
                         "items": [
                           {
                             "source": "investmentPriorities2",
+                            "preLabel": "Which investment priority does this activity relate to?",
                             "type": "select2Many"
-                          },
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
                           {
                             "source": "otherInvestmentPriority",
                             "type": "text"
                           }
                         ]
-                      },
-                      {
-                        "width": "25%",
-                        "source": "species",
-                        "title": "Targeted species",
-                        "type": "speciesSelect"
-                      },
-                      {
-                        "width": "10%",
-                        "source": "participationIndividualsOrGroups",
-                        "title": "Group or individual",
-                        "type": "selectOne"
-                      },
-                      {
-                        "width": "10%",
-                        "source": "numberOfIndividualsInvolved",
-                        "type": "number",
-                        "title": "Number of groups / individuals"
                       }
-                    ],
-                    "userAddedRows": true,
-                    "source": "interventionSpecies",
-                    "type": "table"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "Optionally attach photos",
-                    "source": "photographicEvidence",
-                    "type": "image"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "Clarification, if needed",
-                    "type": "textarea",
-                    "rows": 4,
-                    "css": "span8",
-                    "source": "comments",
-                    "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
+                    ]
                   },
                   {
-                    "preLabel": "Data have been uploaded",
-                    "source": "dataUploaded",
-                    "type": "boolean"
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "invoicingThisActivity",
+                            "preLabel": "Are you invoicing for this activity in this reporting period?",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "css": "border-bottom",
+                "items": [
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "initialOrFollowup",
+                            "preLabel": "Initial or follow-up activity?",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "numberOfInterventions",
+                            "preLabel": "Number of interventions",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               },
@@ -32796,26 +33152,324 @@
                 "type": "row",
                 "items": [
                   {
-                    "preLabel": "",
-                    "source": "projectAssuranceDetails",
-                    "type": "textarea",
-                    "rows": 4,
-                    "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
+                    "css": "span2 col-border-right",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Site/s where interventions occurred (source site)",
+                            "source": "sitesTreatedSource",
+                            "type": "feature"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "readonly": true,
+                            "source": "siteCalculatedAreaHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "readonly": true,
+                            "source": "siteCalculatedLengthKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Please attach mapping details",
+                            "source": "extraMappingDetails",
+                            "type": "document"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span2 col-border-right",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Actual area (ha) where interventions occurred",
+                            "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
+                            "source": "areaTreatedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "lengthTreatedKm",
+                            "type": "number",
+                            "validate": "required",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for actual being different to mapped amount",
+                            "source": "mappingNotAlignedReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "mappingNotAlignedComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span2 col-border-right",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Site/s where interventions were released (release site)",
+                            "source": "sitesTreatedRelease",
+                            "type": "feature"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "readonly": true,
+                            "source": "siteCalculatedAreaHaRelease",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "readonly": true,
+                            "source": "siteCalculatedLengthKmRelease",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Please attach mapping details",
+                            "source": "extraMappingDetailsRelease",
+                            "type": "document"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span2 col-border-right",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Actual area (ha) where interventions were relocated to (release site)",
+                            "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
+                            "source": "areaTreatedHaRelease",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "lengthTreatedKmRelease",
+                            "type": "number",
+                            "validate": "required",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for actual being different to mapped amount",
+                            "source": "mappingNotAlignedReasonRelease",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "mappingNotAlignedCommentsRelease",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               },
               {
-                "type": "table",
-                "source": "assuranceDocuments",
-                "userAddedRows": true,
-                "disableTableUpload": true,
                 "columns": [
                   {
-                    "title": "Attached documents",
-                    "source": "attachments",
-                    "type": "document"
+                    "width": "25%",
+                    "source": "species",
+                    "title": "Targeted species",
+                    "type": "speciesSelect"
+                  },
+                  {
+                    "title": "Activity start date",
+                    "source": "activitiesStartDate",
+                    "type": "date",
+                    "width": "10%"
+                  },
+                  {
+                    "title": "Activity end date",
+                    "source": "activitiesEndDate",
+                    "type": "date",
+                    "width": "10%"
+                  },
+                  {
+                    "width": "10%",
+                    "source": "participationIndividualsOrGroups",
+                    "title": "Group or individual",
+                    "type": "selectOne"
+                  },
+                  {
+                    "width": "10%",
+                    "source": "numberOfIndividualsInvolved",
+                    "type": "number",
+                    "title": "Number of groups / individuals"
+                  },
+                  {
+                    "width": "35%",
+                    "source": "purposeOfIntervention",
+                    "type": "textarea",
+                    "title": "Type and goal of intervention"
                   }
-                ]
+                ],
+                "userAddedRows": false,
+                "disableTableUpload": true,
+                "source": "interventionSpecies",
+                "type": "table"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Optionally attach photos",
+                "source": "photographicEvidence",
+                "type": "image"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Clarification, if needed",
+                "type": "textarea",
+                "rows": 4,
+                "css": "span8",
+                "source": "comments",
+                "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
+              },
+              {
+                "preLabel": "Data have been uploaded",
+                "source": "dataUploaded",
+                "type": "boolean"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "",
+                "source": "projectAssuranceDetails",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
+              }
+            ]
+          },
+          {
+            "type": "table",
+            "source": "assuranceDocuments",
+            "userAddedRows": true,
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "title": "Attached documents",
+                "source": "attachments",
+                "type": "document"
               }
             ]
           }
