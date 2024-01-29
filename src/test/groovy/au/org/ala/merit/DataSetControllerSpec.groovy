@@ -28,7 +28,7 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
 
     void "The model for the create page has information about the project"() {
         setup:
-        Map project = [projectId:'p1']
+        Map project = [projectId:'p1', custom:[dataSets:[[name:'d1'], [name:'d2']]]]
         Map programConfig = [program:[name:"program 1"]]
 
         when:
@@ -45,7 +45,7 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         model == [project:project, projectId:'p1', programName:"program 1", supportsOutcomeTargets:false,
                   priorities:["p1"], outcomes:["1", "2"], projectOutcomes:[],
                     projectBaselines:[[label:"b1 - a baseline", value:"b1"]],
-                    projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']]]
+                    projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']], dataSetNames:['d1', 'd2']]
 
     }
 
@@ -90,7 +90,7 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"], supportsOutcomeTargets: true,
                   outcomes:["1", "2"], projectOutcomes:[], dataSet:existingDataSets[1],
                   projectBaselines:[[label:"b1 - a baseline", value:"b1"]],
-                  projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']]]
+                  projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']], dataSetNames: ['data set 1', 'data set 3']]
     }
 
     void "The save method delegates to the projectService"() {
@@ -155,6 +155,6 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"], supportsOutcomeTargets: false,
                   outcomes:["1", "2"], projectOutcomes:[], dataSet:existingDataSets[1],
                   projectBaselines:[[label:"b1 - a baseline", value:"b1"]],
-                  projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']]]
+                  projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']], dataSetNames: ['data set 1', 'data set 2', 'data set 3']]
     }
 }

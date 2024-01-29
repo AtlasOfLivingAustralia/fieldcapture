@@ -98,7 +98,10 @@ class DataSetController {
 
         Map projectData = projectData(id)
         Map dataSet = projectData.project?.custom?.dataSets?.find{it.dataSetId == dataSetId}
-        projectData.dataSetNames?.remove(dataSet.name)
+        if (dataSet) {
+            projectData.dataSetNames?.remove(dataSet.name)
+        }
+
         if (!dataSet) {
             render status: HttpStatus.NOT_FOUND
         }
