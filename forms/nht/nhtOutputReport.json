@@ -732,51 +732,166 @@
         "modelName": "NHT - Baseline data",
         "dataModel": [
           {
-            "dataType": "list",
-            "name": "baselineDetails",
             "columns": [
               {
                 "dataType": "text",
-                "name": "datasetName",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
                 "validate": "required"
               },
               {
-                "name": "projectBaseline",
-                "dataType": "text",
-                "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
-                "validate": "required",
-                "constraints": {
-                  "textProperty": "baseline",
-                  "valueProperty": "baseline",
-                  "type": "pre-populated",
-                  "excludePath": "baselineDetails.projectBaseline",
-                  "config": {
-                    "source": {
-                      "context-path": "owner.custom.details.baseline.rows"
-                    }
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
                   }
-                }
-              },
-              {
-                "name": "datasetSupports",
-                "dataType": "text",
-                "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
-                "validate": "required",
-                "constraints": {
-                  "textProperty": "name",
-                  "valueProperty": "dataSetId",
-                  "type": "pre-populated",
-                  "config": {
-                    "source": {
-                      "context-path": "owner.custom.dataSets"
-                    }
-                  }
-                }
+                ],
+                "validate": "required,min[0]"
               },
               {
                 "dataType": "text",
-                "name": "baselineDescription",
-                "validate": "required,maxSize[500]"
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
+              }
+            ],
+            "dataType": "list",
+            "name": "participationInformationTable"
+          },
+          {
+            "columns": [
+              {
+                "dataType": "list",
+                "name": "baselineDetails",
+                "columns": [
+                  {
+                    "dataType": "text",
+                    "name": "datasetName",
+                    "validate": "required"
+                  },
+                  {
+                    "name": "projectBaseline",
+                    "dataType": "text",
+                    "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "baseline",
+                      "valueProperty": "baseline",
+                      "type": "pre-populated",
+                      "excludePath": "baselineDetailsControlled.baselineDetails.projectBaseline",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.baseline.rows"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "monitoringIndicator",
+                    "dataType": "text",
+                    "description": "",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "data1",
+                      "valueProperty": "data1",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.details.monitoring.rows"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "name": "datasetSupports",
+                    "dataType": "text",
+                    "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
+                    "validate": "required",
+                    "constraints": {
+                      "textProperty": "name",
+                      "valueProperty": "dataSetId",
+                      "type": "pre-populated",
+                      "config": {
+                        "source": {
+                          "context-path": "owner.custom.dataSets"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "purpose",
+                    "validate": "required,maxSize[500]"
+                  }
+                ]
               },
               {
                 "name": "relatedOutcomes",
@@ -807,19 +922,75 @@
                 }
               },
               {
+                "name": "investmentPriorities2",
+                "dataType": "stringList",
+                "validate": "required",
+                "constraints": {
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        }
+                      ],
+                      "url": "/project/listProjectInvestmentPriorities/"
+                    }
+                  }
+                }
+              },
+              {
                 "dataType": "text",
-                "description": "",
-                "name": "outcomeStatementNew"
+                "name": "otherInvestmentPriority",
+                "behaviour": [
+                  {
+                    "type": "enable",
+                    "condition": "\"Other\" in investmentPriorities2"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicingThisActivity",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
+                "validate": "required"
               }
-            ]
+            ],
+            "dataType": "list",
+            "name": "baselineDetailsControlled"
           },
           {
             "name": "numberBaselineDataSets",
             "type": "number",
+            "decimalPlaces": 0
+          },
+          {
+            "dataType": "number",
+            "name": "totalNumberBaselineDatasets",
+            "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(baselineDetails, \"projectBaseline\")"
+              "expression": "count(baselineDetailsControlled, \"relatedOutcomes\")"
             }
+          },
+          {
+            "dataType": "number",
+            "name": "totalNumberBaselineDatasetsInvoiced",
+            "validate": [
+              {
+                "param": {
+                  "expression": "totalNumberBaselineDatasets",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 0
           },
           {
             "dataType": "text",
@@ -856,17 +1027,186 @@
         ],
         "viewModel": [
           {
+            "type": "row",
             "items": [
               {
-                "preLabel": "Total number of baseline datasets synthesised and finalised:",
-                "noEdit": true,
-                "type": "number",
-                "source": "numberBaselineDataSets"
+                "type": "literal",
+                "source": "<h3>Participation information</h3>"
+              }
+            ]
+          },
+          {
+            "columns": [
+              {
+                "width": "10%",
+                "source": "participationIndividualsOrGroups",
+                "title": "Are individuals or groups delivering this service?",
+                "type": "selectOne"
+              },
+              {
+                "width": "20%",
+                "type": "col",
+                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
+                "items": [
+                  {
+                    "source": "participationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "participationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "width": "20%",
+                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
+                "items": [
+                  {
+                    "source": "firstNationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "firstNationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "source": "participationDetails",
+                "rows": 4,
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved.",
+                "type": "textarea"
+              }
+            ],
+            "userAddedRows": false,
+            "disableTableUpload": true,
+            "source": "participationInformationTable",
+            "type": "table"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Totals Summary</h3>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(i) Total number of baseline datasets synthesised and finalised for this reporting period",
+                        "source": "totalNumberBaselineDatasets",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(ii) Total number of baseline datasets synthesised and finalised invoiced for this reporting period",
+                        "source": "totalNumberBaselineDatasetsInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "addRowText": "Add a new controlled area",
+            "userAddedRows": true,
+            "source": "baselineDetailsControlled",
+            "type": "repeat",
+            "items": [
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "relatedOutcomes",
+                            "type": "selectOne",
+                            "preLabel": "Which outcome statement/s does this activity relate to?"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "investmentPriorities2",
+                            "preLabel": "Which investment priority does this activity relate to?",
+                            "type": "select2Many"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "otherInvestmentPriority",
+                            "type": "text"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "invoicingThisActivity",
+                            "preLabel": "Are you invoicing for this activity in this reporting period?",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
               },
               {
                 "type": "table",
                 "source": "baselineDetails",
-                "userAddedRows": true,
+                "userAddedRows": false,
+                "disableTableUpload": true,
                 "columns": [
                   {
                     "source": "datasetName",
@@ -877,8 +1217,14 @@
                   {
                     "source": "projectBaseline",
                     "type": "selectOne",
-                    "width": "15%",
+                    "width": "20%",
                     "title": "Which Project Baseline are you reporting on?"
+                  },
+                  {
+                    "source": "monitoringIndicator",
+                    "type": "selectOne",
+                    "width": "20%",
+                    "title": "What monitoring indicator does the baseline?"
                   },
                   {
                     "source": "datasetSupports",
@@ -888,75 +1234,69 @@
                   },
                   {
                     "preLabel": "",
-                    "source": "baselineDescription",
+                    "source": "purpose",
                     "type": "textarea",
                     "width": "25%",
                     "rows": 3,
                     "placeholder": "",
-                    "title": "Briefly describe the baseline you have established under this service and its purpose."
-                  },
-                  {
-                    "source": "relatedOutcomes",
-                    "type": "selectOne",
-                    "width": "25%",
-                    "title": "Which outcome statement/s aligns with this Baseline Dataset?"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "Clarification, if needed",
-                    "type": "textarea",
-                    "rows": 4,
-                    "css": "span8",
-                    "source": "comments",
-                    "placeholder": "Clarification comments include information for your project manager about the service like:\n• any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
-                  },
-                  {
-                    "preLabel": "Data have been uploaded",
-                    "source": "dataUploaded",
-                    "type": "boolean"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "",
-                    "source": "projectAssuranceDetails",
-                    "type": "textarea",
-                    "rows": 4,
-                    "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "table",
-                "source": "assuranceDocuments",
-                "userAddedRows": true,
-                "disableTableUpload": true,
-                "columns": [
-                  {
-                    "title": "Attached documents",
-                    "source": "attachments",
-                    "type": "document"
+                    "title": "Purpose"
                   }
                 ]
               }
-            ],
-            "type": "section"
+            ]
+          },
+
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Clarification, if needed",
+                "type": "textarea",
+                "rows": 4,
+                "css": "span8",
+                "source": "comments",
+                "placeholder": "Clarification comments include information for your project manager about the service like:\n• any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
+              },
+              {
+                "preLabel": "Data have been uploaded",
+                "source": "dataUploaded",
+                "type": "boolean"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "",
+                "source": "projectAssuranceDetails",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
+              }
+            ]
+          },
+          {
+            "type": "table",
+            "source": "assuranceDocuments",
+            "userAddedRows": true,
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "title": "Attached documents",
+                "source": "attachments",
+                "type": "document"
+              }
+            ]
           }
         ]
       },
