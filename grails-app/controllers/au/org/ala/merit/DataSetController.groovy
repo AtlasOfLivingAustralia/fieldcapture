@@ -85,7 +85,11 @@ class DataSetController {
         }
         projectProtocols << [label:'Other', value:'other']
 
-        [projectId:projectId, programName:programName, supportsOutcomeTargets:config.supportsOutcomeTargets(), priorities:priorities, outcomes: outcomes, project:project, projectOutcomes:outcomeGroups, projectBaselines:projectBaselines, projectProtocols:projectProtocols]
+        List dataSetNames = project.custom?.dataSets?.collect{it.name}
+
+        [projectId:projectId, programName:programName, supportsOutcomeTargets:config.supportsOutcomeTargets(),
+         priorities:priorities, outcomes: outcomes, project:project, projectOutcomes:outcomeGroups,
+         projectBaselines:projectBaselines, projectProtocols:projectProtocols, dataSetNames:dataSetNames]
     }
 
     // Note that authorization is done against a project, so the project id must be supplied to the method.
@@ -94,6 +98,7 @@ class DataSetController {
 
         Map projectData = projectData(id)
         Map dataSet = projectData.project?.custom?.dataSets?.find{it.dataSetId == dataSetId}
+        projectData.dataSetNames?.remove(dataSet.name)
         if (!dataSet) {
             render status: HttpStatus.NOT_FOUND
         }
