@@ -242,7 +242,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
                 iat               : DateUtils.toSecondsSinceEpoch(new Date()),
                 jti               : "id",
                 email             : userDetails.email,
-                scope             : "openid profile ala roles"
+                scope             : "openid profile ala roles email"
         ]
         String idToken = new JwtGenerator(new RSASignatureConfiguration(pair)).generate(idTokenClaims)
         Map token = [:]
@@ -251,7 +251,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
         token.refresh_token = null
         token.token_type = "bearer"
         token.expires_in = 86400
-        token.scope = "openid profile ala roles"
+        token.scope = "openid profile ala roles email"
 
         stubFor(post(urlPathEqualTo("/cas/oidc/oidcAccessToken"))
                 .willReturn(aResponse()

@@ -141,6 +141,7 @@ describe("The data set summaries view models behave correctly", function () {
 
         expect(projectService.saveDataSet).toHaveBeenCalled();
         delete savedDataSet.attachValidation;
+        delete savedDataSet.uniqueName;
         expect(savedDataSet).toEqual(dataSet());
 
 

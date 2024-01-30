@@ -3,7 +3,7 @@
     <div class="form-group row">
         <label for="title" class="col-sm-5 col-form-label required">1. Dataset title</label>
         <div class="col-sm-7">
-            <input type="text" class="form-control" id="title" placeholder="" data-validation-engine="validate[required,maxSize[150]]" data-bind="value:name">
+            <input type="text" class="form-control" id="title" placeholder="" data-validation-engine="validate[required,maxSize[150],funcCall[uniqueName]]" data-bind="value:name">
         </div>
     </div>
     <div class="row form-subheading">

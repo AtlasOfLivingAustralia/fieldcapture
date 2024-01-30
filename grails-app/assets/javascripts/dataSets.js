@@ -165,7 +165,9 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.sizeUnknown = ko.observable(dataSet.sizeUnknown);
     self.format.subscribe(function(format) {
         if (!self.sizeInKB()) {
-            self.sizeUnknown(['Database Table', 'Database View', 'ESRI REST'].indexOf(format) >=0);
+             if (['Database Table', 'Database View', 'ESRI REST'].indexOf(format) >=0) {
+                 self.sizeUnknown(true);
+             }
         }
     });
     self.format(dataSet.format);
@@ -210,7 +212,15 @@ var DataSetViewModel = function(dataSet, projectService, options) {
         window.location.href = config.returnToUrl;
     }
 
+    self.uniqueName = function() {
+        var invalidNames = config.invalidNames || [];
+        if (invalidNames.indexOf(self.name()) >= 0) {
+            return "This name is used by another data set.  Please use a unique name";
+        }
+    }
+
     self.attachValidation = function () {
         $(config.validationContainerSelector).validationEngine();
+        window.uniqueName = self.uniqueName; // Setup the validation function for the name field.
     }
 };
