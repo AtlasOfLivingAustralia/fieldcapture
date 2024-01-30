@@ -11783,8 +11783,7 @@
                     "name": "otherEmsaProtocol",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
-                    },
-                    "validate": "required"
+                    }
                   },
                   {
                     "dataType": "text",
@@ -12841,8 +12840,7 @@
                     "name": "otherEmsaProtocol",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
-                    },
-                    "validate": "required"
+                    }
                   },
                   {
                     "dataType": "text",
@@ -14863,8 +14861,7 @@
                     "name": "otherEmsaProtocol",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
-                    },
-                    "validate": "required"
+                    }
                   },
                   {
                     "dataType": "text",
@@ -17163,8 +17160,7 @@
                     "name": "otherEmsaProtocol",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
-                    },
-                    "validate": "required"
+                    }
                   },
                   {
                     "dataType": "text",
@@ -22991,8 +22987,7 @@
                     "name": "otherEmsaProtocol",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
-                    },
-                    "validate": "required"
+                    }
                   },
                   {
                     "dataType": "text",
@@ -24158,8 +24153,7 @@
                     "name": "otherEmsaProtocol",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
-                    },
-                    "validate": "required"
+                    }
                   },
                   {
                     "dataType": "text",
@@ -30507,8 +30501,7 @@
                     "name": "otherEmsaProtocol",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
-                    },
-                    "validate": "required"
+                    }
                   },
                   {
                     "dataType": "text",
@@ -34932,8 +34925,7 @@
                     "name": "otherEmsaProtocol",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
-                    },
-                    "validate": "required"
+                    }
                   },
                   {
                     "dataType": "text",
