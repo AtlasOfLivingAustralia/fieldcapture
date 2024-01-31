@@ -15016,7 +15016,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
-            "validate": "required,min[0],max[1]",
+            "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(floraSurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
@@ -22688,7 +22688,7 @@
               {
                 "dataType": "number",
                 "name": "numberOfSurveysInvoiced",
-                "validate": "required,min[0],max[1]",
+                "validate": "required,min[0]",
                 "defaultValue": 1
               },
               {
@@ -23140,7 +23140,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
-            "validate": "required,min[0],max[1]",
+            "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(pestAnimalSurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
@@ -30226,7 +30226,7 @@
               {
                 "dataType": "number",
                 "name": "numberOfSurveysInvoiced",
-                "validate": "required,min[0],max[1]",
+                "validate": "required,min[0]",
                 "defaultValue": 1
               },
               {
@@ -30680,7 +30680,7 @@
           {
             "dataType": "number",
             "name": "numberOfSurveysInvoiced",
-            "validate": "required,min[0],max[1]",
+            "validate": "required,min[0]",
             "defaultValue": 1
           },
           {
@@ -33521,7 +33521,7 @@
               {
                 "dataType": "number",
                 "name": "numberOfSurveysInvoiced",
-                "validate": "required,min[0],max[1]",
+                "validate": "required,min[0]",
                 "defaultValue": 1
               },
               {
@@ -34613,7 +34613,7 @@
               {
                 "dataType": "number",
                 "name": "numberOfSurveysInvoiced",
-                "validate": "required,min[0],max[1]",
+                "validate": "required,min[0]",
                 "defaultValue": 1
               },
               {
