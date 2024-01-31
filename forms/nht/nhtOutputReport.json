@@ -1510,8 +1510,6 @@
           {
             "dataType": "number",
             "name": "totalMaterialsPublishedInvoiced",
-            "validate": "required,min[0]",
-            "defaultValue": 1,
             "validate": [
               {
                 "param": {
@@ -2227,7 +2225,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total number of engagement activities invoiced for this reporting period",
+                        "preLabel": "(ii) Total number of engagement activities <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalNumberEngagementHeldInvoiced",
                         "type": "number"
                       }
@@ -3179,8 +3177,7 @@
                 },
                 "rule": "max"
               }
-            ],
-            "defaultValue": 1
+            ]
           },
           {
             "dataType": "number",
@@ -3202,8 +3199,7 @@
                 },
                 "rule": "max"
               }
-            ],
-            "defaultValue": 1
+            ]
           },
           {
             "dataType": "number",
@@ -3225,8 +3221,7 @@
                 },
                 "rule": "max"
               }
-            ],
-            "defaultValue": 1
+            ]
           },
           {
             "dataType": "text",
@@ -3360,7 +3355,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total number of structures that control access invoiced for this reporting period",
+                        "preLabel": "(ii) Total number of structures that control access <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalStructuresInstalledInvoiced",
                         "type": "number"
                       }
@@ -3386,7 +3381,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iv) Total length (km) of structures installed that control access invoiced for this reporting period",
+                        "preLabel": "(iv) Total length (km) of structures installed that control access <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalLengthStructuresInstalledInvoiced",
                         "type": "number"
                       }
@@ -3412,7 +3407,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vi) Total area (ha) of structures installed that control access invoiced for this reporting period",
+                        "preLabel": "(vi) Total area (ha) of structures installed that control access <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalAreaStructuresInstalledInvoiced",
                         "type": "number"
                       }
@@ -4187,7 +4182,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1)) or roundTo(areaControlledHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "condition": "not (within(areaControlledHa, siteCalculatedAreaHa, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -4614,8 +4609,7 @@
                 },
                 "rule": "max"
               }
-            ],
-            "defaultValue": 1
+            ]
           },
           {
             "dataType": "number",
@@ -4637,8 +4631,7 @@
                 },
                 "rule": "max"
               }
-            ],
-            "defaultValue": 1
+            ]
           },
           {
             "dataType": "number",
@@ -4660,8 +4653,7 @@
                 },
                 "rule": "max"
               }
-            ],
-            "defaultValue": 1
+            ]
           },
           {
             "dataType": "number",
@@ -4683,8 +4675,7 @@
                 },
                 "rule": "max"
               }
-            ],
-            "defaultValue": 1
+            ]
           },
           {
             "dataType": "text",
@@ -18318,6 +18309,15 @@
             "dataType": "list",
             "name": "potentialSiteSurveys",
             "minSize": 1
+          },
+          {
+            "dataType": "number",
+            "name": "totalPotentialSites",
+            "validate": "required,min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(potentialSiteSurveys, \"relatedOutcomes\")"
+            }
           },
           {
             "dataType": "number",
