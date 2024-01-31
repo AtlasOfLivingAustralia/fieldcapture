@@ -217,7 +217,7 @@
         <label for="endDate" class="col-sm-5 col-form-label required">15. Last collection date.</label>
         <div class="col-sm-3">
             <div class="input-group input-append">
-                <fc:datePicker type="text"  bs4="true" class="form-control" id="endDate" placeholder="" data-validation-engine="validate[required,future[startDate]]" data-bind="datepicker:endDate.date, disable:dataCollectionOngoing" targetField="" autocomplete="off"/>
+                <fc:datePicker type="text"  bs4="true" class="form-control" id="endDate" placeholder="" data-bind="jqueryValidationEngine:{validationFunction:validateEndDate}, datepicker:endDate.date, disable:dataCollectionOngoing" targetField="" autocomplete="off"/>
 
             </div>
         </div>
