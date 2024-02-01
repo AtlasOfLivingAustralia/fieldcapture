@@ -1504,7 +1504,7 @@
             "decimalPlaces": 0,
             "defaultValue": 1,
             "computed": {
-              "expression": "count(communicationMaterials, \"numberOfCommunicationMaterialsPublished\")"
+              "expression": "sum(communicationMaterials, \"numberOfCommunicationMaterialsPublished\")"
             }
           },
           {
@@ -35861,6 +35861,12 @@
                 "validate": "required"
               },
               {
+                "dataType": "number",
+                "name": "numberOfFteInvoicedFor",
+                "description": "",
+                "validate": "required,min[0]"
+              },
+              {
                 "columns": [
                   {
                     "dataType": "number",
@@ -35881,12 +35887,6 @@
                     "dataType": "number",
                     "name": "numberOfFteEachPos",
                     "description": "Note: Full-time recorded as 1. Part-time recorded as 0.6, 0.5 or 0.25",
-                    "validate": "required,min[0]"
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "numberOfFteInvoicedFor",
-                    "description": "",
                     "validate": "required,min[0]"
                   },
                   {
@@ -35965,7 +35965,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(safAreasControlled, \"relatedOutcomes\")"
+              "expression": "sum(safAreasControlled, \"numberOfFteInvoicedFor\")"
             }
           },
           {
@@ -36195,6 +36195,22 @@
                         ]
                       }
                     ]
+                  },
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "numberOfFteInvoicedFor",
+                            "preLabel": "Number of FTEs invoiced for",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               },
@@ -36228,13 +36244,7 @@
                     "type": "number"
                   },
                   {
-                    "width": "5%",
-                    "source": "numberOfFteInvoicedFor",
-                    "title": "Number of FTEs invoiced for",
-                    "type": "number"
-                  },
-                  {
-                    "width": "10%",
+                    "width": "15%",
                     "source": "wasPositionVacant",
                     "title": "Was the position(s) vacant for any amount of time during the reporting period (not including leave)",
                     "type": "selectOne"
