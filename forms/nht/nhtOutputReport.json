@@ -24285,7 +24285,7 @@
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(plantSurvivalSurveys, \"1\")"
+              "expression": "sum(plantSurvivalSurveys, \"surveyObjective ? 1 : 0\")"
             }
           },
           {
