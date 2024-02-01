@@ -125,12 +125,24 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.measurementTypes = ko.observableArray(dataSet.measurementTypes);
     self.otherMeasurementType = ko.observable(dataSet.otherMeasurementType);
     self.methods = ko.observableArray(dataSet.methods);
-    self.methodDescription = ko.observable(dataSet.methodDescription);
-    self.protocol.subscribe(function(protocol) {
+
+    /** Applies a standard method description for emsa protocols */
+    function syncMethodDescriptionToProtocol(protocol) {
+        var emsaMethodDescription = 'See EMSA Protocols Manual: https://www.tern.org.au/emsa-protocols-manual';
         if (protocol && protocol != 'other') {
-            self.methodDescription('See EMSA Protocols Manual: https://www.tern.org.au/emsa-protocols-manual');
+            self.methodDescription(emsaMethodDescription);
         }
+        else if (self.methodDescription() == emsaMethodDescription) {
+            self.methodDescription('');
+        }
+    }
+    self.methodDescription = ko.observable(dataSet.methodDescription);
+    syncMethodDescriptionToProtocol(dataSet.protocol);
+
+    self.protocol.subscribe(function(protocol) {
+        syncMethodDescriptionToProtocol(protocol);
     });
+
 
     self.collectionApp = ko.observable();
     self.location = ko.observable(dataSet.location);
@@ -180,11 +192,20 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     });
     self.dataCollectionOngoing = ko.observable(dataSet.dataCollectionOngoing);
     self.dataCollectionOngoing.subscribe(function (dataCollectionOngoing) {
-        self.dataCollectionOngoing(dataCollectionOngoing);
         if(dataCollectionOngoing) {
             $(options.endDateSelector).val(null).trigger('change');
         }
     });
+    self.validateEndDate = function() {
+        if (!self.dataCollectionOngoing()) {
+            if (!self.endDate()) {
+                return 'This field is required';
+            }
+            if (self.endDate() < self.startDate()) {
+                return 'Date must be after '+self.startDate.formattedDate();
+            }
+        }
+    };
 
     self.isAutoCreated = dataSet.surveyId != null;
 

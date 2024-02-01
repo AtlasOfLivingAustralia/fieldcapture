@@ -209,7 +209,7 @@
         <label for="startDate" class="col-sm-5 col-form-label required">14. First collection date.</label>
         <div class="col-sm-3">
             <div class="input-group input-append">
-                <fc:datePicker type="text" bs4="true" class="form-control" id="startDate" name="startDate" placeholder="" targetField="startDate.date" autocomplete="off" data-validation-engine="validate[required]"/>
+                <fc:datePicker type="text" bs4="true" class="form-control" id="startDate" name="startDate" placeholder="" targetField="startDate.date" autocomplete="off" data-validation-engine="validate[required,past[now]]"/>
             </div>
         </div>
     </div>
@@ -217,7 +217,7 @@
         <label for="endDate" class="col-sm-5 col-form-label required">15. Last collection date.</label>
         <div class="col-sm-3">
             <div class="input-group input-append">
-                <fc:datePicker type="text"  bs4="true" class="form-control" id="endDate" placeholder="" data-validation-engine="validate[required,future[startDate]]" data-bind="datepicker:endDate.date, disable:dataCollectionOngoing" targetField="" autocomplete="off"/>
+                <fc:datePicker type="text"  bs4="true" class="form-control" id="endDate" placeholder="" data-bind="jqueryValidationEngine:{validationFunction:validateEndDate}, datepicker:endDate.date, disable:dataCollectionOngoing" targetField="" autocomplete="off"/>
 
             </div>
         </div>
@@ -256,7 +256,7 @@
         <label for="threatenedSpeciesIndex" class="col-sm-5 col-form-label required">16b. Date of upload, if you answered 'Yes' to 16a above.</label>
         <div class="col-sm-3">
             <div class="input-group input-append">
-                <fc:datePicker type="text" bs4="true" class="form-control" id="threatenedSpeciesIndexUploadDate" placeholder="" data-validation-engine="validate[required]" data-bind="datepicker:threatenedSpeciesIndexUploadDate.date, enable: threatenedSpeciesIndex() == 'Yes'" targetField="" required="true"/>
+                <fc:datePicker type="text" bs4="true" class="form-control" id="threatenedSpeciesIndexUploadDate" placeholder="" data-validation-engine="validate[required]" data-bind="datepicker:threatenedSpeciesIndexUploadDate.date, enable: threatenedSpeciesIndex() == 'Yes'" targetField="" required="true" autocomplete="off"/>
             </div>
         </div>
     </div>
