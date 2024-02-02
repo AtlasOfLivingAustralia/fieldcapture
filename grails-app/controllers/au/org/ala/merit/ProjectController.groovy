@@ -41,7 +41,7 @@ class ProjectController {
 
         Map projectArea = null
         if (project.sites) {
-            projectArea = project.sites?.find({ it.type == 'projectArea' })
+            projectArea = project.sites?.find({ it.type == SiteService.SITE_TYPE_PROJECT_AREA })
             if (!projectArea) {
                 projectArea = project.sites[0]
             }
