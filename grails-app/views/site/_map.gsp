@@ -1,3 +1,4 @@
+<%@ page import="au.org.ala.merit.SiteService" %>
 <!-- ko stopBinding: true -->
 <div id="sitemap">
             <script type="text/javascript" src="${grailsApplication.config.getProperty('google.drawmaps.url')}"></script>
@@ -30,19 +31,21 @@
                 </div>
                 <div class="col-sm-3">
                     <label for="siteType">Type</label>
-                    %{--<input data-bind="value: type" id="siteType" type="text" class="span12"/>--}%
                     <div>
                         <g:select id="siteType"
+                                  from="${siteTypes}"
+                                  optionKey="value"
+                                  optionValue="label"
                               data-bind="value: type"
                               class="form-control"
                               name='type'
-                              from="['Works Area','Project Extent']"
-                              keys="['worksArea','projectArea']"/>
+
+                              />
                     </div>
                 </div>
                 <div class="col-sm-3">
                     <label for="siteContext">Context</label>
-                    %{--<input data-bind="value: context" id="siteContext" type="text" class="span12"/>--}%
+
                     <div>
                         <g:select id="siteContext"
                               data-bind="value: context"

@@ -27,13 +27,14 @@ class SiteController {
     }
 
     def createForProject(){
-        def project = projectService.getRich(params.projectId)
+        def project = projectService.get(params.projectId, 'all')
         // permissions check
         if (!projectService.canUserEditProject(userService.getCurrentUserId(), params.projectId)) {
             flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${params.projectId}"
             redirect(controller:'project', action:'index', id: params.projectId)
         }
-        render view: 'edit', model: [create:true, project:project, documents:[]]
+
+        render view: 'edit', model: [create:true, project:project, documents:[], siteTypes:siteTypes(null, project)]
     }
 
     def index(String id) {
@@ -120,8 +121,36 @@ class SiteController {
             if (SiteService.isReadOnly(result.site)) {
                 redirect(action:'index', id:id)
             }
-            result
         }
+
+        Map site = result.site
+        Map project = null
+        // Don't allow a site to be a project area if it:
+        // 1) Isn't associated with a project
+        // 2) Is associated with more than one project.
+        if (site.projects && site.projects.size() == 1) {
+            project = projectService.get(site.projects[0], 'all')
+        }
+        result.siteTypes = siteTypes(site, project)
+        result
+    }
+
+    /**
+     * Returns a List to use to render the site type dropdown.
+     * Projects are only allowed to have one project area, and project areas can only be associated with a
+     * single Project.
+     *
+     * @param project If this site is for a single project, supplying it here will allow a check whether
+     * the site is allowed to be a project area.
+     * @return
+     */
+    private List<Map> siteTypes(Map site, Map project) {
+        List siteTypes = [SiteService.SITE_TYPE_WORKS_AREA, SiteService.SITE_TYPE_SURVEY_AREA]
+        if (site?.type == SiteService.SITE_TYPE_PROJECT_AREA || (project && !projectService.hasProjectArea(project))) {
+            siteTypes << SiteService.SITE_TYPE_PROJECT_AREA
+        }
+
+        siteTypes.collect{[value:it, label:g.message(code:'site.type.'+it, default:it)]}
     }
 
     def downloadShapefile(String id) {
