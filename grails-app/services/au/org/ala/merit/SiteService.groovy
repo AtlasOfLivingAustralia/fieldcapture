@@ -25,6 +25,13 @@ class SiteService {
 
     /** A site with the extent derived from the convex hull of a set of geojson features */
     public static final String SITE_TYPE_COMPOUND = 'compound'
+    /** A site representing the area in which project activities are being conducted */
+    public static final String SITE_TYPE_PROJECT_AREA = 'projectArea'
+    /** A site representing an area in which one or more project activities will take place */
+    public static final String SITE_TYPE_WORKS_AREA = 'worksArea'
+/** A site representing an area in which one or more project surveys will take place */
+    public static final String SITE_TYPE_SURVEY_AREA = 'surveyArea'
+
 
     static isReadOnly(Map site) {
         site?.type == SITE_TYPE_COMPOUND || PublicationStatus.isReadOnly(site.publicationStatus)

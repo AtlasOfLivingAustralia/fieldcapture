@@ -69,7 +69,8 @@ describe("The data set summaries view models behave correctly", function () {
 
     function dataSet() {
         return {
-            "methodDescription" : "Test method",
+            "dateCreated":"2024-01-01T00:00:00Z",
+            "methodDescription" : "See EMSA Protocols Manual: https://www.tern.org.au/emsa-protocols-manual",
             "investmentPriorities" : ["Botaurus poiciloptilus (Australasian Bittern)", "Other"],
             "otherInvestmentPriority": "Test",
             "endDate" : "2020-12-02T13:00:00Z",
@@ -139,6 +140,9 @@ describe("The data set summaries view models behave correctly", function () {
         dataSetsVM.save();
 
         expect(projectService.saveDataSet).toHaveBeenCalled();
+        delete savedDataSet.attachValidation;
+        delete savedDataSet.uniqueName;
+        delete savedDataSet.validateEndDate;
         expect(savedDataSet).toEqual(dataSet());
 
 

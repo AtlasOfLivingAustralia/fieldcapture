@@ -512,8 +512,8 @@ function MERIPlan(project, projectService, config) {
         var valid = false;
         // Only mark the plan as finished if the user has ticked the checkbox and the validation routine passes.
         meriPlan.progress = ActivityProgress.started;
-
-        if (meriPlan.markAsFinished()) {
+        var markedAsFinished = meriPlan.markAsFinished();
+        if (markedAsFinished) {
             valid =  $('#project-details-validation').validationEngine('validate');
             meriPlan.markAsFinished(valid);
             meriPlan.progress = valid ? ActivityProgress.finished : ActivityProgress.started;
@@ -522,8 +522,13 @@ function MERIPlan(project, projectService, config) {
 
         meriPlan.saveWithErrorDetection(function() {
 
+            if (!valid && markedAsFinished && !enableSubmit) {
+                bootbox.alert("Your MERI plan cannot be marked as complete until all validation errors are resolved");
+            }
             if (unlock) {
-                self.unlockPlanAndReload("MERI Plan saved and unlocked.  Reloading project...");
+                if (!markedAsFinished || valid) {
+                    self.unlockPlanAndReload("MERI Plan saved and unlocked.  Reloading project...");
+                }
             }
             if(enableSubmit) {
                 if (valid) {
@@ -531,7 +536,6 @@ function MERIPlan(project, projectService, config) {
                     self.submitChanges();
                 }
                 else {
-
                     $.unblockUI();
                     bootbox.alert("Your MERI plan cannot be submitted until all validation errors are resolved");
                 }
@@ -698,6 +702,9 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
                 result = {text: 'This plan has been approved', badgeClass: 'badge-success'};
             } else if (projectService.isSubmitted()) {
                 result = {text: 'This plan has been submitted for approval', badgeClass: 'badge-info'};
+            }
+            else if (!projectService.isPlanComplete()) {
+                result = {text: 'This plan has not been completed', badgeClass: 'badge-warning'};
             }
         }
         return result;

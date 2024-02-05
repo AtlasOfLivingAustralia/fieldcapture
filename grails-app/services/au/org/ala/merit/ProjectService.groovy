@@ -512,7 +512,7 @@ class ProjectService  {
 
     def rejectPlan(String projectId) {
         def project = get(projectId)
-        if (requiresMERITAdminToModifyPlan(project) && !userService.userIsAlaOrFcAdmin()) {
+        if (project.planStatus == PLAN_APPROVED && requiresMERITAdminToModifyPlan(project) && !userService.userIsAlaOrFcAdmin()) {
             return [error: 'Only MERIT admins can return MERI plans for this program']
         }
         if (project.planStatus in [PLAN_SUBMITTED, PLAN_APPROVED]) {
@@ -1899,7 +1899,7 @@ class ProjectService  {
         Map projectSites = siteService.getProjectSites(projectId)
         if (projectSites && !projectSites.error) {
             List sites = projectSites.sites
-            Map projectArea = projectSites?.find { it.properties?.type == 'projectArea' }
+            Map projectArea = projectSites?.find { it.properties?.type == SiteService.SITE_TYPE_PROJECT_AREA }
             if (projectArea) {
                 result.projectArea = projectArea
             }
@@ -1909,7 +1909,7 @@ class ProjectService  {
                     site.properties.category = 'Reporting Sites'
                     result.features << site
                 }
-                else if (site.properties?.type != 'projectArea') {
+                else if (site.properties?.type != SiteService.SITE_TYPE_PROJECT_AREA) {
                     site.properties.category = 'Planning Sites'
                     result.features << site
                 }
@@ -1922,6 +1922,10 @@ class ProjectService  {
 
         }
         result
+    }
+
+    boolean hasProjectArea(Map project) {
+        project?.sites?.find{it.type == SiteService.SITE_TYPE_PROJECT_AREA}
     }
 
     /**

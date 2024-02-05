@@ -3,7 +3,7 @@
     <div class="form-group row">
         <label for="title" class="col-sm-5 col-form-label required">1. Dataset title</label>
         <div class="col-sm-7">
-            <input type="text" class="form-control" id="title" placeholder="" data-validation-engine="validate[required,maxSize[150]]" data-bind="value:name">
+            <input type="text" class="form-control" id="title" placeholder="" data-validation-engine="validate[required,maxSize[150],funcCall[uniqueName]]" data-bind="value:name">
         </div>
     </div>
     <div class="row form-subheading">
@@ -151,32 +151,32 @@
         <label for="methods" class="col-sm-5 col-form-label required">10. Identify the method(s) used to collect the data. <br/>To select more than one answer, hold down the ‘CTRL’ button whilst selecting an option from the drop-down list</label>
         <div class="col-sm-7">
             <select class="form-control" multiple="multiple" id="methods" data-validation-engine="validate[required]" data-bind="disable: protocol() != 'other', multiSelect2:{value:methods}">
-                <option>Genetic sampling</option>
-                <option>Hair, track, dung sampling</option>
-                <option>Area sampling</option>
-                <option>Water quality sampling</option>
                 <option>Active searching</option>
                 <option>Aerial photography</option>
+                <option>Area sampling</option>
                 <option>Call playback</option>
                 <option>Camera trapping</option>
                 <option>Data extraction</option>
                 <option>Distance sampling</option>
+                <option>Genetic sampling</option>
                 <option>Grab sampling</option>
+                <option>Ground cover monitoring</option>
                 <option>Habitat condition assessment</option>
+                <option>Hair, track, dung sampling</option>
                 <option>Mark-recapture</option>
                 <option>Meta-analysis</option>
-                <option>Other</option>
+                <option>Participant surveys</option>
                 <option>Photopoints</option>
                 <option>Plotless sampling</option>
                 <option>Quadrat sampling</option>
-                <option>Participant surveys</option>
                 <option>Soil sampling and analysis</option>
                 <option>Surber sampling</option>
                 <option>Surveying - Fauna, Flora</option>
                 <option>Transect sampling</option>
                 <option>Trapping</option>
                 <option>Vegetation mapping</option>
-                <option>Ground cover monitoring
+                <option>Water quality sampling</option>
+
             </select>
         </div>
     </div>
@@ -206,18 +206,18 @@
         </div>
     </div>
     <div class="form-group row">
-        <label for="startDate" class="col-sm-5 col-form-label">14. First collection date.</label>
+        <label for="startDate" class="col-sm-5 col-form-label required">14. First collection date.</label>
         <div class="col-sm-3">
             <div class="input-group input-append">
-                <fc:datePicker type="text"   bs4="true" class="form-control" id="startDate" name="startDate" placeholder="" targetField="startDate.date"/>
+                <fc:datePicker type="text" bs4="true" class="form-control" id="startDate" name="startDate" placeholder="" targetField="startDate.date" autocomplete="off" data-validation-engine="validate[required,past[now]]"/>
             </div>
         </div>
     </div>
     <div class="form-group row">
-        <label for="endDate" class="col-sm-5 col-form-label">15. Last collection date.</label>
+        <label for="endDate" class="col-sm-5 col-form-label required">15. Last collection date.</label>
         <div class="col-sm-3">
             <div class="input-group input-append">
-                <fc:datePicker type="text"  bs4="true" class="form-control" id="endDate" placeholder="" data-validation-engine="validate[future[startDate]]" targetField="endDate.date"/>
+                <fc:datePicker type="text"  bs4="true" class="form-control" id="endDate" placeholder="" data-bind="jqueryValidationEngine:{validationFunction:validateEndDate}, datepicker:endDate.date, disable:dataCollectionOngoing" targetField="" autocomplete="off"/>
 
             </div>
         </div>
@@ -256,7 +256,7 @@
         <label for="threatenedSpeciesIndex" class="col-sm-5 col-form-label required">16b. Date of upload, if you answered 'Yes' to 16a above.</label>
         <div class="col-sm-3">
             <div class="input-group input-append">
-                <fc:datePicker type="text" bs4="true" class="form-control" id="threatenedSpeciesIndexUploadDate" placeholder="" data-validation-engine="validate[required]" data-bind="datepicker:threatenedSpeciesIndexUploadDate.date, enable: threatenedSpeciesIndex() == 'Yes'" targetField="" required="true"/>
+                <fc:datePicker type="text" bs4="true" class="form-control" id="threatenedSpeciesIndexUploadDate" placeholder="" data-validation-engine="validate[required]" data-bind="datepicker:threatenedSpeciesIndexUploadDate.date, enable: threatenedSpeciesIndex() == 'Yes'" targetField="" required="true" autocomplete="off"/>
             </div>
         </div>
     </div>

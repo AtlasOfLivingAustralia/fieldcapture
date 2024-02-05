@@ -667,10 +667,10 @@ class ImportService {
                         siteService.addPhotoPoint(site.siteId, createPhotoPoint(site))
                     }
                 }
-                if (!prj.sites?.find{it.type == 'projectArea'}) {
+                if (!prj.sites?.find{it.type == SiteService.SITE_TYPE_PROJECT_AREA}) {
                     Map siteCoords = createProjectArea(prj.sites)
                     String projectAreaSiteName = "Project area for "+prj.name
-                    Map projectArea = [extent: [source: 'drawn', geometry: siteCoords], projects: [projectId], name: projectAreaSiteName, description: projectAreaSiteName, externalId:'', type:'projectArea', visibility:'private']
+                    Map projectArea = [extent: [source: 'drawn', geometry: siteCoords], projects: [projectId], name: projectAreaSiteName, description: projectAreaSiteName, externalId:'', type:SiteService.SITE_TYPE_PROJECT_AREA, visibility:'private']
                     siteService.create(projectArea)
 
                     // Re-query the project to pick up the new project area site.
@@ -732,7 +732,7 @@ class ImportService {
 
 
     private void createActivities(Map project) {
-        String projectAreaId = project.sites.find{it.type == 'projectArea'}.siteId
+        String projectAreaId = project.sites.find{it.type == SiteService.SITE_TYPE_PROJECT_AREA}.siteId
         List activitiesToCreate = [
                 [
                         type:'ESP Species',

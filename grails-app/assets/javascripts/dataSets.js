@@ -72,11 +72,9 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
  */
 var DataSetViewModel = function(dataSet, projectService, options) {
     var self = this;
-
     var config = _.defaults({validationContainerSelector:'.validationEngineContainer'}, options);
-    $(config.validationContainerSelector).validationEngine();
-
     dataSet = dataSet || {};
+    self.dateCreated = dataSet.dateCreated;
     self.dataSetId = dataSet.dataSetId;
     self.surveyId = dataSet.surveyId; // Data set summaries created by a submission from the Monitor app will have a surveyId
     self.name = ko.observable(dataSet.name );
@@ -127,12 +125,24 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.measurementTypes = ko.observableArray(dataSet.measurementTypes);
     self.otherMeasurementType = ko.observable(dataSet.otherMeasurementType);
     self.methods = ko.observableArray(dataSet.methods);
-    self.methodDescription = ko.observable(dataSet.methodDescription);
-    self.protocol.subscribe(function(protocol) {
+
+    /** Applies a standard method description for emsa protocols */
+    function syncMethodDescriptionToProtocol(protocol) {
+        var emsaMethodDescription = 'See EMSA Protocols Manual: https://www.tern.org.au/emsa-protocols-manual';
         if (protocol && protocol != 'other') {
-            self.methodDescription('See EMSA Protocols Manual: https://www.tern.org.au/emsa-protocols-manual');
+            self.methodDescription(emsaMethodDescription);
         }
+        else if (self.methodDescription() == emsaMethodDescription) {
+            self.methodDescription('');
+        }
+    }
+    self.methodDescription = ko.observable(dataSet.methodDescription);
+    syncMethodDescriptionToProtocol(dataSet.protocol);
+
+    self.protocol.subscribe(function(protocol) {
+        syncMethodDescriptionToProtocol(protocol);
     });
+
 
     self.collectionApp = ko.observable();
     self.location = ko.observable(dataSet.location);
@@ -150,7 +160,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.threatenedSpeciesIndex = ko.observable(dataSet.threatenedSpeciesIndex);
     self.threatenedSpeciesIndexUploadDate = ko.observable(dataSet.threatenedSpeciesIndexUploadDate).extend({simpleDate:false});
     self.publicationUrl = ko.observable(dataSet.publicationUrl);
-    self.format = ko.observable(dataSet.format);
+    self.format = ko.observable();
     self.collectionApp.subscribe(function(collectionApp) {
         if (collectionApp == MONITOR_APP) {
             self.format('Database Table');
@@ -162,11 +172,17 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     if (dataSet.sensitivities && !_.isArray(dataSet.sensitivities)) {
         dataSet.sensitivities = [dataSet.sensitivities];
     }
+
     self.sizeInKB = ko.observable(dataSet.sizeInKB);
     self.sizeUnknown = ko.observable(dataSet.sizeUnknown);
     self.format.subscribe(function(format) {
-        self.sizeUnknown(['Database Table', 'Database View', 'ESRI REST'].indexOf(format) >=0);
+        if (!self.sizeInKB()) {
+             if (['Database Table', 'Database View', 'ESRI REST'].indexOf(format) >=0) {
+                 self.sizeUnknown(true);
+             }
+        }
     });
+    self.format(dataSet.format);
     self.sensitivities = ko.observableArray(dataSet.sensitivities);
     self.otherSensitivity = ko.observable(dataSet.otherSensitivity);
     self.progress = ko.observable(dataSet.progress);
@@ -176,11 +192,20 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     });
     self.dataCollectionOngoing = ko.observable(dataSet.dataCollectionOngoing);
     self.dataCollectionOngoing.subscribe(function (dataCollectionOngoing) {
-        self.dataCollectionOngoing(dataCollectionOngoing);
         if(dataCollectionOngoing) {
             $(options.endDateSelector).val(null).trigger('change');
         }
     });
+    self.validateEndDate = function() {
+        if (!self.dataCollectionOngoing()) {
+            if (!self.endDate()) {
+                return 'This field is required';
+            }
+            if (self.endDate() < self.startDate()) {
+                return 'Date must be after '+self.startDate.formattedDate();
+            }
+        }
+    };
 
     self.isAutoCreated = dataSet.surveyId != null;
 
@@ -206,5 +231,17 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.cancel = function() {
         // return to project
         window.location.href = config.returnToUrl;
+    }
+
+    self.uniqueName = function() {
+        var invalidNames = config.invalidNames || [];
+        if (invalidNames.indexOf(self.name()) >= 0) {
+            return "This name is used by another data set.  Please use a unique name";
+        }
+    }
+
+    self.attachValidation = function () {
+        $(config.validationContainerSelector).validationEngine();
+        window.uniqueName = self.uniqueName; // Setup the validation function for the name field.
     }
 };
