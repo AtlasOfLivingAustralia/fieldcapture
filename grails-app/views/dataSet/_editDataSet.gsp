@@ -151,32 +151,32 @@
         <label for="methods" class="col-sm-5 col-form-label required">10. Identify the method(s) used to collect the data. <br/>To select more than one answer, hold down the ‘CTRL’ button whilst selecting an option from the drop-down list</label>
         <div class="col-sm-7">
             <select class="form-control" multiple="multiple" id="methods" data-validation-engine="validate[required]" data-bind="disable: protocol() != 'other', multiSelect2:{value:methods}">
-                <option>Genetic sampling</option>
-                <option>Hair, track, dung sampling</option>
-                <option>Area sampling</option>
-                <option>Water quality sampling</option>
                 <option>Active searching</option>
                 <option>Aerial photography</option>
+                <option>Area sampling</option>
                 <option>Call playback</option>
                 <option>Camera trapping</option>
                 <option>Data extraction</option>
                 <option>Distance sampling</option>
+                <option>Genetic sampling</option>
                 <option>Grab sampling</option>
+                <option>Ground cover monitoring</option>
                 <option>Habitat condition assessment</option>
+                <option>Hair, track, dung sampling</option>
                 <option>Mark-recapture</option>
                 <option>Meta-analysis</option>
-                <option>Other</option>
+                <option>Participant surveys</option>
                 <option>Photopoints</option>
                 <option>Plotless sampling</option>
                 <option>Quadrat sampling</option>
-                <option>Participant surveys</option>
                 <option>Soil sampling and analysis</option>
                 <option>Surber sampling</option>
                 <option>Surveying - Fauna, Flora</option>
                 <option>Transect sampling</option>
                 <option>Trapping</option>
                 <option>Vegetation mapping</option>
-                <option>Ground cover monitoring
+                <option>Water quality sampling</option>
+
             </select>
         </div>
     </div>
