@@ -99,7 +99,7 @@ class DatasetSpec extends StubbedCasSpec{
         set.protocol == "other"
         set.type == "Baseline dataset associated with a project outcome"
         set.measurementTypes == ["Soil erosion"]
-        set.methods == ["Genetic sampling", "Area sampling"]
+        set.methods == ["Area sampling", "Genetic sampling"]
         set.methodDescription == "Method description"
         set.collectionApp == "Collection App"
         set.location == "Location"
