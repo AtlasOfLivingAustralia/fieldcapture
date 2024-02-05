@@ -10193,12 +10193,12 @@
                   },
                   {
                     "dataType": "feature",
-                    "name": "sitesCoveredForFaunaSurvey",
+                    "name": "sitesCoveredForFarmSurvey",
                     "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
                   },
                   {
                     "computed": {
-                      "expression": "$geom.areaHa(sitesCoveredForFaunaSurvey)"
+                      "expression": "$geom.areaHa(sitesCoveredForFarmSurvey)"
                     },
                     "dataType": "number",
                     "name": "calculatedAreaTreatedHa",
@@ -10207,7 +10207,7 @@
                   },
                   {
                     "computed": {
-                      "expression": "$geom.lengthKm(sitesCoveredForFaunaSurvey)"
+                      "expression": "$geom.lengthKm(sitesCoveredForFarmSurvey)"
                     },
                     "dataType": "number",
                     "name": "calculatedLengthTreatedKm",
@@ -10829,7 +10829,7 @@
                                 "items": [
                                   {
                                     "preLabel": "Sites covered by farm management survey",
-                                    "source": "sitesCoveredForFaunaSurvey",
+                                    "source": "sitesCoveredForFarmSurvey",
                                     "type": "feature"
                                   }
                                 ]
