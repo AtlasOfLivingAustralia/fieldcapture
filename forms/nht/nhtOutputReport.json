@@ -16695,31 +16695,21 @@
               },
               {
                 "dataType": "feature",
-                "name": "siteTreated"
+                "name": "sitesTreatedByFireManagement",
+                "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
               },
               {
-                "defaultValue": {
-                  "expression": "$geom.areaHa(siteTreated)",
-                  "type": "computed"
+                "computed": {
+                  "expression": "$geom.areaHa(sitesTreatedByFireManagement)"
                 },
                 "dataType": "number",
                 "name": "calculatedAreaTreatedHa",
                 "units": "ha",
-                "decimalPlaces": 3,
-                "behaviour": [
-                  {
-                    "condition": "areaTreatedInvoicedHa > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "The managed area must be mapped",
-                      "validate": "required,min[0.0001]"
-                    }
-                  }
-                ]
+                "decimalPlaces": 3
               },
               {
                 "computed": {
-                  "expression": "$geom.lengthKm(siteTreated)"
+                  "expression": "$geom.lengthKm(sitesTreatedByFireManagement)"
                 },
                 "dataType": "number",
                 "name": "calculatedLengthTreatedKm",
@@ -16738,128 +16728,79 @@
               },
               {
                 "defaultValue": {
-                  "expression": "calculatedAreaTreatedHa",
-                  "type": "computed"
+                  "type": "computed",
+                  "expression": "calculatedAreaTreatedHa"
                 },
                 "dataType": "number",
                 "name": "areaTreatedHa",
+                "description": "Manually enter correct figure for this reporting period if different to mapped value.",
                 "units": "ha",
-                "decimalPlaces": 3,
-                "validate": "required,min[0]"
-              },
-              {
-                "defaultValue": {
-                  "expression": "calculatedLengthTreatedKm",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "lengthTreatedKm",
-                "units": "km",
                 "decimalPlaces": 3,
                 "validate": "required,min[0]"
               },
               {
                 "dataType": "text",
                 "name": "mappingNotAlignedReason",
-                "behaviour": [
-                  {
-                    "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1))",
-                    "type": "visible"
-                  }
-                ],
                 "constraints": [
                   "Mapped area simplifies more complex area/s where work was undertaken during this period",
                   "Other"
                 ],
-                "validate": "required"
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "type": "if"
+                  }
+                ]
               },
               {
                 "dataType": "text",
                 "name": "mappingNotAlignedComments",
+                "validate": "required,maxSize[100]",
                 "behaviour": [
                   {
-                    "condition": "\"Other\" == mappingNotAlignedReason",
-                    "type": "visible"
+                    "type": "visible",
+                    "condition": "\"Other\" == mappingNotAlignedReason"
                   }
-                ],
-                "validate": "required,maxSize[300]"
+                ]
               },
               {
                 "dataType": "document",
                 "name": "extraMappingDetails",
+                "validate": "required",
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaTreatedHa, areaTreatedHa, 0.1)) or roundTo(areaTreatedHa, 2) != roundTo(areaTreatedInvoicedHa, 2)",
-                    "type": "visible"
-                  }
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "number",
-                "name": "areaTreatedInvoicedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": [
-                  {
-                    "rule": "min[0]"
-                  },
-                  {
-                    "param": {
-                      "expression": "areaTreatedHa",
-                      "type": "computed"
-                    },
-                    "rule": "max"
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "type": "if"
                   }
                 ]
               },
               {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "calculatedLengthTreatedKm"
+                },
                 "dataType": "number",
-                "name": "areaTreatedInvoicedKm",
+                "name": "lengthTreatedKm",
                 "units": "km",
                 "decimalPlaces": 3,
                 "validate": [
                   {
-                    "rule": "required"
-                  },
-                  {
-                    "rule": "min[0]"
-                  },
-                  {
+                    "rule": "min",
                     "param": {
-                      "expression": "lengthTreatedKm",
-                      "type": "computed"
-                    },
-                    "rule": "max"
+                      "type": "computed",
+                      "expression": "calculatedLengthTreatedKm*0.9"
+                    }
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "calculatedLengthTreatedKm*1.1"
+                    }
                   }
                 ]
-              },
-              {
-                "dataType": "text",
-                "name": "invoicedNotActualReason",
-                "behaviour": [
-                  {
-                    "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaTreatedInvoicedHa, 2) or roundTo(lengthTreatedKm, 2) != roundTo(areaTreatedInvoicedKm, 2)",
-                    "type": "visible"
-                  }
-                ],
-                "constraints": [
-                  "Work was undertaken over a greater area than will be invoiced for",
-                  "Other"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "invoicedNotActualComments",
-                "behaviour": [
-                  {
-                    "condition": "\"Other\" == invoicedNotActualReason",
-                    "type": "visible"
-                  }
-                ],
-                "validate": "required,maxSize[300]"
               },
               {
                 "dataType": "text",
@@ -17253,9 +17194,9 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "siteTreated",
-                            "type": "feature",
-                            "preLabel": "Site/s treated by fire management action"
+                            "preLabel": "Site/s treated by fire management action",
+                            "source": "sitesTreatedByFireManagement",
+                            "type": "feature"
                           }
                         ]
                       },
@@ -17265,10 +17206,10 @@
                           {
                             "source": "calculatedAreaTreatedHa",
                             "type": "number",
-                            "readonly": true,
                             "displayOptions": {
                               "displayUnits": true
-                            }
+                            },
+                            "readonly": "readonly"
                           }
                         ]
                       },
@@ -17278,10 +17219,10 @@
                           {
                             "source": "calculatedLengthTreatedKm",
                             "type": "number",
-                            "readonly": true,
                             "displayOptions": {
                               "displayUnits": true
-                            }
+                            },
+                            "readonly": "readonly"
                           }
                         ]
                       },
@@ -17306,7 +17247,6 @@
                         "items": [
                           {
                             "preLabel": "Actual area (ha) / length (km) treated by fire management action",
-                            "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
                             "source": "areaTreatedHa",
                             "type": "number",
                             "displayOptions": {
@@ -17319,10 +17259,8 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "",
                             "source": "lengthTreatedKm",
                             "type": "number",
-                            "validate": "required",
                             "displayOptions": {
                               "displayUnits": true
                             }
