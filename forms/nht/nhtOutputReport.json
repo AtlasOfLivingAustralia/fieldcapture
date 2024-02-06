@@ -11776,41 +11776,32 @@
               },
               {
                 "dataType": "feature",
-                "name": "sitesPrepared"
+                "name": "sitesUndertakeForFirstNations",
+                "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
               },
               {
                 "computed": {
-                  "expression": "$geom.areaHa(sitesPrepared)"
+                  "expression": "$geom.areaHa(sitesUndertakeForFirstNations)"
                 },
                 "dataType": "number",
-                "name": "calculatedAreaPreparedHa",
+                "name": "calculatedAreaTreatedHa",
                 "units": "ha",
-                "decimalPlaces": 3,
-                "behaviour": [
-                  {
-                    "condition": "areaPreparedInvoicedHa > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "The prepared area must be mapped",
-                      "validate": "required,min[0.0001]"
-                    }
-                  }
-                ]
+                "decimalPlaces": 3
               },
               {
                 "computed": {
-                  "expression": "$geom.lengthKm(sitesPrepared)"
+                  "expression": "$geom.lengthKm(sitesUndertakeForFirstNations)"
                 },
                 "dataType": "number",
-                "name": "calculatedLengthPreparedKm",
+                "name": "calculatedLengthTreatedKm",
                 "units": "km",
                 "decimalPlaces": 3,
                 "behaviour": [
                   {
-                    "condition": "lengthPreparedKm > 0",
+                    "condition": "lengthTreatedKm > 0",
                     "type": "conditional_validation",
                     "value": {
-                      "message": "The prepared length must be mapped",
+                      "message": "The managed length must be mapped",
                       "validate": "required,min[0.0001]"
                     }
                   }
@@ -11818,63 +11809,79 @@
               },
               {
                 "defaultValue": {
-                  "expression": "calculatedAreaPreparedHa",
-                  "type": "computed"
+                  "type": "computed",
+                  "expression": "calculatedAreaTreatedHa"
                 },
                 "dataType": "number",
-                "name": "areaPreparedHa",
-                "decimalPlaces": 3,
+                "name": "areaTreatedHa",
+                "description": "Manually enter correct figure for this reporting period if different to mapped value.",
                 "units": "ha",
-                "validate": "min[0]"
-              },
-              {
-                "defaultValue": {
-                  "expression": "calculatedLengthPreparedKm",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "lengthPreparedKm",
-                "units": "km",
                 "decimalPlaces": 3,
                 "validate": "required,min[0]"
               },
               {
                 "dataType": "text",
                 "name": "mappingNotAlignedReason",
-                "behaviour": [
-                  {
-                    "condition": "not (within(calculatedAreaPreparedHa, areaPreparedHa, 0.1))",
-                    "type": "visible"
-                  }
-                ],
                 "constraints": [
                   "Mapped area simplifies more complex area/s where work was undertaken during this period",
                   "Other"
                 ],
-                "validate": "required"
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "type": "if"
+                  }
+                ]
               },
               {
                 "dataType": "text",
                 "name": "mappingNotAlignedComments",
+                "validate": "required,maxSize[100]",
                 "behaviour": [
                   {
-                    "condition": "\"Other\" == mappingNotAlignedReason",
-                    "type": "visible"
+                    "type": "visible",
+                    "condition": "\"Other\" == mappingNotAlignedReason"
                   }
-                ],
-                "validate": "required,maxSize[300]"
+                ]
               },
               {
                 "dataType": "document",
                 "name": "extraMappingDetails",
+                "validate": "required",
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(calculatedAreaPreparedHa, areaPreparedHa, 0.1)) or roundTo(areaPreparedHa, 2) != roundTo(areaPreparedInvoicedHa, 2)",
-                    "type": "visible"
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "type": "if"
                   }
-                ],
-                "validate": "required"
+                ]
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "calculatedLengthTreatedKm"
+                },
+                "dataType": "number",
+                "name": "lengthTreatedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "min",
+                    "param": {
+                      "type": "computed",
+                      "expression": "calculatedLengthTreatedKm*0.9"
+                    }
+                  },
+                  {
+                    "rule": "max",
+                    "param": {
+                      "type": "computed",
+                      "expression": "calculatedLengthTreatedKm*1.1"
+                    }
+                  }
+                ]
               },
               {
                 "columns": [
@@ -12295,9 +12302,9 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "sitesPrepared",
-                            "type": "feature",
-                            "preLabel": "Site/s where activity was undertaken"
+                            "preLabel": "Site/s where activity was undertaken",
+                            "source": "sitesUndertakeForFirstNations",
+                            "type": "feature"
                           }
                         ]
                       },
@@ -12305,12 +12312,12 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "calculatedAreaPreparedHa",
+                            "source": "calculatedAreaTreatedHa",
                             "type": "number",
-                            "readonly": true,
                             "displayOptions": {
                               "displayUnits": true
-                            }
+                            },
+                            "readonly": "readonly"
                           }
                         ]
                       },
@@ -12318,12 +12325,12 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "calculatedLengthPreparedKm",
+                            "source": "calculatedLengthTreatedKm",
                             "type": "number",
-                            "readonly": true,
                             "displayOptions": {
                               "displayUnits": true
-                            }
+                            },
+                            "readonly": "readonly"
                           }
                         ]
                       },
@@ -12348,8 +12355,7 @@
                         "items": [
                           {
                             "preLabel": "Actual area (ha) / length (km) where activity has been undertaken",
-                            "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
-                            "source": "areaPreparedHa",
+                            "source": "areaTreatedHa",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -12361,7 +12367,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "lengthPreparedKm",
+                            "source": "lengthTreatedKm",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -12385,7 +12391,8 @@
                           {
                             "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
                             "source": "mappingNotAlignedComments",
-                            "type": "textarea"
+                            "type": "textarea",
+                            "rows": 5
                           }
                         ]
                       }
