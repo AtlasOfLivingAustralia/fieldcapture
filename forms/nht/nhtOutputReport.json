@@ -32480,6 +32480,7 @@
               {
                 "dataType": "text",
                 "name": "otherInvestmentPriority",
+                "description": "Describe the investment priority (if Other) was selected",
                 "behaviour": [
                   {
                     "type": "enable",
@@ -32507,13 +32508,13 @@
               },
               {
                 "dataType": "number",
-                "name": "numberOfFteEachPos",
+                "name": "fteOfThisPosition",
                 "description": "Note: This must be reported in the context of this reporting period only. For example, a full time SAF = 1, and a half time SAF = 0.5",
                 "validate": "required,min[0],max[1]"
               },
               {
                 "dataType": "number",
-                "name": "numberOfFteInvoicedFor",
+                "name": "amountOfFteInvoicedFor",
                 "description": "Note: This must be reported in the context of this reporting period only. For example, a full time SAF = 1, and a half time SAF = 0.5",
                 "validate": "required,min[0]"
               },
@@ -32591,21 +32592,21 @@
           },
           {
             "dataType": "number",
-            "name": "totalNumberFtes",
+            "name": "totalAnnualFtes",
             "validate": "required,min[0]",
             "decimalPlaces": 3,
             "computed": {
-              "expression": "sum(safAreasControlled, \"numberOfFteEachPos\")/4"
+              "expression": "sum(safAreasControlled, \"fteOfThisPosition\")/4"
             }
           },
           {
             "dataType": "number",
-            "name": "totalNumberFtesInvoiced",
+            "name": "totalAnnualFtesInvoiced",
             "decimalPlaces": 3,
             "validate": [
               {
                 "param": {
-                  "expression": "totalNumberFtes",
+                  "expression": "totalAnnualFtes",
                   "type": "computed"
                 },
                 "rule": "max"
@@ -32729,7 +32730,7 @@
                     "items": [
                       {
                         "preLabel": "(i) Total <u>Annual</u> FTE for this reporting period",
-                        "source": "totalNumberFtes",
+                        "source": "totalAnnualFtes",
                         "type": "number"
                       }
                     ]
@@ -32745,7 +32746,7 @@
                     "items": [
                       {
                         "preLabel": "(ii) Total <u>Annual</u> FTE invoiced for in this reporting period",
-                        "source": "totalNumberFtesInvoiced",
+                        "source": "totalAnnualFtesInvoiced",
                         "type": "number"
                       }
                     ]
@@ -32755,20 +32756,20 @@
             ]
           },
           {
-            "type": "row",
-            "items": [
-              {
-                "source": "<b><i>Each SAF position must be reported on in a separate section. Please add a new section for each SAF position.</i></b>",
-                "type": "literal"
-              }
-            ]
-          },
-          {
             "addRowText": "Add a new SAF position",
             "userAddedRows": true,
             "source": "safAreasControlled",
             "type": "repeat",
             "items": [
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "source": "<h4><u>Each SAF position must be reported on in a separate section. Please add a new section for each SAF position.</u><h4>",
+                    "type": "literal"
+                  }
+                ]
+              },
               {
                 "type": "row",
                 "items": [
@@ -32807,6 +32808,7 @@
                         "items": [
                           {
                             "source": "otherInvestmentPriority",
+                            "preLabel": "Investment priority (if Other)",
                             "type": "text"
                           }
                         ]
@@ -32858,7 +32860,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "numberOfFteEachPos",
+                            "source": "fteOfThisPosition",
                             "preLabel": "FTE of <u>this position</u> for this reporting period",
                             "type": "number"
                           }
@@ -32874,7 +32876,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "numberOfFteInvoicedFor",
+                            "source": "amountOfFteInvoicedFor",
                             "preLabel": "Amount of FTE for <u>this position</u> that are being invoiced for",
                             "type": "number"
                           }
