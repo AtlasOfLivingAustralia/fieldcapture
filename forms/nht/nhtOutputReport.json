@@ -944,6 +944,7 @@
               {
                 "dataType": "text",
                 "name": "otherInvestmentPriority",
+                "description": "Describe the investment priority (if Other) was selected",
                 "behaviour": [
                   {
                     "type": "enable",
@@ -1135,7 +1136,7 @@
             ]
           },
           {
-            "addRowText": "Add a new controlled area",
+            "addRowText": "Add a new baseline",
             "userAddedRows": true,
             "source": "baselineDetailsControlled",
             "type": "repeat",
@@ -1177,6 +1178,7 @@
                         "type": "row",
                         "items": [
                           {
+                            "preLabel": "Investment priority (if Other)",
                             "source": "otherInvestmentPriority",
                             "type": "text"
                           }
@@ -1224,7 +1226,7 @@
                     "source": "monitoringIndicator",
                     "type": "selectOne",
                     "width": "20%",
-                    "title": "What monitoring indicator does the baseline?"
+                    "title": "What monitoring indicator does the baseline support?"
                   },
                   {
                     "source": "datasetSupports",
@@ -32495,12 +32497,6 @@
                 "validate": "required"
               },
               {
-                "dataType": "number",
-                "name": "numberOfSaf",
-                "description": "",
-                "validate": "required,min[0]"
-              },
-              {
                 "dataType": "text",
                 "name": "fullOrPartTime",
                 "constraints": [
@@ -32512,13 +32508,13 @@
               {
                 "dataType": "number",
                 "name": "numberOfFteEachPos",
-                "description": "Note: Full-time recorded as 1. Part-time recorded as 0.6, 0.5 or 0.25",
-                "validate": "required,min[0]"
+                "description": "Note: This must be reported in the context of this reporting period only. For example, a full time SAF = 1, and a half time SAF = 0.5",
+                "validate": "required,min[0],max[1]"
               },
               {
                 "dataType": "number",
                 "name": "numberOfFteInvoicedFor",
-                "description": "",
+                "description": "Note: This must be reported in the context of this reporting period only. For example, a full time SAF = 1, and a half time SAF = 0.5",
                 "validate": "required,min[0]"
               },
               {
@@ -32597,14 +32593,15 @@
             "dataType": "number",
             "name": "totalNumberFtes",
             "validate": "required,min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
-              "expression": "sum(safAreasControlled, \"numberOfFteEachPos\")"
+              "expression": "sum(safAreasControlled, \"numberOfFteEachPos\")/4"
             }
           },
           {
             "dataType": "number",
             "name": "totalNumberFtesInvoiced",
+            "decimalPlaces": 3,
             "validate": [
               {
                 "param": {
@@ -32613,8 +32610,7 @@
                 },
                 "rule": "max"
               }
-            ],
-            "defaultValue": 0
+            ]
           },
           {
             "dataType": "text",
@@ -32633,13 +32629,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -32738,7 +32728,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total number of FTE for this reporting period",
+                        "preLabel": "(i) Total <u>Annual</u> FTE for this reporting period",
                         "source": "totalNumberFtes",
                         "type": "number"
                       }
@@ -32754,7 +32744,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total number of FTE invoiced for this reporting period",
+                        "preLabel": "(ii) Total <u>Annual</u> FTE invoiced for in this reporting period",
                         "source": "totalNumberFtesInvoiced",
                         "type": "number"
                       }
@@ -32765,7 +32755,16 @@
             ]
           },
           {
-            "addRowText": "Add a new controlled area",
+            "type": "row",
+            "items": [
+              {
+                "source": "<b><i>Each SAF position must be reported on in a separate section. Please add a new section for each SAF position.</i></b>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "addRowText": "Add a new SAF position",
             "userAddedRows": true,
             "source": "safAreasControlled",
             "type": "repeat",
@@ -32836,22 +32835,6 @@
                 "type": "row",
                 "items": [
                   {
-                    "css": "span3",
-                    "type": "col",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "numberOfSaf",
-                            "preLabel": "Number of Sustainable Agriculture Facilitators (SAFs)",
-                            "type": "number"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
                     "type": "col",
                     "css": "span3 col-border-right",
                     "items": [
@@ -32876,7 +32859,7 @@
                         "items": [
                           {
                             "source": "numberOfFteEachPos",
-                            "preLabel": "FTE of each position",
+                            "preLabel": "FTE of <u>this position</u> for this reporting period",
                             "type": "number"
                           }
                         ]
@@ -32884,7 +32867,7 @@
                     ]
                   },
                   {
-                    "css": "span3",
+                    "css": "span4",
                     "type": "col",
                     "items": [
                       {
@@ -32892,7 +32875,7 @@
                         "items": [
                           {
                             "source": "numberOfFteInvoicedFor",
-                            "preLabel": "Number of FTEs invoiced for",
+                            "preLabel": "Amount of FTE for <u>this position</u> that are being invoiced for",
                             "type": "number"
                           }
                         ]
@@ -32916,22 +32899,22 @@
                     "type": "selectOne"
                   },
                   {
-                    "width": "15%",
+                    "width": "20%",
                     "source": "noRecruitmentProcess",
                     "title": "If no, what are the reasons?",
-                    "type": "text"
+                    "type": "textarea"
                   },
                   {
-                    "width": "10%",
+                    "width": "15%",
                     "source": "expectedDatePositionFill",
                     "title": "Expected date to fill the position(s)",
                     "type": "date"
                   },
                   {
-                    "width": "10%",
+                    "width": "15%",
                     "source": "coveredInterimPosition",
                     "title": "How is the position(s) being covered in the interim?",
-                    "type": "text"
+                    "type": "textarea"
                   },
                   {
                     "width": "10%",
@@ -32940,10 +32923,10 @@
                     "type": "selectOne"
                   },
                   {
-                    "width": "10%",
+                    "width": "15%",
                     "source": "subcontractorEmployed",
                     "title": "If employed by subcontractor, please provide name of subcontractor",
-                    "type": "text"
+                    "type": "textarea"
                   }
                 ],
                 "userAddedRows": false,
@@ -32994,11 +32977,6 @@
                   {
                     "type": "literal",
                     "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
-                  },
-                  {
-                    "preLabel": "Data have been uploaded",
-                    "source": "dataUploaded",
-                    "type": "boolean"
                   }
                 ]
               },
