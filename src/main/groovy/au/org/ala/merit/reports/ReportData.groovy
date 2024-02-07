@@ -15,8 +15,8 @@ class ReportData {
     @Autowired
     ActivityFormService activityFormService
 
-    Map getContextData(Map context) { [:] }
-    Map getOutputData(Map context, Map outputConfig) { [:] }
+    Map getContextData(Map context, Map report) { [:] }
+    Map getOutputData(Map context, Map outputConfig, Map report) { [:] }
 
     private List<Map> findReferencedEntityTypes(String activityFormType) {
         List<Map> referencedEntities = []
@@ -35,21 +35,24 @@ class ReportData {
 
     List<Map> findReferencedEntities(Map activityData) {
         List<Map> typesInForm = findReferencedEntityTypes(activityData.type)
-
+        List<Map> entityIds = []
         activityData.outputs?.each { Map output ->
             List<Map> typesInOutput = typesInForm.findAll{it.outputName == output.name}
             typesInOutput.each { Map entityType ->
-                String value = getValueFromPath(entityType.path, output.data)
+                List value = getValueFromPath(entityType.path, output.data)
                 if (value) {
-                    entityType.entityId = value
+                    entityIds << [entityType: entityType.node.entityType, entityIds: value]
                 }
             }
         }
-        List<String> entityIds = getValueFromPath(path, output.data)
         entityIds
 
     }
 
+    Map saveRelatedEntities(Map activityData, Map report) {
+        // Do nothing by default - subclasses can override this method to save related entities
+        [:]
+    }
 
     /**
      * Traverses the '.' separated path through the supplied Map and returns the value at the end of the path.

@@ -3,6 +3,7 @@ package au.org.ala.merit
 import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
+import au.org.ala.merit.reports.ReportData
 import au.org.ala.merit.reports.ReportGenerator
 import au.org.ala.merit.reports.ReportOwner
 import grails.plugin.cache.Cacheable
@@ -1003,4 +1004,21 @@ class ReportService {
         return resp
     }
 
+    ReportData reportDataForActivityType(String activityType) {
+        ReportData reportData = null
+        // Remove all spaces from the activityType
+        String reportDataBeanName = activityType.replaceAll("\\s", "")
+
+        if (grailsApplication.mainContext.containsBean(reportDataBeanName)) {
+            reportData = grailsApplication.mainContext.getBean(reportDataBeanName)
+        }
+
+        if (!reportData) {
+            reportData = new ReportData()
+        }
+        else {
+            log.debug("Found custom reportData bean "+reportDataBeanName+" for activity type "+activityType)
+        }
+        reportData
+    }
 }

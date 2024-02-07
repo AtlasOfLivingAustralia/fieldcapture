@@ -1,6 +1,5 @@
 package au.org.ala.merit.reports
 
-import au.org.ala.ecodata.forms.ActivityFormService
 import au.org.ala.merit.ActivityService
 import au.org.ala.merit.ProjectService
 import groovy.util.logging.Slf4j
@@ -17,7 +16,7 @@ class NHTOutputReportData extends ReportData {
     @Autowired
     ProjectService projectService
 
-    Map getContextData(Map project) {
+    Map getContextData(Map project, Map report) {
         // Side effect - filter data sets.
         List eligibleDataSets = project.custom?.dataSets?.findAll {
             // This is a side effect and a workaround for the problem that selected outcomes
@@ -40,7 +39,7 @@ class NHTOutputReportData extends ReportData {
         ]
     }
 
-    Map getOutputData(Map project, Map outputConfig) {
+    Map getOutputData(Map project, Map outputConfig, Map report) {
         List scores = outputConfig.outputContext.scores
         JSONObject extraData = new JSONObject()
         if (scores) {
@@ -53,6 +52,48 @@ class NHTOutputReportData extends ReportData {
             }
         }
         extraData
+    }
+
+    Map saveRelatedEntities(Map activityData, Map report) {
+        List entities = findReferencedEntities(activityData)
+        List dataSetIds = []
+        List errors = []
+        boolean dirty = false
+        Map project = projectService.get(report.projectId)
+        entities.each {
+            if (it.entityType == 'au.org.ala.ecodata.DataSetSummary') {
+                it.entityIds?.each {String entityId ->
+                    dataSetIds.addAll(it.entityIds)
+                    Map dataSet = project.custom?.dataSets?.find{it.dataSetId == entityId}
+                    if (dataSet) {
+                        // Associate the data set with the report
+                        if (!dataSet.reportId) {
+                            dataSet.reportId = report.reportId
+                            dirty = true
+                        }
+                        else if (dataSet.reportId != report.reportId) {
+                            errors << "Data set ${dataSet.dataSetId} is already associated with report ${dataSet.reportId}"
+                        }
+                    }
+                    else {
+                        errors << "Report ${report.reportId} references data set ${entityId} which does not exist in project ${report.projectId}"
+                    }
+
+                }
+            }
+        }
+        // Disassociate any data sets that were removed from the report
+        project.custom?.dataSets.findAll { Map dataSet ->
+            dataSet.reportId == report.reportId && !(dataSet.dataSetId in dataSetIds)
+        }.each {
+            it.reportId = null
+            dirty = true
+        }
+
+        if (dirty) {
+            // Save the changes to the data sets
+            projectService.update(project.projectId, [custom: project.custom])
+        }
     }
 
 }

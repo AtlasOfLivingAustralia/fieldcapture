@@ -3,13 +3,14 @@ package au.org.ala.merit.command
 import au.org.ala.merit.ActivityService
 import au.org.ala.merit.ReportService
 import au.org.ala.merit.SiteService
+import au.org.ala.merit.reports.ReportData
 import grails.validation.Validateable
 import org.apache.http.HttpStatus
 
 /**
  * Handles the process of updating the activity and site data for a Report.
  */
-class SaveReportDataCommand implements Validateable{
+class SaveReportDataCommand implements Validateable {
 
     SiteService siteService
     ActivityService activityService
@@ -119,6 +120,7 @@ class SaveReportDataCommand implements Validateable{
             }
             // Setting the activityId in the payload is necessary for ecodata to update the activity as well as outputs.
             activity.activityId = activityId
+            saveRelatedEntities(activity, report)
             result = activityService.update(activityId, activity)
         }
 
@@ -156,5 +158,8 @@ class SaveReportDataCommand implements Validateable{
         siteId
     }
 
-
+    private Map saveRelatedEntities(Map activity, Map report) {
+        ReportData reportData = reportService.reportDataForActivityType(activity.type)
+        reportData.saveRelatedEntities(activity, report)
+    }
 }

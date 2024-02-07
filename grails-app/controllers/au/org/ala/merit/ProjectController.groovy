@@ -874,7 +874,7 @@ class ProjectController {
         List sites = project.remove('sites')
         Map config = projectService.getProgramConfiguration(project)
         Map model = reportService.activityReportModel(reportId, mode, formVersion)
-        ReportData reportData = projectService.reportDataForProject(config, model.activity.type)
+        ReportData reportData = reportService.reportDataForActivityType(model.activity.type)
 
         model.metaModel = projectService.filterOutputModel(model.metaModel, project, model.activity)
 
@@ -886,14 +886,14 @@ class ProjectController {
                 }
                 else {
                     outputConfig.outputContext = new JSONObject([scores:v.scores])
-                    outputConfig.outputContext.putAll(reportData.getOutputData(project, outputConfig))
+                    outputConfig.outputContext.putAll(reportData.getOutputData(project, outputConfig, model.report))
                 }
 
             }
         }
 
         model.context = new HashMap(project)
-        model.context.putAll(reportData.getContextData(project))
+        model.context.putAll(reportData.getContextData(project, model.report))
         model.returnTo = g.createLink(action:'exitReport', id:projectId, params:[reportId:reportId])
         model.contextViewUrl = g.createLink(action:'index', id:projectId)
         model.reportHeaderTemplate = '/project/rlpProjectReportHeader'

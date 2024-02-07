@@ -19,5 +19,6 @@ beans = {
 
     projectGroupingHelper(ProjectGroupingHelper)
 
-    nhtOutputReportData(NHTOutputReportData)
+    // The non-standard case is used because the name is derived from the activity type
+    NHTOutputReport(NHTOutputReportData)
 }

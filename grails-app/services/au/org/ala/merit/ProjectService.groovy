@@ -4,7 +4,6 @@ import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.PublicationStatus
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
-import au.org.ala.merit.reports.ReportData
 import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportGenerator
 import au.org.ala.merit.reports.ReportOwner
@@ -1166,23 +1165,6 @@ class ProjectService  {
         // Activities in a submitted or approved report cannot be edited
         Map report = reportService.findReportForDate(activity.plannedEndDate, project.reports)
         return !reportService.excludesNotApproved(report) && Status.isActive(report?.status)
-    }
-
-    ReportData reportDataForProject(Map config, String activityType) {
-        ReportData reportData = null
-        String reportDataBeanName = config.reportData?[activityType] ?: null
-        if (reportDataBeanName) {
-            if (grailsApplication.mainContext.containsBean(reportDataBeanName)) {
-                reportData = grailsApplication.mainContext.getBean(reportDataBeanName)
-            }
-            else {
-                log.warn("Unable to find reportData bean "+reportDataBeanName+" for project "+projectId+" and activity type "+model.activity.type+" using default")
-            }
-        }
-        if (!reportData) {
-            reportData = new ReportData()
-        }
-        reportData
     }
 
     private Map getOutcomes(String activityId, String outputType) {
