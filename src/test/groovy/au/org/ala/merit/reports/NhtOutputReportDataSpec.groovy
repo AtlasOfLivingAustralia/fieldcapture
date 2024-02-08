@@ -17,10 +17,11 @@ class NhtOutputReportDataSpec extends Specification {
 
         setup:
         Map project = [:]
+        Map report = [:]
         List protocols = [[name:'test', externalId:'e1']]
 
         when:
-        Map contextData = reportData.getContextData(project)
+        Map contextData = reportData.getContextData(project, report)
 
         then:
         1 * projectService.listProjectProtocols(project) >> protocols
@@ -42,10 +43,11 @@ class NhtOutputReportDataSpec extends Specification {
                          [dataSetId:'d3', progress:ActivityService.PROGRESS_STARTED, projectOutcomes:['g','h','i']],
                          [dataSetId:'d4', progress:ActivityService.PROGRESS_FINISHED, projectOutcomes:['j','k','l']]]
         Map project = [custom:[dataSets:dataSets]]
+        Map report = [:]
         List protocols = [[name:'test', externalId:'e1']]
 
         when:
-        Map contextData = reportData.getContextData(project)
+        Map contextData = reportData.getContextData(project, report)
 
         then:
         1 * projectService.listProjectProtocols(project) >> protocols

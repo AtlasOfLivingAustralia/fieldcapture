@@ -120,7 +120,7 @@ class SaveReportDataCommand implements Validateable {
             }
             // Setting the activityId in the payload is necessary for ecodata to update the activity as well as outputs.
             activity.activityId = activityId
-            saveRelatedEntities(activity, report)
+            saveRelatedEntities(savedActivity.type, activity, report)
             result = activityService.update(activityId, activity)
         }
 
@@ -158,8 +158,8 @@ class SaveReportDataCommand implements Validateable {
         siteId
     }
 
-    private Map saveRelatedEntities(Map activity, Map report) {
-        ReportData reportData = reportService.reportDataForActivityType(activity.type)
+    private Map saveRelatedEntities(String activityType, Map activity, Map report) {
+        ReportData reportData = reportService.reportDataForActivityType(activityType)
         reportData.saveRelatedEntities(activity, report)
     }
 }

@@ -4,6 +4,7 @@ import au.org.ala.merit.ActivityService
 import au.org.ala.merit.PublicationStatus
 import au.org.ala.merit.ReportService
 import au.org.ala.merit.SiteService
+import au.org.ala.merit.reports.ReportData
 import org.apache.http.HttpStatus
 import grails.databinding.DataBinder
 import grails.databinding.SimpleDataBinder
@@ -118,7 +119,7 @@ class SaveReportDataCommandSpec extends Specification {
                 reportId:'r1'
         ]
         Map r1Report = [reportId:jsonData.reportId, publicationStatus:PublicationStatus.NOT_APPROVED, activityId:jsonData.activityId]
-        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: PublicationStatus.NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED]
+        Map savedActivity = [activityId:jsonData.activityId, type:'Type', publicationStatus: PublicationStatus.NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED]
         reportService.get(jsonData.reportId) >> r1Report
         activityService.get(jsonData.activityId) >> savedActivity
 
@@ -129,6 +130,7 @@ class SaveReportDataCommandSpec extends Specification {
 
         then:
         command.hasErrors() == false
+        1 * reportService.reportDataForActivityType(savedActivity.type) >> new ReportData()
         1 * activityService.update(jsonData.activityId, jsonData.activity)
     }
 
@@ -154,7 +156,7 @@ class SaveReportDataCommandSpec extends Specification {
                 ]
         ]
         Map r1Report = [reportId:jsonData.reportId, publicationStatus:PublicationStatus.NOT_APPROVED, activityId:jsonData.activityId]
-        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: PublicationStatus.NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED, siteId:jsonData.site.siteId]
+        Map savedActivity = [activityId:jsonData.activityId, type:'Type', publicationStatus: PublicationStatus.NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED, siteId:jsonData.site.siteId]
         reportService.get(jsonData.reportId) >> r1Report
         activityService.get(jsonData.activityId) >> savedActivity
 
@@ -165,6 +167,7 @@ class SaveReportDataCommandSpec extends Specification {
 
         then:
         command.hasErrors() == false
+        1 * reportService.reportDataForActivityType(savedActivity.type) >> new ReportData()
         1 * siteService.update(jsonData.site.siteId, jsonData.site) >> [resp:[siteId:jsonData.site.siteId]]
         1 * activityService.update(jsonData.activityId, jsonData.activity)
     }
@@ -191,7 +194,7 @@ class SaveReportDataCommandSpec extends Specification {
         ]
         String siteId = 's1'
         Map r1Report = [reportId:jsonData.reportId, publicationStatus:PublicationStatus.NOT_APPROVED, activityId:jsonData.activityId]
-        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: PublicationStatus.NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED, siteId:siteId]
+        Map savedActivity = [activityId:jsonData.activityId, type:'Type', publicationStatus: PublicationStatus.NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED, siteId:siteId]
         reportService.get(jsonData.reportId) >> r1Report
         activityService.get(jsonData.activityId) >> savedActivity
 
@@ -202,6 +205,7 @@ class SaveReportDataCommandSpec extends Specification {
 
         then:
         command.hasErrors() == false
+        1 * reportService.reportDataForActivityType(savedActivity.type) >> new ReportData()
         1 * siteService.update(siteId, jsonData.site) >> [resp:[siteId:siteId]]
         1 * activityService.update(jsonData.activityId, jsonData.activity)
     }
@@ -229,7 +233,7 @@ class SaveReportDataCommandSpec extends Specification {
 
         String siteId = 's1'
         Map r1Report = [reportId:jsonData.reportId, publicationStatus:PublicationStatus.NOT_APPROVED, activityId:jsonData.activityId]
-        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: PublicationStatus.NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED]
+        Map savedActivity = [activityId:jsonData.activityId, type:'Type', publicationStatus: PublicationStatus.NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED]
         reportService.get(jsonData.reportId) >> r1Report
         activityService.get(jsonData.activityId) >> savedActivity
 
@@ -241,7 +245,7 @@ class SaveReportDataCommandSpec extends Specification {
         then:
         command.hasErrors() == false
         1 * siteService.update('', jsonData.site) >> [resp:[siteId:siteId]]
-
+        1 * reportService.reportDataForActivityType(savedActivity.type) >> new ReportData()
         jsonData.activity.siteId == siteId
         jsonData.activity.activityId == jsonData.activityId
 
@@ -266,7 +270,7 @@ class SaveReportDataCommandSpec extends Specification {
         ]
 
         Map r1Report = [reportId:jsonData.reportId, publicationStatus:PublicationStatus.NOT_APPROVED, activityId:jsonData.activityId]
-        Map savedActivity = [activityId:jsonData.activityId, publicationStatus: PublicationStatus.NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED, siteId:siteId]
+        Map savedActivity = [activityId:jsonData.activityId, type:'Type', publicationStatus: PublicationStatus.NOT_APPROVED, progress:ActivityService.PROGRESS_PLANNED, siteId:siteId]
         reportService.get(jsonData.reportId) >> r1Report
         activityService.get(jsonData.activityId) >> savedActivity
 
@@ -277,6 +281,7 @@ class SaveReportDataCommandSpec extends Specification {
 
         then:
         command.hasErrors() == false
+        1 * reportService.reportDataForActivityType(savedActivity.type) >> new ReportData()
         and: "The activity is updated to remove the site id"
         1 * activityService.update(jsonData.activityId, expectedActivityData)
         and: "The site is deleted"
