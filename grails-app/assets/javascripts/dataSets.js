@@ -33,6 +33,13 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         return (service && service.name);
     }
 
+    function reportName(reportId) {
+        var report = _.find(config.reports || [], function(report) {
+            return report.reportId == reportId
+        });
+        return (report && report.name);
+    }
+
     /** View model backing for a single row in the data set summary table */
     function DataSetSummary(dataSet) {
 
@@ -44,7 +51,11 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         this.dateCreated = ko.observable(dataSet.dateCreated).extend({simpleDate: false});
         this.lastUpdated = ko.observable(dataSet.lastUpdated).extend({simpleDate: false});
         this.service = dataSet.serviceId ? (serviceName(dataSet.serviceId) || 'Unsupported service') : '';
+        this.report = dataSet.reportId ? reportName(dataSet.reportId) : '';
+        this.reportUrl = config.viewReportUrl + '?reportId=' + dataSet.reportId;
+        this.publicationStatus = dataSet.publicationStatus;
 
+        this.readOnly = PublicationStatus.isReadOnly(dataSet.publicationStatus);
         this.deleteDataSet = function () {
             bootbox.confirm("Are you sure?", function (yes) {
                 if (yes) {

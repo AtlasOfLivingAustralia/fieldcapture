@@ -7,7 +7,7 @@ import au.org.ala.merit.command.ReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
-import au.org.ala.merit.reports.ReportData
+import au.org.ala.merit.reports.ReportLifecycleListener
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import grails.core.GrailsApplication
@@ -874,7 +874,7 @@ class ProjectController {
         List sites = project.remove('sites')
         Map config = projectService.getProgramConfiguration(project)
         Map model = reportService.activityReportModel(reportId, mode, formVersion)
-        ReportData reportData = reportService.reportDataForActivityType(model.activity.type)
+        ReportLifecycleListener reportData = reportService.reportLifeCycleListener(model.activity.type)
 
         model.metaModel = projectService.filterOutputModel(model.metaModel, project, model.activity)
 

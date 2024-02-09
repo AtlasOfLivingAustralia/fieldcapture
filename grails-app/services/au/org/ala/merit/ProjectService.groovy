@@ -1,9 +1,9 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.config.EmailTemplate
-import au.org.ala.merit.PublicationStatus
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
+import au.org.ala.merit.reports.ReportLifecycleListener
 import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportGenerator
 import au.org.ala.merit.reports.ReportOwner
@@ -21,7 +21,6 @@ import org.joda.time.Interval
 import org.joda.time.Period
 
 import java.text.SimpleDateFormat
-import java.util.concurrent.locks.Lock
 
 @Slf4j
 class ProjectService  {
@@ -2143,6 +2142,63 @@ class ProjectService  {
      */
     boolean canBulkRegenerateReports(Map project) {
         return project.reports.size() > 0
+    }
+
+    /**
+     * Updates all of the data set summaries for the supplied data set ids with the supplied properties.
+     * @param dataSetIds
+     * @param properties
+     * @return
+     */
+    Map bulkUpdateDataSetSummaries(String projectId, String reportId, List dataSetIds, Map properties) {
+        boolean dirty = false
+        List errors = []
+        Map project = get(projectId)
+        dataSetIds?.each { String dataSetId ->
+
+            Map dataSet = project.custom?.dataSets?.find{it.dataSetId == dataSetId}
+            if (dataSet) {
+                // Associate the data set with the report
+                if (!dataSet.reportId) {
+                    dataSet.reportId = reportId
+                    dirty = true
+                }
+                else if (dataSet.reportId != reportId) {
+                    errors << "Data set ${dataSet.dataSetId} is already associated with report ${dataSet.reportId}"
+                    return
+                }
+
+                properties.each { String key, value ->
+                    if (dataSet[key] != value) {
+                        dataSet[key] = value
+                        dirty = true
+                    }
+                }
+            }
+            else {
+                errors << "Report ${reportId} references data set ${dataSetId} which does not exist in project ${projectId}"
+            }
+        }
+        // Disassociate any data sets that were removed from the report
+        project.custom?.dataSets.findAll { Map dataSet ->
+            dataSet.reportId == reportId && !(dataSet.dataSetId in dataSetIds)
+        }.each {
+            it.reportId = null
+            dirty = true
+        }
+
+        Map result = [:]
+        if (dirty) {
+            // Save the changes to the data sets
+            result = updateUnchecked(project.projectId, [custom: project.custom])
+            if (result?.error) {
+                errors << result.error
+            }
+        }
+        if (errors) {
+            result.error = errors.join("\n")
+        }
+        result
     }
 
 }

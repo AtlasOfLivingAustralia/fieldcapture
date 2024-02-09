@@ -1125,7 +1125,9 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             editDataSetUrl: config.editDataSetUrl,
             deleteDataSetUrl: config.deleteDataSetUrl,
             viewDataSetUrl: config.viewDataSetUrl,
-            returnToUrl: config.returnToUrl
+            returnToUrl: config.returnToUrl,
+            reports: project.reports || [],
+            viewReportUrl: config.viewReportUrl
         };
         var projectService = new ProjectService({}, config);
         var viewModel = new DataSetsViewModel(project.custom && project.custom.dataSets, projectService, dataSetsConfig);
@@ -1146,22 +1148,22 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
                     visible: true
                 },
                 {
-                    target: 3,
+                    target: 4,
                     sortable: true,
-                    orderData: 4
+                    orderData: 5
                 },
                 {
-                    target: 4,
+                    target: 5,
                     visible: false,
                     searchable: false
                 },
                 {
-                    target: 5,
+                    target: 6,
                     sortable:true,
-                    orderData: 6
+                    orderData: 7
                 },
                 {
-                    target: 6,
+                    target: 7,
                     visible: false,
                     searchable: false
                 },

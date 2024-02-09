@@ -4,7 +4,7 @@ import au.org.ala.merit.ActivityService
 import au.org.ala.merit.PublicationStatus
 import au.org.ala.merit.ReportService
 import au.org.ala.merit.SiteService
-import au.org.ala.merit.reports.ReportData
+import au.org.ala.merit.reports.ReportLifecycleListener
 import org.apache.http.HttpStatus
 import grails.databinding.DataBinder
 import grails.databinding.SimpleDataBinder
@@ -130,7 +130,7 @@ class SaveReportDataCommandSpec extends Specification {
 
         then:
         command.hasErrors() == false
-        1 * reportService.reportDataForActivityType(savedActivity.type) >> new ReportData()
+        1 * reportService.reportLifeCycleListener(savedActivity.type) >> new ReportLifecycleListener()
         1 * activityService.update(jsonData.activityId, jsonData.activity)
     }
 
@@ -167,7 +167,7 @@ class SaveReportDataCommandSpec extends Specification {
 
         then:
         command.hasErrors() == false
-        1 * reportService.reportDataForActivityType(savedActivity.type) >> new ReportData()
+        1 * reportService.reportLifeCycleListener(savedActivity.type) >> new ReportLifecycleListener()
         1 * siteService.update(jsonData.site.siteId, jsonData.site) >> [resp:[siteId:jsonData.site.siteId]]
         1 * activityService.update(jsonData.activityId, jsonData.activity)
     }
@@ -205,7 +205,7 @@ class SaveReportDataCommandSpec extends Specification {
 
         then:
         command.hasErrors() == false
-        1 * reportService.reportDataForActivityType(savedActivity.type) >> new ReportData()
+        1 * reportService.reportLifeCycleListener(savedActivity.type) >> new ReportLifecycleListener()
         1 * siteService.update(siteId, jsonData.site) >> [resp:[siteId:siteId]]
         1 * activityService.update(jsonData.activityId, jsonData.activity)
     }
@@ -245,7 +245,7 @@ class SaveReportDataCommandSpec extends Specification {
         then:
         command.hasErrors() == false
         1 * siteService.update('', jsonData.site) >> [resp:[siteId:siteId]]
-        1 * reportService.reportDataForActivityType(savedActivity.type) >> new ReportData()
+        1 * reportService.reportLifeCycleListener(savedActivity.type) >> new ReportLifecycleListener()
         jsonData.activity.siteId == siteId
         jsonData.activity.activityId == jsonData.activityId
 
@@ -281,7 +281,7 @@ class SaveReportDataCommandSpec extends Specification {
 
         then:
         command.hasErrors() == false
-        1 * reportService.reportDataForActivityType(savedActivity.type) >> new ReportData()
+        1 * reportService.reportLifeCycleListener(savedActivity.type) >> new ReportLifecycleListener()
         and: "The activity is updated to remove the site id"
         1 * activityService.update(jsonData.activityId, expectedActivityData)
         and: "The site is deleted"

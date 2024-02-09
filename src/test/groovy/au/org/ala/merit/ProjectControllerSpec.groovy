@@ -3,7 +3,7 @@ package au.org.ala.merit
 import au.org.ala.merit.command.MeriPlanReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
 import au.org.ala.merit.config.ProgramConfig
-import au.org.ala.merit.reports.ReportData
+import au.org.ala.merit.reports.ReportLifecycleListener
 import org.apache.http.HttpStatus
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
@@ -268,7 +268,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         then:
         1 * projectService.doesReportBelongToProject(projectId, reportId) >> true
         1 * reportService.activityReportModel(reportId, ReportService.ReportMode.VIEW, null) >> activityReportModel
-        1 * reportService.reportDataForActivityType(_) >> new ReportData()
+        1 * reportService.reportLifeCycleListener(_) >> new ReportLifecycleListener()
         1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
         1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
 
@@ -293,7 +293,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         then:
         1 * projectService.doesReportBelongToProject(projectId, reportId) >> true
         1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> activityReportModel
-        1 * reportService.reportDataForActivityType(_) >> new ReportData()
+        1 * reportService.reportLifeCycleListener(_) >> new ReportLifecycleListener()
         1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
         1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
 
@@ -320,7 +320,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
 
         then: "the report activity should not be locked"
         1 * projectService.doesReportBelongToProject(projectId, reportId) >> true
-        1 * reportService.reportDataForActivityType(_) >> new ReportData()
+        1 * reportService.reportLifeCycleListener(_) >> new ReportLifecycleListener()
         // Override the default behaviour from setup
         1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
         0 * reportService.lockForEditing(_)
@@ -347,7 +347,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
 
         then:
         1 * projectService.doesReportBelongToProject(projectId, reportId) >> true
-        1 * reportService.reportDataForActivityType(_) >> new ReportData()
+        1 * reportService.reportLifeCycleListener(_) >> new ReportLifecycleListener()
         1 * reportService.lockForEditing(project.reports[0])
         1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
 
@@ -371,7 +371,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
 
         then:
         1 * projectService.doesReportBelongToProject(projectId, reportId) >> true
-        1 * reportService.reportDataForActivityType(_) >> new ReportData()
+        1 * reportService.reportLifeCycleListener(_) >> new ReportLifecycleListener()
         0 * reportService.lockForEditing(project.reports[0])
         1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
 

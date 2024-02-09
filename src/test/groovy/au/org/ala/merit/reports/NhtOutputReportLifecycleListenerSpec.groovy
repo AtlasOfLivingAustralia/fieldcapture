@@ -4,9 +4,9 @@ import au.org.ala.merit.ProjectService
 import au.org.ala.merit.ActivityService
 import spock.lang.Specification
 
-class NhtOutputReportDataSpec extends Specification {
+class NhtOutputReportLifecycleListenerSpec extends Specification {
 
-    NHTOutputReportData reportData = new NHTOutputReportData()
+    NHTOutputReportLifecycleListener reportData = new NHTOutputReportLifecycleListener()
     ProjectService projectService = Mock(ProjectService)
 
     void setup() {

@@ -10,13 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired
  * program configuration.
  */
 @Slf4j
-class ReportData {
+class ReportLifecycleListener {
 
     @Autowired
     ActivityFormService activityFormService
 
     Map getContextData(Map context, Map report) { [:] }
     Map getOutputData(Map context, Map outputConfig, Map report) { [:] }
+    Map reportSaved(Map report, Map activityData) { [:] }
+    Map reportSubmitted(Map report, List reportActivityIds, Map reportOwner) { [:] }
+    Map reportApproved(Map report, List reportActivityIds, Map reportOwner) { [:] }
+    Map reportRejected(Map report, List reportActivityIds, Map reportOwner) { [:] }
+    Map reportCancelled(Map report, List reportActivityIds, Map reportOwner) { [:] }
 
     private List<Map> findReferencedEntityTypes(String activityFormType) {
         List<Map> referencedEntities = []
@@ -39,7 +44,7 @@ class ReportData {
         activityData.outputs?.each { Map output ->
             List<Map> typesInOutput = typesInForm.findAll{it.outputName == output.name}
             typesInOutput.each { Map entityType ->
-                List value = getValueFromPath(entityType.path, output.data)
+                List value = getValueFromPath(entityType.path, output.data)?.findAll()
                 if (value) {
                     entityIds << [entityType: entityType.node.entityType, entityIds: value]
                 }
@@ -47,11 +52,6 @@ class ReportData {
         }
         entityIds
 
-    }
-
-    Map saveRelatedEntities(Map activityData, Map report) {
-        // Do nothing by default - subclasses can override this method to save related entities
-        [:]
     }
 
     /**

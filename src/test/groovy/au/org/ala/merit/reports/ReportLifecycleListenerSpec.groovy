@@ -4,9 +4,9 @@ import au.org.ala.ecodata.forms.ActivityFormService
 import groovy.json.JsonSlurper
 import spock.lang.Specification
 
-class ReportDataSpec extends Specification {
+class ReportLifecycleListenerSpec extends Specification {
 
-    ReportData reportData = new ReportData()
+    ReportLifecycleListener reportData = new ReportLifecycleListener()
     ActivityFormService activityFormService = Mock(ActivityFormService)
 
     def setup() {
@@ -31,7 +31,7 @@ class ReportDataSpec extends Specification {
         ]
 
         when:
-        List result = ReportData.getValueFromPath('prop1.prop2.prop3.prop4', data)
+        List result = ReportLifecycleListener.getValueFromPath('prop1.prop2.prop3.prop4', data)
 
         then:
         result == ['value1', 'value2', 'value3', 'value4']

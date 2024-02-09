@@ -2,6 +2,7 @@ package au.org.ala.merit.reports
 
 import au.org.ala.merit.ActivityService
 import au.org.ala.merit.ProjectService
+import au.org.ala.merit.PublicationStatus
 import groovy.util.logging.Slf4j
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
@@ -11,11 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired
  * Custom data for the NHT Output Report.
  */
 @Slf4j
-class NHTOutputReportData extends ReportData {
+class NHTOutputReportLifecycleListener extends ReportLifecycleListener {
 
     @Autowired
     ProjectService projectService
+    @Autowired
+    ActivityService activityService
 
+    boolean containsEntityReferences() {
+        true
+    }
     Map getContextData(Map project, Map report) {
         // Side effect - filter data sets.
         List eligibleDataSets = project.custom?.dataSets?.findAll {
@@ -25,6 +31,9 @@ class NHTOutputReportData extends ReportData {
                 it.outcomesLabel = new ArrayList(it.projectOutcomes).join(',')
             }
             it.progress == ActivityService.PROGRESS_FINISHED
+        }
+        eligibleDataSets.each {
+            it.alreadyReported = (it.reportId && it.reportId != report.reportId)
         }
         if (project.custom) {
             project.custom.dataSets = new JSONArray(eligibleDataSets ?: [])
@@ -38,6 +47,7 @@ class NHTOutputReportData extends ReportData {
             protocols:protocols
         ]
     }
+
 
     Map getOutputData(Map project, Map outputConfig, Map report) {
         List scores = outputConfig.outputContext.scores
@@ -54,46 +64,39 @@ class NHTOutputReportData extends ReportData {
         extraData
     }
 
-    Map saveRelatedEntities(Map activityData, Map report) {
+    Map reportSaved(Map report, Map activityData) {
+        updateDataSetSummaries(report, activityData, [reportId: report.reportId])
+    }
+
+
+    private Map updateDataSetSummaries(Map report, Map activityData, Map properties) {
         List entities = findReferencedEntities(activityData)
-        List dataSetIds = []
-        List errors = []
-        boolean dirty = false
-        Map project = projectService.get(report.projectId)
-        entities.each {
-            if (it.entityType == 'au.org.ala.ecodata.DataSetSummary') {
-                it.entityIds?.each {String entityId ->
-                    dataSetIds.addAll(it.entityIds)
-                    Map dataSet = project.custom?.dataSets?.find{it.dataSetId == entityId}
-                    if (dataSet) {
-                        // Associate the data set with the report
-                        if (!dataSet.reportId) {
-                            dataSet.reportId = report.reportId
-                            dirty = true
-                        }
-                        else if (dataSet.reportId != report.reportId) {
-                            errors << "Data set ${dataSet.dataSetId} is already associated with report ${dataSet.reportId}"
-                        }
-                    }
-                    else {
-                        errors << "Report ${report.reportId} references data set ${entityId} which does not exist in project ${report.projectId}"
-                    }
+        List dataSetIds = entities.findAll{
+            it.entityType == 'au.org.ala.ecodata.DataSetSummary'}.collect {
+            it.entityIds }.flatten().unique()
+        projectService.bulkUpdateDataSetSummaries(report.projectId, report.reportId, dataSetIds, properties)
+    }
 
-                }
-            }
-        }
-        // Disassociate any data sets that were removed from the report
-        project.custom?.dataSets.findAll { Map dataSet ->
-            dataSet.reportId == report.reportId && !(dataSet.dataSetId in dataSetIds)
-        }.each {
-            it.reportId = null
-            dirty = true
-        }
+    Map reportSubmitted(Map report, List reportActivityIds, Map reportOwner) {
+        updateDataSetPublicationStatus(report, reportActivityIds, PublicationStatus.SUBMITTED)
+    }
+    Map reportApproved(Map report, List reportActivityIds, Map reportOwner) {
+        updateDataSetPublicationStatus(report, reportActivityIds, PublicationStatus.APPROVED)
+    }
+    Map reportRejected(Map report, List reportActivityIds, Map reportOwner) {
+        updateDataSetPublicationStatus(report, reportActivityIds, PublicationStatus.NOT_APPROVED)
+    }
+    Map reportCancelled(Map report, List reportActivityIds, Map reportOwner) {
+        updateDataSetPublicationStatus(report, reportActivityIds, PublicationStatus.CANCELLED)
+    }
 
-        if (dirty) {
-            // Save the changes to the data sets
-            projectService.update(project.projectId, [custom: project.custom])
+    private Map updateDataSetPublicationStatus(Map report, List reportActivityIds, String newStatus) {
+        Map result = [:]
+        if (report.activityId) {
+            Map activity = activityService.get(report.activityId)
+            result = updateDataSetSummaries(report, activity, [publicationStatus: newStatus])
         }
+        result
     }
 
 }
