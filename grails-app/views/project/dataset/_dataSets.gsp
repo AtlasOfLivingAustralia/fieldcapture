@@ -45,7 +45,9 @@
             <td class="last-updated" data-bind="text:lastUpdated.formattedDate"></td>
             <td class="last-updated-hidden" data-bind="text:lastUpdated"></td>
             <td class="created-in" data-bind="text:createdIn"></td>
-            <td><button type="button" class="btn btn-sm" data-bind="activityProgress:progress">
+            <td>
+                <report-status params="reportStatus:publicationStatus"></report-status>
+                <button type="button" class="btn btn-sm" data-bind="activityProgress:progress">
                 <span data-bind="text: progress"></span>
                 </button>
             </td>
