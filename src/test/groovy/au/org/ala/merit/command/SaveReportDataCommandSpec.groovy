@@ -131,7 +131,7 @@ class SaveReportDataCommandSpec extends Specification {
         then:
         command.hasErrors() == false
         1 * reportService.reportLifeCycleListener(savedActivity.type) >> new ReportLifecycleListener()
-        1 * activityService.update(jsonData.activityId, jsonData.activity)
+        1 * activityService.update(jsonData.activityId, jsonData.activity) >> [message:'updated']
     }
 
     def "the command should save site data when it is supplied"() {
@@ -169,7 +169,7 @@ class SaveReportDataCommandSpec extends Specification {
         command.hasErrors() == false
         1 * reportService.reportLifeCycleListener(savedActivity.type) >> new ReportLifecycleListener()
         1 * siteService.update(jsonData.site.siteId, jsonData.site) >> [resp:[siteId:jsonData.site.siteId]]
-        1 * activityService.update(jsonData.activityId, jsonData.activity)
+        1 * activityService.update(jsonData.activityId, jsonData.activity) >> [message:'updated']
     }
 
     def "the command should assign a siteId when it exists but is not supplied"() {
@@ -207,7 +207,7 @@ class SaveReportDataCommandSpec extends Specification {
         command.hasErrors() == false
         1 * reportService.reportLifeCycleListener(savedActivity.type) >> new ReportLifecycleListener()
         1 * siteService.update(siteId, jsonData.site) >> [resp:[siteId:siteId]]
-        1 * activityService.update(jsonData.activityId, jsonData.activity)
+        1 * activityService.update(jsonData.activityId, jsonData.activity) >> [message:'updated']
     }
 
     def "the command should assign the siteId to the activity when creating a new site"() {
@@ -249,7 +249,7 @@ class SaveReportDataCommandSpec extends Specification {
         jsonData.activity.siteId == siteId
         jsonData.activity.activityId == jsonData.activityId
 
-        1 * activityService.update(jsonData.activityId, jsonData.activity)
+        1 * activityService.update(jsonData.activityId, jsonData.activity) >> [message:'updated']
     }
 
     def "If an existing report site contains no features it should be deleted"() {
@@ -283,7 +283,7 @@ class SaveReportDataCommandSpec extends Specification {
         command.hasErrors() == false
         1 * reportService.reportLifeCycleListener(savedActivity.type) >> new ReportLifecycleListener()
         and: "The activity is updated to remove the site id"
-        1 * activityService.update(jsonData.activityId, expectedActivityData)
+        1 * activityService.update(jsonData.activityId, expectedActivityData) >> [message:'updated']
         and: "The site is deleted"
         1 * siteService.delete(siteId) >> HttpStatus.SC_OK
 
