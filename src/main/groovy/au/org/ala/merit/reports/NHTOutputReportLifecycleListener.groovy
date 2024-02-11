@@ -89,6 +89,10 @@ class NHTOutputReportLifecycleListener extends ReportLifecycleListener {
     Map reportCancelled(Map report, List reportActivityIds, Map reportOwner) {
         updateDataSetPublicationStatus(report, reportActivityIds, PublicationStatus.CANCELLED)
     }
+    Map reportReset(Map report) {
+        // This is dissociate all data set summaries from the report because of the empty array of data set ids.
+        projectService.bulkUpdateDataSetSummaries(report.projectId, report.reportId, [], [:])
+    }
 
     private Map updateDataSetPublicationStatus(Map report, List reportActivityIds, String newStatus) {
         Map result = [:]

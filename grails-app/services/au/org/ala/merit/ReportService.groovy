@@ -464,7 +464,12 @@ class ReportService {
             return [success:false, error:"Cannot delete data for an approved or submitted report"]
         }
 
-        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/reset/"+report.reportId, [:])
+        Map resp = webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/reset/"+report.reportId, [:])
+        if (!resp.error) {
+            ReportLifecycleListener listener = reportLifeCycleListener(report)
+            listener.reportReset(report)
+        }
+        resp
     }
 
     def findReportsForUser(String userId) {

@@ -53,7 +53,10 @@ class ReportLifecycleListenerSpec extends Specification {
 
         then:
         1 * activityFormService.findActivityForm(_) >> nhtActivityForm()
-        entities == [[entityType:"au.org.ala.ecodata.DataSetSummary", entityIds:["e4e3f304-5ee7-458b-ad7e-0e3ee0cbb202", "0d2d2b6c-50ce-46f8-a8f0-5f9238d84120", "144ca417-43a8-4eab-94c3-f857263bbc06"]]]
+        entities == [
+                [entityType:"au.org.ala.ecodata.DataSetSummary", entityIds:["297cbf04-b8b1-43d5-a1b4-e833ef00a718", "0847b4c6-aba9-425c-a3e4-a07035d40b9b"]],
+                [entityType:"au.org.ala.ecodata.DataSetSummary", entityIds:["e4e3f304-5ee7-458b-ad7e-0e3ee0cbb202", "0d2d2b6c-50ce-46f8-a8f0-5f9238d84120", "144ca417-43a8-4eab-94c3-f857263bbc06"]],
+                [entityType:"au.org.ala.ecodata.DataSetSummary", entityIds:["5b1255a4-3b91-4fae-a243-02bd4d163898"]]]
     }
 
     private static Map nhtActivityForm() {
