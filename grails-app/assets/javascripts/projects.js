@@ -1169,12 +1169,13 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
                 },
 
             ],
-            order: [3, 'desc']
+            order: [4, 'desc']
         };
         if (!viewModel.supportsDateColumn) {
             dataTableConfig.columnDefs[2].visible = false;
             dataTableConfig.columnDefs[3].visible = false;
             dataTableConfig.columnDefs[5].visible = false;
+            dataTableConfig.columnDefs[6].visible = false;
             dataTableConfig.order = [1, 'asc'];
         }
 
