@@ -973,7 +973,7 @@
           {
             "dataType": "number",
             "name": "totalNumberBaselineDatasets",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(baselineDetailsControlled, \"relatedOutcomes ? 1 : 0\")"
@@ -984,6 +984,12 @@
             "name": "totalNumberBaselineDatasetsInvoiced",
             "validate": [
               {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
                 "param": {
                   "expression": "totalNumberBaselineDatasets",
                   "type": "computed"
@@ -992,6 +998,18 @@
               }
             ],
             "defaultValue": 0
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedBaselineMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalNumberBaselineDatasetsInvoiced < totalNumberBaselineDatasets",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -1132,6 +1150,18 @@
                     ]
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                "source": "totalInvoicedBaselineMismatched",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": ""
               }
             ]
           },
@@ -2083,7 +2113,6 @@
             "dataType": "number",
             "name": "totalNumberEngagementHeldInvoiced",
             "description": "Number of events invoiced for this reporting period.",
-            "validate": "required,min[0]",
             "defaultValue": 0,
             "validate": [
               {
@@ -2092,6 +2121,28 @@
                   "type": "computed"
                 },
                 "rule": "max"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "totalNumberEngagementInvoicedMismatched",
+            "description": "Please explain why the Total invoiced field is different from the Totals tally field.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalNumberEngagementHeldInvoiced < totalNumberEngagementHeld",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "otherInvestmentPriority",
+            "behaviour": [
+              {
+                "type": "enable",
+                "condition": "\"Other\" in investmentPriorities2"
               }
             ]
           },
@@ -2222,7 +2273,13 @@
                         "type": "number"
                       }
                     ]
-                  },
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span5 col-border-right",
+                "items": [
                   {
                     "type": "row",
                     "items": [
@@ -2230,6 +2287,16 @@
                         "preLabel": "(ii) Total number of engagement activities <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalNumberEngagementHeldInvoiced",
                         "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "source": "totalNumberEngagementInvoicedMismatched",
+                        "preLabel": "If Total invoiced field is different from the Totals tally field, please provide the reason",
+                        "type": "textarea"
                       }
                     ]
                   }
@@ -6768,9 +6835,14 @@
             "dataType": "number",
             "name": "totalNoPestFreeSurveyEstablishedInvoiced",
             "description": "The total invoiced must be the same or less than the total amount delivered.",
-            "validate": "required,min[0]",
             "decimalPlaces": 0,
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalNoPestFreeSurveyEstablished",
@@ -6794,10 +6866,15 @@
             "dataType": "number",
             "name": "totalNoPestFreeSurveyMaintainedInvoiced",
             "description": "The total invoiced must be the same or less than the total amount delivered.",
-            "validate": "required,min[0]",
             "decimalPlaces": 0,
             "defaultValue": 0,
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalNoPestFreeSurveyMaintained",
@@ -6847,10 +6924,15 @@
             "dataType": "number",
             "name": "totalAreaPestFreeSurveyInitialInvoiced",
             "description": "The total invoiced must be the same or less than the total amount delivered.",
-            "validate": "required,min[0]",
             "decimalPlaces": 0,
             "defaultValue": 0,
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalAreaPestFreeSurveyInitial",
@@ -6874,10 +6956,15 @@
             "dataType": "number",
             "name": "totalAreaPestFreeSurveyMaintainedInvoiced",
             "description": "The total invoiced must be the same or less than the total amount delivered.",
-            "validate": "required,min[0]",
             "decimalPlaces": 0,
             "defaultValue": 0,
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalAreaPestFreeSurveyMaintained",
@@ -9741,7 +9828,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(farmManagementSurveys, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
@@ -9751,6 +9838,12 @@
             "dataType": "number",
             "name": "totalSurveyBaselineInvoiced",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalSurveyBaseline",
@@ -9764,7 +9857,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(farmManagementSurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
@@ -9775,6 +9868,12 @@
             "name": "totalSurveyIndicatorInvoiced",
             "validate": [
               {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
                 "param": {
                   "expression": "totalSurveyIndicator",
                   "type": "computed"
@@ -9783,6 +9882,18 @@
               }
             ],
             "defaultValue": 0
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedFarmMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator or totalSurveyBaselineInvoiced < totalSurveyBaseline",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -9955,6 +10066,18 @@
                         ]
                       }
                     ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                    "source": "totalInvoicedFarmMismatched",
+                    "type": "textarea",
+                    "rows": 4,
+                    "placeholder": ""
                   }
                 ]
               },
@@ -10782,7 +10905,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(faunaSurveys, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
@@ -10792,6 +10915,12 @@
             "dataType": "number",
             "name": "totalSurveyBaselineInvoiced",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalSurveyBaseline",
@@ -10805,7 +10934,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(faunaSurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
@@ -10816,6 +10945,12 @@
             "name": "totalSurveyIndicatorInvoiced",
             "validate": [
               {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
                 "param": {
                   "expression": "totalSurveyIndicator",
                   "type": "computed"
@@ -10824,6 +10959,18 @@
               }
             ],
             "defaultValue": 0
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedFaunaMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator or totalSurveyBaselineInvoiced < totalSurveyBaseline",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -10996,6 +11143,18 @@
                         ]
                       }
                     ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                    "source": "totalInvoicedFaunaMismatched",
+                    "type": "textarea",
+                    "rows": 4,
+                    "placeholder": ""
                   }
                 ]
               },
@@ -12777,7 +12936,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(floraSurveys, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
@@ -12787,6 +12946,12 @@
             "dataType": "number",
             "name": "totalSurveyBaselineInvoiced",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalSurveyBaseline",
@@ -12800,7 +12965,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(floraSurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
@@ -12812,11 +12977,29 @@
             "defaultValue": 0,
             "validate": [
               {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
                 "param": {
                   "expression": "totalSurveyIndicator",
                   "type": "computed"
                 },
                 "rule": "max"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedFloraMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator or totalSurveyBaselineInvoiced < totalSurveyBaseline",
+                "type": "enable"
               }
             ]
           },
@@ -12991,6 +13174,18 @@
                         ]
                       }
                     ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                    "source": "totalInvoicedFloraMismatched",
+                    "type": "textarea",
+                    "rows": 4,
+                    "placeholder": ""
                   }
                 ]
               },
@@ -14886,7 +15081,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(habitatConditionSurveys, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
@@ -14896,6 +15091,12 @@
             "dataType": "number",
             "name": "totalSurveyBaselineInvoiced",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalSurveyBaseline",
@@ -14909,7 +15110,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(habitatConditionSurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
@@ -14920,6 +15121,12 @@
             "name": "totalSurveyIndicatorInvoiced",
             "validate": [
               {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
                 "param": {
                   "expression": "totalSurveyIndicator",
                   "type": "computed"
@@ -14928,6 +15135,18 @@
               }
             ],
             "defaultValue": 0
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedHabitatConditionMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator or totalSurveyBaselineInvoiced < totalSurveyBaseline",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -15100,6 +15319,18 @@
                         ]
                       }
                     ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                    "source": "totalInvoicedHabitatConditionMismatched",
+                    "type": "textarea",
+                    "rows": 4,
+                    "placeholder": ""
                   }
                 ]
               },
@@ -19150,7 +19381,7 @@
           {
             "dataType": "number",
             "name": "totalAreaDiseaseManagementInitial",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(diseaseManagementAreasControlled, \"initialOrFollowup == 'Initial' ? areaTreatedHa : 0\")"
@@ -19160,6 +19391,12 @@
             "dataType": "number",
             "name": "totalAreaDiseaseManagementInitialInvoiced",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalAreaDiseaseManagementInitial",
@@ -19173,7 +19410,7 @@
           {
             "dataType": "number",
             "name": "totalAreaDiseaseManagementFollowup",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(diseaseManagementAreasControlled, \"initialOrFollowup == 'Follow-up' ? areaTreatedHa : 0\")"
@@ -19183,6 +19420,12 @@
             "dataType": "number",
             "name": "totalAreaDiseaseManagementInvoicedFollowup",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalAreaDiseaseManagementFollowup",
@@ -19196,7 +19439,7 @@
           {
             "dataType": "number",
             "name": "totalLengthDiseaseManagementInitial",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(diseaseManagementAreasControlled, \"initialOrFollowup == 'Initial' ? lengthTreatedKm : 0\")"
@@ -19206,6 +19449,12 @@
             "dataType": "number",
             "name": "totalLengthDiseaseManagementInvoicedInitial",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalLengthDiseaseManagementInitial",
@@ -19219,7 +19468,7 @@
           {
             "dataType": "number",
             "name": "totalLengthDiseaseManagementFollowup",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(diseaseManagementAreasControlled, \"initialOrFollowup == 'Follow-up' ? lengthTreatedKm : 0\")"
@@ -19230,6 +19479,12 @@
             "name": "totalLengthDiseaseManagementInvoicedFollowup",
             "validate": [
               {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
                 "param": {
                   "expression": "totalLengthDiseaseManagementFollowup",
                   "type": "computed"
@@ -19238,6 +19493,18 @@
               }
             ],
             "defaultValue": 0
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedDiseaseMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalAreaDiseaseManagementInitialInvoiced < totalAreaDiseaseManagementInitial or totalAreaDiseaseManagementInvoicedFollowup < totalAreaDiseaseManagementFollowup or totalLengthDiseaseManagementInvoicedInitial < totalLengthDiseaseManagementInitial or totalLengthDiseaseManagementInvoicedFollowup < totalLengthDiseaseManagementFollowup",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -19456,6 +19723,18 @@
                     ]
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                "source": "totalInvoicedDiseaseMismatched",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": ""
               }
             ]
           },
@@ -20258,7 +20537,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(pestAnimalSurveys, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
@@ -20268,6 +20547,12 @@
             "dataType": "number",
             "name": "totalSurveyBaselineInvoiced",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalSurveyBaseline",
@@ -20281,7 +20566,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(pestAnimalSurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
@@ -20293,11 +20578,29 @@
             "defaultValue": 0,
             "validate": [
               {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
                 "param": {
                   "expression": "totalSurveyIndicator",
                   "type": "computed"
                 },
                 "rule": "max"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedPestAnimalMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator or totalSurveyBaselineInvoiced < totalSurveyBaseline",
+                "type": "enable"
               }
             ]
           },
@@ -20472,6 +20775,18 @@
                         ]
                       }
                     ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                    "source": "totalInvoicedPestAnimalMismatched",
+                    "type": "textarea",
+                    "rows": 4,
+                    "placeholder": ""
                   }
                 ]
               },
@@ -21364,7 +21679,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(plantSurvivalSurveys, \"surveyObjective ? 1 : 0\")"
@@ -21375,6 +21690,12 @@
             "name": "totalSurveyIndicatorInvoiced",
             "validate": [
               {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
                 "param": {
                   "expression": "totalSurveyIndicator",
                   "type": "computed"
@@ -21383,6 +21704,18 @@
               }
             ],
             "defaultValue": 0
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedSeedMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -21535,6 +21868,18 @@
                         ]
                       }
                     ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                    "source": "totalInvoicedSeedMismatched",
+                    "type": "textarea",
+                    "rows": 4,
+                    "placeholder": ""
                   }
                 ]
               },
@@ -23170,7 +23515,7 @@
           {
             "dataType": "number",
             "name": "totalAreaWeedsTreatedInitial",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(weedTreatmentAreasControlled, \"initialOrFollowup == 'Initial' ? areaTreatedHa : 0\")"
@@ -23180,6 +23525,12 @@
             "dataType": "number",
             "name": "totalAreaWeedsTreatedInitialInvoiced",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalAreaWeedsTreatedInitial",
@@ -23193,7 +23544,7 @@
           {
             "dataType": "number",
             "name": "totalAreaWeedsTreatedFollowup",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(weedTreatmentAreasControlled, \"initialOrFollowup == 'Follow-up' ? areaTreatedHa : 0\")"
@@ -23203,6 +23554,12 @@
             "dataType": "number",
             "name": "totalAreaWeedsTreatedInvoicedFollowup",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalAreaWeedsTreatedFollowup",
@@ -23216,7 +23573,7 @@
           {
             "dataType": "number",
             "name": "totalLengthWeedsTreatedInitial",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(weedTreatmentAreasControlled, \"initialOrFollowup == 'Initial' ? lengthTreatedKm : 0\")"
@@ -23226,6 +23583,12 @@
             "dataType": "number",
             "name": "totalLengthWeedsTreatedInvoicedInitial",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalLengthWeedsTreatedInitial",
@@ -23239,7 +23602,7 @@
           {
             "dataType": "number",
             "name": "totalLengthWeedsTreatedFollowup",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(weedTreatmentAreasControlled, \"initialOrFollowup == 'Follow-up' ? lengthTreatedKm : 0\")"
@@ -23250,6 +23613,12 @@
             "name": "totalLengthWeedsTreatedInvoicedFollowup",
             "validate": [
               {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
                 "param": {
                   "expression": "totalLengthWeedsTreatedFollowup",
                   "type": "computed"
@@ -23258,6 +23627,18 @@
               }
             ],
             "defaultValue": 0
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedRemovingWeedsMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalAreaWeedsTreatedInitialInvoiced < totalAreaWeedsTreatedInitial or totalAreaWeedsTreatedInvoicedFollowup < totalAreaWeedsTreatedFollowup or totalLengthWeedsTreatedInvoicedInitial < totalLengthWeedsTreatedInitial or totalLengthWeedsTreatedInvoicedFollowup < totalLengthWeedsTreatedFollowup",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -23480,6 +23861,18 @@
                         ]
                       }
                     ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                    "source": "totalInvoicedRemovingWeedsMismatched",
+                    "type": "textarea",
+                    "rows": 4,
+                    "placeholder": ""
                   }
                 ]
               },
@@ -24155,7 +24548,7 @@
           {
             "dataType": "number",
             "name": "totalAreaWeedsTreatedInitial",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(revegetationAreasControlled, \"initialOrMaintenance == 'Initial' ? areaTreatedHa : 0\")"
@@ -24165,6 +24558,12 @@
             "dataType": "number",
             "name": "totalAreaWeedsTreatedInitialInvoiced",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalAreaWeedsTreatedInitial",
@@ -24178,7 +24577,7 @@
           {
             "dataType": "number",
             "name": "totalAreaWeedsTreatedFollowup",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(revegetationAreasControlled, \"initialOrMaintenance == 'Maintenance' ? areaTreatedHa : 0\")"
@@ -24189,6 +24588,12 @@
             "name": "totalAreaWeedsTreatedInvoicedFollowup",
             "validate": [
               {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
                 "param": {
                   "expression": "totalAreaWeedsTreatedFollowup",
                   "type": "computed"
@@ -24197,6 +24602,18 @@
               }
             ],
             "defaultValue": 0
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedRevegetatingMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalAreaWeedsTreatedInitialInvoiced < totalAreaWeedsTreatedInitial or totalAreaWeedsTreatedInvoicedFollowup < totalAreaWeedsTreatedFollowup",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -24363,6 +24780,18 @@
                     ]
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                "source": "totalInvoicedRevegetatingMismatched",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": ""
               }
             ]
           },
@@ -25122,7 +25551,7 @@
           {
             "dataType": "number",
             "name": "totalAmountSeedsCuttingsCollected",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(areasOfSeedCollection, \"amountSeedCollected\")"
@@ -25132,6 +25561,12 @@
             "dataType": "number",
             "name": "totalAmountSeedsCuttingsCollectedInvoiced",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalAmountSeedsCuttingsCollected",
@@ -25145,7 +25580,7 @@
           {
             "dataType": "number",
             "name": "totalDaysSeedsCuttingsCollected",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(areasOfSeedCollection, \"numberOfDaysCollectingSeeds\")"
@@ -25155,6 +25590,12 @@
             "dataType": "number",
             "name": "totalDaysSeedsCuttingsCollectedInvoiced",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalDaysSeedsCuttingsCollected",
@@ -25168,7 +25609,7 @@
           {
             "dataType": "number",
             "name": "totalDaysPropagating",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(areasOfSeedCollection, \"noOfDaysPropagating\")"
@@ -25178,6 +25619,12 @@
             "dataType": "number",
             "name": "totalDaysPropagatingInvoiced",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalDaysPropagating",
@@ -25191,7 +25638,7 @@
           {
             "dataType": "number",
             "name": "totalPlantsPropagated",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(areasOfSeedCollection, \"noOfPlantsPropogated\")"
@@ -25202,6 +25649,12 @@
             "name": "totalPlantsPropagatedInvoiced",
             "validate": [
               {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
                 "param": {
                   "expression": "totalPlantsPropagated",
                   "type": "computed"
@@ -25210,6 +25663,18 @@
               }
             ],
             "defaultValue": 0
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedSeedCollectionMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalAmountSeedsCuttingsCollectedInvoiced < totalAmountSeedsCuttingsCollected or totalDaysSeedsCuttingsCollectedInvoiced < totalDaysSeedsCuttingsCollected or totalDaysPropagatingInvoiced < totalDaysPropagating or totalPlantsPropagatedInvoiced < totalPlantsPropagated",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -25428,6 +25893,18 @@
                     ]
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                "source": "totalInvoicedSeedCollectionMismatched",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": ""
               }
             ]
           },
@@ -26203,7 +26680,7 @@
           {
             "dataType": "number",
             "name": "totalAreaSitePreparation",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(sitePreparationDetailsControlled, \"areaTreatedHa\")"
@@ -26213,6 +26690,12 @@
             "dataType": "number",
             "name": "totalAreaSitePreparationInvoiced",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalAreaSitePreparation",
@@ -26226,7 +26709,7 @@
           {
             "dataType": "number",
             "name": "totalLengthSitePreparation",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(sitePreparationDetailsControlled, \"lengthTreatedKm\")"
@@ -26237,6 +26720,12 @@
             "name": "totalLengthSitePreparationInvoiced",
             "validate": [
               {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
                 "param": {
                   "expression": "totalLengthSitePreparation",
                   "type": "computed"
@@ -26245,6 +26734,18 @@
               }
             ],
             "defaultValue": 0
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedSiteCollectionMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalAreaSitePreparationInvoiced < totalAreaSitePreparation or totalLengthSitePreparationInvoiced < totalLengthSitePreparation",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -26411,6 +26912,18 @@
                     ]
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                "source": "totalInvoicedSiteCollectionMismatched",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": ""
               }
             ]
           },
@@ -27167,7 +27680,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(skillsAndKnowledgeSurveys, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
@@ -27177,6 +27690,12 @@
             "dataType": "number",
             "name": "totalSurveyBaselineInvoiced",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalSurveyBaseline",
@@ -27190,7 +27709,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(skillsAndKnowledgeSurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
@@ -27200,6 +27719,12 @@
             "dataType": "number",
             "name": "totalSurveyIndicatorInvoiced",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalSurveyIndicator",
@@ -27215,6 +27740,18 @@
             "name": "numberOfSurveysInvoiced",
             "validate": "required,min[0]",
             "defaultValue": 1
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedSkillsMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator or totalSurveyBaselineInvoiced < totalSurveyBaseline",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -27387,6 +27924,18 @@
                         ]
                       }
                     ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                    "source": "totalInvoicedSkillsMismatched",
+                    "type": "textarea",
+                    "rows": 4,
+                    "placeholder": ""
                   }
                 ]
               },
@@ -28107,7 +28656,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(soilTestingSurveys, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
@@ -28117,6 +28666,12 @@
             "dataType": "number",
             "name": "totalSurveyBaselineInvoiced",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalSurveyBaseline",
@@ -28130,7 +28685,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(soilTestingSurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
@@ -28141,6 +28696,12 @@
             "name": "totalSurveyIndicatorInvoiced",
             "validate": [
               {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
                 "param": {
                   "expression": "totalSurveyIndicator",
                   "type": "computed"
@@ -28149,6 +28710,18 @@
               }
             ],
             "defaultValue": 0
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedSoilTestingMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalSurveyBaselineInvoiced < totalSurveyBaseline or totalSurveyIndicatorInvoiced < totalSurveyIndicator",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -28312,6 +28885,18 @@
                         ]
                       }
                     ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                    "source": "totalInvoicedSoilTestingMismatched",
+                    "type": "textarea",
+                    "rows": 4,
+                    "placeholder": ""
                   }
                 ]
               },
@@ -29040,7 +29625,7 @@
           {
             "dataType": "number",
             "name": "totalNumberInterventionsInitial",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(interventionDetails, \"initialOrFollowup == 'Initial' ? numberOfInterventions : 0\")"
@@ -29050,6 +29635,12 @@
             "dataType": "number",
             "name": "totalNumberInterventionsInitialInvoiced",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalNumberInterventionsInitial",
@@ -29063,7 +29654,7 @@
           {
             "dataType": "number",
             "name": "totalNumberInterventionsFollowUp",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(interventionDetails, \"initialOrFollowup == 'Follow-up' ? numberOfInterventions : 0\")"
@@ -29074,6 +29665,12 @@
             "name": "totalNumberInterventionsFollowUpInvoiced",
             "validate": [
               {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
                 "param": {
                   "expression": "totalNumberInterventionsFollowUp",
                   "type": "computed"
@@ -29082,6 +29679,18 @@
               }
             ],
             "defaultValue": 0
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedInterventionsMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalNumberInterventionsInitialInvoiced < totalNumberInterventionsInitial or totalNumberInterventionsFollowUpInvoiced < totalNumberInterventionsFollowUp",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -29248,6 +29857,18 @@
                     ]
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                "source": "totalInvoicedInterventionsMismatched",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": ""
               }
             ]
           },
@@ -30147,7 +30768,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(waterQualitySurveys, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
@@ -30157,6 +30778,12 @@
             "dataType": "number",
             "name": "totalSurveyBaselineInvoiced",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalSurveyBaseline",
@@ -30170,7 +30797,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(waterQualitySurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
@@ -30181,6 +30808,12 @@
             "name": "totalSurveyIndicatorInvoiced",
             "validate": [
               {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
                 "param": {
                   "expression": "totalSurveyIndicator",
                   "type": "computed"
@@ -30189,6 +30822,18 @@
               }
             ],
             "defaultValue": 0
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedWaterMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator or totalSurveyBaselineInvoiced < totalSurveyBaseline",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -30361,6 +31006,18 @@
                         ]
                       }
                     ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                    "source": "totalInvoicedWaterMismatched",
+                    "type": "textarea",
+                    "rows": 4,
+                    "placeholder": ""
                   }
                 ]
               },
@@ -31239,7 +31896,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(weedSurveys, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
@@ -31249,6 +31906,12 @@
             "dataType": "number",
             "name": "totalSurveyBaselineInvoiced",
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalSurveyBaseline",
@@ -31262,7 +31925,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
               "expression": "sum(weedSurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
@@ -31273,6 +31936,12 @@
             "name": "totalSurveyIndicatorInvoiced",
             "validate": [
               {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
                 "param": {
                   "expression": "totalSurveyIndicator",
                   "type": "computed"
@@ -31281,6 +31950,18 @@
               }
             ],
             "defaultValue": 0
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedWeedMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator or totalSurveyBaselineInvoiced < totalSurveyBaseline",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -31453,6 +32134,18 @@
                         ]
                       }
                     ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                    "source": "totalInvoicedWeedMismatched",
+                    "type": "textarea",
+                    "rows": 4,
+                    "placeholder": ""
                   }
                 ]
               },
@@ -32145,8 +32838,7 @@
           {
             "dataType": "number",
             "name": "totalAnnualFtes",
-            "validate": "required,min[0]",
-            "decimalPlaces": 3,
+            "defaultValue": 0,
             "computed": {
               "expression": "sum(safAreasControlled, \"fteOfThisPosition\")/4"
             }
@@ -32154,14 +32846,31 @@
           {
             "dataType": "number",
             "name": "totalAnnualFtesInvoiced",
-            "decimalPlaces": 3,
             "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
               {
                 "param": {
                   "expression": "totalAnnualFtes",
                   "type": "computed"
                 },
                 "rule": "max"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedSafMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalAnnualFtesInvoiced < totalAnnualFtes or totalAnnualFtesInvoiced == 0",
+                "type": "enable"
               }
             ]
           },
@@ -32304,6 +33013,18 @@
                     ]
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                "source": "totalInvoicedSafMismatched",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": ""
               }
             ]
           },
