@@ -9346,6 +9346,7 @@
                 "columns": [
                   {
                     "name": "dataSetId",
+                    "entityType": "au.org.ala.ecodata.DataSetSummary",
                     "dataType": "text",
                     "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
                     "validate": "required",
@@ -10392,6 +10393,7 @@
                 "columns": [
                   {
                     "name": "dataSetId",
+                    "entityType": "au.org.ala.ecodata.DataSetSummary",
                     "dataType": "text",
                     "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
                     "validate": "required",
@@ -12380,6 +12382,7 @@
                 "columns": [
                   {
                     "name": "dataSetId",
+                    "entityType": "au.org.ala.ecodata.DataSetSummary",
                     "dataType": "text",
                     "entityType": "au.org.ala.ecodata.DataSetSummary",
                     "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
@@ -14479,6 +14482,7 @@
                 "columns": [
                   {
                     "name": "dataSetId",
+                    "entityType": "au.org.ala.ecodata.DataSetSummary",
                     "dataType": "text",
                     "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
                     "validate": "required",
@@ -19855,6 +19859,7 @@
                 "columns": [
                   {
                     "name": "dataSetId",
+                    "entityType": "au.org.ala.ecodata.DataSetSummary",
                     "dataType": "text",
                     "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
                     "validate": "required",
@@ -20932,6 +20937,7 @@
                 "columns": [
                   {
                     "name": "dataSetId",
+                    "entityType": "au.org.ala.ecodata.DataSetSummary",
                     "dataType": "text",
                     "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
                     "validate": "required",
@@ -26785,6 +26791,7 @@
                 "columns": [
                   {
                     "name": "dataSetId",
+                    "entityType": "au.org.ala.ecodata.DataSetSummary",
                     "dataType": "text",
                     "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
                     "validate": "required",
@@ -29751,6 +29758,7 @@
                 "columns": [
                   {
                     "name": "dataSetId",
+                    "entityType": "au.org.ala.ecodata.DataSetSummary",
                     "dataType": "text",
                     "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
                     "validate": "required",
@@ -30827,6 +30835,7 @@
                 "columns": [
                   {
                     "name": "dataSetId",
+                    "entityType": "au.org.ala.ecodata.DataSetSummary",
                     "dataType": "text",
                     "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
                     "validate": "required",
