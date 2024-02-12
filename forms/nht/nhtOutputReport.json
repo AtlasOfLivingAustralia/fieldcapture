@@ -9448,7 +9448,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 12 and dataSet.progress == 'finished' and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 12 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -10531,7 +10531,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 13 and dataSet.progress == 'finished' and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 13 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -12556,7 +12556,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 15 and dataSet.progress == 'finished' and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 15 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -14691,7 +14691,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 42 and dataSet.progress == 'finished' and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 42 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -20152,7 +20152,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 23 and dataSet.progress == 'finished' and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 23 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -21266,7 +21266,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 24 and dataSet.progress == 'finished' and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 24 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -27318,7 +27318,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 29 and dataSet.progress == 'finished' and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 29 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -30393,7 +30393,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 32 and dataSet.progress == 'finished' and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 32 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -31506,7 +31506,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 33 and dataSet.progress == 'finished' and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 33 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
