@@ -1532,7 +1532,7 @@
           {
             "dataType": "number",
             "name": "totalMaterialsPublished",
-            "validate": "required,min[0]",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "defaultValue": 1,
             "computed": {
@@ -1544,11 +1544,29 @@
             "name": "totalMaterialsPublishedInvoiced",
             "validate": [
               {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
                 "param": {
                   "expression": "totalMaterialsPublished",
                   "type": "computed"
                 },
                 "rule": "max"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedCommunicationMaterialsMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required,min[0]",
+            "behaviour": [
+              {
+                "condition": "totalMaterialsPublishedInvoiced < totalMaterialsPublished",
+                "type": "enable"
               }
             ]
           },
@@ -1679,7 +1697,13 @@
                         "type": "number"
                       }
                     ]
-                  },
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
                   {
                     "type": "row",
                     "items": [
@@ -1691,6 +1715,18 @@
                     ]
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                "source": "totalInvoicedCommunicationMaterialsMismatched",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": ""
               }
             ]
           },
@@ -32762,12 +32798,14 @@
               },
               {
                 "dataType": "number",
+                "decimalPlaces": 3,
                 "name": "fteOfThisPosition",
                 "description": "Note: This must be reported in the context of this reporting period only. For example, a full time SAF = 1, and a half time SAF = 0.5",
                 "validate": "required,min[0],max[1]"
               },
               {
                 "dataType": "number",
+                "decimalPlaces": 3,
                 "name": "amountOfFteInvoicedFor",
                 "description": "Note: This must be reported in the context of this reporting period only. For example, a full time SAF = 1, and a half time SAF = 0.5",
                 "validate": "required,min[0]"
@@ -32825,16 +32863,6 @@
                       "Subcontractor"
                     ],
                     "validate": "required"
-                  },
-                  {
-                    "name": "subcontractorEmployed",
-                    "dataType": "text",
-                    "behaviour": [
-                      {
-                        "condition": "deliveryOrSubcontractorEmployed == \"Subcontractor\"",
-                        "type": "enable"
-                      }
-                    ]
                   }
                 ],
                 "dataType": "list",
@@ -32846,14 +32874,16 @@
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAnnualFtes",
             "defaultValue": 0,
             "computed": {
-              "expression": "sum(safAreasControlled, \"fteOfThisPosition\")/4"
+              "expression": "sum(safAreasControlled, \"fteOfThisPosition\")/4,3"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAnnualFtesInvoiced",
             "validate": [
               {
@@ -32878,7 +32908,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalAnnualFtesInvoiced < totalAnnualFtes or totalAnnualFtesInvoiced == 0",
+                "condition": "totalAnnualFtesInvoiced < totalAnnualFtes",
                 "type": "enable"
               }
             ]
@@ -33084,16 +33114,6 @@
                             "type": "select2Many"
                           }
                         ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherInvestmentPriority",
-                            "preLabel": "Investment priority (if Other)",
-                            "type": "text"
-                          }
-                        ]
                       }
                     ]
                   },
@@ -33177,7 +33197,7 @@
                     "type": "selectOne"
                   },
                   {
-                    "width": "10%",
+                    "width": "15%",
                     "source": "yesPositionVacant",
                     "title": "If yes, is there a recruitment process being run?",
                     "type": "selectOne"
@@ -33195,22 +33215,16 @@
                     "type": "date"
                   },
                   {
-                    "width": "15%",
+                    "width": "20%",
                     "source": "coveredInterimPosition",
                     "title": "How is the position(s) being covered in the interim?",
                     "type": "textarea"
                   },
                   {
-                    "width": "10%",
+                    "width": "15%",
                     "source": "deliveryOrSubcontractorEmployed",
                     "title": "Is the position employed by delivery partner or subcontractor?",
                     "type": "selectOne"
-                  },
-                  {
-                    "width": "15%",
-                    "source": "subcontractorEmployed",
-                    "title": "If employed by subcontractor, please provide name of subcontractor",
-                    "type": "textarea"
                   }
                 ],
                 "userAddedRows": false,
