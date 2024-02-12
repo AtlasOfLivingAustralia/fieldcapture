@@ -2186,6 +2186,7 @@ class ProjectService  {
             dataSet.reportId == reportId && !(dataSet.dataSetId in dataSetIds)
         }.each {
             it.reportId = null
+            it.publicationStatus = null
             dirty = true
         }
 
