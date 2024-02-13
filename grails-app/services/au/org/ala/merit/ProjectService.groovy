@@ -2164,8 +2164,8 @@ class ProjectService  {
                     dirty = true
                 }
                 else if (dataSet.reportId != reportId) {
-                    Map report = project.reports?.find({it.reportId == reportId})
-                    String reportLabel = report?.name ?: reportId
+                    Map report = project.reports?.find({it.reportId == dataSet.reportId})
+                    String reportLabel = report?.name ?: dataSet.reportId
                     errors << "Data set ${dataSet.name} is already associated with report ${reportLabel}"
                     return
                 }
