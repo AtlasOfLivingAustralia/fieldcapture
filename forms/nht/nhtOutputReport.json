@@ -33100,6 +33100,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -33192,7 +33193,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableSaf"
           },
           {
             "columns": [
@@ -33288,6 +33289,9 @@
                 "validate": "required,min[0]"
               },
               {
+                "dataType": "list",
+                "name": "sustainableAgricultureFacilitators",
+                "allowRowDelete": "false",
                 "columns": [
                   {
                     "dataType": "text",
@@ -33301,6 +33305,7 @@
                   {
                     "name": "yesPositionVacant",
                     "dataType": "text",
+                    "validate": "required",
                     "constraints": [
                       "Yes",
                       "No"
@@ -33308,7 +33313,7 @@
                     "behaviour": [
                       {
                         "condition": "wasPositionVacant == \"Yes\"",
-                        "type": "enable"
+                        "type": "enable_and_clear"
                       }
                     ]
                   },
@@ -33321,16 +33326,29 @@
                         "type": "enable"
                       }
                     ],
-                    "validate": "maxSize[300]"
+                    "validate": "required,maxSize[300]"
                   },
                   {
                     "dataType": "date",
-                    "name": "expectedDatePositionFill"
+                    "name": "expectedDatePositionFill",
+                    "validate": "required",
+                    "behaviour": [
+                      {
+                        "condition": "wasPositionVacant == \"Yes\" and yesPositionVacant == \"No\" or wasPositionVacant == \"Yes\" and yesPositionVacant == \"Yes\"",
+                        "type": "enable"
+                      }
+                    ]
                   },
                   {
                     "dataType": "text",
                     "name": "coveredInterimPosition",
-                    "validate": "maxSize[100]"
+                    "validate": "required,maxSize[100]",
+                    "behaviour": [
+                      {
+                        "condition": "wasPositionVacant == \"Yes\" and yesPositionVacant == \"No\" or wasPositionVacant == \"Yes\" and yesPositionVacant == \"Yes\"",
+                        "type": "enable"
+                      }
+                    ]
                   },
                   {
                     "dataType": "text",
@@ -33341,11 +33359,10 @@
                     ],
                     "validate": "required"
                   }
-                ],
-                "dataType": "list",
-                "name": "sustainableAgricultureFacilitators"
+                ]
               }
             ],
+            "allowRowDelete": "false",
             "dataType": "list",
             "name": "safAreasControlled"
           },
@@ -33362,6 +33379,7 @@
             "dataType": "number",
             "name": "totalAnnualFtesInvoiced",
             "decimalPlaces": 3,
+            "defaultValue": "",
             "validate": [
               {
                 "rule": "required"
@@ -33416,7 +33434,7 @@
               {
                 "dataType": "document",
                 "name": "attachments",
-                "description": "Please attach any Evidence of Service Delivery here."
+                "description": "Please attach any Evidence of Service Delivery here.xxxx"
               }
             ]
           }
@@ -33434,6 +33452,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -33474,6 +33493,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -33481,9 +33501,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableSaf",
             "type": "table"
           },
           {
@@ -33546,7 +33564,6 @@
           },
           {
             "addRowText": "Add a new SAF position",
-            "userAddedRows": true,
             "source": "safAreasControlled",
             "type": "repeat",
             "items": [
@@ -33704,10 +33721,9 @@
                     "type": "selectOne"
                   }
                 ],
-                "userAddedRows": false,
-                "disableTableUpload": true,
                 "source": "sustainableAgricultureFacilitators",
-                "type": "table"
+                "type": "table",
+                "disableTableUpload": true
               }
             ]
           },
