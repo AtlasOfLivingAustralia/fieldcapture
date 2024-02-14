@@ -163,13 +163,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -394,13 +388,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -1024,13 +1012,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -1587,13 +1569,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -2205,13 +2181,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -2989,13 +2959,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -3990,7 +3954,8 @@
           {
             "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "description": "",
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -4494,7 +4459,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
               },
               {
                 "preLabel": "Data have been uploaded",
@@ -4994,13 +4959,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -6101,13 +6060,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -7228,13 +7181,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -8226,13 +8173,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -9191,13 +9132,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -10234,7 +10169,8 @@
           {
             "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "description": "",
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -10743,7 +10679,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -11312,7 +11248,8 @@
           {
             "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "description": "",
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -11846,7 +11783,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -12301,13 +12238,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -13380,7 +13311,8 @@
           {
             "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "description": "",
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -13920,7 +13852,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -14447,13 +14379,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -15574,7 +15500,8 @@
           {
             "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "description": "",
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -16102,7 +16029,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -16563,13 +16490,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -17373,13 +17294,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -18275,13 +18190,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -18775,13 +18684,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -20040,13 +19943,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -21139,7 +21036,8 @@
           {
             "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "description": "",
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -21673,7 +21571,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -22253,7 +22151,8 @@
           {
             "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "description": "",
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -22787,7 +22686,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -23258,13 +23157,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -24176,13 +24069,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -25151,13 +25038,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -26212,13 +26093,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -27283,13 +27158,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -28290,7 +28159,8 @@
           {
             "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "description": "",
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -28814,7 +28684,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -29260,7 +29130,8 @@
           {
             "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "description": "",
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -29678,7 +29549,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -30229,13 +30100,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "dataUploaded == true",
-                "type": "enable"
-              }
-            ]
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -31373,7 +31238,8 @@
           {
             "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "description": "",
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -31897,7 +31763,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -32502,7 +32368,8 @@
           {
             "dataType": "text",
             "name": "projectAssuranceDetails",
-            "description": ""
+            "description": "",
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -33048,7 +32915,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -33434,7 +33301,7 @@
               {
                 "dataType": "document",
                 "name": "attachments",
-                "description": "Please attach any Evidence of Service Delivery here.xxxx"
+                "description": "Please attach any Evidence of Service Delivery here."
               }
             ]
           }
@@ -33768,6 +33635,11 @@
                   {
                     "type": "literal",
                     "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
+                  },
+                  {
+                    "preLabel": "Data have been uploaded",
+                    "source": "dataUploaded",
+                    "type": "boolean"
                   }
                 ]
               },
