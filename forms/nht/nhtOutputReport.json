@@ -1185,16 +1185,6 @@
                             "type": "select2Many"
                           }
                         ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Investment priority (if Other)",
-                            "source": "otherInvestmentPriority",
-                            "type": "text"
-                          }
-                        ]
                       }
                     ]
                   },
@@ -1736,15 +1726,6 @@
                         "source": "investmentPriorities2",
                         "preLabel": "Which investment priority does this activity relate to?",
                         "type": "select2Many"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "source": "otherInvestmentPriority",
-                        "type": "text"
                       }
                     ]
                   }
@@ -2351,15 +2332,6 @@
                             "source": "investmentPriorities2",
                             "preLabel": "Which investment priority does this activity relate to?",
                             "type": "select2Many"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherInvestmentPriority",
-                            "type": "text"
                           }
                         ]
                       }
@@ -3178,15 +3150,6 @@
                             "source": "investmentPriorities2",
                             "preLabel": "Which investment priority does this activity relate to?",
                             "type": "select2Many"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherInvestmentPriority",
-                            "type": "text"
                           }
                         ]
                       }
@@ -4202,15 +4165,6 @@
                             "type": "select2Many"
                           }
                         ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherInvestmentPriority",
-                            "type": "text"
-                          }
-                        ]
                       }
                     ]
                   },
@@ -5204,15 +5158,6 @@
                             "source": "investmentPriorities2",
                             "preLabel": "Which investment priority does this activity relate to?",
                             "type": "select2Many"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherInvestmentPriority",
-                            "type": "text"
                           }
                         ]
                       }
@@ -6333,15 +6278,6 @@
                             "type": "select2Many"
                           }
                         ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherInvestmentPriority",
-                            "type": "text"
-                          }
-                        ]
                       }
                     ]
                   },
@@ -7459,15 +7395,6 @@
                                 "type": "select2Many"
                               }
                             ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "otherInvestmentPriority",
-                                "type": "text"
-                              }
-                            ]
                           }
                         ]
                       },
@@ -8369,15 +8296,6 @@
                                 "source": "investmentPriorities2",
                                 "preLabel": "Which investment priority does this activity relate to?",
                                 "type": "select2Many"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "otherInvestmentPriority",
-                                "type": "text"
                               }
                             ]
                           }
@@ -9328,15 +9246,6 @@
                                 "source": "investmentPriorities2",
                                 "preLabel": "Which investment priority does this activity relate to?",
                                 "type": "select2Many"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "otherInvestmentPriority",
-                                "type": "text"
                               }
                             ]
                           }
@@ -10437,15 +10346,6 @@
                                     "type": "select2Many"
                                   }
                                 ]
-                              },
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "source": "otherInvestmentPriority",
-                                    "type": "text"
-                                  }
-                                ]
                               }
                             ]
                           },
@@ -11514,15 +11414,6 @@
                                     "source": "investmentPriorities2",
                                     "preLabel": "Which investment priority does this activity relate to?",
                                     "type": "select2Many"
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "source": "otherInvestmentPriority",
-                                    "type": "text"
                                   }
                                 ]
                               }
@@ -13579,15 +13470,6 @@
                                     "type": "select2Many"
                                   }
                                 ]
-                              },
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "source": "otherInvestmentPriority",
-                                    "type": "text"
-                                  }
-                                ]
                               }
                             ]
                           },
@@ -14624,15 +14506,6 @@
                             "source": "investmentPriorities2",
                             "preLabel": "Which investment priority does this activity relate to?",
                             "type": "select2Many"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherInvestmentPriority",
-                            "type": "text"
                           }
                         ]
                       }
@@ -15768,15 +15641,6 @@
                                     "type": "select2Many"
                                   }
                                 ]
-                              },
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "source": "otherInvestmentPriority",
-                                    "type": "text"
-                                  }
-                                ]
                               }
                             ]
                           },
@@ -16699,15 +16563,6 @@
                                 "type": "select2Many"
                               }
                             ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "otherInvestmentPriority",
-                                "type": "text"
-                              }
-                            ]
                           }
                         ]
                       }
@@ -17487,15 +17342,6 @@
                             "source": "investmentPriorities2",
                             "preLabel": "Which investment priority does this activity relate to?",
                             "type": "select2Many"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherInvestmentPriority",
-                            "type": "text"
                           }
                         ]
                       }
@@ -18475,10 +18321,6 @@
                       {
                         "source": "investmentPriorities2",
                         "type": "select2Many"
-                      },
-                      {
-                        "source": "otherInvestmentPriority",
-                        "type": "text"
                       }
                     ]
                   },
@@ -19188,15 +19030,6 @@
                             "source": "investmentPriorities2",
                             "preLabel": "Which investment priority does this activity relate to?",
                             "type": "select2Many"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherInvestmentPriority",
-                            "type": "text"
                           }
                         ]
                       }
@@ -20188,15 +20021,6 @@
                             "source": "investmentPriorities2",
                             "preLabel": "Which investment priority does this activity relate to?",
                             "type": "select2Many"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherInvestmentPriority",
-                            "type": "text"
                           }
                         ]
                       }
@@ -21304,15 +21128,6 @@
                                     "type": "select2Many"
                                   }
                                 ]
-                              },
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "source": "otherInvestmentPriority",
-                                    "type": "text"
-                                  }
-                                ]
                               }
                             ]
                           },
@@ -22389,15 +22204,6 @@
                                     "type": "select2Many"
                                   }
                                 ]
-                              },
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "source": "otherInvestmentPriority",
-                                    "type": "text"
-                                  }
-                                ]
                               }
                             ]
                           },
@@ -23414,10 +23220,6 @@
                       {
                         "source": "investmentPriorities2",
                         "type": "select2Many"
-                      },
-                      {
-                        "source": "otherInvestmentPriority",
-                        "type": "text"
                       }
                     ]
                   },
@@ -24318,15 +24120,6 @@
                                 "source": "investmentPriorities2",
                                 "preLabel": "Which investment priority does this activity relate to?",
                                 "type": "select2Many"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "otherInvestmentPriority",
-                                "type": "text"
                               }
                             ]
                           }
@@ -25231,15 +25024,6 @@
                             "source": "investmentPriorities2",
                             "preLabel": "Which investment priority does this activity relate to?",
                             "type": "select2Many"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherInvestmentPriority",
-                            "type": "text"
                           }
                         ]
                       }
@@ -26340,15 +26124,6 @@
                             "type": "select2Many"
                           }
                         ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherInvestmentPriority",
-                            "type": "text"
-                          }
-                        ]
                       }
                     ]
                   },
@@ -27351,15 +27126,6 @@
                             "source": "investmentPriorities2",
                             "preLabel": "Which investment priority does this activity relate to?",
                             "type": "select2Many"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherInvestmentPriority",
-                            "type": "text"
                           }
                         ]
                       }
@@ -28427,15 +28193,6 @@
                                     "type": "select2Many"
                                   }
                                 ]
-                              },
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "source": "otherInvestmentPriority",
-                                    "type": "text"
-                                  }
-                                ]
                               }
                             ]
                           },
@@ -29328,15 +29085,6 @@
                                 "source": "investmentPriorities2",
                                 "preLabel": "Which investment priority does this activity relate to?",
                                 "type": "select2Many"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "otherInvestmentPriority",
-                                "type": "text"
                               }
                             ]
                           }
@@ -30293,15 +30041,6 @@
                             "source": "investmentPriorities2",
                             "preLabel": "Which investment priority does this activity relate to?",
                             "type": "select2Many"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherInvestmentPriority",
-                            "type": "text"
                           }
                         ]
                       }
@@ -31506,15 +31245,6 @@
                                     "type": "select2Many"
                                   }
                                 ]
-                              },
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "source": "otherInvestmentPriority",
-                                    "type": "text"
-                                  }
-                                ]
                               }
                             ]
                           },
@@ -32634,15 +32364,6 @@
                                     "source": "investmentPriorities2",
                                     "preLabel": "Which investment priority does this activity relate to?",
                                     "type": "select2Many"
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "source": "otherInvestmentPriority",
-                                    "type": "text"
                                   }
                                 ]
                               }
