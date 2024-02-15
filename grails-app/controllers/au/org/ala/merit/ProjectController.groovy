@@ -7,7 +7,7 @@ import au.org.ala.merit.command.ReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
-import au.org.ala.merit.reports.ReportData
+import au.org.ala.merit.reports.ReportLifecycleListener
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import grails.core.GrailsApplication
@@ -866,22 +866,7 @@ class ProjectController {
         render result as JSON
     }
 
-    private ReportData reportDataForProject(Map config, String activityType) {
-        ReportData reportData = null
-        String reportDataBeanName = config.reportData?[activityType] ?: null
-        if (reportDataBeanName) {
-            if (grailsApplication.mainContext.containsBean(reportDataBeanName)) {
-                reportData = grailsApplication.mainContext.getBean(reportDataBeanName)
-            }
-            else {
-                log.warn("Unable to find reportData bean "+reportDataBeanName+" for project "+projectId+" and activity type "+model.activity.type+" using default")
-            }
-        }
-        if (!reportData) {
-            reportData = new ReportData()
-        }
-        reportData
-    }
+
 
     private Map activityReportModel(String projectId, String reportId, ReportMode mode, Integer formVersion = null) {
 
@@ -889,7 +874,7 @@ class ProjectController {
         List sites = project.remove('sites')
         Map config = projectService.getProgramConfiguration(project)
         Map model = reportService.activityReportModel(reportId, mode, formVersion)
-        ReportData reportData = reportDataForProject(config, model.activity.type)
+        ReportLifecycleListener reportData = reportService.reportLifeCycleListener(model.activity.type)
 
         model.metaModel = projectService.filterOutputModel(model.metaModel, project, model.activity)
 
@@ -901,14 +886,14 @@ class ProjectController {
                 }
                 else {
                     outputConfig.outputContext = new JSONObject([scores:v.scores])
-                    outputConfig.outputContext.putAll(reportData.getOutputData(project, outputConfig))
+                    outputConfig.outputContext.putAll(reportData.getOutputData(project, outputConfig, model.report))
                 }
 
             }
         }
 
         model.context = new HashMap(project)
-        model.context.putAll(reportData.getContextData(project))
+        model.context.putAll(reportData.getContextData(project, model.report))
         model.returnTo = g.createLink(action:'exitReport', id:projectId, params:[reportId:reportId])
         model.contextViewUrl = g.createLink(action:'index', id:projectId)
         model.reportHeaderTemplate = '/project/rlpProjectReportHeader'

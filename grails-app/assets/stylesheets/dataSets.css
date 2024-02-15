@@ -24,11 +24,14 @@ table.dataset-summary-with-dates td.actions, table.dataset-summary-with-dates th
     width:3em;
 }
 table.dataset-summary-with-dates td.dataset-name, table.dataset-summary-with-dates th.dataset-name {
-    width:40%;
+    width:30%;
 }
 
 table.dataset-summary-with-dates td.service, table.dataset-summary-with-dates th.service {
-    width:25%;
+    width:20%;
+}
+table.dataset-summary-with-dates td.report, table.dataset-summary-with-dates th.report {
+    width:20%;
 }
 table.dataset-summary td.dataset-progress, table.dataset-summary th.dataset-progress {
     width:10em;

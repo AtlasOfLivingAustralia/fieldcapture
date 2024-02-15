@@ -2,7 +2,7 @@
 import au.org.ala.merit.hub.HubAwareLinkGenerator
 import au.org.ala.merit.StatisticsFactory
 import au.org.ala.merit.CheckRisksAndThreatsTask
-import au.org.ala.merit.reports.NHTOutputReportData
+import au.org.ala.merit.reports.NHTOutputReportLifecycleListener
 import au.org.ala.merit.util.ProjectGroupingHelper
 
 // Place your Spring DSL code here
@@ -19,5 +19,6 @@ beans = {
 
     projectGroupingHelper(ProjectGroupingHelper)
 
-    nhtOutputReportData(NHTOutputReportData)
+    // The non-standard case is used because the name is derived from the activity type
+    NHTOutputReport(NHTOutputReportLifecycleListener)
 }

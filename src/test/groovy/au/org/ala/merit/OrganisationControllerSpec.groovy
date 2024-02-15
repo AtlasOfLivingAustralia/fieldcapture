@@ -1,12 +1,12 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.command.SaveReportDataCommand
+import au.org.ala.merit.reports.ReportLifecycleListener
 import au.org.ala.merit.util.ProjectGroupingHelper
 import grails.converters.JSON
 import org.apache.http.HttpStatus
 import org.grails.plugins.excelimport.ExcelImportService
 import org.springframework.mock.web.MockMultipartFile
-import spock.lang.Ignore
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
 
@@ -542,7 +542,8 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         Map props = [
                 activityId:activityId,
                 activity:[
-                        test1:'test'
+                        test1:'test',
+                        type:'Org report'
                 ],
                 reportId:reportId,
                 reportService:reportService,
@@ -556,7 +557,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         params.id = organisationId
         params.reportId = reportId
         params.activityId = props.activityId
-        params.activity = props
+        params.activity = props.activity
         // Normally grails would use dependency injection for this but that doesn't happen in controller unit tests
         params.reportService = reportService
         params.activityService = activityService
@@ -565,8 +566,9 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         controller.saveReport()
 
         then:
-        1 * activityService.get(activityId) >> [activityId:activityId]
-        1 * activityService.update(activityId, props) >> [success:true]
+        1 * activityService.get(activityId) >> [activityId:activityId, type:'Org report']
+        1 * activityService.update(activityId, props.activity) >> [success:true]
+        1 * reportService.reportLifeCycleListener('Org report') >> new ReportLifecycleListener()
         response.json.success == true
 
     }

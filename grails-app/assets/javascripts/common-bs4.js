@@ -60,9 +60,10 @@ ReportStatus = {
 PublicationStatus = {
     PUBLISHED: 'published',
     SUBMITTED: 'pendingApproval',
-    UNPUBLISHED: '',
+    UNPUBLISHED: 'unpublished',
+    CANCELLED: 'cancelled',
 
     isReadOnly: function(status) {
-        return status && status != this.UNPUBLISHED;
+        return status && status != '' && status != this.UNPUBLISHED;
     }
 }

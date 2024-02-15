@@ -52,10 +52,10 @@
     var dataSet = <fc:modelAsJavascript model="${dataSet}"/>;
     var projectService = new ProjectService(project, fcConfig);
     var config = _.extend(fcConfig, {endDateSelector:"#endDate"});
-    config.projectOutcomes = <fc:modelAsJavascript model="${projectOutcomes}"/>;
-    config.projectBaselines = <fc:modelAsJavascript model="${projectBaselines}"/>;
-    config.projectProtocols = <fc:modelAsJavascript model="${projectProtocols}"/>;
-    config.invalidNames = <fc:modelAsJavascript model="${dataSetNames}"/>;
+    config.projectOutcomes = <fc:modelAsJavascript model="${projectOutcomes}" default="[]"/>;
+    config.projectBaselines = <fc:modelAsJavascript model="${projectBaselines}" default="[]"/>;
+    config.projectProtocols = <fc:modelAsJavascript model="${projectProtocols}" default="[]"/>;
+    config.invalidNames = <fc:modelAsJavascript model="${dataSetNames}" default="[]"/>;
     var viewModel = new DataSetViewModel(dataSet, projectService, config);
     $.fn.select2.defaults.set( "theme", "bootstrap" );
     ko.applyBindings(viewModel);
