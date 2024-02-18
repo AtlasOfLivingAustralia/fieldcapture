@@ -183,13 +183,13 @@
               {
                 "type": "table",
                 "source": "engagementDetails",
-                "title": "<b>Please list community engagement activities undertaken, including the title, description, and the number of participants for each activity undertaken in this reporting period, if any.</b><br>This does not include engagement activities undertaken in community/stakeholder engagement service or regional capacity service. The Register of Engagement must be retained as evidence.",
+                "title": "<b>Please list community engagement activities undertaken, including the title, description, and the number of participants for each activity undertaken in this reporting period, if any.</b><br><br><b>Each activity must be reported in a separate row.</b><br>This does not include engagement activities undertaken in community/stakeholder engagement service or regional capacity service. The Register of Engagement must be retained as evidence.",
                 "preLabel": "If yes, please provide link or copy of the material.",
                 "userAddedRows": true,
                 "columns": [
                   {
                     "source": "engagementType",
-                    "type": "select2Many",
+                    "type": "selectOne",
                     "width": "20%",
                     "title": "Type"
                   },
@@ -2849,15 +2849,16 @@
           {
             "dataType": "number",
             "name": "totalLengthStructuresInstalled",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "validate": "min[0]",
             "computed": {
-              "expression": "sum(controllingAccessAreasControlled, \"lengthInstalledKmForControlAccess\")"
+              "expression": "sum(controllingAccessAreasControlled, \"lengthTreatedKm\")"
             }
           },
           {
             "dataType": "number",
             "name": "totalLengthStructuresInstalledInvoiced",
+            "decimalPlaces": 3,
             "validate": [
               {
                 "rule": "required"
@@ -2868,7 +2869,8 @@
               {
                 "param": {
                   "expression": "totalLengthStructuresInstalled",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -2877,15 +2879,16 @@
           {
             "dataType": "number",
             "name": "totalAreaStructuresInstalled",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "validate": "min[0]",
             "computed": {
-              "expression": "sum(controllingAccessAreasControlled, \"areaInstalledHaForControlAccess\")"
+              "expression": "sum(controllingAccessAreasControlled, \"areaTreatedHa\")"
             }
           },
           {
             "dataType": "number",
             "name": "totalAreaStructuresInstalledInvoiced",
+            "decimalPlaces": 3,
             "validate": [
               {
                 "rule": "required"
@@ -2896,7 +2899,8 @@
               {
                 "param": {
                   "expression": "totalAreaStructuresInstalled",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -3779,13 +3783,14 @@
           {
             "dataType": "number",
             "name": "totalAreaPestAnimalsTreatedInitial",
-            "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
-              "expression": "sum(areasControlled, \"initialOrFollowup == 'Initial' ? areaControlledHa : 0\")"
+              "expression": "sum(areasControlled, \"initialOrFollowup == 'Initial' ? areaTreatedHa : 0\")"
             }
           },
           {
+            "decimalPlaces": 3,
+            "defaultValue": "",
             "dataType": "number",
             "name": "totalAreaPestAnimalsTreatedInitialInvoiced",
             "validate": [
@@ -3798,22 +3803,26 @@
               {
                 "param": {
                   "expression": "totalAreaPestAnimalsTreatedInitial",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
             ]
           },
+
           {
             "dataType": "number",
             "name": "totalAreaPestAnimalsTreatedFollowUp",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
-              "expression": "sum(areasControlled, \"initialOrFollowup == 'Follow-up' ? areaControlledHa : 0\")"
+              "expression": "sum(areasControlled, \"initialOrFollowup == 'Follow-up' ? areaTreatedHa : 0\")"
             }
           },
           {
+            "decimalPlaces": 3,
+            "defaultValue": "",
             "dataType": "number",
             "name": "totalAreaPestAnimalsTreatedFollowUpInvoiced",
             "validate": [
@@ -3826,7 +3835,8 @@
               {
                 "param": {
                   "expression": "totalAreaPestAnimalsTreatedFollowUp",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -3838,10 +3848,12 @@
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
-              "expression": "sum(areasControlled, \"lengthControlledKm\")"
+              "expression": "sum(areasControlled, \"initialOrFollowup == 'Initial' ? lengthTreatedKm : 0\")"
             }
           },
           {
+            "decimalPlaces": 3,
+            "defaultValue": "",
             "dataType": "number",
             "name": "totalLengthPestAnimalsTreatedInitialInvoiced",
             "validate": [
@@ -3854,7 +3866,8 @@
               {
                 "param": {
                   "expression": "totalLengthPestAnimalsTreatedInitial",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -3866,10 +3879,12 @@
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
-              "expression": "sum(areasControlled, \"lengthControlledKm\")"
+              "expression": "sum(areasControlled, \"initialOrFollowup == 'Follow-up' ? lengthTreatedKm : 0\")"
             }
           },
           {
+            "decimalPlaces": 3,
+            "defaultValue": "",
             "dataType": "number",
             "name": "totalLengthPestAnimalsTreatedFollowUpInvoiced",
             "validate": [
@@ -3882,7 +3897,8 @@
               {
                 "param": {
                   "expression": "totalLengthPestAnimalsTreatedFollowUp",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -4774,12 +4790,13 @@
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
-              "expression": "sum(debrisRemovalAreasControlled, \"initialOrFollowup == 'Initial' ? areaControlledHa : 0\")"
+              "expression": "sum(debrisRemovalAreasControlled, \"initialOrFollowup == 'Initial' ? areaTreatedHa : 0\")"
             }
           },
           {
             "dataType": "number",
             "name": "totalAreaDebrisRemovedInitialInvoiced",
+            "decimalPlaces": 3,
             "validate": [
               {
                 "rule": "required"
@@ -4790,7 +4807,8 @@
               {
                 "param": {
                   "expression": "totalAreaDebrisRemovedInitial",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -4803,12 +4821,13 @@
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
-              "expression": "sum(debrisRemovalAreasControlled, \"initialOrFollowup == 'Initial' ? lengthControlledKm : 0\")"
+              "expression": "sum(debrisRemovalAreasControlled, \"initialOrFollowup == 'Initial' ? lengthTreatedKm : 0\")"
             }
           },
           {
             "dataType": "number",
             "name": "totalLengthDebrisRemovedInvoicedInitial",
+            "decimalPlaces": 3,
             "validate": [
               {
                 "rule": "required"
@@ -4819,7 +4838,8 @@
               {
                 "param": {
                   "expression": "totalLengthDebrisRemovedInitial",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -4832,12 +4852,13 @@
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
-              "expression": "sum(debrisRemovalAreasControlled, \"initialOrFollowup == 'Follow-up' ? areaControlledHa : 0\")"
+              "expression": "sum(debrisRemovalAreasControlled, \"initialOrFollowup == 'Follow-up' ? areaTreatedHa : 0\")"
             }
           },
           {
             "dataType": "number",
             "name": "totalAreaDebrisRemovedInvoicedFollowup",
+            "decimalPlaces": 3,
             "validate": [
               {
                 "rule": "required"
@@ -4848,7 +4869,8 @@
               {
                 "param": {
                   "expression": "totalAreaDebrisRemovedFollowup",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -4861,12 +4883,13 @@
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
-              "expression": "sum(debrisRemovalAreasControlled, \"initialOrFollowup == 'Follow-up' ? lengthControlledKm : 0\")"
+              "expression": "sum(debrisRemovalAreasControlled, \"initialOrFollowup == 'Follow-up' ? lengthTreatedKm : 0\")"
             }
           },
           {
             "dataType": "number",
             "name": "totalLengthDebrisRemovedInvoicedFollowup",
+            "decimalPlaces": 3,
             "validate": [
               {
                 "rule": "required"
@@ -4877,7 +4900,8 @@
               {
                 "param": {
                   "expression": "totalLengthDebrisRemovedFollowup",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -5845,7 +5869,7 @@
             "dataType": "number",
             "name": "totalNoAreaOfErosionControl",
             "validate": "required,min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(erosionManagementAreasControlled, \"areaTreatedHa\")"
             }
@@ -5854,7 +5878,7 @@
             "dataType": "number",
             "name": "totalNoLengthOfErosionControl",
             "validate": "required,min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(erosionManagementAreasControlled, \"lengthTreatedKm\")"
             }
@@ -5863,13 +5887,14 @@
             "dataType": "number",
             "name": "totalLengthStreamCoastlineInitial",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(erosionManagementAreasControlled, \"initialOrFollowup == 'Initial' ? lengthTreatedKm : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalLengthStreamCoastlineInitialInvoice",
             "validate": [
               {
@@ -5880,9 +5905,9 @@
               },
               {
                 "param": {
-                  "expression": "totalLengthStreamCoastlineInitial"
-                ,
-                  "type": "computed"
+                  "expression": "totalLengthStreamCoastlineInitial",
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -5893,13 +5918,14 @@
             "dataType": "number",
             "name": "totalLengthStreamCoastlineFollowup",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(erosionManagementAreasControlled, \"initialOrFollowup == 'Follow-up' ? lengthTreatedKm : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalLengthStreamCoastlineInvoicedFollowup",
             "validate": [
               {
@@ -5911,7 +5937,8 @@
               {
                 "param": {
                   "expression": "totalLengthStreamCoastlineFollowup",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -5922,13 +5949,14 @@
             "dataType": "number",
             "name": "totalAreaErosionControlInitial",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(erosionManagementAreasControlled, \"initialOrFollowup == 'Initial' ? areaTreatedHa : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAreaErosionControlInvoicedInitial",
             "validate": [
               {
@@ -5940,7 +5968,8 @@
               {
                 "param": {
                   "expression": "totalAreaErosionControlInitial",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -5951,13 +5980,14 @@
             "dataType": "number",
             "name": "totalAreaErosionControlFollowup",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(erosionManagementAreasControlled, \"initialOrFollowup == 'Follow-up' ? areaTreatedHa : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAreaErosionControlInvoicedFollowup",
             "validate": [
               {
@@ -5969,7 +5999,8 @@
               {
                 "param": {
                   "expression": "totalAreaErosionControlFollowup",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -7028,7 +7059,7 @@
             "dataType": "number",
             "name": "totalAreaPestFreeSurveyInitial",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "defaultValue": 0,
             "computed": {
               "expression": "sum(enclosureDetails, \"newOrMaintained == 'Newly established' ? areaTreatedHa : 0\")"
@@ -7038,7 +7069,7 @@
             "dataType": "number",
             "name": "totalAreaPestFreeSurveyInitialInvoiced",
             "description": "The total invoiced must be the same or less than the total amount delivered.",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "defaultValue": 0,
             "validate": [
               {
@@ -7050,7 +7081,8 @@
               {
                 "param": {
                   "expression": "totalAreaPestFreeSurveyInitial",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -7060,7 +7092,7 @@
             "dataType": "number",
             "name": "totalAreaPestFreeSurveyMaintained",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "defaultValue": 0,
             "computed": {
               "expression": "sum(enclosureDetails, \"newOrMaintained == 'Maintained' ? areaTreatedHa : 0\")"
@@ -7070,7 +7102,7 @@
             "dataType": "number",
             "name": "totalAreaPestFreeSurveyMaintainedInvoiced",
             "description": "The total invoiced must be the same or less than the total amount delivered.",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "defaultValue": 0,
             "validate": [
               {
@@ -7082,7 +7114,8 @@
               {
                 "param": {
                   "expression": "totalAreaPestFreeSurveyMaintained",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -8967,13 +9000,14 @@
             "dataType": "number",
             "name": "totalAreaConservationAgreements",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(conservationAgreementsControlled, \"establishedOrImplementation == 'Established' ? areaTreatedHa : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAreaConservationAgreementsInvoiced",
             "validate": [
               {
@@ -8985,7 +9019,8 @@
               {
                 "param": {
                   "expression": "totalAreaConservationAgreements",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -8996,13 +9031,14 @@
             "dataType": "number",
             "name": "totalAreaActivitiesConducted",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(conservationAgreementsControlled, \"establishedOrImplementation == 'Implementation' ? areaTreatedHa : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAreaActivitiesConductedInvoiced",
             "validate": [
               {
@@ -9014,7 +9050,8 @@
               {
                 "param": {
                   "expression": "totalAreaActivitiesConducted",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -14120,13 +14157,14 @@
             "dataType": "number",
             "name": "totalAreaAugmentationInitial",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(habitatAugmentationAreas, \"initialOrMaintained == 'Initial' ? areaTreatedHa : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAreaAugmentationInitialInvoiced",
             "validate": [
               {
@@ -14138,7 +14176,8 @@
               {
                 "param": {
                   "expression": "totalAreaAugmentationInitial",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -14149,13 +14188,14 @@
             "dataType": "number",
             "name": "totalAreaAugmentationMaintained",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(habitatAugmentationAreas, \"initialOrMaintained == 'Maintained' ? areaTreatedHa : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAreaAugmentationMaintainedInvoiced",
             "validate": [
               {
@@ -14167,7 +14207,8 @@
               {
                 "param": {
                   "expression": "totalAreaAugmentationMaintained",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -17066,13 +17107,14 @@
             "dataType": "number",
             "name": "totalAreaTreatedFireMgmtInitial",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(fireManagementAreasControlled, \"initialOrFollowup == 'Initial' ? areaTreatedHa : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAreaTreatedFireMgmtInitialInvoiced",
             "validate": [
               {
@@ -17084,7 +17126,8 @@
               {
                 "param": {
                   "expression": "totalAreaTreatedFireMgmtInitial",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -17095,13 +17138,14 @@
             "dataType": "number",
             "name": "totalAreaTreatedFireMgmtFollowup",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(fireManagementAreasControlled, \"initialOrFollowup == 'Follow-up' ? areaTreatedHa : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAreaTreatedFireMgmtFollowupInvoiced",
             "validate": [
               {
@@ -17113,7 +17157,8 @@
               {
                 "param": {
                   "expression": "totalAreaTreatedFireMgmtFollowup",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -18784,13 +18829,14 @@
             "dataType": "number",
             "name": "totalAreaPracticeChangeInitial",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(landManagementAreasControlled, \"initialOrFollowup == 'Initial' ? areaTreatedHa : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAreaPracticeChangeInitialInvoiced",
             "validate": [
               {
@@ -18802,7 +18848,8 @@
               {
                 "param": {
                   "expression": "totalAreaPracticeChangeInitial",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -18813,13 +18860,14 @@
             "dataType": "number",
             "name": "totalAreaPracticeChangeFollowup",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(landManagementAreasControlled, \"initialOrFollowup == 'Follow-up' ? areaTreatedHa : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAreaPracticeChangeInvoicedFollowup",
             "validate": [
               {
@@ -18831,7 +18879,8 @@
               {
                 "param": {
                   "expression": "totalAreaPracticeChangeFollowup",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -19635,13 +19684,14 @@
             "dataType": "number",
             "name": "totalAreaDiseaseManagementInitial",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(diseaseManagementAreasControlled, \"initialOrFollowup == 'Initial' ? areaTreatedHa : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAreaDiseaseManagementInitialInvoiced",
             "validate": [
               {
@@ -19653,7 +19703,8 @@
               {
                 "param": {
                   "expression": "totalAreaDiseaseManagementInitial",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -19664,13 +19715,14 @@
             "dataType": "number",
             "name": "totalAreaDiseaseManagementFollowup",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(diseaseManagementAreasControlled, \"initialOrFollowup == 'Follow-up' ? areaTreatedHa : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAreaDiseaseManagementInvoicedFollowup",
             "validate": [
               {
@@ -19682,7 +19734,8 @@
               {
                 "param": {
                   "expression": "totalAreaDiseaseManagementFollowup",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -19693,13 +19746,14 @@
             "dataType": "number",
             "name": "totalLengthDiseaseManagementInitial",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(diseaseManagementAreasControlled, \"initialOrFollowup == 'Initial' ? lengthTreatedKm : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalLengthDiseaseManagementInvoicedInitial",
             "validate": [
               {
@@ -19711,7 +19765,8 @@
               {
                 "param": {
                   "expression": "totalLengthDiseaseManagementInitial",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -19722,13 +19777,14 @@
             "dataType": "number",
             "name": "totalLengthDiseaseManagementFollowup",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(diseaseManagementAreasControlled, \"initialOrFollowup == 'Follow-up' ? lengthTreatedKm : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalLengthDiseaseManagementInvoicedFollowup",
             "validate": [
               {
@@ -19740,7 +19796,8 @@
               {
                 "param": {
                   "expression": "totalLengthDiseaseManagementFollowup",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -23730,13 +23787,14 @@
             "dataType": "number",
             "name": "totalAreaWeedsTreatedInitial",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(weedTreatmentAreasControlled, \"initialOrFollowup == 'Initial' ? areaTreatedHa : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAreaWeedsTreatedInitialInvoiced",
             "validate": [
               {
@@ -23748,7 +23806,8 @@
               {
                 "param": {
                   "expression": "totalAreaWeedsTreatedInitial",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -23759,13 +23818,14 @@
             "dataType": "number",
             "name": "totalAreaWeedsTreatedFollowup",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(weedTreatmentAreasControlled, \"initialOrFollowup == 'Follow-up' ? areaTreatedHa : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAreaWeedsTreatedInvoicedFollowup",
             "validate": [
               {
@@ -23777,7 +23837,8 @@
               {
                 "param": {
                   "expression": "totalAreaWeedsTreatedFollowup",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -23788,13 +23849,14 @@
             "dataType": "number",
             "name": "totalLengthWeedsTreatedInitial",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(weedTreatmentAreasControlled, \"initialOrFollowup == 'Initial' ? lengthTreatedKm : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalLengthWeedsTreatedInvoicedInitial",
             "validate": [
               {
@@ -23806,7 +23868,8 @@
               {
                 "param": {
                   "expression": "totalLengthWeedsTreatedInitial",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -23817,13 +23880,14 @@
             "dataType": "number",
             "name": "totalLengthWeedsTreatedFollowup",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(weedTreatmentAreasControlled, \"initialOrFollowup == 'Follow-up' ? lengthTreatedKm : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalLengthWeedsTreatedInvoicedFollowup",
             "validate": [
               {
@@ -23835,7 +23899,8 @@
               {
                 "param": {
                   "expression": "totalLengthWeedsTreatedFollowup",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -24748,13 +24813,14 @@
             "dataType": "number",
             "name": "totalAreaWeedsTreatedInitial",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(revegetationAreasControlled, \"initialOrMaintenance == 'Initial' ? areaTreatedHa : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAreaWeedsTreatedInitialInvoiced",
             "validate": [
               {
@@ -24766,7 +24832,8 @@
               {
                 "param": {
                   "expression": "totalAreaWeedsTreatedInitial",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -24777,13 +24844,14 @@
             "dataType": "number",
             "name": "totalAreaWeedsTreatedFollowup",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(revegetationAreasControlled, \"initialOrMaintenance == 'Maintenance' ? areaTreatedHa : 0\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAreaWeedsTreatedInvoicedFollowup",
             "validate": [
               {
@@ -24795,7 +24863,8 @@
               {
                 "param": {
                   "expression": "totalAreaWeedsTreatedFollowup",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -26850,13 +26919,14 @@
             "dataType": "number",
             "name": "totalAreaSitePreparation",
             "validate": "min[0]",
-            "decimalPlaces": 0,
+            "decimalPlaces": 3,
             "computed": {
               "expression": "sum(sitePreparationDetailsControlled, \"areaTreatedHa\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalAreaSitePreparationInvoiced",
             "validate": [
               {
@@ -26868,7 +26938,8 @@
               {
                 "param": {
                   "expression": "totalAreaSitePreparation",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -26877,15 +26948,16 @@
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalLengthSitePreparation",
             "validate": "min[0]",
-            "decimalPlaces": 0,
             "computed": {
               "expression": "sum(sitePreparationDetailsControlled, \"lengthTreatedKm\")"
             }
           },
           {
             "dataType": "number",
+            "decimalPlaces": 3,
             "name": "totalLengthSitePreparationInvoiced",
             "validate": [
               {
@@ -26897,7 +26969,8 @@
               {
                 "param": {
                   "expression": "totalLengthSitePreparation",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -31662,17 +31735,8 @@
                       },
                       {
                         "dataType": "text",
-                        "name": "individualsOrGroups",
-                        "constraints": [
-                          "Individuals",
-                          "Groups"
-                        ],
-                        "validate": "required"
-                      },
-                      {
-                        "dataType": "number",
-                        "name": "numberOfIndividualsOrGroups",
-                        "validate": "required,min[0]"
+                        "name": "weedSurveyObjective",
+                        "validate": "maxSize[300],required"
                       }
                     ],
                     "dataType": "list",
@@ -32587,16 +32651,10 @@
                             "type": "text"
                           },
                           {
-                            "width": "15%",
-                            "source": "individualsOrGroups",
-                            "title": "Are individuals or groups delivering this service?",
-                            "type": "selectOne"
-                          },
-                          {
-                            "width": "10%",
-                            "source": "numberOfIndividualsOrGroups",
-                            "title": "Number of groups / individuals in weed survey",
-                            "type": "number"
+                            "width": "25%",
+                            "source": "weedSurveyObjective",
+                            "title": "Survey Objective",
+                            "type": "text"
                           }
                         ],
                         "userAddedRows": true,
@@ -32978,7 +33036,8 @@
               {
                 "param": {
                   "expression": "totalAnnualFtes",
-                  "type": "computed"
+                  "type": "computed",
+                  "decimalPlaces": 3
                 },
                 "rule": "max"
               }
@@ -33311,6 +33370,7 @@
                 ],
                 "source": "sustainableAgricultureFacilitators",
                 "type": "table",
+                "userAddedRows": true,
                 "disableTableUpload": true
               }
             ]
@@ -33318,15 +33378,6 @@
           {
             "type": "section",
             "items": [
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "source": "<i>Note: to upload a communication material refer to the documents tab.</i>",
-                    "type": "literal"
-                  }
-                ]
-              },
               {
                 "type": "row",
                 "items": [
