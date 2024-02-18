@@ -1,0 +1,859 @@
+{
+  "activityId": "40815021-a51b-4297-8253-67a19ba856d4",
+  "description": "Year 2023/2024 - Quarter 1 Outputs Report",
+  "startDate": "2023-06-30T14:00:00Z",
+  "endDate": "2023-09-30T14:00:00Z",
+  "plannedStartDate": "2023-06-30T14:00:00Z",
+  "plannedEndDate": "2023-09-30T14:00:00Z",
+  "projectStage": "",
+  "progress": "started",
+  "mainTheme": "",
+  "type": "NHT Output Report",
+  "projectId": "30b6e207-51fb-4286-881c-9ca31959010c",
+  "formVersion": 1,
+  "siteId": "55ceebc6-9239-4880-88a1-0ab5186b6fc4",
+  "outputs": [
+    {
+      "name": "NHT - Communications",
+      "outputId": "0de3677c-a10d-43a6-b5b8-44292744eb2e",
+      "data": {
+        "nhtCommunications": "Yes",
+        "yesCommunicationsMaterial": "Test"
+      },
+      "outputNotCompleted": false
+    },
+    {
+      "name": "NHT - Project Engagements",
+      "outputId": "390ef464-b250-4da6-a1f0-376de48808ed",
+      "data": {
+        "engagementDetails": [
+          {
+            "engagementType": [
+              "Negotiations with the community, etc."
+            ],
+            "engagementTitle": "Test",
+            "engagementPurpose": "Test",
+            "engagementNoParticipants": "2",
+            "activityDateFrom": "2024-01-29T13:00:00Z",
+            "activityDateTo": "2024-01-30T13:00:00Z"
+          }
+        ],
+        "assuranceDocuments": [
+          {}
+        ]
+      },
+      "outputNotCompleted": false
+    },
+    {
+      "name": "NHT - Coordinate",
+      "outputId": "1e61c456-394e-423b-aa65-95ad50e51d5f",
+      "data": {
+        "undergoneReview": "No",
+        "plansDeveloped": "No",
+        "facilitatedPlanningMeetings": "No",
+        "meetingDetails": [
+          {
+            "meetingDateFrom": "",
+            "meetingDateTo": ""
+          }
+        ],
+        "assuranceDocuments": [
+          {}
+        ]
+      },
+      "outputNotCompleted": false
+    },
+    {
+      "name": "NHT - Project Commencement",
+      "outputId": "e1a3f267-2dad-4674-b1ca-3919161ee00d",
+      "data": {},
+      "outputNotCompleted": false
+    },
+    {
+      "name": "NHT - Project WHS",
+      "outputId": "7ff61f93-b3b3-483d-af5a-9a2d42353ad9",
+      "data": {
+        "undergoneWhsReview": "No",
+        "hasNotifiableIncident": "No",
+        "hasVerifiedSubContractors": "Yes"
+      },
+      "outputNotCompleted": false
+    },
+    {
+      "name": "NHT - Farm Management Survey",
+      "outputId": "28b05dea-f492-405b-a10f-acadb36bbf89",
+      "data": {
+        "farmManagementSurveys": [
+          {
+            "relatedOutcomes": "MT1",
+            "baselineOrIndicatorSurvey": "Baseline",
+            "surveyObjective": "Test objective 4/1/24",
+            "farmManagementDataSets": [
+              {
+                "dataSetId": "297cbf04-b8b1-43d5-a1b4-e833ef00a718",
+                "farmManagementSurveySpeciesTable": [
+                  {
+                    "species": {
+                      "guid": "",
+                      "name": "",
+                      "scientificName": "",
+                      "commonName": ""
+                    },
+                    "numberOfIndividualsOrGroups": "0"
+                  }
+                ],
+                "projectBaselines": [
+                  "B1",
+                  "B2"
+                ],
+                "investmentPriorities2": [
+                  "Botaurus poiciloptilus (Australasian Bittern)"
+                ],
+                "activitiesStartDate": "2023-08-31T14:00:00Z",
+                "activitiesEndDate": "2023-10-07T13:00:00Z",
+                "calculatedAreaTreatedHa": "0.000",
+                "calculatedLengthTreatedKm": "0.000",
+                "areaTreatedHa": "0",
+                "lengthTreatedKm": "0",
+                "emsaProtocol": "other",
+                "otherEmsaProtocol": [
+                  "Hair, track, dung sampling"
+                ],
+                "surveyMethodology": "See EMSA Protocols Manual: https://www.tern.org.au/emsa-protocols-manual",
+                "invoicingThisActivity": "Yes"
+              }
+            ]
+          },
+          {
+            "relatedOutcomes": "MT1",
+            "baselineOrIndicatorSurvey": "Indicator",
+            "surveyObjective": "Test objective 4/1/24",
+            "farmManagementDataSets": [
+              {
+                "dataSetId": "0847b4c6-aba9-425c-a3e4-a07035d40b9b",
+                "farmManagementSurveySpeciesTable": [
+                  {
+                    "species": {
+                      "guid": "",
+                      "name": "",
+                      "scientificName": "",
+                      "commonName": ""
+                    },
+                    "numberOfIndividualsOrGroups": "0"
+                  }
+                ],
+                "projectBaselines": [
+                  "B1"
+                ],
+                "investmentPriorities2": [
+                  "Anthochaera phrygia (Regent Honeyeater)",
+                  "Lathamus discolor (Swift Parrot)"
+                ],
+                "activitiesStartDate": "2024-01-01T13:00:00Z",
+                "activitiesEndDate": "2024-01-01T13:00:00Z",
+                "calculatedAreaTreatedHa": "0.000",
+                "calculatedLengthTreatedKm": "0.000",
+                "areaTreatedHa": "0",
+                "mappingNotAlignedReason": "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                "lengthTreatedKm": "0",
+                "emsaProtocol": "other",
+                "otherEmsaProtocol": [
+                  "Participant surveys"
+                ],
+                "surveyMethodology": "Method detail 2/1/24",
+                "invoicingThisActivity": "Yes"
+              }
+            ]
+          }
+        ],
+        "baselineIndicatorMapping": {
+          "table": [
+            {
+              "input": "Baseline dataset associated with a project outcome",
+              "output": "Baseline"
+            },
+            {
+              "input": "Project progress dataset that is tracking change against an established project baseline dataset",
+              "output": "Indicator"
+            }
+          ],
+          "initialization": {}
+        },
+        "participationInformationTable": [
+          {
+            "participationIndividualsOrGroups": "Individuals",
+            "participationIndividualNumber": "3",
+            "firstNationIndividualNumber": "0",
+            "participationDetails": "TEST "
+          }
+        ],
+        "totalSurveyBaseline": "1",
+        "totalSurveyBaselineInvoiced": "1",
+        "totalSurveyIndicator": "1",
+        "totalSurveyIndicatorInvoiced": "1",
+        "photographicEvidence": [
+          {
+            "dateTaken": "2024-01-04T05:29:45Z",
+            "contentType": "image/jpeg",
+            "url": "/document/download/2024-01/0_Gulf_Savannah_NRM.jpg",
+            "filesize": 20825,
+            "thumbnailUrl": "/document/download/2024-01/thumb_0_Gulf_Savannah_NRM.jpg",
+            "filename": "0_Gulf_Savannah_NRM.jpg",
+            "licence": "CC BY 3.0",
+            "notes": "",
+            "name": "Gulf_Savannah_NRM.jpg",
+            "formattedSize": "20.82 KB",
+            "staged": false,
+            "documentId": "42b42b08-c8c0-4863-a089-e0a235a46a7a",
+            "status": "active",
+            "activityId": "40815021-a51b-4297-8253-67a19ba856d4",
+            "identifier": "/document/download/2024-01/0_Gulf_Savannah_NRM.jpg"
+          }
+        ],
+        "assuranceDocuments": [
+          {
+            "attachments": {
+              "settings": {
+                "roles": [
+                  {
+                    "id": "information",
+                    "name": "Information",
+                    "isPublicRole": true
+                  },
+                  {
+                    "id": "embeddedVideo",
+                    "name": "Embedded Video",
+                    "isPublicRole": true
+                  },
+                  {
+                    "id": "projectLogic",
+                    "name": "Project Logic",
+                    "isPublicRole": false
+                  },
+                  {
+                    "id": "contractAssurance",
+                    "name": "Contract Assurance",
+                    "isPublicRole": false
+                  },
+                  {
+                    "id": "auditableOutputs",
+                    "name": "Auditable Outputs",
+                    "isPublicRole": false
+                  },
+                  {
+                    "id": "projectSupportAndOverheadsEvidence",
+                    "name": "Project Support & Overheads Evidence",
+                    "isPublicRole": false
+                  },
+                  {
+                    "id": "projectServiceEvidence",
+                    "name": "Project Service Evidence",
+                    "isPublicRole": false
+                  }
+                ],
+                "stages": [],
+                "reports": [],
+                "showSettings": true,
+                "thirdPartyDeclarationTextSelector": "#thirdPartyDeclarationText",
+                "imageLocation": "/assets/"
+              },
+              "stages": [],
+              "reports": [],
+              "filename": "Afonso & Hazin 2014 Post-release survival and behavior and exposure to fisheries in juvenile tiger sharks, Galeocerdo cuvier, from the South Atlantic..pdf",
+              "filesize": 816253,
+              "name": "Test upload 4/1/24",
+              "uploadDate": "2024-01-04T05:29:25Z",
+              "status": "active",
+              "type": "application",
+              "role": "information",
+              "roles": [
+                {
+                  "id": "information",
+                  "name": "Information",
+                  "isPublicRole": true
+                },
+                {
+                  "id": "embeddedVideo",
+                  "name": "Embedded Video",
+                  "isPublicRole": true
+                },
+                {
+                  "id": "projectLogic",
+                  "name": "Project Logic",
+                  "isPublicRole": false
+                },
+                {
+                  "id": "contractAssurance",
+                  "name": "Contract Assurance",
+                  "isPublicRole": false
+                },
+                {
+                  "id": "auditableOutputs",
+                  "name": "Auditable Outputs",
+                  "isPublicRole": false
+                },
+                {
+                  "id": "projectSupportAndOverheadsEvidence",
+                  "name": "Project Support & Overheads Evidence",
+                  "isPublicRole": false
+                },
+                {
+                  "id": "projectServiceEvidence",
+                  "name": "Project Service Evidence",
+                  "isPublicRole": false
+                }
+              ],
+              "url": "/document/download/2024-01/Afonso%20%26%20Hazin%202014%20Post-release%20survival%20and%20behavior%20and%20exposure%20to%20fisheries%20in%20juvenile%20tiger%20sharks%2C%20Galeocerdo%20cuvier%2C%20from%20the%20South%20Atlantic..pdf",
+              "thumbnailUrl": "/document/download/2024-01/Afonso%20%26%20Hazin%202014%20Post-release%20survival%20and%20behavior%20and%20exposure%20to%20fisheries%20in%20juvenile%20tiger%20sharks%2C%20Galeocerdo%20cuvier%2C%20from%20the%20South%20Atlantic..pdf",
+              "documentId": "506e48aa-e17f-4bc1-a511-b0a87405c814",
+              "reportId": "3585d49e-3ea0-4cad-b050-562f01fe113e",
+              "reportName": "",
+              "hasPreview": false,
+              "progress": 0,
+              "complete": false,
+              "readOnly": false,
+              "contentType": "application/pdf",
+              "fileButtonText": "Change file",
+              "hasPublicRole": true,
+              "isPrimaryProjectImage": false,
+              "thirdPartyConsentDeclarationMade": false,
+              "thirdPartyConsentDeclarationText": null,
+              "embeddedVideoVisible": false,
+              "labels": [],
+              "thirdPartyConsentDeclarationRequired": false,
+              "fileReady": true,
+              "saveEnabled": true,
+              "saveHelp": "",
+              "fileLabel": "Afonso & Hazin 2014 Post-release survival and behavior and exposure to fisheries in juvenile tiger sharks, Galeocerdo cuvier, from the South Atlantic..pdf (816.25 KB)"
+            }
+          }
+        ]
+      },
+      "outputNotCompleted": false
+    },
+    {
+      "name": "NHT - Fauna survey",
+      "outputId": "0be9653b-84e2-4563-a260-f5936cdaec91",
+      "data": {},
+      "outputNotCompleted": true
+    },
+    {
+      "name": "NHT - Flora survey",
+      "outputId": "cedd9ec2-5bfb-44ba-9fe1-e946e4849061",
+      "data": {
+        "floraSurveys": [
+          {
+            "relatedOutcomes": "MT1",
+            "baselineOrIndicatorSurvey": "Baseline",
+            "surveyObjective": "Test Objective 12/1/24",
+            "numberOfSurveys": "1",
+            "floraDataSets": []
+          },
+          {
+            "relatedOutcomes": "MT1",
+            "baselineOrIndicatorSurvey": "Indicator",
+            "surveyObjective": "Test objective 12/1/24",
+            "numberOfSurveys": "1",
+            "floraDataSets": [
+              {
+                "dataSetId": "e4e3f304-5ee7-458b-ad7e-0e3ee0cbb202",
+                "floraSurveySpeciesTable": [
+                  {
+                    "species": {
+                      "guid": "https://id.biodiversity.org.au/node/apni/2900044",
+                      "name": "Digitalis",
+                      "scientificName": "Digitalis",
+                      "commonName": "Foxgloves"
+                    },
+                    "individualsOrGroups": "Individuals",
+                    "numberOfIndividualsOrGroups": "2"
+                  }
+                ],
+                "projectBaselines": [
+                  "B1"
+                ],
+                "investmentPriorities2": [
+                  "Botaurus poiciloptilus (Australasian Bittern)",
+                  "Lathamus discolor (Swift Parrot)"
+                ],
+                "activitiesStartDate": "2024-01-01T13:00:00Z",
+                "activitiesEndDate": "2024-01-01T13:00:00Z",
+                "sitesCoveredForFloraSurvey": {
+                  "modelId": 2,
+                  "featureIds": [
+                    "2-NHT - Flora survey-sitesCoveredForFloraSurvey-0-0"
+                  ]
+                },
+                "calculatedAreaTreatedHa": "8.846",
+                "calculatedLengthTreatedKm": "0.000",
+                "areaTreatedHa": "8.846",
+                "lengthTreatedKm": "0",
+                "emsaProtocol": "other",
+                "otherEmsaProtocol": [
+                  "Area sampling",
+                  "Active searching",
+                  "Aerial photography",
+                  "Other"
+                ],
+                "surveyMethodology": "See EMSA Protocols Manual: https://www.tern.org.au/emsa-protocols-manual",
+                "invoicingThisActivity": "Yes"
+              }
+            ]
+          },
+          {
+            "relatedOutcomes": "MT1",
+            "baselineOrIndicatorSurvey": "Indicator",
+            "surveyObjective": "test objective 12/1/24",
+            "numberOfSurveys": "1",
+            "floraDataSets": [
+              {
+                "dataSetId": "0d2d2b6c-50ce-46f8-a8f0-5f9238d84120",
+                "floraSurveySpeciesTable": [
+                  {
+                    "species": {
+                      "guid": "https://id.biodiversity.org.au/node/apni/2899861",
+                      "name": "Austrostipa densiflora",
+                      "scientificName": "Austrostipa densiflora",
+                      "commonName": "Foxtail Spear-Grass"
+                    },
+                    "individualsOrGroups": "Groups",
+                    "numberOfIndividualsOrGroups": "1"
+                  }
+                ],
+                "projectBaselines": [
+                  "B2"
+                ],
+                "investmentPriorities2": [
+                  "Anthochaera phrygia (Regent Honeyeater)",
+                  "Lathamus discolor (Swift Parrot)"
+                ],
+                "activitiesStartDate": "2024-01-21T13:00:00Z",
+                "activitiesEndDate": "2024-01-21T13:00:00Z",
+                "sitesCoveredForFloraSurvey": {
+                  "modelId": 3,
+                  "featureIds": [
+                    "3-NHT - Flora survey-sitesCoveredForFloraSurvey-0-0"
+                  ]
+                },
+                "calculatedAreaTreatedHa": "8.846",
+                "calculatedLengthTreatedKm": "0.000",
+                "areaTreatedHa": "6",
+                "mappingNotAlignedReason": "Other",
+                "mappingNotAlignedComments": "Test for other mapping reason 22/1/24",
+                "lengthTreatedKm": "0",
+                "emsaProtocol": "other",
+                "otherEmsaProtocol": [
+                  "Water quality sampling",
+                  "Active searching",
+                  "Transect sampling",
+                  "Trapping",
+                  "Vegetation mapping"
+                ],
+                "surveyMethodology": "Test method 22/1/24",
+                "invoicingThisActivity": "Yes"
+              }
+            ]
+          },
+          {
+            "relatedOutcomes": "MT1",
+            "baselineOrIndicatorSurvey": "Indicator",
+            "surveyObjective": "Test Objective 12/1/24",
+            "numberOfSurveys": "1",
+            "floraDataSets": [
+              {
+                "dataSetId": "144ca417-43a8-4eab-94c3-f857263bbc06",
+                "floraSurveySpeciesTable": [
+                  {
+                    "species": {
+                      "guid": "https://id.biodiversity.org.au/node/apni/2903360",
+                      "name": "Banksia sphaerocarpa",
+                      "scientificName": "Banksia sphaerocarpa",
+                      "commonName": "Fox Banksia"
+                    },
+                    "individualsOrGroups": "Individuals",
+                    "numberOfIndividualsOrGroups": "2"
+                  }
+                ],
+                "projectBaselines": [
+                  "B2"
+                ],
+                "investmentPriorities2": [
+                  "Botaurus poiciloptilus (Australasian Bittern)",
+                  "Lathamus discolor (Swift Parrot)"
+                ],
+                "activitiesStartDate": "2024-01-11T13:00:00Z",
+                "activitiesEndDate": "2024-01-11T13:00:00Z",
+                "sitesCoveredForFloraSurvey": {
+                  "modelId": 4,
+                  "featureIds": [
+                    "4-NHT - Flora survey-sitesCoveredForFloraSurvey-0-0"
+                  ]
+                },
+                "calculatedAreaTreatedHa": "8.846",
+                "calculatedLengthTreatedKm": "0.000",
+                "areaTreatedHa": "8.846",
+                "lengthTreatedKm": "0",
+                "emsaProtocol": "other",
+                "otherEmsaProtocol": [
+                  "Area sampling",
+                  "Aerial photography",
+                  "Other"
+                ],
+                "surveyMethodology": "Test method 12/1/24",
+                "invoicingThisActivity": "Yes"
+              }
+            ]
+          }
+        ],
+        "baselineIndicatorMapping": {
+          "table": [
+            {
+              "input": "Baseline dataset associated with a project outcome",
+              "output": "Baseline"
+            },
+            {
+              "input": "Project progress dataset that is tracking change against an established project baseline dataset",
+              "output": "Indicator"
+            }
+          ],
+          "initialization": {}
+        },
+        "participationInformationTable": [
+          {
+            "participationIndividualsOrGroups": "Individuals",
+            "participationIndividualNumber": "2",
+            "firstNationIndividualNumber": "2",
+            "participationDetails": "TEST"
+          }
+        ],
+        "totalSurveyBaseline": "1",
+        "totalSurveyBaselineInvoiced": "0",
+        "totalSurveyIndicator": "3",
+        "totalSurveyIndicatorInvoiced": "0",
+        "photographicEvidence": [
+          {
+            "dateTaken": "2024-01-08T02:57:48Z",
+            "contentType": "image/png",
+            "url": "/document/download/2024-01/0_Screenshot_2023-03-21_082940.png",
+            "filesize": 17428,
+            "thumbnailUrl": "/document/download/2024-01/thumb_0_Screenshot_2023-03-21_082940.png",
+            "filename": "0_Screenshot_2023-03-21_082940.png",
+            "licence": "CC BY 3.0",
+            "notes": "",
+            "name": "Screenshot_2023-03-21_082940.png",
+            "formattedSize": "17.43 KB",
+            "staged": false,
+            "documentId": "88b96d11-8434-4aac-a6de-605d3466f345",
+            "status": "active",
+            "activityId": "40815021-a51b-4297-8253-67a19ba856d4",
+            "identifier": "/document/download/2024-01/0_Screenshot_2023-03-21_082940.png"
+          }
+        ],
+        "assuranceDocuments": [
+          {
+            "attachments": {
+              "settings": {
+                "roles": [
+                  {
+                    "id": "information",
+                    "name": "Information",
+                    "isPublicRole": true
+                  },
+                  {
+                    "id": "embeddedVideo",
+                    "name": "Embedded Video",
+                    "isPublicRole": true
+                  },
+                  {
+                    "id": "projectLogic",
+                    "name": "Project Logic",
+                    "isPublicRole": false
+                  },
+                  {
+                    "id": "contractAssurance",
+                    "name": "Contract Assurance",
+                    "isPublicRole": false
+                  },
+                  {
+                    "id": "auditableOutputs",
+                    "name": "Auditable Outputs",
+                    "isPublicRole": false
+                  },
+                  {
+                    "id": "projectSupportAndOverheadsEvidence",
+                    "name": "Project Support & Overheads Evidence",
+                    "isPublicRole": false
+                  },
+                  {
+                    "id": "projectServiceEvidence",
+                    "name": "Project Service Evidence",
+                    "isPublicRole": false
+                  }
+                ],
+                "stages": [],
+                "reports": [],
+                "showSettings": true,
+                "thirdPartyDeclarationTextSelector": "#thirdPartyDeclarationText",
+                "imageLocation": "/assets/"
+              },
+              "stages": [],
+              "reports": [],
+              "filename": "20220711_113709.jpg",
+              "filesize": 2348801,
+              "name": "Test 2 8/1/24",
+              "uploadDate": "2024-01-08T02:58:31Z",
+              "status": "active",
+              "type": "image",
+              "role": "contractAssurance",
+              "roles": [
+                {
+                  "id": "information",
+                  "name": "Information",
+                  "isPublicRole": true
+                },
+                {
+                  "id": "embeddedVideo",
+                  "name": "Embedded Video",
+                  "isPublicRole": true
+                },
+                {
+                  "id": "projectLogic",
+                  "name": "Project Logic",
+                  "isPublicRole": false
+                },
+                {
+                  "id": "contractAssurance",
+                  "name": "Contract Assurance",
+                  "isPublicRole": false
+                },
+                {
+                  "id": "auditableOutputs",
+                  "name": "Auditable Outputs",
+                  "isPublicRole": false
+                },
+                {
+                  "id": "projectSupportAndOverheadsEvidence",
+                  "name": "Project Support & Overheads Evidence",
+                  "isPublicRole": false
+                },
+                {
+                  "id": "projectServiceEvidence",
+                  "name": "Project Service Evidence",
+                  "isPublicRole": false
+                }
+              ],
+              "public": false,
+              "url": "/document/download/2024-01/20220711_113709.jpg",
+              "thumbnailUrl": "/document/download/2024-01/thumb_20220711_113709.jpg",
+              "documentId": "f47d377d-89f8-4bbc-a4c1-1055573490b2",
+              "reportId": "3585d49e-3ea0-4cad-b050-562f01fe113e",
+              "reportName": "",
+              "hasPreview": false,
+              "progress": 0,
+              "complete": false,
+              "readOnly": false,
+              "contentType": "image/jpeg",
+              "fileButtonText": "Change file",
+              "hasPublicRole": false,
+              "isPrimaryProjectImage": false,
+              "thirdPartyConsentDeclarationMade": false,
+              "thirdPartyConsentDeclarationText": null,
+              "embeddedVideoVisible": false,
+              "labels": [],
+              "thirdPartyConsentDeclarationRequired": false,
+              "fileReady": true,
+              "saveEnabled": true,
+              "saveHelp": "",
+              "fileLabel": "20220711_113709.jpg (2.35 MB)"
+            }
+          }
+        ]
+      },
+      "outputNotCompleted": false
+    },
+    {
+      "name": "NHT - Habitat condition assessment",
+      "outputId": "2b364b43-6a61-4569-bd26-a637a7336e82",
+      "data": {},
+      "outputNotCompleted": true
+    },
+    {
+      "name": "NHT - Pest animal survey",
+      "outputId": "0672b3d2-cc6e-4245-a902-f22f4aefb330",
+      "data": {},
+      "outputNotCompleted": true
+    },
+    {
+      "name": "NHT - Plant survival survey",
+      "outputId": "21c920a5-9504-443e-a6e4-6189c759c3bd",
+      "data": {},
+      "outputNotCompleted": true
+    },
+    {
+      "name": "NHT - Skills and knowledge survey",
+      "outputId": "43b44e7c-b898-4ce5-b583-d7382cd758a9",
+      "data": {},
+      "outputNotCompleted": true
+    },
+    {
+      "name": "NHT - Water quality survey",
+      "outputId": "78e1d70c-fad7-48dd-909a-ee77f7253074",
+      "data": {},
+      "outputNotCompleted": true
+    },
+    {
+      "name": "NHT - Weed distribution survey",
+      "outputId": "06dc7e55-47e8-4425-9530-a5ad1b507724",
+      "data": {
+        "weedSurveys": [
+          {
+            "relatedOutcomes": "ST1",
+            "baselineOrIndicatorSurvey": "Baseline",
+            "surveyObjective": "Test objective 16/1/24",
+            "numberOfSurveys": "1",
+            "numberOfSurveysInvoiced": "1",
+            "weedDataSets": [
+              {
+                "dataSetId": "5b1255a4-3b91-4fae-a243-02bd4d163898",
+                "weedSurveySpeciesTable": [
+                  {
+                    "species": {
+                      "guid": "https://id.biodiversity.org.au/node/apni/2906890",
+                      "name": "Setaria italica",
+                      "scientificName": "Setaria italica",
+                      "commonName": "Siberian Millet"
+                    },
+                    "estimatedCoverPercent": "14",
+                    "individualsOrGroups": "Individuals",
+                    "numberOfIndividualsOrGroups": "0"
+                  }
+                ],
+                "baselineOrIndicatorSurvey": "Baseline",
+                "projectBaselines": [
+                  "B1"
+                ],
+                "investmentPriorities2": [
+                  "Botaurus poiciloptilus (Australasian Bittern)",
+                  "Anthochaera phrygia (Regent Honeyeater)",
+                  "Lathamus discolor (Swift Parrot)"
+                ],
+                "activitiesStartDate": "2024-01-15T13:00:00Z",
+                "activitiesEndDate": "2024-01-15T13:00:00Z",
+                "sitesCoveredForWeedDistribution": {
+                  "modelId": 5,
+                  "featureIds": [
+                    "5-NHT - Weed distribution survey-sitesCoveredForWeedDistribution-0-0"
+                  ]
+                },
+                "calculatedAreaTreatedHa": "737.609",
+                "calculatedLengthTreatedKm": "0.000",
+                "areaTreatedHa": "0",
+                "mappingNotAlignedReason": "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                "lengthTreatedKm": "0",
+                "emsaProtocol": "other",
+                "otherEmsaProtocol": [
+                  "Genetic sampling",
+                  "Surber sampling",
+                  "Vegetation mapping",
+                  "Ground cover monitoring"
+                ],
+                "surveyMethodology": "Test method 16/1/24",
+                "invoicingThisActivity": "Yes"
+              }
+            ]
+          }
+        ],
+        "baselineIndicatorMapping": {
+          "table": [
+            {
+              "input": "Baseline dataset associated with a project outcome",
+              "output": "Baseline"
+            },
+            {
+              "input": "Project progress dataset that is tracking change against an established project baseline dataset",
+              "output": "Indicator"
+            }
+          ],
+          "initialization": {}
+        },
+        "participationInformationTable": [
+          {
+            "participationIndividualsOrGroups": "Individuals",
+            "participationIndividualNumber": "2",
+            "firstNationIndividualNumber": "2",
+            "participationDetails": "Test"
+          }
+        ],
+        "totalSurveyBaseline": "1",
+        "totalSurveyBaselineInvoiced": "1",
+        "totalSurveyIndicator": "0",
+        "totalSurveyIndicatorInvoiced": "0",
+        "photographicEvidence": [],
+        "assuranceDocuments": [
+          {}
+        ]
+      },
+      "outputNotCompleted": false
+    },
+    {
+      "name": "NHT - Communication materials",
+      "outputId": "5bec9521-9909-4b8a-b969-e0550dc93fbe",
+      "data": {},
+      "outputNotCompleted": true
+    },
+    {
+      "name": "NHT - Maintaining feral free enclosures",
+      "outputId": "a01e134e-d98f-4b83-a8d4-47d42af13221",
+      "data": {},
+      "outputNotCompleted": true
+    },
+    {
+      "name": "NHT - Pest animal management",
+      "outputId": "80334bd5-096f-4cd3-b40d-1479a6e3c568",
+      "data": {},
+      "outputNotCompleted": true
+    },
+    {
+      "name": "NHT - Baseline data",
+      "outputId": "b359377f-eac2-427a-be97-9792bb7accf8",
+      "data": {},
+      "outputNotCompleted": true
+    },
+    {
+      "name": "NHT - Debris removal",
+      "outputId": "613f7e83-c69d-4560-b8d7-d7ff8ac04f6b",
+      "data": {},
+      "outputNotCompleted": true
+    },
+    {
+      "name": "NHT - Seed Collection",
+      "outputId": "e5279f58-2593-4b1c-b564-8228c1a2e58b",
+      "data": {},
+      "outputNotCompleted": true
+    },
+    {
+      "name": "NHT - Soil testing",
+      "outputId": "5e2ab73b-6101-4ce8-9992-bb2d09bc67ed",
+      "data": {},
+      "outputNotCompleted": true
+    },
+    {
+      "name": "NHT - Establishing Agreements",
+      "outputId": "6cdec067-baee-4405-99a2-b2923b560a44",
+      "data": {},
+      "outputNotCompleted": true
+    },
+    {
+      "name": "NHT - Community engagement",
+      "outputId": "2cba3af2-e4e4-4021-bcc8-265c0b1d3020",
+      "data": {},
+      "outputNotCompleted": true
+    },
+    {
+      "name": "NHT - Erosion Management",
+      "outputId": "7bef1c1a-b260-4d0e-98cc-b0bfa2f75b52",
+      "data": {},
+      "outputNotCompleted": true
+    }
+  ]
+}

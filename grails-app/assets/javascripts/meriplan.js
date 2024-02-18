@@ -1462,10 +1462,23 @@ function GenericViewModel(o, propertyNames, codePrefix, arrayPropertyNames, numD
         return new GenericRowViewModel(row, propertyNames, arrayPropertyNames)
     };
 
+    function nextCode() {
+        var maxCodeNumber = 1;
+        for (var i=0; i<self.rows().length; i++) {
+            var code = ko.utils.unwrapObservable(self.rows()[i].code);
+            if (code) {
+                var num = parseInt(code.substring(codePrefix.length));
+                if (num > maxCodeNumber) {
+                    maxCodeNumber = num;
+                }
+            }
+        }
+        return codePrefix+(maxCodeNumber+1);
+    }
     function newObj() {
         var obj = {};
         if (codePrefix) {
-            obj.code = codePrefix + (self.rows().length+1);
+            obj.code = nextCode();
         }
         return obj;
     }

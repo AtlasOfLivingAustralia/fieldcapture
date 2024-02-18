@@ -325,7 +325,7 @@ var config = {
     config.excludeFinancialYearData = ${config.program?.config?.excludeFinancialYearData ?: false};
     config.canModifyMeriPlan = ${projectContent.admin.canModifyMeriPlan};
     config.userHoldsMeriPlanLock = ${project.lock?.userId == user?.userId};
-
+    config.viewReportUrl = fcConfig.viewReportUrl;
     project.mapFeatures =  $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
     var viewModel = new ProjectPageViewModel(project, project.sites, project.activities || [], organisations, userRoles, config);
     viewModel.loadPrograms(programs);
