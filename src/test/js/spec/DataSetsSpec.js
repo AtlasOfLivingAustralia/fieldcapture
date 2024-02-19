@@ -107,7 +107,6 @@ describe("The data set summaries view models behave correctly", function () {
                 "time":"2023-06-30T00:00:00.000Z"
             },
             "term":null,
-            "otherMeasurementType":null,
             "threatenedSpeciesIndexUploadDate":'',
             "sizeUnknown": false,
             "otherSensitivity":null,

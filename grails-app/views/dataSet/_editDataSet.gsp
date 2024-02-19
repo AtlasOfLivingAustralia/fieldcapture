@@ -124,7 +124,6 @@
                 <option>Habitat condition</option>
                 <option>Interventions</option>
                 <option>Opportune records</option>
-                <option>Other</option>
                 <option>Participation</option>
                 <option>Publication of materials</option>
                 <option>Recruitment - Fauna, flora</option>
@@ -136,9 +135,6 @@
                 <option>Targeted - weeds</option>
                 <option>Water quality
             </select>
-            <div class="otherMeasurementType other">
-                <textarea type="text" class="form-control otherPriorityTextArea" placeholder="Note: This field will only enable if Other is selected" data-bind="enable: measurementTypes() && measurementTypes().indexOf('Other') >= 0, value: otherMeasurementType"></textarea>
-            </div>
         </div>
     </div>
 
