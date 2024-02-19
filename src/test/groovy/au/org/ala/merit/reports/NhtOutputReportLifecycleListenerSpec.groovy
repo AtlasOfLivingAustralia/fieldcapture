@@ -54,4 +54,21 @@ class NhtOutputReportLifecycleListenerSpec extends Specification {
         project.custom.dataSets.size() == 3
         project.custom.dataSets*.dataSetId == ['d1','d2','d4']
     }
+
+    def "It will return a list of investment priorities from the MERI plan"() {
+        setup:
+        String projectId = 'p1'
+        Map report = [:]
+        List secondaryOutcomes = [ [ "assets" : [ "Investment priority 1" ], "description" : "Outcome 2" ] ]
+        Map primaryOutcome = [:]
+        Map project = [projectId:projectId, custom:[details:[outcomes:[secondaryOutcomes:secondaryOutcomes, primaryOutcome:primaryOutcome]]]]
+
+        when:
+        Map contextData = reportData.getContextData(project, report)
+
+        then:
+        1 * projectService.listProjectInvestmentPriorities(projectId) >> ['Investment priority 1']
+        contextData.investmentPriorities == ['Investment priority 1']
+
+    }
 }
