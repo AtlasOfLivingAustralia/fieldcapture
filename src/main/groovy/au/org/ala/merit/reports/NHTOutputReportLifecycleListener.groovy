@@ -39,12 +39,15 @@ class NHTOutputReportLifecycleListener extends ReportLifecycleListener {
             project.custom.dataSets = new JSONArray(eligibleDataSets ?: [])
         }
 
+        List investmentPriorities = projectService.listProjectInvestmentPriorities(project.projectId)
+
         List protocols = projectService.listProjectProtocols(project).collect {
             [label: it.name, value: it.externalId]
         }
         protocols << [label:'Other', value:'other']
         return [
-            protocols:protocols
+            protocols:protocols,
+            investmentPriorities:investmentPriorities
         ]
     }
 
