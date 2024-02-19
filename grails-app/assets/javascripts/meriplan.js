@@ -392,6 +392,15 @@ function MERIPlan(project, projectService, config) {
     self.removeMonitoringIndicator = function(row) {
         self.meriPlan().monitoring.removeRow(row);
     }
+    /** Called by the extendedBaselineMonitoring template to remove any monitoring indicators associated with a
+     * removed baseline */
+    self.removeBaseline = function(baseline) {
+        var code = ko.utils.unwrapObservable(baseline.code);
+        self.meriPlan().monitoring.rows.remove(function(row) {
+            return ko.utils.unwrapObservable(row.relatedBaseline) == code;
+        });
+        self.meriPlan().baseline.removeRow(baseline);
+    }
     self.addKEQ = function () {
         self.meriPlan().keq.rows.push(new GenericRowViewModel());
     };
@@ -857,11 +866,8 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
                 self.selectedTargetMeasures.push(service);
             }
         }
-
-        _.each(self.selectedTargetMeasures(), function(selectedService) {
-            if (!serviceOutcomeMap[selectedService.scoreId]) {
-                self.selectedTargetMeasures.remove(selectedService)
-            }
+        self.selectedTargetMeasures.remove(function(selectedService) {
+            return !serviceOutcomeMap[selectedService.scoreId];
         });
 
         return services;
