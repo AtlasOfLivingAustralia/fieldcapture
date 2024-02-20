@@ -803,6 +803,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -1401,6 +1414,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -1955,6 +1981,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -2585,6 +2624,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -3533,6 +3585,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -4562,6 +4627,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -5538,6 +5616,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -6744,6 +6835,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -7779,6 +7883,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -8732,6 +8849,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -10017,6 +10147,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -11087,6 +11230,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -11846,6 +12002,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -13141,6 +13310,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -13906,6 +14088,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -15316,6 +15511,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -16071,6 +16279,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -16874,6 +17095,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -17766,6 +18000,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -18543,6 +18790,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -19433,7 +19693,19 @@
               "31-40",
               "41-50"
             ],
-            "validate": "required"
+            "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "param": {
+                  "expression": "participationGroupNumber",
+                  "type": "computed"
+                },
+                "rule": "max",
+                "message": "The number of first nation participants cannot be greater than the total number of participants"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -20819,6 +21091,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -21954,6 +22239,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -22668,7 +22966,19 @@
               "31-40",
               "41-50"
             ],
-            "validate": "required"
+            "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "param": {
+                  "expression": "participationGroupNumber",
+                  "type": "computed"
+                },
+                "rule": "max",
+                "message": "The number of first nation participants cannot be greater than the total number of participants"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -23772,6 +24082,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -24531,6 +24854,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -25534,6 +25870,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -26664,6 +27013,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -27894,6 +28256,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -28649,6 +29024,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -29505,6 +29893,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -30952,6 +31353,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -32064,6 +32478,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
@@ -32830,6 +33257,19 @@
                   "21-30",
                   "31-40",
                   "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
                 ]
               },
               {
