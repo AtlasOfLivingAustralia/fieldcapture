@@ -349,7 +349,17 @@
                   }
                 ],
                 "name": "meetingDateTo",
-                "validate": "required"
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "future",
+                    "param": {
+                      "expression": "formatDateForValidation(meetingDateFrom)",
+                      "type": "computed"
+                    }
+                  }]
               },
               {
                 "dataType": "text",
