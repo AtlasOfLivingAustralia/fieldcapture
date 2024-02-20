@@ -134,7 +134,6 @@ var DataSetViewModel = function(dataSet, projectService, options) {
         dataSet.measurementTypes = [dataSet.measurementTypes];
     }
     self.measurementTypes = ko.observableArray(dataSet.measurementTypes);
-    self.otherMeasurementType = ko.observable(dataSet.otherMeasurementType);
     self.methods = ko.observableArray(dataSet.methods);
 
     /** Applies a standard method description for emsa protocols */
