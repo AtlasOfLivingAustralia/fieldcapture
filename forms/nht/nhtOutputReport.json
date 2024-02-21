@@ -146,7 +146,18 @@
               {
                 "dataType": "date",
                 "name": "activityDateTo",
-                "validate": "required"
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "future",
+                    "param": {
+                      "expression": "formatDateForValidation(activityDateFrom)",
+                      "type": "computed"
+                    }
+                  }
+                ]
               }
             ]
           },
@@ -2135,7 +2146,18 @@
               {
                 "dataType": "date",
                 "name": "dateTo",
-                "validate": "required"
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "future",
+                    "param": {
+                      "expression": "formatDateForValidation(dateFrom)",
+                      "type": "computed"
+                    }
+                  }
+                ]
               }
             ],
             "dataType": "list",
@@ -2717,7 +2739,18 @@
                   {
                     "dataType": "date",
                     "name": "dateTo",
-                    "validate": "required"
+                    "validate": [
+                      {
+                        "rule": "required"
+                      },
+                      {
+                        "rule": "future",
+                        "param": {
+                          "expression": "formatDateForValidation(dateFrom)",
+                          "type": "computed"
+                        }
+                      }
+                    ]
                   }
                 ],
                 "dataType": "list",
@@ -5834,7 +5867,18 @@
                   {
                     "dataType": "date",
                     "name": "dateTo",
-                    "validate": "required"
+                    "validate": [
+                      {
+                        "rule": "required"
+                      },
+                      {
+                        "rule": "future",
+                        "param": {
+                          "expression": "formatDateForValidation(dateFrom)",
+                          "type": "computed"
+                        }
+                      }
+                    ]
                   },
                   {
                     "dataType": "text",
@@ -8075,7 +8119,18 @@
                     "dataType": "date",
                     "name": "activitiesEndDate",
                     "description": "Specific the dates these events were held on.",
-                    "validate": "required"
+                    "validate": [
+                      {
+                        "rule": "required"
+                      },
+                      {
+                        "rule": "future",
+                        "param": {
+                          "expression": "formatDateForValidation(activitiesStartDate)",
+                          "type": "computed"
+                        }
+                      }
+                    ]
                   },
                   {
                     "dataType": "text",
@@ -12072,7 +12127,18 @@
                 "dataType": "date",
                 "name": "activitiesEndDate",
                 "description": "",
-                "validate": "required"
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "future",
+                    "param": {
+                      "expression": "formatDateForValidation(activitiesStartDate)",
+                      "type": "computed"
+                    }
+                  }
+                ]
               },
               {
                 "dataType": "text",
@@ -14243,7 +14309,18 @@
                     "dataType": "date",
                     "name": "activitiesEndDate",
                     "description": "Specific the dates these events were held on.",
-                    "validate": "required"
+                    "validate": [
+                      {
+                        "rule": "required"
+                      },
+                      {
+                        "rule": "future",
+                        "param": {
+                          "expression": "formatDateForValidation(activitiesStartDate)",
+                          "type": "computed"
+                        }
+                      }
+                    ]
                   },
                   {
                     "dataType": "text",
@@ -23238,7 +23315,18 @@
                 "dataType": "date",
                 "name": "activitiesEndDate",
                 "description": "Specific the dates these events were held on.",
-                "validate": "required"
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "future",
+                    "param": {
+                      "expression": "formatDateForValidation(activitiesStartDate)",
+                      "type": "computed"
+                    }
+                  }
+                ]
               },
               {
                 "dataType": "number",
@@ -25102,7 +25190,18 @@
                 "dataType": "date",
                 "name": "activitiesEndDate",
                 "description": "Specific the dates these events were held on.",
-                "validate": "required"
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "future",
+                    "param": {
+                      "expression": "formatDateForValidation(activitiesStartDate)",
+                      "type": "computed"
+                    }
+                  }
+                ]
               },
               {
                 "columns": [
@@ -26078,7 +26177,18 @@
                     "dataType": "date",
                     "name": "activitiesEndDate",
                     "description": "Specific the dates these events were held on.",
-                    "validate": "required"
+                    "validate": [
+                      {
+                        "rule": "required"
+                      },
+                      {
+                        "rule": "future",
+                        "param": {
+                          "expression": "formatDateForValidation(activitiesStartDate)",
+                          "type": "computed"
+                        }
+                      }
+                    ]
                   },
                   {
                     "dataType": "text",
@@ -27154,7 +27264,18 @@
                     "dataType": "date",
                     "name": "activitiesEndDate",
                     "description": "Specific the dates these events were held on.",
-                    "validate": "required"
+                    "validate": [
+                      {
+                        "rule": "required"
+                      },
+                      {
+                        "rule": "future",
+                        "param": {
+                          "expression": "formatDateForValidation(activitiesStartDate)",
+                          "type": "computed"
+                        }
+                      }
+                    ]
                   },
                   {
                     "dataType": "number",
@@ -28163,7 +28284,14 @@
                   {
                     "dataType": "number",
                     "name": "numberOfPeopleSurveying",
-                    "validate": "required,min[0]"
+                    "validate": "required,min[0]",
+                    "defaultValue": ""
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "skillsSurveyObjective",
+                    "validate": "maxSize[300],required",
+                    "description": "How will the information from the surveys be used?"
                   }
                 ],
                 "minSize": 1
@@ -28694,110 +28822,6 @@
                                 "type": "row",
                                 "items": [
                                   {
-                                    "preLabel": "Sites covered by skills and knowledge survey",
-                                    "source": "sitesCoveredForSkillsAndKnowledge",
-                                    "type": "feature"
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "source": "calculatedAreaTreatedHa",
-                                    "type": "number",
-                                    "displayOptions": {
-                                      "displayUnits": true
-                                    },
-                                    "readonly": "readonly"
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "source": "calculatedLengthTreatedKm",
-                                    "type": "number",
-                                    "displayOptions": {
-                                      "displayUnits": true
-                                    },
-                                    "readonly": "readonly"
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "preLabel": "Please attach mapping details",
-                                    "source": "extraMappingDetails",
-                                    "type": "document"
-                                  }
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "type": "col",
-                            "css": "span3 col-border-right",
-                            "items": [
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "preLabel": "Actual area (ha) / length (km) covered by skills and knowledge survey",
-                                    "source": "areaTreatedHa",
-                                    "type": "number",
-                                    "displayOptions": {
-                                      "displayUnits": true
-                                    }
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "source": "lengthTreatedKm",
-                                    "type": "number",
-                                    "displayOptions": {
-                                      "displayUnits": true
-                                    }
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "preLabel": "Reason for actual being different to mapped amount",
-                                    "source": "mappingNotAlignedReason",
-                                    "type": "selectOne"
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                                    "source": "mappingNotAlignedComments",
-                                    "type": "textarea",
-                                    "rows": 5
-                                  }
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "type": "col",
-                            "css": "span3 col-border-right",
-                            "items": [
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
                                     "preLabel": "Survey technique",
                                     "source": "emsaProtocol",
                                     "type": "selectOne",
@@ -28860,6 +28884,22 @@
                                     "source": "numberOfPeopleSurveying",
                                     "preLabel": "Number of people completing survey",
                                     "type": "number"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "skillsSurveyObjective",
+                                    "preLabel": "Survey objective",
+                                    "type": "text"
                                   }
                                 ]
                               }
@@ -29245,7 +29285,18 @@
                     "dataType": "date",
                     "name": "activitiesEndDate",
                     "description": "Specific the dates these events were held on.",
-                    "validate": "required"
+                    "validate": [
+                      {
+                        "rule": "required"
+                      },
+                      {
+                        "rule": "future",
+                        "param": {
+                          "expression": "formatDateForValidation(activitiesStartDate)",
+                          "type": "computed"
+                        }
+                      }
+                    ]
                   },
                   {
                     "dataType": "text",
@@ -30209,7 +30260,18 @@
                     "dataType": "date",
                     "name": "activitiesEndDate",
                     "description": "Specific the dates these events were held on.",
-                    "validate": "required"
+                    "validate": [
+                      {
+                        "rule": "required"
+                      },
+                      {
+                        "rule": "future",
+                        "param": {
+                          "expression": "formatDateForValidation(activitiesStartDate)",
+                          "type": "computed"
+                        }
+                      }
+                    ]
                   },
                   {
                     "dataType": "species",
@@ -30929,6 +30991,15 @@
             "minSize": 1,
             "columns": [
               {
+                "dataType": "text",
+                "name": "typeOfSurvey",
+                "constraints": [
+                  "Water Quality Survey",
+                  "Hydrology Survey"
+                ],
+                "validate": "required"
+              },
+              {
                 "name": "relatedOutcomes",
                 "dataType": "text",
                 "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
@@ -31218,6 +31289,14 @@
                     }
                   },
                   {
+                    "dataType": "stringList",
+                    "description": "Describe the technique (if Other) was selected.",
+                    "name": "otherEmsaProtocol",
+                    "computed": {
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.methods"
+                    }
+                  },
+                  {
                     "dataType": "text",
                     "name": "surveyMethodology",
                     "description": "Provide more details on what is being done.",
@@ -31261,6 +31340,12 @@
                       }
                     ],
                     "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "waterSurveyObjective",
+                    "validate": "maxSize[300],required",
+                    "description": "How will the information from the surveys be used?"
                   }
                 ],
                 "minSize": 1
@@ -31490,7 +31575,7 @@
           }
         ],
         "modelName": "NHT - Water quality survey",
-        "title": "Water Quality Survey",
+        "title": "Water Quality or Hydrology Survey",
         "viewModel": [
           {
             "type": "section",
@@ -31654,6 +31739,16 @@
                   {
                     "type": "row",
                     "items": [
+                      {
+                        "type": "col",
+                        "items": [
+                          {
+                            "source": "typeOfSurvey",
+                            "type": "selectOne",
+                            "preLabel": "Type of survey"
+                          }
+                        ]
+                      },
                       {
                         "type": "col",
                         "items": [
@@ -31895,6 +31990,16 @@
                                     "readonly": "readonly"
                                   }
                                 ]
+                              },
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "preLabel": "Survey technique (if Other)",
+                                    "source": "otherEmsaProtocol",
+                                    "type": "select2Many"
+                                  }
+                                ]
                               }
                             ]
                           },
@@ -31950,6 +32055,22 @@
                                   {
                                     "preLabel": "Type of water body (if Other)",
                                     "source": "otherWaterBodyType",
+                                    "type": "text"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "waterSurveyObjective",
+                                    "preLabel": "Survey objective",
                                     "type": "text"
                                   }
                                 ]
@@ -32032,7 +32153,7 @@
       "templateName": "nhtWaterQualitySurvey",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Water quality survey",
+      "title": "Water Quality or Hydrology Survey",
       "collapsibleHeading": null,
       "name": "NHT - Water quality survey",
       "description": null
@@ -32160,7 +32281,8 @@
                       {
                         "dataType": "text",
                         "name": "weedSurveyObjective",
-                        "validate": "maxSize[300],required"
+                        "validate": "maxSize[300],required",
+                        "description": "How will the information from the surveys be used?"
                       }
                     ],
                     "dataType": "list",
@@ -33458,7 +33580,6 @@
                 ]
               }
             ],
-            "allowRowDelete": "false",
             "dataType": "list",
             "name": "safAreasControlled"
           },
@@ -33661,6 +33782,7 @@
           },
           {
             "addRowText": "Add a new SAF position",
+            "userAddedRows": true,
             "source": "safAreasControlled",
             "type": "repeat",
             "items": [
