@@ -945,20 +945,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -1477,20 +1473,16 @@
           },
           {
             "name": "investmentPriorities2",
-            "dataType": "stringList",
+            "dataType": "text",
+            "description": "",
             "validate": "required",
             "constraints": {
+              "textProperty": "label",
+              "valueProperty": "value",
               "type": "pre-populated",
               "config": {
                 "source": {
-                  "params": [
-                    {
-                      "expression": "owner.projectId",
-                      "name": "id",
-                      "type": "computed"
-                    }
-                  ],
-                  "url": "/project/listProjectInvestmentPriorities/"
+                  "context-path": "owner.investmentPriorities"
                 }
               }
             }
@@ -2044,20 +2036,16 @@
           },
           {
             "name": "investmentPriorities2",
-            "dataType": "stringList",
+            "dataType": "text",
+            "description": "",
             "validate": "required",
             "constraints": {
+              "textProperty": "label",
+              "valueProperty": "value",
               "type": "pre-populated",
               "config": {
                 "source": {
-                  "params": [
-                    {
-                      "expression": "owner.projectId",
-                      "name": "id",
-                      "type": "computed"
-                    }
-                  ],
-                  "url": "/project/listProjectInvestmentPriorities/"
+                  "context-path": "owner.investmentPriorities"
                 }
               }
             }
@@ -2779,20 +2767,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -3847,20 +3831,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -4816,20 +4796,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -5820,20 +5796,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -5973,20 +5945,16 @@
           },
           {
             "name": "investmentPriorities2",
-            "dataType": "stringList",
+            "dataType": "text",
+            "description": "",
             "validate": "required",
             "constraints": {
+              "textProperty": "label",
+              "valueProperty": "value",
               "type": "pre-populated",
               "config": {
                 "source": {
-                  "params": [
-                    {
-                      "expression": "owner.projectId",
-                      "name": "id",
-                      "type": "computed"
-                    }
-                  ],
-                  "url": "/project/listProjectInvestmentPriorities/"
+                  "context-path": "owner.investmentPriorities"
                 }
               }
             }
@@ -7079,20 +7047,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -7981,20 +7945,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -8970,20 +8930,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -14394,20 +14350,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -16434,20 +16386,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -16901,7 +16849,7 @@
                       },
                       {
                         "type": "col",
-                        "css": "span2 col-border-right",
+                        "css": "span3 col-border-right",
                         "items": [
                           {
                             "type": "row",
@@ -17392,20 +17340,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -18326,20 +18270,16 @@
                   },
                   {
                     "name": "investmentPriorities2",
-                    "dataType": "stringList",
+                    "dataType": "text",
+                    "description": "",
                     "validate": "required",
                     "constraints": {
+                      "textProperty": "label",
+                      "valueProperty": "value",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            }
-                          ],
-                          "url": "/project/listProjectInvestmentPriorities/"
+                          "context-path": "owner.investmentPriorities"
                         }
                       }
                     }
@@ -18951,20 +18891,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -19905,20 +19841,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -23277,20 +23209,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -23990,20 +23918,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -25143,20 +25067,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -26128,20 +26048,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -27367,20 +27283,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -29236,20 +29148,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -30010,20 +29918,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
@@ -33445,20 +33349,16 @@
               },
               {
                 "name": "investmentPriorities2",
-                "dataType": "stringList",
+                "dataType": "text",
+                "description": "",
                 "validate": "required",
                 "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
                   "type": "pre-populated",
                   "config": {
                     "source": {
-                      "params": [
-                        {
-                          "expression": "owner.projectId",
-                          "name": "id",
-                          "type": "computed"
-                        }
-                      ],
-                      "url": "/project/listProjectInvestmentPriorities/"
+                      "context-path": "owner.investmentPriorities"
                     }
                   }
                 }
