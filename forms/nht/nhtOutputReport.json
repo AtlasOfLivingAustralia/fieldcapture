@@ -18067,276 +18067,251 @@
                 "validate": "required"
               },
               {
-                "columns": [
-                  {
-                    "dataType": "feature",
-                    "name": "improvedSites",
-                    "validate": "required"
-                  },
-                  {
-                    "computed": {
-                      "expression": "$geom.areaHa(improvedSites)"
-                    },
-                    "dataType": "number",
-                    "name": "calculatedAreaCoveringRegimeChangeHa",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "behaviour": [
-                      {
-                        "condition": "invoicedAreaHa > 0",
-                        "type": "conditional_validation",
-                        "value": {
-                          "message": "The area must be mapped",
-                          "validate": "required,min[0.0001]"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "computed": {
-                      "expression": "$geom.lengthKm(improvedSites)"
-                    },
-                    "dataType": "number",
-                    "name": "calculatedLengthOfRegimeChangeKm",
-                    "units": "km",
-                    "decimalPlaces": 3,
-                    "behaviour": [
-                      {
-                        "condition": "lengthOfRegimeChangeKm > 0",
-                        "type": "conditional_validation",
-                        "value": {
-                          "message": "The length must be mapped",
-                          "validate": "required,min[0.0001]"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "document",
-                    "name": "extraMappingDetails",
-                    "validate": "required",
-                    "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
-                    "behaviour": [
-                      {
-                        "condition": "not (within(calculatedAreaCoveringRegimeChangeHa, areaCoveringRegimeChangeHa, 0.1) and within(calculatedLengthOfRegimeChangeKm, lengthOfRegimeChangeKm, 0.1))",
-                        "type": "visible"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "mappingNotAlignedReason",
-                    "constraints": [
-                      "Mapped area simplifies more complex area/s where work was undertaken during this period",
-                      "Other"
-                    ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "not (within(calculatedAreaCoveringRegimeChangeHa, areaCoveringRegimeChangeHa, 0.1) and within(calculatedLengthOfRegimeChangeKm, lengthOfRegimeChangeKm, 0.1))",
-                        "type": "visible"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "mappingNotAlignedComments",
-                    "validate": "required,maxSize[100]",
-                    "behaviour": [
-                      {
-                        "type": "visible",
-                        "condition": "\"Other\" == mappingNotAlignedReason"
-                      }
-                    ]
-                  },
-                  {
-                    "defaultValue": {
-                      "type": "computed",
-                      "expression": "calculatedAreaCoveringRegimeChangeHa"
-                    },
-                    "dataType": "number",
-                    "name": "areaCoveringRegimeChangeHa",
-                    "validate": "min[0]",
-                    "decimalPlaces": 3,
-                    "units": "ha"
-                  },
-                  {
-                    "defaultValue": {
-                      "type": "computed",
-                      "expression": "calculatedLengthOfRegimeChangeKm"
-                    },
-                    "dataType": "number",
-                    "name": "lengthOfRegimeChangeKm",
-                    "validate": "min[0]",
-                    "decimalPlaces": 3,
-                    "units": "km"
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "areaInvoicedHa",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "validate": [
-                      {
-                        "rule": "required"
-                      },
-                      {
-                        "rule": "min[0]"
-                      },
-                      {
-                        "param": {
-                          "expression": "areaCoveringRegimeChangeHa",
-                          "type": "computed"
-                        },
-                        "rule": "max"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "areaInvoicedKm",
-                    "units": "km",
-                    "decimalPlaces": 3,
-                    "validate": [
-                      {
-                        "rule": "required"
-                      },
-                      {
-                        "rule": "min[0]"
-                      },
-                      {
-                        "param": {
-                          "expression": "lengthOfRegimeChangeKm",
-                          "type": "computed"
-                        },
-                        "rule": "max"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedNotActualReason",
-                    "behaviour": [
-                      {
-                        "condition": "roundTo(areaCoveringRegimeChangeHa, 2) != roundTo(areaInvoicedHa, 2) or roundTo(lengthOfRegimeChangeKm, 2) != roundTo(areaInvoicedKm, 2)",
-                        "type": "visible"
-                      }
-                    ],
-                    "constraints": [
-                      "Work was undertaken over a greater area than will be invoiced for",
-                      "Other"
-                    ],
-                    "validate": "required"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedNotActualComments",
-                    "behaviour": [
-                      {
-                        "condition": "\"Other\" == invoicedNotActualReason",
-                        "type": "if"
-                      }
-                    ],
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "treatmentType",
-                    "description": "",
-                    "constraints": [
-                      "Removing barriers (e.g fish barriers)",
-                      "Structure instalment or modification (e.g. weirs, flow gauging stations, fords, culverts)",
-                      "Resnagging",
-                      "Other"
-                    ],
-                    "validate": "required"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "otherTreatmentType",
-                    "behaviour": [
-                      {
-                        "condition": "treatmentType == \"Other\"",
-                        "type": "enable"
-                      }
-                    ],
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "treatmentObjective",
-                    "description": "Aim of the action - e.g. hydrological regime change from X to Y.",
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "name": "investmentPriorities2",
-                    "dataType": "text",
-                    "description": "",
-                    "validate": "required",
-                    "constraints": {
-                      "textProperty": "label",
-                      "valueProperty": "value",
-                      "type": "pre-populated",
-                      "config": {
-                        "source": {
-                          "context-path": "owner.investmentPriorities"
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "otherInvestmentPriority",
-                    "behaviour": [
-                      {
-                        "type": "enable",
-                        "condition": "\"Other\" in investmentPriorities2"
-                      }
-                    ]
-                  },
-                  {
-                    "name": "relatedOutcomes",
-                    "dataType": "text",
-                    "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
-                    "validate": "required",
-                    "constraints": {
-                      "textProperty": "label",
-                      "valueProperty": "label",
-                      "type": "pre-populated",
-                      "config": {
-                        "source": {
-                          "url": "/project/outcomesByScores",
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            },
-                            {
-                              "expression": "scores",
-                              "name": "scoreIds",
-                              "type": "computed"
-                            }
-                          ]
-                        }
-                      }
+                "name": "relatedOutcomes",
+                "dataType": "text",
+                "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "outcomes"
                     }
                   }
+                }
+              },
+              {
+                "name": "investmentPriorities2",
+                "dataType": "text",
+                "description": "",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "owner.investmentPriorities"
+                    }
+                  }
+                }
+              },
+              {
+                "dataType": "text",
+                "name": "otherInvestmentPriority",
+                "behaviour": [
+                  {
+                    "type": "enable",
+                    "condition": "\"Other\" in investmentPriorities2"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicingThisActivity",
+                "constraints": [
+                  "Yes",
+                  "No"
                 ],
-                "dataType": "list",
-                "name": "hydrologicalRegimeDetails"
+                "validate": "required"
+              },
+              {
+                "dataType": "feature",
+                "name": "sitesOfHydrological",
+                "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+              },
+              {
+                "computed": {
+                  "expression": "$geom.areaHa(sitesOfHydrological)"
+                },
+                "dataType": "number",
+                "name": "calculatedAreaTreatedHa",
+                "units": "ha",
+                "decimalPlaces": 3
+              },
+              {
+                "computed": {
+                  "expression": "$geom.lengthKm(sitesOfHydrological)"
+                },
+                "dataType": "number",
+                "name": "calculatedLengthTreatedKm",
+                "units": "km",
+                "decimalPlaces": 3,
+                "behaviour": [
+                  {
+                    "condition": "lengthTreatedKm > 0",
+                    "type": "conditional_validation",
+                    "value": {
+                      "message": "The managed length must be mapped",
+                      "validate": "required,min[0.0001]"
+                    }
+                  }
+                ]
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "calculatedAreaTreatedHa"
+                },
+                "dataType": "number",
+                "name": "areaTreatedHa",
+                "description": "Manually enter correct figure for this reporting period if different to mapped value.",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReason",
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedComments",
+                "validate": "required,maxSize[100]",
+                "behaviour": [
+                  {
+                    "type": "visible",
+                    "condition": "\"Other\" == mappingNotAlignedReason"
+                  }
+                ]
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetails",
+                "validate": "required",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "calculatedLengthTreatedKm"
+                },
+                "dataType": "number",
+                "name": "lengthTreatedKm",
+                "units": "km",
+                "decimalPlaces": 3
+              },
+              {
+                "dataType": "text",
+                "name": "treatmentType",
+                "description": "",
+                "constraints": [
+                  "Removing barriers (e.g fish barriers)",
+                  "Structure instalment or modification (e.g. weirs, flow gauging stations, fords, culverts)",
+                  "Resnagging",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "otherTreatmentType",
+                "behaviour": [
+                  {
+                    "condition": "treatmentType == \"Other\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+              {
+                "dataType": "text",
+                "name": "treatmentObjective",
+                "description": "Aim of the action - e.g. hydrological regime change from X to Y.",
+                "validate": "required,maxSize[300]"
               }
             ],
             "dataType": "list",
             "name": "hydroAreasControlled"
           },
           {
-            "name": "numberEcoHydroTreatments",
-            "type": "number",
+            "dataType": "number",
+            "name": "totalHydroTreatmentsInitial",
+            "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "count(hydroAreasControlled, \"relatedOutcomes\")"
+              "expression": "sum(hydroAreasControlled, \"initialOrFollowup == 'Initial' ? 1 : 0\")"
             }
+          },
+          {
+            "dataType": "number",
+            "name": "totalHydroTreatmentsInitialInvoiced",
+            "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "totalHydroTreatmentsInitial",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 0
+          },
+          {
+            "dataType": "number",
+            "name": "totalHydroTreatmentsFollowup",
+            "validate": "min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(hydroAreasControlled, \"initialOrFollowup == 'Follow-up' ? 1 : 0\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalHydroTreatmentsFollowupInvoiced",
+            "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "totalHydroTreatmentsFollowup",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": 0
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedIdentifyingMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "totalHydroTreatmentsInitialInvoiced < totalHydroTreatmentsInitial or totalHydroTreatmentsFollowupInvoiced < totalHydroTreatmentsFollowup",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -18435,6 +18410,84 @@
             "type": "table"
           },
           {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Totals Summary</h3>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(i) Total number of treatments implemented (initial) for during this reporting period",
+                        "source": "totalHydroTreatmentsInitial",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(ii) Total number of treatments implemented (initial) <u><i>invoiced</i></u> for during this reporting period",
+                        "source": "totalHydroTreatmentsInitialInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(iii) Total number of treatments implemented (follow up) for during this reporting period",
+                        "source": "totalHydroTreatmentsFollowup",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(iv) Total number of treatments implemented (follow up) <u><i>invoiced</i></u> for during this reporting period",
+                        "source": "totalHydroTreatmentsFollowupInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                "source": "totalInvoicedIdentifyingMismatched",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": ""
+              }
+            ]
+          },
+          {
             "addRowText": "Add a new controlled area",
             "userAddedRows": true,
             "source": "hydroAreasControlled",
@@ -18442,36 +18495,87 @@
             "items": [
               {
                 "type": "row",
-                "css": "border-bottom",
                 "items": [
                   {
-                    "preLabel": "Initial or Follow-up?",
-                    "css": "span3",
-                    "source": "initialOrFollowup",
-                    "type": "selectOne"
-                  }
-                ]
-              },
-              {
-                "columns": [
-                  {
-                    "width": "10%",
+                    "css": "span3 col-border-right",
                     "type": "col",
                     "items": [
-                      {
-                        "type": "feature",
-                        "source": "improvedSites"
-                      },
                       {
                         "type": "row",
                         "items": [
                           {
-                            "type": "number",
-                            "source": "calculatedAreaCoveringRegimeChangeHa",
-                            "displayOptions": {
-                              "displayUnits": true
-                            },
-                            "readonly": true
+                            "source": "relatedOutcomes",
+                            "type": "selectOne",
+                            "preLabel": "Which outcome statement/s does this activity relate to?"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "investmentPriorities2",
+                            "preLabel": "Which investment priority does this activity relate to?",
+                            "type": "select2Many"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span3 col-border-right",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "invoicingThisActivity",
+                            "preLabel": "Are you invoicing for this activity in this reporting period?",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "initialOrFollowup",
+                            "preLabel": "Initial or Follow-up?",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Site/s where hydrological regimes have been improved",
+                            "source": "sitesOfHydrological",
+                            "type": "feature"
                           }
                         ]
                       },
@@ -18479,12 +18583,25 @@
                         "type": "row",
                         "items": [
                           {
+                            "source": "calculatedAreaTreatedHa",
                             "type": "number",
-                            "source": "calculatedLengthOfRegimeChangeKm",
                             "displayOptions": {
                               "displayUnits": true
                             },
-                            "readonly": true
+                            "readonly": "readonly"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "calculatedLengthTreatedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            },
+                            "readonly": "readonly"
                           }
                         ]
                       },
@@ -18498,19 +18615,18 @@
                           }
                         ]
                       }
-                    ],
-                    "title": "Site/s where hydrological regimes have been improved"
+                    ]
                   },
                   {
-                    "width": "10%",
-                    "title": "Actual area (ha) / length (km) where the hydrological regimes have benn improved",
                     "type": "col",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
                         "type": "row",
                         "items": [
                           {
-                            "source": "areaCoveringRegimeChangeHa",
+                            "preLabel": "Actual area (ha) / length (km) where the hydrological regimes have been improved",
+                            "source": "areaTreatedHa",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -18522,7 +18638,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "lengthOfRegimeChangeKm",
+                            "source": "lengthTreatedKm",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -18552,107 +18668,56 @@
                         ]
                       }
                     ]
-                  },
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "css": "border-bottom",
+                "items": [
                   {
-                    "width": "10%",
-                    "title": "Invoiced area (ha) where the hydrological regimes have been improved",
                     "type": "col",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "areaInvoicedHa",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "areaInvoicedKm",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Reason for invoiced amount being different to actual amount",
-                            "source": "invoicedNotActualReason",
-                            "type": "selectOne"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                            "source": "invoicedNotActualComments",
-                            "type": "textarea",
-                            "rows": 5
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "width": "20%",
-                    "title": "Type of treatment implemented to improve eco-hydrological treatment",
-                    "type": "col",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
                         "type": "row",
                         "items": [
                           {
                             "source": "treatmentType",
+                            "preLabel": "Type of treatment implemented to improve eco-hydrological treatment",
                             "type": "select2"
                           }
                         ]
                       },
                       {
-                        "source": "otherTreatmentType",
-                        "placeholder": "Type of treatment implemented (if Other)",
-                        "type": "text"
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "otherTreatmentType",
+                            "placeholder": "Type of treatment implemented (if Other)",
+                            "type": "text"
+                          }
+                        ]
                       }
                     ]
                   },
                   {
-                    "width": "20%",
-                    "source": "treatmentObjective",
-                    "title": "Treatment objective",
-                    "type": "textarea"
-                  },
-                  {
-                    "width": "15%",
                     "type": "col",
-                    "title": "Which investment priority does this activity relate to?",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
-                        "source": "investmentPriorities2",
-                        "type": "select2Many"
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "treatmentObjective",
+                            "type": "textarea",
+                            "preLabel": "Treatment objective"
+                          }
+                        ]
                       }
                     ]
-                  },
-                  {
-                    "width": "15%",
-                    "source": "relatedOutcomes",
-                    "type": "selectOne",
-                    "title": "Which outcome statement/s relates to this survey?"
                   }
-                ],
-                "userAddedRows": true,
-                "source": "hydrologicalRegimeDetails",
-                "type": "table"
+                ]
               }
             ]
           },
