@@ -33660,7 +33660,10 @@
                       {
                         "preLabel": "(ii) Total <u>Annual</u> FTE invoiced for in this reporting period",
                         "source": "totalAnnualFtesInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
