@@ -3151,7 +3151,10 @@
                       {
                         "preLabel": "(iv) Total length (km) of structures installed that control access <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalLengthStructuresInstalledInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -3177,7 +3180,10 @@
                       {
                         "preLabel": "(vi) Total area (ha) of structures installed that control access <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalAreaStructuresInstalledInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -4133,7 +4139,10 @@
                       {
                         "preLabel": "(ii) Total area (ha) of treated for pest animals <u><i>invoiced</i></u> for this reporting period (Initial)",
                         "source": "totalAreaPestAnimalsTreatedInitialInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -4159,7 +4168,10 @@
                       {
                         "preLabel": "(iv) Total area (ha) of treated for pest animals <u><i>invoiced</i></u> for this reporting period (follow up)",
                         "source": "totalAreaPestAnimalsTreatedFollowUpInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -4185,7 +4197,10 @@
                       {
                         "preLabel": "(vi) Total length (km) of treated for pest animals <u><i>invoiced</i></u> for this reporting period (initial)",
                         "source": "totalLengthPestAnimalsTreatedInitialInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -4211,7 +4226,10 @@
                       {
                         "preLabel": "(viii) Total length (km) of treated for pest animals <u><i>invoiced</i></u> for this reporting period (follow up)",
                         "source": "totalLengthPestAnimalsTreatedFollowUpInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -5145,7 +5163,10 @@
                       {
                         "preLabel": "(ii) Total area (ha) of debris removal <b><u>invoiced</b></u> for this reporting period (Initial)",
                         "source": "totalAreaDebrisRemovedInitialInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -5171,7 +5192,10 @@
                       {
                         "preLabel": "(iv) Total area (ha) of debris removal <b><u>invoiced</b></u> for this reporting period (follow up)",
                         "source": "totalAreaDebrisRemovedInvoicedFollowup",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -5197,7 +5221,10 @@
                       {
                         "preLabel": "(vi) Total length (km) of debris removal <b><u>invoiced</b></u> for this reporting period (Initial)",
                         "source": "totalLengthDebrisRemovedInvoicedInitial",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -5223,7 +5250,10 @@
                       {
                         "preLabel": "(viii) Total length (km) of debris removal <b><u>invoiced</b></u> for this reporting period (follow up)",
                         "source": "totalLengthDebrisRemovedInvoicedFollowup",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -6286,7 +6316,10 @@
                       {
                         "preLabel": "(iv) Total length (km) of stream/coastline treated for erosion (initial) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalLengthStreamCoastlineInitialInvoice",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -6312,7 +6345,10 @@
                       {
                         "preLabel": "(vi) Total length (km) of stream/coastline treated for erosion (follow up) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalLengthStreamCoastlineInvoicedFollowup",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -6338,7 +6374,10 @@
                       {
                         "preLabel": "(viii) Total area (ha) of erosion control (initial) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalAreaErosionControlInvoicedInitial",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -6364,7 +6403,10 @@
                       {
                         "preLabel": "(x) Total area (ha) of erosion control <u><i>invoiced</i></u> for this reporting period (follow up)",
                         "source": "totalAreaErosionControlInvoicedFollowup",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -7365,7 +7407,7 @@
             "items": [
               {
                 "type": "col",
-                "css": "span3 col-border-right",
+                "css": "span4 col-border-right",
                 "items": [
                   {
                     "type": "row",
@@ -7392,7 +7434,7 @@
               },
               {
                 "type": "col",
-                "css": "span3 col-border-right",
+                "css": "span4 col-border-right",
                 "items": [
                   {
                     "type": "row",
@@ -7419,7 +7461,7 @@
               },
               {
                 "type": "col",
-                "css": "span3 col-border-right",
+                "css": "span4 col-border-right",
                 "items": [
                   {
                     "type": "row",
@@ -7445,7 +7487,7 @@
               },
               {
                 "type": "col",
-                "css": "span3 col-border-right",
+                "css": "span4 col-border-right",
                 "items": [
                   {
                     "type": "row",
@@ -7463,7 +7505,10 @@
                       {
                         "preLabel": "(viii) Total area (ha) of pest animal-free enclosures (newly established) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalAreaPestFreeSurveyInitialInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -7471,7 +7516,7 @@
               },
               {
                 "type": "col",
-                "css": "span3 col-border-right",
+                "css": "span4 col-border-right",
                 "items": [
                   {
                     "type": "row",
@@ -7489,7 +7534,10 @@
                       {
                         "preLabel": "(x) Total area (ha) of pest animal-free enclosures (maintained) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalAreaPestFreeSurveyMaintainedInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -9349,7 +9397,10 @@
                       {
                         "preLabel": "(ii) Total area (ha) covered by conservation agreements <u><i>invoiced</i></u> for during this reporting period (Established)",
                         "source": "totalAreaConservationAgreementsInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -9375,7 +9426,10 @@
                       {
                         "preLabel": "(iv) Total Area (ha) where implementation activities conducted <u><i>invoiced</i></u> for during this reporting period (Implementation/Stewardship)",
                         "source": "totalAreaActivitiesConductedInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -14647,7 +14701,10 @@
                       {
                         "preLabel": "(ii) Total area (ha) of augmentation (initial) <u><i>invoiced</i></u> for during this reporting period",
                         "source": "totalAreaAugmentationInitialInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -14673,7 +14730,10 @@
                       {
                         "preLabel": "(iv) Total area (ha) of augmentation (maintained) <u><i>invoiced</i></u> for during this reporting period",
                         "source": "totalAreaAugmentationMaintainedInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -17570,7 +17630,10 @@
                       {
                         "preLabel": "(ii) Total area (ha) treated by fire management action/s (initial) <u><i>invoiced</i></u> for during this reporting period",
                         "source": "totalAreaTreatedFireMgmtInitialInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -17596,7 +17659,10 @@
                       {
                         "preLabel": "(iv) Total area (ha) treated by fire management action/s (follow up) <u><i>invoiced</i></u> for during this reporting period",
                         "source": "totalAreaTreatedFireMgmtFollowupInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -17948,6 +18014,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -18053,7 +18120,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableHyd"
           },
           {
             "columns": [
@@ -18357,6 +18424,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -18397,6 +18465,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -18404,9 +18473,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableHyd",
             "type": "table"
           },
           {
@@ -19345,7 +19412,10 @@
                       {
                         "preLabel": "(ii) Total area (ha) covered by practice change <u><i>invoiced</i></u> for during this reporting period (Initial)",
                         "source": "totalAreaPracticeChangeInitialInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -19371,7 +19441,10 @@
                       {
                         "preLabel": "(iv) Total area (ha) covered by practice change <u><i>invoiced</i></u> for during this reporting period (follow up)",
                         "source": "totalAreaPracticeChangeInvoicedFollowup",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -20300,7 +20373,10 @@
                       {
                         "preLabel": "(ii) Total area (ha) for disease treatment/prevention (initial) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalAreaDiseaseManagementInitialInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -20326,7 +20402,10 @@
                       {
                         "preLabel": "(iv) Total Area (ha) for disease treatment/prevention (follow up) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalAreaDiseaseManagementInvoicedFollowup",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -20352,7 +20431,10 @@
                       {
                         "preLabel": "(vi) Total length (km) for disease treatment/prevention (initial) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalLengthDiseaseManagementInvoicedInitial",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -20378,7 +20460,10 @@
                       {
                         "preLabel": "(viii) Total length (km) for disease treatment/prevention (follow up) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalLengthDiseaseManagementInvoicedFollowup",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -23750,7 +23835,10 @@
                       {
                         "preLabel": "(ii) Total area (ha) of remediation of riparian/aquatic areas (initial) <u><i>invoiced</i></u> for during this reporting period",
                         "source": "totalAreaRemediationInitialInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -23776,7 +23864,10 @@
                       {
                         "preLabel": "(iv) Total area (ha) of remediation of riparian/aquatic areas (follow - up) <u><i>invoiced</i></u> for during this reporting period",
                         "source": "totalAreaRemediationFollowupInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -23802,7 +23893,10 @@
                       {
                         "preLabel": "(vi) Total length (km) of remediation of riparian/aquatic areas (initial) <u><i>invoiced</i></u> for during this reporting period",
                         "source": "totalLengthRemediationInitialInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -23828,7 +23922,10 @@
                       {
                         "preLabel": "(viii) Total length (km) of remediation of riparian/aquatic areas (follow-up) <u><i>invoiced</i></u> for during this reporting period",
                         "source": "totalLengthRemediationFollowupInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -24969,7 +25066,10 @@
                           {
                             "preLabel": "(ii) Total area (ha) treated for weeds (initial) <u><i>invoiced</i></u> for this reporting period",
                             "source": "totalAreaWeedsTreatedInitialInvoiced",
-                            "type": "number"
+                            "type": "number",
+                            "displayOptions": {
+                              "removeTrailingZeros": false
+                            }
                           }
                         ]
                       }
@@ -24995,7 +25095,10 @@
                           {
                             "preLabel": "(iv) Total area (ha) treated for weeds (follow-up) <u><i>invoiced</i></u> for this reporting period",
                             "source": "totalAreaWeedsTreatedInvoicedFollowup",
-                            "type": "number"
+                            "type": "number",
+                            "displayOptions": {
+                              "removeTrailingZeros": false
+                            }
                           }
                         ]
                       }
@@ -25021,7 +25124,10 @@
                           {
                             "preLabel": "(vi) Total length (km) treated for weeds (initial) <u><i>invoiced</i></u> for this reporting period",
                             "source": "totalLengthWeedsTreatedInvoicedInitial",
-                            "type": "number"
+                            "type": "number",
+                            "displayOptions": {
+                              "removeTrailingZeros": false
+                            }
                           }
                         ]
                       }
@@ -25047,7 +25153,10 @@
                           {
                             "preLabel": "(viii) Total length (km) treated for weeds (follow-up) <u><i>invoiced</i></u> for this reporting period",
                             "source": "totalLengthWeedsTreatedInvoicedFollowup",
-                            "type": "number"
+                            "type": "number",
+                            "displayOptions": {
+                              "removeTrailingZeros": false
+                            }
                           }
                         ]
                       }
@@ -25949,7 +26058,10 @@
                       {
                         "preLabel": "(ii) Total area (ha) of habitat revegetated (initial) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalAreaWeedsTreatedInitialInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -25975,7 +26087,10 @@
                       {
                         "preLabel": "(iv) Total area (ha) of habitat revegetated (maintenance) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalAreaWeedsTreatedInvoicedFollowup",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -28095,7 +28210,10 @@
                       {
                         "preLabel": "(ii) Total area (ha) of site preparation <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalAreaSitePreparationInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -28121,7 +28239,10 @@
                       {
                         "preLabel": "(iv) Total length (km) of site preparation <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalLengthSitePreparationInvoiced",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
@@ -34217,7 +34338,10 @@
                       {
                         "preLabel": "(i) Total <u>Annual</u> FTE for this reporting period",
                         "source": "totalAnnualFtes",
-                        "type": "number"
+                        "type": "number",
+                        "displayOptions": {
+                          "removeTrailingZeros": false
+                        }
                       }
                     ]
                   }
