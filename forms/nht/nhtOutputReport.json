@@ -741,6 +741,7 @@
         "modelName": "NHT - Baseline data",
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -846,7 +847,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableSyn"
           },
           {
             "columns": [
@@ -1067,6 +1068,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -1107,6 +1109,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -1114,9 +1117,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableSyn",
             "type": "table"
           },
           {
@@ -1348,6 +1349,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -1453,7 +1455,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableCom"
           },
           {
             "name": "relatedOutcomes",
@@ -1625,6 +1627,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -1665,6 +1668,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -1672,9 +1676,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableCom",
             "type": "table"
           },
           {
@@ -1911,6 +1913,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -2016,7 +2019,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableCse"
           },
           {
             "name": "relatedOutcomes",
@@ -2248,6 +2251,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -2288,6 +2292,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -2295,9 +2300,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableCse",
             "type": "table"
           },
           {
@@ -2561,6 +2564,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -2666,7 +2670,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableCoa"
           },
           {
             "columns": [
@@ -3041,6 +3045,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -3081,6 +3086,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -3088,9 +3094,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableCoa",
             "type": "table"
           },
           {
@@ -3535,6 +3539,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -3640,7 +3645,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableCpa"
           },
           {
             "columns": [
@@ -4055,6 +4060,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -4095,6 +4101,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -4102,9 +4109,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableCpa",
             "type": "table"
           },
           {
@@ -4585,6 +4590,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -4690,7 +4696,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableDer"
           },
           {
             "columns": [
@@ -5079,6 +5085,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -5119,6 +5126,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -5126,9 +5134,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableDer",
             "type": "table"
           },
           {
@@ -5582,6 +5588,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -5687,7 +5694,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableErm"
           },
           {
             "columns": [
@@ -6206,6 +6213,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -6246,6 +6254,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -6253,9 +6262,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableErm",
             "type": "table"
           },
           {
@@ -6816,6 +6823,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -6921,7 +6929,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableEmp"
           },
           {
             "columns": [
@@ -7341,6 +7349,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -7381,6 +7390,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -7388,9 +7398,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableEmp",
             "type": "table"
           },
           {
@@ -7866,6 +7874,7 @@
       "template":   {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -7971,7 +7980,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableCbp"
           },
           {
             "columns": [
@@ -8350,6 +8359,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -8390,6 +8400,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -8397,9 +8408,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableCbp",
             "type": "table"
           },
           {
@@ -8839,6 +8848,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -8944,7 +8954,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableEsa"
           },
           {
             "columns": [
@@ -9313,6 +9323,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -9353,6 +9364,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -9360,9 +9372,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableEsa",
             "type": "table"
           },
           {
@@ -9798,6 +9808,115 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
+              }
+            ],
+            "dataType": "list",
+            "name": "participationInformationTableFms"
+          },
+          {
             "name": "farmManagementSurveys",
             "dataType": "list",
             "minSize": 1,
@@ -10139,114 +10258,6 @@
             }
           },
           {
-            "columns": [
-              {
-                "dataType": "text",
-                "name": "participationIndividualsOrGroups",
-                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
-                "constraints": [
-                  "Individuals",
-                  "Groups"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "number",
-                "name": "participationIndividualNumber",
-                "defaultValue": 0,
-                "behaviour": [
-                  {
-                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
-                  }
-                ],
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "text",
-                "name": "participationGroupNumber",
-                "behaviour": [
-                  {
-                    "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
-                  }
-                ],
-                "constraints": [
-                  "0",
-                  "1-10",
-                  "11-20",
-                  "21-30",
-                  "31-40",
-                  "41-50"
-                ]
-              },
-              {
-                "dataType": "number",
-                "name": "firstNationIndividualNumber",
-                "defaultValue": 0,
-                "behaviour": [
-                  {
-                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
-                  }
-                ],
-                "validate": [
-                  {
-                    "rule": "required"
-                  },
-                  {
-                    "rule": "min[0]"
-                  },
-                  {
-                    "param": {
-                      "expression": "participationIndividualNumber",
-                      "type": "computed"
-                    },
-                    "rule": "max"
-                  }
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "firstNationGroupNumber",
-                "behaviour": [
-                  {
-                    "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
-                  }
-                ],
-                "constraints": [
-                  "0",
-                  "1-10",
-                  "11-20",
-                  "21-30",
-                  "31-40",
-                  "41-50"
-                ],
-                "validate": [
-                  {
-                    "rule": "required"
-                  },
-                  {
-                    "param": {
-                      "expression": "participationGroupNumber",
-                      "type": "computed"
-                    },
-                    "rule": "max",
-                    "message": "The number of first nation participants cannot be greater than the total number of participants"
-                  }
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "participationDetails",
-                "validate": "required, maxSize[3000]"
-              }
-            ],
-            "dataType": "list",
-            "name": "participationInformationTable"
-          },
-          {
             "dataType": "number",
             "name": "totalSurveyBaseline",
             "validate": "min[0]",
@@ -10364,6 +10375,7 @@
                 ]
               },
               {
+                "disableTableUpload": true,
                 "columns": [
                   {
                     "width": "10%",
@@ -10404,6 +10416,7 @@
                     ]
                   },
                   {
+                    "width": "20%",
                     "source": "participationDetails",
                     "rows": 4,
                     "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -10411,9 +10424,7 @@
                     "type": "textarea"
                   }
                 ],
-                "userAddedRows": false,
-                "disableTableUpload": true,
-                "source": "participationInformationTable",
+                "source": "participationInformationTableFms",
                 "type": "table"
               },
               {
@@ -11222,6 +11233,7 @@
             }
           },
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -11327,7 +11339,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableFau"
           },
           {
             "dataType": "number",
@@ -11447,6 +11459,7 @@
                 ]
               },
               {
+                "disableTableUpload": true,
                 "columns": [
                   {
                     "width": "10%",
@@ -11487,6 +11500,7 @@
                     ]
                   },
                   {
+                    "width": "20%",
                     "source": "participationDetails",
                     "rows": 4,
                     "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -11494,9 +11508,7 @@
                     "type": "textarea"
                   }
                 ],
-                "userAddedRows": false,
-                "disableTableUpload": true,
-                "source": "participationInformationTable",
+                "source": "participationInformationTableFau",
                 "type": "table"
               },
               {
@@ -11994,6 +12006,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -12099,7 +12112,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableFna"
           },
           {
             "columns": [
@@ -12448,6 +12461,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -12488,6 +12502,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -12495,9 +12510,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableFna",
             "type": "table"
           },
           {
@@ -13313,6 +13326,7 @@
             }
           },
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -13418,7 +13432,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableFls"
           },
           {
             "dataType": "number",
@@ -13538,6 +13552,7 @@
                 ]
               },
               {
+                "disableTableUpload": true,
                 "columns": [
                   {
                     "width": "10%",
@@ -13578,6 +13593,7 @@
                     ]
                   },
                   {
+                    "width": "20%",
                     "source": "participationDetails",
                     "rows": 4,
                     "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -13585,9 +13601,7 @@
                     "type": "textarea"
                   }
                 ],
-                "userAddedRows": false,
-                "disableTableUpload": true,
-                "source": "participationInformationTable",
+                "source": "participationInformationTableFls",
                 "type": "table"
               },
               {
@@ -14091,6 +14105,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -14196,7 +14211,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableHaa"
           },
           {
             "columns": [
@@ -14617,6 +14632,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -14657,6 +14673,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -14664,9 +14681,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableHaa",
             "type": "table"
           },
           {
@@ -15527,6 +15542,7 @@
             }
           },
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -15632,7 +15648,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableHca"
           },
           {
             "dataType": "number",
@@ -15752,6 +15768,7 @@
                 ]
               },
               {
+                "disableTableUpload": true,
                 "columns": [
                   {
                     "width": "10%",
@@ -15792,6 +15809,7 @@
                     ]
                   },
                   {
+                    "width": "20%",
                     "source": "participationDetails",
                     "rows": 4,
                     "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -15799,9 +15817,7 @@
                     "type": "textarea"
                   }
                 ],
-                "userAddedRows": false,
-                "disableTableUpload": true,
-                "source": "participationInformationTable",
+                "source": "participationInformationTableHca",
                 "type": "table"
               },
               {
@@ -16295,6 +16311,7 @@
         "modelName": "NHT - Identifying sites",
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -16400,7 +16417,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableIpl"
           },
           {
             "columns": [
@@ -16739,6 +16756,7 @@
                 ]
               },
               {
+                "disableTableUpload": true,
                 "columns": [
                   {
                     "width": "10%",
@@ -16779,6 +16797,7 @@
                     ]
                   },
                   {
+                    "width": "20%",
                     "source": "participationDetails",
                     "rows": 4,
                     "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -16786,9 +16805,7 @@
                     "type": "textarea"
                   }
                 ],
-                "userAddedRows": false,
-                "disableTableUpload": true,
-                "source": "participationInformationTable",
+                "source": "participationInformationTableIpl",
                 "type": "table"
               },
               {
@@ -17107,6 +17124,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -17212,7 +17230,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableIfm"
           },
           {
             "columns": [
@@ -17546,6 +17564,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -17586,6 +17605,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -17593,9 +17613,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableIfm",
             "type": "table"
           },
           {
@@ -18866,6 +18884,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -18971,7 +18990,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableIlm"
           },
           {
             "dataType": "text",
@@ -19328,6 +19347,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -19368,6 +19388,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -19375,9 +19396,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableIlm",
             "type": "table"
           },
           {
@@ -19787,91 +19806,113 @@
       "template": {
         "dataModel": [
           {
-            "dataType": "text",
-            "name": "participationIndividualsOrGroups",
-            "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
-            "constraints": [
-              "Individuals",
-              "Groups"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "participationIndividualNumber",
-            "behaviour": [
+            "allowRowDelete": "false",
+            "columns": [
               {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "participationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "number",
-            "name": "firstNationIndividualNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "text",
-            "name": "firstNationGroupNumber",
-            "behaviour": [
-              {
-                "condition": "participationIndividualsOrGroups == \"Groups\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "0",
-              "1-10",
-              "11-20",
-              "21-30",
-              "31-40",
-              "41-50"
-            ],
-            "validate": [
-              {
-                "rule": "required"
+                "dataType": "text",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
               },
               {
-                "param": {
-                  "expression": "participationGroupNumber",
-                  "type": "computed"
-                },
-                "rule": "max",
-                "message": "The number of first nation participants cannot be greater than the total number of participants"
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
               }
-            ]
-          },
-          {
-            "dataType": "text",
-            "name": "participationDetails",
-            "validate": "maxSize[3000]"
+            ],
+            "dataType": "list",
+            "name": "participationInformationTableMad"
           },
           {
             "columns": [
@@ -20289,6 +20330,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -20299,7 +20341,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)",
+                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -20315,7 +20357,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service ",
+                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -20329,6 +20371,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -20336,9 +20379,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": false,
-            "source": "",
+            "source": "participationInformationTableMad",
             "type": "table"
           },
           {
@@ -21177,6 +21218,7 @@
             }
           },
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -21282,7 +21324,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTablePas"
           },
           {
             "dataType": "number",
@@ -21402,6 +21444,7 @@
                 ]
               },
               {
+                "disableTableUpload": true,
                 "columns": [
                   {
                     "width": "10%",
@@ -21442,6 +21485,7 @@
                     ]
                   },
                   {
+                    "width": "20%",
                     "source": "participationDetails",
                     "rows": 4,
                     "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -21449,9 +21493,7 @@
                     "type": "textarea"
                   }
                 ],
-                "userAddedRows": false,
-                "disableTableUpload": true,
-                "source": "participationInformationTable",
+                "source": "participationInformationTablePas",
                 "type": "table"
               },
               {
@@ -22325,6 +22367,7 @@
             }
           },
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -22430,7 +22473,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableSgs"
           },
           {
             "dataType": "number",
@@ -22521,6 +22564,7 @@
                 ]
               },
               {
+                "disableTableUpload": true,
                 "columns": [
                   {
                     "width": "10%",
@@ -22561,6 +22605,7 @@
                     ]
                   },
                   {
+                    "width": "20%",
                     "source": "participationDetails",
                     "rows": 4,
                     "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -22568,9 +22613,7 @@
                     "type": "textarea"
                   }
                 ],
-                "userAddedRows": false,
-                "disableTableUpload": true,
-                "source": "participationInformationTable",
+                "source": "participationInformationTableSgs",
                 "type": "table"
               },
               {
@@ -24691,6 +24734,7 @@
             "name": "weedTreatmentAreasControlled"
           },
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -24796,7 +24840,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableRew"
           },
           {
             "dataType": "number",
@@ -24980,8 +25024,8 @@
                   }
                 ]
               },
-
               {
+                "disableTableUpload": true,
                 "columns": [
                   {
                     "width": "10%",
@@ -25022,6 +25066,7 @@
                     ]
                   },
                   {
+                    "width": "20%",
                     "source": "participationDetails",
                     "rows": 4,
                     "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -25029,9 +25074,7 @@
                     "type": "textarea"
                   }
                 ],
-                "userAddedRows": false,
-                "disableTableUpload": true,
-                "source": "participationInformationTable",
+                "source": "participationInformationTableRew",
                 "type": "table"
               },
               {
@@ -25475,6 +25518,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -25580,7 +25624,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableReh"
           },
           {
             "columns": [
@@ -25974,6 +26018,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -26014,6 +26059,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -26021,9 +26067,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableReh",
             "type": "table"
           },
           {
@@ -26504,6 +26548,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -26609,7 +26654,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableScp"
           },
           {
             "columns": [
@@ -27046,6 +27091,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -27086,6 +27132,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -27093,9 +27140,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableScp",
             "type": "table"
           },
           {
@@ -27654,6 +27699,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -27759,7 +27805,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableSip"
           },
           {
             "columns": [
@@ -28126,6 +28172,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -28166,6 +28213,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -28173,9 +28221,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableSip",
             "type": "table"
           },
           {
@@ -28917,6 +28963,7 @@
             }
           },
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -29022,7 +29069,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableSss"
           },
           {
             "dataType": "number",
@@ -29148,6 +29195,7 @@
                 ]
               },
               {
+                "disableTableUpload": true,
                 "columns": [
                   {
                     "width": "10%",
@@ -29188,6 +29236,7 @@
                     ]
                   },
                   {
+                    "width": "20%",
                     "source": "participationDetails",
                     "rows": 4,
                     "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -29195,9 +29244,7 @@
                     "type": "textarea"
                   }
                 ],
-                "userAddedRows": false,
-                "disableTableUpload": true,
-                "source": "participationInformationTable",
+                "source": "participationInformationTableSss",
                 "type": "table"
               },
               {
@@ -29597,6 +29644,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -29702,7 +29750,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableSot"
           },
           {
             "name": "soilTestingSurveys",
@@ -30042,6 +30090,7 @@
                 ]
               },
               {
+                "disableTableUpload": true,
                 "columns": [
                   {
                     "width": "10%",
@@ -30082,6 +30131,7 @@
                     ]
                   },
                   {
+                    "width": "20%",
                     "source": "participationDetails",
                     "rows": 4,
                     "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -30089,9 +30139,7 @@
                     "type": "textarea"
                   }
                 ],
-                "userAddedRows": false,
-                "disableTableUpload": true,
-                "source": "participationInformationTable",
+                "source": "participationInformationTableSot",
                 "type": "table"
               },
               {
@@ -30473,6 +30521,7 @@
       "template": {
         "dataModel": [
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -30578,7 +30627,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableUei"
           },
           {
             "columns": [
@@ -31019,6 +31068,7 @@
             ]
           },
           {
+            "disableTableUpload": true,
             "columns": [
               {
                 "width": "10%",
@@ -31059,6 +31109,7 @@
                 ]
               },
               {
+                "width": "20%",
                 "source": "participationDetails",
                 "rows": 4,
                 "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -31066,9 +31117,7 @@
                 "type": "textarea"
               }
             ],
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "source": "participationInformationTable",
+            "source": "participationInformationTableUei",
             "type": "table"
           },
           {
@@ -31963,6 +32012,7 @@
             }
           },
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -32068,7 +32118,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableWhs"
           },
           {
             "dataType": "number",
@@ -32188,6 +32238,7 @@
                 ]
               },
               {
+                "disableTableUpload": true,
                 "columns": [
                   {
                     "width": "10%",
@@ -32228,6 +32279,7 @@
                     ]
                   },
                   {
+                    "width": "20%",
                     "source": "participationDetails",
                     "rows": 4,
                     "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -32235,9 +32287,7 @@
                     "type": "textarea"
                   }
                 ],
-                "userAddedRows": false,
-                "disableTableUpload": true,
-                "source": "participationInformationTable",
+                "source": "participationInformationTableWhs",
                 "type": "table"
               },
               {
@@ -33125,6 +33175,7 @@
             }
           },
           {
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -33230,7 +33281,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTable"
+            "name": "participationInformationTableWds"
           },
           {
             "dataType": "number",
@@ -33350,6 +33401,7 @@
                 ]
               },
               {
+                "disableTableUpload": true,
                 "columns": [
                   {
                     "width": "10%",
@@ -33390,6 +33442,7 @@
                     ]
                   },
                   {
+                    "width": "20%",
                     "source": "participationDetails",
                     "rows": 4,
                     "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
@@ -33397,9 +33450,7 @@
                     "type": "textarea"
                   }
                 ],
-                "userAddedRows": false,
-                "disableTableUpload": true,
-                "source": "participationInformationTable",
+                "source": "participationInformationTableWds",
                 "type": "table"
               },
               {
