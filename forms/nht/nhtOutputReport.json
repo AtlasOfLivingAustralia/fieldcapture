@@ -889,6 +889,10 @@
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.monitoring.rows"
+                        },
+                        "filter": {
+                          "namespace": "monitoringIndicator",
+                          "expression": "monitoringIndicator.relatedBaseline == projectBaseline"
                         }
                       }
                     }
