@@ -1016,7 +1016,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -1555,6 +1555,7 @@
           {
             "dataType": "number",
             "name": "totalMaterialsPublishedInvoiced",
+            "defaultValue": "",
             "validate": [
               {
                 "rule": "required"
@@ -2168,7 +2169,7 @@
             "dataType": "number",
             "name": "totalNumberEngagementHeldInvoiced",
             "description": "Number of events invoiced for this reporting period.",
-            "defaultValue": 0,
+            "defaultValue": "",
             "validate": [
               {
                 "rule": "required"
@@ -2913,6 +2914,7 @@
           {
             "dataType": "number",
             "name": "totalStructuresInstalledInvoiced",
+            "defaultValue": "",
             "validate": [
               {
                 "rule": "required"
@@ -2942,6 +2944,7 @@
             "dataType": "number",
             "name": "totalLengthStructuresInstalledInvoiced",
             "decimalPlaces": 3,
+            "defaultValue": "",
             "validate": [
               {
                 "rule": "required"
@@ -2972,6 +2975,7 @@
             "dataType": "number",
             "name": "totalAreaStructuresInstalledInvoiced",
             "decimalPlaces": 3,
+            "defaultValue": "",
             "validate": [
               {
                 "rule": "required"
@@ -4934,7 +4938,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -4965,7 +4969,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -4996,7 +5000,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -5027,7 +5031,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -6062,7 +6066,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -6093,7 +6097,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -6124,7 +6128,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -6155,7 +6159,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -7163,7 +7167,8 @@
                 },
                 "rule": "max"
               }
-            ]
+            ],
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -7180,7 +7185,7 @@
             "name": "totalNoPestFreeSurveyMaintainedInvoiced",
             "description": "The total invoiced must be the same or less than the total amount delivered.",
             "decimalPlaces": 0,
-            "defaultValue": 0,
+            "defaultValue": "",
             "validate": [
               {
                 "rule": "required"
@@ -7225,7 +7230,8 @@
                 },
                 "rule": "max"
               }
-            ]
+            ],
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -7242,7 +7248,7 @@
             "name": "totalAreaPestFreeSurveyInitialInvoiced",
             "description": "The total invoiced must be the same or less than the total amount delivered.",
             "decimalPlaces": 3,
-            "defaultValue": 0,
+            "defaultValue": "",
             "validate": [
               {
                 "rule": "required"
@@ -7275,7 +7281,7 @@
             "name": "totalAreaPestFreeSurveyMaintainedInvoiced",
             "description": "The total invoiced must be the same or less than the total amount delivered.",
             "decimalPlaces": 3,
-            "defaultValue": 0,
+            "defaultValue": "",
             "validate": [
               {
                 "rule": "required"
@@ -8272,7 +8278,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -8301,7 +8307,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -9234,7 +9240,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -9265,7 +9271,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -10284,7 +10290,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -10313,7 +10319,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -11368,7 +11374,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -11397,7 +11403,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -12403,7 +12409,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -13461,7 +13467,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -13475,7 +13481,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicatorInvoiced",
-            "defaultValue": 0,
+            "defaultValue": "",
             "validate": [
               {
                 "rule": "required"
@@ -13659,7 +13665,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "(iii)  Total Number of  indicator flora surveys completed for this reporting period",
+                            "preLabel": "(iii)  Total Number of indicator flora surveys completed for this reporting period",
                             "source": "totalSurveyIndicator",
                             "type": "number"
                           }
@@ -14485,7 +14491,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -14516,7 +14522,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -14545,7 +14551,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -14574,7 +14580,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -15677,7 +15683,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -15706,7 +15712,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -16697,7 +16703,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -17475,7 +17481,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -17506,7 +17512,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -18355,7 +18361,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -18384,7 +18390,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -19288,7 +19294,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -19319,7 +19325,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -19419,7 +19425,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total  area (ha) covered by practice change during this reporting period (Initial)",
+                        "preLabel": "(i) Total area (ha) covered by practice change during this reporting period (Initial)",
                         "source": "totalAreaPracticeChangeInitial",
                         "type": "number"
                       }
@@ -20179,7 +20185,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -20210,7 +20216,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -20241,7 +20247,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -20272,7 +20278,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -21353,7 +21359,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -21367,7 +21373,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicatorInvoiced",
-            "defaultValue": 0,
+            "defaultValue": "",
             "validate": [
               {
                 "rule": "required"
@@ -22502,7 +22508,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -23583,7 +23589,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -23614,7 +23620,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
 
           {
@@ -23646,7 +23652,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -23677,7 +23683,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
 
           {
@@ -23707,7 +23713,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -23736,7 +23742,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -24871,7 +24877,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -24902,7 +24908,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -24933,7 +24939,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -24964,7 +24970,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -25929,7 +25935,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -25960,7 +25966,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -26946,7 +26952,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -26975,7 +26981,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -27004,7 +27010,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -27033,7 +27039,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -28083,7 +28089,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -28114,7 +28120,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -29098,7 +29104,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -29127,7 +29133,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -29999,7 +30005,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -30028,7 +30034,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -30981,7 +30987,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -31010,7 +31016,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -32147,7 +32153,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -32176,7 +32182,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
@@ -33310,7 +33316,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "number",
@@ -33339,7 +33345,7 @@
                 "rule": "max"
               }
             ],
-            "defaultValue": 0
+            "defaultValue": ""
           },
           {
             "dataType": "text",
