@@ -1244,7 +1244,7 @@
               {
                 "type": "table",
                 "source": "baselineDetails",
-                "userAddedRows": false,
+                "userAddedRows": true,
                 "disableTableUpload": true,
                 "columns": [
                   {
@@ -1826,6 +1826,7 @@
                   }
                 ],
                 "userAddedRows": true,
+                "disableTableUpload": true,
                 "source": "communicationMaterials",
                 "type": "table"
               },
@@ -2486,6 +2487,7 @@
                   }
                 ],
                 "userAddedRows": true,
+                "disableTableUpload": true,
                 "source": "events",
                 "type": "table"
               },
@@ -3461,7 +3463,7 @@
                     "type": "date"
                   }
                 ],
-                "userAddedRows": false,
+                "userAddedRows": true,
                 "disableTableUpload": true,
                 "source": "accessControlDetails",
                 "type": "table"
@@ -4513,6 +4515,7 @@
                       }
                     ],
                     "userAddedRows": true,
+                    "disableTableUpload": true,
                     "source": "pestAnimalsControlled",
                     "type": "table"
                   }
@@ -5512,6 +5515,7 @@
                   }
                 ],
                 "userAddedRows": true,
+                "disableTableUpload": true,
                 "source": "debrisRemovalDetails",
                 "type": "table"
               }
@@ -6746,6 +6750,7 @@
                   }
                 ],
                 "userAddedRows": true,
+                "disableTableUpload": true,
                 "source": "erosionManagementDetails",
                 "type": "table"
               }
@@ -7799,6 +7804,7 @@
                       }
                     ],
                     "userAddedRows": true,
+                    "disableTableUpload": true,
                     "source": "speciesProtected",
                     "type": "table"
                   }
@@ -8773,6 +8779,7 @@
                       }
                     ],
                     "userAddedRows": true,
+                    "disableTableUpload": true,
                     "source": "speciesInBreedingProgram",
                     "type": "table"
                   }
@@ -9728,6 +9735,7 @@
                       }
                     ],
                     "userAddedRows": true,
+                    "disableTableUpload": true,
                     "source": "agreementsTable",
                     "type": "table"
                   }
@@ -11928,7 +11936,7 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": false,
+                        "disableTableUpload": true,
                         "source": "faunaSurveySpeciesTable",
                         "type": "table"
                       }
@@ -12903,6 +12911,7 @@
                   }
                 ],
                 "userAddedRows": true,
+                "disableTableUpload": true,
                 "source": "firstNationsDetails",
                 "type": "table"
               }
@@ -14027,7 +14036,7 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": false,
+                        "disableTableUpload": true,
                         "source": "floraSurveySpeciesTable",
                         "type": "table"
                       }
@@ -15107,7 +15116,8 @@
                     "type": "textarea"
                   }
                 ],
-                "userAddedRows": false,
+                "userAddedRows": true,
+                "disableTableUpload": true,
                 "source": "habitatAugmentationDetails",
                 "type": "table"
               }
@@ -16231,7 +16241,7 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": false,
+                        "disableTableUpload": true,
                         "source": "habitatConditionSurveySpeciesTable",
                         "type": "table"
                       }
@@ -17047,7 +17057,7 @@
                         "type": "text"
                       }
                     ],
-                    "userAddedRows": false,
+                    "userAddedRows": true,
                     "disableTableUpload": true,
                     "source": "potentialSitesSurveyBaselineTable",
                     "type": "table"
@@ -19728,6 +19738,7 @@
                   }
                 ],
                 "userAddedRows": true,
+                "disableTableUpload": true,
                 "source": "landManagementDetails",
                 "type": "table"
               }
@@ -20782,6 +20793,7 @@
                   }
                 ],
                 "userAddedRows": true,
+                "disableTableUpload": true,
                 "source": "diseaseManagementDetails",
                 "type": "table"
               }
@@ -21913,7 +21925,7 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": false,
+                        "disableTableUpload": true,
                         "source": "pestAnimalSurveySpeciesTable",
                         "type": "table"
                       }
@@ -23033,7 +23045,7 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": false,
+                        "disableTableUpload": true,
                         "source": "plantSurvivalSurveySpeciesTable",
                         "type": "table"
                       }
@@ -25443,6 +25455,7 @@
                       }
                     ],
                     "userAddedRows": true,
+                    "disableTableUpload": true,
                     "source": "weedSpeciesTreated",
                     "type": "table"
                   }
@@ -26475,6 +26488,7 @@
                   }
                 ],
                 "userAddedRows": true,
+                "disableTableUpload": true,
                 "source": "revegetationDetails",
                 "type": "table"
               }
@@ -27619,7 +27633,7 @@
                     "type": "textarea"
                   }
                 ],
-                "userAddedRows": false,
+                "userAddedRows": true,
                 "disableTableUpload": true,
                 "source": "seedCollectionDetails",
                 "type": "table"
@@ -28541,6 +28555,7 @@
                   }
                 ],
                 "userAddedRows": true,
+                "disableTableUpload": true,
                 "source": "sitePreparationDetails",
                 "type": "table"
               }
@@ -31803,7 +31818,7 @@
                     "title": "Type and goal of intervention"
                   }
                 ],
-                "userAddedRows": false,
+                "userAddedRows": true,
                 "disableTableUpload": true,
                 "source": "interventionSpecies",
                 "type": "table"
@@ -34121,7 +34136,7 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": false,
+                        "disableTableUpload": true,
                         "source": "weedSurveySpeciesTable",
                         "type": "table"
                       }
