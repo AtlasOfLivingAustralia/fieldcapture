@@ -122,7 +122,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         then:
         waitFor {
             meriPlan.extendedBaseline.projectBaselines[0].outcome.find('option').collect{it.value()} == ["", "MT1", "MT2", "ST1"]
-            meriPlan.extendedBaseline.projectBaselines[0].methodProtocols.find('option').collect{it.value()} == ["", "Category 1", "Category 2", "Category 3", "Other"]
+            meriPlan.extendedBaseline.projectBaselines[0].methodProtocols.find('option').collect{it.value()} == ["", "Category 1", "Category 3", "Other"]
             meriPlan.extendedBaseline.projectBaselines[0].targetMeasures.module(FormElement).disabled
             meriPlan.extendedBaseline.projectBaselines[0].methodProtocols.module(FormElement).disabled
             meriPlan.extendedBaseline.projectBaselines[0].evidence.module(FormElement).disabled
