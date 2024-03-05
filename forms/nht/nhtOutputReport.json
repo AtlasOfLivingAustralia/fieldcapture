@@ -34457,7 +34457,22 @@
                 "name": "amountOfFteInvoicedFor",
                 "decimalPlaces": 3,
                 "description": "Note: This must be reported in the context of this reporting period only. For example, a full time SAF = 1, and a half time SAF = 0.5",
-                "validate": "required,min[0]"
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "fteOfThisPosition",
+                      "type": "computed",
+                      "decimalPlaces": 3
+                    },
+                    "rule": "max"
+                  }
+                ]
               },
               {
                 "dataType": "list",
