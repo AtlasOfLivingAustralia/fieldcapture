@@ -2951,6 +2951,7 @@
             "name": "totalLengthStructuresInstalledInvoiced",
             "decimalPlaces": 3,
             "defaultValue": "",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -2982,6 +2983,7 @@
             "name": "totalAreaStructuresInstalledInvoiced",
             "decimalPlaces": 3,
             "defaultValue": "",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -3902,6 +3904,7 @@
             "defaultValue": "",
             "dataType": "number",
             "name": "totalAreaPestAnimalsTreatedInitialInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -3934,6 +3937,7 @@
             "defaultValue": "",
             "dataType": "number",
             "name": "totalAreaPestAnimalsTreatedFollowUpInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -3965,6 +3969,7 @@
             "defaultValue": "",
             "dataType": "number",
             "name": "totalLengthPestAnimalsTreatedInitialInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -3996,6 +4001,7 @@
             "defaultValue": "",
             "dataType": "number",
             "name": "totalLengthPestAnimalsTreatedFollowUpInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -4929,6 +4935,7 @@
             "dataType": "number",
             "name": "totalAreaDebrisRemovedInitialInvoiced",
             "decimalPlaces": 3,
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -4960,6 +4967,7 @@
             "dataType": "number",
             "name": "totalLengthDebrisRemovedInvoicedInitial",
             "decimalPlaces": 3,
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -4991,6 +4999,7 @@
             "dataType": "number",
             "name": "totalAreaDebrisRemovedInvoicedFollowup",
             "decimalPlaces": 3,
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -5021,6 +5030,7 @@
           {
             "dataType": "number",
             "name": "totalLengthDebrisRemovedInvoicedFollowup",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "decimalPlaces": 3,
             "validate": [
               {
@@ -6058,6 +6068,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalLengthStreamCoastlineInitialInvoice",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -6089,6 +6100,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalLengthStreamCoastlineInvoicedFollowup",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -6120,6 +6132,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaErosionControlInvoicedInitial",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -6151,6 +6164,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaErosionControlInvoicedFollowup",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -7160,8 +7174,8 @@
           {
             "dataType": "number",
             "name": "totalNoPestFreeSurveyEstablishedInvoiced",
-            "description": "The total invoiced must be the same or less than the total amount delivered.",
             "decimalPlaces": 0,
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -7192,9 +7206,9 @@
           {
             "dataType": "number",
             "name": "totalNoPestFreeSurveyMaintainedInvoiced",
-            "description": "The total invoiced must be the same or less than the total amount delivered.",
             "decimalPlaces": 0,
             "defaultValue": "",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -7223,8 +7237,8 @@
           {
             "dataType": "number",
             "name": "totalNoDaysMaintainingPestFreeInvoiced",
-            "description": "The total invoiced must be the same or less than the total amount delivered.",
             "decimalPlaces": 0,
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -7255,9 +7269,9 @@
           {
             "dataType": "number",
             "name": "totalAreaPestFreeSurveyInitialInvoiced",
-            "description": "The total invoiced must be the same or less than the total amount delivered.",
             "decimalPlaces": 3,
             "defaultValue": "",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -7288,9 +7302,9 @@
           {
             "dataType": "number",
             "name": "totalAreaPestFreeSurveyMaintainedInvoiced",
-            "description": "The total invoiced must be the same or less than the total amount delivered.",
             "decimalPlaces": 3,
             "defaultValue": "",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -9235,6 +9249,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaConservationAgreementsInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -9266,6 +9281,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaActivitiesConductedInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -14488,6 +14504,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaAugmentationInitialInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -14519,6 +14536,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaAugmentationMaintainedInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -17479,6 +17497,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaTreatedFireMgmtInitialInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -17510,6 +17529,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaTreatedFireMgmtFollowupInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -19292,6 +19312,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaPracticeChangeInitialInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -19323,6 +19344,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaPracticeChangeInvoicedFollowup",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -20184,6 +20206,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaDiseaseManagementInitialInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -20215,6 +20238,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaDiseaseManagementInvoicedFollowup",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -20246,6 +20270,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalLengthDiseaseManagementInvoicedInitial",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -20277,6 +20302,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalLengthDiseaseManagementInvoicedFollowup",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -23589,6 +23615,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaRemediationInitialInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -23620,6 +23647,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaRemediationFollowupInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -23652,6 +23680,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalLengthRemediationInitialInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -23683,6 +23712,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalLengthRemediationFollowupInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -24877,6 +24907,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaWeedsTreatedInitialInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -24908,6 +24939,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaWeedsTreatedInvoicedFollowup",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -24939,6 +24971,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalLengthWeedsTreatedInvoicedInitial",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -24970,6 +25003,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalLengthWeedsTreatedInvoicedFollowup",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -25936,6 +25970,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaWeedsTreatedInitialInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -25967,6 +26002,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaWeedsTreatedInvoicedFollowup",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -28091,6 +28127,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalAreaSitePreparationInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
@@ -28122,6 +28159,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalLengthSitePreparationInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
                 "rule": "required"
