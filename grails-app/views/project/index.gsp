@@ -76,6 +76,7 @@
                 approvalPlanUrl: "${createLink(controller:'project', action:'ajaxApprovePlan', id:project.projectId)}",
                 rejectPlanUrl: "${createLink(controller:'project', action:'ajaxRejectPlan', id:project.projectId)}",
                 unlockPlanForCorrectionUrl: "${createLink(controller:'project', action:'ajaxUnlockPlanForCorrection', id:project.projectId)}",
+                removeMeriPlanEditLockUrl: "${createLink(controller:'project', action:'removeMeriPlanEditLock', id:project.projectId)}",
                 finishedCorrectingPlanUrl: "${createLink(controller:'project', action:'ajaxFinishedCorrectingPlan', id:project.projectId)}",
                 projectScoresUrl: "${createLink(action:'serviceScores', id:project.projectId)}",
                 healthCheckUrl: "${createLink(controller:'ajax', action:'keepSessionAlive')}",
@@ -263,6 +264,7 @@ var config = {
     meriPlanPDFUrl: fcConfig.meriPlanPDFUrl,
     meriPlanChangesUrl: fcConfig.meriPlanChangesUrl,
     viewMeriPlanChangesUrl: fcConfig.viewMeriPlanChangesUrl,
+    removeMeriPlanEditLockUrl: fcConfig.removeMeriPlanEditLockUrl,
     saveTargetsUrl: fcConfig.projectUpdateUrl,
     documentUpdateUrl: fcConfig.documentUpdateUrl,
     projectUpdateUrl: fcConfig.projectUpdateUrl,
@@ -300,8 +302,8 @@ var config = {
     config.themes = themes;
             var services = <fc:modelAsJavascript model="${config.services}" default="[]"/>;
 
-    config.useAlaMap = ${Boolean.valueOf(projectContent.site.useAlaMap)};
-    config.showSiteType = ${Boolean.valueOf(projectContent.site.showSiteType)};
+    config.useAlaMap = ${Boolean.valueOf(projectContent.site?.useAlaMap)};
+    config.showSiteType = ${Boolean.valueOf(projectContent.site?.showSiteType)};
     config.services = services;
 
     config.useRlpTemplate = ${config.getProjectTemplate() == au.org.ala.merit.config.ProgramConfig.ProjectTemplate.RLP};
@@ -321,8 +323,9 @@ var config = {
     config.programObjectives = <fc:modelAsJavascript model="${config.program?.config?.objectives ?: []}"/>
     config.programActivities = <fc:modelAsJavascript model="${config.program?.config?.activities?.collect { it.name } ?: []}"/>
     config.excludeFinancialYearData = ${config.program?.config?.excludeFinancialYearData ?: false};
-    config.canModifyMeriPlan = ${projectContent.admin.canModifyMeriPlan};;
-
+    config.canModifyMeriPlan = ${projectContent.admin.canModifyMeriPlan};
+    config.userHoldsMeriPlanLock = ${project.lock?.userId == user?.userId};
+    config.viewReportUrl = fcConfig.viewReportUrl;
     project.mapFeatures =  $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
     var viewModel = new ProjectPageViewModel(project, project.sites, project.activities || [], organisations, userRoles, config);
     viewModel.loadPrograms(programs);

@@ -121,13 +121,13 @@ function removeNotRequiredStatus(reportId, reason, adminUserId) {
             "dateChanged" : ISODate(),
             "status" : report.publicationStatus
         });
-    db.report.save(report);
+    db.report.replaceOne({_id:report._id}, report);
     audit(report, report.reportId, 'au.org.ala.ecodata.Report', adminUserId);
 
     if (report.activityId) {
         var activity = db.activity.findOne({activityId:report.activityId});
         activity.publicationStatus = 'unpublished';
-        db.activity.save(activity);
+        db.activity.replaceOne({_id:activity._id}, activity);
         audit(activity, activity.activityId, 'au.org.ala.ecodata.Activity', adminUserId);
     }
 }

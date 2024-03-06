@@ -205,7 +205,8 @@ function loadActivityForms() {
         "externalIds": [{ externalId: "1", idType:"MONITOR_PROTOCOL_INTERNAL_ID" }, { externalId: "guid-1", idType:"MONITOR_PROTOCOL_GUID" }],
         "external":true,
         "formVersion": NumberInt(1),
-        "publicationStatus":"published"
+        "publicationStatus":"published",
+        "tags":["survey"]
     }, {
         "name": "Protocol 2",
         "type":"EMSA",
@@ -213,7 +214,8 @@ function loadActivityForms() {
         "externalIds": [{ externalId: "2", idType:"MONITOR_PROTOCOL_INTERNAL_ID" }, { externalId: "guid-2", idType:"MONITOR_PROTOCOL_GUID" }],
         "external":true,
         "formVersion": NumberInt(1),
-        "publicationStatus":"published"
+        "publicationStatus":"published",
+        "tags": ["intervention"]
     }, {
         "name": "Protocol 3",
         "type":"EMSA",
@@ -222,7 +224,8 @@ function loadActivityForms() {
 
         "external":true,
         "formVersion": NumberInt(1),
-        "publicationStatus":"published"
+        "publicationStatus":"published",
+        "tags": ["survey"]
 
     }];
     for (let i= 0; i < forms.length; i++) {

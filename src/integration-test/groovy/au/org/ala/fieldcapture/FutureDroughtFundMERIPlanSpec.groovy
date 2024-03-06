@@ -25,6 +25,13 @@ class FutureDroughtFundMERIPlanSpec extends StubbedCasSpec {
 
         when:
         def meriPlan = openMeriPlanEditTab()
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
 
         meriPlan.primaryOutcome = "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
         meriPlan.primaryPriorityUnstyled[0].click()

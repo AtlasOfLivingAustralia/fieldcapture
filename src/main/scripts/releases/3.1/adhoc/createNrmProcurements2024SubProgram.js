@@ -588,337 +588,1436 @@ var config =
 
 var outcomes = [
     {
-        outcome: "1.  Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved",
-        shortDescription: "EPBC Species",
-        category: "Threatened Species",
-        priorities: [
+        "priorities": [
             {
-                category: "Threatened Species"
+                "category": "Priority Threatened Species Primary"
             }
-        ]
+        ],
+        "targeted": true,
+        "shortDescription": "EPBC Species",
+        "category": "Threatened Species",
+        "outcome": "1. The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
     },
     {
-        outcome: "1.  Species and Landscapes (Long term): Threatened Species (TS) - New extinctions of plants and animals are prevented",
-        shortDescription: "New extinctions",
-        category: "Threatened Species",
-        priorities: [
+        "priorities": [
             {
-                category: "Threatened Species"
+                "category": "Priority Threatened Species Primary"
             }
-        ]
+        ],
+        "shortDescription": "New extinctions",
+        "category": "Threatened Species",
+        "outcome": "2. New extinctions of plants and animals are prevented"
     },
     {
-        outcome: "1.  Species and Landscapes (Long term): Threatened Ecological Communities (TECs) and priority places - The condition of targeted EPBC Act listed Threatened Ecological Communities and identified priority places under the Threatened Species Action Plan 2022-2032 is improved",
-        shortDescription: "Threatened Ecological Communities",
-        category: "Threatened Ecological Communities",
-        priorities: [
+        "priorities": [
             {
-                category: "Threatened Ecological Communities"
+                "category": "Threatened Ecological Communities"
             }
-        ]
+        ],
+        "shortDescription": "Threatened Ecological Communities",
+        "category": "Threatened Ecological Communities",
+        "outcome": "3. The condition of targeted EPBC Act listed Threatened Ecological Communities and identified priority places under the Threatened Species Action Plan 2022-2032 is improved"
     },
     {
-        outcome: "2: World Heritage Protection (Long term): The outstanding universal value of world heritage properties listed for their natural heritage value is maintained and improved",
-        shortDescription: "World Heritage",
-        category: "World Heritage",
-        priorities: [
-            {
-                category: "World Heritage"
-            }
-        ]
+        "category": "Threatened Species",
+        "type": "medium",
+        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Targeted threatened species (TS) are on track for improved trajectory"
     },
     {
-        outcome: "3: Ramsar Wetland Protection (Long term): The ecological character of targeted Ramsar sites is maintained and/or improved, building resilience to climate change",
-        shortDescription: "Ramsar Sites",
-        category: "Ramsar",
-        priorities: [
-            {
-                category: "Ramsar"
-            }
-        ]
+        "category": "Threatened Species",
+        "type": "medium",
+        "outcome": "2.  Species and Landscapes (Medium term): Threatened species - Species at high risk of imminent extinction are identified and supported to persist"
     },
     {
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Targeted threatened species (TS) are on track for improved trajectory",
-        category: "Threatened Species",
-        type: "medium"
+        "category": "Threatened Species",
+        "type": "medium",
+        "outcome": "3.  Species and Landscapes (Medium term): Threatened species - Priority species are being assisted to strengthen reliance and adaptive capacity for climate change"
     },
     {
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Species at high risk of imminent extinction are identified and supported to persist",
-        category: "Threatened Species",
-        type: "medium"
+        "category": "Threatened Species",
+        "type": "medium",
+        "outcome": "4.  Species and Landscapes (Medium term): Threatened species - Increased leadership and/or participation of First Nations people in the management and recovery of threatened species"
     },
     {
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Priority species are being assisted to strengthen reliance and adaptive capacity for climate change",
-        category: "Threatened Species",
-        type: "medium"
+        "category": "Threatened Species",
+        "type": "medium",
+        "outcome": "5.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - The implementation of priority actions is leading to an improvement in the condition of targeted TECs and priority places"
     },
     {
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Increased leadership and/or participation of First Nations people in the management and recovery of threatened species",
-        category: "Threatened Species",
-        type: "medium"
+        "category": "Threatened Species",
+        "type": "medium",
+        "outcome": "6.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - Resilience to climate change and extreme events has been increased"
     },
     {
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - The implementation of priority actions is leading to an improvement in the condition of targeted TECs and priority places",
-        category: "Threatened Species",
-        type: "medium"
+        "category": "Threatened Species",
+        "type": "medium",
+        "outcome": "7.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - Increased leadership and/or participation of First Nations people in the management and recovery of threatened ecological communities and priority places"
     },
     {
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - Resilience to climate change and extreme events has been increased",
-        category: "Threatened Species",
-        type: "medium"
-    },
-
-    {
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - Increased leadership and/or participation of First Nations people in the management and recovery of threatened ecological communities and priority places",
-        category: "Threatened Species",
-        type: "medium"
+        "type": "short",
+        "category": "Threatened Species",
+        "outcome": "1.  Species and Landscapes (Short term): Managing Threats - Pest predator an competitor species have been controlled or are under active, long-term control programs"
     },
     {
-        "outcome": "2. World Heritage Protection (Medium term): Threats to the outstanding universal value of world heritage properties listed for their natural heritage value have been reduced through the implementation of priority actions",
-        category: "World Heritage",
-        type: "medium"
+        "type": "short",
+        "category": "Threatened Species",
+        "outcome": "2.  Species and Landscapes (Short term): Managing Threats - Threats from disease have been contained, reduced or excluded"
     },
     {
-        "outcome": "2. World Heritage Protection (Medium term): Managing Threats - Threats from climate change, extreme events and invasive species have been reduced",
-        category: "World Heritage",
-        type: "medium"
+        "type": "short",
+        "category": "Threatened Species",
+        "outcome": "3.  Species and Landscapes (Short term): Improving habitat - Land management practices have improved"
     },
     {
-        "outcome": "2. World Heritage Protection (Medium term): Managing Threats - Threats from disease have been reduced",
-        category: "World Heritage",
-        type: "medium"
+        "type": "short",
+        "category": "Threatened Species",
+        "outcome": "4.  Species and Landscapes (Short term): Improving habitat - Quality of (TS/TECs) habitat has improved"
     },
     {
-        "outcome": "2. World Heritage Protection (Medium term): Managing Threats - Increased leadership and/or participation of First Nations people in the management of threats to World Heritage properties",
-        category: "World Heritage",
-        type: "medium"
+        "type": "short",
+        "category": "Threatened Species",
+        "outcome": "5.  Species and Landscapes (Short term): Improving habitat - Area/Extent of (TS/TECs) habitat has increased"
     },
     {
-        "outcome": "2. World Heritage Protection (Medium term): Improving land management practices and protecting habitat - Threats from inappropriate fire management are reduced",
-        category: "Threatened Species",
-        type: "medium"
+        "type": "short",
+        "category": "Threatened Species",
+        "outcome": "6.  Species and Landscapes (Short term): Improving habitat - Increased connectivity between patches"
     },
     {
-        "outcome": "2. World Heritage Protection (Medium term): Improving land management practices and protecting habitat - Threats from inappropriate management of human impacts, climate change and extreme events are reduced",
-        category: "World Heritage",
-        type: "medium"
+        "type": "short",
+        "category": "Threatened Species",
+        "outcome": "7.  Species and Landscapes (Short term): Improving habitat - Quality of breeding and foraging habitat is improved   "
     },
     {
-        "outcome": "2. World Heritage Protection (Medium term): Improving land management practices and protecting habitat - Increased leadership and/or participation of First Nations people in the management and protection of World Heritage properties",
-        category: "World Heritage",
-        type: "medium"
+        "type": "short",
+        "category": "Threatened Species",
+        "outcome": "8.  Species and Landscapes (Short term): Creating insurance populations - Existing populations have been protected"
     },
     {
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Priority actions at targeted Ramsar sites will reduce threats, restore or maintain ecological character and increase climate change resilience",
-        category: "Ramsar",
-        type: "medium"
+        "type": "short",
+        "category": "Threatened Species",
+        "outcome": "9.  Species and Landscapes (Short term): Creating insurance populations - Re-introductions have enhanced wild populations"
     },
     {
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Managing Threats - The critical components, processes and services of the wetland actively maintained and/or improved",
-        category: "Ramsar",
-        type: "medium"
+        "type": "short",
+        "category": "Threatened Species",
+        "outcome": "10.  Species and Landscapes (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway"
     },
     {
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Managing Threats - Absence/reduction of non-native species",
-        category: "Ramsar",
-        type: "medium"
-    },
-    {
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Managing Threats - Increased leadership and/or participation of First Nations people in the management of threats to Ramsar sites",
-        category: "Ramsar",
-        type: "medium"
-    },
-    {
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Managing Threats - Adaptive management planning and actions are building resilience to extreme climate events",
-        category: "Ramsar",
-        type: "medium"
-    },
-    {
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Wetland biota and/or abundance is maintained and improved",
-        category: "Ramsar",
-        type: "medium"
-    },
-    {
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Hydrological regimes have been restored and maintained",
-        category: "Ramsar",
-        type: "medium"
-    },
-    {
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Improved condition of wetland vegetation/habitat",
-        category: "Ramsar",
-        type: "medium"
-    },
-    {
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Quality of breeding, foraging and roosting habitat is improved",
-        category: "Ramsar",
-        type: "medium"
-    },
-    {
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Increased leadership and/or participation of First Nations people in the restoration and/or maintenance of the ecological character of Ramsar sites",
-        category: "Ramsar",
-        type: "medium"
-    },
-    {
-        outcome: '1.  Species and Landscapes (Short term): Managing Threats - Pest predator an competitor species have been controlled or are under active, long-term control programs',
-        type: 'short',
-        category: 'Threatened Species'
-    },
-    {
-        outcome: '1.  Species and Landscapes (Short term): Managing Threats - Threats from disease have been contained, reduced or excluded',
-        type: 'short',
-        category: 'Threatened Species'
-    },
-    {
-        outcome: '1.  Species and Landscapes (Short term): Improving habitat - Land management practices have improved',
-        type: 'short',
-        category: 'Threatened Species'
-    },
-    {
-        outcome: '1.  Species and Landscapes (Short term): Improving habitat - Quality of (TS/TECs) habitat has improved',
-        type: 'short',
-        category: 'Threatened Species'
-    },
-    {
-        outcome: '1.  Species and Landscapes (Short term): Improving habitat - Area/Extent of (TS/TECs) habitat has increased',
-        type: 'short',
-        category: 'Threatened Species'
-    },
-    {
-        outcome: '1.  Species and Landscapes (Short term): Improving habitat - Increased connectivity between patches',
-        type: 'short',
-        category: 'Threatened Species'
-    },
-    {
-        outcome: '1.  Species and Landscapes (Short term): Improving habitat - Quality of breeding and foraging habitat is improved   ',
-        type: 'short',
-        category: 'Threatened Species'
-    },
-    {
-        outcome: '1.  Species and Landscapes (Short term): Creating insurance populations - Existing populations have been protected',
-        type: 'short',
-        category: 'Threatened Species'
-    },
-    {
-        outcome: '1.  Species and Landscapes (Short term): Creating insurance populations - Re-introductions have enhanced wild populations',
-        type: 'short',
-        category: 'Threatened Species'
-    },
-    {
-        outcome: '1.  Species and Landscapes (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway',
-        type: 'short',
-        category: 'Threatened Species'
-    },
-    {
-        outcome: '1.  Species and Landscapes (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in recovery activities',
-        type: 'short',
-        category: 'Threatened Species'
-    },
-    {
-        outcome: '2. World Heritage Protection (Short term): Managing threats - Pest predator and competitor species have been controlled',
-        type: 'short',
-        category: 'World Heritage'
-    },
-    {
-        outcome: '2. World Heritage Protection (Short term): Managing threats -Threats from disease have been contained or reduced',
-        type: 'short',
-        category: 'World Heritage'
-    },
-    {
-        outcome: '2. World Heritage Protection (Short term): Improving land management practices and protecting habitat - Inappropriate fire regimes have been reduced or halted',
-        type: 'short',
-        category: 'World Heritage'
-    },
-    {
-        outcome: '2. World Heritage Protection (Short term): Improving land management practices and protecting habitat - Land management practices have improved (within and around heritage properties)',
-        type: 'short',
-        category: 'World Heritage'
-    },
-    {
-        outcome: '2. World Heritage Protection (Short term): Improving land management practices and protecting habitat - Actions to reduce nutrient levels have been implemented, and nutrient levels are beginning to stabilise/improve ',
-        type: 'short',
-        category: 'World Heritage'
-    },
-    {
-        outcome: '2. World Heritage Protection (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway',
-        type: 'short',
-        category: 'World Heritage'
-    },
-    {
-        outcome: '2. World Heritage Protection (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in management and protection activities',
-        type: 'short',
-        category: 'World Heritage'
-    },
-    {
-        outcome: '3. Ramsar Wetland Protection (Short term): Managing threats -  Inappropriate land management practices have decreased within the catchment',
-        type: 'short',
-        category: 'Ramsar'
-    },
-    {
-        outcome: '3. Ramsar Wetland Protection (Short term): Managing Threats - Pest predator and competitor species have been controlled ',
-        type: 'short',
-        category: 'Ramsar'
-    },
-    {
-        outcome: '3. Ramsar Wetland Protection (Short term):  Managing Threats - Appropriate fire management regimes within and external to site',
-        type: 'short',
-        category: 'Ramsar'
-    },
-    {
-        outcome: '3. Ramsar Wetland Protection (Short term): Protecting and Improving Habitat - Area and quality of suitable wetland habitat has increased and/or is maintained',
-        type: 'short',
-        category: 'Ramsar'
-    },
-    {
-        outcome: '3. Ramsar Wetland Protection (Short term): Protecting and Improving Habitat - Water quality has been stabilised and/or improved  ',
-        type: 'short',
-        category: 'Ramsar'
-    },
-    {
-        outcome: '3. Ramsar Wetland Protection (Short term): Protecting and Improving Habitat - Improved access control to protect sensitive species and habitats',
-        type: 'short',
-        category: 'Ramsar'
-    },
-    {
-        outcome: '3. Ramsar Wetland Protection (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway to improve and/or maintain the ecological character of Ramsar sites ',
-        type: 'short',
-        category: 'Ramsar'
-    },
-    {
-        outcome: '3. Ramsar Wetland Protection (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in restoration, maintenance and protection activities',
-        type: 'short',
-        category: 'Ramsar'
+        "type": "short",
+        "category": "Threatened Species",
+        "outcome": "11.  Species and Landscapes (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in recovery activities"
     }
-
 ];
 
 var priorities = [
     {
-        "category": "Ramsar",
-        "priority": "Ginini Flats Wetland Complex"
+        "category": "Plants",
+        "priority": "Adamson’s Blown-grass Lachnagrostis adamsonii"
     },
     {
-        "category": "Threatened Species",
-        "priority": "Anthochaera phrygia (Regent Honeyeater)"
+        "category": "Priority Threatened Species Primary",
+        "priority": "Adamson’s Blown-grass Lachnagrostis adamsonii"
     },
     {
-        "category": "Threatened Species",
-        "priority": "Bettongia gaimardi (Tasmanian Bettong, Eastern Bettong)"
+        "category": "Target 3",
+        "priority": "Adamson’s Blown-grass Lachnagrostis adamsonii"
     },
     {
-        "category": "Threatened Species",
-        "priority": "Botaurus poiciloptilus (Australasian Bittern)"
+        "category": "Priority Threatened Species Primary",
+        "priority": "Ammonite Snail Ammoniropa vigens"
     },
     {
-        "category": "Threatened Species",
-        "priority": "Lathamus discolor (Swift Parrot)"
+        "category": "Invertebrates",
+        "priority": "Ammonite Snail Ammoniropa vigens"
     },
     {
-        "category": "Threatened Species",
-        "priority": "Rutidosis leptorrhynchoides (Button Wrinklewort)"
+        "category": "Target 3",
+        "priority": "Ammonite Snail Ammoniropa vigens"
     },
     {
-        "category": "Threatened Species",
-        "priority": "Swainsona recta (Small Purple-pea, Mountain Swainson-pea, Small Purple Pea)"
+        "category": "Plants",
+        "priority": "Angle-stemmed Myrtle Gossia gonoclada"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Angle-stemmed Myrtle Gossia gonoclada"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Angle-stemmed Myrtle Gossia gonoclada"
+    },
+    {
+        "category": "Plants",
+        "priority": "Arckaringa Daisy Olearia arckaringensis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Arckaringa Daisy Olearia arckaringensis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Arckaringa Daisy Olearia arckaringensis"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Arnhem Land Gorges Skink Bellatorias obiri"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Arnhem Land Gorges Skink Bellatorias obiri"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Arnhem Land Gorges Skink Bellatorias obiri"
+    },
+    {
+        "category": "Birds",
+        "priority": "Australasian Bittern Botaurus poiciloptilus"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Australasian Bittern Botaurus poiciloptilus"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Australasian Bittern Botaurus poiciloptilus"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Australian Sea-lion Neophoca cinerea"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Australian Sea-lion Neophoca cinerea"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Australian Sea-lion Neophoca cinerea"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Bellinger River Snapping Turtle Wollumbinia georgesi"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Bellinger River Snapping Turtle Wollumbinia georgesi"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Bellinger River Snapping Turtle Wollumbinia georgesi"
+    },
+    {
+        "category": "Birds",
+        "priority": "Black-eared Miner Manorina melanotis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Black-eared Miner Manorina melanotis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Black-eared Miner Manorina melanotis"
+    },
+    {
+        "category": "Plants",
+        "priority": "Bolivia Hill Rice-flower, Pimelea venosa"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Bolivia Hill Rice-flower, Pimelea venosa"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Bolivia Hill Rice-flower, Pimelea venosa"
+    },
+    {
+        "category": "Plants",
+        "priority": "Border Ranges Lined Fern Antrophyum austroqueenslandicum"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Border Ranges Lined Fern Antrophyum austroqueenslandicum"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Border Ranges Lined Fern Antrophyum austroqueenslandicum"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Brush-tailed Rock-wallaby Petrogale penicillata"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Brush-tailed Rock-wallaby Petrogale penicillata"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Brush-tailed Rock-wallaby Petrogale penicillata"
+    },
+    {
+        "category": "Plants",
+        "priority": "Bulberin Nut Macadamia jansenii "
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Bulberin Nut Macadamia jansenii "
+    },
+    {
+        "category": "Target 3",
+        "priority": "Bulberin Nut Macadamia jansenii "
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Canberra Grassland Earless Dragon Tympanocryptis lineata"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Canberra Grassland Earless Dragon Tympanocryptis lineata"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Canberra Grassland Earless Dragon Tympanocryptis lineata"
+    },
+    {
+        "category": "Birds",
+        "priority": "Carnaby's Cockatoo Calyptorhynchus latirostris"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Carnaby's Cockatoo Calyptorhynchus latirostris"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Carnaby's Cockatoo Calyptorhynchus latirostris"
+    },
+    {
+        "category": "Plants",
+        "priority": "Carrington Falls Pomaderris Pomaderris walshii"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Carrington Falls Pomaderris Pomaderris walshii"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Carrington Falls Pomaderris Pomaderris walshii"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Cauliflower Soft Coral Dendronephthya australis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Cauliflower Soft Coral Dendronephthya australis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Cauliflower Soft Coral Dendronephthya australis"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Central Rock-rat Antina Zyzomys pedunculatus"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Central Rock-rat Antina Zyzomys pedunculatus"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Central Rock-rat Antina Zyzomys pedunculatus"
+    },
+    {
+        "category": "Birds",
+        "priority": "Christmas Island Goshawk Accipiter hiogaster natalis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Christmas Island Goshawk Accipiter hiogaster natalis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Christmas Island Goshawk Accipiter hiogaster natalis"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Chuditch, Western Quoll Dasyurus geoffroii"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Chuditch, Western Quoll Dasyurus geoffroii"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Chuditch, Western Quoll Dasyurus geoffroii"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Collared Delma, Adorned Delma Delma torquata"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Collared Delma, Adorned Delma Delma torquata"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Collared Delma, Adorned Delma Delma torquata"
+    },
+    {
+        "category": "Plants",
+        "priority": "Davies' Waxflower Phebalium daviesii"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Davies' Waxflower Phebalium daviesii"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Davies' Waxflower Phebalium daviesii"
+    },
+    {
+        "category": "Birds",
+        "priority": "Eastern Curlew Numenius madagascariensis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Eastern Curlew Numenius madagascariensis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Eastern Curlew Numenius madagascariensis"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Eastern Quoll Dasyurus viverrinus"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Eastern Quoll Dasyurus viverrinus"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Eastern Quoll Dasyurus viverrinus"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Eltham Copper Butterfly Paralucia pyrodiscus lucida"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Eltham Copper Butterfly Paralucia pyrodiscus lucida"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Eltham Copper Butterfly Paralucia pyrodiscus lucida"
+    },
+    {
+        "category": "Plants",
+        "priority": "Foote's Grevillea Grevillea calliantha"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Foote's Grevillea Grevillea calliantha"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Foote's Grevillea Grevillea calliantha"
+    },
+    {
+        "category": "Plants",
+        "priority": "Forked Spyridium Spyridium furculentum"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Forked Spyridium Spyridium furculentum"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Forked Spyridium Spyridium furculentum"
+    },
+    {
+        "category": "Fish",
+        "priority": "Freshwater Sawfish Pristis pristis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Freshwater Sawfish Pristis pristis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Freshwater Sawfish Pristis pristis"
+    },
+    {
+        "category": "Plants",
+        "priority": "Giant Andersonia Andersonia axilliflora"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Giant Andersonia Andersonia axilliflora"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Giant Andersonia Andersonia axilliflora"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Giant Gippsland Earthworm Megascolides australis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Giant Gippsland Earthworm Megascolides australis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Giant Gippsland Earthworm Megascolides australis"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Gilbert's Potoroo Ngilkat Potorous gilbertii"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Gilbert's Potoroo Ngilkat Potorous gilbertii"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Gilbert's Potoroo Ngilkat Potorous gilbertii"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Glenelg Freshwater Mussel Hyridella glenelgensis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Glenelg Freshwater Mussel Hyridella glenelgensis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Glenelg Freshwater Mussel Hyridella glenelgensis"
+    },
+    {
+        "category": "Birds",
+        "priority": "Golden-shouldered Parrot, Alwal Psephotus chrysopterygius"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Golden-shouldered Parrot, Alwal Psephotus chrysopterygius"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Golden-shouldered Parrot, Alwal Psephotus chrysopterygius"
+    },
+    {
+        "category": "Plants",
+        "priority": "Gorge Rice-flower, Pimelelea cremnophila"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Gorge Rice-flower, Pimelelea cremnophila"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Gorge Rice-flower, Pimelea cremnophila"
+    },
+    {
+        "category": "Plants",
+        "priority": "Graveside Leek-orchid Prasophyllum taphanyx"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Graveside Leek-orchid Prasophyllum taphanyx"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Graveside Leek-orchid Prasophyllum taphanyx"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Great Desert Skink, Tjakura, Warrarna, Mulyamiji Liopholis kintorei"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Great Desert Skink, Tjakura, Warrarna, Mulyamiji Liopholis kintorei"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Great Desert Skink, Tjakura, Warrarna, Mulyamiji Liopholis kintorei"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Greater Bilby Macrotis lagotis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Greater Bilby Macrotis lagotis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Greater Bilby Macrotis lagotis"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Green Turtle Chelonia mydas"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Green Turtle Chelonia mydas"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Green Turtle Chelonia mydas"
+    },
+    {
+        "category": "Fish",
+        "priority": "Grey Nurse Shark (eastern) Carcharias taurus"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Grey Nurse Shark (eastern) Carcharias taurus"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Grey Nurse Shark (eastern) Carcharias taurus"
+    },
+    {
+        "category": "Frogs",
+        "priority": "Growling Grass Frog, Southern Bell Frog Litoria raniformis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Growling Grass Frog, Southern Bell Frog Litoria raniformis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Growling Grass Frog, Southern Bell Frog Litoria raniformis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Hooded Plover (eastern) Thinornis cucullatus cucullatus"
+    },
+    {
+        "category": "Birds",
+        "priority": "Hooded Plover (eastern) Thinornis cucullatus cucullatus"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Hooded Plover (eastern) Thinornis cucullatus cucullatus"
+    },
+    {
+        "category": "Plants",
+        "priority": "Imlay Mallee Eucalyptus imlayensis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Imlay Mallee Eucalyptus imlayensis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Imlay Mallee Eucalyptus imlayensis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Kangaroo Island Assassin Spider Zephyrarchaea austini"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Kangaroo Island Assassin Spider Zephyrarchaea austini"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Kangaroo Island Echidna Tachyglossus aculeatus multiaculeatus"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Kangaroo Island Echidna Tachyglossus aculeatus multiaculeatus"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Kangaroo Island Echidna Tachyglossus aculeatus multiaculeatus"
+    },
+    {
+        "category": "Plants",
+        "priority": "King Blue-grass Dichanthium queenslandicum"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "King Blue-grass Dichanthium queenslandicum"
+    },
+    {
+        "category": "Target 3",
+        "priority": "King Blue-grass Dichanthium queenslandicum"
+    },
+    {
+        "category": "Birds",
+        "priority": "King Island Brown Thornbill Acanthiza pusilla archibaldi"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "King Island Brown Thornbill Acanthiza pusilla archibaldi"
+    },
+    {
+        "category": "Target 3",
+        "priority": "King Island Brown Thornbill Acanthiza pusilla archibaldi"
+    },
+    {
+        "category": "Birds",
+        "priority": "King Island Scrubtit Acanthornis magna greeniana"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "King Island Scrubtit Acanthornis magna greeniana"
+    },
+    {
+        "category": "Target 3",
+        "priority": "King Island Scrubtit Acanthornis magna greeniana"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Koala Phascolarctos cinereus"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Koala Phascolarctos cinereus"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Koala Phascolarctos cinereus"
+    },
+    {
+        "category": "Frogs",
+        "priority": "Kroombit Tinker Frog Taudactylus pleione"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Kroombit Tinker Frog Taudactylus pleione"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Kroombit Tinker Frog Taudactylus pleione"
+    },
+    {
+        "category": "Plants",
+        "priority": "Lax Leek Orchid Prasophyllum laxum"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Lax Leek Orchid Prasophyllum laxum"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Lax Leek Orchid Prasophyllum laxum"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Leadbeater’s Possum Gymnobelideus leadbeateri"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Leadbeater’s Possum Gymnobelideus leadbeateri"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Leadbeater’s Possum Gymnobelideus leadbeateri"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Leaf-Scaled Seasnake – Aipysurus foliosquama"
+    },
+    {
+        "category": "Plants",
+        "priority": "Little Mountain Palm Lepidorrhachis mooreana"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Little Mountain Palm Lepidorrhachis mooreana"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Little Mountain Palm Lepidorrhachis mooreana"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Lord Howe Island Phasmid Dryococelus australis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Lord Howe Island Phasmid Dryococelus australis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Lord Howe Island Phasmid Dryococelus australis"
+    },
+    {
+        "category": "Plants",
+        "priority": "MacDonnell Ranges Cycad Macrozamia macdonnellii"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "MacDonnell Ranges Cycad Macrozamia macdonnellii"
+    },
+    {
+        "category": "Target 3",
+        "priority": "MacDonnell Ranges Cycad Macrozamia macdonnellii"
+    },
+    {
+        "category": "Birds",
+        "priority": "Malleefowl Leipoa ocellata"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Malleefowl Leipoa ocellata"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Malleefowl Leipoa ocellata"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Margaret River Burrowing Crayfish Engaewa pseudoreducta"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Margaret River Burrowing Crayfish Engaewa pseudoreducta"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Margaret River Burrowing Crayfish Engaewa pseudoreducta"
+    },
+    {
+        "category": "Fish",
+        "priority": "Maugean Skate Zearaja maugeana"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Maugean Skate Zearaja maugeana"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Maugean Skate Zearaja maugeana"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Mount Lidgbird Charopid Land Snail Pseudocharopa ledgbirdi"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Mount Lidgbird Charopid Land Snail Pseudocharopa ledgbirdi"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Mount Lidgbird Charopid Land Snail Pseudocharopa ledgbirdi"
+    },
+    {
+        "category": "Frogs",
+        "priority": "Mountain Frog Philoria kundagungan"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Mountain Frog Philoria kundagungan"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Mountain Frog Philoria kundagungan"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Mountain Pygmy-possum Burramys parvus"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Mountain Pygmy-possum Burramys parvus"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Mountain Pygmy-possum Burramys parvus"
+    },
+    {
+        "category": "Frogs",
+        "priority": "Mountain-top Nursery-frog Cophixalus monticola"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Mountain-top Nursery-frog Cophixalus monticola"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Mountain-top Nursery-frog Cophixalus monticola"
+    },
+    {
+        "category": "Fish",
+        "priority": "Murray Hardyhead Craterocephalus fluviatilis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Murray Hardyhead Craterocephalus fluviatilis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Murray Hardyhead Craterocephalus fluviatilis"
+    },
+    {
+        "category": "Plants",
+        "priority": "Narrow-leaf Eremophila Eremophila subangustifolia"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Narrow-leaf Eremophila Eremophila subangustifolia"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Narrow-leaf Eremophila Eremophila subangustifolia"
+    },
+    {
+        "category": "Plants",
+        "priority": "Native Guava Rhodomyrtus psidioides"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Native Guava Rhodomyrtus psidioides"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Native Guava Rhodomyrtus psidioides"
+    },
+    {
+        "category": "Mammals",
+        "priority": "New Holland Mouse, Pookila Pseudomys novaehollandiae"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "New Holland Mouse, Pookila Pseudomys novaehollandiae"
+    },
+    {
+        "category": "Target 3",
+        "priority": "New Holland Mouse, Pookila Pseudomys novaehollandiae"
+    },
+    {
+        "category": "Birds",
+        "priority": "Night Parrot Pezoporus occidentalis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Night Parrot Pezoporus occidentalis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Night Parrot Pezoporus occidentalis"
+    },
+    {
+        "category": "Birds",
+        "priority": "Noisy Scrub-bird Atrichornis clamosus"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Noisy Scrub-bird Atrichornis clamosus"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Noisy Scrub-bird Atrichornis clamosus"
+    },
+    {
+        "category": "Birds",
+        "priority": "Norfolk Island Green Parrot Cyanoramphus cookii"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Norfolk Island Green Parrot Cyanoramphus cookii"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Norfolk Island Green Parrot Cyanoramphus cookii"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Northern Brushtail Possum Trichosurus vulpecula arnhemensis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Northern Brushtail Possum Trichosurus vulpecula arnhemensis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Northern Brushtail Possum Trichosurus vulpecula arnhemensis"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Northern Hairy-nosed Wombat, Yaminon Lasiorhinus krefftii"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Northern Hairy-nosed Wombat, Yaminon Lasiorhinus krefftii"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Northern Hairy-nosed Wombat, Yaminon Lasiorhinus krefftii"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Northern Hopping-mouse, Woorrentinta Notomys aquilo"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Northern Hopping-mouse, Woorrentinta Notomys aquilo"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Northern Hopping-mouse, Woorrentinta Notomys aquilo"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Northern Quoll Dasyurus hallucatus"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Northern Quoll Dasyurus hallucatus"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Northern Quoll Dasyurus hallucatus"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Numbat Myrmecobius fasciatus"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Numbat Myrmecobius fasciatus"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Numbat Myrmecobius fasciatus"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Olive Ridley Turtle Lepidochelys olivacea"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Olive Ridley Turtle Lepidochelys olivacea"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Olive Ridley Turtle Lepidochelys olivacea"
+    },
+    {
+        "category": "Birds",
+        "priority": "Orange-bellied Parrot Neophema chrysogaster"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Orange-bellied Parrot Neophema chrysogaster"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Orange-bellied Parrot Neophema chrysogaster"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Pink Underwing Moth Phyllodes imperialis smithersi"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Pink Underwing Moth Phyllodes imperialis smithersi"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Pink Underwing Moth Phyllodes imperialis smithersi"
+    },
+    {
+        "category": "Birds",
+        "priority": "Plains-wanderer Pedionomus torquatus"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Plains-wanderer Pedionomus torquatus"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Plains-wanderer Pedionomus torquatus"
+    },
+    {
+        "category": "Birds",
+        "priority": "Princess Parrot Polytelis alexandrae"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Princess Parrot Polytelis alexandrae"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Princess Parrot Polytelis alexandrae"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Pygmy Blue-tongue Lizard Tiliqua adelaidensis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Pygmy Blue-tongue Lizard Tiliqua adelaidensis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Pygmy Blue-tongue Lizard Tiliqua adelaidensis"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Quokka Setonix brachyurus"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Quokka Setonix brachyurus"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Quokka Setonix brachyurus"
+    },
+    {
+        "category": "Birds",
+        "priority": "Red Goshawk Erythrotriorchis radiatus"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Red Goshawk Erythrotriorchis radiatus"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Red Goshawk Erythrotriorchis radiatus"
+    },
+    {
+        "category": "Fish",
+        "priority": "Red Handfish Thymichthys politus"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Red Handfish Thymichthys politus"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Red Handfish Thymichthys politus"
+    },
+    {
+        "category": "Birds",
+        "priority": "Red-tailed Black Cockatoo (SE) Calyptorhynchus banksii graptogyne"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Red-tailed Black Cockatoo (SE) Calyptorhynchus banksii graptogyne"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Red-tailed Black Cockatoo (SE) Calyptorhynchus banksii graptogyne"
+    },
+    {
+        "category": "Fish",
+        "priority": "Redfin Blue-eye Scaturiginichthys vermeilipinnis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Redfin Blue-eye Scaturiginichthys vermeilipinnis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Redfin Blue-eye Scaturiginichthys vermeilipinnis"
+    },
+    {
+        "category": "Birds",
+        "priority": "Regent Honeyeater Anthochaera phrygia"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Regent Honeyeater Anthochaera phrygia"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Regent Honeyeater Anthochaera phrygia"
+    },
+    {
+        "category": "Plants",
+        "priority": "Scaly-butt Mallee Eucalyptus leprophloia"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Scaly-butt Mallee Eucalyptus leprophloia"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Scaly-butt Mallee Eucalyptus leprophloia"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Short-nosed Seasnake Aipysurus apraefrontalis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Short-nosed Seasnake Aipysurus apraefrontalis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Short-nosed Seasnake Aipysurus apraefrontalis"
+    },
+    {
+        "category": "Plants",
+        "priority": "Small-flowered Snottygobble Persoonia micranthera"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Small-flowered Snottygobble Persoonia micranthera"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Small-flowered Snottygobble Persoonia micranthera"
+    },
+    {
+        "category": "Plants",
+        "priority": "Smooth Davidson's Plum Davidsonia johnsonii"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Smooth Davidson's Plum Davidsonia johnsonii"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Smooth Davidson's Plum Davidsonia johnsonii"
+    },
+    {
+        "category": "Frogs",
+        "priority": "Southern Corroboree Frog Pseudophryne corroboree"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Southern Corroboree Frog Pseudophryne corroboree"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Southern Corroboree Frog Pseudophryne corroboree"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Spectacled Flying-fox Pteropus conspicillatus"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Spectacled Flying-fox Pteropus conspicillatus"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Spectacled Flying-fox Pteropus conspicillatus"
+    },
+    {
+        "category": "Plants",
+        "priority": "Stiff Groundsel Senecio behrianus"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Stiff Groundsel Senecio behrianus"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Stiff Groundsel Senecio behrianus"
+    },
+    {
+        "category": "Plants",
+        "priority": "Stirling Range Dryandra Banksia montana"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Stirling Range Dryandra Banksia montana"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Stirling Range Dryandra Banksia montana"
+    },
+    {
+        "category": "Fish",
+        "priority": "Stocky Galaxias Galaxias tantangara"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Stocky Galaxias Galaxias tantangara"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Stocky Galaxias Galaxias tantangara"
+    },
+    {
+        "category": "Fish",
+        "priority": "Swan Galaxias Galaxias fontanus"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Swan Galaxias Galaxias fontanus"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Swan Galaxias Galaxias fontanus"
+    },
+    {
+        "category": "Birds",
+        "priority": "Swift Parrot Lathamus discolor"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Swift Parrot Lathamus discolor"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Swift Parrot Lathamus discolor"
+    },
+    {
+        "category": "Plants",
+        "priority": "Tangled Wattle Acacia volubilis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Tangled Wattle Acacia volubilis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Tangled Wattle Acacia volubilis"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Tasmanian Giant Freshwater Crayfish Astacopsis gouldi"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Tasmanian Giant Freshwater Crayfish Astacopsis gouldi"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Tasmanian Giant Freshwater Crayfish Astacopsis gouldi"
+    },
+    {
+        "category": "Plants",
+        "priority": "Waddy, Waddi, Waddy-wood, Birdsville Wattle Acacia peuce"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Waddy, Waddi, Waddy-wood, Birdsville Wattle Acacia peuce"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Waddy, Waddi, Waddy-wood, Birdsville Wattle Acacia peuce"
+    },
+    {
+        "category": "Birds",
+        "priority": "Western Ground Parrot, Kyloring Pezoporus flaviventris"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Western Ground Parrot, Kyloring Pezoporus flaviventris"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Western Ground Parrot, Kyloring Pezoporus flaviventris"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Western Ringtail Possum Pseudocheirus occidentalis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Western Ringtail Possum Pseudocheirus occidentalis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Western Ringtail Possum Pseudocheirus occidentalis"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Western Swamp Tortoise Pseudemydura umbrina"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Western Swamp Tortoise Pseudemydura umbrina"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Western Swamp Tortoise Pseudemydura umbrina"
+    },
+    {
+        "category": "Frogs",
+        "priority": "White-bellied Frog Anstisia alba"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "White-bellied Frog Anstisia alba"
+    },
+    {
+        "category": "Target 3",
+        "priority": "White-bellied Frog Anstisia alba"
+    },
+    {
+        "category": "Birds",
+        "priority": "White-throated Grasswren, Yirlinkirrkirr Amytornis woodwardi"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "White-throated Grasswren, Yirlinkirrkirr Amytornis woodwardi"
+    },
+    {
+        "category": "Target 3",
+        "priority": "White-throated Grasswren, Yirlinkirrkirr Amytornis woodwardi"
+    },
+    {
+        "category": "Fish",
+        "priority": "White's Seahorse Hippocampus whitei"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "White's Seahorse Hippocampus whitei"
+    },
+    {
+        "category": "Target 3",
+        "priority": "White's Seahorse Hippocampus whitei"
+    },
+    {
+        "category": "Plants",
+        "priority": "Wollemi Pine Wollemia nobilis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Wollemi Pine Wollemia nobilis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Wollemi Pine Wollemia nobilis"
+    },
+    {
+        "category": "Plants",
+        "priority": "Wongan Eriostemon Philotheca wonganensis"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Wongan Eriostemon Philotheca wonganensis"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Wongan Eriostemon Philotheca wonganensis"
+    },
+    {
+        "category": "Plants",
+        "priority": "Wood Well Spyridium Spyridium fontis-woodii"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Wood Well Spyridium Spyridium fontis-woodii"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Wood Well Spyridium Spyridium fontis-woodii"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Yinnietharra Rock-dragon Ctenophorus yinnietharra"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Yinnietharra Rock-dragon Ctenophorus yinnietharra"
+    },
+    {
+        "category": "Target 3",
+        "priority": "Yinnietharra Rock-dragon Ctenophorus yinnietharra"
     },
     {
         "category": "Threatened Ecological Communities",
@@ -931,862 +2030,6 @@ var priorities = [
     {
         "category": "Threatened Ecological Communities",
         "priority": "White Box-Yellow Box-Blakely's Red Gum Grassy Woodland and Derived Native Grassland"
-    },
-    {
-        "category": "Soil Quality",
-        "priority": "Soil acidification"
-    },
-    {
-        "category": "Soil Quality",
-        "priority": "Soil Carbon priority"
-    },
-    {
-        "category": "Soil Quality",
-        "priority": "Hillslope erosion priority"
-    },
-    {
-        "category": "Soil Quality",
-        "priority": "Wind erosion priority"
-    },
-    {
-        "category": "Land Management",
-        "priority": "Soil acidification"
-    },
-    {
-        "category": "Land Management",
-        "priority": "Soil carbon"
-    },
-    {
-        "category": "Land Management",
-        "priority": "Hillslope erosion"
-    },
-    {
-        "category": "Land Management",
-        "priority": "Wind erosion"
-    },
-    {
-        "category": "Land Management",
-        "priority": "Native vegetation and biodiversity on-farm"
-    },
-    {
-        "category": "Sustainable Agriculture",
-        "priority": "Climate change adaptation"
-    },
-    {
-        "category": "Sustainable Agriculture",
-        "priority": "Market traceability"
-    },
-    {
-        "category": "Threatened Species",
-        "priority": "Dasyurus viverrinus (Eastern Quoll)"
-    },
-    {
-        "category": "Bushfires",
-        "priority": "Herbivore and/or predator control"
-    },
-    {
-        "category": "Bushfires",
-        "priority": "Weed control and/or revegetation"
-    },
-    {
-        "category": "Bushfires",
-        "priority": "Fire management and planning"
-    },
-    {
-        "category": "Bushfires",
-        "priority": "Species and ecological community specific interventions"
-    },
-    {
-        "category": "Bushfires",
-        "priority": "Traditional Owner led healing of country"
-    },
-    {
-        "category": "Bushfires",
-        "priority": "Erosion control"
-    },
-    {
-        "category": "Bushfires",
-        "priority": "Refugia management"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Alpine Sphagnum Bogs and Associated Fens"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Ecological vegetation classes (EVC) dominated by fire sensitive eucalypt species"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Ecological vegetation classes dominated by callitris pine"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Montane Peatlands and Swamps of the New England Tableland, NSW North Coast, Sydney Basin, South East Corner, South Eastern Highlands and Australian Alps bioregions"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Podocarpus heathland"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Kosciuszko-Namadgi Alpine Ash Moist Grassy Forest"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Jounama Snow Gum Shrub Woodland"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Alpine Snow Gum Woodland"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Black Sallee Woodland"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "White Box-Yellow Box-Blakely's Red Gum Grassy Woodland and Derived Native Grassland"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Natural Temperate Grassland of the South Eastern Highlands"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Alpine Teatree shrubland"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Kosciuszko Flanks Moist Gully Forest"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Kosciuszko Snow Gum-Mountain Gum Moist Forest"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Kosciuszko Western Flanks Moist Shrub Forest"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Kosciuszko Eastern Slopes Mountain Gum Forest"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Namadgi Subalpine Rocky Shrubland"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Kybeyan Montane Heath"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Eucalyptus niphophila woodlands (Alpine Snow Gum Woodland)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Potorous longipes (Long-footed Potoroo)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Antechinus mimetes (Dusky Antechinus)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Ornithorhynchus anatinus (Platypus)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Phascolarctos cinereus (Koala)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Potorous tridactylus (Long-nosed Potoroo)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Pseudomys novaehollandiae (New Holland Mouse, Pookila)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Petrogale penicillata (Brush-tailed Rock-wallaby)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Pteropus poliocephalus (Grey-headed Flying-fox)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Menura novaehollandiae (Superb Lyrebird)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Callocephalon fimbriatum (Gang-gang Cockatoo)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Pycnoptilus floccosus (Pilotbird)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Cyclodomorphs praealtus (Alpine She-oak Skink)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Litoria spenceri (Spotted Tree Frog)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Pseudophryne corroboree (Southern Corroboree Frog)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Pseudophryne pengilleyi (Northern Corroboree Frog)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Climacteris erythrops (Red-browed Treecreeper)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Anthochaera phrygia (Regent Honeyeater)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Monarcha melanopsis (Black-faced Monarch)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Calyptorhynchs lathami (Glossy Black-Cockatoo (eastern))"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Galaxias rostratus (Flathead Galaxias, Beaked Minnow, Dargo Galaxias)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Pseudemoia cryodroma (Alpine Bog Skink)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Liopholis guthega (Guthega Skink)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Pseudemoia rawlinsoni (Glossy Grass Skink, Swampland Cool-skink)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Eulamprus typmanum (Southern Water-skink)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Petauroides volans (Greater Glider)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Dasyurus maculatus maculatus (Spotted-tailed Quoll)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Dasyornis brachypterus (Eastern Bristlebird)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Dasyurus maculatus (Spot-tailed Quoll)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Mastacomys fuscus mordicus (Broad-toothed Rat)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Miniopterus orianae oceanensis (Eastern Bentwing Bat)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Petaurus norfolcensis (Squirrel Glider)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Petauroides volans (Southern Greater Glider)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Potorous longipes (Long-footed Potoroo)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Pseudomys fumeus (Smoky Mouse)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Crinia sloanei (Sloanes Froglet)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Litoria booroolongensis (Booroolong Tree Frog)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Litoria verreauxii alpina (Alpine Tree Frog)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Macquaria australasica (Macquarie Perch)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Galaxias tantangara (Stocky Galaxias)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Gadopsis bispinosus (Two-spined Blackfish)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Dasyurus maculatus maculatus (Spotted-tailed Quoll)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Petaurus australis (Yellow-bellied Glider)"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Petaurus australis (Yellow-bellied Glider)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Callocephalon fimbriatum (Gang gang Cockatoo)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Climacteris picumnus victoriae (Brown Treecreeper)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Melithreptus gularis (Black-chinned Honeyeater)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Neophema pulchella (Turquoise Parrot)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Ninox connivens (Barking Owl)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Petauroides volans (Greater Glider)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Ninox strenua (Powerful Owl)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Stagonopleura guttata (Diamond Firetail)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Xenica Oreixenica lathalis theddora (Alpine Silver)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Hedleyropa yarrangobillyensis (Yarrangobilly Pinwheel Snail)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Buburra jeanae (leaf beetle)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Canthocamptus longipes (harpactacoid copepod)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Euastacus crassus. (Alpine crayfish)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Euastacus diversus (Orbost Spiny Crayfish)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Euastacus rieki (Riek's Crayfish)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Thaumatoperia alpina (Alpine Stonefly)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Castiarina flavoviridis (jewel beetle)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Austrochloritis kosciuszkoensis (Koscuiszko Bristle Snail)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Austrorhytida glaciamans (Koscuiszko Carnivorous Snail)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Diphyoropa illustra (Lakes Entrance Pinwheel Snail)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Oreixenica latialis (Small Alpine Xenica)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Austroaeschna flavomaculata (Alpine Darner)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Paralaoma annabelli (Prickle Pinhead Snail)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Oreixenica orichora (Spotted Alpine Xenica)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Castiarina kershawi (jewel beetle)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Oreixenica correae (Orange Alpine Xenica; Correa Brown)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Aulacopris reichei (Beetle)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Temognatha grandis (jewel beetle)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Leptoperla cacuminis (Mount Kosciusko Wingless Stonefly)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Asteron grayi (Spider, harvestman or pseudoscorpion)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Molycria mammosa (Spider, harvestman or pseudoscorpion -)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Storenosoma terraneum (Spider, harvestman or pseudoscorpion -)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Acanthaeschna victoria (Thylacine Darner)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Austropetalia patricia (Waterfall Redspot)"
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Grevillea jephcottii (Pine Mountain Grevillea)"
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Grevillea oxyantha subsp. ecarinata  "
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Olearia stenophylla  "
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Prasophyllum bagoense (Bago Leek-orchid)"
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Eucalyptus forresterae (Brumby Sallee)"
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Pomaderris helianthemifolia "
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Prasophyllum keltonii (Kelton’s Leek-orchid)"
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Pterostylis oreophila (Blue-tongue Greenhood)"
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Gentianella sylvicola "
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Pultenaea vrolandii "
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Zieria citriodora (Lemon-scented Zieria)"
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Tetratheca subaphylla (Leafless Pinkbells)"
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Cardamine tryssa (Dainty Bitter-cress)"
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Prostanthera walteri (Blotchy Mintbush)"
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Galium roddii "
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Dampiera fusca (Kydra Dampiera)"
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Prostanthera stenophylla "
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Philotheca myoporoides subsp. brevipedunculata "
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Callistemon subulatus (Dwarf Bottlebrush)"
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Dillwynia brunioides "
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Eucalyptus fraxinoides (White Mountain Ash, White Ash)"
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Eucalyptus elaeophloia (Nunniong Gum)"
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Grevillea macleayana (Jervis Bay Grevillea)"
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Deyeuxia talariata"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Acacia blayana (Blay’s Wattle)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Acacia covenyi "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Acacia mabellae "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Acacia phlebophylla (Mount Buffalo Wattle)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Acacia phasmoides (Phantom Wattle)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Acacia saliciformis "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Acacia trachyphloia "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Almalea capitata (Slender Parrot Pea)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Banksia canei (Mountain Banksia)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Botrychium lunaria (Moonwort)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Caladenia montana (Mountain Spider Orchid)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Calochilus sandrae (Brownish Beard Orchid)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Calochilus saprophyticus (Leafless Beard Orchid)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Cassinia heleniae "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Cassinia venusta "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Cassytha phaeolasia "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Celmisia sp pulchella (A snow daisy)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Dampiera fusca (Kydra Dampiera)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Daviesia nova-anglica "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Deyeuxia reflexa "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Dillwynia palustris "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Discaria nitida (Leafy Anchor Plant)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Diuris ochroma (Pale Golden Moths)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Eucalyptus cinerea subsp. triplex  "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Eucalyptus forresterae "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Euphrasia scabra (Rough Eyebright)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Galium roddii  "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Genoplesium vernale (East Lynne Midge Orchid)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Gentiana baeuerlenii (Baeuerlen's Gentian)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Gentianella muelleriana subsp. jingerensis (Mueller’s Snow-gentian)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Geranium sessiliflorum  "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Goodenia glomerata "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Grevillea imberbis "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Grevillea alpivaga (Buffalo Grevillea)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Grevillea macleayana "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Grevillea neurophylla subsp fluviatilis  "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Grevillea neurophylla subsp neurophylla  "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Grevillea oxyantha subsp. ecarinata "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Grevillea ramosissima subsp hypargyrea (Fan Grevillea)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Grevillea victoriae subsp nivalis  "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Grevillea willisii (Omeo Grevillea)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Hakea macraeana "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Leionema lamprophyllum subsp obovatum (Shiny Phebalium)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Leptospermum namadgiensis (Namadgi Tea Tree)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Logania granitica (Mountain Logania)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Leucochrysum albicans var. tricolor (Hoary Sunray)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Lobelia gelida (Snow Pratia)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Olearia sp Rhizomatica  "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Olearia stenophylla "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Parantennaria uniceps  "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Persoonia chamaepitys "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Persoonia mollis subsp. mollis "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Persoonia procumbens "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Pimelea bracteata  "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Pomaderris cotoneaster (Cotoneaster Pomaderris)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Pomaderris gilmourii (Grey Deua Pomaderris)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Pomaderris phylicifolia subsp. phylicifolia  "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Prostanthera monticola (Buffalo Mint Bush)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Prasophyllum canaliculatum (Summer Leek Orchid)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Prasophyllum innubum (Brandy Marys leek orchid)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Prasophyllum keltonii (Kelton's Leek Orchid)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Prasophyllum venustum (Charming Leek Orchid)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Prasophyllum viriosum (Stocky Leek Orchid)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Prostanthera decussata "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Prostanthera stenophylla "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Prostanthera walteri "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Pterostylis oreophila (Blue-tongued Greenhood / Kiandra Greenhood)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Pultenaea polifolia (Dusky Bush-pea)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Pultenaea vrolandii (Cupped Bush-pea)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Rutidosis leiolepis (Monaro Golden Daisy)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Sannantha crenulate (Fern-leaf Baeckea)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Tetratheca subaphylla "
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Thesium austral (Austral Toadflax)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Thynninorchis huntianus (Elbow Orchid)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Viola improcera (Dwarf Violet)"
     }
 ];
 
@@ -1800,7 +2043,7 @@ subprograms.forEach(function (subProgram){
     var p = {name: subProgram, programId: UUID.generate(), dateCreated: now, lastUpdate: now, parent: parent._id, status: "active"}
     var program = db.program.find({name: subProgram})
     if (!program.hasNext()) {
-        db.program.insert(p);
+        db.program.insertOne(p);
     } else {
         print("Program Already Exist: " + subProgram)
     }
@@ -1810,10 +2053,7 @@ subprograms.forEach(function (subprogram){
     var program = db.program.find({name: subprogram});
     while(program.hasNext()){
         var p = program.next();
-        p.outcomes = outcomes;
-        p.config = config;
-        p.priorities = priorities;
-        db.program.save(p);
+        db.program.updateOne({programId:p.programId}, {$set:{config:config, outcomes:outcomes, priorities:priorities}});
     }
 });
 

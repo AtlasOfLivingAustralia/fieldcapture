@@ -16,10 +16,10 @@
     <tr class="service-target">
         <td class="index"><span data-bind="text:${i}+1"></span></td>
         <td class="service">
-            <fc:renderComparisonOutputType changed="${changed.outputTargets ?: []}" i="${i}" original="${project.outputTargets ?: []}" property="scoreId"/>
+            <fc:renderComparisonService programConfig="${config}"  changed="${changed.outputTargets ?: []}" i="${i}" original="${project.outputTargets ?: []}"/>
         </td>
         <td class="score">
-            <fc:renderComparisonScoreLabel changed="${changed.outputTargets ?: []}" i="${i}" original="${project.outputTargets ?: []}" property="scoreId"/>
+            <fc:renderComparisonScoreLabel config="${config}" changed="${changed.outputTargets ?: []}" i="${i}" original="${project.outputTargets ?: []}" property="scoreId"/>
         </td>
     </tr>
     <tr>
@@ -30,10 +30,10 @@
     <tr class="outcome-target">
         <td class="index"></td>
         <td class="service">
-            <fc:renderComparisonList changed="${changed.outputTargets.outcomeTargets ?: []}" i="${i}" original="${project.outputTargets.outcomeTargets ?: []}" property="relatedOutcomes"/>
+            <fc:renderComparisonOutputTargets changed="${changed.outputTargets.outcomeTargets ?: []}" i="${i}" original="${project.outputTargets.outcomeTargets ?: []}" property="relatedOutcomes"/>
         </td>
         <td class="score">
-            <fc:renderComparisonList changed="${changed.outputTargets.outcomeTargets ?: []}" i="${i}" original="${project.outputTargets.outcomeTargets ?: []}" property="target"/>
+            <fc:renderComparisonOutputTargets changed="${changed.outputTargets.outcomeTargets ?: []}" i="${i}" original="${project.outputTargets.outcomeTargets ?: []}" property="target"/>
         </td>
     </tr>
     </g:each>

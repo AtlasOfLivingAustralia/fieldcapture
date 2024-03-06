@@ -7,8 +7,8 @@
     </thead>
     <tbody>
     <tr>
-        <td style="display:none" class="original" data-bind="text:details.name"></td>
-        <td style="display:none" class="changed" data-bind="text:detailsChanged.name"></td>
+        <td style="display:none" class="original" data-bind="text:details.nameComparison"></td>
+        <td style="display:none" class="changed" data-bind="text:detailsChanged.nameComparison"></td>
         <td wrap class="diff1"></td>
     </tr>
     </tbody>
@@ -16,7 +16,7 @@
 </g:if>
 <g:else>
 <h4>Project name</h4>
-    <span style="display:none" class="original" data-bind="text:detailsChanged.name"></span>
-    <span style="display:none" class="changed" data-bind="text:detailsChanged.name"></span>
+    <span style="display:none" class="original" data-bind="text:details.nameComparison"></span>
+    <span style="display:none" class="changed" data-bind="text:detailsChanged.nameComparison"></span>
     <span wrap class="diff1"></span>
 </g:else>

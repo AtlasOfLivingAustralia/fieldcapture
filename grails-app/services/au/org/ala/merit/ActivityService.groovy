@@ -1,8 +1,6 @@
 package au.org.ala.merit
 
 import au.org.ala.ecodata.forms.ActivityFormService
-import au.org.ala.merit.DateUtils
-import grails.converters.JSON
 import grails.plugin.cache.Cacheable
 import groovy.util.logging.Slf4j
 import org.joda.time.DateTime
@@ -14,6 +12,7 @@ class ActivityService {
 
     def webService, grailsApplication, metadataService, reportService, projectService, emailService, userService
     ActivityFormService activityFormService
+    LockService lockService
 
     public static final String PROGRESS_PLANNED = 'planned'
     public static final String PROGRESS_FINISHED = 'finished'
@@ -178,27 +177,20 @@ class ActivityService {
     }
 
     Map lock(String activityId) {
-        String path = "lock/lock/"+activityId
-        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+path,[:])
+       lockService.lock(activityId)
     }
 
     Map lock(Map activity) {
-        lock(activity.activityId)
+        lockService.lock(activity.activityId)
     }
 
     Map unlock(String activityId, Boolean force = false) {
-        String path = "lock/unlock/"+activityId
-        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+path,[force:force])
+        lockService.unlock(activityId, force)
     }
 
     void stealLock(String activityId, String activityUrl) {
         Map activity = get(activityId)
-        Map result = [error:'No lock']
-        if (activity.lock) {
-            result = unlock(activityId, true)
-            emailService.sendLockStolenEmail(activity.lock, activityUrl)
-        }
-        result
+        lockService.stealLock(activityId, activity, activityUrl, SettingPageType.ACTIVITY_LOCK_STOLEN_EMAIL_SUBJECT, SettingPageType.ACTIVITY_LOCK_STOLEN_EMAIL)
     }
 
     def isReport(activity) {
@@ -290,7 +282,7 @@ class ActivityService {
 
         Map resp = activityFormService.searchActivityForms(criteria)
         List<Map> forms = resp?.resp ?: []
-        forms = forms.collect{[externalIds:it.externalIds, externalId:it.externalIds?.find{it.idType?.name == "MONITOR_PROTOCOL_GUID"}?.externalId, name:it.name, formVersion:it.formVersion, category:it.category]}
+        forms = forms.collect{[externalIds:it.externalIds, externalId:it.externalIds?.find{it.idType?.name == "MONITOR_PROTOCOL_GUID"}?.externalId, name:it.name, formVersion:it.formVersion, category:it.category, tags:it.tags]}
 
         forms
     }

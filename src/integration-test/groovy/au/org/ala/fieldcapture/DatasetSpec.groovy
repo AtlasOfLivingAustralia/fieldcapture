@@ -99,7 +99,7 @@ class DatasetSpec extends StubbedCasSpec{
         set.protocol == "other"
         set.type == "Baseline dataset associated with a project outcome"
         set.measurementTypes == ["Soil erosion"]
-        set.methods == ["Genetic sampling", "Area sampling"]
+        set.methods == ["Area sampling", "Genetic sampling"]
         set.methodDescription == "Method description"
         set.collectionApp == "Collection App"
         set.location == "Location"
@@ -127,8 +127,12 @@ class DatasetSpec extends StubbedCasSpec{
         waitFor 10, {
             hasBeenReloaded()
         }
+        when:
+        def dataSetSummary = openDataSetSummaryTab()
+
+        then:
         waitFor 10, {
-           $('#project-data-sets tbody[data-bind*=dataSets] tr').size() == 0
+           dataSetSummary.dataSetSummaryCount() == 0
         }
 
     }
@@ -192,13 +196,19 @@ class DatasetSpec extends StubbedCasSpec{
         set.threatenedSpeciesIndex = "Yes"
         set.format = "JSON"
         set.sensitivities =["Commercially sensitive", "Ecologically sensitive"]
-        set.publicationUrl = "https://www.ala.org.au"
         set.threatenedSpeciesDateOfUpload = '21-01-2021'
         set.dataSetSize = '200'
+        set.publicationUrl = "https://www.ala.org.au"
+
         set.createButton.click()
 
         then:
-        waitFor { at RlpProjectPage }
+        waitFor {
+            // This test is failing sometimes on actions due to what seems to be a validation error - trying to track it down.
+            println js.exec("return \$('div.formError').next()")?.collect{[it.getAttribute('name'), it.getAttribute('id'), it.getAttribute('data-bind')]}
+
+            at RlpProjectPage
+        }
         waitFor {$("#project-data-sets .fa-edit").displayed}
         $('[data-bind*="text: progress"]').displayed
         $('[data-bind*="text: progress"]').text() == "finished"
@@ -221,6 +231,13 @@ class DatasetSpec extends StubbedCasSpec{
         when: "We update and save the MERI plan"
         openMERIPlanTab()
         def meriPlan = openMeriPlanEditTab()
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
         meriPlan.save()
 
         and: "We reload the page and reopen the data set summary tab"

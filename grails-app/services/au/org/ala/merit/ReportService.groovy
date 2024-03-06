@@ -3,12 +3,14 @@ package au.org.ala.merit
 import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
+import au.org.ala.merit.reports.ReportLifecycleListener
 import au.org.ala.merit.reports.ReportGenerator
 import au.org.ala.merit.reports.ReportOwner
 import grails.plugin.cache.Cacheable
 import groovy.util.logging.Slf4j
 import org.apache.commons.io.FilenameUtils
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.joda.time.Period
 
 @Slf4j
@@ -253,6 +255,8 @@ class ReportService {
         Map report = get(reportId)
 
         if (!resp.error) {
+            ReportLifecycleListener listener = reportLifeCycleListener(report)
+            listener.reportSubmitted(report, reportActivityIds, reportOwner)
             activityService.submitActivitiesForPublication(reportActivityIds)
             emailService.sendEmail(emailTemplate, [reportOwner:reportOwner, report:report], ownerUsersAndRoles, RoleService.PROJECT_ADMIN_ROLE)
         }
@@ -298,6 +302,8 @@ class ReportService {
         Map report = get(reportId)
 
         if (!resp.error) {
+            ReportLifecycleListener listener = reportLifeCycleListener(report)
+            listener.reportApproved(report, reportActivityIds, reportOwner)
             activityService.approveActivitiesForPublication(reportActivityIds)
             emailService.sendEmail(emailTemplate, [reportOwner:reportOwner, report:report, reason:reason], ownerUsersAndRoles, RoleService.GRANT_MANAGER_ROLE)
         }
@@ -327,6 +333,8 @@ class ReportService {
         Map report = get(reportId)
 
         if (!resp.error) {
+            ReportLifecycleListener listener = reportLifeCycleListener(report)
+            listener.reportRejected(report, reportActivityIds, reportOwner)
             activityService.rejectActivitiesForPublication(reportActivityIds)
             emailService.sendEmail(emailTemplate, [reportOwner:reportOwner, report:report, categories: reasonCategories, reason:reason], ownerUsersAndRoles, RoleService.GRANT_MANAGER_ROLE)
         }
@@ -342,6 +350,8 @@ class ReportService {
         Map report = get(reportId)
 
         if (!resp.error) {
+            ReportLifecycleListener listener = reportLifeCycleListener(report)
+            listener.reportCancelled(report, reportActivityIds, reportOwner)
             activityService.cancelActivitiesForPublication(reportActivityIds)
         }
         else {
@@ -454,7 +464,12 @@ class ReportService {
             return [success:false, error:"Cannot delete data for an approved or submitted report"]
         }
 
-        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/reset/"+report.reportId, [:])
+        Map resp = webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/reset/"+report.reportId, [:])
+        if (!resp.error) {
+            ReportLifecycleListener listener = reportLifeCycleListener(report)
+            listener.reportReset(report)
+        }
+        resp
     }
 
     def findReportsForUser(String userId) {
@@ -981,4 +996,53 @@ class ReportService {
         history
     }
 
+    /**
+     * Download [all] management unit reports in a given period
+     * @param startDate
+     * @param endDate
+     * @param emails for sending email to user
+     * @return
+     */
+    def generateReports(String startDate, String endDate, Map extras = null){
+
+        // The end date is the last day of the period (e.g. 2020-06-30) but reports will end at midnight of the next day (e.g. 2020-07-01T00:00:00)
+        // so add a day or two to achieve this.
+
+        String isoStartDate = DateUtils.format(DateUtils.parse(startDate).plusDays(1).withZone(DateTimeZone.UTC))
+        String isoEndDate = DateUtils.format(DateUtils.parse(endDate).plusDays(1).withZone(DateTimeZone.UTC))
+
+        String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}" + "report/generateReportsInPeriod?startDate=${isoStartDate}&endDate=${isoEndDate}"
+        url += '&' + extras.collect { k,v -> "$k=$v" }.join('&')
+        def resp = webService.getJson(url)
+        return resp
+    }
+
+    ReportLifecycleListener reportLifeCycleListener(Map report) {
+        ReportLifecycleListener listener
+        if (report.activityType && report.activityId) {
+            listener = reportLifeCycleListener(report.activityType)
+        }
+        if (!listener) {
+            listener = new ReportLifecycleListener()
+        }
+        listener
+    }
+
+    ReportLifecycleListener reportLifeCycleListener(String activityType) {
+        ReportLifecycleListener reportData = null
+        // Remove all spaces from the activityType
+        String reportDataBeanName = activityType.replaceAll("\\s", "")
+
+        if (grailsApplication.mainContext.containsBean(reportDataBeanName)) {
+            reportData = grailsApplication.mainContext.getBean(reportDataBeanName)
+        }
+
+        if (!reportData) {
+            reportData = new ReportLifecycleListener()
+        }
+        else {
+            log.debug("Found custom reportData bean "+reportDataBeanName+" for activity type "+activityType)
+        }
+        reportData
+    }
 }

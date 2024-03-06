@@ -4,6 +4,8 @@ var DOCUMENT_EMBEDDED_VIDEO = 'embeddedVideo';
 var DOCUMENT_PROJECT_LOGIC = 'projectLogic';
 var DOCUMENT_CONTRACT_ASSURANCE = 'contractAssurance';
 var DOCUMENT_AUDITABLE_OUTPUTS = 'auditableOutputs';
+var DOCUMENT_SUPPORT_AND_OVERHEADS = 'projectSupportAndOverheadsEvidence';
+var DOCUMENT_PROJECT_SERVICE_EVIDENCE = 'projectServiceEvidence'
 
 var documentRoles =
     [
@@ -11,7 +13,9 @@ var documentRoles =
         {id: DOCUMENT_EMBEDDED_VIDEO, name:'Embedded Video', isPublicRole:true},
         {id: DOCUMENT_PROJECT_LOGIC, name: 'Project Logic', isPublicRole:false},
         {id: DOCUMENT_CONTRACT_ASSURANCE, name:'Contract Assurance', isPublicRole:false},
-        {id: DOCUMENT_AUDITABLE_OUTPUTS, name:'Auditable Outputs', isPublicRole:false}
+        {id: DOCUMENT_AUDITABLE_OUTPUTS, name:'Auditable Outputs', isPublicRole:false},
+        {id: DOCUMENT_SUPPORT_AND_OVERHEADS, name:'Project Support & Overheads Evidence', isPublicRole:false},
+        {id: DOCUMENT_PROJECT_SERVICE_EVIDENCE, name:'Project Service Evidence', isPublicRole:false}
         ];
 /**
  * A view model to capture metadata about a document and manage progress / feedback as a file is uploaded.

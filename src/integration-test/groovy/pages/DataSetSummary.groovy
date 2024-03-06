@@ -13,6 +13,8 @@ class DataSetSummary extends Module {
         statusColumn(required: false) { $('#project-data-sets .dataset-progress') }
         status(required: false) {$('[data-bind*="text: progress"]')}
 
+        summaryTable(required: false) {$('#project-data-sets')}
+        tableEmptyMessage(required:false) {$('#project-data-sets td.dataTables_empty')}
     }
 
     void cancel() {
@@ -20,7 +22,7 @@ class DataSetSummary extends Module {
     }
 
     int dataSetSummaryCount() {
-        $('#project-data-sets tbody tr').size()
+        tableEmptyMessage.displayed ? 0 : summaryTable.find('tbody tr').size()
     }
 
 }

@@ -176,7 +176,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
     }
     /** Convenience method to stub the login of a user with the CAS ROLE_ALA_ADMIN role */
     def loginAsAlaAdmin(Browser browser) {
-        login([userId:ALA_ADMIN_USER_ID, role:"ROLE_ADMIN", email: 'ala_admin@nowhere.com', firstName:"ALA", lastName:"Administrator"], browser)
+        login([userId:ALA_ADMIN_USER_ID, role:"ROLE_ADMIN", userName: 'ala_admin@nowhere.com', email: 'ala_admin@nowhere.com', firstName:"ALA", lastName:"Administrator"], browser)
     }
     /** Convenience method to stub the login of a user no special roles */
     def loginAsUser(String userId, Browser browser) {
@@ -242,7 +242,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
                 iat               : DateUtils.toSecondsSinceEpoch(new Date()),
                 jti               : "id",
                 email             : userDetails.email,
-                scope             : "openid profile ala roles"
+                scope             : "openid profile ala roles email"
         ]
         String idToken = new JwtGenerator(new RSASignatureConfiguration(pair)).generate(idTokenClaims)
         Map token = [:]
@@ -251,7 +251,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
         token.refresh_token = null
         token.token_type = "bearer"
         token.expires_in = 86400
-        token.scope = "openid profile ala roles"
+        token.scope = "openid profile ala roles email"
 
         stubFor(post(urlPathEqualTo("/cas/oidc/oidcAccessToken"))
                 .willReturn(aResponse()

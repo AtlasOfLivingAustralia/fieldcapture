@@ -1066,7 +1066,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         };
         sitesViewModel.typeFilter.subscribe(function(filterValue) {
 
-            if (filterValue == 'Both') {
+            if (filterValue == 'All') {
                 filterValue = "";  // Clear the search.
             }
             $sitesTable.DataTable().column(2).search(filterValue).draw();
@@ -1138,16 +1138,68 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
 
     self.initialiseDataSets = function() {
         var dataSetsConfig = {
+            services: config.services,
             dataSetsSelector: config.dataSetsSelector || '#project-data-sets',
             newDataSetUrl:  config.newDataSetUrl,
             editDataSetUrl: config.editDataSetUrl,
             deleteDataSetUrl: config.deleteDataSetUrl,
             viewDataSetUrl: config.viewDataSetUrl,
-            returnToUrl: config.returnToUrl
+            returnToUrl: config.returnToUrl,
+            reports: project.reports || [],
+            viewReportUrl: config.viewReportUrl
         };
         var projectService = new ProjectService({}, config);
         var viewModel = new DataSetsViewModel(project.custom && project.custom.dataSets, projectService, dataSetsConfig);
         ko.applyBindings(viewModel, $(dataSetsConfig.dataSetsSelector)[0]);
+
+        var dataTableConfig = {
+            columnDefs: [
+                {
+                    target: 0,
+                    sortable: false
+                },
+                {
+                    target: 1,
+                    sortable: true
+                },
+                {
+                    target: 2,
+                    visible: true
+                },
+                {
+                    target: 4,
+                    sortable: true,
+                    orderData: 5
+                },
+                {
+                    target: 5,
+                    visible: false,
+                    searchable: false
+                },
+                {
+                    target: 6,
+                    sortable:true,
+                    orderData: 7
+                },
+                {
+                    target: 7,
+                    visible: false,
+                    searchable: false
+                },
+
+            ],
+            order: [4, 'desc']
+        };
+        if (!viewModel.supportsDateColumn) {
+            dataTableConfig.columnDefs[2].visible = false;
+            dataTableConfig.columnDefs[3].visible = false;
+            dataTableConfig.columnDefs[5].visible = false;
+            dataTableConfig.columnDefs[6].visible = false;
+            dataTableConfig.order = [1, 'asc'];
+        }
+
+        $(dataSetsConfig.dataSetsSelector).find('table').dataTable(dataTableConfig);
+
     };
 
     self.initialiseAdminTab = function() {
@@ -1155,8 +1207,12 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         var meriPlanSection = document.getElementById("edit-meri-plan");
         if (meriPlanSection) {
             ko.applyBindings(self.meriPlan, meriPlanSection);
-            self.meriPlan.meriPlan().dirtyFlag.reset();
-            self.meriPlan.attachFloatingSave();
+            // The dirty flag is only attached if the MERI plan is in edit mode.
+            if (self.meriPlan.meriPlan().dirtyFlag) {
+                self.meriPlan.meriPlan().dirtyFlag.reset();
+                self.meriPlan.attachFloatingSave();
+            }
+
         }
 
         // When the MERI plan is approved, the announcements move to their own section, otherwise they

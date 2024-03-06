@@ -39,6 +39,7 @@ class ProjectService  {
     def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService, commonService
     ProjectConfigurationService projectConfigurationService
     def programService
+    LockService lockService
 
     def get(id, levelOfDetail = "", includeDeleted = false) {
 
@@ -55,6 +56,16 @@ class ProjectService  {
         }
         project
 
+    }
+
+    void filterDataSetSummaries(List dataSetSummaries) {
+        List protocolNamesToHide = grailsApplication.config.getProperty('hidden.dataSet.protocols', List.class, ['Plot Selection', 'Plot Layout and Visit'])
+        List<Map> forms = activityService.monitoringProtocolForms()
+
+        dataSetSummaries.removeAll { Map dataSetSummary ->
+            Map protocolForm = forms.find{it.externalId == dataSetSummary.protocol}
+            protocolForm && (protocolForm.name in protocolNamesToHide)
+        }
     }
 
     /**
@@ -340,7 +351,7 @@ class ProjectService  {
             // the "custom" Map which can contain properties "details" (the MERI plan) and "dataSets" (data set summaries)
             // The longer term solution for this is to model Projects explicitly/correctly in ecodata
             if (projectDetails.custom) {
-                projectDetails.custom.details?.lastUpdated = DateUtils.format(new Date())
+                projectDetails.custom.details?.lastUpdated = DateUtils.formatAsISOStringNoMillis(new Date())
 
                 Map custom = currentProject.custom ?: [:]
                 custom.putAll(projectDetails.custom)
@@ -409,18 +420,48 @@ class ProjectService  {
         userCanEdit
     }
 
+    Map lockMeriPlanForEditing(String projectId) {
+        Map project = get(projectId)
+        if (!project.planStatus || project.planStatus == PLAN_NOT_APPROVED) {
+            Map resp = lockService.lock(projectId)
+            if (resp.resp && !resp.resp.error) {
+                return [message:'success']
+            }
+            else {
+                return [error:resp?.resp?.error]
+            }
+        }
+        return [error:'Invalid plan status']
+    }
+
+    Map overrideLock(String projectId, String entityUrl) {
+        Map project = get(projectId)
+        lockService.stealLock(projectId, project, entityUrl, SettingPageType.PROJECT_LOCK_STOLEN_EMAIL_SUBJECT, SettingPageType.PROJECT_LOCK_STOLEN_EMAIL)
+        // This is done in the projectService instead of the lockService as the
+        // same use case for an Activity has the lock aquired as a part of the redirect
+        lockService.lock(projectId)
+    }
+
+
     def submitPlan(String projectId) {
         def project = get(projectId)
 
         if (!project.planStatus || project.planStatus == PLAN_NOT_APPROVED) {
-            def resp = update(projectId, [planStatus:PLAN_SUBMITTED])
-            if (resp.resp && !resp.resp.error) {
-
-                sendEmail({ProgramConfig programConfig -> programConfig.getPlanSubmittedTemplate()}, project, RoleService.PROJECT_ADMIN_ROLE)
-                return [message:'success']
+            if (project.lock && project.lock?.userId != userService.getCurrentUserId()) {
+                return [error:'MERI plan is locked by another user']
             }
             else {
-                return [error:"Update failed: ${resp?.resp?.error}"]
+                if (project.lock) {
+                    lockService.unlock(projectId)
+                }
+                def resp = update(projectId, [planStatus: PLAN_SUBMITTED])
+                if (resp.resp && !resp.resp.error) {
+
+                    sendEmail({ ProgramConfig programConfig -> programConfig.getPlanSubmittedTemplate() }, project, RoleService.PROJECT_ADMIN_ROLE)
+                    return [message: 'success']
+                } else {
+                    return [error: "Update failed: ${resp?.resp?.error}"]
+                }
             }
         }
         return [error:'Invalid plan status']
@@ -464,7 +505,7 @@ class ProjectService  {
 
     def rejectPlan(String projectId) {
         def project = get(projectId)
-        if (requiresMERITAdminToModifyPlan(project) && !userService.userIsAlaOrFcAdmin()) {
+        if (project.planStatus == PLAN_APPROVED && requiresMERITAdminToModifyPlan(project) && !userService.userIsAlaOrFcAdmin()) {
             return [error: 'Only MERIT admins can return MERI plans for this program']
         }
         if (project.planStatus in [PLAN_SUBMITTED, PLAN_APPROVED]) {
@@ -1834,7 +1875,7 @@ class ProjectService  {
         Map projectSites = siteService.getProjectSites(projectId)
         if (projectSites && !projectSites.error) {
             List sites = projectSites.sites
-            Map projectArea = projectSites?.find { it.properties?.type == 'projectArea' }
+            Map projectArea = projectSites?.find { it.properties?.type == SiteService.SITE_TYPE_PROJECT_AREA }
             if (projectArea) {
                 result.projectArea = projectArea
             }
@@ -1844,7 +1885,7 @@ class ProjectService  {
                     site.properties.category = 'Reporting Sites'
                     result.features << site
                 }
-                else if (site.properties?.type != 'projectArea') {
+                else if (site.properties?.type != SiteService.SITE_TYPE_PROJECT_AREA) {
                     site.properties.category = 'Planning Sites'
                     result.features << site
                 }
@@ -1857,6 +1898,10 @@ class ProjectService  {
 
         }
         result
+    }
+
+    boolean hasProjectArea(Map project) {
+        project?.sites?.find{it.type == SiteService.SITE_TYPE_PROJECT_AREA}
     }
 
     /**
@@ -2056,9 +2101,11 @@ class ProjectService  {
         if(!dataSet.dataCollectionOngoing) {
             dataSet.dataCollectionOngoing = false
         }
+        dataSet.lastUpdated = DateUtils.formatAsISOStringNoMillis(new Date())
 
         if (!dataSet.dataSetId) {
             dataSet.dataSetId = UUID.randomUUID().toString()
+            dataSet.dateCreated = DateUtils.formatAsISOStringNoMillis(new Date())
             project.custom.dataSets << dataSet
         }
         else {
@@ -2094,5 +2141,70 @@ class ProjectService  {
 
     List fetchDataSetRecords (String projectId, String dataSetId) {
         webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + "project/$projectId/dataSet/$dataSetId/records")
+    }
+
+    /**
+     * Updates all of the data set summaries for the supplied data set ids with the supplied properties.
+     * @param dataSetIds
+     * @param properties
+     * @return
+     */
+    Map bulkUpdateDataSetSummaries(String projectId, String reportId, List dataSetIds, Map properties) {
+        boolean dirty = false
+        List errors = []
+        Map project = get(projectId)
+        dataSetIds?.each { String dataSetId ->
+
+            Map dataSet = project.custom?.dataSets?.find{it.dataSetId == dataSetId}
+            if (dataSet) {
+                // Associate the data set with the report
+                if (!dataSet.reportId) {
+                    dataSet.reportId = reportId
+                    dirty = true
+                }
+                else if (dataSet.reportId != reportId) {
+                    Map report = project.reports?.find({it.reportId == dataSet.reportId})
+                    String reportLabel = report?.name ?: dataSet.reportId
+                    errors << "Data set ${dataSet.name} is already associated with report ${reportLabel}" +
+                            "Datasets can only be selected once into all outputs reports, please ensure that you have" +
+                            " selected the correct dataset before attempting to save the report again. " +
+                            "If you have selected the wrong dataset into another report, you will need to remove it" +
+                            " from that report before you can select it into this report. " +
+                            "If the problem persists, please contact support."
+                    return
+                }
+
+                properties.each { String key, value ->
+                    if (dataSet[key] != value) {
+                        dataSet[key] = value
+                        dirty = true
+                    }
+                }
+            }
+            else {
+                errors << "Report ${reportId} references data set ${dataSetId} which does not exist in project ${projectId}"
+            }
+        }
+        // Disassociate any data sets that were removed from the report
+        project.custom?.dataSets.findAll { Map dataSet ->
+            dataSet.reportId == reportId && !(dataSet.dataSetId in dataSetIds)
+        }.each {
+            it.reportId = null
+            it.publicationStatus = null
+            dirty = true
+        }
+
+        Map result = [:]
+        if (dirty) {
+            // Save the changes to the data sets
+            result = updateUnchecked(project.projectId, [custom: project.custom])
+            if (result?.error) {
+                errors << result.error
+            }
+        }
+        if (errors) {
+            result.error = errors.join("\n")
+        }
+        result
     }
 }

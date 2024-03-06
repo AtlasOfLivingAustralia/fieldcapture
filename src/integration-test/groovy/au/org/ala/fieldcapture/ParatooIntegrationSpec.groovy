@@ -63,7 +63,7 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
                         ],
                         surveyType: 'soil-pit-characterisation-full',
                         time      : '2023-08-28T00:34:13.100Z',
-                        randNum   : 46390249
+                        uuid   : "123-123-123-123-123"
                 ]
         ]
         Map collectionPayload = [
