@@ -82,7 +82,7 @@
 
 
     <g:render template="/project/meriPlan/monitoringIndicators"
-              model="${[monitoringValidation:true, extendedMonitoring:true,indictorSelectorExpression:'$root.monitoringIndicators(code)', addIndictorExpression:'function() {$root.addMonitoringIndicator(this)}', removeIndictorExpression:'$root.removeMonitoringIndicator']}"/>
+              model="${[monitoringValidation:true, extendedMonitoring:true,indictorSelectorExpression:'$root.monitoringIndicators(code)', addIndictorExpression:'function() {$root.addMonitoringIndicator(this)}', removeIndictorExpression:'$root.removeMonitoringIndicator', numberOfMandatoryRows:0]}"/>
 
 </td>
 </tr>

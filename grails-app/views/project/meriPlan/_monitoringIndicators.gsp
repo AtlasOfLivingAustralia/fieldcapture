@@ -83,7 +83,7 @@
                     <td class="baseline-method"> <textarea class="form-control form-control-sm" data-bind="value: data2, disable: $root.isProjectDetailsLocked()" rows="5" placeholder="${approachPlaceHolder}"></textarea> </td>
                 </g:else>
                 <td class="remove">
-                    <span data-bind="if: $index() && !$root.isProjectDetailsLocked()"><i class="fa fa-remove" data-bind="click: ${removeIndictorExpression?:'$root.removeObjectives'}"></i></span>
+                    <span data-bind="if: $index() >= ${numberOfMandatoryRows != null ? numberOfMandatoryRows : 1} && !$root.isProjectDetailsLocked()"><i class="fa fa-remove" data-bind="click: ${removeIndictorExpression?:'$root.removeObjectives'}"></i></span>
                 </td>
             </tr>
             </tbody>
