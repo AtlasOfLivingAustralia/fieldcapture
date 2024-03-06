@@ -4,6 +4,7 @@ package au.org.ala.merit
 import au.org.ala.merit.command.Reef2050PlanActionReportCommand
 import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
 import grails.converters.JSON
+import org.apache.http.HttpStatus
 import org.joda.time.DateTime
 import org.joda.time.Interval
 import org.joda.time.Period
@@ -19,6 +20,11 @@ class ReportController {
     static defaultAction = "dashboard"
 
     def loadReport() {
+        if (!params.report) {
+            render status: HttpStatus.SC_BAD_REQUEST
+            return
+        }
+
         forward action: params.report+'Report', params:params
     }
 
