@@ -2083,6 +2083,7 @@
               {
                 "dataType": "text",
                 "name": "eventType",
+                "description": "Type of engagement events are training/workshops, on-ground trials/demonstrations and field days. Note field days should be reported as an event e.g, 3 field days is considered 1 event NOT 3 days",
                 "constraints": [
                   "Field days",
                   "On-ground trials / demonstrations facilitated or hosted",
@@ -2093,7 +2094,8 @@
               {
                 "dataType": "number",
                 "name": "numberOfEvents",
-                "validate": "required"
+                "validate": "required",
+                "description": "This field can contribute to Number of the engagement event types: <li>training/workshops,</li> <li>on-ground trials/demonstrations and</li> <li>field days</li>"
               },
               {
                 "dataType": "number",
@@ -2329,7 +2331,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total number of engagement activities held/attended",
+                        "preLabel": "(i) Total number of events held/attended",
                         "source": "totalNumberEngagementHeld",
                         "type": "number"
                       }
@@ -2345,7 +2347,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total number of engagement activities <u><i>invoiced</i></u> for this reporting period",
+                        "preLabel": "(ii) Total number of events <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalNumberEngagementHeldInvoiced",
                         "type": "number"
                       }
@@ -2427,14 +2429,26 @@
                 "columns": [
                   {
                     "width": "10%",
+                    "source": "dateFrom",
+                    "title": "Date from",
+                    "type": "date"
+                  },
+                  {
+                    "width": "10%",
+                    "source": "dateTo",
+                    "title": "Date to",
+                    "type": "date"
+                  },
+                  {
+                    "width": "10%",
                     "source": "eventType",
                     "title": "Type of Community / Stakeholder engagement activity",
-                    "type": "select2"
+                    "type": "selectOne"
                   },
                   {
                     "width": "10%",
                     "source": "numberOfEvents",
-                    "title": "Number of engagement activities",
+                    "title": "Number of engagement events",
                     "type": "number"
                   },
                   {
@@ -2472,18 +2486,6 @@
                     "source": "industryType",
                     "title": "Industry type engaged",
                     "type": "select2Many"
-                  },
-                  {
-                    "width": "10%",
-                    "source": "dateFrom",
-                    "title": "Date from",
-                    "type": "date"
-                  },
-                  {
-                    "width": "10%",
-                    "source": "dateTo",
-                    "title": "Date to",
-                    "type": "date"
                   }
                 ],
                 "userAddedRows": true,
