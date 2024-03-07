@@ -21027,19 +21027,6 @@
                     "name": "pestAnimalSurveySpeciesTable"
                   },
                   {
-                    "dataType": "text",
-                    "name": "baselineOrIndicatorSurvey",
-                    "description": "",
-                    "constraints": [
-                      "Baseline",
-                      "Indicator"
-                    ],
-                    "validate": "required",
-                    "computed": {
-                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); baselineIndicatorMapping.lookupValue(x.type)"
-                    }
-                  },
-                  {
                     "name": "projectBaselines",
                     "dataType": "stringList",
                     "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
@@ -28776,19 +28763,6 @@
                     ]
                   },
                   {
-                    "dataType": "text",
-                    "name": "baselineOrIndicatorSurvey",
-                    "description": "",
-                    "constraints": [
-                      "Baseline",
-                      "Indicator"
-                    ],
-                    "validate": "required",
-                    "computed": {
-                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); baselineIndicatorMapping.lookupValue(x.type)"
-                    }
-                  },
-                  {
                     "name": "projectBaselines",
                     "dataType": "stringList",
                     "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
@@ -30419,7 +30393,7 @@
                 "addRowText": "Add survey",
                 "removeRowText": "Delete this survey",
                 "userAddedRows": true,
-                "source": "soilSurveys",
+                  "source": "soilSurveys",
                 "type": "repeat",
                 "items": [
                   {
@@ -32049,19 +32023,6 @@
                     ]
                   },
                   {
-                    "dataType": "text",
-                    "name": "baselineOrIndicatorSurvey",
-                    "description": "",
-                    "constraints": [
-                      "Baseline",
-                      "Indicator"
-                    ],
-                    "validate": "required",
-                    "computed": {
-                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); baselineIndicatorMapping.lookupValue(x.type)"
-                    }
-                  },
-                  {
                     "name": "projectBaselines",
                     "dataType": "stringList",
                     "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
@@ -33243,19 +33204,6 @@
                     ],
                     "dataType": "list",
                     "name": "weedSurveySpeciesTable"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "baselineOrIndicatorSurvey",
-                    "description": "",
-                    "constraints": [
-                      "Baseline",
-                      "Indicator"
-                    ],
-                    "validate": "required",
-                    "computed": {
-                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); baselineIndicatorMapping.lookupValue(x.type)"
-                    }
                   },
                   {
                     "name": "projectBaselines",
