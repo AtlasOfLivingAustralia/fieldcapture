@@ -867,7 +867,7 @@
                     "validate": "required",
                     "constraints": {
                       "textProperty": "baseline",
-                      "valueProperty": "baseline",
+                      "valueProperty": "code",
                       "type": "pre-populated",
                       "excludePath": "baselineDetailsControlled.baselineDetails.projectBaseline",
                       "config": {
@@ -879,22 +879,12 @@
                   },
                   {
                     "name": "monitoringIndicator",
-                    "dataType": "text",
+                    "dataType": "stringList",
                     "description": "",
-                    "validate": "required",
-                    "constraints": {
-                      "textProperty": "data1",
-                      "valueProperty": "data1",
-                      "type": "pre-populated",
-                      "config": {
-                        "source": {
-                          "context-path": "owner.custom.details.monitoring.rows"
-                        },
-                        "filter": {
-                          "namespace": "monitoringIndicator",
-                          "expression": "monitoringIndicator.relatedBaseline == projectBaseline"
-                        }
-                      }
+
+
+                    "computed": {
+                      "expression": "if(projectBaseline, x=pluck(findAll($context.owner.custom.details.monitoring.rows, \"relatedBaseline\", projectBaseline), \"data1\", \"No monitoring indicators associated with this baseline\"), '')"
                     }
                   },
                   {
@@ -1261,7 +1251,7 @@
                   },
                   {
                     "source": "monitoringIndicator",
-                    "type": "selectOne",
+                    "type": "selectMany",
                     "width": "20%",
                     "title": "What monitoring indicator does the baseline support?"
                   },
