@@ -2698,7 +2698,16 @@
                     "name": "areaProtectedHa",
                     "units": "ha"
                   },
-
+                  {
+                    "defaultValue": {
+                      "expression": "$geom.lengthKm(protectedSites)",
+                      "type": "computed"
+                    },
+                    "dataType": "number",
+                    "name": "lengthProtectedKm",
+                    "units": "km",
+                    "decimalPlaces": 3
+                  },
                   {
                     "dataType": "text",
                     "name": "accessControlType",
@@ -3429,6 +3438,19 @@
                             }
                           }
                         ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "readonly": true,
+                            "source": "lengthProtectedKm",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
                       }
                     ]
                   },
@@ -3439,7 +3461,7 @@
                     "items": [
                       {
                         "source": "accessControlType",
-                        "type": "select2"
+                        "type": "selectOne"
                       },
                       {
                         "source": "otherAccessControlType",
