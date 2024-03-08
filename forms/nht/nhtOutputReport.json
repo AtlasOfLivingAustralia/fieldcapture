@@ -16500,6 +16500,12 @@
                     "name": "assessedSitesName",
                     "description": "",
                     "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "outcomesAchievement",
+                    "description": "",
+                    "validate": "required,maxSize[300]"
                   }
                 ],
                 "dataType": "list",
@@ -16707,7 +16713,7 @@
                 ]
               },
               {
-                "addRowText": "New survey site",
+                "addRowText": "Add a new site",
                 "userAddedRows": true,
                 "source": "potentialSiteSurveys",
                 "type": "repeat",
@@ -16758,7 +16764,7 @@
                               {
                                 "source": "relatedOutcomes",
                                 "type": "selectOne",
-                                "preLabel": "Which outcome statement/s relates to this survey?"
+                                "preLabel": "Which outcome statement/s relates to this activity?"
                               }
                             ]
                           }
@@ -16785,7 +16791,7 @@
                   {
                     "columns": [
                       {
-                        "width": "25%",
+                        "width": "20%",
                         "title": "Identified and prioritised site",
                         "type": "col",
                         "items": [
@@ -16822,7 +16828,13 @@
                         ]
                       },
                       {
-                        "width": "25%",
+                        "width": "20%",
+                        "source": "identifiedSitesName",
+                        "title": "Name of identified and prioritised site",
+                        "type": "text"
+                      },
+                      {
+                        "width": "20%",
                         "type": "col",
                         "title": "Assessed site",
                         "helpText": "",
@@ -16865,16 +16877,16 @@
                         ]
                       },
                       {
-                        "width": "25%",
-                        "source": "identifiedSitesName",
-                        "title": "Name of identified and prioritised site",
-                        "type": "text"
-                      },
-                      {
-                        "width": "25%",
+                        "width": "20%",
                         "source": "assessedSitesName",
                         "title": "Name of assessed site",
                         "type": "text"
+                      },
+                      {
+                        "width": "20%",
+                        "source": "outcomesAchievement",
+                        "title": "How do they contribute to the achievement of the outcome statement/s?",
+                        "type": "textarea"
                       }
                     ],
                     "userAddedRows": true,
