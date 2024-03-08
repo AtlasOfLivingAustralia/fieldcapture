@@ -12011,12 +12011,6 @@
               },
               {
                 "dataType": "number",
-                "name": "noDaysConductingCulturalPracticesInvoiced",
-                "description": "",
-                "validate": "required"
-              },
-              {
-                "dataType": "number",
                 "name": "noOfParticipants",
                 "description": "",
                 "validate": "required"
@@ -12217,7 +12211,7 @@
                     "dataType": "text",
                     "name": "activityDescription",
                     "description": "",
-                    "validate": "required,maxSize[300]"
+                    "validate": "maxSize[300]"
                   },
                   {
                     "dataType": "text",
@@ -12492,22 +12486,6 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Number of days conducting cultural practices invoiced for",
-                            "source": "noDaysConductingCulturalPracticesInvoiced",
-                            "type": "number"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "col",
-                    "css": "span3 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
                             "preLabel": "Number of participants",
                             "source": "noOfParticipants",
                             "type": "number"
@@ -12524,41 +12502,9 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Number of first nations participants",
+                            "preLabel": "Number of First Nations participants",
                             "source": "noOfFirstNationsParticipants",
                             "type": "number"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "col",
-                    "css": "span3 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Activity start date",
-                            "source": "activitiesStartDate",
-                            "type": "date"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "col",
-                    "css": "span3 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Activity end date",
-                            "source": "activitiesEndDate",
-                            "type": "date"
                           }
                         ]
                       }
@@ -12725,25 +12671,71 @@
                         ]
                       }
                     ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Activity start date",
+                            "source": "activitiesStartDate",
+                            "type": "date"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Activity end date",
+                            "source": "activitiesEndDate",
+                            "type": "date"
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               },
               {
                 "columns": [
                   {
-                    "width": "10%",
-                    "source": "activityTypeUndertaken",
+                    "width": "15%",
                     "title": "Type of activity undertaken",
-                    "type": "selectOne"
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "activityTypeUndertaken",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "otherActivityTypeUndertaken",
+                            "title": "Type of activity (if other)",
+                            "type": "textarea"
+                          }
+                        ]
+                      }
+                    ]
                   },
                   {
-                    "width": "10%",
-                    "source": "otherActivityTypeUndertaken",
-                    "title": "Type of activity(If other)",
-                    "type": "selectOne"
-                  },
-                  {
-                    "width": "10%",
+                    "width": "15%",
                     "source": "purposeOfActivity",
                     "title": "Purpose of activity",
                     "type": "textarea"
