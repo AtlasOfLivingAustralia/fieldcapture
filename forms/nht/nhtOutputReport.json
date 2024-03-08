@@ -6934,7 +6934,7 @@
                 "dataType": "text",
                 "name": "newOrMaintained",
                 "constraints": [
-                  "Newly established",
+                  "Initial",
                   "Maintained"
                 ],
                 "validate": "required"
@@ -6948,12 +6948,13 @@
                 "dataType": "number",
                 "name": "daysSpentOnMaintenanceOfEnclosures",
                 "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days).",
-                "validate": "min[0]"
+                "validate": "required, min[0]"
               },
               {
                 "dataType": "feature",
                 "name": "sitesOfPestAnimalFreeEnclosure",
-                "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                "description": "Mapping field to be done and area (ha) field be auto-calculated from mapping.",
+                "validate": "required"
               },
               {
                 "computed": {
@@ -7005,7 +7006,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -7028,7 +7029,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -7138,7 +7139,7 @@
             "decimalPlaces": 0,
             "defaultValue": 0,
             "computed": {
-              "expression": "sum(enclosureDetails, \"newOrMaintained == 'Newly established' ? numberOfPestFreeEnclosures : 0\")"
+              "expression": "sum(enclosureDetails, \"newOrMaintained == 'Initial' ? numberOfPestFreeEnclosures : 0\")"
             }
           },
           {
@@ -7233,7 +7234,7 @@
             "decimalPlaces": 3,
             "defaultValue": 0,
             "computed": {
-              "expression": "sum(enclosureDetails, \"newOrMaintained == 'Newly established' ? areaTreatedHa : 0\")"
+              "expression": "sum(enclosureDetails, \"newOrMaintained == 'Initial' ? areaTreatedHa : 0\")"
             }
           },
           {
@@ -7260,46 +7261,13 @@
             ]
           },
           {
-            "dataType": "number",
-            "name": "totalAreaPestFreeSurveyMaintained",
-            "validate": "min[0]",
-            "decimalPlaces": 3,
-            "defaultValue": 0,
-            "computed": {
-              "expression": "sum(enclosureDetails, \"newOrMaintained == 'Maintained' ? areaTreatedHa : 0\")"
-            }
-          },
-          {
-            "dataType": "number",
-            "name": "totalAreaPestFreeSurveyMaintainedInvoiced",
-            "decimalPlaces": 3,
-            "defaultValue": "",
-            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
-            "validate": [
-              {
-                "rule": "required"
-              },
-              {
-                "rule": "min[0]"
-              },
-              {
-                "param": {
-                  "expression": "totalAreaPestFreeSurveyMaintained",
-                  "type": "computed",
-                  "decimalPlaces": 3
-                },
-                "rule": "max"
-              }
-            ]
-          },
-          {
             "dataType": "text",
             "name": "totalInvoicedPestFreeMismatched",
             "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalNoPestFreeSurveyEstablishedInvoiced < totalNoPestFreeSurveyEstablished or totalNoPestFreeSurveyMaintainedInvoiced < totalNoPestFreeSurveyMaintained or totalNoDaysMaintainingPestFreeInvoiced < totalNoDaysMaintainingPestFree or totalAreaPestFreeSurveyInitialInvoiced < totalAreaPestFreeSurveyInitial or totalAreaPestFreeSurveyMaintainedInvoiced < totalAreaPestFreeSurveyMaintained",
+                "condition": "totalNoPestFreeSurveyEstablishedInvoiced < totalNoPestFreeSurveyEstablished or totalNoPestFreeSurveyMaintainedInvoiced < totalNoPestFreeSurveyMaintained or totalNoDaysMaintainingPestFreeInvoiced < totalNoDaysMaintainingPestFree or totalAreaPestFreeSurveyInitialInvoiced < totalAreaPestFreeSurveyInitial",
                 "type": "enable"
               }
             ]
@@ -7420,7 +7388,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i)  Total number of pest animal-free enclosures (newly established) for this reporting period",
+                        "preLabel": "(i)  Total number of pest animal-free enclosures (initial) for this reporting period",
                         "source": "totalNoPestFreeSurveyEstablished",
                         "type": "number"
                       }
@@ -7430,7 +7398,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total number of pest animal-free enclosures (newly established) <u><i>invoiced</i></u> for this reporting period",
+                        "preLabel": "(ii) Total number of pest animal-free enclosures (initial) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalNoPestFreeSurveyEstablishedInvoiced",
                         "type": "number",
                         "readonly": false
@@ -7500,7 +7468,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vii) Total area (ha) of pest animal-free enclosures (newly established) for this reporting period",
+                        "preLabel": "(vii) Total area (ha) of pest animal-free enclosures (initial) for this reporting period",
                         "source": "totalAreaPestFreeSurveyInitial",
                         "type": "number"
                       }
@@ -7510,37 +7478,8 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(viii) Total area (ha) of pest animal-free enclosures (newly established) <u><i>invoiced</i></u> for this reporting period",
+                        "preLabel": "(viii) Total area (ha) of pest animal-free enclosures (initial) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalAreaPestFreeSurveyInitialInvoiced",
-                        "type": "number",
-                        "displayOptions": {
-                          "removeTrailingZeros": false
-                        }
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "col",
-                "css": "span4 col-border-right",
-                "items": [
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(ix) Total area (ha) of pest animal-free enclosures (maintained) for this reporting period",
-                        "source": "totalAreaPestFreeSurveyMaintained",
-                        "type": "number"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(x) Total area (ha) of pest animal-free enclosures (maintained) <u><i>invoiced</i></u> for this reporting period",
-                        "source": "totalAreaPestFreeSurveyMaintainedInvoiced",
                         "type": "number",
                         "displayOptions": {
                           "removeTrailingZeros": false
@@ -7631,7 +7570,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "Newly established or maintained feral free enclosure?",
+                        "preLabel": "Initial or maintained feral free enclosure?",
                         "css": "span3",
                         "source": "newOrMaintained",
                         "type": "selectOne"
@@ -7661,7 +7600,7 @@
                             "type": "row",
                             "items": [
                               {
-                                "preLabel": "Site/s (ha) of pest animal-free enclosure",
+                                "preLabel": "Site/s of pest animal-free enclosure",
                                 "source": "sitesOfPestAnimalFreeEnclosure",
                                 "type": "feature"
                               }
@@ -7672,19 +7611,6 @@
                             "items": [
                               {
                                 "source": "calculatedAreaTreatedHa",
-                                "type": "number",
-                                "displayOptions": {
-                                  "displayUnits": true
-                                },
-                                "readonly": "readonly"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "calculatedLengthTreatedKm",
                                 "type": "number",
                                 "displayOptions": {
                                   "displayUnits": true
@@ -7713,20 +7639,8 @@
                             "type": "row",
                             "items": [
                               {
-                                "preLabel": "Actual area (ha) / length (km) of pest animal-free enclosure",
+                                "preLabel": "Actual area (ha) of pest animal-free enclosure",
                                 "source": "areaTreatedHa",
-                                "type": "number",
-                                "displayOptions": {
-                                  "displayUnits": true
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "lengthTreatedKm",
                                 "type": "number",
                                 "displayOptions": {
                                   "displayUnits": true
