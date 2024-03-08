@@ -9071,7 +9071,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -9094,7 +9094,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -9460,7 +9460,7 @@
             "type": "section",
             "items": [
               {
-                "addRowText": "Add a new controlled area",
+                "addRowText": "Add a new agreement",
                 "userAddedRows": true,
                 "source": "conservationAgreementsControlled",
                 "type": "repeat",
@@ -9559,19 +9559,6 @@
                             "type": "row",
                             "items": [
                               {
-                                "source": "calculatedLengthTreatedKm",
-                                "type": "number",
-                                "displayOptions": {
-                                  "displayUnits": true
-                                },
-                                "readonly": "readonly"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
                                 "preLabel": "Please attach mapping details",
                                 "source": "extraMappingDetails",
                                 "type": "document"
@@ -9588,20 +9575,8 @@
                             "type": "row",
                             "items": [
                               {
-                                "preLabel": "Actual area (ha) / length (km) of site/s agreements",
+                                "preLabel": "Actual area (ha) of site/s agreements",
                                 "source": "areaTreatedHa",
-                                "type": "number",
-                                "displayOptions": {
-                                  "displayUnits": true
-                                }
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "lengthTreatedKm",
                                 "type": "number",
                                 "displayOptions": {
                                   "displayUnits": true
@@ -9646,7 +9621,7 @@
                             "items": [
                               {
                                 "source": "agreementType",
-                                "type": "select2"
+                                "type": "selectOne"
                               }
                             ]
                           },
@@ -9702,7 +9677,7 @@
                             "items": [
                               {
                                 "source": "implementationType",
-                                "type": "select2"
+                                "type": "selectOne"
                               }
                             ]
                           },
