@@ -14248,7 +14248,7 @@
                     "behaviour": [
                       {
                         "condition": "habitatAugmentationType == \"Other\"",
-                        "type": "visible"
+                        "type": "enable"
                       }
                     ],
                     "validate": "required,maxSize[100]"
@@ -14258,24 +14258,6 @@
                     "name": "habitatAugmentationObjective",
                     "description": "",
                     "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "dataType": "feature",
-                    "name": "sitesBenefittedByHabitatAugmentation"
-                  },
-                  {
-                    "computed": {
-                      "expression": "$geom.areaHa(sitesBenefittedByHabitatAugmentation)"
-                    },
-                    "dataType": "number",
-                    "name": "areaBenefittedByHabitatAugmentationHa",
-                    "units": "ha",
-                    "decimalPlaces": 3
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "evidenceOfBenefit",
-                    "validate": "maxSize[300]"
                   }
                 ],
                 "dataType": "list",
@@ -14703,7 +14685,7 @@
             ]
           },
           {
-            "addRowText": "Add a new controlled area",
+            "addRowText": "Add a new area",
             "userAddedRows": true,
             "source": "habitatAugmentationAreas",
             "type": "repeat",
@@ -14914,16 +14896,16 @@
                     "title": "Activity start date",
                     "source": "activitiesStartDate",
                     "type": "date",
-                    "width": "10%"
+                    "width": "20%"
                   },
                   {
                     "title": "Activity end date",
                     "source": "activitiesEndDate",
                     "type": "date",
-                    "width": "10%"
+                    "width": "20%"
                   },
                   {
-                    "width": "20%",
+                    "width": "25%",
                     "title": "Type of habitat augmentation / installed",
                     "type": "col",
                     "items": [
@@ -14948,34 +14930,9 @@
                     ]
                   },
                   {
-                    "width": "25%",
+                    "width": "35%",
                     "source": "habitatAugmentationObjective",
                     "title": "Purpose of habitat augmentation",
-                    "type": "textarea"
-                  },
-                  {
-                    "width": "15%",
-                    "title": "Please map any off-site area/s if they benefitted from this habitat augmentation",
-                    "type": "col",
-                    "items": [
-                      {
-                        "source": "sitesBenefittedByHabitatAugmentation",
-                        "type": "feature"
-                      },
-                      {
-                        "source": "areaBenefittedByHabitatAugmentationHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        },
-                        "readonly": "readonly"
-                      }
-                    ]
-                  },
-                  {
-                    "width": "20%",
-                    "source": "evidenceOfBenefit",
-                    "title": "If off-site area was mapped please provide a description on the evidence available to reflect this benefit",
                     "type": "textarea"
                   }
                 ],
