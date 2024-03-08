@@ -3156,8 +3156,8 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iii) Total length (km) of structures installed that control access for this reporting period",
-                        "source": "totalLengthStructuresInstalled",
+                        "preLabel": "(iii) Total area (ha) of structures installed that control access for this reporting period",
+                        "source": "totalAreaStructuresInstalled",
                         "type": "number"
                       }
                     ]
@@ -3166,8 +3166,8 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iv) Total length (km) of structures installed that control access <u><i>invoiced</i></u> for this reporting period",
-                        "source": "totalLengthStructuresInstalledInvoiced",
+                        "preLabel": "(iv) Total area (ha) of structures installed that control access <u><i>invoiced</i></u> for this reporting period",
+                        "source": "totalAreaStructuresInstalledInvoiced",
                         "type": "number",
                         "displayOptions": {
                           "removeTrailingZeros": false
@@ -3185,8 +3185,8 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(v) Total area (ha) of structures installed that control access for this reporting period",
-                        "source": "totalAreaStructuresInstalled",
+                        "preLabel": "(v) Total length (km) of structures installed that control access for this reporting period",
+                        "source": "totalLengthStructuresInstalled",
                         "type": "number"
                       }
                     ]
@@ -3195,8 +3195,8 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vi) Total area (ha) of structures installed that control access <u><i>invoiced</i></u> for this reporting period",
-                        "source": "totalAreaStructuresInstalledInvoiced",
+                        "preLabel": "(vi) Total length (km) of structures installed that control access <u><i>invoiced</i></u> for this reporting period",
+                        "source": "totalLengthStructuresInstalledInvoiced",
                         "type": "number",
                         "displayOptions": {
                           "removeTrailingZeros": false
@@ -4163,7 +4163,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total area (ha) treated for pest animals for this reporting period (initial)",
+                        "preLabel": "(i) Total area (ha) treated for pest animals (initial) for this reporting period",
                         "source": "totalAreaPestAnimalsTreatedInitial",
                         "type": "number"
                       }
@@ -4173,7 +4173,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total area (ha) treated for pest animals <u><i>invoiced</i></u> for this reporting period (initial)",
+                        "preLabel": "(ii) Total area (ha) treated for pest animals (initial) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalAreaPestAnimalsTreatedInitialInvoiced",
                         "type": "number",
                         "displayOptions": {
@@ -4192,7 +4192,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iii) Total area (ha) treated for pest animals for this reporting period (follow up)",
+                        "preLabel": "(iii) Total area (ha) treated for pest animals (follow up) for this reporting period",
                         "source": "totalAreaPestAnimalsTreatedFollowUp",
                         "type": "number"
                       }
@@ -4202,7 +4202,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iv) Total area (ha) treated for pest animals <u><i>invoiced</i></u> for this reporting period (follow up)",
+                        "preLabel": "(iv) Total area (ha) treated for pest animals (follow up) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalAreaPestAnimalsTreatedFollowUpInvoiced",
                         "type": "number",
                         "displayOptions": {
@@ -4221,7 +4221,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(v) Total length (km) treated for pest animals for this reporting period (initial)",
+                        "preLabel": "(v) Total length (km) treated for pest animals (initial) for this reporting period",
                         "source": "totalLengthPestAnimalsTreatedInitial",
                         "type": "number"
                       }
@@ -4231,7 +4231,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vi) Total length (km) treated for pest animals <u><i>invoiced</i></u> for this reporting period (initial)",
+                        "preLabel": "(vi) Total length (km) treated for pest animals (initial) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalLengthPestAnimalsTreatedInitialInvoiced",
                         "type": "number",
                         "displayOptions": {
@@ -4250,7 +4250,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vii) Total length (km) treated for pest animals for this reporting period (follow up)",
+                        "preLabel": "(vii) Total length (km) treated for pest animals (follow up) for this reporting period",
                         "source": "totalLengthPestAnimalsTreatedFollowUp",
                         "type": "number"
                       }
@@ -4260,7 +4260,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(viii) Total length (km) treated for pest animals <u><i>invoiced</i></u> for this reporting period (follow up)",
+                        "preLabel": "(viii) Total length (km) treated for pest animals (follow up) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalLengthPestAnimalsTreatedFollowUpInvoiced",
                         "type": "number",
                         "displayOptions": {
@@ -5206,7 +5206,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total area (ha) of debris removal <b><u>invoiced</b></u> (initial) for this reporting period",
+                        "preLabel": "(ii) Total area (ha) of debris removal (initial) <b><u>invoiced</b></u> for this reporting period",
                         "source": "totalAreaDebrisRemovedInitialInvoiced",
                         "type": "number",
                         "displayOptions": {
@@ -5235,7 +5235,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iv) Total area (ha) of debris removal <b><u>invoiced</b></u> (follow up) for this reporting period",
+                        "preLabel": "(iv) Total area (ha) of debris removal (follow up) <b><u>invoiced</b></u> for this reporting period",
                         "source": "totalAreaDebrisRemovedInvoicedFollowup",
                         "type": "number",
                         "displayOptions": {
@@ -5264,7 +5264,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vi) Total length (km) of debris removal <b><u>invoiced</b></u> (initial) for this reporting period",
+                        "preLabel": "(vi) Total length (km) of debris removal (initial) <b><u>invoiced</b></u> for this reporting period",
                         "source": "totalLengthDebrisRemovedInvoicedInitial",
                         "type": "number",
                         "displayOptions": {
@@ -5293,7 +5293,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(viii) Total length (km) of debris removal <b><u>invoiced</b></u> (follow up) for this reporting period",
+                        "preLabel": "(viii) Total length (km) of debris removal (follow up) <b><u>invoiced</b></u> for this reporting period",
                         "source": "totalLengthDebrisRemovedInvoicedFollowup",
                         "type": "number",
                         "displayOptions": {
@@ -8933,7 +8933,7 @@
               {
                 "dataType": "feature",
                 "name": "sitesAgreementsEstablished",
-                "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                "description": "Mapping field to be done and Area (ha) field be auto-calculated from mapping."
               },
               {
                 "computed": {
@@ -16831,7 +16831,7 @@
                         "width": "20%",
                         "source": "identifiedSitesName",
                         "title": "Name of identified and prioritised site",
-                        "type": "text"
+                        "type": "textarea"
                       },
                       {
                         "width": "20%",
@@ -18404,7 +18404,7 @@
             ]
           },
           {
-            "addRowText": "Add a new controlled area",
+            "addRowText": "Add a new area",
             "userAddedRows": true,
             "source": "hydroAreasControlled",
             "type": "repeat",
@@ -18909,7 +18909,7 @@
               {
                 "dataType": "feature",
                 "name": "sitesCoveredByPracticeChange",
-                "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                "description": "Mapping field to be done and Area (ha) field be auto-calculated from mapping."
               },
               {
                 "computed": {
@@ -18961,7 +18961,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -18984,7 +18984,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -19054,28 +19054,13 @@
                     "name": "offSiteBenefitSites"
                   },
                   {
-                    "defaultValue": {
-                      "expression": "$geom.areaHa(offSiteBenefitSites)",
-                      "type": "computed"
+                    "computed": {
+                      "expression": "$geom.areaHa(offSiteBenefitSites)"
                     },
                     "dataType": "number",
-                    "name": "offSiteBenefitAreaHa",
-                    "validate": [
-                      {
-                        "param": {
-                          "expression": "$geom.areaHa(offSiteBenefitSites)*0.9",
-                          "type": "computed"
-                        },
-                        "rule": "min"
-                      },
-                      {
-                        "param": {
-                          "expression": "$geom.areaHa(offSiteBenefitSites)*1.1",
-                          "type": "computed"
-                        },
-                        "rule": "max"
-                      }
-                    ]
+                    "name": "offSiteBenefitAreaHa2",
+                    "units": "ha",
+                    "decimalPlaces": 3
                   },
                   {
                     "dataType": "text",
@@ -19252,7 +19237,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total area (ha) covered by practice change during this reporting period (initial)",
+                        "preLabel": "(i) Total area (ha) covered by practice change (initial) during this reporting period",
                         "source": "totalAreaPracticeChangeInitial",
                         "type": "number"
                       }
@@ -19262,7 +19247,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total area (ha) covered by practice change <u><i>invoiced</i></u> for during this reporting period (initial)",
+                        "preLabel": "(ii) Total area (ha) covered by practice change (initial) <u><i>invoiced</i></u> for during this reporting period",
                         "source": "totalAreaPracticeChangeInitialInvoiced",
                         "type": "number",
                         "displayOptions": {
@@ -19281,7 +19266,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iii) Total area (ha) covered by practice change during this reporting period (follow up)",
+                        "preLabel": "(iii) Total area (ha) covered by practice change (follow up) during this reporting period",
                         "source": "totalAreaPracticeChangeFollowup",
                         "type": "number"
                       }
@@ -19291,7 +19276,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iv) Total area (ha) covered by practice change <u><i>invoiced</i></u> for during this reporting period (follow up)",
+                        "preLabel": "(iv) Total area (ha) covered by practice change (follow up) <u><i>invoiced</i></u> for during this reporting period",
                         "source": "totalAreaPracticeChangeInvoicedFollowup",
                         "type": "number",
                         "displayOptions": {
@@ -19317,7 +19302,7 @@
             ]
           },
           {
-            "addRowText": "Add a new controlled area",
+            "addRowText": "Add a new area",
             "userAddedRows": true,
             "source": "landManagementAreasControlled",
             "type": "repeat",
@@ -19416,19 +19401,6 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "calculatedLengthTreatedKm",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            },
-                            "readonly": "readonly"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
                             "preLabel": "Please attach mapping details",
                             "source": "extraMappingDetails",
                             "type": "document"
@@ -19445,20 +19417,8 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Actual area (ha) / length (km) covered by practice change",
+                            "preLabel": "Actual area (ha) covered by practice change",
                             "source": "areaTreatedHa",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "lengthTreatedKm",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -19503,7 +19463,7 @@
                         "items": [
                           {
                             "source": "practiceChangeType",
-                            "type": "select2"
+                            "type": "selectOne"
                           }
                         ]
                       },
@@ -19536,15 +19496,21 @@
                         "type": "feature"
                       },
                       {
-                        "source": "offSiteBenefitAreaHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "offSiteBenefitAreaHa2",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            },
+                            "readonly": "readonly"
+                          }
+                        ]
                       },
                       {
                         "source": "evidenceOfBenefit",
-                        "placeholder": "Please provide a description on the evidence available to reflect this benefit",
+                        "placeholder": "If off-site area was mapped please provide a description on the evidence available to reflect this benefit",
                         "type": "textarea"
                       }
                     ]
@@ -19800,37 +19766,6 @@
                     "name": "treatmentObjective",
                     "description": "Please start with either part of the field heading [dash]. If reporting on both separate the information with a ';'. (eg. 'Management method -' and a brief description of method being used to fix the area; 'Treatment objective -' and a brief description of how the work will contribute to the area.",
                     "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "dataType": "feature",
-                    "name": "offSiteBenefitSites"
-                  },
-                  {
-                    "defaultValue": {
-                      "expression": "$geom.areaHa(offSiteBenefitSites)",
-                      "type": "computed"
-                    },
-                    "dataType": "number",
-                    "name": "offSiteBenefitAreaHa",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "validate": "min[0]"
-                  },
-                  {
-                    "defaultValue": {
-                      "expression": "$geom.lengthKm(offSiteBenefitSites)",
-                      "type": "computed"
-                    },
-                    "dataType": "number",
-                    "name": "offSiteBenefitLengthKm",
-                    "units": "km",
-                    "decimalPlaces": 3,
-                    "validate": "min[0]"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "evidenceOfBenefit",
-                    "validate": "maxSize[300]"
                   }
                 ],
                 "dataType": "list",
@@ -20363,7 +20298,7 @@
             ]
           },
           {
-            "addRowText": "Add a new controlled area",
+            "addRowText": "Add a new area",
             "userAddedRows": true,
             "source": "diseaseManagementAreasControlled",
             "type": "repeat",
@@ -20546,13 +20481,13 @@
               {
                 "columns": [
                   {
-                    "width": "25%",
+                    "width": "30%",
                     "source": "targetDisease",
                     "title": "Disease treated",
-                    "type": "text"
+                    "type": "textarea"
                   },
                   {
-                    "width": "25%",
+                    "width": "20%",
                     "type": "col",
                     "title": "Type of management method / treatment",
                     "items": [
@@ -20561,7 +20496,7 @@
                         "items": [
                           {
                             "source": "managementMethod",
-                            "type": "select2"
+                            "type": "selectOne"
                           }
                         ]
                       },
@@ -20573,40 +20508,10 @@
                     ]
                   },
                   {
-                    "width": "30%",
+                    "width": "50%",
                     "source": "treatmentObjective",
                     "title": "Management method / treatment objective",
                     "type": "textarea"
-                  },
-                  {
-                    "width": "20%",
-                    "type": "col",
-                    "title": "Please map any off-site area/s if they have also benefitted from this disease management",
-                    "items": [
-                      {
-                        "source": "offSiteBenefitSites",
-                        "type": "feature"
-                      },
-                      {
-                        "source": "offSiteBenefitAreaHa",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      },
-                      {
-                        "source": "offSiteBenefitLengthKm",
-                        "type": "number",
-                        "displayOptions": {
-                          "displayUnits": true
-                        }
-                      },
-                      {
-                        "source": "evidenceOfBenefit",
-                        "placeholder": "Please provide a description on the evidence available to reflect this benefit",
-                        "type": "textarea"
-                      }
-                    ]
                   }
                 ],
                 "userAddedRows": true,
