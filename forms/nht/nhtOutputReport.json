@@ -17120,7 +17120,7 @@
               {
                 "dataType": "feature",
                 "name": "sitesTreatedByFireManagement",
-                "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                "description": "Mapping field to be done and Area (ha) field be auto-calculated from mapping."
               },
               {
                 "computed": {
@@ -17245,7 +17245,9 @@
                   "expression": "$geom.areaHa(sitesBenefittedByFireAction)"
                 },
                 "dataType": "number",
-                "name": "areaBenefittedByFireActionHa"
+                "name": "areaBenefittedByFireActionHa2",
+                "units": "ha",
+                "decimalPlaces": 3
               },
               {
                 "dataType": "text",
@@ -17555,7 +17557,7 @@
             ]
           },
           {
-            "addRowText": "Add a new controlled area",
+            "addRowText": "Add a new area",
             "userAddedRows": true,
             "source": "fireManagementAreasControlled",
             "type": "repeat",
@@ -17654,19 +17656,6 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "calculatedLengthTreatedKm",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            },
-                            "readonly": "readonly"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
                             "preLabel": "Please attach mapping details",
                             "source": "extraMappingDetails",
                             "type": "document"
@@ -17683,20 +17672,8 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Actual area (ha) / length (km) treated by fire management action",
+                            "preLabel": "Actual area (ha) treated by fire management action",
                             "source": "areaTreatedHa",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "lengthTreatedKm",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -17777,12 +17754,12 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "areaBenefittedByFireActionHa",
+                            "source": "areaBenefittedByFireActionHa2",
                             "type": "number",
-                            "readonly": true,
                             "displayOptions": {
                               "displayUnits": true
-                            }
+                            },
+                            "readonly": "readonly"
                           }
                         ]
                       }
