@@ -27659,7 +27659,8 @@
                       "Fisheries",
                       "Aquaculture",
                       "Other"
-                    ]
+                    ],
+                    "validate": "required"
                   },
                   {
                     "dataType": "text",
@@ -27707,7 +27708,7 @@
                     "dataType": "text",
                     "name": "purposeOfSitePreparation",
                     "description": "Please provide a brief description of how the work will benefit the area.",
-                    "validate": "required"
+                    "validate": "required,maxSize[300]"
                   }
                 ],
                 "dataType": "list",
@@ -28025,7 +28026,7 @@
             ]
           },
           {
-            "addRowText": "Add a new controlled area",
+            "addRowText": "Add a new site",
             "userAddedRows": true,
             "source": "sitePreparationDetailsControlled",
             "type": "repeat",
@@ -28216,7 +28217,7 @@
                     "width": "20%",
                     "source": "industryType",
                     "title": "Industry type",
-                    "type": "select2"
+                    "type": "selectOne"
                   },
                   {
                     "width": "25%",
@@ -28228,7 +28229,7 @@
                         "items": [
                           {
                             "source": "actionType",
-                            "type": "select2"
+                            "type": "selectOne"
                           }
                         ]
                       },
@@ -28242,7 +28243,7 @@
                   {
                     "width": "25%",
                     "source": "purposeOfSitePreparation",
-                    "title": "Aim of site preparation",
+                    "title": "Purpose of site preparation",
                     "type": "textarea"
                   }
                 ],
