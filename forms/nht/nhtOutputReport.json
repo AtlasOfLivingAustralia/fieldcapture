@@ -30661,7 +30661,7 @@
               {
                 "dataType": "feature",
                 "name": "sitesInterventionsOccurred",
-                "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                "description": "Mapping field to be done and Area (ha) field be auto-calculated from mapping."
               },
               {
                 "computed": {
@@ -30713,7 +30713,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -30736,7 +30736,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -30755,7 +30755,7 @@
               {
                 "dataType": "feature",
                 "name": "sitesInterventionsReleased",
-                "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                "description": "Mapping field to be done and Area (ha) field be auto-calculated from mapping."
               },
               {
                 "computed": {
@@ -30807,7 +30807,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaTreatedHaReleased, calculatedAreaTreatedHaReleased, 0.1) and within(lengthTreatedKmReleased, calculatedLengthTreatedKmReleased, 0.1))",
+                    "condition": "not (within(areaTreatedHaReleased, calculatedAreaTreatedHaReleased, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -30830,7 +30830,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaTreatedHaReleased, calculatedAreaTreatedHaReleased, 0.1) and within(lengthTreatedKmReleased, calculatedLengthTreatedKmReleased, 0.1))",
+                    "condition": "not (within(areaTreatedHaReleased, calculatedAreaTreatedHaReleased, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -30877,8 +30877,7 @@
                   },
                   {
                     "dataType": "text",
-                    "name": "participationIndividualsOrGroups",
-                    "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                    "name": "groupsOrIndividual",
                     "constraints": [
                       "Individuals",
                       "Groups"
@@ -31279,19 +31278,6 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "calculatedLengthTreatedKm",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            },
-                            "readonly": "readonly"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
                             "preLabel": "Please attach mapping details",
                             "source": "extraMappingDetails",
                             "type": "document"
@@ -31308,20 +31294,8 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Actual area (ha) / length (km) where interventions occurred",
+                            "preLabel": "Actual area (ha) where interventions occurred",
                             "source": "areaTreatedHa",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "lengthTreatedKm",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -31384,19 +31358,6 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "calculatedLengthTreatedKmReleased",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            },
-                            "readonly": "readonly"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
                             "preLabel": "Please attach mapping details",
                             "source": "extraMappingDetailsReleased",
                             "type": "document"
@@ -31415,18 +31376,6 @@
                           {
                             "preLabel": "Actual area (ha) where interventions were relocated to (release site)",
                             "source": "areaTreatedHaReleased",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "lengthTreatedKmReleased",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -31481,7 +31430,7 @@
                   },
                   {
                     "width": "10%",
-                    "source": "participationIndividualsOrGroups",
+                    "source": "groupsOrIndividual",
                     "title": "Group or individual",
                     "type": "selectOne"
                   },
