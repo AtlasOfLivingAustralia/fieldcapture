@@ -25175,7 +25175,7 @@
                       {
                         "width": "15%",
                         "source": "treatmentMethod",
-                        "title": "'Type of treatment being used",
+                        "title": "Type of treatment being used",
                         "type": "selectOne"
                       },
                       {
@@ -25640,7 +25640,7 @@
                     "dataType": "text",
                     "name": "threatenedEcologicalCommunity",
                     "description": "This free text field allows multiple TECs to be entered. They should be written as listed in EPBC, and separated by ';'",
-                    "validate": "maxSize[100]"
+                    "validate": "required,maxSize[100]"
                   },
                   {
                     "dataType": "number",
@@ -25649,7 +25649,7 @@
                   },
                   {
                     "dataType": "text",
-                    "name": "revegetationObjective",
+                    "name": "revegetationActivityDescription",
                     "validate": "required,maxSize[300]"
                   }
                 ],
@@ -26100,59 +26100,6 @@
                 "type": "row",
                 "items": [
                   {
-                    "type": "col",
-                    "css": "span3 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "offSiteBenefitSites",
-                            "preLabel": "Please map any off-site area/s if they benefitted from this  revegetation activity",
-                            "type": "feature"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "css": "span3",
-                    "type": "col",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "offSiteBenefitAreaHa",
-                            "type": "number",
-                            "preLabel": "Area (ha) benefitting from revegetation activity"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "col",
-                    "css": "span3 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "evidenceOfBenefit",
-                            "preLabel": "If off-site area was mapped please provide a description on the evidence available to reflect this benefit",
-                            "type": "textarea"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
                     "css": "span3",
                     "type": "col",
                     "items": [
@@ -26177,7 +26124,7 @@
                         "items": [
                           {
                             "source": "activitiesEndDate",
-                            "preLabel": "Activity start date",
+                            "preLabel": "Activity end date",
                             "type": "date"
                           }
                         ]
@@ -26187,13 +26134,19 @@
                 ]
               },
               {
-                "addRowText": "Add a species",
+                "addRowText": "Add a row",
                 "columns": [
                   {
                     "width": "20%",
                     "source": "species",
                     "title": "Target Plant Species",
                     "type": "speciesSelect"
+                  },
+                  {
+                    "width": "10%",
+                    "source": "numberPlanted",
+                    "title": "Numbers planted",
+                    "type": "number"
                   },
                   {
                     "width": "10%",
@@ -26210,19 +26163,13 @@
                   {
                     "width": "20%",
                     "source": "threatenedEcologicalCommunity",
-                    "title": "'Threatened Ecological Communities (if applicable) benefitting from this activity",
+                    "title": "Threatened Ecological Communities (if applicable) benefitting from this activity",
                     "type": "text"
                   },
                   {
-                    "width": "10%",
-                    "source": "numberPlanted",
-                    "title": "Numbers planted",
-                    "type": "number"
-                  },
-                  {
                     "width": "20%",
-                    "source": "revegetationObjective",
-                    "title": "Objective of revegetation activity",
+                    "source": "revegetationActivityDescription",
+                    "title": "Description of revegetation activity",
                     "type": "textarea"
                   }
                 ],
