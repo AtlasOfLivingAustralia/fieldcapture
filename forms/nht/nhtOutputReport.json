@@ -23215,6 +23215,15 @@
               },
               {
                 "dataType": "text",
+                "name": "invoicingThisActivity",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
                 "name": "initialOrFollowup",
                 "constraints": [
                   "Initial",
@@ -23224,7 +23233,7 @@
               },
               {
                 "dataType": "number",
-                "name": "noStructuresInstalled",
+                "name": "noRemediationInterventions",
                 "validate": "required"
               },
               {
@@ -23350,7 +23359,7 @@
               },
               {
                 "dataType": "text",
-                "name": "typesOfStructuresInstalled",
+                "name": "typesOfRemediationInstalled",
                 "description": "",
                 "constraints": [
                   "Access control",
@@ -23366,10 +23375,10 @@
               },
               {
                 "dataType": "text",
-                "name": "otherStructuresType",
+                "name": "otherRemediationType",
                 "behaviour": [
                   {
-                    "condition": "typesOfStructuresInstalled == \"Other\"",
+                    "condition": "typesOfRemediationInstalled == \"Other\"",
                     "type": "enable"
                   }
                 ],
@@ -23401,104 +23410,6 @@
                   }
                 ],
                 "validate": "required,maxSize[100]"
-              },
-              {
-                "dataType": "feature",
-                "name": "sitesBenefitted",
-                "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
-              },
-              {
-                "computed": {
-                  "expression": "$geom.areaHa(sitesBenefitted)"
-                },
-                "dataType": "number",
-                "name": "calculatedAreaTreatedHaBenefitted",
-                "units": "ha",
-                "decimalPlaces": 3
-              },
-              {
-                "computed": {
-                  "expression": "$geom.lengthKm(sitesBenefitted)"
-                },
-                "dataType": "number",
-                "name": "calculatedLengthTreatedKmBenefitted",
-                "units": "km",
-                "decimalPlaces": 3,
-                "behaviour": [
-                  {
-                    "condition": "lengthTreatedKmBenefitted > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "The managed length must be mapped",
-                      "validate": "required,min[0.0001]"
-                    }
-                  }
-                ]
-              },
-              {
-                "defaultValue": {
-                  "type": "computed",
-                  "expression": "calculatedAreaTreatedHaBenefitted"
-                },
-                "dataType": "number",
-                "name": "areaTreatedHaBenefitted",
-                "description": "Manually enter correct figure for this reporting period if different to mapped value.",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "text",
-                "name": "mappingNotAlignedReasonBenefitted",
-                "constraints": [
-                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
-                  "Other"
-                ],
-                "validate": "required",
-                "behaviour": [
-                  {
-                    "condition": "not (within(areaTreatedHaBenefitted, calculatedAreaTreatedHaBenefitted, 0.1) and within(lengthTreatedKmBenefitted, calculatedLengthTreatedKmBenefitted, 0.1))",
-                    "type": "if"
-                  }
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "mappingNotAlignedCommentsBenefitted",
-                "validate": "required,maxSize[100]",
-                "behaviour": [
-                  {
-                    "type": "visible",
-                    "condition": "\"Other\" == mappingNotAlignedReasonBenefitted"
-                  }
-                ]
-              },
-              {
-                "dataType": "document",
-                "name": "extraMappingDetailsBenefitted",
-                "validate": "required",
-                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
-                "behaviour": [
-                  {
-                    "condition": "not (within(areaTreatedHaBenefitted, calculatedAreaTreatedHaBenefitted, 0.1) and within(lengthTreatedKmBenefitted, calculatedLengthTreatedKmBenefitted, 0.1))",
-                    "type": "if"
-                  }
-                ]
-              },
-              {
-                "defaultValue": {
-                  "type": "computed",
-                  "expression": "calculatedLengthTreatedKmBenefitted"
-                },
-                "dataType": "number",
-                "name": "lengthTreatedKmBenefitted",
-                "units": "km",
-                "decimalPlaces": 3
-              },
-              {
-                "dataType": "text",
-                "name": "evidenceOfBenefit",
-                "validate": "maxSize[300]"
               }
             ],
             "dataType": "list",
@@ -23640,7 +23551,7 @@
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(remediatingAreas, \"noStructuresInstalled\")"
+              "expression": "sum(remediatingAreas, \"noRemediationInterventions\")"
             }
           },
           {
@@ -23669,7 +23580,7 @@
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(remediatingAreas, \"initialOrFollowup == 'Follow-up' ? noStructuresInstalled : 0\")"
+              "expression": "sum(remediatingAreas, \"initialOrFollowup == 'Follow-up' ? noRemediationInterventions : 0\")"
             }
           },
           {
@@ -23936,7 +23847,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ix) Number of structures installed to promote aquatic health during this reporting period",
+                        "preLabel": "(ix) Number of remediation interventions applied to promote aquatic health during this reporting period",
                         "source": "totalStructuresInstalled",
                         "type": "number"
                       }
@@ -23946,7 +23857,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(x) Number of structures installed to promote aquatic health <u><i>invoiced</i></u> for during this reporting period",
+                        "preLabel": "(x) Number of remediation interventions applied to promote aquatic health <u><i>invoiced</i></u> for during this reporting period",
                         "source": "totalStructuresInstalledInvoiced",
                         "type": "number"
                       }
@@ -23969,7 +23880,7 @@
             ]
           },
           {
-            "addRowText": "Add a new controlled area",
+            "addRowText": "Add a new area",
             "userAddedRows": true,
             "source": "remediatingAreas",
             "type": "repeat",
@@ -24008,6 +23919,22 @@
                         ]
                       }
                     ]
+                  },
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "invoicingThisActivity",
+                            "preLabel": "Are you invoicing for this activity in this reporting period?",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               },
@@ -24022,9 +23949,9 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "initialOrFollowup",
-                            "preLabel": "Initial or follow-up treatment?",
-                            "type": "selectOne"
+                            "source": "noRemediationInterventions",
+                            "preLabel": "Number of remediation interventions",
+                            "type": "number"
                           }
                         ]
                       }
@@ -24038,9 +23965,9 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "noStructuresInstalled",
-                            "preLabel": "Number of structures installed",
-                            "type": "number"
+                            "source": "initialOrFollowup",
+                            "preLabel": "Initial or follow-up treatment?",
+                            "type": "selectOne"
                           }
                         ]
                       }
@@ -24180,7 +24107,7 @@
                         "items": [
                           {
                             "source": "activitiesEndDate",
-                            "preLabel": "Activity start date",
+                            "preLabel": "Activity end date",
                             "type": "date"
                           }
                         ]
@@ -24195,8 +24122,8 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Type of structures installed",
-                            "source": "typesOfStructuresInstalled",
+                            "preLabel": "Type of remediation intervention installed",
+                            "source": "typesOfRemediationInstalled",
                             "type": "select2"
                           }
                         ]
@@ -24205,8 +24132,8 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "otherStructuresType",
-                            "placeholder": "Type of structures (if Other)",
+                            "source": "otherRemediationType",
+                            "placeholder": "Type of remediation intervention (if Other)",
                             "type": "text"
                           }
                         ]
@@ -24221,7 +24148,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Type of remediation",
+                            "preLabel": "Type of aquatic and riparian remediation",
                             "source": "remediationType",
                             "type": "select2"
                           }
@@ -24232,133 +24159,8 @@
                         "items": [
                           {
                             "source": "otherRemediationType",
-                            "placeholder": "Type of remediation (if Other)",
+                            "placeholder": "Type of aquatic and riparian remediation (if Other)",
                             "type": "text"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "col",
-                    "css": "span3 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Please map any off-site area/s if they benefitted from this revegetation activity",
-                            "source": "sitesBenefitted",
-                            "type": "feature"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "calculatedAreaTreatedHaBenefitted",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            },
-                            "readonly": "readonly"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "calculatedLengthTreatedKmBenefitted",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            },
-                            "readonly": "readonly"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Please attach mapping details",
-                            "source": "extraMappingDetailsBenefitted",
-                            "type": "document"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "col",
-                    "css": "span3 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Actual area (ha) / length (km) benefitting from revegetation activity",
-                            "source": "areaTreatedHaBenefitted",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "lengthTreatedKmBenefitted",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Reason for actual being different to mapped amount",
-                            "source": "mappingNotAlignedReasonBenefitted",
-                            "type": "selectOne"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                            "source": "mappingNotAlignedCommentsBenefitted",
-                            "type": "textarea",
-                            "rows": 5
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "col",
-                    "css": "span3 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "evidenceOfBenefit",
-                            "preLabel": "If off-site area was mapped please provide a description on the evidence available to reflect this benefit",
-                            "type": "textarea"
                           }
                         ]
                       }
@@ -24368,7 +24170,6 @@
               }
             ]
           },
-
           {
             "type": "section",
             "items": [
