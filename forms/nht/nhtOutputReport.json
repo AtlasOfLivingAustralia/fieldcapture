@@ -25060,7 +25060,7 @@
                             "type": "row",
                             "items": [
                               {
-                                "preLabel": "Sites where weed treatment was undertaken",
+                                "preLabel": "Site/s treated for weed removal",
                                 "source": "sitesUndertakenForWeedTreatment",
                                 "type": "feature"
                               }
@@ -25176,7 +25176,7 @@
                         "width": "15%",
                         "source": "treatmentMethod",
                         "title": "'Type of treatment being used",
-                        "type": "select2"
+                        "type": "selectOne"
                       },
                       {
                         "width": "20%",
