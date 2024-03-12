@@ -12244,6 +12244,70 @@
                 ],
                 "dataType": "list",
                 "name": "firstNationsDetails"
+              },
+              {
+                "name": "relatedOutcomes",
+                "dataType": "text",
+                "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "label",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "url": "/project/outcomesByScores",
+                      "params": [
+                        {
+                          "expression": "owner.projectId",
+                          "name": "id",
+                          "type": "computed"
+                        },
+                        {
+                          "expression": "scores",
+                          "name": "scoreIds",
+                          "type": "computed"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "name": "investmentPriorities2",
+                "dataType": "text",
+                "description": "",
+                "validate": "required",
+                "constraints": {
+                  "textProperty": "label",
+                  "valueProperty": "value",
+                  "type": "pre-populated",
+                  "config": {
+                    "source": {
+                      "context-path": "owner.investmentPriorities"
+                    }
+                  }
+                }
+              },
+              {
+                "dataType": "text",
+                "name": "otherInvestmentPriority",
+                "description": "Describe the investment priority (if Other) was selected",
+                "behaviour": [
+                  {
+                    "type": "enable",
+                    "condition": "\"Other\" in investmentPriorities2"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicingThisActivity",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
+                "validate": "required"
               }
             ],
             "dataType": "list",
@@ -12453,11 +12517,64 @@
             ]
           },
           {
-            "addRowText": "Add a new controlled area",
+            "addRowText": "Add a new area",
             "userAddedRows": true,
             "source": "firstNationAreasControlled",
             "type": "repeat",
             "items": [
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "relatedOutcomes",
+                            "type": "selectOne",
+                            "preLabel": "Which outcome statement/s does this activity relate to?"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "investmentPriorities2",
+                            "preLabel": "Which investment priority does this activity relate to?",
+                            "type": "select2Many"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "invoicingThisActivity",
+                            "preLabel": "Are you invoicing for this activity in this reporting period?",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
               {
                 "type": "row",
                 "css": "border-bottom",
@@ -16320,12 +16437,22 @@
               {
                 "dataType": "text",
                 "name": "otherInvestmentPriority",
+                "description": "Describe the investment priority (if Other) was selected",
                 "behaviour": [
                   {
                     "type": "enable",
                     "condition": "\"Other\" in investmentPriorities2"
                   }
                 ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicingThisActivity",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
+                "validate": "required"
               },
               {
                 "columns": [
@@ -16720,43 +16847,10 @@
                 "items": [
                   {
                     "type": "row",
-                    "css": "border-bottom",
                     "items": [
                       {
+                        "css": "span3",
                         "type": "col",
-                        "css": "span2 col-border-right",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "sitesHaveBeenIdentified",
-                                "preLabel": "What sites have been identified?",
-                                "type": "text"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "col",
-                        "css": "span2 col-border-right",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "methodsUsedToIdentify",
-                                "preLabel": "What method/s were used to identify and prioritise?",
-                                "type": "text"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "col",
-                        "css": "span3 col-border-right",
                         "items": [
                           {
                             "type": "row",
@@ -16764,7 +16858,7 @@
                               {
                                 "source": "relatedOutcomes",
                                 "type": "selectOne",
-                                "preLabel": "Which outcome statement/s relates to this activity?"
+                                "preLabel": "Which outcome statement/s does this activity relate to?"
                               }
                             ]
                           }
@@ -16781,6 +16875,59 @@
                                 "source": "investmentPriorities2",
                                 "preLabel": "Which investment priority does this activity relate to?",
                                 "type": "select2Many"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "css": "span3",
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "invoicingThisActivity",
+                                "preLabel": "Are you invoicing for this activity in this reporting period?",
+                                "type": "selectOne"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "css": "span3",
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "sitesHaveBeenIdentified",
+                                "preLabel": "What sites have been identified?",
+                                "type": "text"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "methodsUsedToIdentify",
+                                "preLabel": "What method/s were used to identify and prioritise?",
+                                "type": "text"
                               }
                             ]
                           }
@@ -18036,7 +18183,7 @@
               {
                 "dataType": "feature",
                 "name": "sitesOfHydrological",
-                "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                "description": "Mapping field to be done and Area (ha) field be auto-calculated from mapping."
               },
               {
                 "computed": {
@@ -18088,7 +18235,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -18111,7 +18258,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -18125,6 +18272,24 @@
                 "name": "lengthTreatedKm",
                 "units": "km",
                 "decimalPlaces": 3
+              },
+              {
+                "dataType": "number",
+                "name": "noTreatments",
+                "defaultValue": "",
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "number",
+                "name": "waterVolume",
+                "defaultValue": "",
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "number",
+                "name": "stormWaterVolume",
+                "defaultValue": "",
+                "validate": "required,min[0]"
               },
               {
                 "dataType": "text",
@@ -18345,7 +18510,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total number of treatments implemented (initial) for during this reporting period",
+                        "preLabel": "(i) Total number of treatments implemented to improve site eco-hydrology (initial) for this reporting period",
                         "source": "totalHydroTreatmentsInitial",
                         "type": "number"
                       }
@@ -18355,7 +18520,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total number of treatments implemented (initial) <u><i>invoiced</i></u> for during this reporting period",
+                        "preLabel": "(ii) Total number of treatments implemented to improve site eco-hydrology (initial) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalHydroTreatmentsInitialInvoiced",
                         "type": "number"
                       }
@@ -18371,7 +18536,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iii) Total number of treatments implemented (follow up) for during this reporting period",
+                        "preLabel": "(iii) Total number of treatments implemented to improve site eco-hydrology (follow up) for this reporting period",
                         "source": "totalHydroTreatmentsFollowup",
                         "type": "number"
                       }
@@ -18381,7 +18546,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iv) Total number of treatments implemented (follow up) <u><i>invoiced</i></u> for during this reporting period",
+                        "preLabel": "(iv) Total number of treatments implemented to improve site eco-hydrology (follow up) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalHydroTreatmentsFollowupInvoiced",
                         "type": "number"
                       }
@@ -18512,19 +18677,6 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "calculatedLengthTreatedKm",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            },
-                            "readonly": "readonly"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
                             "preLabel": "Please attach mapping details",
                             "source": "extraMappingDetails",
                             "type": "document"
@@ -18541,20 +18693,8 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Actual area (ha) / length (km) where the hydrological regimes have been improved",
+                            "preLabel": "Actual area (ha) where the hydrological regimes have been improved",
                             "source": "areaTreatedHa",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "lengthTreatedKm",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -18580,6 +18720,60 @@
                             "source": "mappingNotAlignedComments",
                             "type": "textarea",
                             "rows": 5
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "css": "border-bottom",
+                "items": [
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "noTreatments",
+                            "preLabel": "Number of treatments implemented to improve site eco-hydrology",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "waterVolume",
+                            "type": "number",
+                            "preLabel": "Volume of water (in megalitres) introduced as a result of the intervention"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "stormWaterVolume",
+                            "type": "number",
+                            "preLabel": "Volume of stormwater (in megalitres) redirected or removed"
                           }
                         ]
                       }
@@ -18896,6 +19090,15 @@
                     "condition": "\"Other\" in investmentPriorities2"
                   }
                 ]
+              },
+              {
+                "dataType": "text",
+                "name": "invoicingThisActivity",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
+                "validate": "required"
               },
               {
                 "dataType": "text",
@@ -19337,6 +19540,22 @@
                             "source": "investmentPriorities2",
                             "preLabel": "Which investment priority does this activity relate to?",
                             "type": "select2Many"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "invoicingThisActivity",
+                            "preLabel": "Are you invoicing for this activity in this reporting period?",
+                            "type": "selectOne"
                           }
                         ]
                       }
