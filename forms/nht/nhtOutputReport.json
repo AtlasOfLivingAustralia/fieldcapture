@@ -26562,7 +26562,7 @@
                   {
                     "dataType": "text",
                     "name": "activityPurpose",
-                    "validate": "required"
+                    "validate": "required,maxSize[300]"
                   },
                   {
                     "dataType": "text",
@@ -26575,11 +26575,13 @@
                   },
                   {
                     "dataType": "text",
-                    "name": "otherSeedSources"
+                    "name": "otherSeedSources",
+                    "validate": "maxSize[300]"
                   },
                   {
                     "dataType": "text",
-                    "name": "storingFacility"
+                    "name": "storingFacility",
+                    "validate": "maxSize[300]"
                   },
                   {
                     "dataType": "text",
@@ -26607,11 +26609,13 @@
               {
                 "dataType": "number",
                 "name": "amountSeedCollected",
-                "decimalPlaces": 5
+                "decimalPlaces": 5,
+                "validate": "required"
               },
               {
                 "dataType": "number",
-                "name": "numberOfDaysCollectingSeeds"
+                "name": "numberOfDaysCollectingSeeds",
+                "validate": "required"
               },
               {
                 "dataType": "number",
@@ -27195,7 +27199,7 @@
                         "items": [
                           {
                             "source": "amountSeedCollected",
-                            "preLabel": "Amount collected",
+                            "preLabel": "Amount of seeds/cuttings collected",
                             "type": "number"
                           }
                         ]
@@ -27227,7 +27231,7 @@
                         "items": [
                           {
                             "source": "noOfPlantsPropogated",
-                            "preLabel": "Number of plants propogated",
+                            "preLabel": "Number of plants propagated",
                             "type": "number"
                           }
                         ]
@@ -27292,7 +27296,7 @@
                     "width": "15%",
                     "title": "Purpose of activity",
                     "source": "activityPurpose",
-                    "type": "text"
+                    "type": "textarea"
                   },
                   {
                     "width": "10%",
@@ -27315,7 +27319,7 @@
                   {
                     "width": "15%",
                     "source": "threatEcoCommunity",
-                    "title": "'Threatened Ecological Community (if applicable)where the seeds were sourced from",
+                    "title": "Threatened Ecological Community (if applicable) where the seeds were sourced from",
                     "type": "textarea"
                   }
                 ],
