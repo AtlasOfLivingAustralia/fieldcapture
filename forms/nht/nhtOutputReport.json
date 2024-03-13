@@ -21685,7 +21685,7 @@
               {
                 "dataType": "feature",
                 "name": "sitesBenefitted",
-                "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                "description": "Mapping field to be done and Area (ha) field be auto-calculated from mapping."
               },
               {
                 "computed": {
