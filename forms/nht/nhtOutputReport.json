@@ -25846,7 +25846,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 24 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 24 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and deepEquals(relatedOutcomes,dataSet.outcomesLabel) and 'Indicator' == baselineIndicatorMapping.lookupValue(dataSet.type)"
                         }
                       }
                     },
