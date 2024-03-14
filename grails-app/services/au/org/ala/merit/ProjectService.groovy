@@ -2166,7 +2166,7 @@ class ProjectService  {
                 else if (dataSet.reportId != reportId) {
                     Map report = project.reports?.find({it.reportId == dataSet.reportId})
                     String reportLabel = report?.name ?: dataSet.reportId
-                    errors << "Data set ${dataSet.name} is already associated with report ${reportLabel}" +
+                    errors << "Data set ${dataSet.name} is already associated with report ${reportLabel}. " +
                             "Datasets can only be selected once into all outputs reports, please ensure that you have" +
                             " selected the correct dataset before attempting to save the report again. " +
                             "If you have selected the wrong dataset into another report, you will need to remove it" +
