@@ -1121,9 +1121,14 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
         };
 
         self.hasData = function() {
-            return _.find(self.outcomeTargets(), function(outcomeTarget) {
+            var hasTarget = _.find(self.outcomeTargets(), function(outcomeTarget) {
                 return (outcomeTarget.target() && outcomeTarget.target() != 0);
             });
+            var hasPeriodTarget = _.find(self.periodTargets, function(periodTarget) {
+                return (periodTarget.target() && periodTarget.target() != 0);
+            });
+
+            return hasTarget || hasPeriodTarget;
         };
 
         self.toJSON = function() {
