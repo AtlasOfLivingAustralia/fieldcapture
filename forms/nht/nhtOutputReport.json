@@ -945,30 +945,73 @@
               },
               {
                 "dataType": "feature",
-                "name": "areaOfSourceSite"
+                "name": "areaOfSourceSite",
+                "description": "Mapping field to be done and area (ha) field be auto-calculated from mapping."
               },
               {
                 "computed": {
                   "expression": "$geom.areaHa(areaOfSourceSite)"
                 },
                 "dataType": "number",
-                "name": "areaOfSourceSiteAreaHa",
+                "name": "calculatedAreaOfSourceSiteAreaHa",
+                "units": "ha",
+                "decimalPlaces": 3
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "calculatedAreaOfSourceSiteAreaHa"
+                },
+                "dataType": "number",
+                "name": "areaOfSourceSiteTreatedHa",
+                "description": "Manually enter correct figure for this reporting period if different to mapped value.",
                 "units": "ha",
                 "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReasonSourceSite",
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "areaOfErosionControlInvoicedHa > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "The controlled area must be mapped",
-                      "validate": "required,min[0.0001]"
-                    }
+                    "condition": "not (within(areaOfSourceSiteTreatedHa, calculatedAreaOfSourceSiteAreaHa, 0.1))",
+                    "type": "if"
                   }
                 ]
               },
               {
+                "dataType": "text",
+                "name": "mappingNotAlignedCommentsSourceSite",
+                "validate": "required,maxSize[100]",
+                "behaviour": [
+                  {
+                    "type": "visible",
+                    "condition": "\"Other\" == mappingNotAlignedReasonSourceSite"
+                  }
+                ]
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetailsSourceSite",
+                "validate": "required",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaOfSourceSiteTreatedHa, calculatedAreaOfSourceSiteAreaHa, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+
+              {
                 "dataType": "feature",
-                "name": "areaOfReleaseSite"
+                "name": "areaOfReleaseSite",
+                "description": "Mapping field to be done and area (ha) field be auto-calculated from mapping."
               },
               {
                 "computed": {
@@ -977,18 +1020,59 @@
                 "dataType": "number",
                 "name": "calculatedAreaOfReleaseSiteHa",
                 "units": "ha",
+                "decimalPlaces": 3
+              },
+              {
+                "defaultValue": {
+                  "type": "computed",
+                  "expression": "calculatedAreaOfReleaseSiteHa"
+                },
+                "dataType": "number",
+                "name": "areaOfReleaseSiteTreatedHa",
+                "description": "Manually enter correct figure for this reporting period if different to mapped value.",
+                "units": "ha",
                 "decimalPlaces": 3,
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedReasonReleaseSite",
+                "constraints": [
+                  "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                  "Other"
+                ],
+                "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "areaOfErosionControlInvoicedHa > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "The controlled area must be mapped",
-                      "validate": "required,min[0.0001]"
-                    }
+                    "condition": "not (within(areaOfReleaseSiteTreatedHa, calculatedAreaOfReleaseSiteHa, 0.1))",
+                    "type": "if"
                   }
                 ]
               },
+              {
+                "dataType": "text",
+                "name": "mappingNotAlignedCommentsReleaseSite",
+                "validate": "required,maxSize[100]",
+                "behaviour": [
+                  {
+                    "type": "visible",
+                    "condition": "\"Other\" == mappingNotAlignedReasonReleaseSite"
+                  }
+                ]
+              },
+              {
+                "dataType": "document",
+                "name": "extraMappingDetailsReleaseSite",
+                "validate": "required",
+                "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                "behaviour": [
+                  {
+                    "condition": "not (within(areaOfReleaseSiteTreatedHa, calculatedAreaOfReleaseSiteHa, 0.1))",
+                    "type": "if"
+                  }
+                ]
+              },
+
               {
                 "columns": [
                   {
@@ -1492,9 +1576,32 @@
                             "type": "row",
                             "items": [
                               {
-                                "preLabel": "Number of captive breeding, release, translocation, or re-introduction sites established/ maintained",
-                                "source": "numberOfCaptiveBreeding",
-                                "type": "number"
+                                "source": "areaOfSourceSite",
+                                "type": "feature",
+                                "preLabel": "Site/s of captive breeding, pre-translocation capture (source site)"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "calculatedAreaOfSourceSiteAreaHa",
+                                "type": "number",
+                                "readonly": true,
+                                "displayOptions": {
+                                  "displayUnits": true
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Please attach mapping details",
+                                "source": "extraMappingDetailsSourceSite",
+                                "type": "document"
                               }
                             ]
                           }
@@ -1508,9 +1615,12 @@
                             "type": "row",
                             "items": [
                               {
-                                "source": "areaOfSourceSite",
-                                "type": "feature",
-                                "preLabel": "Site/s of captive breeding, pre-translocation capture (source site)"
+                                "preLabel": "Actual area (ha) of captive breeding, pre-translocation capture (source site)",
+                                "source": "areaOfSourceSiteTreatedHa",
+                                "type": "number",
+                                "displayOptions": {
+                                  "displayUnits": true
+                                }
                               }
                             ]
                           },
@@ -1518,12 +1628,20 @@
                             "type": "row",
                             "items": [
                               {
-                                "source": "areaOfSourceSiteAreaHa",
-                                "type": "number",
-                                "readonly": true,
-                                "displayOptions": {
-                                  "displayUnits": true
-                                }
+                                "preLabel": "Reason for actual being different to mapped amount",
+                                "source": "mappingNotAlignedReasonSourceSite",
+                                "type": "selectOne"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                                "source": "mappingNotAlignedCommentsSourceSite",
+                                "type": "textarea",
+                                "rows": 5
                               }
                             ]
                           }
@@ -1553,6 +1671,72 @@
                                 "displayOptions": {
                                   "displayUnits": true
                                 }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Please attach mapping details",
+                                "source": "extraMappingDetailsReleaseSite",
+                                "type": "document"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Actual area (ha) of release of captive breeding, re-introduced or translocated animals (release site)",
+                                "source": "areaOfReleaseSiteTreatedHa",
+                                "type": "number",
+                                "displayOptions": {
+                                  "displayUnits": true
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Reason for actual being different to mapped amount",
+                                "source": "mappingNotAlignedReasonReleaseSite",
+                                "type": "selectOne"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                                "source": "mappingNotAlignedCommentsReleaseSite",
+                                "type": "textarea",
+                                "rows": 5
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Number of captive breeding, release, translocation, or re-introduction sites established/ maintained",
+                                "source": "numberOfCaptiveBreeding",
+                                "type": "number"
                               }
                             ]
                           }
@@ -1590,7 +1774,7 @@
                       {
                         "width": "10%",
                         "source": "numberOfAdnimalDiedPreReleased",
-                        "title": "Number of groups/individuals of the investment priority species that died (pre-release), released, translocated or re-introduced",
+                        "title": "Number of groups/individuals of the investment priority species that died (pre-release)",
                         "type": "number"
                       },
                       {
