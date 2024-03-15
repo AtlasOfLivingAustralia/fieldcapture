@@ -116,6 +116,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     });
     self.serviceAndOutcomes = ko.observable(selectedServiceAndOutcome && selectedServiceAndOutcome.label);
     self.projectProtocols = config.projectProtocols;
+
     self.protocol = ko.observable(dataSet.protocol);
     self.projectOutcomeList = ko.observableArray(options.projectOutcomes);
     self.serviceId = ko.computed(function() {
@@ -124,6 +125,15 @@ var DataSetViewModel = function(dataSet, projectService, options) {
         });
         return selectedOutcome && selectedOutcome.serviceId;
     });
+
+    self.disableBaseline = function(e) {
+        var serviceConfig = config.serviceBaselineIndicatorOptions[self.serviceId()];
+        return serviceConfig ? serviceConfig.disableBaseline : false;
+    };
+    self.disableIndicator = function() {
+        var serviceConfig = config.serviceBaselineIndicatorOptions[self.serviceId()];
+        return serviceConfig ? serviceConfig.disableIndicator : false;
+    };
     self.projectOutcomes = ko.computed(function() {
         var selectedOutcome = _.find(options.projectOutcomes || [], function(serviceAndOutcome) {
             return serviceAndOutcome.label == self.serviceAndOutcomes();
@@ -228,7 +238,11 @@ var DataSetViewModel = function(dataSet, projectService, options) {
 
         if (valid) {
             var dataSet = ko.mapping.toJS(self,
-                {ignore: ['grantId', 'projectName', 'programName', 'validate', 'save', 'cancel', 'investmentOtherSelected', 'siteUrl', 'isAutoCreated', 'serviceAndOutcomes', 'projectOutcomeList', 'projectBaselines', 'projectProtocols']});
+                {ignore: [
+                    'grantId', 'projectName', 'programName', 'validate', 'save', 'cancel',
+                        'investmentOtherSelected', 'siteUrl', 'isAutoCreated', 'serviceAndOutcomes',
+                        'projectOutcomeList', 'projectBaselines', 'projectProtocols', 'disableBaseline',
+                        'disableIndicator']});
             projectService.saveDataSet(dataSet).done(function() {
                 // return to project
                 window.location.href = config.returnToUrl;

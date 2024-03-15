@@ -77,8 +77,8 @@
         <div class="col-sm-7">
             <select class="form-control" id="type" data-validation-engine="validate[required]" data-bind="value:type">
                 <option></option>
-                <option>Baseline dataset associated with a project outcome</option>
-                <option>Project progress dataset that is tracking change against an established project baseline dataset</option>
+                <option data-bind="disable:disableBaseline()">Baseline dataset associated with a project outcome</option>
+                <option data-bind="disable:disableIndicator()">Project progress dataset that is tracking change against an established project baseline dataset</option>
                 <option>Standalone, foundational dataset to inform future management interventions</option>
                 <option>Other</option>
             </select>
