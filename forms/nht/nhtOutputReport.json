@@ -4328,16 +4328,6 @@
                 "decimalPlaces": 3
               },
               {
-                "dataType": "number",
-                "name": "noStructuresInstalled",
-                "validate": "required"
-              },
-              {
-                "dataType": "number",
-                "name": "invoiceLocationsStructures",
-                "validate": "required"
-              },
-              {
                 "columns": [
                   {
                     "dataType": "species",
@@ -5008,32 +4998,6 @@
                             "source": "mappingNotAlignedComments",
                             "type": "textarea",
                             "rows": 5
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "col",
-                    "css": "span3 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "noStructuresInstalled",
-                            "preLabel": "Number of structures installed/maintained",
-                            "type": "number"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "invoiceLocationsStructures",
-                            "preLabel": "Number of locations where structures were installed/maintained",
-                            "type": "number"
                           }
                         ]
                       }
