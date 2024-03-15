@@ -5709,7 +5709,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total area (ha) of debris removal implemented (initial) for this reporting period",
+                        "preLabel": "(i) Total area (ha) of debris removal (initial) for this reporting period",
                         "source": "totalAreaDebrisRemovedInitial",
                         "type": "number"
                       }
@@ -5738,7 +5738,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iii) Total area (ha) of debris removal implemented (follow up) for this reporting period",
+                        "preLabel": "(iii) Total area (ha) of debris removal (follow up) for this reporting period",
                         "source": "totalAreaDebrisRemovedFollowup",
                         "type": "number"
                       }
@@ -5767,7 +5767,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(v) Total length (km) of debris removal implemented (initial) for this reporting period",
+                        "preLabel": "(v) Total length (km) of debris removal (initial) for this reporting period",
                         "source": "totalLengthDebrisRemovedInitial",
                         "type": "number"
                       }
@@ -5796,7 +5796,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vii) Total length (km) of debris removal implemented (follow up) for this reporting period",
+                        "preLabel": "(vii) Total length (km) of debris removal (follow up) for this reporting period",
                         "source": "totalLengthDebrisRemovedFollowup",
                         "type": "number"
                       }
@@ -5832,7 +5832,7 @@
             ]
           },
           {
-            "addRowText": "Add a new controlled area",
+            "addRowText": "Add a new debris removal activity",
             "userAddedRows": true,
             "source": "debrisRemovalAreasControlled",
             "type": "repeat",
