@@ -946,7 +946,7 @@
               {
                 "dataType": "feature",
                 "name": "areaOfSourceSite",
-                "description": "Mapping field to be done and area (ha) field be auto-calculated from mapping."
+                "description": "Mapping field to be done and Area (ha) field be auto-calculated from mapping."
               },
               {
                 "computed": {
@@ -1011,7 +1011,7 @@
               {
                 "dataType": "feature",
                 "name": "areaOfReleaseSite",
-                "description": "Mapping field to be done and area (ha) field be auto-calculated from mapping."
+                "description": "Mapping field to be done and Area (ha) field be auto-calculated from mapping."
               },
               {
                 "computed": {
@@ -3856,7 +3856,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Site/s where access has been controlled",
+                            "preLabel": "Site/s where structures have been installed to control access",
                             "source": "sitesCoveredForControlAccess",
                             "type": "feature"
                           }
