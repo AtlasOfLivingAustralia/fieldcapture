@@ -3023,7 +3023,7 @@
                   {
                     "width": "10%",
                     "source": "industryType",
-                    "title": "Industry type engaged",
+                    "title": "Industry/Stakeholder type engaged",
                     "type": "select2Many"
                   }
                 ],
