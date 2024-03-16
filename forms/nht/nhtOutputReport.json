@@ -6266,32 +6266,6 @@
               },
               {
                 "dataType": "feature",
-                "name": "existingErosionSites"
-              },
-              {
-                "defaultValue": {
-                  "expression": "$geom.areaHa(existingErosionSites)",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "existingErosionAreaHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": "min[0]"
-              },
-              {
-                "defaultValue": {
-                  "expression": "$geom.lengthKm(existingErosionSites)",
-                  "type": "computed"
-                },
-                "dataType": "number",
-                "name": "existingErosionLengthKm",
-                "units": "km",
-                "decimalPlaces": 3,
-                "validate": "min[0]"
-              },
-              {
-                "dataType": "feature",
                 "name": "sitesOfErosionControl",
                 "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
               },
@@ -6938,7 +6912,7 @@
             ]
           },
           {
-            "addRowText": "Add a new controlled area",
+            "addRowText": "Add a new erosion control area",
             "userAddedRows": true,
             "source": "erosionManagementAreasControlled",
             "type": "repeat",
@@ -7038,48 +7012,6 @@
                 "type": "row",
                 "css": "border-bottom",
                 "items": [
-                  {
-                    "type": "col",
-                    "css": "span3 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "existingErosionSites",
-                            "type": "feature",
-                            "preLabel": "Site/s where erosion is evident"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "existingErosionAreaHa",
-                            "type": "number",
-                            "readonly": true,
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "existingErosionLengthKm",
-                            "type": "number",
-                            "readonly": true,
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      }
-                    ]
-                  },
                   {
                     "type": "col",
                     "css": "span3 col-border-right",
@@ -7466,7 +7398,7 @@
               {
                 "dataType": "feature",
                 "name": "sitesOfPestAnimalFreeEnclosure",
-                "description": "Mapping field to be done and area (ha) field be auto-calculated from mapping.",
+                "description": "Mapping field to be done and Area (ha) field be auto-calculated from mapping.",
                 "validate": "required"
               },
               {
@@ -7567,10 +7499,11 @@
                     "validate": "required"
                   },
                   {
-                    "dataType": "text",
+                    "dataType": "species",
                     "name": "targetFeralSpecies",
+                    "dwcAttribute": "scientificName",
                     "description": "",
-                    "validate": "required,maxSize[300]"
+                    "validate": "required"
                   },
                   {
                     "dataType": "text",
@@ -8020,7 +7953,7 @@
             "type": "section",
             "items": [
               {
-                "addRowText": "Add a new feral free area",
+                "addRowText": "Add a new pest animal free area",
                 "userAddedRows": true,
                 "source": "enclosureDetails",
                 "type": "repeat",
@@ -8190,7 +8123,7 @@
                     "addRowText": "Add a species",
                     "columns": [
                       {
-                        "width": "25%",
+                        "width": "30%",
                         "source": "protectedSpecies",
                         "title": "Targeted species being protected",
                         "type": "speciesSelect"
@@ -8199,12 +8132,12 @@
                         "width": "30%",
                         "source": "targetFeralSpecies",
                         "title": "Targeted pest animal species being controlled",
-                        "type": "text"
+                        "type": "speciesSelect"
                       },
                       {
-                        "width": "25%",
+                        "width": "20%",
                         "source": "individualsOrPopulations",
-                        "title": "Individuals or populations?",
+                        "title": "Individuals or populations of species being protected?",
                         "type": "selectOne"
                       },
                       {
@@ -8642,13 +8575,7 @@
                     "dataType": "text",
                     "name": "otherImplementationType",
                     "description": "",
-                    "behaviour": [
-                      {
-                        "condition": "implementationType == \"Other (explanation of the activity required)\"",
-                        "type": "enable"
-                      }
-                    ],
-                    "validate": "required,maxSize[300]"
+                    "validate": "maxSize[300]"
                   }
                 ],
                 "dataType": "list",
@@ -8918,7 +8845,7 @@
             "type": "section",
             "items": [
               {
-                "addRowText": "Add a new agreement",
+                "addRowText": "Add a new agreement area",
                 "userAddedRows": true,
                 "source": "conservationAgreementsControlled",
                 "type": "repeat",
@@ -9135,13 +9062,13 @@
                             "items": [
                               {
                                 "source": "implementationType",
-                                "type": "selectOne"
+                                "type": "select2Many"
                               }
                             ]
                           },
                           {
                             "source": "otherImplementationType",
-                            "placeholder": "",
+                            "placeholder": "If Other was selected",
                             "type": "text"
                           }
                         ]
