@@ -114,6 +114,9 @@ table tr.header th {
 
 .meri-plan .document-url {
     width: 20%;
+    white-space: pre-wrap;
+    word-break: break-word;
+    word-wrap: break-word;
 }
 
 .meri-plan .service {
