@@ -11481,16 +11481,101 @@
                 "validate": "required"
               },
               {
-                "dataType": "number",
-                "name": "noOfParticipants",
-                "description": "",
+                "dataType": "text",
+                "name": "individualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
                 "validate": "required"
               },
               {
                 "dataType": "number",
+                "name": "noOfParticipants",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "individualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "groupParticipants",
+                "behaviour": [
+                  {
+                    "condition": "individualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
                 "name": "noOfFirstNationsParticipants",
-                "description": "",
-                "validate": "required"
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "individualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "noOfParticipants",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "groupFirstNationsParticipants",
+                "behaviour": [
+                  {
+                    "condition": "individualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "groupParticipants",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
+                ]
               },
               {
                 "dataType": "date",
@@ -11688,13 +11773,25 @@
                     "dataType": "text",
                     "name": "surveyObjective",
                     "description": "",
-                    "validate": "required,maxSize[300]"
+                    "validate": "required,maxSize[300]",
+                    "behaviour": [
+                      {
+                        "condition": "activityTypeUndertaken == \"Survey\" or activityTypeUndertaken == \"Assessment\"",
+                        "type": "enable"
+                      }
+                    ]
                   },
                   {
                     "dataType": "text",
                     "name": "surveyTechnique",
                     "description": "",
-                    "validate": "required,maxSize[300]"
+                    "validate": "required,maxSize[300]",
+                    "behaviour": [
+                      {
+                        "condition": "activityTypeUndertaken == \"Survey\" or activityTypeUndertaken == \"Assessment\"",
+                        "type": "enable"
+                      }
+                    ]
                   },
                   {
                     "dataType": "text",
@@ -11704,13 +11801,25 @@
                       "Fair",
                       "Good",
                       "Excellent"
+                    ],
+                    "behaviour": [
+                      {
+                        "condition": "activityTypeUndertaken == \"Survey\" or activityTypeUndertaken == \"Assessment\"",
+                        "type": "enable"
+                      }
                     ]
                   },
                   {
                     "dataType": "text",
                     "name": "siteConditionDetails",
                     "description": "",
-                    "validate": "required,maxSize[300]"
+                    "validate": "required,maxSize[300]",
+                    "behaviour": [
+                      {
+                        "condition": "activityTypeUndertaken == \"Survey\" or activityTypeUndertaken == \"Assessment\"",
+                        "type": "enable"
+                      }
+                    ]
                   }
                 ],
                 "dataType": "list",
@@ -11988,7 +12097,7 @@
             ]
           },
           {
-            "addRowText": "Add a new area",
+            "addRowText": "Add new First Nations Cultural Practice",
             "userAddedRows": true,
             "source": "firstNationAreasControlled",
             "type": "repeat",
@@ -12060,38 +12169,6 @@
                           {
                             "preLabel": "Number of days conducting cultural practices",
                             "source": "noDaysConductingCulturalPractices",
-                            "type": "number"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "col",
-                    "css": "span3 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Number of participants",
-                            "source": "noOfParticipants",
-                            "type": "number"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "col",
-                    "css": "span3 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Number of First Nations participants",
-                            "source": "noOfFirstNationsParticipants",
                             "type": "number"
                           }
                         ]
@@ -12287,6 +12364,72 @@
                             "preLabel": "Activity end date",
                             "source": "activitiesEndDate",
                             "type": "date"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Are individuals or groups delivering this service?",
+                            "source": "individualsOrGroups",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Number of participants",
+                            "source": "noOfParticipants",
+                            "type": "number"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "groupParticipants",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Number of First Nations participants",
+                            "source": "noOfFirstNationsParticipants",
+                            "type": "number"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "groupFirstNationsParticipants",
+                            "type": "selectOne"
                           }
                         ]
                       }
