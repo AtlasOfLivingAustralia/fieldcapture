@@ -19220,7 +19220,7 @@
             ]
           },
           {
-            "addRowText": "Add a new area",
+            "addRowText": "Add a new area of improved land management",
             "userAddedRows": true,
             "source": "landManagementAreasControlled",
             "type": "repeat",
