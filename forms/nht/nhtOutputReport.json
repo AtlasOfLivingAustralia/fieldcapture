@@ -11802,6 +11802,7 @@
                       "Good",
                       "Excellent"
                     ],
+                    "validate": "required",
                     "behaviour": [
                       {
                         "condition": "activityTypeUndertaken == \"Survey\" or activityTypeUndertaken == \"Assessment\"",
@@ -12377,7 +12378,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Are individuals or groups delivering this service?",
+                            "preLabel": "Individuals or groups?",
                             "source": "individualsOrGroups",
                             "type": "selectOne"
                           }
