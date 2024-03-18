@@ -17425,7 +17425,7 @@
             ]
           },
           {
-            "addRowText": "Add a new area",
+            "addRowText": "Add a new area of fire management actions",
             "userAddedRows": true,
             "source": "fireManagementAreasControlled",
             "type": "repeat",
@@ -17486,13 +17486,7 @@
                         ]
                       }
                     ]
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "css": "border-bottom",
-                "items": [
+                  },
                   {
                     "type": "col",
                     "css": "span3 col-border-right",
