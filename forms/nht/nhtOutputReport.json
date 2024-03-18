@@ -20232,7 +20232,7 @@
             ]
           },
           {
-            "addRowText": "Add a new area",
+            "addRowText": "Add a new area where disease is being managed",
             "userAddedRows": true,
             "source": "diseaseManagementAreasControlled",
             "type": "repeat",
@@ -20449,6 +20449,7 @@
                   }
                 ],
                 "userAddedRows": true,
+                "addRowText": "Add a new disease being managed to this area",
                 "disableTableUpload": true,
                 "source": "diseaseManagementDetails",
                 "type": "table"
