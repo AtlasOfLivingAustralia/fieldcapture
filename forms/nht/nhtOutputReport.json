@@ -18045,7 +18045,7 @@
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(hydroAreasControlled, \"initialOrFollowup == 'Initial' ? 1 : 0\")"
+              "expression": "sum(hydroAreasControlled, \"initialOrFollowup == 'Initial' ? noTreatments : 0\")"
             }
           },
           {
@@ -18074,7 +18074,7 @@
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(hydroAreasControlled, \"initialOrFollowup == 'Follow-up' ? 1 : 0\")"
+              "expression": "sum(hydroAreasControlled, \"initialOrFollowup == 'Follow-up' ? noTreatments : 0\")"
             }
           },
           {
@@ -18284,7 +18284,7 @@
             ]
           },
           {
-            "addRowText": "Add a new area",
+            "addRowText": "Add a new area treated to improve hydrological regimes",
             "userAddedRows": true,
             "source": "hydroAreasControlled",
             "type": "repeat",
