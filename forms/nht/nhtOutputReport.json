@@ -15981,6 +15981,12 @@
                 "validate": "required,maxSize[300]"
               },
               {
+                "dataType": "text",
+                "name": "outcomesAchievement",
+                "description": "",
+                "validate": "required,maxSize[300]"
+              },
+              {
                 "name": "relatedOutcomes",
                 "dataType": "text",
                 "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
@@ -16048,43 +16054,30 @@
                 "columns": [
                   {
                     "dataType": "feature",
-                    "name": "sitesTreated",
-                    "validate": [
-                      {
-                        "rule": "required"
-                      }
-                    ]
+                    "name": "sitesAssessed",
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.",
+                    "validate": "required"
                   },
                   {
                     "computed": {
-                      "expression": "$geom.areaHa(sitesTreated)"
+                      "expression": "$geom.areaHa(sitesAssessed)"
                     },
                     "dataType": "number",
-                    "name": "calculatedAreaTreatedHa",
+                    "name": "calculatedAreaTreatedHaAssessed",
                     "units": "ha",
-                    "decimalPlaces": 3,
-                    "behaviour": [
-                      {
-                        "condition": "areaInvoicedTreatedHa > 0",
-                        "type": "conditional_validation",
-                        "value": {
-                          "message": "The managed area must be mapped",
-                          "validate": "required,min[0.0001]"
-                        }
-                      }
-                    ]
+                    "decimalPlaces": 3
                   },
                   {
                     "computed": {
-                      "expression": "$geom.lengthKm(sitesTreated)"
+                      "expression": "$geom.lengthKm(sitesAssessed)"
                     },
                     "dataType": "number",
-                    "name": "calculatedLengthTreatedKm",
+                    "name": "calculatedLengthTreatedKmAssessed",
                     "units": "km",
                     "decimalPlaces": 3,
                     "behaviour": [
                       {
-                        "condition": "lengthTreatedKm > 0",
+                        "condition": "lengthTreatedKmAssessed > 0",
                         "type": "conditional_validation",
                         "value": {
                           "message": "The managed length must be mapped",
@@ -16096,24 +16089,18 @@
                   {
                     "defaultValue": {
                       "type": "computed",
-                      "expression": "calculatedAreaTreatedHa"
+                      "expression": "calculatedAreaTreatedHaAssessed"
                     },
                     "dataType": "number",
-                    "name": "areaTreatedHa",
+                    "name": "areaTreatedHaAssessed",
+                    "description": "Manually enter correct figure for this reporting period if different to mapped value.",
                     "units": "ha",
                     "decimalPlaces": 3,
-                    "validate": [
-                      {
-                        "rule": "required"
-                      },
-                      {
-                        "rule": "min[0]"
-                      }
-                    ]
+                    "validate": "required,min[0]"
                   },
                   {
                     "dataType": "text",
-                    "name": "mappingNotAlignedReason",
+                    "name": "mappingNotAlignedReasonAssessed",
                     "constraints": [
                       "Mapped area simplifies more complex area/s where work was undertaken during this period",
                       "Other"
@@ -16121,94 +16108,41 @@
                     "validate": "required",
                     "behaviour": [
                       {
-                        "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                        "condition": "not (within(areaTreatedHaAssessed, calculatedAreaTreatedHaAssessed, 0.1) and within(lengthTreatedKmAssessed, calculatedLengthTreatedKmAssessed, 0.1))",
                         "type": "visible"
                       }
                     ]
                   },
                   {
                     "dataType": "text",
-                    "name": "mappingNotAlignedComments",
+                    "name": "mappingNotAlignedCommentsAssessed",
                     "validate": "required,maxSize[100]",
                     "behaviour": [
                       {
                         "type": "visible",
-                        "condition": "\"Other\" == mappingNotAlignedReason"
+                        "condition": "\"Other\" == mappingNotAlignedReasonAssessed"
                       }
                     ]
                   },
                   {
                     "dataType": "document",
-                    "name": "extraMappingDetails",
+                    "name": "extraMappingDetailsAssessed",
                     "validate": "required",
                     "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                     "behaviour": [
                       {
-                        "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                        "condition": "not (within(areaTreatedHaAssessed, calculatedAreaTreatedHaAssessed, 0.1) and within(lengthTreatedKmAssessed, calculatedLengthTreatedKmAssessed, 0.1))",
                         "type": "visible"
                       }
                     ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "identifiedSitesName",
-                    "description": "",
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "areaInvoicedTreatedHa",
-                    "units": "ha",
-                    "decimalPlaces": 3,
-                    "validate": [
-                      {
-                        "rule": "required"
-                      },
-                      {
-                        "rule": "min[0]"
-                      },
-                      {
-                        "rule": "max",
-                        "param": {
-                          "type": "computed",
-                          "expression": "areaTreatedHa"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedNotActualReason",
-                    "constraints": [
-                      "Work was undertaken over a greater area than will be invoiced for",
-                      "Other"
-                    ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedTreatedHa, 2)",
-                        "type": "visible"
-                      }
-                    ]
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "invoicedNotActualComments",
-                    "behaviour": [
-                      {
-                        "type": "visible",
-                        "condition": "\"Other\" == invoicedNotActualReason"
-                      }
-                    ],
-                    "validate": "required,maxSize[300]"
                   },
                   {
                     "defaultValue": {
                       "type": "computed",
-                      "expression": "$geom.lengthKm(sitesTreated)"
+                      "expression": "$geom.lengthKm(sitesAssessed)"
                     },
                     "dataType": "number",
-                    "name": "lengthTreatedKm",
+                    "name": "lengthTreatedKmAssessed",
                     "units": "km",
                     "decimalPlaces": 3
                   },
@@ -16218,11 +16152,115 @@
                     "description": "",
                     "validate": "required,maxSize[300]"
                   },
+
+                  {
+                    "dataType": "feature",
+                    "name": "sitesIdentified",
+                    "validate": [
+                      {
+                        "rule": "required"
+                      }
+                    ]
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.areaHa(sitesIdentified)"
+                    },
+                    "dataType": "number",
+                    "name": "calculatedAreaTreatedHaIdentified",
+                    "units": "ha",
+                    "decimalPlaces": 3
+                  },
+                  {
+                    "computed": {
+                      "expression": "$geom.lengthKm(sitesIdentified)"
+                    },
+                    "dataType": "number",
+                    "name": "calculatedLengthTreatedKmIdentified",
+                    "units": "km",
+                    "decimalPlaces": 3,
+                    "behaviour": [
+                      {
+                        "condition": "lengthTreatedKmIdentified > 0",
+                        "type": "conditional_validation",
+                        "value": {
+                          "message": "The managed length must be mapped",
+                          "validate": "required,min[0.0001]"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "defaultValue": {
+                      "type": "computed",
+                      "expression": "calculatedAreaTreatedHaIdentified"
+                    },
+                    "dataType": "number",
+                    "name": "areaTreatedHaIdentified",
+                    "units": "ha",
+                    "decimalPlaces": 3,
+                    "validate": [
+                      {
+                        "rule": "required"
+                      },
+                      {
+                        "rule": "min[0]"
+                      }
+                    ]
+                  },
                   {
                     "dataType": "text",
-                    "name": "outcomesAchievement",
+                    "name": "mappingNotAlignedReasonIdentified",
+                    "constraints": [
+                      "Mapped area simplifies more complex area/s where work was undertaken during this period",
+                      "Other"
+                    ],
+                    "validate": "required",
+                    "behaviour": [
+                      {
+                        "condition": "not (within(areaTreatedHaIdentified, calculatedAreaTreatedHaIdentified, 0.1) and within(lengthTreatedKmIdentified, calculatedLengthTreatedKmIdentified, 0.1))",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "mappingNotAlignedCommentsIdentified",
+                    "validate": "required,maxSize[100]",
+                    "behaviour": [
+                      {
+                        "type": "visible",
+                        "condition": "\"Other\" == mappingNotAlignedReasonIdentified"
+                      }
+                    ]
+                  },
+                  {
+                    "dataType": "document",
+                    "name": "extraMappingDetailsIdentified",
+                    "validate": "required",
+                    "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
+                    "behaviour": [
+                      {
+                        "condition": "not (within(areaTreatedHaIdentified, calculatedAreaTreatedHaIdentified, 0.1) and within(lengthTreatedKmIdentified, calculatedLengthTreatedKmIdentified, 0.1))",
+                        "type": "visible"
+                      }
+                    ]
+                  },
+                  {
+                    "defaultValue": {
+                      "type": "computed",
+                      "expression": "$geom.lengthKm(sitesIdentified)"
+                    },
+                    "dataType": "number",
+                    "name": "lengthTreatedKmIdentified",
+                    "units": "km",
+                    "decimalPlaces": 3
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "identifiedSitesName",
                     "description": "",
-                    "validate": "required,maxSize[300]"
+                    "validate": "maxSize[300]"
                   }
                 ],
                 "dataType": "list",
@@ -16430,7 +16468,7 @@
                 ]
               },
               {
-                "addRowText": "Add a new site",
+                "addRowText": "Add a new outcome statement and assessed sites",
                 "userAddedRows": true,
                 "source": "potentialSiteSurveys",
                 "type": "repeat",
@@ -16500,7 +16538,7 @@
                             "items": [
                               {
                                 "source": "sitesHaveBeenIdentified",
-                                "preLabel": "What sites have been identified?",
+                                "preLabel": "What have the sites identified for?",
                                 "type": "text"
                               }
                             ]
@@ -16522,22 +16560,39 @@
                             ]
                           }
                         ]
+                      },
+                      {
+                        "type": "col",
+                        "css": "span3 col-border-right",
+                        "items": [
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "outcomesAchievement",
+                                "preLabel": "How do they contribute to the achievement of the outcome statement/s?",
+                                "type": "textarea"
+                              }
+                            ]
+                          }
+                        ]
                       }
                     ]
                   },
                   {
                     "columns": [
                       {
-                        "width": "20%",
-                        "title": "Identified and prioritised site",
+                        "width": "15%",
+                        "title": "Site/s assessed<b style=\"color:red\">*</b>",
+                        "helpText": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.",
                         "type": "col",
                         "items": [
                           {
-                            "source": "sitesTreated",
+                            "source": "sitesAssessed",
                             "type": "feature"
                           },
                           {
-                            "source": "calculatedAreaTreatedHa",
+                            "source": "calculatedAreaTreatedHaAssessed",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -16545,7 +16600,7 @@
                             "readonly": "readonly"
                           },
                           {
-                            "source": "calculatedLengthTreatedKm",
+                            "source": "calculatedLengthTreatedKmAssessed",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -16557,7 +16612,7 @@
                             "items": [
                               {
                                 "preLabel": "Please attach mapping details",
-                                "source": "extraMappingDetails",
+                                "source": "extraMappingDetailsAssessed",
                                 "type": "document"
                               }
                             ]
@@ -16565,26 +16620,20 @@
                         ]
                       },
                       {
-                        "width": "20%",
-                        "source": "identifiedSitesName",
-                        "title": "Name of identified and prioritised site",
-                        "type": "textarea"
-                      },
-                      {
-                        "width": "20%",
+                        "width": "15%",
                         "type": "col",
-                        "title": "Assessed site",
-                        "helpText": "",
+                        "title": "Actual area (ha) / length (km) of assessed site<b style=\"color:red\">*</b>",
+                        "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
                         "items": [
                           {
-                            "source": "areaTreatedHa",
+                            "source": "areaTreatedHaAssessed",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
                             }
                           },
                           {
-                            "source": "lengthTreatedKm",
+                            "source": "lengthTreatedKmAssessed",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -16595,7 +16644,7 @@
                             "items": [
                               {
                                 "preLabel": "Reason for actual being different to mapped amount",
-                                "source": "mappingNotAlignedReason",
+                                "source": "mappingNotAlignedReasonAssessed",
                                 "type": "selectOne"
                               }
                             ]
@@ -16605,7 +16654,7 @@
                             "items": [
                               {
                                 "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                                "source": "mappingNotAlignedComments",
+                                "source": "mappingNotAlignedCommentsAssessed",
                                 "type": "textarea",
                                 "rows": 5
                               }
@@ -16620,12 +16669,94 @@
                         "type": "text"
                       },
                       {
+                        "width": "15%",
+                        "title": "Site/s identified and prioritised",
+                        "helpText": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.",
+                        "type": "col",
+                        "items": [
+                          {
+                            "source": "sitesIdentified",
+                            "type": "feature"
+                          },
+                          {
+                            "source": "calculatedAreaTreatedHaIdentified",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            },
+                            "readonly": "readonly"
+                          },
+                          {
+                            "source": "calculatedLengthTreatedKmIdentified",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            },
+                            "readonly": "readonly"
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Please attach mapping details",
+                                "source": "extraMappingDetailsIdentified",
+                                "type": "document"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "width": "15%",
+                        "type": "col",
+                        "title": "Actual area (ha) / length (km) of identified and prioritised site",
+                        "helpText": "Manually enter correct figure for this reporting period if different to mapped value.",
+                        "items": [
+                          {
+                            "source": "areaTreatedHaIdentified",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          },
+                          {
+                            "source": "lengthTreatedKmIdentified",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "preLabel": "Reason for actual being different to mapped amount",
+                                "source": "mappingNotAlignedReasonIdentified",
+                                "type": "selectOne"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                                "source": "mappingNotAlignedCommentsIdentified",
+                                "type": "textarea",
+                                "rows": 5
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
                         "width": "20%",
-                        "source": "outcomesAchievement",
-                        "title": "How do they contribute to the achievement of the outcome statement/s?",
+                        "source": "identifiedSitesName",
+                        "title": "Name of identified and prioritised site",
                         "type": "textarea"
                       }
                     ],
+                    "addRowText": "Add a new assessed site to this outcome",
                     "userAddedRows": true,
                     "disableTableUpload": true,
                     "source": "potentialSitesSurveyBaselineTable",
