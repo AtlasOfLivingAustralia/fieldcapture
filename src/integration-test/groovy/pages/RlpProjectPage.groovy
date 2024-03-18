@@ -68,7 +68,7 @@ class RlpProjectPage extends ReloadablePage {
             datasetDetails.displayed
         }
         waitFor {
-            datasetDetails.statusColumn.displayed
+            datasetDetails.summaryTable.displayed
         }
         datasetDetails
     }

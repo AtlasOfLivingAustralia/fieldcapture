@@ -71,7 +71,7 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["site"]
     },
-    "3cbc5277-45fb-4e7a-8f33-19d9bff4cd78": {"name": "Drone Survey", "usesPlotLayout": false, "tags": ["survey"]},
+    "3cbc5277-45fb-4e7a-8f33-19d9bff4cd78": {"name": "Drone Survey", "usesPlotLayout": false, "tags": ["development"]},
     "3d2eaa76-a610-4575-ac30-abf40e57b68a": {"name": "Dev sandbox", "usesPlotLayout": false, "tags": ["development"]},
     "5fd206b5-25cb-4371-bd90-7b2e8801ea25": {
         "name": "Photopoints - DSLR Panorama",
@@ -121,7 +121,13 @@ var protocols = {
         "tags": ["survey"]
     },
     "36e9d224-a51f-47ea-9442-865e80144311": {"name": "Fire Survey", "usesPlotLayout": true, "tags": ["survey"]},
-    "5005b0af-4360-4a8c-a203-b2c9e440547e": {"name": "Basal Area - DBH", "usesPlotLayout": true, "tags": ["survey"]},
+    "5005b0af-4360-4a8c-a203-b2c9e440547e": {
+        "name": "Basal Area - DBH",
+        "usesPlotLayout": true,
+        "tags": ["survey"],
+        "startDatePath": 'attributes.start_date',
+        "endDatePath": 'attributes.start_date'
+    },
     "4b8b35c7-15ef-4abd-a7b2-2f4e24509b52": {
         "name": "Basal Area - Basal Wedge",
         "usesPlotLayout": true,
