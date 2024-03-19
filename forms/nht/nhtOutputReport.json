@@ -25341,7 +25341,8 @@
                   {
                     "dataType": "text",
                     "name": "threatEcoCommunity",
-                    "validate": "maxSize[100]"
+                    "validate": "maxSize[100]",
+                    "description": "\"description\": \"This free text field allows multiple TECs to be entered. They should be written as listed in EPBC, and separated by ';'\","
                   }
                 ],
                 "dataType": "list",
@@ -25743,7 +25744,7 @@
             ]
           },
           {
-            "addRowText": "Add a new area",
+            "addRowText": "Add a new collection/propagation site",
             "userAddedRows": true,
             "source": "areasOfSeedCollection",
             "type": "repeat",
@@ -25913,7 +25914,7 @@
                         "items": [
                           {
                             "source": "inKgSeedCollected",
-                            "preLabel": "Individuals / grams collected",
+                            "preLabel": "Individuals (cuttings) / grams of seed collected",
                             "type": "selectOne"
                           }
                         ]
@@ -25929,7 +25930,7 @@
                         "items": [
                           {
                             "source": "amountSeedCollected",
-                            "preLabel": "Amount of seeds/cuttings collected",
+                            "preLabel": "Amount of seeds (grams)/Number of individuals (cuttings) collected",
                             "type": "number"
                           }
                         ]
@@ -26054,6 +26055,7 @@
                   }
                 ],
                 "userAddedRows": true,
+                "addRowText": "Add a new propagation/storage/collecting activity",
                 "disableTableUpload": true,
                 "source": "seedCollectionDetails",
                 "type": "table"
