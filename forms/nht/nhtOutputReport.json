@@ -24911,7 +24911,7 @@
                   {
                     "width": "20%",
                     "source": "objectiveRevegetationActivity",
-                    "title": "Type of revegetation activity",
+                    "title": "Objective of revegetation activity",
                     "type": "text"
                   },
                   {
@@ -28075,12 +28075,6 @@
                     "source": "numberOfDaysPreparingSite",
                     "title": "Number of days in preparing site",
                     "type": "number"
-                  },
-                  {
-                    "width": "20%",
-                    "source": "industryType",
-                    "title": "Industry type",
-                    "type": "selectOne"
                   },
                   {
                     "width": "20%",
