@@ -23941,6 +23941,7 @@
                       }
                     ],
                     "userAddedRows": true,
+                    "addRowText": "Add a new weed species",
                     "disableTableUpload": true,
                     "source": "weedSpeciesTreated",
                     "type": "table"
