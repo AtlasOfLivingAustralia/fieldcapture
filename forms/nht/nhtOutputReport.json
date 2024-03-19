@@ -27516,6 +27516,17 @@
                   },
                   {
                     "dataType": "text",
+                    "name": "otherIndustryType",
+                    "behaviour": [
+                      {
+                        "condition": "industryType == \"Other\"",
+                        "type": "enable"
+                      }
+                    ],
+                    "validate": "required,maxSize[100]"
+                  },
+                  {
+                    "dataType": "text",
                     "name": "actionType",
                     "description": "",
                     "constraints": [
@@ -27878,7 +27889,7 @@
             ]
           },
           {
-            "addRowText": "Add a new site",
+            "addRowText": "Add a new preparation site",
             "userAddedRows": true,
             "source": "sitePreparationDetailsControlled",
             "type": "repeat",
@@ -28072,6 +28083,27 @@
                     "type": "selectOne"
                   },
                   {
+                    "width": "20%",
+                    "type": "col",
+                    "title": "Industry type",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "industryType",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "source": "otherIndustryType",
+                        "placeholder": "Type of industry type (if Other)",
+                        "type": "text"
+                      }
+                    ]
+                  },
+                  {
                     "width": "25%",
                     "type": "col",
                     "title": "Type of action",
@@ -28101,6 +28133,7 @@
                 ],
                 "userAddedRows": true,
                 "disableTableUpload": true,
+                "addRowText": "Add a new activity at this site",
                 "source": "sitePreparationDetails",
                 "type": "table"
               }
