@@ -21993,7 +21993,7 @@
               },
               {
                 "dataType": "text",
-                "name": "otherRemediationType",
+                "name": "otherAquaticOrRemediationType",
                 "behaviour": [
                   {
                     "condition": "remediationType == \"Other\"",
@@ -22569,7 +22569,7 @@
             ]
           },
           {
-            "addRowText": "Add a new area",
+            "addRowText": "Add a new remediated area",
             "userAddedRows": true,
             "source": "remediatingAreas",
             "type": "repeat",
@@ -22811,7 +22811,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Type of remediation intervention installed",
+                            "preLabel": "Type of remediation intervention",
                             "source": "typesOfRemediationInstalled",
                             "type": "select2"
                           }
@@ -22837,7 +22837,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Type of aquatic and riparian remediation",
+                            "preLabel": "Type of aquatic or riparian remediation",
                             "source": "remediationType",
                             "type": "select2"
                           }
@@ -22847,8 +22847,8 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "otherRemediationType",
-                            "placeholder": "Type of aquatic and riparian remediation (if Other)",
+                            "source": "otherAquaticOrRemediationType",
+                            "placeholder": "Type of aquatic or riparian remediation (if Other)",
                             "type": "text"
                           }
                         ]
