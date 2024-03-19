@@ -32565,7 +32565,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Site/s where interventions were released (release site)",
+                            "preLabel": "Site/s where target species were relocated to (release site)",
                             "source": "sitesInterventionsReleased",
                             "type": "feature"
                           }
@@ -32604,7 +32604,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Actual area (ha) where interventions were relocated to (release site)",
+                            "preLabel": "Actual area (ha) where target species were relocated to (release site)",
                             "source": "areaTreatedHaReleased",
                             "type": "number",
                             "displayOptions": {
@@ -32679,6 +32679,7 @@
                 ],
                 "userAddedRows": true,
                 "disableTableUpload": true,
+                "addRowText": "Add a new species",
                 "source": "interventionSpecies",
                 "type": "table"
               }
