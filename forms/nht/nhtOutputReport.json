@@ -24370,14 +24370,13 @@
                   },
                   {
                     "dataType": "text",
-                    "name": "typeOfRevegetationActivity",
+                    "name": "objectiveRevegetationActivity",
                     "validate": "required,maxSize[100]"
                   },
                   {
                     "dataType": "text",
                     "name": "revegetationMethod",
                     "dwcAttribute": "establishmentMeans",
-                    "description": "If 'Other', please identify in 'Type of revegetation activity' field.",
                     "constraints": [
                       "Direct seeding",
                       "Tubestock planting",
@@ -24385,6 +24384,17 @@
                       "Other"
                     ],
                     "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "otherRevegetationMethod",
+                    "behaviour": [
+                      {
+                        "condition": "revegetationMethod == \"Other\"",
+                        "type": "enable"
+                      }
+                    ],
+                    "validate": "required,maxSize[100]"
                   },
                   {
                     "dataType": "text",
@@ -24859,7 +24869,6 @@
                 ]
               },
               {
-                "addRowText": "Add a row",
                 "columns": [
                   {
                     "width": "20%",
@@ -24875,13 +24884,33 @@
                   },
                   {
                     "width": "10%",
-                    "source": "revegetationMethod",
                     "title": "Planting method",
-                    "type": "selectOne"
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "revegetationMethod",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Planting method (if other)",
+                            "source": "otherRevegetationMethod",
+                            "type": "textarea"
+                          }
+                        ]
+                      }
+                    ]
                   },
                   {
                     "width": "20%",
-                    "source": "typeOfRevegetationActivity",
+                    "source": "objectiveRevegetationActivity",
                     "title": "Type of revegetation activity",
                     "type": "text"
                   },
@@ -24899,6 +24928,7 @@
                   }
                 ],
                 "userAddedRows": true,
+                "addRowText": "Add a new plant species to this area",
                 "disableTableUpload": true,
                 "source": "revegetationDetails",
                 "type": "table"
