@@ -1259,7 +1259,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalCaptiveBreedingEstablishedInvoiced < totalCaptiveBreedingEstablished or totalCaptiveBreedingMaintainedInvoiced < totalCaptiveBreedingMaintained",
+                "condition": "+totalCaptiveBreedingEstablishedInvoiced < +totalCaptiveBreedingEstablished or +totalCaptiveBreedingMaintainedInvoiced < +totalCaptiveBreedingMaintained",
                 "type": "enable"
               }
             ]
@@ -2122,7 +2122,7 @@
             "validate": "maxSize[400],required,min[0]",
             "behaviour": [
               {
-                "condition": "totalMaterialsPublishedInvoiced < totalMaterialsPublished",
+                "condition": "+totalMaterialsPublishedInvoiced < +totalMaterialsPublished",
                 "type": "enable"
               }
             ]
@@ -2739,7 +2739,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalNumberEngagementHeldInvoiced < totalNumberEngagementHeld",
+                "condition": "+totalNumberEngagementHeldInvoiced < +totalNumberEngagementHeld",
                 "type": "enable"
               }
             ]
@@ -3558,7 +3558,7 @@
             "validate": "maxSize[400],required,min[0]",
             "behaviour": [
               {
-                "condition": "totalStructuresInstalledInvoiced < totalStructuresInstalled or totalLengthStructuresInstalledInvoiced < totalLengthStructuresInstalled or totalAreaStructuresInstalledInvoiced < totalAreaStructuresInstalled",
+                "condition": "+totalStructuresInstalledInvoiced < +totalStructuresInstalled or +totalLengthStructuresInstalledInvoiced < +totalLengthStructuresInstalled or +totalAreaStructuresInstalledInvoiced < +totalAreaStructuresInstalled",
                 "type": "enable"
               }
             ]
@@ -4580,7 +4580,7 @@
             "validate": "maxSize[400],required,min[0]",
             "behaviour": [
               {
-                "condition": "totalAreaPestAnimalsTreatedInitialInvoiced < totalAreaPestAnimalsTreatedInitial or totalAreaPestAnimalsTreatedFollowUpInvoiced < totalAreaPestAnimalsTreatedFollowUp or totalLengthPestAnimalsTreatedInitialInvoiced < totalLengthPestAnimalsTreatedInitial or totalLengthPestAnimalsTreatedFollowUpInvoiced < totalLengthPestAnimalsTreatedFollowUp",
+                "condition": "+totalAreaPestAnimalsTreatedInitialInvoiced < +totalAreaPestAnimalsTreatedInitial or +totalAreaPestAnimalsTreatedFollowUpInvoiced < +totalAreaPestAnimalsTreatedFollowUp or +totalLengthPestAnimalsTreatedInitialInvoiced < +totalLengthPestAnimalsTreatedInitial or +totalLengthPestAnimalsTreatedFollowUpInvoiced < +totalLengthPestAnimalsTreatedFollowUp",
                 "type": "enable"
               }
             ]
@@ -5588,7 +5588,7 @@
             "validate": "maxSize[400],required,min[0]",
             "behaviour": [
               {
-                "condition": "totalAreaDebrisRemovedInitialInvoiced < totalAreaDebrisRemovedInitial or totalLengthDebrisRemovedInvoicedInitial < totalLengthDebrisRemovedInitial or totalAreaDebrisRemovedInvoicedFollowup < totalAreaDebrisRemovedFollowup or totalLengthDebrisRemovedInvoicedFollowup < totalLengthDebrisRemovedFollowup",
+                "condition": "+totalAreaDebrisRemovedInitialInvoiced < +totalAreaDebrisRemovedInitial or +totalLengthDebrisRemovedInvoicedInitial < +totalLengthDebrisRemovedInitial or +totalAreaDebrisRemovedInvoicedFollowup < +totalAreaDebrisRemovedFollowup or +totalLengthDebrisRemovedInvoicedFollowup < +totalLengthDebrisRemovedFollowup",
                 "type": "enable"
               }
             ]
@@ -6668,7 +6668,7 @@
             "validate": "maxSize[400],required,min[0]",
             "behaviour": [
               {
-                "condition": "totalLengthStreamCoastlineInitialInvoice < totalLengthStreamCoastlineInitial or totalLengthStreamCoastlineInvoicedFollowup < totalLengthStreamCoastlineFollowup or totalAreaErosionControlInvoicedInitial < totalAreaErosionControlInitial or totalAreaErosionControlInvoicedFollowup < totalAreaErosionControlFollowup",
+                "condition": "+totalLengthStreamCoastlineInitialInvoice < +totalLengthStreamCoastlineInitial or +totalLengthStreamCoastlineInvoicedFollowup < +totalLengthStreamCoastlineFollowup or +totalAreaErosionControlInvoicedInitial < +totalAreaErosionControlInitial or +totalAreaErosionControlInvoicedFollowup < +totalAreaErosionControlFollowup",
                 "type": "enable"
               }
             ]
@@ -7713,7 +7713,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalNoPestFreeSurveyEstablishedInvoiced < totalNoPestFreeSurveyEstablished or totalNoPestFreeSurveyMaintainedInvoiced < totalNoPestFreeSurveyMaintained or totalNoDaysMaintainingPestFreeInvoiced < totalNoDaysMaintainingPestFree or totalAreaPestFreeSurveyInitialInvoiced < totalAreaPestFreeSurveyInitial",
+                "condition": "+totalNoPestFreeSurveyEstablishedInvoiced < +totalNoPestFreeSurveyEstablished or +totalNoPestFreeSurveyMaintainedInvoiced < +totalNoPestFreeSurveyMaintained or +totalNoDaysMaintainingPestFreeInvoiced < +totalNoDaysMaintainingPestFree or +totalAreaPestFreeSurveyInitialInvoiced < +totalAreaPestFreeSurveyInitial",
                 "type": "enable"
               }
             ]
@@ -8656,7 +8656,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalAreaConservationAgreementsInvoiced < totalAreaConservationAgreements or totalAreaActivitiesConductedInvoiced < totalAreaActivitiesConducted",
+                "condition": "+totalAreaConservationAgreementsInvoiced < +totalAreaConservationAgreements or +totalAreaActivitiesConductedInvoiced < +totalAreaActivitiesConducted",
                 "type": "enable"
               }
             ]
@@ -9680,7 +9680,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator or totalSurveyBaselineInvoiced < totalSurveyBaseline",
+                "condition": "+totalSurveyIndicatorInvoiced < +totalSurveyIndicator or +totalSurveyBaselineInvoiced < +totalSurveyBaseline",
                 "type": "enable"
               }
             ]
@@ -10764,7 +10764,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator or totalSurveyBaselineInvoiced < totalSurveyBaseline",
+                "condition": "+totalSurveyIndicatorInvoiced < +totalSurveyIndicator or +totalSurveyBaselineInvoiced < +totalSurveyBaseline",
                 "type": "enable"
               }
             ]
@@ -11938,7 +11938,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalNoDaysCulturalPracticesInvoiced < totalNoDaysCulturalPractices",
+                "condition": "+totalNoDaysCulturalPracticesInvoiced < +totalNoDaysCulturalPractices",
                 "type": "enable"
               }
             ]
@@ -13111,7 +13111,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator or totalSurveyBaselineInvoiced < totalSurveyBaseline",
+                "condition": "+totalSurveyIndicatorInvoiced < +totalSurveyIndicator or +totalSurveyBaselineInvoiced < +totalSurveyBaseline",
                 "type": "enable"
               }
             ]
@@ -14179,7 +14179,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalAreaAugmentationInitialInvoiced < totalAreaAugmentationInitial or totalAreaAugmentationMaintainedInvoiced < totalAreaAugmentationMaintained or totalStructuresInstalledInitialInvoiced < totalStructuresInstalledInitial or totalStructuresInstalledMaintainedInvoiced < totalStructuresInstalledMaintained",
+                "condition": "+totalAreaAugmentationInitialInvoiced < +totalAreaAugmentationInitial or +totalAreaAugmentationMaintainedInvoiced < +totalAreaAugmentationMaintained or +totalStructuresInstalledInitialInvoiced < +totalStructuresInstalledInitial or +totalStructuresInstalledMaintainedInvoiced < +totalStructuresInstalledMaintained",
                 "type": "enable"
               }
             ]
@@ -14504,7 +14504,7 @@
                         "items": [
                           {
                             "source": "noStructuresInstalled",
-                            "preLabel": "Number of structures installed/maintained",
+                            "preLabel": "Number of locations where structures installed/maintained",
                             "type": "number"
                           }
                         ]
@@ -15262,7 +15262,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator or totalSurveyBaselineInvoiced < totalSurveyBaseline",
+                "condition": "+totalSurveyIndicatorInvoiced < +totalSurveyIndicator or +totalSurveyBaselineInvoiced < +totalSurveyBaseline",
                 "type": "enable"
               }
             ]
@@ -16307,7 +16307,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalPotentialSitesInvoiced < totalPotentialSites",
+                "condition": "+totalPotentialSitesInvoiced < +totalPotentialSites",
                 "type": "enable"
               }
             ]
@@ -17239,7 +17239,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalAreaTreatedFireMgmtInitialInvoiced < totalAreaTreatedFireMgmtInitial or totalAreaTreatedFireMgmtFollowupInvoiced < totalAreaTreatedFireMgmtFollowup",
+                "condition": "+totalAreaTreatedFireMgmtInitialInvoiced < +totalAreaTreatedFireMgmtInitial or +totalAreaTreatedFireMgmtFollowupInvoiced < +totalAreaTreatedFireMgmtFollowup",
                 "type": "enable"
               }
             ]
@@ -18104,7 +18104,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalHydroTreatmentsInitialInvoiced < totalHydroTreatmentsInitial or totalHydroTreatmentsFollowupInvoiced < totalHydroTreatmentsFollowup",
+                "condition": "+totalHydroTreatmentsInitialInvoiced < +totalHydroTreatmentsInitial or +totalHydroTreatmentsFollowupInvoiced < +totalHydroTreatmentsFollowup",
                 "type": "enable"
               }
             ]
@@ -19064,7 +19064,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalAreaPracticeChangeInitialInvoiced < totalAreaPracticeChangeInitial or totalAreaPracticeChangeInvoicedFollowup < totalAreaPracticeChangeFollowup",
+                "condition": "+totalAreaPracticeChangeInitialInvoiced < +totalAreaPracticeChangeInitial or +totalAreaPracticeChangeInvoicedFollowup < +totalAreaPracticeChangeFollowup",
                 "type": "enable"
               }
             ]
@@ -19988,7 +19988,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalAreaDiseaseManagementInitialInvoiced < totalAreaDiseaseManagementInitial or totalAreaDiseaseManagementInvoicedFollowup < totalAreaDiseaseManagementFollowup or totalLengthDiseaseManagementInvoicedInitial < totalLengthDiseaseManagementInitial or totalLengthDiseaseManagementInvoicedFollowup < totalLengthDiseaseManagementFollowup",
+                "condition": "+totalAreaDiseaseManagementInitialInvoiced < +totalAreaDiseaseManagementInitial or +totalAreaDiseaseManagementInvoicedFollowup < +totalAreaDiseaseManagementFollowup or +totalLengthDiseaseManagementInvoicedInitial < +totalLengthDiseaseManagementInitial or +totalLengthDiseaseManagementInvoicedFollowup < +totalLengthDiseaseManagementFollowup",
                 "type": "enable"
               }
             ]
@@ -20449,7 +20449,7 @@
                   }
                 ],
                 "userAddedRows": true,
-                "addRowText": "Add a new disease being managed to this area",
+                "addRowText": "Add a new disease being managed in this area",
                 "disableTableUpload": true,
                 "source": "diseaseManagementDetails",
                 "type": "table"
@@ -21057,7 +21057,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator or totalSurveyBaselineInvoiced < totalSurveyBaseline",
+                "condition": "+totalSurveyIndicatorInvoiced < +totalSurveyIndicator or +totalSurveyBaselineInvoiced < +totalSurveyBaseline",
                 "type": "enable"
               }
             ]
@@ -22299,7 +22299,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalAreaRemediationInitialInvoiced < totalAreaRemediationInitial or totalAreaRemediationFollowupInvoiced < totalAreaRemediationFollowup or totalLengthRemediationInitialInvoiced < totalLengthRemediationInitial or totalLengthRemediationFollowupInvoiced < totalLengthRemediationFollowup or totalStructuresInstalledInvoiced < totalStructuresInstalled",
+                "condition": "+totalAreaRemediationInitialInvoiced < +totalAreaRemediationInitial or +totalAreaRemediationFollowupInvoiced < +totalAreaRemediationFollowup or +totalLengthRemediationInitialInvoiced < +totalLengthRemediationInitial or +totalLengthRemediationFollowupInvoiced < +totalLengthRemediationFollowup or +totalStructuresInstalledInvoiced < +totalStructuresInstalled",
                 "type": "enable"
               }
             ]
@@ -23481,7 +23481,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalAreaWeedsTreatedInitialInvoiced < totalAreaWeedsTreatedInitial or totalAreaWeedsTreatedInvoicedFollowup < totalAreaWeedsTreatedFollowup or totalLengthWeedsTreatedInvoicedInitial < totalLengthWeedsTreatedInitial or totalLengthWeedsTreatedInvoicedFollowup < totalLengthWeedsTreatedFollowup",
+                "condition": "+totalAreaWeedsTreatedInitialInvoiced < +totalAreaWeedsTreatedInitial or +totalAreaWeedsTreatedInvoicedFollowup < +totalAreaWeedsTreatedFollowup or +totalLengthWeedsTreatedInvoicedInitial < +totalLengthWeedsTreatedInitial or +totalLengthWeedsTreatedInvoicedFollowup < +totalLengthWeedsTreatedFollowup",
                 "type": "enable"
               }
             ]
@@ -24491,7 +24491,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalAreaWeedsTreatedInitialInvoiced < totalAreaWeedsTreatedInitial or totalAreaWeedsTreatedInvoicedFollowup < totalAreaWeedsTreatedFollowup",
+                "condition": "+totalAreaWeedsTreatedInitialInvoiced < +totalAreaWeedsTreatedInitial or +totalAreaWeedsTreatedInvoicedFollowup < +totalAreaWeedsTreatedFollowup",
                 "type": "enable"
               }
             ]
@@ -25342,7 +25342,7 @@
                     "dataType": "text",
                     "name": "threatEcoCommunity",
                     "validate": "maxSize[100]",
-                    "description": "\"description\": \"This free text field allows multiple TECs to be entered. They should be written as listed in EPBC, and separated by ';'\","
+                    "description": "This free text field allows multiple TECs to be entered. They should be written as listed in EPBC, and separated by ';'"
                   }
                 ],
                 "dataType": "list",
@@ -25512,7 +25512,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalAmountSeedsCuttingsCollectedInvoiced < totalAmountSeedsCuttingsCollected or totalDaysSeedsCuttingsCollectedInvoiced < totalDaysSeedsCuttingsCollected or totalDaysPropagatingInvoiced < totalDaysPropagating or totalPlantsPropagatedInvoiced < totalPlantsPropagated",
+                "condition": "+totalAmountSeedsCuttingsCollectedInvoiced < +totalAmountSeedsCuttingsCollected or +totalDaysSeedsCuttingsCollectedInvoiced < +totalDaysSeedsCuttingsCollected or +totalDaysPropagatingInvoiced < +totalDaysPropagating or +totalPlantsPropagatedInvoiced < +totalPlantsPropagated",
                 "type": "enable"
               }
             ]
@@ -26665,7 +26665,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator",
+                "condition": "+totalSurveyIndicatorInvoiced < +totalSurveyIndicator",
                 "type": "enable"
               }
             ]
@@ -27703,7 +27703,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalAreaSitePreparationInvoiced < totalAreaSitePreparation or totalLengthSitePreparationInvoiced < totalLengthSitePreparation",
+                "condition": "+totalAreaSitePreparationInvoiced < +totalAreaSitePreparation or +totalLengthSitePreparationInvoiced < +totalLengthSitePreparation",
                 "type": "enable"
               }
             ]
@@ -28726,7 +28726,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator or totalSurveyBaselineInvoiced < totalSurveyBaseline",
+                "condition": "+totalSurveyIndicatorInvoiced < +totalSurveyIndicator or +totalSurveyBaselineInvoiced < +totalSurveyBaseline",
                 "type": "enable"
               }
             ]
@@ -29744,7 +29744,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator or totalSurveyBaselineInvoiced < totalSurveyBaseline",
+                "condition": "+totalSurveyIndicatorInvoiced < +totalSurveyIndicator or +totalSurveyBaselineInvoiced < +totalSurveyBaseline",
                 "type": "enable"
               }
             ]
@@ -30677,7 +30677,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalAnnualFtesInvoiced < totalAnnualFtes",
+                "condition": "+totalAnnualFtesInvoiced < +totalAnnualFtes",
                 "type": "enable"
               }
             ]
@@ -31371,7 +31371,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalNumberBaselineDatasetsInvoiced < totalNumberBaselineDatasets",
+                "condition": "+totalNumberBaselineDatasetsInvoiced < +totalNumberBaselineDatasets",
                 "type": "enable"
               }
             ]
@@ -32192,7 +32192,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalNumberInterventionsInitialInvoiced < totalNumberInterventionsInitial or totalNumberInterventionsFollowUpInvoiced < totalNumberInterventionsFollowUp",
+                "condition": "+totalNumberInterventionsInitialInvoiced < +totalNumberInterventionsInitial or +totalNumberInterventionsFollowUpInvoiced < +totalNumberInterventionsFollowUp",
                 "type": "enable"
               }
             ]
@@ -33296,7 +33296,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator or totalSurveyBaselineInvoiced < totalSurveyBaseline",
+                "condition": "+totalSurveyIndicatorInvoiced < +totalSurveyIndicator or +totalSurveyBaselineInvoiced < +totalSurveyBaseline",
                 "type": "enable"
               }
             ]
@@ -34446,7 +34446,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "totalSurveyIndicatorInvoiced < totalSurveyIndicator or totalSurveyBaselineInvoiced < totalSurveyBaseline",
+                "condition": "+totalSurveyIndicatorInvoiced < +totalSurveyIndicator or +totalSurveyBaselineInvoiced < +totalSurveyBaseline",
                 "type": "enable"
               }
             ]
