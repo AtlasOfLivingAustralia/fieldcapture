@@ -16265,6 +16265,14 @@
                 ],
                 "dataType": "list",
                 "name": "potentialSitesSurveyBaselineTable"
+              },
+              {
+                "dataType": "number",
+                "name": "rowCount",
+                "decimalPlaces": 0,
+                "computed": {
+                  "expression": "sum(potentialSitesSurveyBaselineTable, \"assessedSitesName ? 1 : 0\")"
+                }
               }
             ],
             "dataType": "list",
@@ -16277,7 +16285,7 @@
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(potentialSiteSurveys, \"relatedOutcomes ? 1 : 0\")"
+              "expression": "sum(potentialSiteSurveys, \"rowCount\")"
             }
           },
           {
