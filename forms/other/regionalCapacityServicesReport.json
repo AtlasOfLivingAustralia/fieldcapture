@@ -10,7 +10,6 @@
       "templateName": "regionalCapacityServicesReport",
       "template": {
         "dataModel": [
-
           {
             "name": "governanceAndFinancialFrameworksOnTrack",
             "dataType": "text",
@@ -33,7 +32,7 @@
           },
           {
             "name": "whsUndergoneReview",
-            "description":"Service Providers shall review the organisation's WHS management system (Manual/plan or policy) at planned intervals (not exceeding 3 years) to ensure its continuing suitability, adequacy, and effectiveness. Trigger to warrant a review may include:<ul><li>Change in Executive Staff</li><li>Changes in Legislation</li><li>As a result of an incident or event</li><li>As a result of an internal or external audit or assurance activity.</li></ul>",
+            "description": "Service Providers shall review the organisation's WHS management system (Manual/plan or policy) at planned intervals (not exceeding 3 years) to ensure its continuing suitability, adequacy, and effectiveness. Trigger to warrant a review may include:<ul><li>Change in Executive Staff</li><li>Changes in Legislation</li><li>As a result of an incident or event</li><li>As a result of an internal or external audit or assurance activity.</li></ul>",
             "dataType": "text",
             "validate": "required",
             "constraints": [
@@ -79,7 +78,7 @@
           },
           {
             "name": "whsIncidentsOccured",
-            "description":"A WHS Notifiable incident is defined within Work Health and Safety Act (Cth) 2011 Part 3 – Incident Notification.<br>Refer to Deed of Standing offer clause 42 Work Health and Safety for further information on these requirements.",
+            "description": "A WHS Notifiable incident is defined within Work Health and Safety Act (Cth) 2011 Part 3 – Incident Notification.<br>Refer to Deed of Standing offer clause 42 Work Health and Safety for further information on these requirements.",
             "dataType": "text",
             "validate": "required",
             "constraints": [
@@ -189,15 +188,15 @@
           {
             "columns": [
               {
-              "name": "workshopEventType",
-              "dataType": "text",
+                "name": "workshopEventType",
+                "dataType": "text",
                 "validate": "required,maxSize[500]",
-              "behaviour": [
-                {
-                  "type": "enable_and_clear",
-                  "condition": "communityConductWorkshops == \"Yes\""
-                }
-              ]
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "communityConductWorkshops == \"Yes\""
+                  }
+                ]
               },
               {
                 "name": "workshopTitle",
@@ -266,7 +265,7 @@
                 "behaviour": [
                   {
                     "type": "enable_and_clear",
-                    "condition": "communityConductWorkshops == \"Yes\""
+                    "condition": "supportCommunityWorkshops == \"Yes\""
                   }
                 ]
               },
@@ -277,7 +276,7 @@
                 "behaviour": [
                   {
                     "type": "enable_and_clear",
-                    "condition": "communityConductWorkshops == \"Yes\""
+                    "condition": "supportCommunityWorkshops == \"Yes\""
                   }
                 ]
               },
@@ -288,7 +287,7 @@
                 "behaviour": [
                   {
                     "type": "enable_and_clear",
-                    "condition": "communityConductWorkshops == \"Yes\""
+                    "condition": "supportCommunityWorkshops == \"Yes\""
                   }
                 ]
               }
@@ -317,7 +316,6 @@
               }
             ]
           },
-
           {
             "name": "communicationMaterialPublished",
             "dataType": "text",
@@ -349,7 +347,6 @@
         "modelName": "Regional capacity services - reporting",
         "title": "Regional capacity services - reporting",
         "viewModel": [
-
           {
             "type": "row",
             "items": [
@@ -511,7 +508,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "Q5b. Please confirm that you have reported via the IPPRS this period, and this report has been uploaded to the documents tab in MERIT.",
+                "preLabel": "Q5b. Please confirm that you have reported via the IPPRS this period, and this report has been attached.",
                 "source": "reportedToIpprs",
                 "type": "boolean"
               }
@@ -523,7 +520,7 @@
               {
                 "type": "document",
                 "source": "ipprsReport",
-                "preLabel": "Please attach the document here"
+                "preLabel": "Please attach the document here."
               }
             ]
           },

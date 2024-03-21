@@ -28,13 +28,14 @@ var Master = function (activityId, config) {
     var activityStorageKey = options.activityStorageKey;
 
     // client models register their name and methods to participate in saving
-    self.register = function (modelInstanceName, getMethod, isDirtyMethod, resetMethod, saveCallback) {
+    self.register = function (modelInstanceName, getMethod, isDirtyMethod, resetMethod, saveCallback, beforeSaveCallback) {
         self.subscribers.push({
             model: modelInstanceName,
             get: getMethod,
             isDirty: isDirtyMethod,
             reset: resetMethod,
-            saveCallback: saveCallback
+            saveCallback: saveCallback,
+            beforeSaveCallback: beforeSaveCallback
         });
         if (ko.isObservable(isDirtyMethod)) {
             isDirtyMethod.subscribe(function() {
@@ -208,9 +209,11 @@ var Master = function (activityId, config) {
             dirtyFlag: ko.simpleDirtyFlag,
             viewRootElementId: 'ko' + options.namespace
         };
+        // This was an observable but it's causing dirty checks to fail when the context changes state.
+        context.lifecycleState = {state:'initialising'};
         var config = _.defaults(options, defaults);
         var viewModel = new config.constructorFunction(output, config.model.dataModel, context, config);
-
+        context.lifecycleState.state = 'modelCreated';
         viewModel.initialise(output.data).done(function () {
 
             // Check for locally saved data for this output - this will happen in the event of a session timeout
@@ -231,7 +234,9 @@ var Master = function (activityId, config) {
             }
 
             // register with the master controller so this model can participate in the save cycle
-            self.register(viewModel, viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset);
+            self.register(viewModel, viewModel.modelForSaving, viewModel.dirtyFlag.isDirty, viewModel.dirtyFlag.reset, null, viewModel.clearDataIfOutputMarkedAsNotCompleted);
+
+            context.lifecycleState.state = 'initialised';
 
         });
     }
@@ -277,6 +282,13 @@ var Master = function (activityId, config) {
             valid = self.validate();
         }
 
+        // Notify each output that a save is about to occur.  This is for clearing data
+        // from sections marked "Output not completed"
+        _.each(self.subscribers, function(obj) {
+            if (_.isFunction(obj.beforeSaveCallback)) {
+                obj.beforeSaveCallback();
+            }
+        });
         var jsData = self.modelAsJS(valid);
 
         if (jsData === undefined) {

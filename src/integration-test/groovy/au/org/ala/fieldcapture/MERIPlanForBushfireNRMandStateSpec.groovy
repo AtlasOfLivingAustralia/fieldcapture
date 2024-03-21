@@ -42,6 +42,13 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
 
         when:
         def meriPlan = openMeriPlanEditTab()
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
 
         waitFor {
             meriPlan.asset.find('[value="Euastacus jagara (Freshwater crayfish)"')
@@ -163,6 +170,13 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
 
         when:
         def meriPlan = openMeriPlanEditTab()
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
 
         meriPlan.primaryOutcome = "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
         meriPlan.secondaryOutcomes[0].outcome = "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."

@@ -12,10 +12,16 @@ class AdminReportsPage extends Page {
         period {$('select#reportPeriodOfManagementUnit',0)}
         downloadReportBtn(required:false) {$('a#muReportDownload')}
         downloadReportSummaryBtn(required:false) {$('a#muReportDownloadSummary')}
+        orgDownloadReportBtn(required:false) {$('a#orgReportDownload')}
+        orgDownloadReportSummaryBtn(required:false) {$('a#orgReportDownloadSummary')}
         showDownloadDetailsIcon(required:false) { $('i.showDownloadDetailsIcon')}
-        muReportDownloadLink(required:false) {$('a#muReportDownloadLink')}
-        startDate{$("#fromDate")}
-        endDate{$("#toDate")}
+        muReportDownloadLink(required:false) {$('a#entityReportDownloadLink')}
+        startDate{$("#muFromDate")}
+        endDate{$("#muToDate")}
+        orgStartDate{$("#orgFromDate")}
+        orgEndDate{$("#orgToDate")}
+        reportFormats { $('#reportFormats')}
+        viewReportBtn(required:false) {$('#viewReportBtn')}
 
     }
 
@@ -33,6 +39,23 @@ class AdminReportsPage extends Page {
         startDate = fromDate
         endDate = toDate
         downloadReportSummaryBtn.click()
+    }
+
+    def downloadOrgReport(String fromDate, String toDate) {
+        orgStartDate = fromDate
+        orgEndDate = toDate
+        orgDownloadReportBtn.click()
+    }
+
+    def downloadOrgReportSummary(String fromDate, String toDate) {
+        orgStartDate = fromDate
+        orgEndDate = toDate
+        orgDownloadReportSummaryBtn.click()
+    }
+
+    def generateReef2050Pdf() {
+        reportFormats = "pdf"
+        viewReportBtn.click()
     }
 
 }

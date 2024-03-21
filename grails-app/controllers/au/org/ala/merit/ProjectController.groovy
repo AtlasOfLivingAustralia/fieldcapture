@@ -1,11 +1,13 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.command.MeriPlanChangesReportCommand
 import au.org.ala.merit.command.MeriPlanReportCommand
 import au.org.ala.merit.command.ProjectSummaryReportCommand
 import au.org.ala.merit.command.ReportCommand
 import au.org.ala.merit.command.SaveReportDataCommand
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
+import au.org.ala.merit.reports.ReportLifecycleListener
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import grails.core.GrailsApplication
@@ -31,14 +33,15 @@ class ProjectController {
     static String MERI_PLAN_TEMPLATE = "meriPlan"
 
     def projectService, metadataService, commonService, activityService, userService, webService, roleService
-    def siteService, documentService, reportService, blogService, pdfGenerationService
+    def siteService, documentService, reportService, blogService
     GrailsApplication grailsApplication
+    LockService lockService
 
     private def espOverview(Map project, Map user, ProgramConfig config) {
 
         Map projectArea = null
         if (project.sites) {
-            projectArea = project.sites?.find({ it.type == 'projectArea' })
+            projectArea = project.sites?.find({ it.type == SiteService.SITE_TYPE_PROJECT_AREA })
             if (!projectArea) {
                 projectArea = project.sites[0]
             }
@@ -101,7 +104,10 @@ class ProjectController {
             } else {
                 project.sites?.sort { it.name }
                 project.projectSite = project.sites?.find { it.siteId == project.projectSiteId }
-                def roles = roleService.getRoles()
+                List roles = roleService.getRoles()
+                if (config.supportsParatoo) {
+                    roles = roles + [RoleService.PROJECT_SURVEYOR_ROLE]
+                }
 
                 def members = projectService.getMembersForProjectId(id)
                 def admins = members.findAll { it.role == "admin" }.collect { it.userName }.join(",")
@@ -160,6 +166,7 @@ class ProjectController {
         def meriPlanEnabled = user?.hasViewAccess || ((project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding'))
         def meriPlanVisibleToUser = project.planStatus == 'approved' || user?.isAdmin || user?.isCaseManager || user?.hasViewAccess
         boolean userHasViewAccess = user?.hasViewAccess ?: false
+        boolean showMeriPlanComparison = config.supportsMeriPlanComparison
 
         def publicImages = project.documents.findAll {
             it.public == true && it.thirdPartyConsentDeclarationMade == true && it.type == 'image'
@@ -185,6 +192,9 @@ class ProjectController {
         boolean adminTabVisible = user?.isEditor || user?.isAdmin || user?.isCaseManager || user?.hasViewAccess
         boolean showMeriPlanHistory = config.supportsMeriPlanHistory && userService.userIsSiteAdmin()
         boolean datasetsVisible = config.includesContent(ProgramConfig.ProjectContent.DATA_SETS) && userHasViewAccess
+        if (datasetsVisible && project.custom?.dataSets) {
+            projectService.filterDataSetSummaries(project.custom?.dataSets)
+        }
         def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates, outcomes:project.outcomes, objectives:config.program?.config?.objectives],
                      documents      : [label: 'Documents', visible: config.includesContent(ProgramConfig.ProjectContent.DOCUMENTS), type: 'tab', user:user, template:'docs', activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
                      details        : [label: 'MERI Plan', default: false, disabled: !meriPlanEnabled, visible: meriPlanVisible, meriPlanVisibleToUser: meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: true, project:project, type: 'tab', template:'viewMeriPlan', meriPlanTemplate:MERI_PLAN_TEMPLATE+'View', config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
@@ -200,7 +210,7 @@ class ProjectController {
         else if (template == RLP_TEMPLATE) {
 
             // The RLP Project Template doesn't need site details or activities.
-            project.sites = new JSONArray(project.sites?.collect{new JSONObject([name:it.name, siteId:it.siteId, lastUpdated:it.lastUpdated, type:it.type, extent:[:]])} ?: [])
+            project.sites = new JSONArray(project.sites?.collect{new JSONObject([name:it.name, siteId:it.siteId, lastUpdated:it.lastUpdated, type:it.type, extent:[:], publicationStatus:it.publicationStatus, externalIds:it.externalIds])} ?: [])
             project.remove('activities')
             model.overview.template = 'rlpOverview'
 
@@ -222,7 +232,8 @@ class ProjectController {
             model.details.visible = model.details.visible && userHasViewAccess
 
             boolean reportsVisible = config.includesContent(ProgramConfig.ProjectContent.REPORTING) && userHasViewAccess
-            Map reportingTab = [label: 'Reporting', visible:reportsVisible, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager]
+
+            Map reportingTab = [label: 'Reporting', visible:reportsVisible, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager, declarationTemplate:config.getDeclarationTemplate()]
             if (reportingTab.visible) {
                 reportingTab.reportOrder = config?.projectReports?.collect{
                     [category:it.category, description:it.description, banner:it.banner, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]}?.unique({it.category}) ?: []
@@ -242,6 +253,7 @@ class ProjectController {
             rlpModel.admin.hidePrograms = true
             rlpModel.admin.showAnnouncementsTab = false
             rlpModel.admin.risksAndThreatsVisible = risksAndThreatsVisible
+            rlpModel.admin.showMeriPlanComparison = showMeriPlanComparison
 
             model = buildRLPTargetsModel(rlpModel, project)
         }
@@ -598,6 +610,16 @@ class ProjectController {
         render result as JSON
     }
 
+
+    @PreAuthorise(accessLevel = "admin")
+    def lockMeriPlan(String id) {
+        Map result = projectService.lockMeriPlanForEditing(id)
+        if (result.error) {
+            flash.message = "An error occurred while attempting to lock the MERI Plan: ${result.error}"
+        }
+        redirect action:'index', id:id
+    }
+
     @PreAuthorise(accessLevel = 'caseManager')
     def ajaxUnlockPlanForCorrection(String id) {
         def result = projectService.unlockPlanForCorrection(id, params.declaration)
@@ -631,20 +653,6 @@ class ProjectController {
     @PreAuthorise(accessLevel = 'readOnly')
     def projectReport(String id, ProjectSummaryReportCommand projectSummaryReportCommand) {
         projectSummaryReportCommand()
-    }
-
-    @PreAuthorise(accessLevel = 'admin')
-    def projectReportPDF(String id) {
-
-        Map reportUrlConfig = [controller: 'report', action: 'projectReportCallback', id: id, absolute: true, params: [fromStage: params.fromStage, toStage: params.toStage, sections: params.sections]]
-        Map pdfGenParams = [:]
-        if (params.orientation == 'landscape') {
-            pdfGenParams.options = '-O landscape'
-        }
-        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, pdfGenParams, response)
-        if (!result) {
-            render view: '/error', model: [error: "An error occurred generating the project report."]
-        }
     }
 
     /**
@@ -823,28 +831,22 @@ class ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'editor')
+    def removeMeriPlanEditLock(String id) {
+        lockService.unlock(id)
+        redirect action:'index', id:id
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def overrideMeriPlanLockAndEdit(String id) {
+        String url = g.createLink(action:'index', id:id)
+        projectService.overrideLock(id, url)
+        redirect action:'index', id:id
+
+    }
+    @PreAuthorise(accessLevel = 'editor')
     def overrideLockAndEdit(String id, String reportId) {
         reportService.overrideLock(reportId, g.createLink(action:'viewReport', id:id, params:[reportId:reportId], absolute: true))
         chain(action:'editReport', id:id, params:[reportId:reportId])
-    }
-
-    @PreAuthorise(accessLevel = 'readOnly')
-    def reportPDF(String id, String reportId) {
-        if (!id || !reportId || !projectService.doesReportBelongToProject(id, reportId)) {
-            error('An invalid report was selected for download', id)
-            return
-        }
-
-        Map reportUrlConfig = [action: 'viewReportCallback', id: id, params:[reportId:reportId]]
-
-        Map pdfGenParams = [:]
-        if (params.orientation) {
-            pdfGenParams.orientation = params.orientation
-        }
-        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, pdfGenParams, response)
-        if (!result) {
-            render view: '/error', model: [error: "An error occurred generating the project report."]
-        }
     }
 
     @PreAuthorise(accessLevel = 'admin')
@@ -857,23 +859,6 @@ class ProjectController {
         render result as JSON
     }
 
-    /**
-     * This is designed as a callback from the PDF generation service.  It produces a HTML report that will
-     * be converted into PDF.
-     * @param id the project id
-     */
-    def viewReportCallback(String id, String reportId) {
-
-        if (pdfGenerationService.authorizePDF(request)) {
-            Map model = activityReportModel(id, reportId, ReportMode.PRINT)
-
-            render view:'/activity/activityReportView', model:model
-        }
-        else {
-            render status:HttpStatus.SC_UNAUTHORIZED
-        }
-    }
-
     @PreAuthorise(accessLevel = 'readOnly', redirectController = "home")
     def ajaxProjectSites(String id) {
         Map result = projectService.projectSites(id)
@@ -881,22 +866,34 @@ class ProjectController {
         render result as JSON
     }
 
+
+
     private Map activityReportModel(String projectId, String reportId, ReportMode mode, Integer formVersion = null) {
 
         Map project = projectService.get(projectId)
         List sites = project.remove('sites')
         Map config = projectService.getProgramConfiguration(project)
         Map model = reportService.activityReportModel(reportId, mode, formVersion)
+        ReportLifecycleListener reportData = reportService.reportLifeCycleListener(model.activity.type)
+
         model.metaModel = projectService.filterOutputModel(model.metaModel, project, model.activity)
 
         model.outputModels.each { k, v ->
             if (v.scores) {
                 Map outputConfig = model.metaModel.outputConfig.find {it.outputName == k}
-                outputConfig?.outputContext = new JSONObject([scores:v.scores])
+                if (!outputConfig) {
+                    log.warn("Missing outputConfig for "+k)
+                }
+                else {
+                    outputConfig.outputContext = new JSONObject([scores:v.scores])
+                    outputConfig.outputContext.putAll(reportData.getOutputData(project, outputConfig, model.report))
+                }
+
             }
         }
 
         model.context = new HashMap(project)
+        model.context.putAll(reportData.getContextData(project, model.report))
         model.returnTo = g.createLink(action:'exitReport', id:projectId, params:[reportId:reportId])
         model.contextViewUrl = g.createLink(action:'index', id:projectId)
         model.reportHeaderTemplate = '/project/rlpProjectReportHeader'
@@ -1013,12 +1010,15 @@ class ProjectController {
     }
 
     private boolean hasTarget(value) {
-        value != 0 && value != "0"
+        if (value instanceof String) {
+            return value && value != "0"
+        }
+        value && value != 0
     }
 
     private boolean hasFinancialYearTarget(Map targetRow) {
         def financialYearTarget = targetRow.financialYearTarget
-        financialYearTarget != 0 && financialYearTarget != "0"
+        hasTarget(financialYearTarget)
     }
 
     @PreAuthorise(accessLevel ='siteAdmin')
@@ -1077,6 +1077,24 @@ class ProjectController {
         }
     }
 
+    @PreAuthorise(accessLevel = 'admin')
+    def viewMeriPlanChanges(MeriPlanChangesReportCommand meriPlanChangesReportCommand) {
+        Map model
+        // Only grant/project managers can view historical MERI plans.
+        if (meriPlanChangesReportCommand.documentId && !userService.userIsSiteAdmin()) {
+            render status:HttpStatus.SC_UNAUTHORIZED
+        }
+        else {
+            model = meriPlanChangesReportCommand.meriPlanChangesReportModel()
+            if (!model.error) {
+                render view:'/project/meriPlanChangesReport', model:model
+            }
+            else {
+                render status: HttpStatus.SC_NOT_FOUND
+            }
+        }
+    }
+
     /**
      * This method returns the investment priorities listed in the primary and secondary outcome sections of the
      * RLP MERI plan into a single list for the purposes of pre-populating one of the RLP outcomes reporting forms.
@@ -1097,8 +1115,9 @@ class ProjectController {
 
     @PreAuthorise(accessLevel = 'editor')
     def monitoringProtocolFormCategories() {
+        String MONITORING_TAG = 'survey'
         List<Map> forms = activityService.monitoringProtocolForms()
-
+        forms = forms.findAll{MONITORING_TAG in it.tags}
         List<String> categories = forms?.collect{
             [label:g.message(code:it.category, default:it.category.capitalize()), value:it.category]}?.unique()?.sort({it.label})
         render categories as JSON

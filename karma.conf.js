@@ -49,6 +49,8 @@ module.exports = function (config) {
             'grails-app/assets/components/components.js',
             'grails-app/assets/components/compile/*.js',
             'grails-app/assets/components/javascript/*.js',
+            'node_modules/@atlasoflivingaustralia/ecodata-client-plugin/grails-app/assets/javascripts/utils.js',
+            'node_modules/@atlasoflivingaustralia/ecodata-client-plugin/grails-app/assets/javascripts/knockout-dates.js',
             'src/test/js/spec/**/*.js'
         ],
 

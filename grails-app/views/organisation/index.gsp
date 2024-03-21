@@ -24,7 +24,7 @@
             editReportUrl: "${g.createLink(action:'editOrganisationReport', id:organisation.organisationId)}",
             resetReportUrl: "${createLink(action:'resetReport', id:organisation.organisationId)}",
             regenerateOrganisationReportsUrl: "${createLink(action:"regenerateOrganisationReports", id:organisation.organisationId)}",
-            reportPDFUrl: "${g.createLink(action:'performanceReportPDF')}",
+            reportPDFUrl: "${createLink(action:"printOrganisationReport", id:organisation.organisationId)}",
             organisationMembersUrl: "${loadPermissionsUrl}",
             imageLocation:"${assetPath(src:'/')}",
             logoLocation:"${assetPath(src:'/filetypes')}",
@@ -39,11 +39,12 @@
             approveReportUrl: '${g.createLink( action:'ajaxApproveReport', id:"${organisation.organisationId}")}',
             rejectReportUrl: '${g.createLink( action:'ajaxRejectReport', id:"${organisation.organisationId}")}',
             cancelReportUrl: "${createLink(action:'ajaxCancelReport', id:organisation.organisationId)}/",
-
+            reportsHistoryUrl:"${createLink(controller: 'report', action:'reportingHistory')}",
             returnTo: '${g.createLink(action:'index', id:"${organisation.organisationId}")}',
             dashboardCategoryUrl: "${g.createLink(controller: 'report', action: 'activityOutputs', params: [fq:'organisationFacet:'+organisation.name])}",
             reportOwner: {organisationId:'${organisation.organisationId}'},
             projects : <fc:modelAsJavascript model="${organisation.projects}"/>
+
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>

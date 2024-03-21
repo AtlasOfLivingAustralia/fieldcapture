@@ -1,4 +1,4 @@
-describe("ManagementUnitReportSelectorViewModel Spec", function () {
+describe("EntityReportSelectorViewModel Spec", function () {
     beforeAll(function() {
         window.fcConfig = {
             imageLocation:'/'
@@ -18,8 +18,8 @@ describe("ManagementUnitReportSelectorViewModel Spec", function () {
     });
 
     it("Should able to download the report", function() {
-        var options = {generateMUReportInPeriodUrl:'/test/url'};
-        var model = new ManagementUnitReportSelectorViewModel(options);
+        var options = {generateEntityReportInPeriodUrl:'/test/url?entity=organisation'};
+        var model = new EntityReportSelectorViewModel(options);
 
         var ajaxCall = spyOn($, 'ajax').and.callFake(function () {
             var d = $.Deferred();
@@ -30,11 +30,11 @@ describe("ManagementUnitReportSelectorViewModel Spec", function () {
 
         spyOn(bootbox, 'alert');
 
-        model.muReportDownloadSummary()
+        model.entityReportDownloadSummary()
         var expected = {
-            url: options.generateMUReportInPeriodUrl,
+            url: options.generateEntityReportInPeriodUrl,
             type: 'GET',
-            data: Object({ fromDate:'2018-07-01T02:04:45Z', toDate:'2018-07-01T02:04:45Z', summaryFlag: true }),
+            data: Object({ fromDate:'2018-07-01T02:04:45Z', toDate:'2018-07-01T02:04:45Z', summaryFlag: true, entity: 'organisation' }),
             dataType: 'json',
             contentType: 'application/json'
         };

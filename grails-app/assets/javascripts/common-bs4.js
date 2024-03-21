@@ -18,6 +18,7 @@
 //= require fieldcapture-application
 //= require healthCheck
 //= require knockout-utils
+//= require utils
 //= require knockout-dates
 //= require knockout-custom-bindings
 //= require wmd/wmd.js
@@ -53,5 +54,16 @@ ReportStatus = {
 
     isCancelled: function(status) {
         return status && status.toLowerCase() == this.CANCELLED;
+    }
+}
+
+PublicationStatus = {
+    PUBLISHED: 'published',
+    SUBMITTED: 'pendingApproval',
+    UNPUBLISHED: 'unpublished',
+    CANCELLED: 'cancelled',
+
+    isReadOnly: function(status) {
+        return status && status != '' && status != this.UNPUBLISHED;
     }
 }

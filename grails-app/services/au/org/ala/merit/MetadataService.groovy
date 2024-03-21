@@ -250,7 +250,7 @@ class MetadataService {
 
     def getAccessLevels() {
         return cacheService.get('accessLevels',{
-            webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') +  "permissions/getAllAccessLevels")
+            webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') +  "permissions/getAllAccessLevels?baseLevel=${RoleService.PROJECT_SURVEYOR_ROLE}")
         })
     }
 

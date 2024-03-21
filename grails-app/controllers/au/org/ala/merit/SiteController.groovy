@@ -27,13 +27,14 @@ class SiteController {
     }
 
     def createForProject(){
-        def project = projectService.getRich(params.projectId)
+        def project = projectService.get(params.projectId, 'all')
         // permissions check
         if (!projectService.canUserEditProject(userService.getCurrentUserId(), params.projectId)) {
             flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${params.projectId}"
             redirect(controller:'project', action:'index', id: params.projectId)
         }
-        render view: 'edit', model: [create:true, project:project, documents:[]]
+
+        render view: 'edit', model: [create:true, project:project, documents:[], siteTypes:siteTypes(null, project)]
     }
 
     def index(String id) {
@@ -46,6 +47,7 @@ class SiteController {
             if (!isUserMemberOfSiteProjects(site)) {
                 flash.message = "Access denied: User does not have permission to view site: ${id}"
                 redirect(controller:'home', action:'index')
+                return
             }
 
             List userProjects = site.projects?.findAll { projectService.canUserViewProject(user?.userId, it.projectId) }
@@ -55,8 +57,8 @@ class SiteController {
             if (params.projectId) {
                 selectedProject = userProjects.find{it.projectId == params.projectId}
             }
-            else if (userProjects.size() == 1) {
-                selectedProject = userProjects[0]
+            else if (userProjects.size() >= 1) {
+                selectedProject = userProjects[0] // Just pick a random project for context if navigation wasn't from the project.
             }
 
             // Filter visible activities to those the user has access to.
@@ -116,11 +118,39 @@ class SiteController {
             flash.message = "Access denied: User does not have <b>editor</b> permission to edit site: ${id}"
             redirect(controller:'home', action:'index')
         } else {
-            if (result.site.type == SiteService.SITE_TYPE_COMPOUND) {
+            if (SiteService.isReadOnly(result.site)) {
                 redirect(action:'index', id:id)
             }
-            result
         }
+
+        Map site = result.site
+        Map project = null
+        // Don't allow a site to be a project area if it:
+        // 1) Isn't associated with a project
+        // 2) Is associated with more than one project.
+        if (site.projects && site.projects.size() == 1) {
+            project = projectService.get(site.projects[0], 'all')
+        }
+        result.siteTypes = siteTypes(site, project)
+        result
+    }
+
+    /**
+     * Returns a List to use to render the site type dropdown.
+     * Projects are only allowed to have one project area, and project areas can only be associated with a
+     * single Project.
+     *
+     * @param project If this site is for a single project, supplying it here will allow a check whether
+     * the site is allowed to be a project area.
+     * @return
+     */
+    private List<Map> siteTypes(Map site, Map project) {
+        List siteTypes = [SiteService.SITE_TYPE_WORKS_AREA, SiteService.SITE_TYPE_SURVEY_AREA]
+        if (site?.type == SiteService.SITE_TYPE_PROJECT_AREA || (project && !projectService.hasProjectArea(project))) {
+            siteTypes << SiteService.SITE_TYPE_PROJECT_AREA
+        }
+
+        siteTypes.collect{[value:it, label:g.message(code:'site.type.'+it, default:it)]}
     }
 
     def downloadShapefile(String id) {
@@ -140,6 +170,25 @@ class SiteController {
         }
     }
 
+    /** Returns geojon for a site */
+    def geojson(String id) {
+        Map site = siteService.get(id)
+        if (!site) {
+            Map resp = [status:HttpStatus.SC_NOT_FOUND]
+            render resp as JSON
+            return
+        }
+        if (!isUserMemberOfSiteProjects(site)) {
+            Map resp = [status:HttpStatus.SC_UNAUTHORIZED]
+            render resp as JSON
+            return
+        }
+
+        Map resp = siteService.getSiteGeoJson(site.siteId)
+        resp = resp?.resp ?: resp // Render the geojson directly if successful, otherwise render the ecodata response including the status
+        render resp as JSON
+    }
+
     @PreAuthorise(accessLevel = 'editor')
     def ajaxDeleteSitesFromProject(String id){
 
@@ -154,7 +203,7 @@ class SiteController {
         List siteIds = payload.siteIds
 
         project?.sites?.each { site ->
-            if (site.type == SiteService.SITE_TYPE_COMPOUND) {
+            if (SiteService.isReadOnly(site)) {
                 siteIds.remove(site.siteId)
             }
         }
@@ -176,7 +225,7 @@ class SiteController {
             return
         }
         Map site = siteService.get(id)
-        if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId) || site.type == SiteService.SITE_TYPE_COMPOUND) {
+        if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId) || SiteService.isReadOnly(site)) {
             render status:403, text: "Access denied: User does not have permission to edit sites for project: ${projectId}"
             return
         }
@@ -194,7 +243,7 @@ class SiteController {
     def ajaxDelete(String id) {
         // permissions check
         Map site = siteService.get(id)
-        if (!isUserMemberOfSiteProjects(site) || site.type == SiteService.SITE_TYPE_COMPOUND) {
+        if (!isUserMemberOfSiteProjects(site) || SiteService.isReadOnly(site)) {
             render status:403, text: "Access denied: User does not have permission to edit site: ${id}"
             return
         }
@@ -214,7 +263,7 @@ class SiteController {
         log.debug("Updating site: " + id)
         Map site = siteService.get(id)
         // permissions check
-        if (!isUserMemberOfSiteProjects(site) || site.type == SiteService.SITE_TYPE_COMPOUND) {
+        if (!isUserMemberOfSiteProjects(site) || SiteService.isReadOnly(site)) {
             render status:403, text: "Access denied: User does not have permission to edit site: ${id}"
             return
         }
@@ -238,10 +287,10 @@ class SiteController {
     }
 
     def siteUpload() {
-        String projectId = params.projectId
+        String projectId = params.id ?: params.projectId
         if (!projectService.canUserEditProject(userService.getCurrentUserId(), projectId)) {
-            flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${params.projectId}"
-            redirect(controller:'project', action:'index', id: params.projectId)
+            flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${projectId}"
+            redirect(controller:'project', action:'index', id: projectId)
         }
         else if (request.respondsTo('getFile')) {
 
@@ -255,23 +304,23 @@ class SiteController {
                     break
                 case 'kmz':
                     uploadKmz(projectId, file)
-                    redirect(controller:'project', id:params.projectId)
+                    redirect(controller:'project', id:projectId)
                     return
                 case 'kml':
                     uploadKml(projectId, file)
-                    redirect(controller:'project', id:params.projectId)
+                    redirect(controller:'project', id:projectId)
                     return
                 default:
                     flash.message = "Unsupported file type.  Please attach a shapefile, kmz or kml file"
-                    result = [view:'upload', model:[projectId: projectId, returnTo:params.returnTo]]
+                    result = [view:'upload', model:[projectId: projectId]]
             }
 
-            result.model.putAll([projectId: projectId, returnTo:params.returnTo])
+            result.model.putAll([projectId: projectId])
             render result
 
         }
         else {
-            render view:'upload', model:[projectId: projectId, returnTo:params.returnTo]
+            render view:'upload', model:[projectId: projectId]
         }
     }
 
@@ -320,7 +369,7 @@ class SiteController {
             def message ='There was an error uploading the shapefile.  Please send an email to support for further assistance.'
 
             flash.message = "An error was encountered when processing the shapefile: ${message}"
-            return [view:'upload', model:[projectId: projectId, returnTo:params.returnTo]]
+            return [view:'upload', model:[projectId: projectId]]
         }
     }
 

@@ -29,7 +29,7 @@
                 <tr>
                     <th><input type="checkbox" id="select-all-sites"></th>
                     <th></th>
-                    <th>Type <fc:iconHelp html="true">Planning site (P) or Reporting site (R)</fc:iconHelp><br/>
+                    <th>Type <fc:iconHelp html="true">Planning site (P), Reporting site (R) or EMSA site created with the Monitor app (E)</fc:iconHelp><br/>
                         <select data-bind="value:typeFilter, options:typeOptions">
 
                         </select>
@@ -42,17 +42,17 @@
                 </thead>
                 <tbody data-bind="foreach: sites">
                 <tr>
-                    <th><input type="checkbox" name="select-site" data-bind="checked:selected, enable:type != 'compound'"></th>
+                    <th><input type="checkbox" name="select-site" data-bind="checked:selected, enable:!readOnly"></th>
                     <td>
                         <g:if test="${editable}">
                             <span>
-                                <button type="button" data-bind="click:$root.editSite, visible:type != 'compound'" class="btn btn-sm btn-container"><i class="fa fa-edit" title="Edit ${wordForSite.capitalize()}"></i></button>
+                                <button type="button" data-bind="click:$root.editSite, visible:!readOnly" class="btn btn-sm btn-container"><i class="fa fa-edit" title="Edit ${wordForSite.capitalize()}"></i></button>
                                 <button type="button" data-bind="click:$root.viewSite" class="btn btn-sm btn-container"><i class="fa fa-eye" title="View ${wordForSite.capitalize()}"></i></button>
-                                <button type="button" data-bind="click:$root.deleteSite, visible:type != 'compound'" class="btn btn-sm btn-container"><i class="fa fa-remove" title="Delete ${wordForSite.capitalize()}"></i></button>
+                                <button type="button" data-bind="click:$root.deleteSite, visible:!readOnly" class="btn btn-sm btn-container"><i class="fa fa-remove" title="Delete ${wordForSite.capitalize()}"></i></button>
                             </span>
                         </g:if>
                     </td>
-                    <td data-bind="text:type == 'compound' ? 'R' : 'P', title:type == 'compound' ? 'Reporting site' :  'Planning site'">
+                    <td data-bind="text:filterType, title:filterTypeTitle">
                     </td>
 
                     <td>

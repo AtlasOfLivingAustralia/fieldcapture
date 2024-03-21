@@ -114,6 +114,9 @@ table tr.header th {
 
 .meri-plan .document-url {
     width: 20%;
+    white-space: pre-wrap;
+    word-break: break-word;
+    word-wrap: break-word;
 }
 
 .meri-plan .service {
@@ -508,4 +511,9 @@ input#changeProjectStartDate {
 
 .meri-plan .textarea-view {
     white-space: pre-wrap;
+}
+
+.meri-plan .meriList {
+    margin-left: 0;
+    padding-left: 1rem;
 }

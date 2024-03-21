@@ -305,6 +305,7 @@ class EditableMeriPlan extends Module {
         floatingSaveButton { $('#floating-save [data-bind*="saveProjectDetails"]') }
         saveButton { $('.form-actions [data-bind*="saveProjectDetails"]').first() }
         pdfButton { $('.btn[data-bind*="meriPlanPDF"]').first() }
+        meriPlanChanges { $('.btn[data-bind*="meriPlanChanges"]').first() }
         saveAndSubmitChanges { $('button.saveAndSubmitChanges').first() }
         approveButton(required:false){ $('[data-bind*="approvePlan"]') }
         rejectButton(required:false) { $('[data-bind*="rejectPlan"]') }
@@ -318,6 +319,7 @@ class EditableMeriPlan extends Module {
 
         toggleMeriPlanHistory(required:false){ $('[data-bind*="toggleMeriPlanHistory"]') }
         meriPlanHistory {module HistoryApprovedMeriPlansModule}
+        lockMeriPlanButton (required:false) { $('#lockMeriPlan') }
 
     }
 
@@ -405,6 +407,10 @@ class EditableMeriPlan extends Module {
         pdfButton.click()
     }
 
+    void compareMeriPlanChanges() {
+        meriPlanChanges.click()
+    }
+
     List checkedObjectives() {
         objectivesList.find('input:checked').collect{it.attr("value")}
     }
@@ -456,6 +462,15 @@ class EditableMeriPlan extends Module {
         if (relatedProgramOutcome) {
             shortTermOutcomes[midTermOutcomeCount].relatedProgramOutcome.value(relatedProgramOutcome)
         }
+    }
+
+    /** Users of this method should waitFor hasBeenReloaded as this triggers a page reload */
+    void aquireEditLock() {
+        lockMeriPlanButton.click()
+    }
+
+    boolean holdsEditLock() {
+        $('div.meri-lock-held').each {it.displayed}
     }
 
 }

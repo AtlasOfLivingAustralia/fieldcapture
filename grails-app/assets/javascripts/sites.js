@@ -994,6 +994,18 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
         if (!site.type) {
             site.type = 'worksArea';
         }
+        site.filterType = 'P';
+        site.filterTypeLabel = 'Planning site';
+        if (site.type === 'compound') {
+            site.filterType = 'R';
+            site.filterTypeLabel = 'Reporting site';
+        }
+        else if (site.externalIds && site.externalIds[0] && site.externalIds[0].idType == 'MONITOR_PLOT_GUID') {
+            site.filterType = 'E';
+            site.filterTypeLabel = 'Site created via EMSA protocol using the Monitor App';
+        }
+
+        site.readOnly = site.type == 'compound' || PublicationStatus.isReadOnly(site.publicationStatus);
         return site;
     });
     self.selectedSiteIds = ko.computed(function() {
@@ -1028,7 +1040,7 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
         }
         return '';
     };
-    self.typeOptions = ['Both', 'P', 'R'];
+    self.typeOptions = ['All', 'P', 'R', 'E'];
     self.typeFilter = ko.observable(self.typeOptions[0]);
 
     // Animation callbacks for the lists
@@ -1159,7 +1171,7 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
     };
     this.editSite = function (site) {
         if (site.type != 'compound') {
-            var url = fcConfig.siteEditUrl + '/' + site.siteId + '?returnTo=' + encodeURIComponent(fcConfig.returnTo);
+            var url = fcConfig.siteEditUrl + '/' + site.siteId;
             document.location.href = url;
         }
         else {
@@ -1184,9 +1196,9 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
         });
     };
     this.viewSite = function (site) {
-        var url = fcConfig.siteViewUrl + '/' + site.siteId + '?returnTo=' + encodeURIComponent(fcConfig.returnTo);
+        var url = fcConfig.siteViewUrl + '/' + site.siteId;
         if (projectId) {
-            url += '&projectId='+projectId;
+            url += '?projectId='+projectId;
         }
         document.location.href = url;
     };

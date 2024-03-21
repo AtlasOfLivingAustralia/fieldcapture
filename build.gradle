@@ -97,8 +97,7 @@ dependencies {
     implementation "org.grails.plugins:gsp"
     implementation 'dk.glasius:external-config:3.0.0'
     implementation "org.grails.plugins:ala-auth:$alaSecurityLibsVersion"
-    // Needs to be left at 2.0 until we finish replacing pdfgen HTML report generation
-    implementation "org.grails.plugins:ala-ws-security-plugin:2.0"
+    implementation "org.grails.plugins:ala-ws-security-plugin:$alaSecurityLibsVersion"
     implementation "org.grails.plugins:ala-ws-plugin:$alaSecurityLibsVersion"
     implementation "au.org.ala:userdetails-service-client:$alaSecurityLibsVersion"
     implementation "com.github.ben-manes.caffeine:caffeine:3.1.6"
@@ -150,6 +149,7 @@ dependencies {
     implementation "commons-io:commons-io:2.6"
     implementation "org.seleniumhq.selenium:selenium-chrome-driver:3.14.0"
     implementation "com.bertramlabs.plugins:asset-pipeline-grails:$assetPipelineVersion"
+    implementation group: 'com.googlecode.owasp-java-html-sanitizer', name: 'owasp-java-html-sanitizer', version: '20220608.1'
 
     compileOnly "io.micronaut:micronaut-inject-groovy"
     console "org.grails:grails-console"
@@ -186,7 +186,7 @@ dependencies {
     providedCompile "io.methvin:directory-watcher:0.4.0"
 
     if (!Boolean.valueOf(inplace)) {
-        implementation "org.grails.plugins:ecodata-client-plugin:6.1.2"
+        implementation "org.grails.plugins:ecodata-client-plugin:6.2"
     }
 }
 
@@ -244,15 +244,16 @@ clientDependencies {
         'underscore'('1.12.1') {
             include 'underscore.js'
         }
-        'datatables.net-bs4'("1.10.25")
-        "datatables.net-buttons-dt"("1.7.1")
-        'datatables.net-buttons-bs4'("1.7.1")
+        'datatables.net'("1.13.6")
+        'datatables.net-bs4'("1.13.6")
+        "datatables.net-buttons-dt"("2.4.2")
+        'datatables.net-buttons-bs4'("2.4.2")
         '@danielfarrell/bootstrap-combobox'('1.1.8', transitive:false)
         'fancybox'('3.0.1')
         "fuelux"("3.17.2", transitive:false)
         "fuse.js"("6.4.6", transitive:false)
         "leaflet"("0.7.7")
-        "select2-theme-bootstrap4"("1.0.0")
+        "select2-theme-bootstrap4"("1.0.2")
         "slickgrid"("2.4.38")
         "slider-pro"("1.6.0", transitive:false)
         "jquery-appear-original"("0.4.1", transitive:false)

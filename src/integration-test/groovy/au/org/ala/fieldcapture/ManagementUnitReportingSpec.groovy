@@ -2,6 +2,8 @@ package au.org.ala.fieldcapture
 
 import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.GreenMailUtil
+import pages.DownloadReport
+import pages.ManagementUnitDownloadReport
 import pages.ManagementUnitPage
 import pages.ReportPage
 import pages.ViewReportPage
@@ -222,5 +224,29 @@ class ManagementUnitReportingSpec extends StubbedCasSpec {
         and:"The not required button is not visible"
         reportsTabPane.reports[1].notRequired()
 
+    }
+
+
+    def "A PDF can be generated from report tab"() {
+        setup:
+        String managementUnitId = 'test_mu'
+        loginAsUser('1', browser)
+
+        when: "Display the reporting tab and download the first report"
+        to ManagementUnitPage, managementUnitId
+        displayReportsTab()
+        reportsTabPane.reports[0].downloadReport()
+
+        then:
+        withWindow("print-report", {
+            at ManagementUnitDownloadReport
+            waitFor {
+                printInstructions.displayed
+            }
+            closePrintInstructions()
+            waitFor {
+                !printInstructions.displayed
+            }
+        })
     }
 }

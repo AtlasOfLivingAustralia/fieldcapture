@@ -43,63 +43,6 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 		1 * activityService.search([type:['t1', 't2'], projectId:['1', '2', '3'], dateProperty:'plannedEndDate', startDate:"2014-01-01T00:00:00+0000", endDate:'2016-02-28T00:00:00+0000'])
 	}
 
-	void "the projects for an organisation should include projects for which the organisation is the service provider"() {
-        given:
-        def orgId = '1234'
-        def organisation = [organisationId:orgId, name:'name', description:'description']
-        def serviceProviderProjects = ['1', '2', '3', '4'].collect{[projectId:it, name:'p'+it]}
-        def organisationProjects = ['5', '6', '7', '8', '9'].collect{[projectId:it, name:'p'+it]}
-        def organisationProjectsWithDuplicates = ['3', '4', '5', '6', '7', '8', '9'].collect{[projectId:it, name:'p'+it]}
-
-        webService.getJson(_) >> organisation
-
-        when: "the organisation is not a service provider for any projects"
-        organisation = service.get(orgId)
-        def projects = organisation.projects
-
-        then:
-        1 * projectService.search([organisationId:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:organisationProjects]]
-        1 * projectService.search([orgIdSvcProvider:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:[]]]
-
-        projects.size() == organisationProjects.size()
-        projects == organisationProjects
-
-        when: "the organisation is exclusively a service provider"
-        organisation = service.get(orgId)
-        projects = organisation.projects
-
-
-        then:
-        1 * projectService.search([organisationId:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:[]]]
-        1 * projectService.search([orgIdSvcProvider:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:serviceProviderProjects]]
-
-        projects.size() == serviceProviderProjects.size()
-        projects == serviceProviderProjects
-
-        when:"the organisation is a service provider and runs it's own projects as well"
-        organisation = service.get(orgId)
-        projects = organisation.projects
-
-        then: "both sets of projects should be returned"
-        1 * projectService.search([organisationId:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:organisationProjects]]
-        1 * projectService.search([orgIdSvcProvider:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:serviceProviderProjects]]
-
-        projects.size() == serviceProviderProjects.size() + organisationProjects.size()
-        projects ==  organisationProjects + serviceProviderProjects
-
-        when: "there is overlap between the organisation and service provider projects"
-        organisation = service.get(orgId)
-        projects = organisation.projects
-
-        then: "there should be no duplicate projects returned"
-        1 * projectService.search([organisationId:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:organisationProjectsWithDuplicates]]
-        1 * projectService.search([orgIdSvcProvider:orgId, view:'enhanced', isMERIT:true]) >> [resp:[projects:serviceProviderProjects]]
-
-        projects.size() == serviceProviderProjects.size() + organisationProjects.size()
-        projects.sort{it.projectId} == (organisationProjects + serviceProviderProjects).sort{it.projectId}
-
-    }
-
 	def "Checking if abn already exist in db"(){
 		setup:
 		String ordId = "123"
@@ -272,7 +215,7 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 		then:
 		1 * webService.getJson({it.endsWith('organisation/o1?view=')}) >> [organisationId:"o1"]
 		1 * reportService.get("r1") >> [reportId:"r1", organisationId:"o1", activityId:'a1']
-		1 * reportService.cancelReport("r1", ['a1'], "Testing", [organisationId:"o1", projects:[], reports:null], [])
+		1 * reportService.cancelReport("r1", ['a1'], "Testing", [organisationId:"o1", reports:null], [])
 		1 * webService.getJson({it.endsWith('permissions/getMembersForOrganisation/o1')}) >> []
 	}
 

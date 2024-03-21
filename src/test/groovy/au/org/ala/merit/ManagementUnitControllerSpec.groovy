@@ -1,11 +1,10 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.command.SaveReportDataCommand
-import au.org.ala.merit.hub.HubSettings
 import au.org.ala.merit.util.ProjectGroupingHelper
+import grails.testing.web.controllers.ControllerUnitTest
 import org.apache.http.HttpStatus
 import spock.lang.Specification
-import grails.testing.web.controllers.ControllerUnitTest
 
 class ManagementUnitControllerSpec extends Specification implements ControllerUnitTest<ManagementUnitController>{
 
@@ -442,22 +441,6 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
                 [userId:editorUserId, role:RoleService.PROJECT_EDITOR_ROLE],
                 [userId:grantManagerUserId, role:RoleService.GRANT_MANAGER_ROLE]]
         return program
-    }
-
-    def "The controller delegates to the managementUnitService to produce reports"() {
-        setup:
-        String fromDate = '01-07-2020'
-        String toDate = '31-12-2020'
-
-        when:
-        params.fromDate = fromDate
-        params.toDate = toDate
-        controller.generateReportsInPeriod()
-
-        then:
-        1 * userService.getUser() >> [userName:'test@test.com']
-        1 * managementUnitService.generateReports(fromDate, toDate, _) >> [status:HttpStatus.SC_OK]
-        response.json == [status:HttpStatus.SC_OK]
     }
 
     def "User adds star to the management unit "() {

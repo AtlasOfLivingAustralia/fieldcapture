@@ -1050,13 +1050,44 @@ createProject({
     managementUnitId: "bushfireManagement1",
     custom: {
         details: {
+            programServiceConfig: {
+                serviceFormName: "Outputs Report",
+                programServices: [
+                    {
+                        "serviceTargets": [
+                            "score_42"
+                        ],
+                        "serviceId": NumberInt(1)
+                    }
+                ]
+            },
             outcomes: {
+                shortTermOutcomes: [{
+                    "code":"ST1",
+                    "description": "Short term outcome 1",
+                    "assets": [],
+                    "relatedOutcome":"Program short term outcome 1"}
+                ],
                 otherOutcomes: ["Partnerships and engagement is built between stakeholders responsible for managing natural resources",
                     "More primary producers adopt risk management practices to improve their sustainability and resilience",
                     "More primary producers and agricultural communities are experimenting with adaptive or transformative NRM practices, systems and approaches that link and contribute to building drought resilience"]
+            },
+            baseline: {
+                rows: [
+                    {
+                        code:'b1', baseline:'baseline 1', protocols:['Category 1', 'Category 2']
+                    }
+                ]
             }
         }
-    }
+    },
+    outputTargets: [
+        {
+            scoreId:'score_42',
+            target:'10',
+            outcomeTargets:[{relatedOutcomes:['ST1'], target:'10'}]
+        }
+    ]
 })
 
 db.userPermission.insert({
@@ -1475,13 +1506,56 @@ config.priorityPlaces = [
     "Priority place 3"
 ];
 config.excludeFinancialYearData = false;
-
+config.supportsParatoo = true;
 createProgram({programId: "outcomeMeriPlan", name: "Outcome MERI Plan", description: "", config: config});
 createProject({projectId: "outcomeMeriPlanProject", name: "Outcome MERI Plan project", programId: "outcomeMeriPlan"});
-
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
     entityId: "outcomeMeriPlanProject",
     userId: '1',
     accessLevel: 'admin'
 });
+const monitorProject = {
+    projectId: "monitorProject",
+    name: "Testing monitor integration",
+    programId: "outcomeMeriPlan",
+    custom: {
+        details: {
+            baseline: {
+                    rows: [
+                        {
+                            code:'b1', baseline:'baseline 1', protocols:['Category 1', 'Category 2']
+                        }
+                    ]
+                }
+            }
+        }
+    };
+
+createProject(monitorProject);
+db.userPermission.insert({
+    entityType: 'au.org.ala.ecodata.Project',
+    entityId: "monitorProject",
+    userId: '1',
+    accessLevel: 'admin'
+});
+
+createOrganisation({
+    name:'THE TRUSTEE FOR PSS FUND Test',
+    organisationId:'test_organisation',
+    status:'active', abn:'',
+    url:'http://www.ala.org.au',
+    acronym:'TSTORG', description:'THE TRUSTEE FOR PSS FUND Test'
+});
+delete report1.projectId
+var activityId = "activity2"
+report1.organisationId = 'test_organisation';
+report1.activityId = activityId;
+activity.activityId = activityId;
+output.activityId = activityId;
+outputSwan.activityId = activityId;
+
+db.report.insert(report1)
+db.activity.insert(activity)
+db.output.insert(output);
+db.output.insert(outputSwan)

@@ -13,7 +13,7 @@
             viewReportUrl: '${createLink(action:"viewReport", id:program.programId)}',
             editReportUrl: "${createLink(action:"editReport", id:program.programId)}",
             resetReportUrl: "${createLink(action:'resetReport', id:program.programId)}",
-            reportPDFUrl: "${createLink(action:"reportPDF", id:program.programId)}",
+            reportPDFUrl: "${createLink(action:"printProgramReport", id:program.programId)}",
             approveReportUrl: "${createLink(action:"ajaxApproveReport", id:program.programId)}",
             submitReportUrl: "${createLink(action:"ajaxSubmitReport", id:program.programId)}",
             rejectReportUrl: "${createLink(action:"ajaxRejectReport", id:program.programId)}",

@@ -479,7 +479,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         def projectId = 'project1'
         def newStartDate = '2015-06-01T00:00Z'
         reportService.includesSubmittedOrApprovedReports(_) >> true
-        reportService.getReportsForProject(_) >> [[publicationStatus:ReportService.REPORT_APPROVED]]
+        reportService.getReportsForProject(_) >> [[publicationStatus:PublicationStatus.APPROVED]]
         Map project = [projectId:projectId, planStatus:ProjectService.PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
         webService.getJson(_) >> project
 
@@ -497,9 +497,9 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         def activityIds = ['a1', 'a2']
         def stageReportDetails = [activityIds:activityIds, reportId:reportId, stage:'Stage 2', reason:reason]
         reportService.getReportsForProject(projectId) >>[
-                [reportId:'r1', publicationStatus:ReportService.REPORT_APPROVED, name:'Stage 1', fromDate: '2015-07-01T00:00Z', toDate: '2016-01-01T00:00Z'],
-                [reportId:'r2', publicationStatus:ReportService.REPORT_NOT_APPROVED, name:'Stage 2', fromDate: '2016-01-01T00:00Z', toDate: '2017-01-01T00:00Z'],
-                [reportId:'r3', publicationStatus:ReportService.REPORT_CANCELLED, name:'Stage 3', fromDate: '2016-01-01T00:00Z', toDate: '2017-01-01T00:00Z']]
+                [reportId:'r1', publicationStatus:PublicationStatus.APPROVED, name:'Stage 1', fromDate: '2015-07-01T00:00Z', toDate: '2016-01-01T00:00Z'],
+                [reportId:'r2', publicationStatus:PublicationStatus.NOT_APPROVED, name:'Stage 2', fromDate: '2016-01-01T00:00Z', toDate: '2017-01-01T00:00Z'],
+                [reportId:'r3', publicationStatus:PublicationStatus.CANCELLED, name:'Stage 3', fromDate: '2016-01-01T00:00Z', toDate: '2017-01-01T00:00Z']]
         webService.getJson(_) >> [projectId:projectId, planStatus:ProjectService.PLAN_NOT_APPROVED, plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z']
 
         when:
@@ -797,7 +797,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         Map project = [projectId:'p1', plannedStartDate: '2015-07-01T00:00Z', plannedEndDate:'2016-12-31T00:00Z', planStatus:ProjectService.PLAN_APPROVED]
 
         webService.getJson(_) >> project
-        reportService.getReportsForProject(project.projectId) >> [[reportId:'r1', publicationStatus:ReportService.REPORT_NOT_APPROVED, fromDate:project.plannedStartDate, toDate:project.plannedEndDate]]
+        reportService.getReportsForProject(project.projectId) >> [[reportId:'r1', publicationStatus:PublicationStatus.NOT_APPROVED, fromDate:project.plannedStartDate, toDate:project.plannedEndDate]]
         reportService.firstReportWithDataByCriteria(_, _) >> null
 
         when:
@@ -814,7 +814,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         project.reports = [r1]
         reportService.firstReportWithDataByCriteria(_, _) >> r1
 
-        boolean submittedOrApproved = (reportStatus == ReportService.REPORT_SUBMITTED || reportStatus == ReportService.REPORT_APPROVED)
+        boolean submittedOrApproved = (reportStatus == PublicationStatus.SUBMITTED || reportStatus == PublicationStatus.APPROVED)
         webService.getJson(_) >> project
         reportService.getReportsForProject(project.projectId) >> [r1]
         reportService.excludesNotApproved(_) >> submittedOrApproved
@@ -827,14 +827,14 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
 
         where:
         reportStatus | date | valid
-        ReportService.REPORT_APPROVED | '2015-07-01T00:00Z' | true
-        ReportService.REPORT_APPROVED | '2015-08-01T00:00Z' | true
-        ReportService.REPORT_APPROVED | '2016-01-01T00:00Z' | false
-        ReportService.REPORT_APPROVED | '2015-04-01T00:00Z' | false
-        ReportService.REPORT_SUBMITTED | '2015-07-01T00:00Z' | true
-        ReportService.REPORT_SUBMITTED | '2015-08-01T00:00Z' | true
-        ReportService.REPORT_SUBMITTED | '2016-01-01T00:00Z' | false
-        ReportService.REPORT_SUBMITTED | '2015-04-01T00:00Z' | false
+        PublicationStatus.APPROVED | '2015-07-01T00:00Z' | true
+        PublicationStatus.APPROVED | '2015-08-01T00:00Z' | true
+        PublicationStatus.APPROVED | '2016-01-01T00:00Z' | false
+        PublicationStatus.APPROVED | '2015-04-01T00:00Z' | false
+        PublicationStatus.SUBMITTED | '2015-07-01T00:00Z' | true
+        PublicationStatus.SUBMITTED | '2015-08-01T00:00Z' | true
+        PublicationStatus.SUBMITTED | '2016-01-01T00:00Z' | false
+        PublicationStatus.SUBMITTED | '2015-04-01T00:00Z' | false
     }
 
     def "if there is an empty report before the first report with data, we should be allowed to change the start date as if the first report with data was the only report"(date, valid) {
@@ -1563,6 +1563,25 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         1 * reportService.dateHistogramForScores(projectId, [fromDate, toDate], 'YYYY-MM', scoreIds) >> resp
 
         result == ['1':1, '2':2, '3':0]
+    }
+
+    def "Plot Selection / Visits should not be displayed in data sets"() {
+        setup:
+        List dataSets = [
+                [name:'Plot Selection', dataSetId:'d1', protocol:'1'],
+                [name:'Plot Layout and Visit', dataSetId:'d2', protocol:'2'],
+                [name:'Not a plot selection', dataSetId:'d3', protocol:'3']
+
+        ]
+
+        when:
+        service.filterDataSetSummaries(dataSets)
+
+        then:
+        1 * activityService.monitoringProtocolForms() >> [[externalId:'1', name:"Plot Selection"], [externalId:'2', name: "Plot Layout and Visit"]]
+        and:
+        dataSets.size() == 1
+        dataSets[0].name == 'Not a plot selection'
     }
 
     private Map setupActivityModelForFiltering(List services) {

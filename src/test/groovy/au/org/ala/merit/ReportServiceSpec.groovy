@@ -7,7 +7,6 @@ import au.org.ala.merit.reports.ReportOwner
 import au.org.ala.web.AuthService
 import grails.testing.services.ServiceUnitTest
 import spock.lang.Specification
-
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
@@ -168,7 +167,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         setup:
         def project = project('2015-01-01T00:00:00Z', '2017-07-01T00:00:00Z')
         project.reports = reports()
-        project.reports[0].publicationStatus = ReportService.REPORT_APPROVED
+        project.reports[0].publicationStatus = PublicationStatus.APPROVED
         projectService.get(_, _) >> project
 
         when:
@@ -184,10 +183,10 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         setup:
         def project = project('2015-01-01T00:00:00Z', '2017-01-01T00:00:00Z')
         project.reports = reports()
-        project.reports[0].publicationStatus = ReportService.REPORT_APPROVED
-        project.reports[1].publicationStatus = ReportService.REPORT_APPROVED
-        project.reports[2].publicationStatus = ReportService.REPORT_APPROVED
-        project.reports[3].publicationStatus = ReportService.REPORT_APPROVED
+        project.reports[0].publicationStatus = PublicationStatus.APPROVED
+        project.reports[1].publicationStatus = PublicationStatus.APPROVED
+        project.reports[2].publicationStatus = PublicationStatus.APPROVED
+        project.reports[3].publicationStatus = PublicationStatus.APPROVED
 
         projectService.get(_, _) >> project
 
@@ -203,10 +202,10 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         setup:
         def project = project('2015-01-01T00:00:00Z', '2017-01-07T00:00:00Z')
         project.reports = reports()
-        project.reports[0].publicationStatus = ReportService.REPORT_APPROVED
-        project.reports[1].publicationStatus = ReportService.REPORT_APPROVED
-        project.reports[2].publicationStatus = ReportService.REPORT_APPROVED
-        project.reports[3].publicationStatus = ReportService.REPORT_APPROVED
+        project.reports[0].publicationStatus = PublicationStatus.APPROVED
+        project.reports[1].publicationStatus = PublicationStatus.APPROVED
+        project.reports[2].publicationStatus = PublicationStatus.APPROVED
+        project.reports[3].publicationStatus = PublicationStatus.APPROVED
 
         projectService.get(_, _) >> project
 
@@ -225,9 +224,9 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         setup:
         def project = project('2015-01-01T00:00:00Z', '2015-12-31T13:00:00Z')
         project.reports = reports()
-        project.reports[0].publicationStatus = ReportService.REPORT_APPROVED
-        project.reports[1].publicationStatus = ReportService.REPORT_APPROVED
-        project.reports[2].publicationStatus = ReportService.REPORT_SUBMITTED
+        project.reports[0].publicationStatus = PublicationStatus.APPROVED
+        project.reports[1].publicationStatus = PublicationStatus.APPROVED
+        project.reports[2].publicationStatus = PublicationStatus.SUBMITTED
 
         projectService.get(_, _) >> project
 
@@ -248,7 +247,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         setup:
         def project = project('2016-04-15T00:00:00Z', '2017-06-29T14:00:00Z') // End date extended by 6 months
         project.reports = [
-                [reportId:'1', fromDate: '2016-01-01T00:00:00Z', toDate: '2016-07-01T00:00:00Z', submissionDate: '2016-07-01T00:00:00Z', dueDate: '', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1', category:'Stage reports', publicationStatus:ReportService.REPORT_APPROVED],
+                [reportId:'1', fromDate: '2016-01-01T00:00:00Z', toDate: '2016-07-01T00:00:00Z', submissionDate: '2016-07-01T00:00:00Z', dueDate: '', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1', category:'Stage reports', publicationStatus:PublicationStatus.APPROVED],
                 [reportId:'2', fromDate: '2016-07-01T00:00:00Z', toDate: '2017-01-01T00:00:00Z', submissionDate: '2017-01-01T00:00:00Z', dueDate: '', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1', category:'Stage reports']]
         projectService.get(_, _) >> project
 
@@ -488,5 +487,19 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         2 * authService.getUserForUserId(userId) >> new au.org.ala.web.UserDetails(userId:'u1', firstName:"Merit", lastName:'User')
         result.size() == 2
 
+    }
+
+
+    def "The server delegates to the ecodata to produce reports"() {
+        setup:
+        String startDate = '2020-07-01'
+        String endDate = '2020-12-31'
+        Map extras = [test:'test', entity: 'managementUnit']
+
+        when:
+        service.generateReports(startDate, endDate, extras)
+
+        then:
+        1 * webService.getJson({it.endsWith('/report/generateReportsInPeriod?startDate=2020-07-02T00:00:00Z&endDate=2021-01-01T00:00:00Z&test=test&entity=managementUnit')})
     }
 }

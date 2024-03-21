@@ -13,6 +13,7 @@
 *= require blog
 *= require dataSets
 *= require activity.css
+*= require prettytextdiff/pretty_text_diff_basic.css
 *= require_self
 */
 
@@ -350,4 +351,9 @@ li.select2-search input {
 
 .project-config-warning {
 	color: orange;
+}
+
+.meri-buttons .btn {
+	float: right;
+	margin-left: 5px;
 }

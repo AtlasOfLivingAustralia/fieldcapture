@@ -2,10 +2,10 @@ package au.org.ala.merit.reports
 
 import au.org.ala.merit.DateUtils
 import au.org.ala.merit.config.ReportConfig
+import au.org.ala.merit.PublicationStatus
 import org.apache.commons.logging.LogFactory
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import org.joda.time.Duration
 import org.joda.time.Interval
 import org.joda.time.Period
 import org.joda.time.PeriodType
@@ -27,8 +27,6 @@ class ReportGenerator {
      * normally placing it on July 1 2019.
      */
     private int DATE_FUDGE_FACTOR = 1
-
-    private static final String REPORT_NOT_APPROVED = 'unpublished'
 
     /**
      * Generates a list of reports according to the supplied configuration.
@@ -122,7 +120,7 @@ class ReportGenerator {
 
         if (end >= start) {
             //validates the latest approved report to avoid creation of duplicate report
-            if (existingReports && existingReports[0].publicationStatus != REPORT_NOT_APPROVED) {
+            if (existingReports && existingReports[0].publicationStatus != PublicationStatus.NOT_APPROVED) {
                 log.info("Not regenerating report " + reportConfig.category + " to avoid creating duplicate reports")
             } else {
                 Interval reportInterval = new Interval(start, end)

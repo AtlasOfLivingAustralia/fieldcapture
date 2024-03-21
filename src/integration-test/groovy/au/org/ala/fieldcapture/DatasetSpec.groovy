@@ -1,5 +1,6 @@
 package au.org.ala.fieldcapture
 
+import geb.module.FormElement
 import pages.DatasetPage
 import pages.RlpProjectPage
 import spock.lang.Stepwise
@@ -33,10 +34,14 @@ class DatasetSpec extends StubbedCasSpec{
         def dataSet = datasetContent
         dataSet.title = "Title"
         dataSet.programOutcome = "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
-        dataSet.investmentPriorities = ["Soil acidification", "Other"]
-        dataSet.otherInvestmentPriority = "Other Priority"
-        dataSet.term = "Short-term outcome statement"
+        dataSet.investmentPriorities = ["Soil acidification"]
         dataSet.type = "Baseline dataset associated with a project outcome"
+        dataSet.protocol = "other"
+
+        then:
+        waitFor {dataSet.measurementTypes.module(FormElement).enabled}
+
+        when:
         dataSet.measurementTypes = ["Soil erosion"]
         dataSet.methods = ["Genetic sampling", "Area sampling"]
         dataSet.methodDescription = "Method description"
@@ -46,15 +51,9 @@ class DatasetSpec extends StubbedCasSpec{
         dataSet.endDate ="21-01-2022"
         dataSet.addition = "Yes"
         dataSet.threatenedSpeciesIndex = "Yes"
-        dataSet.collectorType = "University researcher"
-        dataSet.qa = "Yes"
-        dataSet.published = "Yes"
-        dataSet.storageType = "Aurion"
         dataSet.publicationUrl = "url"
         dataSet.format = "JSON"
         dataSet.sensitivities =["Commercially sensitive", "Ecologically sensitive"]
-        dataSet.dataOwner = "data owner"
-        dataSet.custodian = "custodian"
 
         dataSet.createButton.click()
 
@@ -96,12 +95,11 @@ class DatasetSpec extends StubbedCasSpec{
         def set = datasetContent
         set.title == "Title"
         set.programOutcome == "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
-        set.investmentPriorities == ["Soil acidification", "Other"]
-        set.otherInvestmentPriority == "Other Priority"
-        set.term == "Short-term outcome statement"
+        set.investmentPriorities == ["Soil acidification"]
+        set.protocol == "other"
         set.type == "Baseline dataset associated with a project outcome"
         set.measurementTypes == ["Soil erosion"]
-        set.methods == ["Genetic sampling", "Area sampling"]
+        set.methods == ["Area sampling", "Genetic sampling"]
         set.methodDescription == "Method description"
         set.collectionApp == "Collection App"
         set.location == "Location"
@@ -109,17 +107,10 @@ class DatasetSpec extends StubbedCasSpec{
         set.endDate =="21-01-2022"
         set.addition == "Yes"
         set.threatenedSpeciesIndex == "Yes"
-        set.collectorType == "University researcher"
-        set.qa == "Yes"
-        set.published == "Yes"
-        set.storageType == "Aurion"
-        set.publicationUrl == "url"
         set.format == "JSON"
         set.sensitivities ==["Commercially sensitive", "Ecologically sensitive"]
-        set.dataOwner == "data owner"
-        set.custodian == "custodian"
-        set.dataCollectionOngoing.size() == 1
-        set.dataCollectionOngoingChecked.size() == 0
+        !set.dataCollectionOngoing.checked
+
 
         when:
         cancel()
@@ -136,8 +127,12 @@ class DatasetSpec extends StubbedCasSpec{
         waitFor 10, {
             hasBeenReloaded()
         }
+        when:
+        def dataSetSummary = openDataSetSummaryTab()
+
+        then:
         waitFor 10, {
-           $('#project-data-sets tbody[data-bind*=dataSets] tr').size() == 0
+           dataSetSummary.dataSetSummaryCount() == 0
         }
 
     }
@@ -175,8 +170,7 @@ class DatasetSpec extends StubbedCasSpec{
 
         def set = datasetContent
         set.title == "Title"
-        set.dataCollectionOngoing.size() == 1
-        set.dataCollectionOngoingChecked.size() == 0
+        !set.dataCollectionOngoing.checked
 
         when:
         set.markCompleted.click()
@@ -190,32 +184,32 @@ class DatasetSpec extends StubbedCasSpec{
         when:
         set.title = "Title"
         set.programOutcome = "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
-        set.investmentPriorities = ["Soil acidification", "Other"]
-        set.otherInvestmentPriority = "Other Priority"
+        set.investmentPriorities = ["Soil acidification"]
         set.type = "Baseline dataset associated with a project outcome"
-        set.measurementTypes = ["Soil erosion"]
-        set.methods = ["Genetic sampling", "Area sampling"]
-        set.methodDescription = "Method description"
+        set.baselines = ['b1']
+        set.protocol = 'guid-1'
         set.collectionApp = "Collection App"
         set.location = "Location"
         set.startDate ="21-01-2021"
         set.endDate ="21-01-2022"
         set.addition = "Yes"
         set.threatenedSpeciesIndex = "Yes"
-        set.collectorType = "University researcher"
-        set.qa = "Yes"
-        set.published = "Yes"
-        set.storageType = "Aurion"
-        set.publicationUrl = "url"
         set.format = "JSON"
         set.sensitivities =["Commercially sensitive", "Ecologically sensitive"]
-        set.dataOwner = "data owner"
-        set.custodian = "custodian"
+        set.threatenedSpeciesDateOfUpload = '21-01-2021'
+        set.dataSetSize = '200'
+        set.publicationUrl = "https://www.ala.org.au"
 
         set.createButton.click()
 
         then:
-        waitFor { at RlpProjectPage }
+        waitFor {
+            // This test is failing sometimes on actions due to what seems to be a validation error - trying to track it down.
+            println js.exec("return \$('div.formError')")
+            println js.exec("return \$('div.formError').next()")?.collect{[it.getAttribute('name'), it.getAttribute('id'), it.getAttribute('data-bind'), it.value()]}
+
+            at RlpProjectPage
+        }
         waitFor {$("#project-data-sets .fa-edit").displayed}
         $('[data-bind*="text: progress"]').displayed
         $('[data-bind*="text: progress"]').text() == "finished"
@@ -238,6 +232,13 @@ class DatasetSpec extends StubbedCasSpec{
         when: "We update and save the MERI plan"
         openMERIPlanTab()
         def meriPlan = openMeriPlanEditTab()
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        at RlpProjectPage // reset at check time.
+
+        meriPlan = openMeriPlanEditTab()
         meriPlan.save()
 
         and: "We reload the page and reopen the data set summary tab"

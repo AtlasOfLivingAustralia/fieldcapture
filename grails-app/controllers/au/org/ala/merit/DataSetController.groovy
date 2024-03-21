@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.merit.PreAuthorise
 import au.org.ala.merit.ProjectService
+import au.org.ala.merit.config.ProgramConfig
 import grails.converters.JSON
 import org.springframework.http.HttpStatus
 
@@ -28,7 +29,7 @@ class DataSetController {
         if (!project) {
             return [projectId:projectId, project: null]
         }
-        Map config = projectService.getProgramConfiguration(project)
+        ProgramConfig config = projectService.getProgramConfiguration(project)
         String programName = config.program?.name ?: project.associatedSubProgram
         List outcomes = projectService.getAllProjectOutcomes(project)
         if (!outcomes) {
@@ -47,11 +48,48 @@ class DataSetController {
         if (!priorities) {
             priorities = ['n/a']
         }
-        if (priorities){
-            priorities << 'Other'
+
+
+        List outcomeGroups = []
+        List projectServices = projectService.getProjectServices(project)
+        project.outputTargets?.each { Map outputTarget ->
+            if (outputTarget.outcomeTargets) {
+                Map service = projectServices.find{it.scores?.find{score -> score.scoreId == outputTarget.scoreId}}
+                if (service) {
+                    outputTarget.outcomeTargets.each {
+                        outcomeGroups << [
+                                serviceId: service.id,
+                                service: service.name,
+                                outcomes:it.relatedOutcomes,
+                                label:service.name+" "+it.relatedOutcomes
+                        ]
+                    }
+                }
+                else {
+                    log.warn("No service found for scoreId ${outputTarget.scoreId} in project ${project.projectId}")
+                 }
+            }
+        }
+        outcomeGroups = outcomeGroups.findAll{it.outcomes}.unique{it.label}.sort{it.label}
+
+        List projectBaselines = projectService.listProjectBaselines(project)
+        projectBaselines = projectBaselines?.collect{
+            // Only projects used the 2023 revision of the MERI plan will have a code attribute for their baselines
+            String label = it.code ? it.code + ' - '+ it.baseline : it.baseline
+            String value = it.code ?: it.baseline
+            [label:label, value: value]
         }
 
-        [projectId:projectId, programName:programName, priorities:priorities, outcomes: outcomes, project:project]
+        List projectProtocols = projectService.listProjectProtocols(project).collect{
+            [label:it.name, value:it.externalId]
+        }
+        projectProtocols << [label:'Other', value:'other']
+
+        List dataSetNames = project.custom?.dataSets?.collect{it.name}
+
+        [projectId:projectId, programName:programName, supportsOutcomeTargets:config.supportsOutcomeTargets(),
+         priorities:priorities, outcomes: outcomes, project:project, projectOutcomes:outcomeGroups,
+         projectBaselines:projectBaselines, projectProtocols:projectProtocols, dataSetNames:dataSetNames]
     }
 
     // Note that authorization is done against a project, so the project id must be supplied to the method.
@@ -60,6 +98,10 @@ class DataSetController {
 
         Map projectData = projectData(id)
         Map dataSet = projectData.project?.custom?.dataSets?.find{it.dataSetId == dataSetId}
+        if (dataSet) {
+            projectData.dataSetNames?.remove(dataSet.name)
+        }
+
         if (!dataSet) {
             render status: HttpStatus.NOT_FOUND
         }

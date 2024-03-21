@@ -15,7 +15,7 @@ ProjectStatus = {
 };
 
 PROJECT_EXTERNAL_ID_TYPES =  [
-    'TECH_ONE_CODE', 'INTERNAL_ORDER_NUMBER', 'GRANT_AWARD', 'RELATED_PROJECT'
+    'TECH_ONE_CODE', 'INTERNAL_ORDER_NUMBER', 'GRANT_AWARD', 'RELATED_PROJECT', 'TECH_ONE_CONTRACT_NUMBER'
 ];
 
 /**
@@ -235,6 +235,10 @@ function ProjectService(project, options) {
         });
     };
 
+    self.isEditable = function() {
+        return (project.planStatus == PlanStatus.NOT_APPROVED || !project.planStatus);
+    }
+
     self.isSubmittedOrApproved = function() {
         return (project.planStatus == PlanStatus.APPROVED || project.planStatus == PlanStatus.SUBMITTED);
     };
@@ -251,7 +255,7 @@ function ProjectService(project, options) {
     };
 
     self.isProjectDetailsLocked = ko.computed(function () {
-            return self.isCompletedOrTerminated() || self.isSubmittedOrApproved();
+        return !config.userHoldsMeriPlanLock || self.isCompletedOrTerminated() || self.isSubmittedOrApproved();
     });
 
     self.isApproved = function() {
@@ -270,6 +274,10 @@ function ProjectService(project, options) {
     self.canApproveMeriPlan = function() {
         return self.areExternalIdsValid(project.externalIds);
     };
+
+    self.isPlanComplete = function() {
+        return project.custom && project.custom.details && project.custom.details.progress == ActivityProgress.finished;
+    }
 
     /** The list of external ids needs to include at least one SAP Internal Order or one Tech One Project Code */
     self.areExternalIdsValid = function(externalIds) {
@@ -327,6 +335,7 @@ function ProjectService(project, options) {
                         approvedPlans.push(
                             {
                                 openMeriPlanUrl: config.viewHistoricalMeriPlanUrl+"?documentId="+meriPlan.documentId,
+                                openMeriPlanChangesUrl: config.viewMeriPlanChangesUrl+"?documentId="+meriPlan.documentId,
                                 userDisplayName:meriPlan.userDisplayName,
                                 dateApproved:convertToSimpleDate(meriPlan.date, true),
                                 reason:meriPlan.reason,

@@ -1,8 +1,7 @@
 package au.org.ala.merit.command
 
 import au.org.ala.merit.ActivityService
-import au.org.ala.merit.DateUtils
-import au.org.ala.merit.ReportService
+import au.org.ala.merit.PublicationStatus
 import au.org.ala.merit.reports.Reef2050PlanActionReportConfig
 import grails.converters.JSON
 import grails.validation.Validateable
@@ -41,7 +40,7 @@ class Reef2050PlanActionReportSummaryCommand implements Validateable{
                 [type    : Reef2050PlanActionReportConfig.REEF_2050_PLAN_ACTION_REPORTING_2018_ACTIVITY_TYPE,
                  progress: ActivityService.PROGRESS_FINISHED]
         if (approvedActivitiesOnly) {
-            searchCriteria.publicationStatus = ReportService.REPORT_APPROVED
+            searchCriteria.publicationStatus = PublicationStatus.APPROVED
         }
 
         List availableReports = []

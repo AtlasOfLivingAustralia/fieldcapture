@@ -35,7 +35,6 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         when:
         request.addFile(shapefile)
         params.projectId = projectId
-        params.returnTo = "returnTo"
 
         controller.siteUpload()
 
@@ -47,7 +46,6 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         model.shapeFileId == shapefileId
         model.attributeNames == ['a1', 'a2']
         model.shapes == [[id:"0", values:[a1:"v1", a2:"v2"]]]
-        model.returnTo == params.returnTo
     }
 
     def "the site controller checks the user can edit the supplied project before allowing a site upload"() {
@@ -110,4 +108,154 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         response.json == [progress:[total:1, uploaded:0, errors:[]], message:"success"]
     }
 
+    def "the site controller can return site data as geojson"() {
+        setup:
+        String siteId = 's1'
+        Map site = [siteId:siteId, name:"Site 1", projects:[[projectId:'p1', name:'Project 1']], extent:[geometry:[type:"Point", coordinates:[1,2]]]]
+        Map siteGeoJson = [type:"Feature", geometry:[type:"Point", coordinates:[1,2]], properties:[siteId:siteId, name:"Site 1", projects:[[projectId:'p1', name:'Project 1']]]]
+
+        when:
+        controller.geojson(siteId)
+
+        then:
+        1 * siteService.get(siteId) >> site
+        1 * userService.getCurrentUserId() >> 'u1'
+        1 * projectService.canUserEditProject('u1', 'p1') >> true
+        1 * siteService.getSiteGeoJson(siteId) >> [status:200, resp:siteGeoJson]
+
+        response.json == siteGeoJson
+    }
+
+    def "When a project already has a project area, when creating a new site the project extent type cannot be selected"() {
+        setup:
+        Map project = [projectId: 'p1', name: 'project', sites: [[name: 'name', externalId: 'e1', type: 'projectArea']]]
+
+        when:
+        params.projectId = 'p1'
+        controller.createForProject()
+
+        then:
+        1 * projectService.get(project.projectId, 'all') >> project
+        1 * projectService.hasProjectArea(project) >> true
+
+        and:
+        model.siteTypes.collect { it.value } == ['worksArea', 'surveyArea']
+    }
+
+
+    def "When a project does not have a project area, when creating a new site the project extent type can be selected"() {
+        setup:
+        Map project = [projectId:'p1', name:'project', sites:[[name:'name', externalId:'e1', type:'worksArea']]]
+
+        when:
+        params.projectId = 'p1'
+        controller.createForProject()
+
+        then:
+        1 * projectService.get(project.projectId, 'all') >> project
+        1 * projectService.hasProjectArea(project) >> false
+
+        and:
+        model.siteTypes.collect{it.value} == ['worksArea', 'surveyArea', 'projectArea']
+    }
+
+    def "When editing a site, if the site is already a project area, project area can be selected as the site type"() {
+        setup:
+        Map project = [projectId:'p1', name:'project', sites:[[name:'name', externalId:'e1', type:'worksArea']]]
+        String siteId = 's1'
+        Map site = [siteId:siteId, name:"Site 1", projects:['p1'], type:'projectArea', extent:[geometry:[type:"Point", coordinates:[1,2]]]]
+
+        when:
+        params.projectId = 'p1'
+        params.id = site.siteId
+        Map model = controller.edit()
+
+        then:
+        1 * siteService.getRaw(siteId) >> [site:site]
+        1 * projectService.canUserEditProject(_, project.projectId) >> true
+        1 * projectService.get(project.projectId, 'all') >> project
+        0 * projectService.hasProjectArea(project) >> false
+
+        and:
+        model.siteTypes.collect{it.value} == ['worksArea', 'surveyArea', 'projectArea']
+    }
+
+    def "When editing a site, if the site is not already a project area, project area cannot be selected if the site is assigned to more than 1 project"() {
+        setup:
+        Map project = [projectId:'p1', name:'project', sites:[[name:'name', externalId:'e1', type:'worksArea']]]
+        String siteId = 's1'
+        Map site = [siteId:siteId, name:"Site 1", projects:['p1', 'p2'], type:'worksArea', extent:[geometry:[type:"Point", coordinates:[1,2]]]]
+
+        when:
+        params.projectId = 'p1'
+        params.id = site.siteId
+        Map model = controller.edit()
+
+        then:
+        1 * siteService.getRaw(siteId) >> [site:site]
+        2 * projectService.canUserEditProject(_, _) >> true
+        0 * projectService.get(project.projectId, 'all') >> project
+        0 * projectService.hasProjectArea(project) >> false
+
+        and:
+        model.siteTypes.collect{it.value} == ['worksArea', 'surveyArea']
+    }
+
+    def "When editing a site, if the site is not already a project area, project area cannot be selected if the site is not assigned to a project"() {
+        setup:
+        String siteId = 's1'
+        Map site = [siteId:siteId, name:"Site 1", projects:[], type:'worksArea', extent:[geometry:[type:"Point", coordinates:[1,2]]]]
+
+        when:
+        params.id = site.siteId
+        Map model = controller.edit()
+
+        then:
+        1 * siteService.getRaw(siteId) >> [site:site]
+
+        and:
+        model.siteTypes.collect{it.value} == ['worksArea', 'surveyArea']
+    }
+
+    def "When editing a site, if the site is not already a project area, project area cannot be selected if the project the site is assigned to already has a project area"() {
+        setup:
+        Map project = [projectId:'p1', name:'project', sites:[[name:'name', externalId:'e1', type:'projectArea']]]
+        String siteId = 's1'
+        Map site = [siteId:siteId, name:"Site 1", projects:['p1'], type:'worksArea', extent:[geometry:[type:"Point", coordinates:[1,2]]]]
+
+        when:
+        params.projectId = 'p1'
+        params.id = site.siteId
+        Map model = controller.edit()
+
+        then:
+        1 * siteService.getRaw(siteId) >> [site:site]
+        1 * projectService.canUserEditProject(_, _) >> true
+        1 * projectService.get(project.projectId, 'all') >> project
+        1 * projectService.hasProjectArea(project) >> true
+
+        and:
+        model.siteTypes.collect{it.value} == ['worksArea', 'surveyArea']
+    }
+
+    def "When editing a site, if the site is not already a project area, project area can be selected if the project the site is assigned to does not have a project area"() {
+        setup:
+        Map project = [projectId:'p1', name:'project', sites:[[name:'name', externalId:'e1', type:'projectArea']]]
+        String siteId = 's1'
+        Map site = [siteId:siteId, name:"Site 1", projects:['p1'], type:'worksArea', extent:[geometry:[type:"Point", coordinates:[1,2]]]]
+
+        when:
+        params.projectId = 'p1'
+        params.id = site.siteId
+        Map model = controller.edit()
+
+        then:
+        1 * siteService.getRaw(siteId) >> [site:site]
+        1 * projectService.canUserEditProject(_, _) >> true
+        1 * projectService.get(project.projectId, 'all') >> project
+        1 * projectService.hasProjectArea(project) >> false
+
+        and:
+        model.siteTypes.collect{it.value} == ['worksArea', 'surveyArea', 'projectArea']
+    }
 }

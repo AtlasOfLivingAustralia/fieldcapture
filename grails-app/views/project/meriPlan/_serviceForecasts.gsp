@@ -35,7 +35,7 @@
         <td class="budget-cell">
             <input class="form-control form-control-sm" type="number"
                    data-bind="value: target, disable: $root.isProjectDetailsLocked()"
-                   data-validation-engine="validate[custom[number],min[0]]"/>
+                   data-validation-engine="validate[required,custom[number],min[0]]"/>
         </td>
         <!-- /ko -->
     </tr>

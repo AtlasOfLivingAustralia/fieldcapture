@@ -20,9 +20,9 @@
 <h3>Administrator Reports</h3>
 <content tag="pageTitle">Administrator Reports</content>
 
-<h4>Organisation data download:</h4>
+<h4>Performance Management Framework data download</h4>
 
-<a id="orgDataDownload" class="btn btn-sm" href="#">Download Organisation Report Data</a>
+<a id="orgDataDownload" class="btn btn-sm" href="#">Download Performance Management Framework data</a>
 
 <h4>Management unit report download:</h4>
 <form id="mu-report-selector">
@@ -31,18 +31,39 @@
         <div class="col-sm-2 pl-0 pr-1">
             <label for="fromDate">Start date</label>
             <div class="input-group input-append">
-                <fc:datePicker targetField="fromDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="fromDate"  data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl"/>
+                <fc:datePicker targetField="fromDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="muFromDate"  data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl"/>
             </div>
         </div>
         <div class="col-sm-2 pl-0 pr-1">
             <label for="toDate">End date</label>
             <div class="input-group input-append">
-                <fc:datePicker targetField="toDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="toDate" data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl"/>
+                <fc:datePicker targetField="toDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="muToDate" data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl"/>
             </div>
         </div>
     </div>
-    <a id="muReportDownload" data-bind="click:muReportDownload" class="btn btn-sm" href="#">Management Unit - Activities</a>
-    <a id="muReportDownloadSummary" data-bind="click:muReportDownloadSummary" class="btn btn-sm" href="#">Core Reports - Status</a>
+    <a id="muReportDownload" data-bind="click:entityReportDownload" class="btn btn-sm" href="#">Management Unit - Activities</a>
+    <a id="muReportDownloadSummary" data-bind="click:entityReportDownloadSummary" class="btn btn-sm" href="#">Core Reports - Status</a>
+</form>
+
+<h4>Organisation report download:</h4>
+<form id="org-report-selector">
+    <label class="control-label">Select reporting period: </label>
+    <div class="row mb-2">
+        <div class="col-sm-2 pl-0 pr-1">
+            <label for="orgFromDate">Start date</label>
+            <div class="input-group input-append">
+                <fc:datePicker targetField="fromDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="orgFromDate"  data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl"/>
+            </div>
+        </div>
+        <div class="col-sm-2 pl-0 pr-1">
+            <label for="orgToDate">End date</label>
+            <div class="input-group input-append">
+                <fc:datePicker targetField="toDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="orgToDate" data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl"/>
+            </div>
+        </div>
+    </div>
+    <a id="orgReportDownload" data-bind="click:entityReportDownload" class="btn btn-sm" href="#">Organisation - Activities</a>
+    <a id="orgReportDownloadSummary" data-bind="click:entityReportDownloadSummary" class="btn btn-sm" href="#">Core Reports - Status</a>
 </form>
 
 
@@ -81,7 +102,7 @@
         <div class="form-group row">
             <div class="col-sm-4 mr-3"></div>
             <div class="controls">
-            <button class="btn btn-sm btn-success" data-bind="click:go">View Report</button>
+            <button id="viewReportBtn" class="btn btn-sm btn-success" data-bind="click:go">View Report</button>
             </div>
         </div>
     </form>
@@ -92,7 +113,7 @@
 
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="reef2050Report.js"/>
-<asset:javascript src="managementUnitReport.js"/>
+<asset:javascript src="entityReport.js"/>
 <script>
     $(function () {
         var SELECTED_REPORT_KEY = 'selectedAdminReport';
@@ -143,11 +164,19 @@
 
     });
 
-    var generateMUReportInPeriodUrl = "${g.createLink(controller:'managementUnit', action:'generateReportsInPeriod')}";
+    var generateMUReportInPeriodUrl = "${g.createLink(controller:'report', action:'generateReportsInPeriod', params: [entity: 'managementUnit'])}";
     var optionsReport = {
-        generateMUReportInPeriodUrl: generateMUReportInPeriodUrl
+        generateEntityReportInPeriodUrl: generateMUReportInPeriodUrl,
+        downloadUrl: "${g.createLink(controller:"download",action:"get")}"
     };
-    ko.applyBindings(new ManagementUnitReportSelectorViewModel(optionsReport), document.getElementById('mu-report-selector'));
+    ko.applyBindings(new EntityReportSelectorViewModel(optionsReport), document.getElementById('mu-report-selector'));
+
+    var optionsOrgReport = {
+        generateEntityReportInPeriodUrl: "${g.createLink(controller:'report', action:'generateReportsInPeriod', params: [entity: 'organisation'])}",
+        downloadUrl: "${g.createLink(controller:"download",action:"get")}",
+        fromYear: 2023
+    };
+    ko.applyBindings(new EntityReportSelectorViewModel(optionsOrgReport), document.getElementById('org-report-selector'));
 
 
 </script>

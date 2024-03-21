@@ -7,26 +7,9 @@ var userId = '129333';
 let programName = "Saving Native Species";
 var parentProgram = createOrFindProgram(programName);
 
-let refProgram = "Threatened Species Strategy Action Plan Priority Species";
 var subprograms = ["Emergency Actions for Threatened Species"]
-
-subprograms.forEach(function (subProgram) {
-    var now = ISODate();
-    var newProgram = db.program.find({name: refProgram}).next();
-    delete newProgram._id
-    delete newProgram.programId
-    newProgram.name = subProgram
-    newProgram.programId = UUID.generate()
-    newProgram.dateCreated = now
-    newProgram.lastUpdated = now
-    newProgram.status = "active"
-    newProgram.parent = parentProgram._id
-    var program = db.program.find({name: subProgram})
-    if (!program.hasNext()) {
-        db.program.insert(newProgram);
-    } else {
-        print("Program Already Exist: " + subProgram)
-    }
+subprograms.forEach(function (subProgram){
+    createOrFindProgram(subProgram, parentProgram._id);
 });
 
 var projectConfig = {
@@ -35,121 +18,113 @@ var projectConfig = {
             {
                 "template": "name",
                 "model": {
-                    "helpTextHeading": "A succinct overview of the project: (i) what will be done and (ii) why it will be done",
-                    "maxSize": "1000",
-                    "placeholder": "[Free text; limit response to 150 characters)]",
-                    "explanation": ""
+                    "tableFormatting": true
                 }
+            },
+            {
+                "template": "priorityPlace",
+                "model": {
+                    "priorityPlaceHelpText": "Priority places recognises that some threatened species share the same habitat, and that place-based action can support protection and recovery of more than one species.",
+                    "priorityPlaceLabel": "Does this project directly support a priority place?"
+                }
+            },
+            {
+                "template": "indigenousInvolvement"
             },
             {
                 "template": "description",
                 "model": {
-                    "helpTextHeading": "",
+                    "tableFormatting": true,
                     "maxSize": "1000",
-                    "placeholder": "[Free text; limit response to 1000 characters (approx. 150 words)]",
-                    "explanation": " Please provide a short succinct description of this project. The description should state what will be done and why it will be done. This project description will be publicly visible on the project overview page in MERIT"
+                    "placeholder": "Please provide a short description of this project. This project description will be visible on the project overview page in MERIT [Free text; limit response to 1000 characters (approx. 150 words)]"
                 }
             },
             {
-                "template": "programOutcome"
-            },
-            {
-                "template": "activities",
+                "template": "programOutcome",
                 "model": {
-                    "includeOther": true,
-                    "noneSelectedMessage": "No priority actions have been nominated for this project",
-                    "singleSelection": false,
-                    "title": "Project Actions",
-                    "explanation": "Please select from the lists of priority action applicable to this project. If the priority action is not listed and ‘other’ is selected, please provide details of the ‘other’ priority within the space provided"
+                    "maximumPriorities": "1000",
+                    "priorityHelpText": "Enter the primary investment priority for the primary outcome, noting only one can be selected."
                 }
             },
             {
                 "template": "outcomeStatements",
                 "model": {
-                    "subtitle": "Please provide outcome statements",
-                    "placeholder": "By 30 June 2021, [Free text]",
-                    "title": "Project Outcome"
+                    "outcomeType": "short",
+                    "helpText": "Outline the degree of impact having undertaken the services for up to three years. Ensure the outcomes are measurable with consideration to the baseline and proposed monitoring regime",
+                    "subtitle": "Short-term outcome statement/s",
+                    "extendedOutcomes": true
                 }
             },
             {
-                "template": "keyThreats",
+                "template": "extendedKeyThreats",
                 "model": {
-                    "threatHelpText": "The key threats (or key threatening processes) that your project will be addressing",
-                    "interventionHelpText": "Describe the proposed interventions to address the threat and how this will deliver on the project outcome",
-                    "title": "Key Threats",
-                    "explanation": "Describe the key threat(s) and/or key threatening processes impacting project assets that the project will be addressing."
+                    "servicesHelpText": "Project Services/Target measures selected in this section will be pre-populated into the Project services and targets and Project service forecasts tables",
+                    "threatHelpText": "Describe the key threats or key threatening processes to the investment priority",
+                    "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance",
+                    "interventionHelpText": "Describe the proposed method to address the threat or threatening process",
+                    "title": "Key threat(s) and/or key threatening processes"
                 }
             },
             {
                 "template": "projectMethodology",
                 "model": {
+                    "helpText": "Include all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not impacted by adverse weather conditions. Ensure what’s documented here aligns to those assumptions documented within the Project Logic.",
                     "maxSize": "4000",
-                    "title": "Project Methodology",
-                    "explanation": "The methodology should describe how each project service (i.e., action) will be implemented to achieve outcomes and why that specific approach or technique was chosen. The methodology could include the location, partner/s involvement and outputs. The methodology should clearly link to the outcome statement. At least one method for each project outcome should be identified.",
-                    "tableHeading": "Describe how each project activity will be implemented.",
-                    "placeHolder": "[Free text; limit response to 4000 characters (approx. 650 words)]"
-                }
-            },
-            {
-                "template": "monitoringBaseline",
-                "model": {
-                    "baselineMethodHelpText": "Describe the project baseline (s) units of measure or data which will be used to report progress towards this project’s outcome and the monitoring design",
-                    "titleHelpText": "Describe the project baseline(s) units of measure or data which will be used to report progress towards this project’s outcomes and the monitoring design. Refer to the Regional Land Partnerships Evaluation Plan which provides guidance on baselines and the monitoring indicators for each outcome. Note, other monitoring indicators can also be used."
-                }
-            },
-            {
-                "template": "monitoringIndicators",
-                "model": {
-                    "approachHeading": "Describe the project monitoring indicator(s) approach",
-                    "indicatorHeading": "Identify the project monitoring indicator(s)",
-                    "indicatorHelpText": "List the indicators of project success that will be monitored. Indicators should link back to the outcome statements and, in most cases, will be quantitative and expressed as a numerical measurable. Where relevant, qualitative indicators can be used. Indicators should measure both project outputs (e.g., area (ha) of rabbit control, length (km) of predator proof fencing) and change the project is aiming to achieve (e.g., change in abundance of X threatened species at Y location, change in vegetation cover (%) etc.)",
-                    "approachHelpText": "Briefly describe the method that will be used to monitor the indicator (including timing of monitoring, who will collect/collate/analyse, data, etc)",
-                    "indicatorPlaceHolder": "[Free text]",
-                    "approachPlaceHolder": "[Free text]",
-                    "title": "Project Monitoring Indicators"
-                }
-            },
-            {
-                "template": "adaptiveManagement",
-                "model": {
-                    "title": "Project Review, Evaluation and Improvement Methodology and Approach",
-                    "explanation": "Outline the methods and processes that will enable adaptive management during the lifetime of this project"
-                }
-            },
-            {
-                "template": "nationalAndRegionalPlans",
-                "model": {
-                    "documentNameHelpText": "List the name of the Recovery Plan or Conservation Advice for species listed under the Environment Protection and Biodiversity Conservation Act 1999 (if applicable), or state recovery plan.",
-                    "explanation": "Explain how the project aligns with national and/or state species recovery plans and strategies."
-                }
-            },
-            {
-                "template": "serviceTargets",
-                "model": {
-                    "showTargetDate": true,
-                    "totalHelpText": "The overall total of Project Activities to be delivered during the project delivery period. This total is not necessarily the sum of the minimum annual targets set out for the activities.",
-                    "title": "Activities and Targets Table",
-                    "serviceName": "Activities"
+                    "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])"
                 }
             },
             {
                 "template": "projectPartnerships",
                 "model": {
-                    "namePlaceHolder": "[Free text]",
-                    "helpTextPartnerNature": "If partnership with an organisation: provide the name of the organisation and the role they will play/how you will support them. If partnering with community groups or members of the public: indicate each group or individual you will engage with",
-                    "partnershipPlaceHolder": "[Free text]"
+                    "helpTextHeading": "Note: Not limited to key subcontractors.",
+                    "helpTextPartnerName": "Insert name of project partner. To be a project partner, they need to be actively involved in the planning or delivery of the project"
                 }
             },
             {
-                "template": "meriBudget",
+                "template": "extendedBaselineMonitoring",
                 "model": {
-                    "itemName": "Budget item",
-                    "showThemeColumn": false,
-                    "showActivityColumn": false,
-                    "explanation": "Please detail how project funding will be allocated to project services (action) by species, if more than one species is benefitting from the project. Expenditure should align with the approved project grant application (including the amount identified for project reporting and administration). Each action should be identified as a different line item",
-                    "projectHeadingHelpText": "Planned budget expenditure for each service (action) by species",
-                    "hideHelpText": true
+                    "approachHeading": "Monitoring method",
+                    "indicatorHeading": "Monitoring methodology",
+                    "monitoringServiceHelpText": "Select the relevant Project Services(s)/Target measure(s) that will be used to support ongoing monitoring",
+                    "baselineDataDescriptionHelpText": "Describe the project baseline to be established, or the baseline data that currently exists",
+                    "baselineMethodHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
+                    "baselineDataHelpText": "Existing baseline data needs to be based on best practice methods and be compatible with the EMSA protocols.",
+                    "approachHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
+                    "titleHelpText": "Describe the Project Baseline(s) and ongoing monitoring which will be used to report progress towards this projects outcome(s).  Project Services/Target measures selected in this section will be pre-populated into the Project services and targets and Project service forecasts tables",
+                    "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance",
+                    "baselineServiceHelpText": "Select the relevant Project Service(s)/Target measure(s) that will be used to support the development of the baseline",
+                    "newIndicatorText": "New monitoring indicator"
                 }
+            },
+            {
+                "template": "projectReview",
+                "model": {
+                    "title": "Project review, improvement and evaluation methodology and approach (3000 character limit [approximately 500 words])"
+                }
+            },
+            {
+                "template": "nationalAndRegionalPlans",
+                "model": {
+                    "includeUrl": true,
+                    "headingTitle": "Conservation and management plans"
+                }
+            },
+            {
+                "template": "serviceOutcomeTargets",
+                "model": {
+                    "titleHelpText": "Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections",
+                    "title": "Project services and targets",
+                    "serviceName": "Service"
+                }
+            },
+            {
+                "template": "serviceForecasts",
+                "model": {
+                    "titleHelpText": "Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections"
+                },
+                "excludedModes": [
+                    "PRINT"
+                ]
             }
         ],
         "excludes": [],
@@ -403,12 +378,18 @@ var projectConfig = {
                 }
             ]
         },
-        "visibility": "public",
-        "organisationRelationship": "Grantee",
-        "excludeFinancialYearData": true,
         "requiresActivityLocking": true,
         "projectTemplate": "rlp",
         "activityPeriodDescriptor": "Outputs report #",
+        "requireMeritAdminToReturnMeriPlan": true,
+        "emailTemplates": {
+            "reportSubmittedEmailTemplate": "RLP_REPORT_SUBMITTED_EMAIL_TEMPLATE",
+            "reportReturnedEmailTemplate": "RLP_REPORT_RETURNED_EMAIL_TEMPLATE",
+            "planApprovedEmailTemplate": "RLP_PLAN_APPROVED_EMAIL_TEMPLATE",
+            "planReturnedEmailTemplate": "RLP_PLAN_RETURNED_EMAIL_TEMPLATE",
+            "reportApprovedEmailTemplate": "RLP_REPORT_APPROVED_EMAIL_TEMPLATE",
+            "planSubmittedEmailTemplate": "RLP_PLAN_SUBMITTED_EMAIL_TEMPLATE"
+        },
         "meriPlanTemplate": "configurableMeriPlan",
         "riskAndThreatTypes": [
             "Performance",
@@ -425,7 +406,7 @@ var projectConfig = {
                 "reportDescriptionFormat": "Progress Report %1d",
                 "reportNameFormat": "Progress Report %1d",
                 "reportingPeriodInMonths": 6,
-                "description": "",
+                "description": "_Please note that the reporting fields for these reports are currently being developed_",
                 "minimumReportDurationInDays": 3,
                 "label": "Semester",
                 "category": "Progress Reports",
@@ -439,7 +420,7 @@ var projectConfig = {
                 "reportNameFormat": "Final Report",
                 "reportingPeriodInMonths": 0,
                 "multiple": false,
-                "description": "",
+                "description": "_Please note that the reporting fields for these reports are currently being developed_",
                 "alignToOwnerEnd": true,
                 "label": "Final Report",
                 "category": "Final Report",
@@ -448,933 +429,89 @@ var projectConfig = {
                 "alignToOwnerStart": true
             }
         ],
-        "activities": [
-            {
-                "name": "Herbivore and/or predator control"
-            },
-            {
-                "name": "Weed control and/or revegetation"
-            },
-            {
-                "name": "Fire management and planning"
-            },
-            {
-                "name": "Species and ecological community specific interventions"
-            },
-            {
-                "name": "Traditional Owner led healing of country"
-            },
-            {
-                "name": "Erosion control"
-            },
-            {
-                "name": "Refugia management"
-            }
+        "keyThreatCodes": [
+            "Climate Change - Changed flooding regime",
+            "Climate Change - Changed rainfall patterns",
+            "Climate Change - Sea level rises",
+            "Climate Change - Unexpected seasonal/temperature extremes",
+            "Disease/pathogens - Areas that are infected",
+            "Disease/pathogens - Possible infection of disease free areas",
+            "Fire - Inappropriate fire regime",
+            "Fire - Lack of protection for ecological assets during fire control activities",
+            "Genetics - Bottleneck/inbreeding",
+            "Habitat loss - Breeding place disturbance",
+            "Habitat loss - Dieback/senescence",
+            "Habitat loss - Feeding habitat loss/interference",
+            "Habitat loss - Habitat fragmentation",
+            "Habitat loss - Land clearing",
+            "Habitat loss - Loss of critical ecosystem service supporting habitat",
+            "Human interference - Fish and harvesting aquatic resources (commercial)",
+            "Human interference - Flow-on effects of housing development",
+            "Human interference - Illegal activities",
+            "Human interference - Industrial development",
+            "Human interference - Land use intensification",
+            "Human interference - Recreational fishing",
+            "Human interference - Recreational pressures",
+            "Human interference - Road/vehicle strike",
+            "Land management practices - Changes to hydrology and aquatic systems",
+            "Land management practices - Domestic grazing/stock impacts",
+            "Land management practices - Excess recharge of groundwater",
+            "Land management practices - Excess use (or over-use) of surface water or groundwater resources",
+            "Land management practices - Excessive fertiliser use",
+            "Land management practices - Inappropriate ground cover management",
+            "Land management practices - Runoff",
+            "Native fauna - Competition",
+            "Native fauna - Predation",
+            "Pest - Competition/exclusion",
+            "Pest - Disease transmission",
+            "Pest - Habitat degradation",
+            "Pest - Introduction of new pest animals",
+            "Pest - Predation",
+            "Pollution - Chemical",
+            "Pollution - Eutrophication/algal blooms",
+            "Pollution - Inappropriate waste disposal",
+            "Pollution - Sediment ",
+            "Population size/range - Low habitat area",
+            "Population size/range - Low population numbers",
+            "Weeds - Competition",
+            "Weeds - Introduction of new weed",
+            "Weeds - Spread of weeds from surrounding areas"
         ],
         "navigationMode": "returnToProject",
-        "objectives": [
-            "Prevent extinction and limit decline of native species",
-            "Reduce immediate suffering of native animals directly impacted by the fires",
-            "Maximise chances of long-term recovery of native species and communities",
-            "Ensure learning and continual improvement is core of the response"
+        "priorityPlaces": [
+            "Australian Alps – NSW/ACT/VIC",
+            "Brigalow Country – QLD",
+            "Bruny Island – TAS",
+            "Christmas Island – External Territory",
+            "Eastern Forests of Far North Queensland – QLD",
+            "Fitz-Stirlings – WA",
+            "French Island – VIC",
+            "Giant Kelp Ecological Community – TAS",
+            "Greater Blue Mountains – NSW",
+            "Kakadu & West Arnhem – NT",
+            "Kangaroo Island – SA",
+            "MacDonnell Ranges – NT",
+            "Mallee Birds Ecological Community – VIC/SA/NSW",
+            "Midlands region of central Tasmanian – TAS",
+            "Norfolk Island – External Territory",
+            "Raine Island – Queensland",
+            "Remnant WA Wheatbelt Woodlands – WA",
+            "South East Coastal Ranges – NSW/VIC",
+            "Southern Plains, including the Western Victorian volcanic plain and karst springs – VIC/SA",
+            "Yampi Sounds and surrounds – WA"
         ],
-        "supportedServiceIds": [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            20,
-            21,
-            22,
-            23,
-            24,
-            25,
-            26,
-            27,
-            28,
-            29,
-            30,
-            31,
-            32,
-            33,
-            34,
-            35,
-            36,
-            37,
-            38,
-            39,
-            40,
-            41
-        ]
+        "supportsParatoo": true,
+        "supportsMeriPlanHistory": true
     },
 
     priorities: [
         {
-            "category": "Birds",
-            "priority": "Australasian Bittern Botaurus poiciloptilus"
-        },
-        {
-            "category": "Birds",
-            "priority": "Black-eared Miner Manorina melanotis"
-        },
-        {
-            "category": "Birds",
-            "priority": "Carnaby's Cockatoo Calyptorhynchus latirostris"
-        },
-        {
-            "category": "Birds",
-            "priority": "Christmas Island Goshawk Accipiter hiogaster natalis"
-        },
-        {
-            "category": "Birds",
-            "priority": "Eastern Curlew Numenius madagascariensis"
-        },
-        {
-            "category": "Birds",
-            "priority": "Golden-shouldered Parrot, Alwal Psephotus chrysopterygius"
-        },
-        {
-            "category": "Birds",
-            "priority": "Hooded Plover (eastern) Thinornis cucullatus cucullatus"
-        },
-        {
-            "category": "Birds",
-            "priority": "King Island Brown Thornbill Acanthiza pusilla archibaldi"
-        },
-        {
-            "category": "Birds",
-            "priority": "Malleefowl Leipoa ocellata"
-        },
-        {
-            "category": "Birds",
-            "priority": "Night Parrot Pezoporus occidentalis"
-        },
-        {
-            "category": "Birds",
-            "priority": "Norfolk Island Green Parrot Cyanoramphus cookii"
-        },
-        {
-            "category": "Birds",
-            "priority": "Orange-bellied Parrot Neophema chrysogaster"
-        },
-        {
-            "category": "Birds",
-            "priority": "Plains-wanderer Pedionomus torquatus"
-        },
-        {
-            "category": "Birds",
-            "priority": "Princess Parrot Polytelis alexandrae"
-        },
-        {
-            "category": "Birds",
-            "priority": "Red Goshawk Erythrotriorchis radiatus"
-        },
-        {
-            "category": "Birds",
-            "priority": "Red-tailed Black Cockatoo (SE) Calyptorhynchus banksii graptogyne"
-        },
-        {
-            "category": "Birds",
-            "priority": "Regent Honeyeater Anthochaera phrygia"
-        },
-        {
-            "category": "Birds",
-            "priority": "Swift Parrot Lathamus discolor"
-        },
-        {
-            "category": "Birds",
-            "priority": "Western Ground Parrot, Kyloring Pezoporus flaviventris"
-        },
-        {
-            "category": "Birds",
-            "priority": "White-throated Grasswren, Yirlinkirrkirr Amytornis woodwardi"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Australian Sea-lion Neophoca cinerea"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Brush-tailed Rock-wallaby Petrogale penicillata"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Central Rock-rat Antina Zyzomys pedunculatus"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Chuditch, Western Quoll Dasyurus geoffroii"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Eastern Quoll Dasyurus viverrinus"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Gilbert's Potoroo Ngilkat Potorous gilbertii"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Greater Bilby Macrotis lagotis"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Kangaroo Island Echidna Tachyglossus aculeatus multiaculeatus"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Koala (Qld, NSW, ACT) Phascolarctos cinereus"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Leadbeater’s Possum Gymnobelideus leadbeateri"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Mountain Pygmy-possum Burramys parvus"
-        },
-        {
-            "category": "Mammals",
-            "priority": "New Holland Mouse, Pookila Pseudomys novaehollandiae"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Northern Brushtail Possum Trichosurus vulpecula arnhemensis"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Northern Hairy-nosed Wombat, Yaminon Lasiorhinus krefftii"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Northern Hopping-mouse, Woorrentinta Notomys aquilo"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Northern Quoll Dasyurus hallucatus"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Numbat Myrmecobius fasciatus"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Quokka Setonix brachyurus"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Spectacled Flying-fox Pteropus conspicillatus"
-        },
-        {
-            "category": "Mammals",
-            "priority": "Western Ringtail Possum Pseudocheirus occidentalis"
-        },
-        {
-            "category": "Fish",
-            "priority": "Freshwater Sawfish Pristis pristis"
-        },
-        {
-            "category": "Fish",
-            "priority": "Grey Nurse Shark (eastern) Carcharias taurus"
-        },
-        {
-            "category": "Fish",
-            "priority": "Maugean Skate Zearaja maugeana"
-        },
-        {
-            "category": "Fish",
-            "priority": "Murray Hardyhead Craterocephalus fluviatilis"
-        },
-        {
-            "category": "Fish",
-            "priority": "Red Handfish Thymichthys politus"
-        },
-        {
-            "category": "Fish",
-            "priority": "Redfin Blue-eye Scaturiginichthys vermeilipinnis"
-        },
-        {
-            "category": "Fish",
-            "priority": "Stocky Galaxias Galaxias tantangara"
-        },
-        {
-            "category": "Fish",
-            "priority": "Swan Galaxias Galaxias fontanus"
-        },
-        {
-            "category": "Fish",
-            "priority": "White's Seahorse Hippocampus whitei"
-        },
-        {
-            "category": "Frogs",
-            "priority": "Growling Grass Frog, Southern Bell Frog Litoria raniformis"
-        },
-        {
-            "category": "Frogs",
-            "priority": "Kroombit Tinker Frog Taudactylus pleione"
-        },
-        {
-            "category": "Frogs",
-            "priority": "Southern Corroboree Frog Pseudophryne corroboree"
-        },
-        {
-            "category": "Reptiles",
-            "priority": "Eucalyptus langleyi (Albatross Mallee)"
-        },
-        {
-            "category": "Reptiles",
-            "priority": "Arnhem Land Gorges Skink Bellatorias obiri"
-        },
-        {
-            "category": "Reptiles",
-            "priority": "Bellinger River Snapping Turtle Wollumbinia georgesi"
-        },
-        {
-            "category": "Reptiles",
-            "priority": "Collared Delma, Adorned Delma Delma torquata"
-        },
-        {
-            "category": "Reptiles",
-            "priority": "Great Desert Skink, Tjakura, Warrarna, Mulyamiji Liopholis kintorei"
-        },
-        {
-            "category": "Reptiles",
-            "priority": "Green Turtle Chelonia mydas"
-        },
-        {
-            "category": "Reptiles",
-            "priority": "Olive Ridley Turtle Lepidochelys olivacea"
-        },
-        {
-            "category": "Reptiles",
-            "priority": "Pygmy Blue-tongue Lizard Tiliqua adelaidensis"
-        },
-        {
-            "category": "Reptiles",
-            "priority": "Short-nosed Seasnake Aipysurus apraefrontalis"
-        },
-        {
-            "category": "Reptiles",
-            "priority": "Yinnietharra Rock-dragon Ctenophorus yinnietharra"
-        },
-        {
-            "category": "Invertebrates",
-            "priority": "Ammonite Snail Ammoniropa vigens"
-        },
-        {
-            "category": "Invertebrates",
-            "priority": "Cauliflower Soft Coral Dendronephthya australis"
-        },
-        {
-            "category": "Invertebrates",
-            "priority": "Eltham Copper Butterfly Paralucia pyrodiscus lucida"
-        },
-        {
-            "category": "Invertebrates",
-            "priority": "Giant Gippsland Earthworm Megascolides australis"
-        },
-        {
-            "category": "Invertebrates",
-            "priority": "Lord Howe Island Phasmid Dryococelus australis"
-        },
-        {
-            "category": "Invertebrates",
-            "priority": "Margaret River Burrowing Crayfish Engaewa pseudoreducta"
-        },
-        {
-            "category": "Invertebrates",
-            "priority": "Mount Lidgbird Charopid Land Snail Pseudocharopa ledgbirdi"
-        },
-        {
-            "category": "Invertebrates",
-            "priority": "Pink Underwing Moth Phyllodes imperialis smithersi"
-        },
-        {
-            "category": "Invertebrates",
-            "priority": "Tasmanian Giant Freshwater Crayfish Astacopsis gouldi"
-        },
-        {
-            "category": "Plants",
-            "priority": "Adamson’s Blown-grass Lachnagrostis adamsonii"
-        },
-        {
-            "category": "Plants",
-            "priority": "Angle-stemmed Myrtle Gossia gonoclada"
-        },
-        {
-            "category": "Plants",
-            "priority": "Arckaringa Daisy Olearia arckaringensis"
-        },
-        {
-            "category": "Plants",
-            "priority": "Border Ranges Lined Fern Antrophyum austroqueenslandicum"
-        },
-        {
-            "category": "Plants",
-            "priority": "Bulberin Nut Macadamia jansenii "
-        },
-        {
-            "category": "Plants",
-            "priority": "Carrington Falls Pomaderris Pomaderris walshii"
-        },
-        {
-            "category": "Plants",
-            "priority": "Davies' Waxflower Phebalium daviesii"
-        },
-        {
-            "category": "Plants",
-            "priority": "Eremophila subangustifolia"
-        },
-        {
-            "category": "Plants",
-            "priority": "Foote's Grevillea Grevillea calliantha"
-        },
-        {
-            "category": "Plants",
-            "priority": "Forked Spyridium Spyridium furculentum"
-        },
-        {
-            "category": "Plants",
-            "priority": "Giant Andersonia Andersonia axilliflora"
-        },
-        {
-            "category": "Plants",
-            "priority": "Graveside Leek-orchid Prasophyllum taphanyx"
-        },
-        {
-            "category": "Plants",
-            "priority": "Imlay Mallee Eucalyptus imlayensis"
-        },
-        {
-            "category": "Plants",
-            "priority": "King Blue-grass Dichanthium queenslandicum"
-        },
-        {
-            "category": "Plants",
-            "priority": "Lax Leek Orchid Prasophyllum laxum"
-        },
-        {
-            "category": "Plants",
-            "priority": "Little Mountain Palm Lepidorrhachis mooreana"
-        },
-        {
-            "category": "Plants",
-            "priority": "MacDonnell Ranges Cycad Macrozamia macdonnellii"
-        },
-        {
-            "category": "Plants",
-            "priority": "Native Guava Rhodomyrtus psidioides"
-        },
-        {
-            "category": "Plants",
-            "priority": "Pimelea cremnophila"
-        },
-        {
-            "category": "Plants",
-            "priority": "Pimelea venosa"
-        },
-        {
-            "category": "Plants",
-            "priority": "Scaly-butt Mallee Eucalyptus leprophloia"
-        },
-        {
-            "category": "Plants",
-            "priority": "Small-flowered Snottygobble Persoonia micranthera"
-        },
-        {
-            "category": "Plants",
-            "priority": "Smooth Davidson's Plum Davidsonia johnsonii"
-        },
-        {
-            "category": "Plants",
-            "priority": "Stiff Groundsel Senecio behrianus"
-        },
-        {
-            "category": "Plants",
-            "priority": "Stirling Range Dryandra Banksia montana"
-        },
-        {
-            "category": "Plants",
-            "priority": "Tangled Wattle Acacia volubilis"
-        },
-        {
-            "category": "Plants",
-            "priority": "Waddy, Waddi, Waddy-wood, Birdsville Wattle Acacia peuce"
-        },
-        {
-            "category": "Plants",
-            "priority": "Wollemi Pine Wollemia nobilis"
-        },
-        {
-            "category": "Plants",
-            "priority": "Wongan Eriostemon Philotheca wonganensis"
-        },
-        {
-            "category": "Plants",
-            "priority": "Wood Well Spyridium Spyridium fontis-woodii "
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Australasian Bittern Botaurus poiciloptilus"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Black-eared Miner Manorina melanotis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Carnaby's Cockatoo Calyptorhynchus latirostris"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Christmas Island Goshawk Accipiter hiogaster natalis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Eastern Curlew Numenius madagascariensis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Golden-shouldered Parrot, Alwal Psephotus chrysopterygius"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Hooded Plover (eastern) Thinornis cucullatus cucullatus"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "King Island Brown Thornbill Acanthiza pusilla archibaldi"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Malleefowl Leipoa ocellata"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Night Parrot Pezoporus occidentalis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Norfolk Island Green Parrot Cyanoramphus cookii"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Orange-bellied Parrot Neophema chrysogaster"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Plains-wanderer Pedionomus torquatus"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Princess Parrot Polytelis alexandrae"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Red Goshawk Erythrotriorchis radiatus"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Red-tailed Black Cockatoo (SE) Calyptorhynchus banksii graptogyne"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Regent Honeyeater Anthochaera phrygia"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Swift Parrot Lathamus discolor"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Western Ground Parrot, Kyloring Pezoporus flaviventris"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "White-throated Grasswren, Yirlinkirrkirr Amytornis woodwardi"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "King Island Scrubtit Acanthornis magna greeniana"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Noisy Scrub-bird Atrichornis clamosus"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Australian Sea-lion Neophoca cinerea"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Brush-tailed Rock-wallaby Petrogale penicillata"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Central Rock-rat Antina Zyzomys pedunculatus"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Chuditch, Western Quoll Dasyurus geoffroii"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Eastern Quoll Dasyurus viverrinus"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Gilbert's Potoroo Ngilkat Potorous gilbertii"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Greater Bilby Macrotis lagotis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Kangaroo Island Echidna Tachyglossus aculeatus multiaculeatus"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Koala Phascolarctos cinereus"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Leadbeater’s Possum Gymnobelideus leadbeateri"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Mountain Pygmy-possum Burramys parvus"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "New Holland Mouse, Pookila Pseudomys novaehollandiae"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Northern Brushtail Possum Trichosurus vulpecula arnhemensis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Northern Hairy-nosed Wombat, Yaminon Lasiorhinus krefftii"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Northern Hopping-mouse, Woorrentinta Notomys aquilo"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Northern Quoll Dasyurus hallucatus"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Numbat Myrmecobius fasciatus"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Quokka Setonix brachyurus"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Spectacled Flying-fox Pteropus conspicillatus"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Western Ringtail Possum Pseudocheirus occidentalis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Freshwater Sawfish Pristis pristis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Grey Nurse Shark (eastern) Carcharias taurus"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Maugean Skate Zearaja maugeana"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Murray Hardyhead Craterocephalus fluviatilis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Red Handfish Thymichthys politus"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Redfin Blue-eye Scaturiginichthys vermeilipinnis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Stocky Galaxias Galaxias tantangara"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Swan Galaxias Galaxias fontanus"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "White's Seahorse Hippocampus whitei"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Growling Grass Frog, Southern Bell Frog Litoria raniformis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Kroombit Tinker Frog Taudactylus pleione"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Southern Corroboree Frog Pseudophryne corroboree"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Mountain Frog Philoria kundagungan"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Mountain-top Nursery-frog Cophixalus monticola"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "White-bellied Frog Anstisia alba"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Arnhem Land Gorges Skink Bellatorias obiri"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Bellinger River Snapping Turtle Wollumbinia georgesi"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Collared Delma, Adorned Delma Delma torquata"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Great Desert Skink, Tjakura, Warrarna, Mulyamiji Liopholis kintorei"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Green Turtle Chelonia mydas"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Olive Ridley Turtle Lepidochelys olivacea"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Pygmy Blue-tongue Lizard Tiliqua adelaidensis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Short-nosed Seasnake Aipysurus apraefrontalis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Yinnietharra Rock-dragon Ctenophorus yinnietharra"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Canberra Grassland Earless Dragon Tympanocryptis lineata"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Western Swamp Tortoise Pseudemydura umbrina"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Ammonite Snail Ammoniropa vigens"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Cauliflower Soft Coral Dendronephthya australis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Eltham Copper Butterfly Paralucia pyrodiscus lucida"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Giant Gippsland Earthworm Megascolides australis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Lord Howe Island Phasmid Dryococelus australis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Margaret River Burrowing Crayfish Engaewa pseudoreducta"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Mount Lidgbird Charopid Land Snail Pseudocharopa ledgbirdi"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Pink Underwing Moth Phyllodes imperialis smithersi"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Tasmanian Giant Freshwater Crayfish Astacopsis gouldi"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Glenelg Freshwater Mussel Hyridella glenelgensis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Kangaroo Island Assassin Spider Zephyrarchaea austini"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Adamson’s Blown-grass Lachnagrostis adamsonii"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Angle-stemmed Myrtle Gossia gonoclada"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Arckaringa Daisy Olearia arckaringensis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Border Ranges Lined Fern Antrophyum austroqueenslandicum"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Bulberin Nut Macadamia jansenii "
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Carrington Falls Pomaderris Pomaderris walshii"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Davies' Waxflower Phebalium daviesii"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Eremophila subangustifolia"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Foote's Grevillea Grevillea calliantha"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Forked Spyridium Spyridium furculentum"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Giant Andersonia Andersonia axilliflora"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Graveside Leek-orchid Prasophyllum taphanyx"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Imlay Mallee Eucalyptus imlayensis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "King Blue-grass Dichanthium queenslandicum"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Lax Leek Orchid Prasophyllum laxum"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Little Mountain Palm Lepidorrhachis mooreana"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "MacDonnell Ranges Cycad Macrozamia macdonnellii"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Native Guava Rhodomyrtus psidioides"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Pimelea cremnophila"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Pimelea venosa"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Scaly-butt Mallee Eucalyptus leprophloia"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Small-flowered Snottygobble Persoonia micranthera"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Smooth Davidson's Plum Davidsonia johnsonii"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Stiff Groundsel Senecio behrianus"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Stirling Range Dryandra Banksia montana"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Tangled Wattle Acacia volubilis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Waddy, Waddi, Waddy-wood, Birdsville Wattle Acacia peuce"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Wollemi Pine Wollemia nobilis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Wongan Eriostemon Philotheca wonganensis"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Wood Well Spyridium Spyridium fontis-woodii"
-        },
-        {
-            "category": "Plants and animals extinction prevention",
-            "priority": "Narrow-leaf Eremophila Eremophila subangustifolia"
-        },
-        {
             "category": "Plants and animals extinction prevention",
-            "priority": "Gorge Rice-flower, Pimelelea cremnophila"
+            "priority": "Pugh's Mountain Frog (Philoria pughi)"
         },
         {
             "category": "Plants and animals extinction prevention",
-            "priority": "Bolivia Hill Rice-flower, Pimelea venosa"
+            "priority": "Victorian Grassland Earless Dragon (Tympanocryptis pinguicolla)"
         }
     ]
 };
@@ -1391,7 +528,27 @@ var outcomes = [
         "type": "primary",
         "category": "environment",
         "supportsMultiplePrioritiesAsSecondary": false,
-        "outcome": "Prevent new extinctions of plants and animals"
+        "outcome": "1. Species and Landscapes (Long term): Threatened Species (TS) - New extinctions of plants and animals are prevented"
+    },
+    {
+        "type": "short",
+        "category": "Emergency actions related outcome",
+        "outcome": "All priority species are on track for improved trajectory"
+    },
+    {
+        "type": "short",
+        "category": "Emergency actions related outcome",
+        "outcome": "Implementation of priority actions for priority species is tracked and published"
+    },
+    {
+        "type": "short",
+        "category": "Emergency actions related outcome",
+        "outcome": "Species at high risk of imminent extinction are identified and supported to persist"
+    },
+    {
+        "type": "short",
+        "category": "Emergency actions related outcome",
+        "outcome": "National conservation planning for threatened species and ecological communities is contemporary, effective and fit-for-purpose"
     }
 ]
 
@@ -1400,10 +557,8 @@ subprograms.forEach(function (subprogram){
     var program = db.program.find({name: subprogram});
     while(program.hasNext()){
         var p = program.next();
-        if (p.name === "Emergency Actions for Threatened Species"){
-            p.config = projectConfig.config
-            p.priorities = projectConfig.priorities
-        }
-        db.program.save(p);
+        print("sub program ID: " + p.programId)
+        db.program.updateOne({programId:p.programId}, {$set:{config:projectConfig.config, outcomes:outcomes, priorities:projectConfig.priorities}});
+        useNhtServiceLabels(p.name);
     }
 });

@@ -1,3 +1,5 @@
+
+var MONITOR_APP = 'Monitor';
 /**
  * This view model backs the "Data set summary" tab that is optionally displayed on project
  * pages that support it.
@@ -20,17 +22,44 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         window.location.href = config.newDataSetUrl;
     };
 
+    /** Only new data sets will have a created date, return true if any of the data sets have one */
+    self.supportsDateColumn = _.find(dataSets, function(dataSet) {
+        return dataSet.dateCreated;
+    });
+    function serviceName(serviceId) {
+        var service = _.find(config.services || [], function(service) {
+            return service.id == serviceId
+        });
+        return (service && service.name);
+    }
+
+    function reportName(reportId) {
+        var report = _.find(config.reports || [], function(report) {
+            return report.reportId == reportId
+        });
+        return (report && report.name);
+    }
+
     /** View model backing for a single row in the data set summary table */
     function DataSetSummary(dataSet) {
 
-        this.editUrl = config.editDataSetUrl + '?dataSetId='+dataSet.dataSetId;
-        this.viewUrl = config.viewDataSetUrl + '?dataSetId='+dataSet.dataSetId;
+        this.editUrl = config.editDataSetUrl + '?dataSetId=' + dataSet.dataSetId;
+        this.viewUrl = config.viewDataSetUrl + '?dataSetId=' + dataSet.dataSetId;
         this.name = dataSet.name;
+        this.createdIn = dataSet.collectionApp === MONITOR_APP ? MONITOR_APP : 'MERIT';
         this.progress = dataSet.progress;
-        this.deleteDataSet = function() {
-            bootbox.confirm("Are you sure?", function(yes) {
+        this.dateCreated = ko.observable(dataSet.dateCreated).extend({simpleDate: false});
+        this.lastUpdated = ko.observable(dataSet.lastUpdated).extend({simpleDate: false});
+        this.service = dataSet.serviceId ? (serviceName(dataSet.serviceId) || 'Unsupported service') : '';
+        this.report = dataSet.reportId ? reportName(dataSet.reportId) : '';
+        this.reportUrl = config.viewReportUrl + '?reportId=' + dataSet.reportId;
+        this.publicationStatus = dataSet.publicationStatus;
+
+        this.readOnly = PublicationStatus.isReadOnly(dataSet.publicationStatus);
+        this.deleteDataSet = function () {
+            bootbox.confirm("Are you sure?", function (yes) {
                 if (yes) {
-                    projectService.deleteDataSet(dataSet.dataSetId).done(function() {
+                    projectService.deleteDataSet(dataSet.dataSetId).done(function () {
                         blockUIWithMessage("Refreshing page...");
                         window.location.href = config.returnToUrl;
                     });
@@ -54,12 +83,11 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
  */
 var DataSetViewModel = function(dataSet, projectService, options) {
     var self = this;
-
     var config = _.defaults({validationContainerSelector:'.validationEngineContainer'}, options);
-    $(config.validationContainerSelector).validationEngine();
-
     dataSet = dataSet || {};
+    self.dateCreated = dataSet.dateCreated;
     self.dataSetId = dataSet.dataSetId;
+    self.surveyId = dataSet.surveyId; // Data set summaries created by a submission from the Monitor app will have a surveyId
     self.name = ko.observable(dataSet.name );
     self.grantId = dataSet.grantId;
     self.projectName = dataSet.projectName;
@@ -78,17 +106,58 @@ var DataSetViewModel = function(dataSet, projectService, options) {
         }
     });
 
+    self.projectBaselines = options.projectBaselines;
     self.type = ko.observable(dataSet.type);
+    self.baselines = ko.observableArray(dataSet.baselines);
+    self.otherDataSetType = ko.observable(dataSet.otherDataSetType);
     self.term = ko.observable(dataSet.term);
-
+    var selectedServiceAndOutcome = _.find(options.projectOutcomes || [], function(outcome) {
+        return outcome.serviceId == dataSet.serviceId && _.isEqual(outcome.outcomes, dataSet.projectOutcomes);
+    });
+    self.serviceAndOutcomes = ko.observable(selectedServiceAndOutcome && selectedServiceAndOutcome.label);
+    self.projectProtocols = config.projectProtocols;
+    self.protocol = ko.observable(dataSet.protocol);
+    self.projectOutcomeList = ko.observableArray(options.projectOutcomes);
+    self.serviceId = ko.computed(function() {
+        var selectedOutcome = _.find(options.projectOutcomes || [], function(serviceAndOutcome) {
+            return serviceAndOutcome.label == self.serviceAndOutcomes();
+        });
+        return selectedOutcome && selectedOutcome.serviceId;
+    });
+    self.projectOutcomes = ko.computed(function() {
+        var selectedOutcome = _.find(options.projectOutcomes || [], function(serviceAndOutcome) {
+            return serviceAndOutcome.label == self.serviceAndOutcomes();
+        });
+        return selectedOutcome && selectedOutcome.outcomes;
+    });
     if (dataSet.measurementTypes && !_.isArray(dataSet.measurementTypes)) {
         dataSet.measurementTypes = [dataSet.measurementTypes];
     }
     self.measurementTypes = ko.observableArray(dataSet.measurementTypes);
     self.methods = ko.observableArray(dataSet.methods);
+
+    /** Applies a standard method description for emsa protocols */
+    function syncMethodDescriptionToProtocol(protocol) {
+        var emsaMethodDescription = 'See EMSA Protocols Manual: https://www.tern.org.au/emsa-protocols-manual';
+        if (protocol && protocol != 'other') {
+            self.methodDescription(emsaMethodDescription);
+        }
+        else if (self.methodDescription() == emsaMethodDescription) {
+            self.methodDescription('');
+        }
+    }
     self.methodDescription = ko.observable(dataSet.methodDescription);
-    self.collectionApp = ko.observable(dataSet.collectionApp);
+    syncMethodDescriptionToProtocol(dataSet.protocol);
+
+    self.protocol.subscribe(function(protocol) {
+        syncMethodDescriptionToProtocol(protocol);
+    });
+
+
+    self.collectionApp = ko.observable();
     self.location = ko.observable(dataSet.location);
+    self.siteId = ko.observable(dataSet.siteId);
+    self.siteUrl = options.viewSiteUrl + '/' + dataSet.siteId;
     self.startDate = ko.observable(dataSet.startDate).extend({simpleDate:false});
     self.endDate = ko.observable(dataSet.endDate).extend({simpleDate:false});
     self.endDate.subscribe(function (endDate) {
@@ -99,18 +168,33 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     });
     self.addition = ko.observable(dataSet.addition);
     self.threatenedSpeciesIndex = ko.observable(dataSet.threatenedSpeciesIndex);
-    self.collectorType = ko.observable(dataSet.collectorType);
-    self.qa = ko.observable(dataSet.qa);
-    self.published = ko.observable(dataSet.published);
-    self.storageType = ko.observable(dataSet.storageType);
+    self.threatenedSpeciesIndexUploadDate = ko.observable(dataSet.threatenedSpeciesIndexUploadDate).extend({simpleDate:false});
     self.publicationUrl = ko.observable(dataSet.publicationUrl);
-    self.format = ko.observable(dataSet.format);
+    self.format = ko.observable();
+    self.collectionApp.subscribe(function(collectionApp) {
+        if (collectionApp == MONITOR_APP) {
+            self.format('Database Table');
+            self.publicationUrl('Biodiversity Data Repository (URL pending)');
+        }
+    });
+    self.collectionApp(dataSet.collectionApp); // Set this after declaration to trigger the subscription above.
+
     if (dataSet.sensitivities && !_.isArray(dataSet.sensitivities)) {
         dataSet.sensitivities = [dataSet.sensitivities];
     }
+
+    self.sizeInKB = ko.observable(dataSet.sizeInKB);
+    self.sizeUnknown = ko.observable(dataSet.sizeUnknown);
+    self.format.subscribe(function(format) {
+        if (!self.sizeInKB()) {
+             if (['Database Table', 'Database View', 'ESRI REST'].indexOf(format) >=0) {
+                 self.sizeUnknown(true);
+             }
+        }
+    });
+    self.format(dataSet.format);
     self.sensitivities = ko.observableArray(dataSet.sensitivities);
-    self.owner = ko.observable(dataSet.owner);
-    self.custodian = ko.observable(dataSet.custodian);
+    self.otherSensitivity = ko.observable(dataSet.otherSensitivity);
     self.progress = ko.observable(dataSet.progress);
     self.markedAsFinished = ko.observable(dataSet.progress === 'finished');
     self.markedAsFinished.subscribe(function (finished) {
@@ -118,11 +202,22 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     });
     self.dataCollectionOngoing = ko.observable(dataSet.dataCollectionOngoing);
     self.dataCollectionOngoing.subscribe(function (dataCollectionOngoing) {
-        self.dataCollectionOngoing(dataCollectionOngoing);
         if(dataCollectionOngoing) {
             $(options.endDateSelector).val(null).trigger('change');
         }
     });
+    self.validateEndDate = function() {
+        if (!self.dataCollectionOngoing()) {
+            if (!self.endDate()) {
+                return 'This field is required';
+            }
+            if (self.endDate() < self.startDate()) {
+                return 'Date must be after '+self.startDate.formattedDate();
+            }
+        }
+    };
+
+    self.isAutoCreated = dataSet.surveyId != null;
 
     self.validate = function() {
         return $(config.validationContainerSelector).validationEngine('validate');
@@ -133,7 +228,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
 
         if (valid) {
             var dataSet = ko.mapping.toJS(self,
-                {ignore: ['grantId', 'projectName', 'programName', 'validate', 'save', 'cancel', 'investmentOtherSelected']});
+                {ignore: ['grantId', 'projectName', 'programName', 'validate', 'save', 'cancel', 'investmentOtherSelected', 'siteUrl', 'isAutoCreated', 'serviceAndOutcomes', 'projectOutcomeList', 'projectBaselines', 'projectProtocols']});
             projectService.saveDataSet(dataSet).done(function() {
                 // return to project
                 window.location.href = config.returnToUrl;
@@ -146,5 +241,17 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.cancel = function() {
         // return to project
         window.location.href = config.returnToUrl;
+    }
+
+    self.uniqueName = function() {
+        var invalidNames = config.invalidNames || [];
+        if (invalidNames.indexOf(self.name()) >= 0) {
+            return "This name is used by another data set.  Please use a unique name";
+        }
+    }
+
+    self.attachValidation = function () {
+        $(config.validationContainerSelector).validationEngine();
+        window.uniqueName = self.uniqueName; // Setup the validation function for the name field.
     }
 };

@@ -54,7 +54,7 @@
         ko.applyBindings(programViewModel);
         $('.validationEngineContainer').validationEngine();
 
-         $('.parentProgramId').select2({theme: "bootstrap4"});
+         $('.parentProgramId').select2({theme: "bootstrap"});
     });
 
 </asset:script>

@@ -1,15 +1,23 @@
 package au.org.ala.merit
 
 import au.org.ala.cas.util.AuthenticationCookieUtils
+import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.web.AuthService
 import bootstrap.Attribute
+import com.naleid.grails.MarkdownService
 import grails.converters.JSON
 import grails.web.servlet.mvc.GrailsParameterMap
+import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
 import org.apache.commons.lang.WordUtils
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
+import org.owasp.html.HtmlChangeListener
+import org.owasp.html.HtmlPolicyBuilder
+import org.owasp.html.PolicyFactory
+import org.owasp.html.Sanitizers
 
+@Slf4j
 class FCTagLib {
 
     static namespace = "fc"
@@ -17,7 +25,12 @@ class FCTagLib {
     def commonService
     def userService
     def settingService
+    MarkdownService markdownService
     AuthService authService
+    MetadataService metadataService
+
+    /** Allow simple formatting, links and text within p and divs by default */
+    def policy = (Sanitizers.FORMATTING & Sanitizers.LINKS & Sanitizers.BLOCKS) & new HtmlPolicyBuilder().allowTextIn("p", "div").toFactory()
 
     def textField = { attrs ->
         def outerClass = attrs.remove 'outerClass'
@@ -669,21 +682,21 @@ class FCTagLib {
     def footerContent = { attrs ->
         def content = settingService.getSettingText(SettingPageType.FOOTER) as String
         if (content) {
-            out << content.markdownToHtml()
+            out << markdownToHtmlAndSanitise(content)
         }
     }
 
     def announcementContent = { attrs ->
         def content = settingService.getSettingText(SettingPageType.ANNOUNCEMENT) as String
         if (content) {
-            out << content.markdownToHtml()
+            out << markdownToHtmlAndSanitise(content)
         }
     }
 
     def homePageTitle = { attrs ->
         def content = settingService.getSettingText(SettingPageType.TITLE) as String
         if (content) {
-            out << content
+            out << markdownToHtmlAndSanitise(content)
         }
     }
 
@@ -696,7 +709,7 @@ class FCTagLib {
         SettingPageType settingType = attrs.settingType
         def content = settingService.getSettingText(settingType) as String
         if (content) {
-            out << content.markdownToHtml()
+            out << markdownToHtmlAndSanitise(content)
         }
     }
 
@@ -877,15 +890,189 @@ class FCTagLib {
 
         out << '<span class="original hide">'
         if (original && original.size() > i) {
-            out << original[i][property]
+            (attrs.property) ? out << original[i][property] : out << original[i]
         }
         out << '</span>'
         out << '<span class="changed hide">'
         if (changed && changed.size() > i) {
-            out << changed[i][property]
+            (attrs.property) ? out << changed[i][property] : out << changed[i]
         }
         out << '</span>'
         out << '<span class="diff"></span>'
+
+    }
+
+    def renderComparisonOutputTargets = { attrs ->
+
+        List original = attrs.original
+        List changed = attrs.changed
+        int i = attrs.i
+        String property = attrs.property
+
+        out << '<span class="original hide">'
+        if (original && original.size() > i) {
+            (attrs.property) ? out << original[i][property][0].collect{it}.join(',') : out << original[i][0]
+        }
+        out << '</span>'
+        out << '<span class="changed hide">'
+        if (changed && changed.size() > i) {
+            (attrs.property) ? out << changed[i][property][0].collect{it}.join(',') : out << changed[i][0]
+        }
+        out << '</span>'
+        out << '<span class="diff"></span>'
+
+    }
+
+    def renderComparisonList = { attrs ->
+
+        List original = attrs.original
+        List changed = attrs.changed
+        int i = attrs.i
+        String property = attrs.property
+
+        out << '<span class="original hide">'
+        if (original && original.size() > i) {
+            if (original[i][property] instanceof List) {
+                out << fakeBulletedList(original[i][property])
+            } else {
+                out << original[i][property]
+            }
+
+        }
+        out << '</span>'
+        out << '<span class="changed hide">'
+        if (changed && changed.size() > i) {
+            if (changed[i][property] instanceof List) {
+                out << fakeBulletedList(changed[i][property])
+            } else {
+                out << changed[i][property]
+            }
+        }
+        out << '</span>'
+        out << '<span class="diff"></span>'
+
+    }
+
+    def renderComparisonMonitoring = { attrs ->
+
+        String code = attrs.code
+        List original = attrs.original
+        List changed = attrs.changed
+        int i = attrs.i
+        String property = attrs.property
+        ProgramConfig config = attrs.config
+
+        def origMonitoringList = original
+        def resultOrigMonitoringList = []
+        for (def monitoring : origMonitoringList) {
+            if (code && code == monitoring.relatedBaseline) {
+                resultOrigMonitoringList = monitoring
+            }
+        }
+
+        def changedMonitoringList = changed
+        def resultChangedMonitoringList = []
+        for (def monitoring : changedMonitoringList) {
+            if (code && code == monitoring.relatedBaseline) {
+                resultChangedMonitoringList = monitoring
+            }
+        }
+
+        out << '<span class="original hide">'
+        if (resultOrigMonitoringList && resultOrigMonitoringList.size() > i) {
+            if (property == 'relatedTargetMeasures') {
+                out << getScoreLabels(resultOrigMonitoringList[property], config, true)
+            } else {
+                if (resultOrigMonitoringList[property] instanceof List) {
+                    out << resultOrigMonitoringList[property].collect{it}.join(',')
+                } else {
+                    out << resultOrigMonitoringList[property]
+                }
+            }
+
+        }
+        out << '</span>'
+
+        out << '<span class="changed hide">'
+        if (resultChangedMonitoringList && resultChangedMonitoringList.size() > i) {
+            if (property == 'relatedTargetMeasures') {
+                out << getScoreLabels(resultChangedMonitoringList[property], config, true)
+            } else {
+                if (resultChangedMonitoringList[property] instanceof List) {
+                    out << resultChangedMonitoringList[property].collect{it}.join(',')
+                } else {
+                    out << resultChangedMonitoringList[property]
+                }
+            }
+
+        }
+        out << '</span>'
+        out << '<span class="diff"></span>'
+    }
+
+    def renderComparisonScoreLabel = { attrs ->
+
+        List original = attrs.original
+        List changed = attrs.changed
+        int i = attrs.i
+        boolean includeService = attrs.includeService
+        String property = attrs.property
+        ProgramConfig config = attrs.config
+        try {
+            out << '<span class="original hide">'
+            if (original && original.size() > i) {
+                out << getScoreLabels(original[i][property], config, includeService)
+            }
+            out << '</span>'
+        } catch(Exception e) {
+            log.debug "\n Changed index is greater than the original"
+        }
+
+        out << '<span class="changed hide">'
+        if (changed && changed.size() > i) {
+            out << getScoreLabels(changed[i][property], config, includeService)
+        }
+        out << '</span>'
+
+        out << '<span class="diff"></span>'
+
+    }
+
+    def renderComparisonService = { attrs ->
+
+        List original = attrs.original
+        List changed = attrs.changed
+        int i = attrs.i
+        ProgramConfig programConfig = attrs.programConfig
+
+        try {
+            out << '<span class="original hide">'
+            if (original && original.size() > i) {
+                out << serviceLabel(original[i].scoreId, programConfig)
+            }
+            out << '</span>'
+
+        } catch(Exception e) {
+            log.debug "\n Changed index is greater than the original"
+        }
+
+        out << '<span class="changed hide">'
+        if (changed && changed.size() > i) {
+            out << serviceLabel(changed[i].scoreId, programConfig)
+        }
+        out << '</span>'
+
+        out << '<span class="diff"></span>'
+
+    }
+
+    private static String serviceLabel(String scoreId, ProgramConfig programConfig) {
+        Map service = programConfig.services.find { Map service ->
+            service.scores.find{ Map score ->
+                score.scoreId == scoreId
+            }
+        }
+        service?.name ?: 'Unsupported service'
     }
 
     def status = { attrs ->
@@ -978,5 +1165,89 @@ class FCTagLib {
         List ids = attrs.externalIds?.findAll{it.idType == type}
 
         out << ids.collect{it.externalId}.join(',')
+    }
+
+    def markdownToHtml = { Map attrs, body ->
+        String text = attrs.text ?: body()
+
+        out << markdownToHtmlAndSanitise(text)
+    }
+
+    private String markdownToHtmlAndSanitise(String text) {
+        String html = markdownService.markdown(text)
+        internalSanitise(policy, html)
+    }
+
+    private static String internalSanitise(PolicyFactory policyFactory, String input, String imageId = '', String metadataName = '') {
+        policyFactory.sanitize(input, new HtmlChangeListener<Object>() {
+            void discardedTag(Object context, String elementName) {
+                log.warn("Dropping element $elementName in $imageId.$metadataName")
+            }
+            void discardedAttributes(Object context, String tagName, String... attributeNames) {
+                log.warn("Dropping attributes $attributeNames from $tagName in $imageId.$metadataName")
+            }
+        }, null)
+    }
+
+    private static String getScoreLabels(def scoreIds, ProgramConfig config, Boolean includeService) {
+        List labels = []
+        if (scoreIds instanceof List) {
+            for (String scoreId : scoreIds) {
+                labels.add(scoreLabel(scoreId, config, includeService))
+            }
+        } else {
+            labels.add(scoreLabel(scoreIds, config, includeService))
+        }
+
+        return fakeBulletedList(labels)
+    }
+
+    private static String fakeBulletedList(List items, int spaceAfterCharacterCount = 20) {
+        String result = ''
+        if (items.size() == 1) {
+            result = items[0]
+        } else {
+            for (int i=0; i<items.size(); i++) {
+                String item = items[i]
+                result += '\u2022&nbsp;'
+
+                // replace any space characters in blocks of 20 characters or so with non-breaking spaces
+                // to fake formatting a bulleted list.
+                int count = 0
+                item.tokenize(' \t').eachWithIndex { String word, int index ->
+                    count += word.length()
+                    result += word
+                    if (count < spaceAfterCharacterCount) {
+                        result += '&nbsp;'
+                    }
+                    else {
+                        result += ' '
+                        count = 0
+                    }
+                }
+
+                if (i<items.size() -1) {
+                    result += ', '
+                }
+            }
+
+        }
+        result
+    }
+
+    private static String scoreLabel(String scoreId, ProgramConfig config, Boolean includeService) {
+        String label
+        config.services.find { Map service ->
+            service.scores.find{ Map score ->
+                if (score.scoreId == scoreId) {
+                    label = score.label
+                    if (includeService) {
+                        label = (service?.name ?: 'Unsupported service') + ' - ' + (label ?: 'Unsupported target measure')
+                    }
+                }
+                label
+            }
+        }
+        label ?: 'Unsupported target measure'
     }
 }

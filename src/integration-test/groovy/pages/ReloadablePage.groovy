@@ -32,7 +32,7 @@ class ReloadablePage extends Page {
 
     /** Returns true if the page has been reloaded since the most recent "at" check */
     def hasBeenReloaded() {
-        Thread.sleep(10000)
+        //Thread.sleep(10000)
         !getAtCheckTime()
     }
 

@@ -202,24 +202,30 @@ function loadActivityForms() {
         "name": "Protocol 1",
         "type":"EMSA",
         "category":"Category 1",
-        "externalId": NumberInt(1),
+        "externalIds": [{ externalId: "1", idType:"MONITOR_PROTOCOL_INTERNAL_ID" }, { externalId: "guid-1", idType:"MONITOR_PROTOCOL_GUID" }],
+        "external":true,
         "formVersion": NumberInt(1),
-        "publicationStatus":"published"
+        "publicationStatus":"published",
+        "tags":["survey"]
     }, {
         "name": "Protocol 2",
         "type":"EMSA",
         "category":"Category 2",
-        "externalId": NumberInt(2),
-
+        "externalIds": [{ externalId: "2", idType:"MONITOR_PROTOCOL_INTERNAL_ID" }, { externalId: "guid-2", idType:"MONITOR_PROTOCOL_GUID" }],
+        "external":true,
         "formVersion": NumberInt(1),
-        "publicationStatus":"published"
+        "publicationStatus":"published",
+        "tags": ["intervention"]
     }, {
         "name": "Protocol 3",
         "type":"EMSA",
         "category":"Category 3",
-        "externalId": NumberInt(3),
+        "externalIds": [{ externalId: "3", idType:"MONITOR_PROTOCOL_INTERNAL_ID" }, { externalId: "guid-3", idType:"MONITOR_PROTOCOL_GUID" }],
+
+        "external":true,
         "formVersion": NumberInt(1),
-        "publicationStatus":"published"
+        "publicationStatus":"published",
+        "tags": ["survey"]
 
     }];
     for (let i= 0; i < forms.length; i++) {

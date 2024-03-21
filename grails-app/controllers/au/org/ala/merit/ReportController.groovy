@@ -1,8 +1,6 @@
 package au.org.ala.merit
 
-import au.ala.org.ws.security.RequireApiKey
-import au.org.ala.merit.command.MeriPlanReportCommand
-import au.org.ala.merit.command.ProjectSummaryReportCommand
+
 import au.org.ala.merit.command.Reef2050PlanActionReportCommand
 import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
 import grails.converters.JSON
@@ -11,15 +9,22 @@ import org.joda.time.DateTime
 import org.joda.time.Interval
 import org.joda.time.Period
 
-import static au.org.ala.merit.DashboardTagLib.*
+import java.text.ParseException
+
+import static au.org.ala.merit.DashboardTagLib.estimateHeight
 
 class ReportController {
 
-    def webService, cacheService, searchService, metadataService, activityService, projectService, organisationService, commonService, statisticsFactory, reportService, userService, projectConfigurationService, pdfGenerationService, settingService
+    def webService, cacheService, searchService, metadataService, activityService, projectService, organisationService, commonService, statisticsFactory, reportService, userService, projectConfigurationService, settingService
 
     static defaultAction = "dashboard"
 
     def loadReport() {
+        if (!params.report) {
+            render status: HttpStatus.SC_BAD_REQUEST
+            return
+        }
+
         forward action: params.report+'Report', params:params
     }
 
@@ -486,58 +491,18 @@ class ReportController {
         render view:'_statistics', layout:'ajax', model:[statistics:statistics.statistics]
     }
 
-    /**
-     * Provides a way for the pdf generation service to callback into MERIT without requiring user credentials.
-     * (It uses an IP filter / API Key instead).
-     */
-    @RequireApiKey
-    def projectReportCallback(String id, ProjectSummaryReportCommand projectSummaryReportCommand) {
-
-        if (pdfGenerationService.authorizePDF(request)) {
-            Map model = projectSummaryReportCommand()
-            model.printable = 'pdf'
-            render view:'/project/projectReport', model: model
-        }
-        else {
-            render status:HttpStatus.SC_UNAUTHORIZED
-        }
-
-    }
-
-    private def reef2050PlanActionReportPDF(Reef2050PlanActionReportCommand command) {
-        boolean approvedActivitiesOnly =  userService.userIsAlaOrFcAdmin() ? command.approvedActivitiesOnly : true
-        Map reportUrlConfig = [controller: 'report', action: 'reef2050PlanActionReportCallback', absolute: true, params:[approvedActivitiesOnly:approvedActivitiesOnly, periodEnd:command.periodEnd, type:command.type]]
-        Map pdfGenParams = [orientation:'landscape']
-
-        boolean result = pdfGenerationService.generatePDF(reportUrlConfig, pdfGenParams, response)
-        if (!result) {
-            render view: '/error', model: [error: "Arror generating the PDF of the Reef 2050 Plan Report"]
-        }
-    }
-
-    @RequireApiKey
-    def reef2050PlanActionReportCallback(Reef2050PlanActionReportCommand command) {
-        if (pdfGenerationService.authorizePDF(request)) {
-            Map model = command.produceReport(true)
-            render model:model, view: 'reef2050PlanActionReportPrintable'
-        }
-        else {
-            render status:HttpStatus.SC_UNAUTHORIZED
-        }
-
-    }
-
     def reef2050PlanActionReport(Reef2050PlanActionReportCommand command) {
-        if (command.format == 'pdf') {
-            reef2050PlanActionReportPDF(command)
-        }
-        else if (command.format == 'dashboard') {
+        Map model = [:]
+        if (command.format == 'dashboard') {
             Reef2050PlanActionReportSummaryCommand summary = new Reef2050PlanActionReportSummaryCommand(activityService: command.activityService, approvedActivitiesOnly:  command.approvedActivitiesOnly)
-            Map model = [reportConfig:summary.reportSummary().collect{it.toMap()}, approvedActivitiesOnly: command.approvedActivitiesOnly]
+            model = [reportConfig:summary.reportSummary().collect{it.toMap()}, approvedActivitiesOnly: command.approvedActivitiesOnly]
             render model: model, view: 'reef2050PlanAdminDashboardReport'
         }
         else {
-            Map model = command.produceReport()
+            model = command.produceReport()
+            if (command.format == 'pdf') {
+                model.printView = true
+            }
             render model:model, view: 'reef2050PlanActionReportPrintable'
         }
     }
@@ -556,6 +521,41 @@ class ReportController {
     def reportingHistory(String id) {
         def reportingHistory = reportService.getReportHistory(id)
         render view: '/report/_reportingHistory', model: [reportingHistory: reportingHistory]
+    }
+
+    @PreAuthorise(accessLevel='siteReadOnly')
+    def generateReportsInPeriod(){
+
+        String startDate = params.fromDate
+        String endDate = params.toDate
+
+        try{
+
+            def user = userService.getUser()
+            def extras =[:]
+            extras.summaryFlag = params.summaryFlag
+
+            String email = user.userName
+            extras.put("hubId", SettingService.hubConfig?.hubId)
+            extras.put("entity", params.entity)
+            extras.put("systemEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
+            extras.put("senderEmail", grailsApplication.config.getProperty('fieldcapture.system.email.address'))
+            extras.put("email", email)
+
+            String reportDownloadBaseUrl= grailsLinkGenerator.link(controller:'download',action:'get', absolute: true)
+            extras.put("reportDownloadBaseUrl", reportDownloadBaseUrl)
+
+            def resp = reportService.generateReports(startDate, endDate,extras)
+            render resp as JSON
+
+        }catch (ParseException e){
+            def message = [message: 'Error: You need to provide startDate and endDate in the format of yyyy-MM-dd ']
+            response.setContentType("application/json")
+            render message as JSON
+        }catch(Exception e){
+            def message = [message: 'Fatal: '+ e.message]
+            render message as JSON
+        }
     }
 
 }
