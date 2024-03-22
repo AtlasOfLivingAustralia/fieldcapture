@@ -36,9 +36,16 @@
             <textarea class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="value:description, disable: $parent.isProjectDetailsLocked()" placeholder="${placeholder}"></textarea>
         </td>
         <g:if test="${extendedOutcomes}">
+            <g:if test="${multiplePriorities}">
+                <td class="investment-priority">
+                    <select multiple="multiple" class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectedPrimaryAndSecondaryPriorities, multiSelect2:{preserveColumnWidth:25, value:assets, tags:false}, disable: $parent.isProjectDetailsLocked()"></select>
+                </td>
+            </g:if>
+            <g:else>
             <td class="investment-priority">
                 <select class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectedPrimaryAndSecondaryPriorities,value:asset, optionsCaption:'Please select...', disable: $parent.isProjectDetailsLocked()"></select>
             </td>
+            </g:else>
             <td class="program-outcome">
                 <select class="form-control form-control-sm dropdown-right" data-validation-engine="validate[required]" data-bind="options:details.outcomes.selectable${outcomeType.capitalize()}TermOutcomes, optionsCaption:'Please select...', value:relatedOutcome, select2:{preserveColumnWidth:25}, disable: $parent.isProjectDetailsLocked()"></select>
             </td>
