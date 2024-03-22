@@ -33,7 +33,9 @@
                 <a class="nav-link" href="#species" id="species-tab" data-toggle="pill" role="tab" >Species of interest</a>
             </g:if>
             <a class="nav-link" href="#edit-documents" id="edit-documents-tab" data-toggle="pill" role="tab" >Documents</a>
-            <a class="nav-link" href="#request-labels" id="request-labels-tab" data-toggle="pill" role="tab" >Request voucher barcode labels</a>
+            <g:if test="${showRequestLabels}">
+                <a class="nav-link" href="#request-labels" id="request-labels-tab" data-toggle="pill" role="tab" >Request voucher barcode labels</a>
+            </g:if>
         </g:if>
         <g:elseif test="${fc.userHasReadOnlyAccess()}">
             <a class="nav-link" href="#permissions" id="permissions-tab" data-toggle="pill" role="tab" >Project access</a>
@@ -133,9 +135,11 @@
                 </g:if>
                 <!-- DOCUMENTS -->
                 <g:render template="/admin/editDocuments"/>
+                <g:if test="${showRequestLabels}">
                 <div id="request-labels" class="pill-pane tab-pane">
                     <g:render template="/project/requestLabels"/>
                 </div>
+                </g:if>
             </g:if>
             <g:elseif test="${fc.userHasReadOnlyAccess()}">
                 <div id="permissions" class="pill-pane tab-pane">
