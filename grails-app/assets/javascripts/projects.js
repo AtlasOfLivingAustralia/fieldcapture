@@ -1213,6 +1213,19 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             ko.applyBindings(risksReportViewModel, risksChangesReport);
         }
 
+        var requestLabelsConfig = {
+            requestLabelUrl: fcConfig.requestLabelUrl
+        };
+
+        var RequestLabelsViewModel = function(options) {
+            var self = this;
+            self.pageCount = ko.observable(1);
+            self.requestLabelUrl = ko.computed(function() {
+                return options.requestLabelUrl + '?pageCount=' + self.pageCount();
+            });
+        };
+        ko.applyBindings(new RequestLabelsViewModel(requestLabelsConfig), document.getElementById('request-label-form'));
+
     };
 
     self.initialiseMeriPlan = function() {

@@ -36,6 +36,7 @@ class ProjectController {
     def siteService, documentService, reportService, blogService
     GrailsApplication grailsApplication
     LockService lockService
+    MonitorService monitorService
 
     private def espOverview(Map project, Map user, ProgramConfig config) {
 
@@ -1137,6 +1138,13 @@ class ProjectController {
             [label:label, value:outcomes]
         }
         render result as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def requestVoucherBarcodeLabels(String id, Integer pageCount) {
+        pageCount = pageCount ?: 1
+        monitorService.requestVoucherBarcodeLabels(id, pageCount,  response)
+        null
     }
 
     private def error(String message, String projectId) {

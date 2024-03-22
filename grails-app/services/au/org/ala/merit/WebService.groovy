@@ -41,6 +41,19 @@ import javax.servlet.http.HttpServletResponse
 @Slf4j
 class WebService {
 
+    /** Use legacy ALA authorization header */
+    static String AUTHORIZATION_HEADER_TYPE_API_KEY = 'apiKey'
+
+    /** Use a bearer token obtained from the user login */
+    static String AUTHORIZATION_HEADER_TYPE_USER_BEARER_TOKEN = 'userToken'
+
+    /** Use the MERIT bearer token.  Do not use with non ALA systems */
+    static String AUTHORIZATION_HEADER_TYPE_SYSTEM_BEAREN_TOKEN = 'systemToken'
+
+    /** A bearer token issued by an external system.  E.g. the BDR */
+    static String AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN = 'externalToken'
+
+
     TokenService tokenService
 
     // Used to avoid a circular dependency during initialisation
@@ -103,24 +116,32 @@ class WebService {
     }
 
     private URLConnection configureConnection(String url, boolean includeUserId, Integer timeout = null, boolean useToken = false) {
+        String authHeaderType = useToken ? AUTHORIZATION_HEADER_TYPE_SYSTEM_BEAREN_TOKEN : AUTHORIZATION_HEADER_TYPE_API_KEY
+        configureConnection(url, authHeaderType, timeout)
+    }
+
+    private URLConnection configureConnection(String url, String authorizationHeaderType, Integer timeout = null) {
         URLConnection conn = createAndConfigureConnection(url, timeout)
-        if (!useToken) {
-            conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'))
+        if (authorizationHeaderType == AUTHORIZATION_HEADER_TYPE_API_KEY) {
+            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, grailsApplication.config.getProperty('api_key'))
+            def user = getUserService().getUser()
+            if (user) {
+                conn.setRequestProperty(grailsApplication.config.getProperty('app.http.header.userId'), user.userId)
+            }
+
         }
-        else {
-            conn.setRequestProperty("Authorization", getToken())
+        else if (authorizationHeaderType == AUTHORIZATION_HEADER_TYPE_USER_BEARER_TOKEN) {
+            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, getToken(true))
+        }
+        else if (authorizationHeaderType == AUTHORIZATION_HEADER_TYPE_SYSTEM_BEAREN_TOKEN) {
+            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, getToken(false))
         }
 
-
-        def user = getUserService().getUser()
-        if (user) {
-            conn.setRequestProperty(grailsApplication.config.getProperty('app.http.header.userId'), user.userId)
-        }
         conn
     }
 
-    private String getToken() {
-        tokenService.getAuthToken(false)?.toAuthorizationHeader()
+    private String getToken(boolean requireUser = false) {
+        tokenService.getAuthToken(requireUser)?.toAuthorizationHeader()
     }
 
     private URLConnection createAndConfigureConnection(String url, Integer timeout = null) {
@@ -133,20 +154,19 @@ class WebService {
         conn
     }
 
+    def proxyGetRequest(HttpServletResponse response, String url, boolean includeUserId = true, boolean includeApiKey = false, Integer timeout = null) {
+        String authHeaderType = useToken ? AUTHORIZATION_HEADER_TYPE_SYSTEM_BEAREN_TOKEN : AUTHORIZATION_HEADER_TYPE_API_KEY
+        proxyGetRequest(response, url, authHeaderType, timeout)
+    }
+
     /**
      * Proxies a request URL but doesn't assume the response is text based. (Used for proxying requests to
      * ecodata for excel-based reports)
      */
-    def proxyGetRequest(HttpServletResponse response, String url, boolean includeUserId = true, boolean includeApiKey = false, Integer timeout = null) {
+    def proxyGetRequest(HttpServletResponse response, String url, String authHeaderType, Integer timeout = null) {
 
-        HttpURLConnection conn = configureConnection(url, includeUserId)
         def readTimeout = timeout?:defaultTimeout()
-        conn.setConnectTimeout(connectTimeout())
-        conn.setReadTimeout(readTimeout)
-
-        if (includeApiKey) {
-            conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'))
-        }
+        HttpURLConnection conn = configureConnection(url, authHeaderType, readTimeout)
 
         def headers = [HttpHeaders.CONTENT_DISPOSITION, HttpHeaders.CACHE_CONTROL, HttpHeaders.EXPIRES, HttpHeaders.LAST_MODIFIED, HttpHeaders.ETAG]
         def resp = [status:conn.responseCode]
