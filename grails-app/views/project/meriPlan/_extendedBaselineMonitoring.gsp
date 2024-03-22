@@ -70,7 +70,7 @@
                     data-validation-engine="validate[required,maxSize:4000]"></textarea>
         </td>
         <td class="remove">
-            <span data-bind="if: $index() && !$root.isProjectDetailsLocked()"><i class="fa fa-remove"
+            <span data-bind="if: $index() >= ${numberOfMandatoryRows != null ? numberOfMandatoryRows : 1} && !$root.isProjectDetailsLocked()"><i class="fa fa-remove"
                                                                                  data-bind="click: $root.removeBaseline"></i>
             </span>
         </td>
