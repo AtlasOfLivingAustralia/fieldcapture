@@ -24,7 +24,7 @@
             <!-- /ko -->
             <!-- ko if:isAgricultureProject() || details.outcomes.primaryOutcomeSupportsMultiplePriorities() -->
             <g:if test="${renderPrioritiesWithSelect2}">
-                <select multiple="multiple" class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), multiSelect2:{preserveColumnWidth:48, value:assets, tags:false}, disable: $parent.isProjectDetailsLocked()"></select>
+                <select multiple="multiple" class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), multiSelect2:{preserveColumnWidth:48, value:details.outcomes.primaryOutcome.assets, tags:false}, disable: isProjectDetailsLocked()"></select>
             </g:if>
             <g:else>
             <ul class="list-unstyled" data-bind="foreach:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description())">
