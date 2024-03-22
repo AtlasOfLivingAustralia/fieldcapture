@@ -53,6 +53,8 @@ class WebService {
     /** A bearer token issued by an external system.  E.g. the BDR */
     static String AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN = 'externalToken'
 
+    static String AUTHORIZATION_HEADER_TYPE_NONE = 'none'
+
 
     TokenService tokenService
 
@@ -155,7 +157,7 @@ class WebService {
     }
 
     def proxyGetRequest(HttpServletResponse response, String url, boolean includeUserId = true, boolean includeApiKey = false, Integer timeout = null) {
-        String authHeaderType = useToken ? AUTHORIZATION_HEADER_TYPE_SYSTEM_BEAREN_TOKEN : AUTHORIZATION_HEADER_TYPE_API_KEY
+        String authHeaderType = includeApiKey ?  AUTHORIZATION_HEADER_TYPE_API_KEY : AUTHORIZATION_HEADER_TYPE_NONE
         proxyGetRequest(response, url, authHeaderType, timeout)
     }
 
