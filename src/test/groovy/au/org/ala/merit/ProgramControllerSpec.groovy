@@ -15,7 +15,6 @@ class ProgramControllerSpec extends Specification implements ControllerUnitTest<
     ActivityService activityService = Mock(ActivityService)
     RoleService roleService = Mock(RoleService)
     BlogService blogService = Mock(BlogService)
-    MonitorService monitorService = Mock(MonitorService)
 
 
     String adminUserId = 'admin'
@@ -30,7 +29,6 @@ class ProgramControllerSpec extends Specification implements ControllerUnitTest<
         controller.userService = userService
         controller.blogService = blogService
         controller.managementUnitService = managementUnitService
-        controller.monitorService = monitorService
 
         roleService.getRoles() >> []
     }
@@ -275,15 +273,6 @@ class ProgramControllerSpec extends Specification implements ControllerUnitTest<
         println(expected)
         println(actual)
         expected == actual
-    }
-
-    def "The requestVoucherBarcodeLabels method delegates to the MonitorService and returns null as the response is streamed from Monitor"() {
-        when:
-        def result = controller.requestVoucherBarcodeLabels('p1', 'r1')
-
-        then:
-        1 * monitorService.requestVoucherBarcodeLabels('p1', 'r1', response)
-        result == null
     }
 
     private Map testProgram(String id, boolean includeReports) {
