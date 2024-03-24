@@ -64,7 +64,7 @@ var config =
             {
                 "template": "projectMethodology",
                 "model": {
-                    "helpText": "Include all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not impacted by adverse weather conditions. Ensure what’s documented here aligns to those assumptions documented within the Project Logic.",
+                    "helpText": "In addition to listing your project assumptions, please list any nominated project services that will not be charged for.\nInclude all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not impacted by adverse weather conditions. Ensure what’s documented here aligns to those assumptions documented within the Project Logic.",
                     "maxSize": "4000",
                     "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])"
                 }
