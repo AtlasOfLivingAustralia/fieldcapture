@@ -108,7 +108,8 @@ enum SettingPageType {
     ORGANISATION_REPORT_APPROVED_EMAIL_BODY('organisationReportApprovedEmailBody', 'Organisation Report approved email body text', 'organisation_report.approved.emailBody'),
     ORGANISATION_REPORT_RETURNED_EMAIL_SUBJECT('organisationReportReturnedEmailSubject', 'Organisation Report returned email subject line text', 'organisation_report.returned.emailSubject'),
     ORGANISATION_REPORT_RETURNED_EMAIL_BODY('organisationReportReturnedEmailBody', 'Organisation Report returned email body text', 'organisation_report.returned.emailBody'),
-    ORGANISATION_REPORT_CONFIG('organisationReportConfig', 'Report configuration options for organisations', 'organisation.availableReportsConfig')
+    ORGANISATION_REPORT_CONFIG('organisationReportConfig', 'Report configuration options for organisations', 'organisation.availableReportsConfig'),
+    PLANT_LABEL_INSTRUCTIONS('plantLabelInstructions', 'Instructions for printing plant labels', 'plantLabelInstructions')
     String name
     String title
     String key
