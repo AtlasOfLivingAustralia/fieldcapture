@@ -80,12 +80,12 @@ class DataSetController {
         Map serviceBaselineIndicatorOptions = [:]
         outcomeGroupsByServiceId.each { int serviceId, List groups ->
             List tags = groups.collect{it.allTags}.flatten().unique()
-            if (tags?.contains('Survey')) {
+            if (tags?.contains(Score.TAG_SURVEY)) {
                 serviceBaselineIndicatorOptions[serviceId] = [:]
-                if (!tags?.contains('Baseline')) {
+                if (!tags?.contains(Score.TAG_BASELINE)) {
                     serviceBaselineIndicatorOptions[serviceId].disableBaseline = true
                 }
-                if (!tags?.contains('Indicator')) {
+                if (!tags?.contains(Score.TAG_INDICATOR)) {
                     serviceBaselineIndicatorOptions[serviceId].disableIndicator = true
                 }
             }
