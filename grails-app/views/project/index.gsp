@@ -99,7 +99,8 @@
                 i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
                 returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}",
                 reportsHistoryUrl:"${createLink(controller: 'report', action:'reportingHistory')}",
-                monitoringProtocolsUrl:"${createLink(action:'monitoringProtocolFormCategories', id: project.projectId)}"
+                monitoringProtocolsUrl:"${createLink(action:'monitoringProtocolFormCategories', id: project.projectId)}",
+                requestLabelUrl:"${createLink(action:'requestVoucherBarcodeLabels', id: project.projectId)}",
 
             },
             here = "${createLink(action:'index', id: project.projectId)}";

@@ -27,7 +27,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
     def siteService = Mock(SiteService)
 
     WebService webService = Mock(WebService)
-
+    MonitorService monitorService = Mock(MonitorService)
     ProjectService realProjectService
 
 
@@ -49,6 +49,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         controller.activityService = activityService
         controller.grailsApplication = grailsApplication
         controller.webService = webService
+        controller.monitorService = monitorService
 
         projectService.getMembersForProjectId(_) >> []
         projectService.getProgramConfiguration(_) >> new ProgramConfig([requiresActivityLocking: true])
@@ -935,6 +936,15 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         controller.hasTarget(1) == true
         controller.hasTarget("1.1") == true
         controller.hasTarget("abc") == true // this is accepted for legacy reasons
+    }
+
+    def "The requestVoucherBarcodeLabels method delegates to the MonitorService and returns null as the response is streamed from Monitor"() {
+        when:
+        def result = controller.requestVoucherBarcodeLabels('p1', 1)
+
+        then:
+        1 * monitorService.requestVoucherBarcodeLabels('p1', 1, response)
+        result == null
     }
 
     private Map stubPublicUser() {

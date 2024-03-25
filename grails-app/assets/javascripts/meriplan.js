@@ -1761,7 +1761,7 @@ function OutcomesViewModel(outcomes, config) {
 
         }
 
-        return priorities;
+        return _.uniq(priorities);
     }).extend({ rateLimit: 50 });
 
     self.toJSON = function () {
