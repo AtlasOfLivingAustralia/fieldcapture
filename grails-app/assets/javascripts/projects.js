@@ -934,7 +934,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             associatedSubProgram: self.associatedSubProgram(),
             programId: self.programId(),
             funding: new Number(self.funding()),
-            fundingVerificationDate: self.fundingVerificationDate(),
+            fundingVerificationDate: self.fundingVerificationDate() || null, // Convert empty string to null
             status: self.status(),
             terminationReason: self.terminationReason(),
             tags: self.tags(),
