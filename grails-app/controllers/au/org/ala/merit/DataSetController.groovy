@@ -64,7 +64,8 @@ class DataSetController {
                                 service: service.name,
                                 outcomes:it.relatedOutcomes,
                                 label:service.name+" "+it.relatedOutcomes,
-                                tags:score.tags
+                                projectTags:score.tags,
+                                allTags: service.scores?.collect{it.tags}?.flatten()?.unique()
                         ]
                     }
                 }
@@ -78,13 +79,15 @@ class DataSetController {
         outcomeGroups = outcomeGroups.unique{it.label}.sort{it.label}
         Map serviceBaselineIndicatorOptions = [:]
         outcomeGroupsByServiceId.each { int serviceId, List groups ->
-            List tags = groups.collect{it.tags}.flatten().unique()
-            serviceBaselineIndicatorOptions[serviceId] = [:]
-            if (!tags?.contains('Baseline')) {
-                serviceBaselineIndicatorOptions[serviceId].disableBaseline = true
-            }
-            if (!tags?.contains('Indicator')) {
-                serviceBaselineIndicatorOptions[serviceId].disableIndicator = true
+            List tags = groups.collect{it.allTags}.flatten().unique()
+            if (tags?.contains('Survey')) {
+                serviceBaselineIndicatorOptions[serviceId] = [:]
+                if (!tags?.contains('Baseline')) {
+                    serviceBaselineIndicatorOptions[serviceId].disableBaseline = true
+                }
+                if (!tags?.contains('Indicator')) {
+                    serviceBaselineIndicatorOptions[serviceId].disableIndicator = true
+                }
             }
         }
 
