@@ -71,7 +71,7 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["site"]
     },
-    "3cbc5277-45fb-4e7a-8f33-19d9bff4cd78": {"name": "Drone Survey", "usesPlotLayout": false, "tags": ["survey"]},
+    "3cbc5277-45fb-4e7a-8f33-19d9bff4cd78": {"name": "Drone Survey", "usesPlotLayout": false, "tags": ["development"]},
     "3d2eaa76-a610-4575-ac30-abf40e57b68a": {"name": "Dev sandbox", "usesPlotLayout": false, "tags": ["development"]},
     "5fd206b5-25cb-4371-bd90-7b2e8801ea25": {
         "name": "Photopoints - DSLR Panorama",
