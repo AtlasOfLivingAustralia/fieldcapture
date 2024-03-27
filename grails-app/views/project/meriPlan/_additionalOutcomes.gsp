@@ -16,8 +16,15 @@
         </td>
         <td class="priority">
             <!-- ko if:!details.outcomes.secondaryOutcomeSupportsMultiplePriorities($data.description()) -->
+
+            <!-- ko if:!details.outcomes.supportsSpeciesSearch($data.description()) -->
             <select data-bind="value:asset, options: details.outcomes.outcomePriorities(description()), optionsCaption: 'Please select', select2:{preserveColumnWidth:48}, disable: $parent.isProjectDetailsLocked()" class="form-control form-control-sm asset" <g:if test="!disablePriorityValidation">data-validation-engine="validate[required]"></g:if></select></select>
-            <!-- /ko -->
+        <!-- /ko -->
+        <!-- ko if:details.outcomes.supportsSpeciesSearch($data.description()) -->
+            <g:render template="/shared/speciesSelect" model="${[bindingProperty:'speciesAsset']}"/>
+        <!-- /ko -->
+
+        <!-- /ko -->
             <!-- ko if:details.outcomes.secondaryOutcomeSupportsMultiplePriorities($data.description()) -->
             <g:if test="${renderPrioritiesWithSelect2}">
                 <select multiple="multiple" class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(description()), multiSelect2:{preserveColumnWidth:48, value:assets, tags:false}, disable: $parent.isProjectDetailsLocked()"></select>
