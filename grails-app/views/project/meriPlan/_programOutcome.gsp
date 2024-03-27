@@ -19,8 +19,21 @@
         <td class="priority">
             <!-- ko if:!isAgricultureProject() && !details.outcomes.primaryOutcomeSupportsMultiplePriorities() -->
 
+            <!-- ko if:!details.outcomes.supportsSpeciesSearch(details.outcomes.primaryOutcome.description()) -->
             <select class="form-control form-control-sm asset w-100" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), optionsCaption: 'Please select', value:details.outcomes.primaryOutcome.asset, select2:{preserveColumnWidth:48},  disable: isProjectDetailsLocked()" >
             </select>
+            <!-- /ko -->
+            <!-- ko if:details.outcomes.supportsSpeciesSearch(details.outcomes.primaryOutcome.description()) -->
+
+            <div data-bind="with:details.outcomes.primaryOutcome.speciesAsset" class="input-group">
+                <select class="form-control form-control-sm" data-bind="speciesSelect2:$data"></select>
+                <div class="input-group-append">
+                    <span class="input-group-text" data-bind="visible:name(), popover: {title: transients.speciesTitle, content: transients.speciesInformation}"><i class="fa fa-info-circle"></i></span>
+                </div>
+           </div>
+
+            <!-- /ko -->
+
             <!-- /ko -->
             <!-- ko if:isAgricultureProject() || details.outcomes.primaryOutcomeSupportsMultiplePriorities() -->
             <g:if test="${renderPrioritiesWithSelect2}">
