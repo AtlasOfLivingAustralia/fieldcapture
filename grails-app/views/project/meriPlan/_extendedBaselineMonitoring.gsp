@@ -70,7 +70,7 @@
                     data-validation-engine="validate[required,maxSize:4000]"></textarea>
         </td>
         <td class="remove">
-            <span data-bind="if: $index() && !$root.isProjectDetailsLocked()"><i class="fa fa-remove"
+            <span data-bind="if: $index() >= ${numberOfMandatoryRows != null ? numberOfMandatoryRows : 1} && !$root.isProjectDetailsLocked()"><i class="fa fa-remove"
                                                                                  data-bind="click: $root.removeBaseline"></i>
             </span>
         </td>
@@ -82,7 +82,7 @@
 
 
     <g:render template="/project/meriPlan/monitoringIndicators"
-              model="${[monitoringValidation:true, extendedMonitoring:true,indictorSelectorExpression:'$root.monitoringIndicators(code)', addIndictorExpression:'function() {$root.addMonitoringIndicator(this)}', removeIndictorExpression:'$root.removeMonitoringIndicator']}"/>
+              model="${[monitoringValidation:true, extendedMonitoring:true,indictorSelectorExpression:'$root.monitoringIndicators(code)', addIndictorExpression:'function() {$root.addMonitoringIndicator(this)}', removeIndictorExpression:'$root.removeMonitoringIndicator', numberOfMandatoryRows:0]}"/>
 
 </td>
 </tr>

@@ -131,6 +131,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
     self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
     self.funding = ko.observable(project.funding).extend({currency:{}});
+    self.fundingVerificationDate = ko.observable(project.fundingVerificationDate).extend({simpleDate: false});
     self.regenerateProjectTimeline = ko.observable(false);
     self.projectDatesChanged = ko.computed(function() {
         return project.plannedStartDate != self.plannedStartDate() ||
@@ -952,6 +953,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             associatedSubProgram: self.associatedSubProgram(),
             programId: self.programId(),
             funding: new Number(self.funding()),
+            fundingVerificationDate: self.fundingVerificationDate() || null, // Convert empty string to null
             status: self.status(),
             terminationReason: self.terminationReason(),
             tags: self.tags(),
@@ -1230,6 +1232,24 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             };
             var risksReportViewModel = new RisksReportViewModel(project, reportOptions);
             ko.applyBindings(risksReportViewModel, risksChangesReport);
+        }
+
+        var requestLabelsConfig = {
+            requestLabelUrl: fcConfig.requestLabelUrl
+        };
+
+        var requestLabelsSection = document.getElementById('request-label-form');
+
+        if (requestLabelsSection) {
+            var RequestLabelsViewModel = function(options) {
+                var self = this;
+                self.pageCount = ko.observable(1);
+                self.requestLabelUrl = ko.computed(function() {
+                    return options.requestLabelUrl + '?pageCount=' + self.pageCount();
+                });
+            };
+
+            ko.applyBindings(new RequestLabelsViewModel(requestLabelsConfig), document.getElementById('request-label-form'));
         }
 
     };

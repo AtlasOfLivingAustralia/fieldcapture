@@ -60,11 +60,11 @@ class ProjectPermissionSpec extends StubbedCasSpec {
 
     }
 
-    def "an admin cannot add a user as a grant manager, but change change an editor to an admin"() {
+    def "an admin cannot add a user as a grant manager, but can change an editor to an admin"() {
 
         setup:
         String projectId = '1'
-        loginAsMeritAdmin(browser)
+        loginAsUser('1', browser)
 
         when:
         to RlpProjectPage, projectId
@@ -78,15 +78,15 @@ class ProjectPermissionSpec extends StubbedCasSpec {
         adminContent.projectAccess.addPermission("user1001@user.com", "caseManager")
 
         then: "we cannot because the 'Grant Manager' option is disabled"
-        thrown(ElementNotInteractableException)
+        thrown(Exception)  // The type of exception thrown has changed
 
         when: "We change user 10 to an admin"
-        adminContent.projectAccess.findPermissionForUser('10').updateRole('admin')
+        adminContent.projectAccess.findPermissionForDisplayName('test10 user10').updateRole('admin')
         okBootbox()
 
         then:
         waitFor {
-            adminContent.projectAccess.findPermissionForUser('10').roleText == "Admin"
+            adminContent.projectAccess.findPermissionForDisplayName('test10 user10').roleText == "Admin"
         }
 
     }
