@@ -873,7 +873,12 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         meriSubmissionDeclarationSelector: '#meriSubmissionDeclaration',
         editProjectStartDate: self.canEditStartDate,
         externalIds: self.externalIds,
-        canModifyMeriPlan: config.canModifyMeriPlan
+        canModifyMeriPlan: config.canModifyMeriPlan,
+        bieUrl: config.bieUrl,
+        searchBieUrl: config.searchBieUrl,
+        speciesListUrl: config.speciesListUrl,
+        speciesImageUrl: config.speciesImageUrl,
+        speciesProfileUrl: config.speciesProfileUrl
     });
     self.meriPlan = new MERIPlan(project, projectService, meriPlanConfig);
 
