@@ -1127,7 +1127,7 @@ class ProjectService  {
      * been populated with project reports.
      */
     boolean canRegenerateReports(Map project) {
-        Status.isActive(project.status) && !hasSubmittedOrApprovedFinalReportInCategory(project)
+        Status.isActive(project.status) || APPLICATION_STATUS.equalsIgnoreCase(project.status) && !hasSubmittedOrApprovedFinalReportInCategory(project)
     }
 
     /**
