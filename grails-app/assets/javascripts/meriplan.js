@@ -1867,19 +1867,23 @@ function SingleAssetOutcomeViewModel(o, config) {
         };
 
         self.speciesAsset = new SpeciesViewModel(o.speciesAsset || {}, options, {});
-        self.speciesAsset.name.subscribe(function () {
-            var scientificName = self.speciesAsset.scientificName();
-            var commonName = self.speciesAsset.commonName();
+        // Need to subscribe to an event that fires after all of the fields of the speciesAsset have been loaded.
+        self.speciesAsset.transients.textFieldValue.subscribe(function () {
 
-            var assetName;
-            if (scientificName && commonName) {
-                assetName = scientificName + ' (' + commonName + ')';
-            } else if (scientificName) {
-                assetName = scientificName;
-            } else {
-                assetName = commonName;
+            if (!self.speciesAsset.transients.editing()) {
+                var scientificName = self.speciesAsset.scientificName();
+                var commonName = self.speciesAsset.commonName();
+
+                var assetName;
+                if (scientificName && commonName) {
+                    assetName = scientificName + ' (' + commonName + ')';
+                } else if (scientificName) {
+                    assetName = scientificName;
+                } else {
+                    assetName = commonName;
+                }
+                self.asset(assetName);
             }
-            self.asset(assetName);
         });
     }
     self.description.subscribe(function () {
