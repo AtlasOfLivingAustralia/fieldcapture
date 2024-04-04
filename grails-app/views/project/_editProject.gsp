@@ -310,7 +310,7 @@
 
 <div class="row mb-2">
     <div class="col-sm-12">
-        <button data-bind="click:regenerateStageReports" class="btn btn-sm btn-warning" <g:if test="${!canRegenerateReports}">disabled="disabled"</g:if>>Re-create project reports</button>
+        <button data-bind="click:regenerateStageReports" class="btn btn-sm btn-warning" <g:if test="${!canManuallyRegenerateReports}">disabled="disabled"</g:if>>Re-create project reports</button>
         <fc:iconHelp title="Re-create project">Re-create project reports will be disabled when the Project status is not Active, or if the last report in any category has been submitted, cancelled or approved</fc:iconHelp>
     </div>
 </div>
