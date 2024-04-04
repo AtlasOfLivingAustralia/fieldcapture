@@ -1,8 +1,8 @@
 package au.org.ala.fieldcapture
 
-import org.openqa.selenium.ElementNotInteractableException
+
+import org.openqa.selenium.JavascriptException
 import pages.ManagementUnitPage
-import pages.RlpProjectPage
 
 class ManagementUnitPermissionSpec extends StubbedCasSpec {
     def setupSpec() {
@@ -75,7 +75,7 @@ class ManagementUnitPermissionSpec extends StubbedCasSpec {
         adminTabPane.permissionAccess.addPermission("user1001@user.com", "caseManager")
 
         then: "we cannot because the 'Grant Manager' option is disabled"
-        thrown(ElementNotInteractableException)
+        thrown(JavascriptException)
 
         when: "We change user 4 to an admin"
         adminTabPane.permissionAccess.findPermissionForUser('4').updateRole('admin')
