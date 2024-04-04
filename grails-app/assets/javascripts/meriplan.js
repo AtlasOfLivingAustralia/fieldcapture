@@ -1886,12 +1886,6 @@ function SingleAssetOutcomeViewModel(o, config) {
             }
         });
     }
-    self.description.subscribe(function () {
-        self.assets([]);
-        if (self.speciesAsset) {
-            self.speciesAsset.loadData({});
-        }
-    });
 
     self.relatedOutcome = ko.observable(o.relatedOutcome);
 
