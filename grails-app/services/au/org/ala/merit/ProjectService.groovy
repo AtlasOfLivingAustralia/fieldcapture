@@ -31,6 +31,8 @@ class ProjectService  {
     static final String APPLICATION_STATUS = 'Application'
     static final String ACTIVE = 'active'
 
+    static final String OTHER_EMSA_MODULE = 'Other'
+
     static dateWithTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
     static dateWithTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
     static convertTo = new SimpleDateFormat("dd MMM yyyy")
@@ -2067,6 +2069,17 @@ class ProjectService  {
 
         // Don't return null or empty values
         outcomes.findAll{it}.unique()
+    }
+
+    List getSelectedEmsaModules(Map project) {
+        List baselineProtocols = project.custom?.details?.baseline?.rows?.collect{it.protocols}?.flatten() ?:[]
+        List monitoringProtocols = project.custom?.details?.monitoring?.rows?.collect{it.protocols}?.flatten() ?:[]
+
+        (baselineProtocols + monitoringProtocols).unique().findAll{it}
+    }
+
+    boolean hasSelectedEmsaModules(Map project) {
+        getSelectedEmsaModules(project).findAll{it != OTHER_EMSA_MODULE}.size() > 0
     }
 
     @Cacheable("programList")
