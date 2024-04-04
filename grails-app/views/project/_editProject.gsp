@@ -108,7 +108,8 @@
     <div class="col-sm-4">
         <label for="funding-verification-date">Funding Verification Date</label>
         <div class="input-group input-append">
-            <fc:datePicker targetField="fundingVerificationDate.date" id="funding-verification-date" bs4="true" name="fundingVerificationDate" size="form-control form-control-sm dateControl"/>
+            <fc:datePicker targetField="fundingVerificationDate.date" id="funding-verification-date" bs4="true" name="fundingVerificationDate" size="form-control form-control-sm dateControl" readonly="readonly"/>
+            <button class="ml-2 btn btn-warning btn-sm" data-bind="click:verifyFunding">Verify funding is correct</button>
         </div>
     </div>
 </div>
