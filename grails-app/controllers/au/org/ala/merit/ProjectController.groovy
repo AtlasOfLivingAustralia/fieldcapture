@@ -1162,6 +1162,11 @@ class ProjectController {
         null
     }
 
+    @PreAuthorise
+    def getSpeciesRecordsFromActivity (String activityId) {
+        render projectService.getSpeciesRecordsFromActivity(activityId) as JSON
+    }
+
     private def error(String message, String projectId) {
         flash.message = message
         if (projectId) {

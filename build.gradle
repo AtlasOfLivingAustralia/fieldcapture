@@ -186,7 +186,7 @@ dependencies {
     providedCompile "io.methvin:directory-watcher:0.4.0"
 
     if (!Boolean.valueOf(inplace)) {
-        implementation "org.grails.plugins:ecodata-client-plugin:6.2"
+        implementation "org.grails.plugins:ecodata-client-plugin:6.3-SPECIES-SNAPSHOT"
     }
 }
 

@@ -2207,4 +2207,11 @@ class ProjectService  {
         }
         result
     }
+
+    List getSpeciesRecordsFromActivity (String activityId) {
+        if (activityId) {
+            String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}record/listForActivity/${activityId}"
+            webService.getJson(url)?.records
+        }
+    }
 }
