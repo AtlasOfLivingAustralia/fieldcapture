@@ -11,6 +11,11 @@
         serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
         imageLocation:"${assetPath(src:'/')}",
         healthCheckUrl:"${createLink(controller:'ajax', action:'keepSessionAlive')}",
+        bieUrl: "${grailsApplication.config.getProperty('bie.baseURL')}",
+        searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
+        speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
+        speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
+        speciesProfileUrl:"${createLink(controller:'species', action:'speciesProfile')}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
     },
         here = window.location.href;
@@ -51,7 +56,13 @@
         var project = <fc:modelAsJavascript model="${project}"/>;
         var changed = <fc:modelAsJavascript model="${changed}"/>;
 
-        var config = [];
+        var config = {
+            bieUrl: fcConfig.bieUrl,
+            searchBieUrl: fcConfig.searchBieUrl,
+            speciesListUrl: fcConfig.speciesListUrl,
+            speciesImageUrl: fcConfig.speciesImageUrl,
+            speciesProfileUrl: fcConfig.speciesProfileUrl
+        };
         var themes = <fc:modelAsJavascript model="${config.themes?:[]}"/>;
         config.themes = themes;
         var services = <fc:modelAsJavascript model="${config.services?:[]}"/>;
@@ -96,6 +107,8 @@
 <g:render template="/shared/pdfInstructions"/>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="projects.js"/>
+<asset:javascript src="forms-manifest.js"/>
+<asset:javascript src="speciesModel.js"/>
 <asset:deferredScripts/>
 <asset:javascript src="print-instructions.js"/>
 

@@ -1,5 +1,12 @@
 <!-- ko if: ${source} && ${source}.length == 1 -->
-<span data-bind="text:${source}"></span>
+    <!-- ko foreach:${source} -->
+    <!-- ko if:$data != 'Other' -->
+    <span data-bind="text:$data"></span>
+    <!-- /ko -->
+    <!-- /ko -->
+    <!-- ko if:_.contains(${source}, 'Other') -->
+    <span data-bind="text:'Other: ' + ${otherSource?:"''"}"></span>
+    <!-- /ko -->
 <!-- /ko -->
 
 <!-- ko if: ${source} && ${source}.length > 1 -->

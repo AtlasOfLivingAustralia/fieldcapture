@@ -369,7 +369,7 @@ function MERIPlan(project, projectService, config) {
         self.meriPlan().objectives.rows.push(new GenericRowViewModel());
     };
     self.addOutcome = function () {
-        self.meriPlan().objectives.rows1.push(new SingleAssetOutcomeViewModel());
+        self.meriPlan().objectives.rows1.push(new SingleAssetOutcomeViewModel({}, config));
     };
     self.removeObjectives = function (row) {
         self.meriPlan().objectives.rows.remove(row);
@@ -424,7 +424,7 @@ function MERIPlan(project, projectService, config) {
         self.meriPlan().partnership.removeRow(partnership);
     };
     self.addSecondaryOutcome = function () {
-        self.meriPlan().outcomes.secondaryOutcomes.push(new SingleAssetOutcomeViewModel());
+        self.meriPlan().outcomes.secondaryOutcomes.push(new SingleAssetOutcomeViewModel({}, config));
     };
     self.removeSecondaryOutcome = function (outcome) {
         self.meriPlan().outcomes.secondaryOutcomes.remove(outcome);
@@ -458,7 +458,7 @@ function MERIPlan(project, projectService, config) {
             index++;
             code = codePrefix+index;
         }
-        outcomeStatementList.push(new SingleAssetOutcomeViewModel({code:code}));
+        outcomeStatementList.push(new SingleAssetOutcomeViewModel({code:code}, config));
     }
     self.addMidTermOutcome = function () {
         addOutcomeStatement(self.meriPlan().outcomes.midTermOutcomes, 'MT');
@@ -917,7 +917,16 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
     self.caseStudy = ko.observable(o.caseStudy ? o.caseStudy : false);
     self.keq = new GenericViewModel(o.keq);
     self.objectives = new ObjectiveViewModel(o.objectives, config.programObjectives || []); // Used in original MERI plan template
-    self.outcomes = new OutcomesViewModel(o.outcomes, {outcomes:project.outcomes, priorities:project.priorities}); // Use in new MERI plan template
+    var outcomesConfig = {
+        outcomes:project.outcomes,
+        priorities:project.priorities,
+        bieUrl: config.bieUrl,
+        searchBieUrl: config.searchBieUrl,
+        speciesListUrl: config.speciesListUrl,
+        speciesImageUrl: config.speciesImageUrl,
+        speciesProfileUrl: config.speciesProfileUrl
+    };
+    self.outcomes = new OutcomesViewModel(o.outcomes, outcomesConfig); // Use in new MERI plan template
     self.priorities = new GenericViewModel(o.priorities, ['data1', 'data2', 'data3', 'documentUrl']);
     self.implementation = new ImplementationViewModel(o.implementation);
     self.partnership = new GenericViewModel(o.partnership, ['data1', 'data2', 'data3', 'otherOrganisationType']);
@@ -1721,7 +1730,7 @@ function OutcomesViewModel(outcomes, config) {
         return priorities;
     };
 
-    var supportsMultiplePriorities = function(outcomeText, configItemName) {
+    var supportsConfiguration = function(outcomeText, configItemName) {
         var outcome = _.find(config.outcomes, function (outcome) {
             return outcome.outcome == outcomeText;
         });
@@ -1729,16 +1738,29 @@ function OutcomesViewModel(outcomes, config) {
     }
     self.primaryOutcomeSupportsMultiplePriorities = ko.pureComputed(function() {
         var outcomeText = self.primaryOutcome.description();
-        return supportsMultiplePriorities(outcomeText, 'supportsMultiplePrioritiesAsPrimary')
+        return supportsConfiguration(outcomeText, 'supportsMultiplePrioritiesAsPrimary')
     });
     self.secondaryOutcomeSupportsMultiplePriorities = function(outcomeText) {
-        return supportsMultiplePriorities(outcomeText, 'supportsMultiplePrioritiesAsSecondary')
+        return supportsConfiguration(outcomeText, 'supportsMultiplePrioritiesAsSecondary')
     };
 
-    self.primaryOutcome = new SingleAssetOutcomeViewModel(outcomes.primaryOutcome);
+    self.supportsSpeciesSearch = function(outcomeText) {
+        return supportsConfiguration(outcomeText, 'supportsSpeciesSearch')
+    };
+
+
+    config.supportsSpeciesSearch = _.find(filterByType(config.outcomes, PRIMARY_OUTCOMES, true), function(outcome) {
+        return outcome.supportsSpeciesSearch;
+    });
+    self.primaryOutcome = new SingleAssetOutcomeViewModel(outcomes.primaryOutcome, config);
+
+    config.supportsSpeciesSearch = _.find(filterByType(config.outcomes, SECONDARY_OUTCOMES, true), function(outcome) {
+        return outcome.supportsSpeciesSearch;
+    });
     self.secondaryOutcomes = ko.observableArray(_.map(outcomes.secondaryOutcomes || [], function (outcome) {
-        return new SingleAssetOutcomeViewModel(outcome)
+        return new SingleAssetOutcomeViewModel(outcome, config)
     }));
+    config.supportsSpeciesSearch = false;
     self.shortTermOutcomes = ko.observableArray(_.map(outcomes.shortTermOutcomes || [], function (outcome) {
         return new SingleAssetOutcomeViewModel(outcome);
     }));
@@ -1812,7 +1834,7 @@ function AssetViewModel(asset) {
     self.description = ko.observable(asset.description);
 }
 
-function SingleAssetOutcomeViewModel(o) {
+function SingleAssetOutcomeViewModel(o, config) {
     var self = this;
     if (!o) o = {};
 
@@ -1834,9 +1856,36 @@ function SingleAssetOutcomeViewModel(o) {
         },
         owner: self
     });
-    self.description.subscribe(function () {
-        self.assets([]);
-    });
+
+    if (config && config.supportsSpeciesSearch) {
+        var options = {
+            bieUrl: config.bieUrl,
+            searchBieUrl: config.searchBieUrl,
+            speciesListUrl: config.speciesListUrl,
+            speciesImageUrl: config.speciesImageUrl,
+            speciesProfileUrl: config.speciesProfileUrl
+        };
+
+        self.speciesAsset = new SpeciesViewModel(o.speciesAsset || {}, options, {});
+        // Need to subscribe to an event that fires after all of the fields of the speciesAsset have been loaded.
+        self.speciesAsset.transients.textFieldValue.subscribe(function () {
+
+            if (!self.speciesAsset.transients.editing()) {
+                var scientificName = self.speciesAsset.scientificName();
+                var commonName = self.speciesAsset.commonName();
+
+                var assetName;
+                if (scientificName && commonName) {
+                    assetName = scientificName + ' (' + commonName + ')';
+                } else if (scientificName) {
+                    assetName = scientificName;
+                } else {
+                    assetName = commonName;
+                }
+                self.asset(assetName);
+            }
+        });
+    }
 
     self.relatedOutcome = ko.observable(o.relatedOutcome);
 
@@ -1849,12 +1898,16 @@ function SingleAssetOutcomeViewModel(o) {
             !self.relatedOutcome()) {
             return null;
         }
-        return {
-            code:self.code,
+        var json = {
+            code: self.code,
             description: self.description(),
             assets: self.assets(),
             relatedOutcome: self.relatedOutcome()
+        };
+        if (self.speciesAsset) {
+            json.speciesAsset = self.speciesAsset.name() ? self.speciesAsset.toJSON() : null
         }
+        return json;
     };
 };
 

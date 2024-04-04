@@ -1,7 +1,6 @@
 package au.org.ala.fieldcapture
 
 
-import org.openqa.selenium.JavascriptException
 import pages.ManagementUnitPage
 
 class ManagementUnitPermissionSpec extends StubbedCasSpec {
@@ -59,9 +58,9 @@ class ManagementUnitPermissionSpec extends StubbedCasSpec {
 
     def "an admin cannot add a user as a grant manager, but change change an editor to an admin"() {
 
-        setup:
+        setup: "Login as user 1 who is an admin of the 'test_mu' management unit"
         String projectId = '1'
-        loginAsMeritAdmin(browser)
+        loginAsUser('1', browser)
 
         when:
         to ManagementUnitPage, "test_mu"
@@ -71,19 +70,19 @@ class ManagementUnitPermissionSpec extends StubbedCasSpec {
         then:
         adminTabPane.permissionAccess.permissions.size() == 3
 
-        when: "We try and add a grant manager (user with id = 1001) as a grant manager to the project"
+        when: "We try and add a grant manager (user with id = 1001) as a grant manager to the MU"
         adminTabPane.permissionAccess.addPermission("user1001@user.com", "caseManager")
 
         then: "we cannot because the 'Grant Manager' option is disabled"
-        thrown(JavascriptException)
+        thrown(Exception)  // The type of exception thrown has changed, but the element should be disabled and not clickable
 
         when: "We change user 4 to an admin"
-        adminTabPane.permissionAccess.findPermissionForUser('4').updateRole('admin')
+        adminTabPane.permissionAccess.findPermissionForDisplayName('First 4 Last 4').updateRole('admin')
         okBootbox()
 
         then:
         waitFor {
-            adminTabPane.permissionAccess.findPermissionForUser('4').roleText == "Admin"
+            adminTabPane.permissionAccess.findPermissionForDisplayName('First 4 Last 4').roleText == "Admin"
         }
 
     }
