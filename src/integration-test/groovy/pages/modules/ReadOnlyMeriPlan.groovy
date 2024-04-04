@@ -50,7 +50,7 @@ class ReadOnlyBaselineRow extends Module {
         targetMeasures(required:false) { $('.service span') }
         method { $('.baseline-method span[data-bind*=method]') }
         evidence(required:false) { $('.evidence span') }
-        methodProtocols(required:false) { $('.baseline-method span[data-bind*=protocols]')[0] }
+        methodProtocols(required:false) { $('.baseline-method span') }
         otherMethodProtocol(required:false) { $('.baseline-method span[data-bind*=method]') }
     }
 }
@@ -61,7 +61,7 @@ class ReadOnlyMonitoringIndicatorRow extends Module {
         approach { $('span[data-bind*=data2]' ) }
         targetMeasures(required:false) { $('.monitoring-service span') }
         evidence(required:false) { $('.monitoring-evidence span') }
-        methodProtocols(required:false) { $('.monitoring-method span[data-bind*=protocols]')[0] }
+        methodProtocols(required:false) { $('.monitoring-method span') }
         otherMethodProtocol(required:false) { $('.monitoring-method span[data-bind*=method]') }
     }
 }

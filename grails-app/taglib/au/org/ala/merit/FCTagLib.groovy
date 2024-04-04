@@ -984,7 +984,7 @@ class FCTagLib {
                 out << getScoreLabels(resultOrigMonitoringList[property], config, true)
             } else {
                 if (resultOrigMonitoringList[property] instanceof List) {
-                    out << resultOrigMonitoringList[property].collect{it}.join(',')
+                    out << resultOrigMonitoringList[property].collect{it == 'Other' ? 'Other: ' + resultOrigMonitoringList['data2'] : it}.join(',')
                 } else {
                     out << resultOrigMonitoringList[property]
                 }
@@ -999,7 +999,7 @@ class FCTagLib {
                 out << getScoreLabels(resultChangedMonitoringList[property], config, true)
             } else {
                 if (resultChangedMonitoringList[property] instanceof List) {
-                    out << resultChangedMonitoringList[property].collect{it}.join(',')
+                    out << resultChangedMonitoringList[property].collect{it == 'Other' ? 'Other: ' + resultChangedMonitoringList['data2'] : it}.join(',')
                 } else {
                     out << resultChangedMonitoringList[property]
                 }
