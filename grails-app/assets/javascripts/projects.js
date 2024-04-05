@@ -132,6 +132,13 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
     self.funding = ko.observable(project.funding).extend({currency:{}});
     self.fundingVerificationDate = ko.observable(project.fundingVerificationDate).extend({simpleDate: false});
+    self.verifyFunding = function() {
+        self.fundingVerificationDate.date(new Date());
+    };
+    self.funding.subscribe(function() {
+        self.verifyFunding();
+    });
+
     self.regenerateProjectTimeline = ko.observable(false);
     self.projectDatesChanged = ko.computed(function() {
         return project.plannedStartDate != self.plannedStartDate() ||
