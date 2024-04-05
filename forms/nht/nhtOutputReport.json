@@ -9373,7 +9373,7 @@
                           },
                           "mapping": [
                             {
-                              "source-path": "name",
+                              "source-path": "species",
                               "target": "species"
                             },
                             {
@@ -9400,7 +9400,7 @@
                   {
                     "columns": [
                       {
-                        "dataType": "text",
+                        "dataType": "species",
                         "name": "species",
                         "validate": "required"
                       },
@@ -10396,7 +10396,7 @@
                           },
                           "mapping": [
                             {
-                              "source-path": "name",
+                              "source-path": "species",
                               "target": "species"
                             },
                             {
@@ -10419,7 +10419,7 @@
                   {
                     "columns": [
                       {
-                        "dataType": "text",
+                        "dataType": "species",
                         "name": "species",
                         "validate": "required"
                       },
@@ -11336,7 +11336,7 @@
                             "width": "55%",
                             "source": "species",
                             "title": "Target species recorded",
-                            "type": "text"
+                            "type": "speciesSelect"
                           },
                           {
                             "width": "25%",
@@ -12755,7 +12755,7 @@
                           },
                           "mapping": [
                             {
-                              "source-path": "name",
+                              "source-path": "species",
                               "target": "species"
                             },
                             {
@@ -12803,7 +12803,7 @@
                   {
                     "columns": [
                       {
-                        "dataType": "text",
+                        "dataType": "species",
                         "name": "species",
                         "validate": "required"
                       },
@@ -13725,7 +13725,7 @@
                             "width": "40%",
                             "source": "species",
                             "title": "Target species recorded",
-                            "type": "text"
+                            "type": "speciesSelect"
                           },
                           {
                             "width": "35%",
@@ -20777,7 +20777,7 @@
                           },
                           "mapping": [
                             {
-                              "source-path": "name",
+                              "source-path": "species",
                               "target": "species"
                             },
                             {
@@ -20800,7 +20800,7 @@
                   {
                     "columns": [
                       {
-                        "dataType": "text",
+                        "dataType": "species",
                         "name": "species",
                         "validate": "required"
                       },
@@ -21717,7 +21717,7 @@
                             "width": "55%",
                             "source": "species",
                             "title": "Target species recorded",
-                            "type": "text"
+                            "type": "speciesSelect"
                           },
                           {
                             "width": "25%",
@@ -26409,7 +26409,7 @@
                           },
                           "mapping": [
                             {
-                              "source-path": "name",
+                              "source-path": "species",
                               "target": "species"
                             },
                             {
@@ -26452,7 +26452,7 @@
                   {
                     "columns": [
                       {
-                        "dataType": "text",
+                        "dataType": "species",
                         "name": "species",
                         "validate": "required"
                       },
@@ -27352,7 +27352,7 @@
                             "width": "30%",
                             "source": "species",
                             "title": "Target species recorded",
-                            "type": "text"
+                            "type": "speciesSelect"
                           },
                           {
                             "width": "20%",
@@ -34254,7 +34254,7 @@
                           },
                           "mapping": [
                             {
-                              "source-path": "name",
+                              "source-path": "species",
                               "target": "species"
                             },
                             {
@@ -34281,7 +34281,7 @@
                   {
                     "columns": [
                       {
-                        "dataType": "text",
+                        "dataType": "species",
                         "name": "species",
                         "validate": "required"
                       },
@@ -35200,7 +35200,7 @@
                             "width": "40%",
                             "source": "species",
                             "title": "Target species recorded",
-                            "type": "text"
+                            "type": "speciesSelect"
                           },
                           {
                             "width": "10%",

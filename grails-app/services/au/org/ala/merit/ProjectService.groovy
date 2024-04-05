@@ -2210,8 +2210,22 @@ class ProjectService  {
 
     List getSpeciesRecordsFromActivity (String activityId) {
         if (activityId) {
+            String displayFormat = 'SCIENTIFICNAME(COMMONNAME)'
             String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}record/listForActivity/${activityId}"
-            webService.getJson(url)?.records
+            def records = webService.getJson(url)?.records
+
+            records?.each { record ->
+                record.species = [
+                        scientificName: record.scientificName,
+                        commonName: record.commonName,
+                        outputSpeciesId: record.outputSpeciesId,
+                        guid: record.scientificNameID ?: record.guid ?: record.taxonConceptID ?: "A_GUID"
+                ]
+
+                record.species.name = speciesService.formatSpeciesName(displayFormat, record.species)
+            }
+
+            records
         }
     }
 }
