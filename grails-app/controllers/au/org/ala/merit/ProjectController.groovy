@@ -256,6 +256,7 @@ class ProjectController {
             rlpModel.admin.showAnnouncementsTab = false
             rlpModel.admin.risksAndThreatsVisible = risksAndThreatsVisible
             rlpModel.admin.showMeriPlanComparison = showMeriPlanComparison
+            rlpModel.admin.showRequestLabels = config.supportsParatoo && projectService.hasSelectedEmsaModules(project)
 
             model = buildRLPTargetsModel(rlpModel, project)
         }

@@ -101,6 +101,11 @@
                 reportsHistoryUrl:"${createLink(controller: 'report', action:'reportingHistory')}",
                 monitoringProtocolsUrl:"${createLink(action:'monitoringProtocolFormCategories', id: project.projectId)}",
                 requestLabelUrl:"${createLink(action:'requestVoucherBarcodeLabels', id: project.projectId)}",
+                bieUrl: "${grailsApplication.config.getProperty('bie.baseURL')}",
+                searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
+                speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
+                speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
+                speciesProfileUrl:"${createLink(controller:'species', action:'speciesProfile')}"
 
             },
             here = "${createLink(action:'index', id: project.projectId)}";
@@ -327,7 +332,12 @@ var config = {
     config.canModifyMeriPlan = ${projectContent.admin.canModifyMeriPlan};
     config.userHoldsMeriPlanLock = ${project.lock?.userId == user?.userId};
     config.viewReportUrl = fcConfig.viewReportUrl;
-    project.mapFeatures =  $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
+    config.bieUrl = fcConfig.bieUrl;
+    config.searchBieUrl = fcConfig.searchBieUrl;
+    config.speciesListUrl = fcConfig.speciesListUrl;
+    config.speciesImageUrl = fcConfig.speciesImageUrl;
+    config.speciesProfileUrl = fcConfig.speciesProfileUrl;
+    project.mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
     var viewModel = new ProjectPageViewModel(project, project.sites, project.activities || [], organisations, userRoles, config);
     viewModel.loadPrograms(programs);
     ko.applyBindings(viewModel);
@@ -514,7 +524,8 @@ var config = {
 <asset:javascript src="document.js"/>
 <asset:javascript src="reporting.js"/>
 
-<asset:javascript src="forms-knockout-bindings.js"/>
+<asset:javascript src="forms-manifest.js"/>
+<asset:javascript src="speciesModel.js"/>
 <asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="feature.js"/>
 <asset:deferredScripts/>

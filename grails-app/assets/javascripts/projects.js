@@ -132,6 +132,13 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
     self.funding = ko.observable(project.funding).extend({currency:{}});
     self.fundingVerificationDate = ko.observable(project.fundingVerificationDate).extend({simpleDate: false});
+    self.verifyFunding = function() {
+        self.fundingVerificationDate.date(new Date());
+    };
+    self.funding.subscribe(function() {
+        self.verifyFunding();
+    });
+
     self.regenerateProjectTimeline = ko.observable(false);
     self.projectDatesChanged = ko.computed(function() {
         return project.plannedStartDate != self.plannedStartDate() ||
@@ -873,7 +880,12 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         meriSubmissionDeclarationSelector: '#meriSubmissionDeclaration',
         editProjectStartDate: self.canEditStartDate,
         externalIds: self.externalIds,
-        canModifyMeriPlan: config.canModifyMeriPlan
+        canModifyMeriPlan: config.canModifyMeriPlan,
+        bieUrl: config.bieUrl,
+        searchBieUrl: config.searchBieUrl,
+        speciesListUrl: config.speciesListUrl,
+        speciesImageUrl: config.speciesImageUrl,
+        speciesProfileUrl: config.speciesProfileUrl
     });
     self.meriPlan = new MERIPlan(project, projectService, meriPlanConfig);
 
