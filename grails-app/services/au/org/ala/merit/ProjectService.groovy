@@ -774,10 +774,7 @@ class ProjectService  {
             response = updateUnchecked(projectId, [plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate])
 
             //user explicitly generates the report from the reporting tab
-            if (!APPLICATION_STATUS.equalsIgnoreCase(project.status)) {
-                generateProjectStageReports(projectId, dateChangeOptions)
-            }
-
+            generateProjectStageReports(projectId, dateChangeOptions)
 
             if (dateChangeOptions.updateActivities) {
                 updateActivityDates(projectId, previousStartDate)
@@ -1133,14 +1130,6 @@ class ProjectService  {
      * been populated with project reports.
      */
     boolean canRegenerateReports(Map project) {
-        Status.isActive(project.status) || APPLICATION_STATUS.equalsIgnoreCase(project.status) && !hasSubmittedOrApprovedFinalReportInCategory(project)
-    }
-
-    /**
-     * Returns true if project reports are allowed to be regenerated.
-     * This validation disables the "Re-create project reports" if project status is still in Application
-     */
-    boolean canManuallyRegenerateReports(Map project) {
         Status.isActive(project.status) && !hasSubmittedOrApprovedFinalReportInCategory(project)
     }
 
