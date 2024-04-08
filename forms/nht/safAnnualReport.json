@@ -1,0 +1,109 @@
+{
+  "name": "SAF Annual Report",
+  "description": null,
+  "type": "Activity",
+  "sections": [
+    {
+      "collapsedByDefault": false,
+      "modelName": null,
+      "templateName": "outputReportData",
+      "optional": false,
+      "optionalQuestionText": null,
+      "title": "Output report data",
+      "collapsibleHeading": null,
+      "name": "Output report data",
+      "description": null,
+      "template": {
+        "dataModel": [
+          {
+            "name": "communicationsDuringPeriod",
+            "dataType": "list",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "communications"
+              }
+            ]
+          }
+        ],
+        "viewModel": [
+          {
+            "type": "table",
+            "title": "Communications",
+            "columns": [
+              {
+                "type": "text",
+                "source": "yesCommunicationsMaterial"
+
+              }
+            ]
+          }
+        ],
+        "pre-populate": [
+          {
+            "source": {
+              "url": "/project/agReport/",
+              "params": [
+                {
+                  "expression": "owner.projectId",
+                  "name": "id",
+                  "type": "computed"
+                },
+                {
+                  "expression": "activity.plannedEndDate",
+                  "name": "financialYearEndDate",
+                  "type": "computed"
+                }
+              ]
+
+            },
+            "merge": {
+              "communicationsDuringPeriod": {
+                "keys": [
+                  "yesCommunicationsMaterial"
+                ],
+
+                "addUnmatchedNewRows": true,
+                "deleteUnmatchedExistingRows": true
+              }
+            },
+            "mapping": [
+              {
+                "mapping": [
+                  {
+                    "source-path": "service",
+                    "target": "serviceName"
+                  },
+                  {
+                    "source-path": "targetMeasure",
+                    "target": "targetMeasure"
+                  },
+                  {
+                    "source-path": "scoreId",
+                    "target": "scoreId"
+                  },
+                  {
+                    "source-path": "financialYearTarget",
+                    "target": "annualTarget"
+                  },
+                  {
+                    "source-path": "financialYearResult",
+                    "target": "result"
+                  }
+                ],
+                "source-path": "targets",
+                "target": "communicationsDuringPeriod"
+              }]
+          }
+        ]
+      }
+    }
+  ],
+  "formVersion": 1,
+  "category": null,
+  "status": "active",
+  "gmsId": null,
+  "supportsSites": false,
+  "supportsPhotoPoints": false,
+  "minOptionalSectionsCompleted": 1
+}

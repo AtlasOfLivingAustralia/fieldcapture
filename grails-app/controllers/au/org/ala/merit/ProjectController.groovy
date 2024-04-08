@@ -1148,6 +1148,20 @@ class ProjectController {
         null
     }
 
+    def agAnnualReport(String id) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/projectMetrics/' + id
+        Map params = [approvedOnly:false, scoreIds: [
+                'e7701823-e534-414e-80f5-86f9eecef50c',
+                'f474c538-c8d7-4431-86c3-741163a50a35'
+        ]]
+
+        Map result = webService.doPost(url, params)
+        if (result.resp) {
+            result.resp = result.resp.collect{new Score(it)}
+        }
+        render result as JSON
+    }
+
     private def error(String message, String projectId) {
         flash.message = message
         if (projectId) {
