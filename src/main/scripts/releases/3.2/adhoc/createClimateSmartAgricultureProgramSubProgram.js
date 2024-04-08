@@ -28,17 +28,15 @@ var config =
                 },
                 {
                     "serviceTargets": [
-                        "1f8161bc-908b-4ec8-ab7f-edac973a657d",
-                        "88908921-1248-4a7c-b185-51c625c737e3",
-                        "fe9f1a6c-e614-489a-80fa-4d6d76f1cf95"
+                        "f9c85612-602e-465c-89e0-e155b34b1f31"
                     ],
                     "serviceId": 3
                 },
                 {
                     "serviceTargets": [
-                        "aa0c6b29-285e-4344-987e-dfeaf1d95648",
                         "a9d98baa-b2ab-4428-82cf-d96185e63aa6",
-                        "c4ea5ce3-4a70-4df8-aff7-ffa929e7df61"
+                        "c4ea5ce3-4a70-4df8-aff7-ffa929e7df61",
+                        "dcf917dc-eaf7-49e2-ae7b-abf65edeedae"
                     ],
                     "serviceId": 4
                 },
@@ -174,7 +172,8 @@ var config =
                         "b9e710e4-7dd3-4acc-ac2c-c69f4bcb9787",
                         "00934509-f102-4d39-a043-7547a8ab9ac8",
                         "1021bec7-3836-4b33-90b4-76701efd4fe3",
-                        "4dad393e-cbf7-43dd-87bb-62ea8f8afcdd"
+                        "4dad393e-cbf7-43dd-87bb-62ea8f8afcdd",
+                        "7186117e-ac17-4ed9-8c9c-8ee1c3bf473b"
                     ],
                     "serviceId": 26
                 },
@@ -249,7 +248,8 @@ var config =
                     "serviceTargets": [
                         "3ec07754-4a7a-46fb-a76d-553921781716",
                         "fbc2dab8-7454-40f9-94f6-6bf258fcefff",
-                        "7186e284-0cb2-418e-a8cc-4343eb618140"
+                        "7186e284-0cb2-418e-a8cc-4343eb618140",
+                        "c7d0963e-2847-4f5f-8a1c-e149dfa4c9d1"
                     ],
                     "serviceId": 36
                 },
@@ -268,7 +268,7 @@ var config =
             ]
 
         },
-        "visibility": "private",
+        "visibility": "public",
         "declarationPageType": "rdpReportDeclaration",
         "requiresActivityLocking": true,
         "supportsMeriPlanComparison": true,
