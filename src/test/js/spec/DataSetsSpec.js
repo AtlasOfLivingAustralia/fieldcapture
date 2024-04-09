@@ -112,7 +112,8 @@ describe("The data set summaries view models behave correctly", function () {
             "otherSensitivity":null,
             "otherDataSetType":null,
             "sizeInKB": 205,
-            "protocol":"guid-1"
+            "protocol":"guid-1",
+            "activityId":"1"
         };
     }
 
