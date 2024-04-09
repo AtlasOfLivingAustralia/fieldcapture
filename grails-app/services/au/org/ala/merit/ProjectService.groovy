@@ -1120,6 +1120,7 @@ class ProjectService  {
 
     /**
      * Returns true if project reports are allowed to be regenerated.
+     * This allows project dates to be changed while a project is in the Application status
      *  @param project the project to check, expects the reports property to have
      * been populated with project reports.
      */
