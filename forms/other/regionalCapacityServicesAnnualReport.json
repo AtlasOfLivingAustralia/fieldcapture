@@ -1,0 +1,1270 @@
+{
+  "name": "Regional Capacity Services Annual Report",
+  "sections": [
+    {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": "RLP - Core services annual report",
+      "name": "RLP - Core services annual report",
+      "optional": false,
+      "optionalQuestionText": null,
+      "template": {
+        "modelName": "RLP - Core services annual report",
+        "dataModel": [
+          {
+            "dataType": "text",
+            "name": "coreServicesProgress",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "coreServicesIssues",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "governanceFrameworksMaintained",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "financialAgreementsApplied",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "boolean",
+            "name": "interestRequirementsConfirmation",
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "firstNationsPeopleDevelopment",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "subContractorsRegisterSubmitted",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "name": "subContractorsRegisterNotSubmitted",
+            "dataType": "text",
+            "description": "The Subcontractor register should include subcontractor name, description of the subcontracting agreement, start and finish dates, value of the subcontract and if the subcontractor is an Indigenous owned and operated organisation.",
+            "behaviour": [
+              {
+                "condition": "subContractorsRegisterSubmitted == \"No\"",
+                "type": "visible"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "riskManagementImplemented",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "name": "yesRiskManagementActions",
+            "dataType": "text",
+            "validate": "required,maxSize[1250]",
+            "behaviour": [
+              {
+                "condition": "riskManagementImplemented == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "noRiskManagementActions",
+            "dataType": "text",
+            "validate": "required,maxSize[1250]",
+            "behaviour": [
+              {
+                "condition": "riskManagementImplemented == \"No\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "governanceIssuesOccurred",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "managementActionsForGovernanceRisksAndIssues",
+            "behaviour": [
+              {
+                "condition": "governanceIssuesOccurred == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "adaptiveManagementImplemented",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "adaptiveManagementActions",
+            "behaviour": [
+              {
+                "condition": "adaptiveManagementImplemented == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "whsIncidentsOccurred",
+            "description": "A notifiable incident is prescribed within the Work Health and Safety Act as: <br> <li>the death of a person, or </li> <li>the serious injury or illness of a person, or </li> <li> a dangerous incident</li>",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "whsIncidents",
+            "behaviour": [
+              {
+                "condition": "whsIncidentsOccurred == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "list",
+            "name": "coreServicesPlansTable",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "name": "coreServicesPlans",
+                "dataType": "text"
+              },
+              {
+                "name": "coreServicesPlanLastReviewed",
+                "dataType": "date",
+                "validate": "required"
+              },
+              {
+                "name": "coreServicesPlanActionsRequired",
+                "dataType": "text",
+                "validate": "required"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "communityParticipation",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "communityParticipationFor20PercentRequirement",
+            "description": "",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "requirementAgreedServicesAgreement",
+            "description": "",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "number",
+            "name": "totalInvestmentUnderClause3Point7",
+            "validate": "required"
+          },
+          {
+            "name": "investment2018_19",
+            "dataType": "number",
+            "validate": "required"
+          },
+          {
+            "name": "investment2019_20",
+            "dataType": "number",
+            "validate": "required"
+          },
+          {
+            "name": "investment2020_21",
+            "dataType": "number",
+            "validate": "required"
+          },
+          {
+            "name": "investment2021_22",
+            "dataType": "number",
+            "validate": "required"
+          },
+          {
+            "name": "investment2022_23",
+            "dataType": "number",
+            "validate": "required"
+          },
+          {
+            "name": "investmentTotal",
+            "dataType": "number",
+            "computed": {
+              "expression": "investment2018_19+investment2019_20+investment2020_21+investment2021_22+investment2022_23"
+            }
+          },
+          {
+            "name": "percentageInvested",
+            "dataType": "number",
+            "computed": {
+              "expression": "investmentTotal/totalInvestmentUnderClause3Point7*100"
+            }
+          },
+          {
+            "dataType": "text",
+            "name": "variationPreviousReportingYear",
+            "description": "",
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "indigenousParticipationTarget",
+            "validate": "required",
+            "constraints": [
+              "N/A - Exempt",
+              "General - At least 4%"
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "indigenousParticipationForClause40Point2",
+            "description": "Provide information on all community participation in any Core Services and relevant Projects over the past 12 months",
+            "validate": "maxSize[1250]",
+            "behaviour": [
+              {
+                "type": "conditional_validation",
+                "condition": "indigenousParticipationTarget == \"General - At least 4%\"",
+                "value": {
+                  "validate": "required,maxSize[1250]"
+                }
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "agreedServicesForClause40Point2",
+            "description": "",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "list",
+            "name": "subcontractedWorkForceByFinancialYear",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "name": "contractWorkforceType",
+                "dataType": "text"
+              },
+              {
+                "name": "contractWorkforce2018_19",
+                "dataType": "number",
+                "validate": "required"
+              },
+              {
+                "name": "contractWorkforce2019_20",
+                "dataType": "number",
+                "validate": "required"
+              },
+              {
+                "name": "contractWorkforce2020_21",
+                "dataType": "number",
+                "validate": "required"
+              },
+              {
+                "name": "contractWorkforce2021_22",
+                "dataType": "number",
+                "validate": "required"
+              },
+              {
+                "name": "contractWorkforce2022_23",
+                "dataType": "number",
+                "validate": "required"
+              },
+              {
+                "name": "contractWorkforceTotal",
+                "dataType": "number",
+                "computed": {
+                  "expression": "contractWorkforce2018_19+contractWorkforce2019_20+contractWorkforce2020_21+contractWorkforce2021_22+contractWorkforce2022_23"
+                }
+              }
+            ]
+          },
+          {
+            "name": "percentageOfIndigenousSubcontractors",
+            "dataType": "number",
+            "computed": {
+              "expression": "subcontractedWorkForceByFinancialYear[0].contractWorkforceTotal()/subcontractedWorkForceByFinancialYear[1].contractWorkforceTotal()*100"
+            }
+          },
+          {
+            "dataType": "list",
+            "name": "organisationWorkForceByFinancialYear",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "name": "organisationWorkforceType",
+                "dataType": "text"
+              },
+              {
+                "name": "organisationWorkforce2018_19",
+                "dataType": "number",
+                "validate": "required"
+              },
+              {
+                "name": "organisationWorkforce2019_20",
+                "dataType": "number",
+                "validate": "required"
+              },
+              {
+                "name": "organisationWorkforce2020_21",
+                "dataType": "number",
+                "validate": "required"
+              },
+              {
+                "name": "organisationWorkforce2021_22",
+                "dataType": "number",
+                "validate": "required"
+              },
+              {
+                "name": "organisationWorkforce2022_23",
+                "dataType": "number",
+                "validate": "required"
+              },
+              {
+                "name": "organisationWorkforceTotal",
+                "dataType": "number",
+                "computed": {
+                  "expression": "organisationWorkforce2018_19+organisationWorkforce2019_20+organisationWorkforce2020_21+organisationWorkforce2021_22+organisationWorkforce2022_23"
+                }
+              }
+            ]
+          },
+          {
+            "name": "percentageOfIndigenousEmployees",
+            "dataType": "number",
+            "computed": {
+              "expression": "organisationWorkForceByFinancialYear[0].organisationWorkforceTotal()/organisationWorkForceByFinancialYear[1].organisationWorkforceTotal()*100"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "indigenousInvestmentAmount",
+            "validate": "required,min[0]"
+          },
+          {
+            "name": "serviceSubcontracted2018_19",
+            "dataType": "number",
+            "validate": "required"
+          },
+          {
+            "name": "serviceSubcontracted2019_20",
+            "dataType": "number",
+            "validate": "required"
+          },
+          {
+            "name": "serviceSubcontracted2020_21",
+            "dataType": "number",
+            "validate": "required"
+          },
+          {
+            "name": "serviceSubcontracted2021_22",
+            "dataType": "number",
+            "validate": "required"
+          },
+          {
+            "name": "serviceSubcontracted2022_23",
+            "dataType": "number",
+            "validate": "required"
+          },
+          {
+            "name": "serviceSubcontractedTotal",
+            "dataType": "number",
+            "computed": {
+              "expression": "serviceSubcontracted2018_19+serviceSubcontracted2019_20+serviceSubcontracted2020_21+serviceSubcontracted2021_22+serviceSubcontracted2022_23"
+            }
+          },
+          {
+            "name": "percentageSubcontractedOfTotal",
+            "dataType": "number",
+            "computed": {
+              "expression": "serviceSubcontractedTotal/indigenousInvestmentAmount*100"
+            }
+          },
+          {
+            "dataType": "text",
+            "name": "indigenousParticipation",
+            "description": "Provide information on all Indigenous employment and procurement in Core Services or projects over the past 12 months",
+            "validate": "maxSize[1250]",
+            "behaviour": [
+              {
+                "type": "conditional_validation",
+                "condition": "indigenousParticipationTarget == \"General - At least 4%\"",
+                "value": {
+                  "validate": "required,maxSize[1250]"
+                }
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "variationPreviousReportingYearInvestment",
+            "description": "",
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "keyCommunicationActivities",
+            "description": "Include communications activities specifically related to Core Services",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "waterPlansSubmitted",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "waterPlansNotSubmittedReason",
+            "behaviour": [
+              {
+                "condition": "waterPlansSubmitted == \"No\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[1250]"
+          }
+        ],
+        "name": "RLP - Core services annual report",
+        "title": "Annual Regional Capacity Services Report",
+        "viewModel": [
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<h4>Note: this report applies to Regional Capacity Services (Schedule 2) delivered under the Deed in the last 12 months</h4>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "1. Please outline key achievements in the delivery of Regional Capacity Services (RCS9.2(a)). (1250 character, [approx. 250 word] limit)",
+                "source": "coreServicesProgress",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "2. Please outline key issues in the delivery of Regional Capacity Services and how they were managed/rectified. Please include how adaptive management actions are/ will be implemented (RCS9.2(b)). (1250 character, [approx. 250 word] limit)",
+                "source": "coreServicesIssues",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "3. Please describe how appropriate governance and financial frameworks have been maintained, as required in the Deed (RCS7). Include any management actions that have been taken to ensure governance frameworks are appropriate. (1250 character, [approx. 250 word] limit)",
+                "source": "governanceFrameworksMaintained",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "3.a Please list the types of financial agreements applied relevant to delivery of regional capacity services or projects. (1250 character, [approx. 250 word] limit)",
+                "source": "financialAgreementsApplied",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "3.b Please confirm probity and conflict of interest requirements were addressed and documented for the processes listed above in 3.a.",
+                "source": "interestRequirementsConfirmation",
+                "type": "boolean"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "3.c Please describe actions undertaken in this financial year (if any) to ensure the development of employee and management competence in First Nations peoples’ culture. (1250 character, [approx. 250 word] limit)",
+                "source": "firstNationsPeopleDevelopment",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "3.d Please confirm you have submitted the register of all Subcontractors to your Customer Contract Manager as per clause 20.7 of the Deed.",
+                "source": "subContractorsRegisterSubmitted",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "",
+                "source": "subContractorsRegisterNotSubmitted",
+                "preLabel": "<i><b style=\"background-color:yellow\">Please submit your Subcontractor register to your Customer Contract Manager.</b></i>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "3.e Have organisational risk management processes been implemented and documented?",
+                "source": "riskManagementImplemented",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "3.e(i) Please describe what management actions have been undertaken in relation to risk reviews and implementation. (1250 character, [approx. 250 word] limit)",
+                "source": "yesRiskManagementActions",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "3.e(ii) Please provide reasons to explain why and timeframes for when this will be done. (1250 character, [approx. 250 word] limit)",
+                "source": "noRiskManagementActions",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "4. Have any governance risks or issues occurred?",
+                "css": "span6",
+                "source": "governanceIssuesOccurred",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "4. a) Please describe what management actions have been taken. (1250 character [approx. 250 word] limit).",
+                "source": "managementActionsForGovernanceRisksAndIssues",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "5. Have adaptive management actions been implemented, or planned to be implemented, to improve the delivery of Core Services?",
+                "css": "span6",
+                "source": "adaptiveManagementImplemented",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "5. a) Please describe these adaptive management actions and how they are/ will be implemented. (1250 character [approx. 250 word] limit).",
+                "source": "adaptiveManagementActions",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "6. Have any notifiable Work Health and Safety incidents occurred, while undertaking Core Services?",
+                "css": "span6",
+                "source": "whsIncidentsOccurred",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "6. a) Please describe the Work Health and Safety incidents, were they reported and the outcome of any investigation. (1250 character [approx. 250 word] limit).",
+                "source": "whsIncidents",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "7. Please complete the below table on Core Services plans",
+                "helpText": "Provide the department with a copy of your updated plan"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "coreServicesPlansTable",
+                "type": "table",
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "title": "Plan:",
+                    "source": "coreServicesPlans",
+                    "type": "readonlyText",
+                    "width": "30%"
+                  },
+                  {
+                    "title": "Date last reviewed",
+                    "source": "coreServicesPlanLastReviewed",
+                    "type": "date",
+                    "width": "10%"
+                  },
+                  {
+                    "title": "Are there any outstanding actions required to get you on track to meet target measures in your plan?",
+                    "source": "coreServicesPlanActionsRequired",
+                    "type": "textarea",
+                    "width": "50%"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>8. Community participation and investment in projects delivered under the Services Agreement</b>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "8. a) Please describe how the community has participated in the delivery of Core Services and projects. (1250 character [approx. 250 word] limit).",
+                "source": "communityParticipation",
+                "type": "textarea",
+                "helpText": "Provide information on all community participation in any Core Services and relevant Projects over the past 12 months"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "8. b) Please provide the level of community investment that contributes to the requirement of clause 3.7(m)(ii) in Schedule 2 Statement of Works, or equivalent clause. [that at least 20% of the combined value of RLP Projects delivered in a management unit by a Service Provider must directly support the delivery of small on-ground projects and related activities that are delivered by, or directly engage with, the local landcare community (the Requirement)]. (1250 character [approx. 250 word] limit).",
+                "source": "communityParticipationFor20PercentRequirement",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "8. c) Are you on track to meet the Requirement over the life of the agreed Services Agreement? Note that quantitative figures will be collected in Question 8d), and the investment percentage will be calculated. (1250 character [approx. 250 word] limit).",
+                "source": "requirementAgreedServicesAgreement",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "8. d) i) Enter the total contracted value of investments in your Management Unit to 2023 where clause 3.7(m)(ii) of the Statement of Work applies",
+                "source": "totalInvestmentUnderClause3Point7",
+                "type": "number",
+                "helpText": "The total value of project services minus projects with an exemption from SOW3.7m(ii)"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "title": "<b>8. d) ii) In the last 12 months what has been the value of investments made that contribute to this requirement?</b>",
+                "type": "table",
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "title": "2018/19 ($)",
+                    "source": "investment2018_19",
+                    "type": "number",
+                    "readonly": true
+                  },
+                  {
+                    "title": "2019/20 ($)",
+                    "source": "investment2019_20",
+                    "type": "number",
+                    "readonly": true
+                  },
+                  {
+                    "title": "2020/21 ($)",
+                    "source": "investment2020_21",
+                    "type": "number",
+                    "readonly": true
+                  },
+                  {
+                    "title": "2021/22 ($)",
+                    "source": "investment2021_22",
+                    "type": "number",
+                    "readonly": true
+                  },
+                  {
+                    "title": "2022/23 ($)",
+                    "source": "investment2022_23",
+                    "type": "number"
+                  },
+                  {
+                    "title": "Total ($)",
+                    "source": "investmentTotal",
+                    "type": "number"
+                  },
+                  {
+                    "title": "%",
+                    "source": "percentageInvested",
+                    "type": "number"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "8. e) Please explain any variation from previous year's reporting, including any investment that has been finalised since the previous report.",
+                "source": "variationPreviousReportingYear",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>9. Indigenous employment and procurement investment</b>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "9. a) Please describe how Indigenous people have participated in the delivery of the Core Services and projects. (1250 character [approx. 250 word] limit)",
+                "source": "indigenousParticipation",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "9. b) Please describe the level of Indigenous employment and procurement investment that contributes to the requirement of clause 40.2 of the agreed Services Agreement.",
+                "source": "indigenousParticipationForClause40Point2",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "9. c) Are you on track to meet the requirement of clause 40.2 of the agreed Services Agreement over the life of the agreed Services Agreement? Note that quantitative figures will be collected in question 9e), and the investment percentage will be calculated. (1250 character [approx. 250 word] limit)",
+                "source": "agreedServicesForClause40Point2",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "9. d) Please identify level of Indigenous employment and procurement investment you have agreed to provide under your Services Agreement",
+                "source": "indigenousParticipationTarget",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "9. e) i) Enter the total contracted value of investments in your Management Unit to 2023 where clause 40.2 of the agreed Services Agreement applies.",
+                "helpText": "The total value of services minus projects with an exemption from clause 40.2(a)(ii)"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "indigenousInvestmentAmount",
+                "css": "span2",
+                "type": "currency"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "9. e) ii) In the last 12 months what has been the value of services subcontracted to Indigenous Enterprises where clause 40.2(a)(ii) of the agreed Services Agreement applies?",
+                "helpText": "Please enter any information known for program reporting purposes. Note that there are a number of options presented to meet the investment requirement in clause 40.2. You do not need to meet the requirement for all options"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "table",
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "title": "2018/19 ($)",
+                    "source": "serviceSubcontracted2018_19",
+                    "type": "number",
+                    "readonly": true
+                  },
+                  {
+                    "title": "2019/20 ($)",
+                    "source": "serviceSubcontracted2019_20",
+                    "type": "number",
+                    "readonly": true
+                  },
+                  {
+                    "title": "2020/21 ($)",
+                    "source": "serviceSubcontracted2020_21",
+                    "type": "number",
+                    "readonly": true
+                  },
+                  {
+                    "title": "2021/22 ($)",
+                    "source": "serviceSubcontracted2021_22",
+                    "type": "number",
+                    "readonly": true
+                  },
+                  {
+                    "title": "2022/23 ($)",
+                    "source": "serviceSubcontracted2022_23",
+                    "type": "number"
+                  },
+                  {
+                    "title": "Total ($)",
+                    "source": "serviceSubcontractedTotal",
+                    "type": "number"
+                  },
+                  {
+                    "title": "% of total",
+                    "source": "percentageSubcontractedOfTotal",
+                    "type": "number"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "title": "<b>9. e) iii) In the past 12 months what has been the level of full-time equivalent (FTE) Australian-based workforce deployed on subcontracts to deliver services where clause 40.2(a)(1)(A) of the agreed Services Agreement applies?</b>",
+                "source": "subcontractedWorkForceByFinancialYear",
+                "type": "table",
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "title": "",
+                    "source": "contractWorkforceType",
+                    "type": "readonlyText",
+                    "width": "40%"
+                  },
+                  {
+                    "title": "2018/19",
+                    "source": "contractWorkforce2018_19",
+                    "type": "number",
+                    "width": "10%",
+                    "readonly": true
+                  },
+                  {
+                    "title": "2019/20",
+                    "source": "contractWorkforce2019_20",
+                    "type": "number",
+                    "width": "10%",
+                    "readonly": true
+                  },
+                  {
+                    "title": "2020/21",
+                    "source": "contractWorkforce2020_21",
+                    "type": "number",
+                    "width": "10%",
+                    "readonly": true
+                  },
+                  {
+                    "title": "2021/22",
+                    "source": "contractWorkforce2021_22",
+                    "type": "number",
+                    "width": "10%",
+                    "readonly": true
+                  },
+                  {
+                    "title": "2022/23",
+                    "source": "contractWorkforce2022_23",
+                    "type": "number",
+                    "width": "10%"
+                  },
+                  {
+                    "title": "Total",
+                    "source": "contractWorkforceTotal",
+                    "type": "number",
+                    "width": "10%"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Percentage of Indigenous FTE in subcontracted workforce, calculated from input to table",
+                "type": "number",
+                "source": "percentageOfIndigenousSubcontractors"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "title": "<b>9. e) iv) In the past 12 months what has been the level of full-time equivalent (FTE) Australian-based workforce within the Service Provider's Organisation engaged to deliver the services where clause 40.2(a)(1)(B) of the agreed Services Agreement applies?</b>",
+                "source": "organisationWorkForceByFinancialYear",
+                "type": "table",
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "title": "",
+                    "source": "organisationWorkforceType",
+                    "type": "readonlyText",
+                    "width": "40%"
+                  },
+                  {
+                    "title": "2018/19",
+                    "source": "organisationWorkforce2018_19",
+                    "type": "number",
+                    "width": "10%",
+                    "readonly": true
+                  },
+                  {
+                    "title": "2019/20",
+                    "source": "organisationWorkforce2019_20",
+                    "type": "number",
+                    "width": "10%",
+                    "readonly": true
+                  },
+                  {
+                    "title": "2020/21",
+                    "source": "organisationWorkforce2020_21",
+                    "type": "number",
+                    "width": "10%",
+                    "readonly": true
+                  },
+                  {
+                    "title": "2021/22",
+                    "source": "organisationWorkforce2021_22",
+                    "type": "number",
+                    "width": "10%",
+                    "readonly": true
+                  },
+                  {
+                    "title": "2022/23",
+                    "source": "organisationWorkforce2022_23",
+                    "type": "number",
+                    "width": "10%"
+                  },
+                  {
+                    "title": "Total",
+                    "source": "organisationWorkforceTotal",
+                    "type": "number",
+                    "width": "10%"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Percentage of Indigenous FTE in the organisation workforce, calculated from input to table",
+                "type": "number",
+                "source": "percentageOfIndigenousEmployees"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "9. f) Please explain any variation from previous year's reporting, including any investment that has been finalised since the previous report.",
+                "source": "variationPreviousReportingYearInvestment",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "10. What have been the key communications activities undertaken as part of core services? (1250 character [approx. 250 word] limit).",
+                "source": "keyCommunicationActivities",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "11. Have all required reports in relation to the Regional Agriculture Landcare Facilitator position been submitted?",
+                "css": "span6",
+                "source": "waterPlansSubmitted",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "11. a) Please provide a reason why and describe what management actions have been implemented to rectify this. (1250 character [approx. 250 word] limit).",
+                "source": "waterPlansNotSubmittedReason",
+                "type": "textarea"
+              }
+            ]
+          }
+        ],
+        "pre-populate": [
+          {
+            "source": {
+              "params": [
+                {
+                  "expression": "owner.managementUnitId",
+                  "name": "managementUnitId",
+                  "type": "computed"
+                },
+                {
+                  "name": "startDate",
+                  "value": "2021-07-01T13:00:00Z"
+                },
+                {
+                  "name": "endDate",
+                  "value": "2022-07-01T13:00:00Z"
+                }
+              ],
+              "url": "/managementUnit/previousReportContents/"
+            },
+            "mapping": [
+              {
+                "source-path": "model.data.investment2018_19",
+                "target": "investment2018_19"
+              },
+              {
+                "source-path": "model.data.investment2019_20",
+                "target": "investment2019_20"
+              },
+              {
+                "source-path": "model.data.investment2020_21",
+                "target": "investment2020_21"
+              },
+              {
+                "source-path": "model.data.investment2021_22",
+                "target": "investment2021_22"
+              },
+              {
+                "source-path": "model.data.serviceSubcontracted2018_19",
+                "target": "serviceSubcontracted2018_19"
+              },
+              {
+                "source-path": "model.data.serviceSubcontracted2019_20",
+                "target": "serviceSubcontracted2019_20"
+              },
+              {
+                "source-path": "model.data.serviceSubcontracted2020_21",
+                "target": "serviceSubcontracted2020_21"
+              },
+              {
+                "source-path": "model.data.serviceSubcontracted2021_22",
+                "target": "serviceSubcontracted2021_22"
+              },
+              {
+                "mapping": [
+                  {
+                    "source-path": "contractWorkforceType",
+                    "target": "contractWorkforceType"
+                  },
+                  {
+                    "source-path": "contractWorkforce2018_19",
+                    "target": "contractWorkforce2018_19"
+                  },
+                  {
+                    "source-path": "contractWorkforce2019_20",
+                    "target": "contractWorkforce2019_20"
+                  },
+                  {
+                    "source-path": "contractWorkforce2020_21",
+                    "target": "contractWorkforce2020_21"
+                  },
+                  {
+                    "source-path": "contractWorkforce2021_22",
+                    "target": "contractWorkforce2021_22"
+                  }
+                ],
+                "source-path": "model.data.subcontractedWorkForceByFinancialYear",
+                "target": "subcontractedWorkForceByFinancialYear"
+              },
+              {
+                "mapping": [
+                  {
+                    "source-path": "organisationWorkforceType",
+                    "target": "organisationWorkforceType"
+                  },
+                  {
+                    "source-path": "organisationWorkforce2018_19",
+                    "target": "organisationWorkforce2018_19"
+                  },
+                  {
+                    "source-path": "organisationWorkforce2019_20",
+                    "target": "organisationWorkforce2019_20"
+                  },
+                  {
+                    "source-path": "organisationWorkforce2020_21",
+                    "target": "organisationWorkforce2020_21"
+                  },
+                  {
+                    "source-path": "organisationWorkforce2021_22",
+                    "target": "organisationWorkforce2021_22"
+                  }
+                ],
+                "source-path": "model.data.organisationWorkForceByFinancialYear",
+                "target": "organisationWorkForceByFinancialYear"
+              }
+            ]
+          },
+          {
+            "source": {
+              "type": "literal",
+              "literal": {
+                "coreServicesPlansTable": [
+                  {
+                    "coreServicesPlans": "Community participation plan"
+                  },
+                  {
+                    "coreServicesPlans": "Indigenous participation plan"
+                  },
+                  {
+                    "coreServicesPlans": "Communications plan"
+                  },
+                  {
+                    "coreServicesPlans": "WHS plan"
+                  }
+                ]
+              }
+            },
+            "mapping": [
+              {
+                "source-path": "coreServicesPlansTable",
+                "target": "coreServicesPlansTable",
+                "mapping": [
+                  {
+                    "source-path": "coreServicesPlans",
+                    "target": "coreServicesPlans"
+                  }
+                ]
+              }
+            ],
+            "merge": {
+              "coreServicesPlansTable": {
+                "keys": [
+                  "coreServicesPlans"
+                ],
+                "addUnmatchedNewRows": true,
+                "deleteUnmatchedExistingRows": true
+              }
+            }
+          }
+        ]
+      },
+      "templateName": "rlpCoreServicesAnnualReport",
+      "title": null
+    }
+  ],
+  "status": "active",
+  "supportsPhotoPoints": false,
+  "supportsSites": false,
+  "type": "Report"
+}
+
