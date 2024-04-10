@@ -2231,7 +2231,7 @@ class ProjectService  {
             records?.each { record ->
                 record.species = [
                         scientificName: record.scientificName,
-                        commonName: record.commonName,
+                        commonName: record.vernacularName,
                         outputSpeciesId: record.outputSpeciesId,
                         guid: record.scientificNameID ?: record.guid ?: record.taxonConceptID ?: "A_GUID"
                 ]

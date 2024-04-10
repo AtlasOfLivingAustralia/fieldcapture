@@ -391,7 +391,7 @@ var protocols = {
         "tags": ["survey"],
         "overrides": {
             "dataModel": {
-                "sign-based-track-station-survey-setup.sign-based-track-station-observation.tracks.number_of_individuals": {
+                "sign-based-track-station-observation.tracks.number_of_individuals": {
                     "dwcAttribute": "individualCount"
                 }
             }
@@ -412,6 +412,9 @@ var protocols = {
         "overrides": {
             "dataModel": {
                 "herbivory-and-physical-damage-belt-transect-setup.target_species.lut": {
+                    "dataType": "species"
+                },
+                "herbivory-and-physical-damage-belt-transect-setup.target_species.other_species.other_species": {
                     "dataType": "species"
                 },
                 "herbivory-and-physical-damage-transect.quadrat.quadrat_observation.herbivory_attributable_fauna_species.lut": {
