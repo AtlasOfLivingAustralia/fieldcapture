@@ -658,21 +658,6 @@ class ProjectController {
         projectSummaryReportCommand()
     }
 
-    @PreAuthorise(accessLevel = 'readOnly')
-    def dataSetSpeciesRecords(String projectId, String dataSetId) {
-        if (!projectId || !dataSetId) {
-            render status: 400, text: 'Required params not provided: projectId, dataSetId'
-        }
-        else {
-            def result = projectService.fetchDataSetRecords(projectId, dataSetId)
-            if (result instanceof Map) {
-                render status: 500, text: result.error
-            } else {
-                render text: result as JSON, contentType: 'application/json'
-            }
-        }
-    }
-
     /**
      * Accepts a MERI Plan as an attached file and attempts to convert it into a format compatible with
      * MERIT.
@@ -1164,8 +1149,13 @@ class ProjectController {
         null
     }
 
-    @PreAuthorise
+    @PreAuthorise(accessLevel = 'editor')
     def getSpeciesRecordsFromActivity (String activityId) {
+        if(!activityId) {
+            render status: HttpStatus.SC_BAD_REQUEST, text: [message: 'Activity ID must be supplied'] as JSON
+            return
+        }
+
         render projectService.getSpeciesRecordsFromActivity(activityId) as JSON
     }
 

@@ -20,10 +20,8 @@ var protocols = {
         "tags": ["survey"],
         "apiEndpoint": "vegetation-mapping-surveys",
         "geometryType": "Point",
-        "geometryPath": "attributes.position",
-        "startDatePath": "attributes.vegetation_mapping_survey.data.attributes.start_date_time",
-        "endDatePath": null,
-        "surveyIdPath": "attributes.vegetation_mapping_survey.data.attributes.surveyId"
+        "startDatePath": "start_date_time",
+        "endDatePath": null
     },
     "a9cb9e38-690f-41c9-8151-06108caf539d":
         {
@@ -69,9 +67,8 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "photopoints-surveys",
-        "startDatePath": "attributes.start_date_time",
-        "endDatePath": "attributes.end_date_time",
-        "surveyIdPath": "attributes.surveyId"
+        "startDatePath": "start_date_time",
+        "endDatePath": "end_date_time"
     },
     "2dbb595b-3541-46bd-b200-13db3a823b74": {
         "name": "Photopoints - Device Panorama",
@@ -84,18 +81,16 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "floristics-veg-survey-fulls",
-        "startDatePath": "attributes.start_date_time",
-        "endDatePath": "attributes.end_date_time",
-        "surveyIdPath": "attributes.surveyId"
+        "startDatePath": "start_date_time",
+        "endDatePath": "end_date_time"
     },
     "bbd550c0-04c5-4a8c-ae39-cc748e920fd4": {
         "name": "Floristics - Standard",
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "floristics-veg-survey-lites",
-        "startDatePath": "attributes.start_date_time",
-        "endDatePath": "attributes.end_date_time",
-        "surveyIdPath": "attributes.surveyId"
+        "startDatePath": "start_date_time",
+        "endDatePath": "end_date_time"
     },
     "b92005b0-f418-4208-8671-58993089f587": {
         "name": "Plant Tissue Vouchering - Enhanced",
@@ -144,8 +139,8 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "basal-area-dbh-measure-surveys",
-        "startDatePath": "attributes.start_date",
-        "endDatePath": "attributes.start_date",
+        "startDatePath": "start_date",
+        "endDatePath": "start_date",
         "overrides": {
             "dataModel": {
                 "floristics-veg-voucher-full.host_species": {
@@ -369,8 +364,8 @@ var protocols = {
         "usesPlotLayout": false,
         "tags": ["intervention"],
         "apiEndpoint": "pest-fauna-control-activities",
-        "startDatePath": "attributes.start_time",
-        "endDatePath": "attributes.end_time",
+        "startDatePath": "start_time",
+        "endDatePath": "end_time",
         "geometryType": "LineString"
     },
     "228e5e1e-aa9f-47a3-930b-c1468757f81d": {

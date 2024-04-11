@@ -8,6 +8,7 @@
         </div>
     </div>
 </div>
+<g:if test="${grailsApplication.config.getProperty("app.enableALAHarvestSetting", Boolean)}">
 <div class="row mb-2">
     <div class="col-sm-12">
         <label for="name" class="control-label">Harvest records to ALA</label>
@@ -18,6 +19,7 @@
         </div>
     </div>
 </div>
+</g:if>
 <div class="row mb-2">
     <div class="col-sm-6">
         <label class="control-label" for="organisation">Search for an organisation</label>

@@ -2153,10 +2153,6 @@ class ProjectService  {
         return project.reports.size() > 0
     }
 
-    List fetchDataSetRecords (String projectId, String dataSetId) {
-        webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + "project/$projectId/dataSet/$dataSetId/records")
-    }
-
     /**
      * Updates all of the data set summaries for the supplied data set ids with the supplied properties.
      * @param dataSetIds
