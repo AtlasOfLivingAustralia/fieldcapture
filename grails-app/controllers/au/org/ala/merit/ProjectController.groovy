@@ -1149,18 +1149,44 @@ class ProjectController {
         null
     }
 
-    def agAnnualReport(String id) {
-        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/projectMetrics/' + id
-        Map params = [approvedOnly:false, scoreIds: [
-                'e7701823-e534-414e-80f5-86f9eecef50c',
-                'f474c538-c8d7-4431-86c3-741163a50a35'
-        ]]
+    @PreAuthorise(accessLevel = 'editor')
+    /**
+     * This method accepts an end date for a financial year and a list of scoreIds and
+     * returns the requested aggregate data for the year.
+     *
+     * This was developed for the SAF Ag Annual report to pull tabular data into
+     * the report so also flattens the nested Lists that result from the SET score type
+     * into a single list.
+     *
+     */
+    def annualReport(String id) {
 
-        Map result = webService.doPost(url, params)
-        if (result.resp) {
-            result.resp = result.resp.collect{new Score(it)}
+        String financialYearEndDate = params.financialYearEndDate
+        List scoreIds = params.getList('scoreIds')
+
+        if (!financialYearEndDate || !scoreIds) {
+            render status:400, error:'Required parameters not provided'
+            return
         }
-        render result as JSON
+
+        DateTime financialYearStart = DateUtils.alignToFinancialYear(DateUtils.parse(financialYearEndDate))
+        String year = financialYearStart.year + " - " + (financialYearStart.year+1)
+
+
+        Map result = projectService.scoresByFinancialYear(id, scoreIds)
+
+        List financialYearData = result?.resp?.find{it.group == year}?.results ?: []
+
+        Map reportData = scoreIds.collectEntries { String scoreId ->
+            Map scoreResult = financialYearData.find{it.scoreId == scoreId}
+            def data = scoreResult?.result?.result
+            if (data instanceof List) {
+                data = data.flatten() // Collate a List of tables from each report into a flat List for display
+            }
+            [(scoreId): data]
+        }
+
+        render reportData as JSON
     }
 
     private def error(String message, String projectId) {

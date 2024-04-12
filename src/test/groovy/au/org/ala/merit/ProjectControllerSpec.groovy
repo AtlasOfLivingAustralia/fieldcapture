@@ -947,6 +947,27 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         result == null
     }
 
+    def "The annualReport method delegates to the projectService to get the data then simplifies the result"() {
+        setup:
+        String projectId = 'p1'
+        List scoreIds = ['s1', 's2']
+        Map resp = [resp:[[group:'2023 - 2024', count:4, results:[
+                [scoreId:'s1', result: [ count: 2, result: ['a', 'b']]],
+                [scoreId:'s2', result: [ count: 2, result: [['a', 'b'], ['c']]]],
+
+        ]]]]
+
+        when:
+        params.id = projectId
+        params.scoreIds = scoreIds
+        params.financialYearEndDate = '2024-06-30'
+        controller.annualReport()
+
+        then:
+        1 * projectService.scoresByFinancialYear(projectId, scoreIds) >> resp
+        response.json == [s1:['a', 'b'], s2:['a', 'b', 'c']]
+    }
+
     private Map stubPublicUser() {
         userServiceStub.getUser() >> null
         null

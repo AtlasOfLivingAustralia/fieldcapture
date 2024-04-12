@@ -18,7 +18,7 @@ let scores = [
                 type: 'filter',
                 property: 'name'
             },
-            childAggregations: [ { property: 'data', type: 'SET' } ]
+            childAggregations: [{property: 'data', type: 'SET'}]
         }
     },
 
@@ -40,18 +40,88 @@ let scores = [
                 type: 'filter',
                 property: 'name'
             },
-            childAggregations: [ { property: 'data.engagementDetails', type: 'SET' } ]
+            childAggregations: [{property: 'data.engagementDetails', type: 'SET'}]
+        }
+    },
+
+    {
+        scoreId: '06c401d9-1370-48d1-9c30-9a6846128f71', // Deliberately coding the score ids to keep consistency between test & prod
+        entityTypes: [],
+        tags: [],
+        displayType: '',
+        entity: 'Activity',
+        outputType: 'NHT - Coordinate',
+        isOutputTarget: false,
+        category: 'Annual Reporting',
+        status: 'active',
+        label: 'All NHT Coordinate data from the NHT Output report',
+        description: 'All NHT Coordinate data from the NHT Output report',
+        configuration: {
+            filter: {
+                filterValue: 'NHT - Coordinate',
+                type: 'filter',
+                property: 'name'
+            },
+            childAggregations: [{property: 'data', type: 'SET'}]
+        }
+    },
+
+    {
+        scoreId: 'c6b2f62b-06c7-4ea6-9cb3-61ce26ab8200', // Deliberately coding the score ids to keep consistency between test & prod
+        entityTypes: [],
+        tags: [],
+        displayType: '',
+        entity: 'Activity',
+        outputType: 'NHT - Coordinate',
+        isOutputTarget: false,
+        category: 'Annual Reporting',
+        status: 'active',
+        label: 'All NHT Coordinate planning meetings reporting in the NHT Output report',
+        description: 'All NHT Coordinate planning meetings reporting in the NHT Output report',
+        configuration: {
+            filter: {
+                filterValue: 'NHT - Coordinate',
+                type: 'filter',
+                property: 'name'
+            },
+            childAggregations: [{property: 'data.meetingDetails', type: 'SET'}]
+        }
+    },
+
+    {
+        scoreId: 'c6b2f62b-06c7-4ea6-9cb3-61ce26ab8200', // Deliberately coding the score ids to keep consistency between test & prod
+        entityTypes: [],
+        tags: [],
+        displayType: '',
+        entity: 'Activity',
+        outputType: 'NHT - Coordinate',
+        isOutputTarget: false,
+        category: 'Annual Reporting',
+        status: 'active',
+        label: 'All NHT Coordinate planning meetings reporting in the NHT Output report',
+        description: 'All NHT Coordinate planning meetings reporting in the NHT Output report',
+        configuration: {
+            filter: {
+                filterValue: 'NHT - Coordinate',
+                type: 'filter',
+                property: 'name'
+            },
+            childAggregations: [
+                {
+                    filter: {filterValue: 'Yes', type: 'filter', property: 'data.facilitatedPlanningMeetings'},
+                    childAggregations: [{property: 'data.meetingDetails', type: 'SET'}]
+                }
+            ]
         }
     }
 
 ];
 
-for (let i=0; i<scores.length; i++) {
+for (let i = 0; i < scores.length; i++) {
     let score = db.score.findOne({scoreId: scores[i].scoreId});
     if (!score) {
         db.score.insert(scores[i]);
-    }
-    else {
+    } else {
         db.score.replaceOne({scoreId: scores[i].scoreId}, scores[i]);
     }
 }

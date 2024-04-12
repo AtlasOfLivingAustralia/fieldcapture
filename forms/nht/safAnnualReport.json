@@ -1,40 +1,317 @@
 {
-  "name": "SAF Annual Report",
+  "name": "NHT SAF Annual Report",
   "description": null,
   "type": "Activity",
   "sections": [
     {
       "collapsedByDefault": false,
       "modelName": null,
-      "templateName": "outputReportData",
+      "templateName": "nhtSafAnnualReport",
       "optional": false,
       "optionalQuestionText": null,
-      "title": "Output report data",
+      "title": "SAF Annual Report",
       "collapsibleHeading": null,
-      "name": "Output report data",
+      "name": "NHT SAF Annual Report",
       "description": null,
       "template": {
+        "modelName": "NHT SAF Annual Report",
+        "title": "Sustainable Agriculture Facilitators (SAF) Annual Report",
         "dataModel": [
           {
             "name": "communicationsDuringPeriod",
             "dataType": "list",
+            "allowRowDelete": false,
             "columns": [
               {
+                "name": "nhtCommunications",
                 "dataType": "text",
-                "name": "communications"
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
+                "readonly": true
+              },
+              {
+                "dataType": "text",
+                "name": "yesCommunicationsMaterial",
+                "readonly": true
+              },
+              {
+                "dataType": "document",
+                "name": "attachments"
               }
             ]
+          },
+          {
+            "name": "engagementDetails",
+            "dataType": "list",
+            "columns": [
+              {
+                "dataType": "stringList",
+                "name": "engagementType",
+                "constraints": [
+                  "One-on-one technical advice",
+                  "Negotiations with the community, etc.",
+                  "Facilitating/Hosting on-ground trials/demos",
+                  "Hosting workshops",
+                  "Facilitating/Hosting conferences/seminars"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "engagementTitle"
+              },
+              {
+                "dataType": "text",
+                "name": "engagementPurpose"
+              },
+              {
+                "dataType": "number",
+                "name": "engagementNoParticipants"
+              },
+              {
+                "dataType": "date",
+                "name": "activityDateFrom"
+              },
+              {
+                "dataType": "date",
+                "name": "activityDateTo"
+              }
+            ]
+          },
+          {
+            "name": "projectPlans",
+            "dataType": "list",
+            "allowRowDelete": false,
+            "columns": [
+              {
+                "name": "plansDeveloped",
+                "dataType": "text",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
+                "readonly": true
+              },
+              {
+                "dataType": "text",
+                "name": "planName",
+                "readonly": true
+              },
+              {
+                "dataType": "text",
+                "name": "planPurpose",
+                "readonly": true
+              }
+            ]
+          },
+          {
+            "name": "planningMeetings",
+            "dataType": "list",
+            "allowRowDelete": false,
+            "columns": [
+              {
+                "name": "meetingDateFrom",
+                "dataType": "date",
+                "readonly": true
+              },
+              {
+                "name": "meetingDateTo",
+                "dataType": "date",
+                "readonly": true
+              },
+              {
+                "dataType": "text",
+                "name": "meetingName",
+                "readonly": true
+              },
+              {
+                "dataType": "text",
+                "name": "meetingDescription",
+                "readonly": true
+              }
+            ]
+          },
+          {
+            "dataType": "number",
+            "name": "numberOfCommunityGroupsSupported",
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "number",
+            "name": "numberOfFarmsAdoptingSustainablePractices",
+            "validate": "required,min[0]"
           }
         ],
         "viewModel": [
+
           {
             "type": "table",
-            "title": "Communications",
+            "title": "<b>Communications material published during the year</b>",
+            "source": "communicationsDuringPeriod",
+            "userAddedRows": true,
+            "disableTableDownload": true,
+            "disableTableUpload": true,
             "columns": [
               {
+                "type": "selectOne",
+                "source": "nhtCommunications",
+                "title": "Communications published?",
+                "readonly": true,
+                "width": "10%"
+              },
+              {
                 "type": "text",
-                "source": "yesCommunicationsMaterial"
-
+                "source": "yesCommunicationsMaterial",
+                "title": "Communications material",
+                "readonly": true,
+                "width": "50%"
+              },
+              {
+                "title": "Attached documents",
+                "source": "attachments",
+                "type": "document",
+                "readonly": true,
+                "noEdit": true,
+                "width": "40%"
+              }
+            ]
+          },
+          {
+            "type": "table",
+            "source": "engagementDetails",
+            "title": "<b>Community engagement activities undertaken during the year</b>",
+            "userAddedRows": false,
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "source": "engagementType",
+                "type": "selectOne",
+                "width": "20%",
+                "title": "Type",
+                "readonly": true
+              },
+              {
+                "source": "engagementTitle",
+                "type": "text",
+                "width": "25%",
+                "title": "Title",
+                "readonly": true
+              },
+              {
+                "type": "textarea",
+                "source": "engagementPurpose",
+                "width": "25%",
+                "title": "Purpose",
+                "rows": 4,
+                "readonly": true
+              },
+              {
+                "source": "engagementNoParticipants",
+                "type": "number",
+                "width": "10%",
+                "title": "Number of participants",
+                "readonly": true
+              },
+              {
+                "title": "Activity Date from",
+                "source": "activityDateFrom",
+                "type": "date",
+                "width": "10%",
+                "readonly": true
+              },
+              {
+                "title": "Activity Date to",
+                "source": "activityDateTo",
+                "type": "date",
+                "width": "10%",
+                "readonly": true
+              }
+            ]
+          },
+          {
+            "type": "literal",
+            "source": "<h4>Coordinate Projects and MERI</h4>"
+          },
+          {
+            "type": "table",
+            "source": "projectPlans",
+            "title": "<b>Site / Project / Monitoring plans developed during the year</b>",
+            "userAddedRows": false,
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "source": "plansDeveloped",
+                "type": "selectOne",
+                "width": "10%",
+                "title": "Type",
+                "readonly": true
+              },
+              {
+                "source": "planName",
+                "type": "text",
+                "width": "30%",
+                "title": "Title",
+                "readonly": true
+              },
+              {
+                "source": "planPurpose",
+                "type": "textarea",
+                "width": "60%",
+                "title": "Title",
+                "readonly": true
+              }
+            ]
+          },
+          {
+            "type": "table",
+            "source": "planningMeetings",
+            "title": "<b>Project meetings held during the year</b>",
+            "userAddedRows": false,
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "source": "meetingDateFrom",
+                "type": "date",
+                "width": "10%",
+                "title": "From",
+                "readonly": true
+              },
+              {
+                "source": "meetingDateTo",
+                "type": "date",
+                "width": "10%",
+                "title": "To",
+                "readonly": true
+              },
+              {
+                "source": "meetingName",
+                "type": "text",
+                "width": "30%",
+                "title": "Name",
+                "readonly": true
+              },
+              {
+                "source": "meetingDescription",
+                "type": "text",
+                "width": "50%",
+                "title": "Description",
+                "readonly": true
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "number",
+                "source": "numberOfCommunityGroupsSupported",
+                "preLabel": "Number of community groups supported through the project"
+              },
+              {
+                "type": "number",
+                "source": "numberOfFarmsAdoptingSustainablePractices",
+                "preLabel": "How many farms have adopted sustainable agriculture practices through the project?"
               }
             ]
           }
@@ -42,7 +319,7 @@
         "pre-populate": [
           {
             "source": {
-              "url": "/project/agReport/",
+              "url": "/project/annualReport/",
               "params": [
                 {
                   "expression": "owner.projectId",
@@ -53,47 +330,52 @@
                   "expression": "activity.plannedEndDate",
                   "name": "financialYearEndDate",
                   "type": "computed"
+                },
+                {
+                  "name": "scoreIds",
+                  "value": [
+                    "e7701823-e534-414e-80f5-86f9eecef50c",
+                    "f474c538-c8d7-4431-86c3-741163a50a35",
+                    "06c401d9-1370-48d1-9c30-9a6846128f71",
+                    "c6b2f62b-06c7-4ea6-9cb3-61ce26ab8200"
+                  ]
                 }
               ]
-
             },
             "merge": {
               "communicationsDuringPeriod": {
                 "keys": [
                   "yesCommunicationsMaterial"
                 ],
-
+                "addUnmatchedNewRows": true,
+                "deleteUnmatchedExistingRows": true
+              },
+              "engagementDetails": {
+                "keys": [
+                  "engagementTitle"
+                ],
                 "addUnmatchedNewRows": true,
                 "deleteUnmatchedExistingRows": true
               }
             },
             "mapping": [
               {
-                "mapping": [
-                  {
-                    "source-path": "service",
-                    "target": "serviceName"
-                  },
-                  {
-                    "source-path": "targetMeasure",
-                    "target": "targetMeasure"
-                  },
-                  {
-                    "source-path": "scoreId",
-                    "target": "scoreId"
-                  },
-                  {
-                    "source-path": "financialYearTarget",
-                    "target": "annualTarget"
-                  },
-                  {
-                    "source-path": "financialYearResult",
-                    "target": "result"
-                  }
-                ],
-                "source-path": "targets",
+                "source-path": "e7701823-e534-414e-80f5-86f9eecef50c",
                 "target": "communicationsDuringPeriod"
-              }]
+              },
+              {
+                "source-path": "f474c538-c8d7-4431-86c3-741163a50a35",
+                "target": "engagementDetails"
+              },
+              {
+                "source-path": "06c401d9-1370-48d1-9c30-9a6846128f71",
+                "target": "projectPlans"
+              },
+              {
+                "source-path": "c6b2f62b-06c7-4ea6-9cb3-61ce26ab8200",
+                "target": "planningMeetings"
+              }
+            ]
           }
         ]
       }
