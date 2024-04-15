@@ -1192,7 +1192,7 @@ class ProjectController {
         Map reportData = scoreIds.collectEntries { String scoreId ->
             Map scoreResult = financialYearData.find{it.scoreId == scoreId}
             def data = scoreResult?.result
-            log.warn(data.toString())
+
             if (data?.result) {
                 data = data.result
                 if (data instanceof List) {
@@ -1200,14 +1200,10 @@ class ProjectController {
                 }
             }
             else if (data?.groups) {
-                log.warn( "Data before")
-                log.warn(data.toString())
                 data = data.groups
                 data.each { Map group ->
                     group.result = group.results?[0]?.result
                 }
-                log.warn "Data after"
-                log.warn data.toString()
             }
 
             [(scoreId): data]
