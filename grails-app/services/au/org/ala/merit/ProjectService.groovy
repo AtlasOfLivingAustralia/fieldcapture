@@ -3,7 +3,6 @@ package au.org.ala.merit
 import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
-import au.org.ala.merit.reports.ReportLifecycleListener
 import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportGenerator
 import au.org.ala.merit.reports.ReportOwner
@@ -14,11 +13,7 @@ import org.apache.commons.lang.CharUtils
 import org.apache.http.HttpStatus
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
-import org.joda.time.Days
-import org.joda.time.Interval
-import org.joda.time.Period
+import org.joda.time.*
 
 import java.text.SimpleDateFormat
 
@@ -2223,4 +2218,24 @@ class ProjectService  {
         result
     }
 
+    List getSpeciesRecordsFromActivity (String activityId) {
+        if (activityId) {
+            String displayFormat = 'SCIENTIFICNAME(COMMONNAME)'
+            String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}record/listForActivity/${activityId}"
+            def records = webService.getJson(url)?.records
+
+            records?.each { record ->
+                record.species = [
+                        scientificName: record.scientificName,
+                        commonName: record.vernacularName,
+                        outputSpeciesId: record.outputSpeciesId,
+                        guid: record.scientificNameID ?: record.guid ?: record.taxonConceptID ?: "A_GUID"
+                ]
+
+                record.species.name = speciesService.formatSpeciesName(displayFormat, record.species)
+            }
+
+            records
+        }
+    }
 }

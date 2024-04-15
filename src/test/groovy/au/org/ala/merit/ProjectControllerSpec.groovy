@@ -947,6 +947,21 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         result == null
     }
 
+    def "Get species record for an activity id" (String activityId, int statusCode, int numberOfCalls, def data) {
+        when:
+        request.method = 'GET'
+        controller.getSpeciesRecordsFromActivity (activityId)
+
+        then:
+        numberOfCalls * projectService.getSpeciesRecordsFromActivity (activityId) >> data
+        controller.response.status == statusCode
+
+        where:
+        activityId | statusCode | numberOfCalls | data
+        null | 400 | 0 | null
+        "abc" | 200 | 1 | []
+    }
+
     def "The annualReport method delegates to the projectService to get the data then simplifies the result"() {
         setup:
         String projectId = 'p1'

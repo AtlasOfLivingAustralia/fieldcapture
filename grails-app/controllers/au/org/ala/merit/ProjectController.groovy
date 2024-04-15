@@ -1150,6 +1150,16 @@ class ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'editor')
+    def getSpeciesRecordsFromActivity (String activityId) {
+        if(!activityId) {
+            render status: HttpStatus.SC_BAD_REQUEST, text: [message: 'Activity ID must be supplied'] as JSON
+            return
+        }
+
+        render projectService.getSpeciesRecordsFromActivity(activityId) as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
     /**
      * This method accepts an end date for a financial year and a list of scoreIds and
      * returns the requested aggregate data for the year.
