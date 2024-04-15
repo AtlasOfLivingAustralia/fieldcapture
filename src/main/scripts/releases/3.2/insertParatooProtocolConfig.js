@@ -1,55 +1,3 @@
-var protocolConfig = {
-    // Vegetation Mapping Survey
-    "cd2cbbc7-2f17-4b0f-91b4-06f46e9c90f2": {
-        apiEndpoint: "vegetation-mapping-observations",
-        usesPlotLayout: false,
-        geometryType: "Point",
-        geometryPath: "attributes.position",
-        startDatePath: "attributes.vegetation_mapping_survey.data.attributes.start_date_time",
-        endDatePath: null,
-        surveyIdPath: "attributes.vegetation_mapping_survey.data.attributes.surveyId"
-    },
-    "floristics-veg-survey-lite": {
-        apiEndpoint: "floristics-veg-survey-lites",
-        usesPlotLayout: true,
-        startDatePath: "attributes.start_date_time",
-        endDatePath: "attributes.end_date_time",
-        surveyIdPath: "attributes.surveyId"
-    },
-    "floristics-veg-survey-fulls": {
-        apiEndpoint: "floristics-veg-survey-fulls",
-        usesPlotLayout: true,
-        startDatePath: "attributes.start_date_time",
-        endDatePath: "attributes.end_date_time",
-        surveyIdPath: "attributes.surveyId"
-    },
-    "photopoints-survey": {
-        apiEndpoint: "photopoints-surveys",
-        usesPlotLayout: true,
-        startDatePath: "attributes.start_date_time",
-        endDatePath: "attributes.end_date_time",
-        surveyIdPath: "attributes.surveyId"
-    },
-    // Pest Fauna Control Activities
-    "80360ceb-bd6d-4ed4-b2ea-9bd45d101d0e": {
-        apiEndpoint: "pest-fauna-control-activities",
-        usesPlotLayout: false,
-        startDatePath: "attributes.start_time",
-        endDatePath: "attributes.end_time",
-        geometryType: "LineString",
-        point1: "attributes.start_location", // Type string: format: Lat: -35.2592426, Lng: 149.0651714
-        point2: "attributes.end_location" // Format: Lat: -35.2592426, Lng: 149.0651714
-
-    },
-    // Basal Area DBH
-    "5005b0af-4360-4a8c-a203-b2c9e440547e": {
-        apiEndpoint: "basal-area-dbh-measure-surveys",
-        usesPlotLayout: true,
-        startDatePath: "attributes.start_date",
-        endDatePath: "attributes.start_date",
-    }
-};
-
 var protocols = {
     "068d17e8-e042-ae42-1e42-cff4006e64b0":
         {
@@ -72,10 +20,8 @@ var protocols = {
         "tags": ["survey"],
         "apiEndpoint": "vegetation-mapping-surveys",
         "geometryType": "Point",
-        "geometryPath": "attributes.position",
-        "startDatePath": "attributes.vegetation_mapping_survey.data.attributes.start_date_time",
-        "endDatePath": null,
-        "surveyIdPath": "attributes.vegetation_mapping_survey.data.attributes.surveyId"
+        "startDatePath": "start_date_time",
+        "endDatePath": null
     },
     "a9cb9e38-690f-41c9-8151-06108caf539d":
         {
@@ -121,9 +67,8 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "photopoints-surveys",
-        "startDatePath": "attributes.start_date_time",
-        "endDatePath": "attributes.end_date_time",
-        "surveyIdPath": "attributes.surveyId"
+        "startDatePath": "start_date_time",
+        "endDatePath": "end_date_time"
     },
     "2dbb595b-3541-46bd-b200-13db3a823b74": {
         "name": "Photopoints - Device Panorama",
@@ -136,18 +81,16 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "floristics-veg-survey-fulls",
-        "startDatePath": "attributes.start_date_time",
-        "endDatePath": "attributes.end_date_time",
-        "surveyIdPath": "attributes.surveyId"
+        "startDatePath": "start_date_time",
+        "endDatePath": "end_date_time"
     },
     "bbd550c0-04c5-4a8c-ae39-cc748e920fd4": {
         "name": "Floristics - Standard",
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "floristics-veg-survey-lites",
-        "startDatePath": "attributes.start_date_time",
-        "endDatePath": "attributes.end_date_time",
-        "surveyIdPath": "attributes.surveyId"
+        "startDatePath": "start_date_time",
+        "endDatePath": "end_date_time"
     },
     "b92005b0-f418-4208-8671-58993089f587": {
         "name": "Plant Tissue Vouchering - Enhanced",
@@ -192,12 +135,12 @@ var protocols = {
         "apiEndpoint": "fire-surveys"
     },
     "5005b0af-4360-4a8c-a203-b2c9e440547e": {
-        "name": "Basal Area - DBH", 
-        "usesPlotLayout": true, 
+        "name": "Basal Area - DBH",
+        "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "basal-area-dbh-measure-surveys",
-        "startDatePath": "attributes.start_date",
-        "endDatePath": "attributes.start_date",
+        "startDatePath": "start_date",
+        "endDatePath": "start_date",
         "overrides": {
             "dataModel": {
                 "floristics-veg-voucher-full.host_species": {
@@ -421,8 +364,8 @@ var protocols = {
         "usesPlotLayout": false,
         "tags": ["intervention"],
         "apiEndpoint": "pest-fauna-control-activities",
-        "startDatePath": "attributes.start_time",
-        "endDatePath": "attributes.end_time",
+        "startDatePath": "start_time",
+        "endDatePath": "end_time",
         "geometryType": "LineString"
     },
     "228e5e1e-aa9f-47a3-930b-c1468757f81d": {
@@ -443,7 +386,7 @@ var protocols = {
         "tags": ["survey"],
         "overrides": {
             "dataModel": {
-                "sign-based-track-station-survey-setup.sign-based-track-station-observation.tracks.number_of_individuals": {
+                "sign-based-track-station-observation.tracks.number_of_individuals": {
                     "dwcAttribute": "individualCount"
                 }
             }
@@ -464,6 +407,9 @@ var protocols = {
         "overrides": {
             "dataModel": {
                 "herbivory-and-physical-damage-belt-transect-setup.target_species.lut": {
+                    "dataType": "species"
+                },
+                "herbivory-and-physical-damage-belt-transect-setup.target_species.other_species.other_species": {
                     "dataType": "species"
                 },
                 "herbivory-and-physical-damage-transect.quadrat.quadrat_observation.herbivory_attributable_fauna_species.lut": {

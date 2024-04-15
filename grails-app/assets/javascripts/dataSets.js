@@ -92,6 +92,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.grantId = dataSet.grantId;
     self.projectName = dataSet.projectName;
     self.programName = dataSet.programName;
+    self.activityId = dataSet.activityId;
     self.programOutcome = ko.observable(dataSet.programOutcome);
     self.investmentPriorities = ko.observableArray(dataSet.investmentPriorities);
     self.otherInvestmentPriority = ko.observable(dataSet.otherInvestmentPriority);

@@ -824,6 +824,25 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
     self.planStatus = ko.observable(project.planStatus);
     self.mapLoaded = ko.observable(false);
     self.transients.variation = ko.observable();
+    self.alaHarvest = ko.observable(project.alaHarvest ? true : false);
+    self.alaHarvest.subscribe(function(newValue) {
+        var data = {alaHarvest: newValue};
+        self.saveProjectDataWithoutValidation(data);
+    });
+    self.transients.yesNoOptions = ["Yes","No"];
+    self.transients.alaHarvest = ko.computed({
+        read: function () {
+            return self.alaHarvest() ? 'Yes' : 'No';
+        },
+        write: function (newValue) {
+            if (newValue === 'Yes') {
+                self.alaHarvest(true);
+            } else if (newValue === 'No') {
+                self.alaHarvest(false);
+            }
+        }
+    });
+
 
     self.transients.startDateInvalid = ko.observable(false);
     self.transients.disableSave = ko.pureComputed(function() {

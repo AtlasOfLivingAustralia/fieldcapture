@@ -1,8 +1,7 @@
 package au.org.ala.fieldcapture
 
-import org.openqa.selenium.ElementNotInteractableException
+
 import pages.ManagementUnitPage
-import pages.RlpProjectPage
 
 class ManagementUnitPermissionSpec extends StubbedCasSpec {
     def setupSpec() {

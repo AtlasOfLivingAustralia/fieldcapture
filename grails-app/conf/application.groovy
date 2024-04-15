@@ -1,5 +1,3 @@
-import grails.util.Environment
-
 /******************************************************************************\
  *  CONFIG MANAGEMENT
  \******************************************************************************/
@@ -159,6 +157,9 @@ if(!upload.images.path){
 }
 if(!app.http.header.userId){
     app.http.header.userId = "X-ALA-userId"
+}
+if (!app.enableALAHarvestSetting) {
+    app.enableALAHarvestSetting = false
 }
 
 ecodata.baseUrl = "https://ecodata-test.ala.org.au/ws/"

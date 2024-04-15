@@ -1149,6 +1149,16 @@ class ProjectController {
         null
     }
 
+    @PreAuthorise(accessLevel = 'editor')
+    def getSpeciesRecordsFromActivity (String activityId) {
+        if(!activityId) {
+            render status: HttpStatus.SC_BAD_REQUEST, text: [message: 'Activity ID must be supplied'] as JSON
+            return
+        }
+
+        render projectService.getSpeciesRecordsFromActivity(activityId) as JSON
+    }
+
     private def error(String message, String projectId) {
         flash.message = message
         if (projectId) {
