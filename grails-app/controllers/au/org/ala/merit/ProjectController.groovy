@@ -1187,6 +1187,8 @@ class ProjectController {
 
         List financialYearData = result?.resp?.find{it.group == year}?.results ?: []
 
+        println financialYearData
+
         Map reportData = scoreIds.collectEntries { String scoreId ->
             Map scoreResult = financialYearData.find{it.scoreId == scoreId}
             def data = scoreResult?.result
@@ -1197,10 +1199,14 @@ class ProjectController {
                 }
             }
             else if (data?.groups) {
+                println "Data before"
+                println data
                 data = data.groups
                 data.each { Map group ->
                     group.result = group.results?[0]?.result
                 }
+                println "Data after"
+                println data
             }
 
             [(scoreId): data]
