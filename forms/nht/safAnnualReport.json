@@ -23,59 +23,76 @@
             "allowRowDelete": false,
             "columns": [
               {
-                "name": "nhtCommunications",
-                "dataType": "text",
-                "constraints": [
-                  "Yes",
-                  "No"
-                ],
-                "readonly": true
-              },
-              {
                 "dataType": "text",
                 "name": "yesCommunicationsMaterial",
                 "readonly": true
-              },
-              {
-                "dataType": "document",
-                "name": "attachments"
               }
             ]
           },
           {
-            "name": "engagementDetails",
+            "name": "numberOfCommunicationsMaterialsPublished",
+            "dataType": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(communicationsDuringPeriod, \"yesCommunicationsMaterial\")"
+            }
+          },
+          {
+            "name": "engagementsByType",
             "dataType": "list",
             "columns": [
               {
-                "dataType": "stringList",
-                "name": "engagementType",
-                "constraints": [
-                  "One-on-one technical advice",
-                  "Negotiations with the community, etc.",
-                  "Facilitating/Hosting on-ground trials/demos",
-                  "Hosting workshops",
-                  "Facilitating/Hosting conferences/seminars"
-                ]
-              },
-              {
                 "dataType": "text",
-                "name": "engagementTitle"
-              },
-              {
-                "dataType": "text",
-                "name": "engagementPurpose"
+                "name": "engagementType"
               },
               {
                 "dataType": "number",
-                "name": "engagementNoParticipants"
+                "name": "numberOfEngagements"
               },
               {
-                "dataType": "date",
-                "name": "activityDateFrom"
+                "dataType": "number",
+                "name": "numberOfParticipants",
+                "decimalPlaces": 0,
+                "computed": {
+                  "expression": "sum(engagementDetails, \"engagementNoParticipants\")"
+                }
               },
               {
-                "dataType": "date",
-                "name": "activityDateTo"
+                "name": "engagementDetails",
+                "dataType": "list",
+                "columns": [
+                  {
+                    "dataType": "stringList",
+                    "name": "engagementType",
+                    "constraints": [
+                      "One-on-one technical advice",
+                      "Negotiations with the community, etc.",
+                      "Facilitating/Hosting on-ground trials/demos",
+                      "Hosting workshops",
+                      "Facilitating/Hosting conferences/seminars"
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "engagementTitle"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "engagementPurpose"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "engagementNoParticipants"
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "activityDateFrom"
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "activityDateTo"
+                  }
+                ]
               }
             ]
           },
@@ -84,15 +101,6 @@
             "dataType": "list",
             "allowRowDelete": false,
             "columns": [
-              {
-                "name": "plansDeveloped",
-                "dataType": "text",
-                "constraints": [
-                  "Yes",
-                  "No"
-                ],
-                "readonly": true
-              },
               {
                 "dataType": "text",
                 "name": "planName",
@@ -104,6 +112,14 @@
                 "readonly": true
               }
             ]
+          },
+          {
+            "dataType": "number",
+            "name": "numberOfPlans",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(projectPlans, \"planName\")"
+            }
           },
           {
             "name": "planningMeetings",
@@ -134,6 +150,14 @@
           },
           {
             "dataType": "number",
+            "name": "numberOfMeetings",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(planningMeetings, \"meetingName\")"
+            }
+          },
+          {
+            "dataType": "number",
             "name": "numberOfCommunityGroupsSupported",
             "validate": "required,min[0]"
           },
@@ -144,94 +168,169 @@
           }
         ],
         "viewModel": [
-
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "This section provides a summary of the reported Project Support & Overheads data during the previous finanical year."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Communications</h3>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "items": [
+                  {
+                    "type": "number",
+                    "source": "numberOfCommunicationsMaterialsPublished",
+                    "preLabel": "Total number of communications materials published during the year"
+                  }
+                ]
+              }
+            ]
+          },
           {
             "type": "table",
             "title": "<b>Communications material published during the year</b>",
             "source": "communicationsDuringPeriod",
-            "userAddedRows": true,
+            "userAddedRows": false,
             "disableTableDownload": true,
             "disableTableUpload": true,
             "columns": [
-              {
-                "type": "selectOne",
-                "source": "nhtCommunications",
-                "title": "Communications published?",
-                "readonly": true,
-                "width": "10%"
-              },
               {
                 "type": "text",
                 "source": "yesCommunicationsMaterial",
                 "title": "Communications material",
                 "readonly": true,
                 "width": "50%"
-              },
-              {
-                "title": "Attached documents",
-                "source": "attachments",
-                "type": "document",
-                "readonly": true,
-                "noEdit": true,
-                "width": "40%"
               }
             ]
           },
           {
-            "type": "table",
-            "source": "engagementDetails",
-            "title": "<b>Community engagement activities undertaken during the year</b>",
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "columns": [
+            "type": "row",
+            "items": [
               {
-                "source": "engagementType",
-                "type": "selectOne",
-                "width": "20%",
-                "title": "Type",
-                "readonly": true
-              },
-              {
-                "source": "engagementTitle",
-                "type": "text",
-                "width": "25%",
-                "title": "Title",
-                "readonly": true
-              },
-              {
-                "type": "textarea",
-                "source": "engagementPurpose",
-                "width": "25%",
-                "title": "Purpose",
-                "rows": 4,
-                "readonly": true
-              },
-              {
-                "source": "engagementNoParticipants",
-                "type": "number",
-                "width": "10%",
-                "title": "Number of participants",
-                "readonly": true
-              },
-              {
-                "title": "Activity Date from",
-                "source": "activityDateFrom",
-                "type": "date",
-                "width": "10%",
-                "readonly": true
-              },
-              {
-                "title": "Activity Date to",
-                "source": "activityDateTo",
-                "type": "date",
-                "width": "10%",
-                "readonly": true
+                "type": "literal",
+                "source": "<h3>Engagement activities or events, to the Community, which are directly relevant to delivery of Project</h3>"
               }
             ]
           },
           {
-            "type": "literal",
-            "source": "<h4>Coordinate Projects and MERI</h4>"
+            "type": "repeat",
+            "source": "engagementsByType",
+            "items": [
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "text",
+                    "source": "engagementType",
+                    "preLabel": "Type of engagements",
+                    "readonly": true
+                  },
+                  {
+                    "type": "number",
+                    "source": "numberOfEngagements",
+                    "preLabel": "Number of engagements of this type",
+                    "readonly": true
+                  },
+                  {
+                    "type": "number",
+                    "source": "numberOfParticipants",
+                    "preLabel": "Total number of participants",
+                    "readonly": true
+                  }
+                ]
+              },
+              {
+                "type": "table",
+                "source": "engagementDetails",
+                "title": "<b>Community engagement activities undertaken during the year</b>",
+                "userAddedRows": false,
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "source": "engagementType",
+                    "type": "selectOne",
+                    "width": "20%",
+                    "title": "Type",
+                    "readonly": true
+                  },
+                  {
+                    "source": "engagementTitle",
+                    "type": "text",
+                    "width": "25%",
+                    "title": "Title",
+                    "readonly": true
+                  },
+                  {
+                    "type": "textarea",
+                    "source": "engagementPurpose",
+                    "width": "25%",
+                    "title": "Purpose",
+                    "rows": 4,
+                    "readonly": true
+                  },
+                  {
+                    "source": "engagementNoParticipants",
+                    "type": "number",
+                    "width": "10%",
+                    "title": "Number of participants",
+                    "readonly": true
+                  },
+                  {
+                    "title": "Activity Date from",
+                    "source": "activityDateFrom",
+                    "type": "date",
+                    "width": "10%",
+                    "readonly": true
+                  },
+                  {
+                    "title": "Activity Date to",
+                    "source": "activityDateTo",
+                    "type": "date",
+                    "width": "10%",
+                    "readonly": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Coordinate Projects and MERI</h3>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "items": [
+                  {
+                    "type": "number",
+                    "source": "numberOfPlans",
+                    "preLabel": "Total number of site/ project/ monitoring plans developed"
+                  }
+                ]
+              }
+            ]
           },
           {
             "type": "table",
@@ -240,13 +339,6 @@
             "userAddedRows": false,
             "disableTableUpload": true,
             "columns": [
-              {
-                "source": "plansDeveloped",
-                "type": "selectOne",
-                "width": "10%",
-                "title": "Type",
-                "readonly": true
-              },
               {
                 "source": "planName",
                 "type": "text",
@@ -261,6 +353,22 @@
                 "title": "Title",
                 "readonly": true
               }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "items": [
+                  {
+                    "type": "number",
+                    "source": "numberOfMeetings",
+                    "preLabel": "Total number of planning meetings"
+                  }
+                ]
+              }
+
             ]
           },
           {
@@ -304,14 +412,37 @@
             "type": "row",
             "items": [
               {
-                "type": "number",
-                "source": "numberOfCommunityGroupsSupported",
-                "preLabel": "Number of community groups supported through the project"
-              },
+                "type": "literal",
+                "source": "<h3>Sustainable agricultural practices</h3>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
               {
-                "type": "number",
-                "source": "numberOfFarmsAdoptingSustainablePractices",
-                "preLabel": "How many farms have adopted sustainable agriculture practices through the project?"
+                "type": "literal",
+                "source": "This section includes questions specific to projects targeting sustainable agriculture related outcomes."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "items": [
+                  {
+                    "type": "number",
+                    "source": "numberOfCommunityGroupsSupported",
+                    "preLabel": "Number of community groups supported through the project"
+                  },
+                  {
+                    "type": "number",
+                    "source": "numberOfFarmsAdoptingSustainablePractices",
+                    "preLabel": "How many farms have adopted sustainable agriculture practices through the project?"
+                  }
+                ]
               }
             ]
           }
@@ -337,7 +468,8 @@
                     "e7701823-e534-414e-80f5-86f9eecef50c",
                     "f474c538-c8d7-4431-86c3-741163a50a35",
                     "06c401d9-1370-48d1-9c30-9a6846128f71",
-                    "c6b2f62b-06c7-4ea6-9cb3-61ce26ab8200"
+                    "c6b2f62b-06c7-4ea6-9cb3-61ce26ab8200",
+                    "3117521e-a801-45ef-838f-519c31ca59a2"
                   ]
                 }
               ]
@@ -364,8 +496,22 @@
                 "target": "communicationsDuringPeriod"
               },
               {
-                "source-path": "f474c538-c8d7-4431-86c3-741163a50a35",
-                "target": "engagementDetails"
+                "source-path": "3117521e-a801-45ef-838f-519c31ca59a2",
+                "target": "engagementsByType",
+                "mapping": [
+                  {
+                    "source-path": "group",
+                    "target": "engagementType"
+                  },
+                  {
+                    "source-path": "count",
+                    "target": "numberOfEngagements"
+                  },
+                  {
+                    "source-path": "result",
+                    "target": "engagementDetails"
+                  }
+                ]
               },
               {
                 "source-path": "06c401d9-1370-48d1-9c30-9a6846128f71",

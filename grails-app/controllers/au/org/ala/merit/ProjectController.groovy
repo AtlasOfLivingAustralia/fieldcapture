@@ -1179,10 +1179,20 @@ class ProjectController {
 
         Map reportData = scoreIds.collectEntries { String scoreId ->
             Map scoreResult = financialYearData.find{it.scoreId == scoreId}
-            def data = scoreResult?.result?.result
-            if (data instanceof List) {
-                data = data.flatten() // Collate a List of tables from each report into a flat List for display
+            def data = scoreResult?.result
+            if (data?.result) {
+                data = data.result
+                if (data instanceof List) {
+                    data = data.flatten() // Collate a List of tables from each report into a flat List for display
+                }
             }
+            else if (data?.groups) {
+                data = data.groups
+                data.each { Map group ->
+                    group.result = group.results?[0]?.result
+                }
+            }
+
             [(scoreId): data]
         }
 

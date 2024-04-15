@@ -18,7 +18,15 @@ let scores = [
                 type: 'filter',
                 property: 'name'
             },
-            childAggregations: [{property: 'data', type: 'SET'}]
+            childAggregations: [
+                {
+                    filter: {
+                        filterValue: 'Yes',
+                        type: 'filter',
+                        property: 'data.nhtCommunications'
+                    },
+                    childAggregations: [{property: 'data', type: 'SET'}]
+                }]
         }
     },
 
@@ -43,7 +51,39 @@ let scores = [
             childAggregations: [{property: 'data.engagementDetails', type: 'SET'}]
         }
     },
+    {
+        scoreId: '3117521e-a801-45ef-838f-519c31ca59a2', // Deliberately coding the score ids to keep consistency between test & prod
+        entityTypes: [],
+        tags: [],
+        displayType: '',
+        entity: 'Activity',
+        outputType: 'NHT - Project Engagements',
+        isOutputTarget: false,
+        category: 'Annual Reporting',
+        status: 'active',
+        label: 'Project engagements by engagement type',
+        description: 'All the Project engagements from the output report',
+        configuration: {
+            filter: {
+                filterValue: 'NHT - Project Engagements',
+                type: 'filter',
+                property: 'name'
+            },
+            childAggregations: [
+                {
+                    groups: {
+                        "type": "discrete",
+                        "property": "data.engagementDetails.engagementType"
+                    },
+                    "childAggregations": [
+                        {property: 'data.engagementDetails', type: 'SET'}
+                    ]
 
+                }
+
+            ]
+        }
+    },
     {
         scoreId: '06c401d9-1370-48d1-9c30-9a6846128f71', // Deliberately coding the score ids to keep consistency between test & prod
         entityTypes: [],
@@ -62,7 +102,16 @@ let scores = [
                 type: 'filter',
                 property: 'name'
             },
-            childAggregations: [{property: 'data', type: 'SET'}]
+            childAggregations: [
+                {
+                    filter: {
+                        filterValue: 'Yes',
+                        type: 'filter',
+                        property: 'data.plansDeveloped'
+                    },
+                    childAggregations: [
+                        {property: 'data', type: 'SET'}]
+                }]
         }
     },
 
