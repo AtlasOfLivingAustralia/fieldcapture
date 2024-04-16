@@ -57,6 +57,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         service.projectConfigurationService = projectConfigurationService
         service.auditService = auditService
         service.programService = programService
+        service.speciesService = new SpeciesService()
         userService.userIsAlaOrFcAdmin() >> false
         metadataService.getProgramConfiguration(_,_) >> [reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43]
         projectConfigurationService.getProjectConfiguration(_) >> projectConfig
@@ -1582,6 +1583,19 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         and:
         dataSets.size() == 1
         dataSets[0].name == 'Not a plot selection'
+    }
+
+    def "Get species records for an activity id and construct species object" (){
+        setup:
+        String activityId = 'a1'
+        def record = [scientificName: "sc1", vernacularName: "vn1", guid: "g1", outputSpeciesId: "o1"]
+        when:
+        def result = service.getSpeciesRecordsFromActivity(activityId)
+
+        then:
+        1 * webService.getJson( {it.contains("record/listForActivity/"+activityId)}) >> [records:[record], statusCode: HttpStatus.SC_OK]
+        result == [record + [species: [scientificName: "sc1", commonName: "vn1", outputSpeciesId: "o1", guid: "g1", name: "sc1 (vn1)"]]]
+
     }
 
     private Map setupActivityModelForFiltering(List services) {
