@@ -1159,6 +1159,59 @@ class ProjectController {
         render projectService.getSpeciesRecordsFromActivity(activityId) as JSON
     }
 
+    @PreAuthorise(accessLevel = 'editor')
+    /**
+     * This method accepts an end date for a financial year and a list of scoreIds and
+     * returns the requested aggregate data for the year.
+     *
+     * This was developed for the SAF Ag Annual report to pull tabular data into
+     * the report so also flattens the nested Lists that result from the SET score type
+     * into a single list.
+     *
+     */
+    def annualReport(String id) {
+
+        String financialYearEndDate = params.financialYearEndDate
+        List scoreIds = params.getList('scoreIds')
+
+        if (!financialYearEndDate || !scoreIds) {
+            render status:400, error:'Required parameters not provided'
+            return
+        }
+
+        DateTime financialYearStart = DateUtils.alignToFinancialYear(DateUtils.parse(financialYearEndDate))
+        String year = financialYearStart.year + " - " + (financialYearStart.year+1)
+
+
+        Map result = projectService.scoresByFinancialYear(id, scoreIds)
+
+        List financialYearData = result?.resp?.find{it.group == year}?.results ?: []
+
+        println financialYearData
+
+        Map reportData = scoreIds.collectEntries { String scoreId ->
+            Map scoreResult = financialYearData.find{it.scoreId == scoreId}
+            def data = scoreResult?.result
+
+            if (data?.result) {
+                data = data.result
+                if (data instanceof List) {
+                    data = data.flatten() // Collate a List of tables from each report into a flat List for display
+                }
+            }
+            else if (data?.groups) {
+                data = data.groups
+                data.each { Map group ->
+                    group.result = group.results?[0]?.result
+                }
+            }
+
+            [(scoreId): data]
+        }
+
+        render reportData as JSON
+    }
+
     private def error(String message, String projectId) {
         flash.message = message
         if (projectId) {
