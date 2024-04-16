@@ -6,6 +6,9 @@ var config =
     {
         "meriPlanContents": [
             {
+                "template": "indigenousInvolvement"
+            },
+            {
                 "template": "programOutcome",
                 "model": {
                     "maximumPriorities": "1000",
@@ -40,6 +43,14 @@ var config =
                     "helpTextHeading": "A succinct overview of the project: (i) what will be done and (ii) why it will be done",
                     "maxSize": "1000",
                     "placeholder": "Please provide a short description of this project. This project description will be visible on the project overview page in MERIT [Free text; limit response to 1000 characters (approx. 150 words)]"
+                }
+            },
+            {
+                "template": "projectMethodology",
+                "model": {
+                    "maxSize": "4000",
+                    "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])",
+                    "helpText": "Include all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not impacted by adverse weather conditions. Ensure what’s documented here aligns to those assumptions documented within the Project Logic."
                 }
             },
             {
@@ -171,7 +182,6 @@ var config =
                 "reportDescriptionFormat": "Progress Report %1d",
                 "reportNameFormat": "Progress Report %1d",
                 "reportingPeriodInMonths": 6,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
                 "minimumReportDurationInDays": 3,
                 "label": "Semester",
                 "category": "Progress Reports",
