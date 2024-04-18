@@ -27,6 +27,7 @@ class ProjectService  {
     static final String ACTIVE = 'active'
 
     static final String OTHER_EMSA_MODULE = 'Other'
+    static final String PARATOO_FORM_TAG_SURVEY = 'survey'
 
     static dateWithTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
     static dateWithTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
@@ -61,12 +62,11 @@ class ProjectService  {
     }
 
     void filterDataSetSummaries(List dataSetSummaries) {
-        List protocolNamesToHide = grailsApplication.config.getProperty('hidden.dataSet.protocols', List.class, ['Plot Selection', 'Plot Layout and Visit'])
         List<Map> forms = activityService.monitoringProtocolForms()
 
         dataSetSummaries.removeAll { Map dataSetSummary ->
             Map protocolForm = forms.find{it.externalId == dataSetSummary.protocol}
-            protocolForm && (protocolForm.name in protocolNamesToHide)
+            (protocolForm != null) && (!protocolForm.tags.contains(PARATOO_FORM_TAG_SURVEY))
         }
     }
 

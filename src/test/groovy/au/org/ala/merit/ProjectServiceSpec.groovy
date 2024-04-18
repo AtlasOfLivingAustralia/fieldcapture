@@ -1579,7 +1579,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         service.filterDataSetSummaries(dataSets)
 
         then:
-        1 * activityService.monitoringProtocolForms() >> [[externalId:'1', name:"Plot Selection"], [externalId:'2', name: "Plot Layout and Visit"]]
+        1 * activityService.monitoringProtocolForms() >> [[externalId:'1', name:"Plot Selection", tags: ["site"]], [externalId:'2', name: "Plot Layout and Visit", tags: ["site"]], [externalId:'3', name: "Not a plot selection", tags: ["survey"]]]
         and:
         dataSets.size() == 1
         dataSets[0].name == 'Not a plot selection'
