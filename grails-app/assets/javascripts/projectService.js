@@ -407,4 +407,15 @@ function ProjectService(project, options) {
         var url = config.monitoringProtocolsUrl;
         return $.get(url);
     }
+
+    self.isMonitoringTargetMeasure = function(score) {
+        return score.tags && score.tags.indexOf('Indicator') >= 0;
+    };
+    self.isBaselineTargetMeasure = function(score) {
+        return score.tags && score.tags.indexOf('Baseline') >= 0;
+    };
+    self.isSurveyTargetMeasure = function(score) {
+        return self.isMonitoringTargetMeasure(score) || self.isBaselineTargetMeasure(score);
+    };
+
 };
