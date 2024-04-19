@@ -342,6 +342,16 @@
             ],
             "dataType": "list",
             "name": "communicationMaterialLinkList"
+          },
+          {
+            "name": "communicationsMaterialAttachments",
+            "dataType": "list",
+            "columns": [
+              {
+                "name": "communicationsMaterialAttachment",
+                "dataType": "document"
+              }
+            ]
           }
         ],
         "modelName": "Regional capacity services - reporting",
@@ -752,6 +762,19 @@
                 "source": "communicationMaterialLinkList",
                 "title": "<b>Q11a. If yes, please provide link or copy of the material (one row per item)<b style=\"color:red\">*</b></b>",
                 "type": "table"
+              },
+              {
+                "type": "table",
+                "source": "communicationsMaterialAttachments",
+                "userAddedRows": true,
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "title": "Attached communication material",
+                    "source": "communicationsMaterialAttachment",
+                    "type": "document"
+                  }
+                ]
               }
             ]
           }
