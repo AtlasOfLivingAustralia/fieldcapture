@@ -28,7 +28,7 @@ class NHTOutputReportLifecycleListener extends ReportLifecycleListener {
             // This is a side effect and a workaround for the problem that selected outcomes
             // are an array and the knockout binding doesn't support arrays as a value.
             if (it.projectOutcomes) {
-                it.outcomesLabel = new ArrayList(it.projectOutcomes).join(',')
+                it.outcomesLabel = new ArrayList(it.projectOutcomes.sort()).join(',')
             }
             it.progress == ActivityService.PROGRESS_FINISHED
         }

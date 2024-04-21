@@ -590,38 +590,36 @@ var outcomes = [
     {
         "priorities": [
             {
-                "category": "Climate change adaptation"
+                "category": "Reduce emissions and build resilience"
             }
         ],
         "targeted": true,
-        "shortDescription": "Climate change adaptation",
+        "shortDescription": "Reduce emissions and build resilience",
         "category": "Threatened Species",
         "outcome": "1. The agriculture sector is adopting practices to reduce emissions and build resilience to climate change"
     },
     {
         "priorities": [
             {
-                "category": "Carbon and biodiversity market information"
+                "category": "Harness carbon and biodiversity incentives"
             }
         ],
         "targeted": true,
-        "shortDescription": "Carbon and biodiversity market information",
+        "shortDescription": "Harness carbon and biodiversity incentives",
         "category": "Threatened Species",
         "outcome": "2. The agriculture sector is supported to harness carbon and biodiversity incentives and implement industry sustainability frameworks"
     },
     {
         "priorities": [
             {
-                "category": "Native vegetation and biodiversity on-farm"
+                "category": "Drive agricultural growth"
             }
         ],
         "targeted": true,
-        "shortDescription": "Native vegetation and biodiversity on-farm",
+        "shortDescription": "Drive agricultural growth",
         "category": "Threatened Species",
         "outcome": "3. Farmers are supported to drive agricultural growth, while adopting sustainable natural resource management practices that protect and conserve natural capital and biodiversity"
     },
-
-
     {
         "category": "Threatened Species",
         "type": "medium",
@@ -656,31 +654,43 @@ var outcomes = [
 
 var priorities = [
     {
-        "category": "Climate change adaptation",
+        "category": "Reduce emissions and build resilience",
+        "priority": "Climate change adaptation"
+    },
+    {
+        "category": "Reduce emissions and build resilience",
         "priority": "On-farm emissions reduction practices"
     },
     {
-        "category": "Carbon and biodiversity market information",
+        "category": "Harness carbon and biodiversity incentives",
+        "priority": "Carbon and biodiversity market information"
+    },
+    {
+        "category": "Harness carbon and biodiversity incentives",
         "priority": "Sustainability framework engagement"
     },
     {
-        "category": "Carbon and biodiversity market information",
+        "category": "Harness carbon and biodiversity incentives",
         "priority": "Market access and traceability"
     },
     {
-        "category": "Native vegetation and biodiversity on-farm",
+        "category": "Drive agricultural growth",
+        "priority": "Native vegetation and biodiversity on-farm"
+    },
+    {
+        "category": "Drive agricultural growth",
         "priority": "Soil carbon"
     },
     {
-        "category": "Native vegetation and biodiversity on-farm",
+        "category": "Drive agricultural growth",
         "priority": "Soil erosion"
     },
     {
-        "category": "Native vegetation and biodiversity on-farm",
+        "category": "Drive agricultural growth",
         "priority": "Soil acidification"
     },
     {
-        "category": "Native vegetation and biodiversity on-farm",
+        "category": "Drive agricultural growth",
         "priority": "Sustainable agriculture practices"
     }
 ];

@@ -229,8 +229,10 @@
         <div class="col-sm-7">
             <select class="form-control" id="addition" data-validation-engine="validate[required]" data-bind="value:addition">
                 <option></option>
-                <option>Yes</option>
-                <option>No</option>
+                <option>Previous project</option>
+                <option>Broader/national dataset</option>
+                <option>Neither</option>
+                <option>Both</option>
                 <option>Don't know</option>
             </select>
         </div>

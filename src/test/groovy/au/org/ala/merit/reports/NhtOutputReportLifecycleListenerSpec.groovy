@@ -41,7 +41,7 @@ class NhtOutputReportLifecycleListenerSpec extends Specification {
         List dataSets = [[dataSetId:'d1', progress:ActivityService.PROGRESS_FINISHED, projectOutcomes:['a','b','c']],
                          [dataSetId:'d2', progress:ActivityService.PROGRESS_FINISHED, projectOutcomes:['d','e','f']],
                          [dataSetId:'d3', progress:ActivityService.PROGRESS_STARTED, projectOutcomes:['g','h','i']],
-                         [dataSetId:'d4', progress:ActivityService.PROGRESS_FINISHED, projectOutcomes:['j','k','l']]]
+                         [dataSetId:'d4', progress:ActivityService.PROGRESS_FINISHED, projectOutcomes:['l','j','k']]]
         Map project = [custom:[dataSets:dataSets]]
         Map report = [:]
         List protocols = [[name:'test', externalId:'e1']]
@@ -53,6 +53,7 @@ class NhtOutputReportLifecycleListenerSpec extends Specification {
         1 * projectService.listProjectProtocols(project) >> protocols
         project.custom.dataSets.size() == 3
         project.custom.dataSets*.dataSetId == ['d1','d2','d4']
+        project.custom.dataSets[2].outcomesLabel == 'j,k,l'
     }
 
     def "It will return a list of investment priorities from the MERI plan"() {

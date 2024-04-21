@@ -153,11 +153,51 @@
               "No"
             ],
             "validate": "required"
+          },
+          {
+            "name": "yesProjectContactDetailsChanged",
+            "dataType": "text",
+            "behaviour": [
+              {
+                "condition": "projectContactDetailsChanged == \"Yes\"",
+                "type": "visible"
+              }
+            ]
           }
         ],
         "modelName": "Progress Report",
         "title": "Overview of Project Progress",
         "viewModel": [
+          {
+            "items": [
+              {
+                "source": "<h4>Organisation and Contact Details</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "projectContactDetailsChanged",
+                "preLabel": "Has there been a change to key project contacts or their details?",
+                "type": "selectOne",
+                "helpText": "(e.g. Name, position, role, email, telephone or address of key contacts)"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "",
+                "source": "yesProjectContactDetailsChanged",
+                "preLabel": "<i><b style=\"background-color:yellow\">If yes, please provide updated details to the department.</b></i>"
+              }
+            ]
+          },
           {
             "items": [
               {
