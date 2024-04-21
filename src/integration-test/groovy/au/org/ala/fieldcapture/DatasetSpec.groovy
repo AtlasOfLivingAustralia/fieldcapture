@@ -49,7 +49,7 @@ class DatasetSpec extends StubbedCasSpec{
         dataSet.location = "Location"
         dataSet.startDate ="21-01-2021"
         dataSet.endDate ="21-01-2022"
-        dataSet.addition = "Yes"
+        dataSet.addition = "Previous project"
         dataSet.threatenedSpeciesIndex = "Yes"
         dataSet.publicationUrl = "url"
         dataSet.format = "JSON"
@@ -105,7 +105,7 @@ class DatasetSpec extends StubbedCasSpec{
         set.location == "Location"
         set.startDate =="21-01-2021"
         set.endDate =="21-01-2022"
-        set.addition == "Yes"
+        set.addition == "Previous project"
         set.threatenedSpeciesIndex == "Yes"
         set.format == "JSON"
         set.sensitivities ==["Commercially sensitive", "Ecologically sensitive"]
@@ -192,7 +192,7 @@ class DatasetSpec extends StubbedCasSpec{
         set.location = "Location"
         set.startDate ="21-01-2021"
         set.endDate ="21-01-2022"
-        set.addition = "Yes"
+        set.addition = "Previous project"
         set.threatenedSpeciesIndex = "Yes"
         set.format = "JSON"
         set.sensitivities =["Commercially sensitive", "Ecologically sensitive"]
