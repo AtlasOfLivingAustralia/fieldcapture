@@ -16,11 +16,15 @@
 
     <div class="row mb-2">
         <div class="col-sm-2 header-label">Reporting period end</div>
-
-        <div class="col-sm-9 value"><g:formatDate format="dd MMM yyyy"
-                                         date="${au.org.ala.merit.DateUtils.parse(report.toDate).toDate()}"/></div>
+        <g:if test="${report.toDate < context.config.organisationReports.periodEnd[0]}">
+            <div class="col-sm-9 value"><g:formatDate format="dd MMM yyyy"
+                                                      date="${au.org.ala.merit.DateUtils.parse(report.toDate).minusDays(1).toDate()}"/></div>
+        </g:if>
+        <g:else>
+            <div class="col-sm-9 value"><g:formatDate format="dd MMM yyyy"
+                                                      date="${au.org.ala.merit.DateUtils.parse(report.toDate).toDate()}"/></div>
+        </g:else>
     </div>
-
     <div class="row mb-2">
         <div class="col-sm-2 header-label">Report status</div>
 
