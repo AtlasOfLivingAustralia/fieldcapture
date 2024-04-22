@@ -13,6 +13,8 @@ import org.joda.time.Period
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.util.concurrent.locks.Lock
+
 /**
  * Tests the ProjectService class.
  */
@@ -30,6 +32,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
     ProgramConfig projectConfig = new ProgramConfig([activityBasedReporting: true, reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43])
     ProgramService programService = Mock(ProgramService)
     CacheService cacheService = Mock(CacheService)
+    LockService lockService = Mock(LockService)
 
     Map reportConfig = [
             weekDaysToCompleteReport:projectConfig.weekDaysToCompleteReport,
@@ -57,6 +60,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         service.projectConfigurationService = projectConfigurationService
         service.auditService = auditService
         service.programService = programService
+        service.lockService = lockService
         service.speciesService = new SpeciesService()
         userService.userIsAlaOrFcAdmin() >> false
         metadataService.getProgramConfiguration(_,_) >> [reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43]
@@ -1371,13 +1375,14 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         String projectId = 'p1'
         Map meriPlan = [details:[outcomes:[]]]
         Map dataSets = [dataSets:[[dataSetId:1]]]
-        Map baseProject = [projectId:'p1', name:'Project 1', description:'Description 1']
+        Map baseProject = [projectId:'p1', name:'Project 1', description:'Description 1', lock:[userId:'u1', entityId:projectId]]
         Map postData
 
         when:
-        service.update(projectId, [custom:meriPlan])
+        service.update(projectId, [custom:meriPlan], false)
 
         then:
+        1 * lockService.userHoldsLock(_) >> true
         1 * webService.getJson({it.contains("project/"+projectId)}) >> baseProject+[custom:dataSets]
         1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
             postData = data
@@ -1395,6 +1400,24 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
             [status: HttpStatus.SC_OK]
         }
         postData == [custom:(dataSets+meriPlan)]
+    }
+
+    def "When updating the MERI plan or data sets, if the user doesn't hold a lock the update will fail with an error returned"() {
+        setup:
+        String projectId = 'p1'
+        Map meriPlan = [details: [outcomes: []]]
+        Map baseProject = [projectId: 'p1', name: 'Project 1', description: 'Description 1', lock: [userId: 'u1', entityId: projectId]]
+
+        when:
+        Map result = service.update(projectId, [custom: meriPlan], false)
+
+        then:
+        1 * lockService.userHoldsLock(_) >> false
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> baseProject+[custom:[dataSets:[]]]
+        0 * webService.doPost({it.endsWith('project/'+projectId)}, _)
+        result.error != null
+        result.noLock == true
+
     }
 
     def "The project reports can be regenerated, including optionally specifying which categories to regenerate"() {
