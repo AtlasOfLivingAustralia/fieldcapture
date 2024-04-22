@@ -4,7 +4,7 @@
 function MERIPlan(project, projectService, config) {
     var self = this;
 
-    if (config.meriStorageKey && project.custom && project.custom.details) {
+    if (config.hasAdminPermission && config.meriStorageKey && project.custom && project.custom.details) {
         var savedProjectCustomDetails = amplify.store(config.meriStorageKey);
         if (savedProjectCustomDetails) {
             var serverUpdate = project.custom.details.lastUpdated;
