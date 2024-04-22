@@ -30,7 +30,7 @@
           {
             "dataType": "text",
             "name": "financialAgreementsApplied",
-            "description": "This may include landholder agreements, EOIs, procurements, grants, or any agreement where a third party has been engaged to deliver RCS or project services.",
+            "description": "This may include landholder agreements, EOIs, procurements, grants, or any agreement where a third party has been engaged to deliver Regional Capacity Services or Project Services.",
             "validate": "required,maxSize[1250]"
           },
           {
@@ -218,38 +218,107 @@
             ]
           },
           {
-            "dataType": "boolean",
-            "name": "relationshipManagementPlan",
+            "dataType": "text",
+            "name": "anyContactDetailsChanges",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
             "validate": "required"
+          },
+          {
+            "dataType": "boolean",
+            "name": "yesContactDetailsChanges",
+            "validate": "required",
+            "behaviour": [
+              {
+                "condition": "anyContactDetailsChanges == \"Yes\"",
+                "type": "visible"
+              }
+            ]
           },
           {
             "dataType": "text",
             "name": "communityParticipation",
-            "description": "Please do not include activities reported under Projects and Project Supports and Overheads.",
+            "description": "Please do not include activities reported under Projects and Project Support and Overheads.",
             "validate": "required,maxSize[1250]"
           },
           {
             "dataType": "text",
             "name": "descriptionIndigenousParticipation",
-            "description": "For example, outline what initiatives you took to try and increase purchasing from Indigenous Enterprises and increase the employment of First Nations people).",
+            "description": "For example, outline what initiatives you took to try and increase purchasing from Indigenous Enterprises and increase the employment of First Nations people.",
             "validate": "required,maxSize[1250]"
           },
           {
             "dataType": "text",
+            "name": "deedIncludesScheduleTen",
+            "description": "For the last 12 months, identify the date you provided your response to the Department and which Schedule 10 clause you addressed.",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "boolean",
             "name": "deedIncluded",
-            "description": "For the last 12 months, identify the date you provided your response to the Department and which schedule 10 clause you addressed.",
-            "validate": "required,maxSize[1250]"
+            "validate": "required",
+            "behaviour": [
+              {
+                "condition": "deedIncludesScheduleTen == \"Yes\"",
+                "type": "visible"
+              }
+            ]
           },
           {
             "dataType": "text",
             "name": "maintainCapability",
-            "description": "Please do not list communications materials previously reported through Regional Capacity Services quarterly reports.",
+            "description": "Regional Capacity Services quarterly reports, Project Support and Overheads or Project Services reports.",
             "validate": "required,maxSize[1250]"
           },
           {
             "dataType": "text",
             "name": "environmentalSustainability",
             "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "hasOutstandingActions",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "boolean",
+            "name": "outstandingActionsDetails",
+            "validate": "required",
+            "behaviour": [
+              {
+                "condition": "hasOutstandingActions == \"Yes\"",
+                "type": "visible"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "hasInsurance",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "boolean",
+            "name": "noInsurance",
+            "behaviour": [
+              {
+                "condition": "hasInsurance == \"No\"",
+                "type": "visible"
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -300,7 +369,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "2. Please outline key issues in the delivery of Regional Capacity Services and how they were managed/rectified. Please include how adaptive management actions are/ will be implemented (RCS9.2(b)). (1250 character, [approx. 250 word] limit)",
+                "preLabel": "2. Please outline key issues in the delivery of Regional Capacity Services and how they were managed/rectified. Please include how adaptive management actions are/will be implemented (RCS9.2(b)). (1250 character, [approx. 250 word] limit)",
                 "source": "coreServicesIssues",
                 "type": "textarea"
               }
@@ -320,7 +389,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "3.a Please list the types of financial agreements applied relevant to delivery of regional capacity services or projects. (1250 character, [approx. 250 word] limit)",
+                "preLabel": "3.a Please list the types of financial agreements applied relevant to delivery of Regional Capacity Services or Projects. (1250 character, [approx. 250 word] limit)",
                 "source": "financialAgreementsApplied",
                 "type": "textarea"
               }
@@ -340,7 +409,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "3.c Please describe actions undertaken in this financial year (if any) to ensure the development of employee and management competence in First Nations peoples’ culture. (1250 character, [approx. 250 word] limit)",
+                "preLabel": "3.c Please describe actions undertaken in this reporting period (if any) to ensure the development of employee and management competence in First Nations peoples’ culture. (1250 character, [approx. 250 word] limit)",
                 "source": "firstNationsPeopleDevelopment",
                 "type": "textarea"
               }
@@ -400,7 +469,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "4. Have you reported all Conflicts of Interest as per clause 45.2?",
+                "preLabel": "4. Have you reported all Conflicts of Interest as per clause 45.2 of the Deed?",
                 "css": "span6",
                 "source": "interestConflictReported",
                 "type": "selectOne"
@@ -481,16 +550,6 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "5.b(ii) Please provide reasons to explain why and timeframes for when this will be done. (1250 character [approx. 250 word] limit).",
-                "source": "whsPlanNotReviewed",
-                "type": "textarea"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
                 "source": "<b>6. Natural resource management planning </b>",
                 "type": "literal"
               }
@@ -500,7 +559,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "6.a Please outline any activities completed this year towards meeting the requirements under RCS1 – to maintain the currency of NRM planning and prioritisation of management actions. (1250 character [approx. 250 word] limit).",
+                "preLabel": "6.a Please outline any activities completed during this reporting period towards meeting the requirements under RCS1 – to maintain the currency of NRM planning and prioritisation of management actions. (1250 character [approx. 250 word] limit).",
                 "source": "completedRcs1Requirements",
                 "type": "textarea"
               }
@@ -555,7 +614,7 @@
             "type": "row",
             "items": [
               {
-                "source": "<b>8. Relationship management plan</b>",
+                "source": "<b>8. Relationship Management Plan</b>",
                 "type": "literal"
               }
             ]
@@ -564,8 +623,18 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "8.a Please confirm you have notified the Department of any changes to key contact details as per RCS5.2.",
-                "source": "relationshipManagementPlan",
+                "preLabel": "8.a Were there any changes to key contact details during this reporting period?",
+                "source": "anyContactDetailsChanges",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "8.b Please confirm you have notified the Department of any changes to key contact details as per RCS5.2.",
+                "source": "yesContactDetailsChanges",
                 "type": "boolean"
               }
             ]
@@ -583,7 +652,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "9.a Please describe how the Community and First Nations people has been engaged and supported in the prioritising, planning and the delivery of natural resource management activities as they relate to the 5-year outcomes and any investment priorities across the management unit (RCS2). (1250 character [approx. 250 word] limit)",
+                "preLabel": "9.a Please describe how the Community and First Nations people have been engaged and supported in the prioritising, planning and the delivery of natural resource management activities as they relate to the 5-year outcomes and any investment priorities across the management unit (RCS2). (1250 character [approx. 250 word] limit)",
                 "source": "communityParticipation",
                 "type": "textarea"
               }
@@ -612,7 +681,17 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "10.b Where your Deed includes a Schedule 10, please provide an update on the progress made towards meeting these requirements or identify where you have previously provided information to the Department to demonstrate your compliance with the obligations under the Schedule. (1250 character [approx. 250 word] limit)",
+                "preLabel": "10.b Does your Deed include a Schedule 10?",
+                "source": "deedIncludesScheduleTen",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "10.c Please provide an update on the progress made towards meeting these requirements or identify where you have previously provided information to the Department to demonstrate your compliance with the obligations under the Schedule. (1250 character [approx. 250 word] limit)",
                 "source": "deedIncluded",
                 "type": "textarea"
               }
@@ -650,9 +729,67 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "12.a Please outline what initiatives you have put in place to support environmental sustainability outcomes and increase the use of Recycled Content during the Deed Period and each Work Order Term, as per clause 15.8 of the Deed. (1250 character [approx. 250 word] limit)",
+                "preLabel": "12.a Please outline what initiatives you have put in place to support environmental sustainability outcomes and increase the use of Recycled Content during this reporting period, for the Deed and each Work Order, as per clause 15.8 of the Deed. (1250 character [approx. 250 word] limit)",
                 "source": "environmentalSustainability",
                 "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>13. Assurance/Audit </b>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "13.a Does your organisation have any outstanding actions arising from assurance checks and/or audits conducted on Regional Capacity Services, Project Support and Overheads and Project Services by any Customer?",
+                "source": "hasOutstandingActions",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "13.b Please provide details on the outstanding actions and when they will be completed.",
+                "source": "outstandingActionsDetails",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>14. Insurance </b>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "14.a Please confirm you hold the insurance required as per clause 33 of the Deed.",
+                "source": "hasInsurance",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "",
+                "source": "noInsurance",
+                "preLabel": "<i><b style=\"background-color:yellow\">Please notify the Department immediately.</b></i>"
               }
             ]
           },
@@ -691,22 +828,22 @@
                 "disableTableUpload": true,
                 "columns": [
                   {
-                    "title": "Total value ($ excl GST) of Contracts for which the Customer is DCCEEW",
+                    "title": "Total value ($ excl GST) of Contracts for which the Customer                             is DCCEEW",
                     "source": "totalDcceewContracts",
                     "type": "number",
-                    "width": "33%"
+                    "width": "37%"
                   },
                   {
                     "title": "Total value ($ excl GST) of Contracts for which the Customer is DAFF",
                     "source": "totalDaffContracts",
                     "type": "number",
-                    "width": "34%"
+                    "width": "35%"
                   },
                   {
                     "title": "Total value ($ excl GST) of Subcontracts with First Nations people / Indigenous Enterprises for which the Customer is DCCEEW",
                     "source": "totalDcceewSubContracts",
                     "type": "number",
-                    "width": "33%"
+                    "width": "28%"
                   }
                 ]
               }
