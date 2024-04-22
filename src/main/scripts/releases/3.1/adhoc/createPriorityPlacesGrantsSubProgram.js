@@ -43,6 +43,16 @@ var config =
                 }
             },
             {
+                "template": "additionalOutcomes",
+                "model": {
+                    "outcomePriority": "Additional outcome/s",
+                    "helpTextHeading": "If the project is not delivering additional benefits, delete the row using the 'x' in the right-most column.",
+                    "title": "Additional benefits",
+                    "priority": "Additional investment priorities",
+                    "priorityHelpText": "Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
+                }
+            },
+            {
                 "template": "outcomeStatements",
                 "model": {
                     "outcomeType": "short",
@@ -515,26 +525,13 @@ var outcomes = [
     {
         "priorities": [
             {
-                "category": "Threatened Species"
+                "category": "Priority Threatened Species Primary"
             }
         ],
         "targeted": true,
         "shortDescription": "EPBC Species",
-        "type": "secondary",
         "category": "Threatened Species",
         "outcome": "1.  Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
-    },
-    {
-        "priorities": [
-            {
-                "category": "Threatened Species"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "New extinctions",
-        "type": "secondary",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Long term): Threatened Species (TS) - New extinctions of plants and animals are prevented"
     },
     {
         "priorities": [
@@ -545,38 +542,94 @@ var outcomes = [
         "targeted": true,
         "shortDescription": "Threatened Ecological Communities",
         "category": "Threatened Ecological Communities",
-        "outcome": "1.  Species and Landscapes (Long term): Threatened Ecological Communities (TECs) and priority places - The condition of targeted EPBC Act listed Threatened Ecological Communities and identified priority places under the Threatened Species Action Plan 2022-2032 is improved"
+        "outcome": "1. Species and Landscapes (Long term): Threatened Ecological Communities (TECs) and priority places - The condition of targeted EPBC Act listed Threatened Ecological Communities and identified priority places under the Threatened Species Action Plan 2022-2032 is improved"
     },
-    {
-        "priorities": [
-            {
-                "category": "Ramsar"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "World Heritage",
-        "supportsMultiplePrioritiesAsPrimary": false,
-        "type": "secondary",
-        "category": "Ramsar",
-        "outcome": "2: World Heritage Protection (Long term): The outstanding universal value of world heritage properties listed for their natural heritage value is maintained and improved"
-    },
-    {
-        "priorities": [
-            {
-                "category": "Ramsar"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "Ramsar Sites",
-        "supportsMultiplePrioritiesAsPrimary": false,
-        "type": "secondary",
-        "category": "Ramsar",
-        "outcome": "3: Ramsar Wetland Protection (Long term): The ecological character of targeted Ramsar sites is maintained and/or improved, building resilience to climate change"
-    },
+
+
     {
         "type": "short",
         "category": "Priority species related outcome",
         "outcome": "All priority species are on track for improved trajectory"
+    },
+    {
+        "type": "short",
+        "category": "Priority species related outcome",
+        "outcome": "Implementation of priority actions for priority species is tracked and published"
+    },
+    {
+        "type": "short",
+        "category": "Priority species related outcome",
+        "outcome": "Species at high risk of imminent extinction are identified and supported to persist"
+    },
+    {
+        "type": "short",
+        "category": "Priority species related outcome",
+        "outcome": "All priority places are on track to have improved condition"
+    },
+    {
+        "type": "short",
+        "category": "Priority species related outcome",
+        "outcome": "Implementation of priority actions for priority places is tracked and published"
+    },
+    {
+        "type": "short",
+        "category": "Priority species related outcome",
+        "outcome": "The area managed for conservation is increased by 50 million hectares"
+    },
+    {
+        "type": "short",
+        "category": "Priority species related outcome",
+        "outcome": "Impacts of climate change on priority species and places are identified and actions are underway to strengthen resilience and adaptive capacity"
+    },
+    {
+        "type": "short",
+        "category": "Priority species related outcome",
+        "outcome": "Feral cats and foxes are managed across all important habitats for susceptible priority species using best practice methods"
+    },
+    {
+        "type": "short",
+        "category": "Priority species related outcome",
+        "outcome": "Feral cats and foxes are managed in all priority places where they are a key threat to condition, using best practice methods for the location"
+    },
+    {
+        "type": "short",
+        "category": "Priority species related outcome",
+        "outcome": "Gamba Grass is reduced to an area less than its 2022 range"
+    },
+    {
+        "type": "short",
+        "category": "Priority species related outcome",
+        "outcome": "Introduction and establishment of new exotic environmental pests, weeds and diseases is reduced"
+    },
+    {
+        "type": "short",
+        "category": "Priority species related outcome",
+        "outcome": "Five new populations of appropriate species are added across the national safe haven network to improve representation of invasive predator-susceptible threatened species"
+    },
+    {
+        "type": "short",
+        "category": "Priority species related outcome",
+        "outcome": "At least 80 per cent of nationally listed threatened plant species are secured in insurance collections"
+    },
+    {
+        "type": "short",
+        "category": "Priority species related outcome",
+        "outcome": "All nationally listed threatened plant species affected by Myrtle Rust are secured in insurance collections and populations"
+    },
+    {
+        "type": "short",
+        "category": "Priority species related outcome",
+        "outcome": "First Nations-led recovery activities for threatened species and ecological communities are increased"
+    },
+    {
+        "type": "short",
+        "category": "Priority species related outcome",
+        "outcome": "Emergency response management and planning for critical biodiversity assets improves across jurisdictions"
+    },
+    {
+        "type": "short",
+        "category": "Priority species related outcome",
+        "outcome": "At least 5 new tools are developed to mitigate the impact of broad-scale threats on threatened species"
     },
     {
         "type": "short",
@@ -587,21 +640,6 @@ var outcomes = [
         "type": "short",
         "category": "Priority species related outcome",
         "outcome": "Community groups lead or participate in recovery activities for all accessible priority species and places, including through citizen science"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "Feral cats and foxes are managed in all priority places where they are a key threat to condition, using best practice method for the location"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "First Nations-led recovery activities for threatened species and ecological communities are increased"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "Impacts of climate change on priority species and places are identified and actions are underway to strengthen resilience and adaptive capacity"
     }
 ];
 
