@@ -586,8 +586,18 @@ function MERIPlan(project, projectService, config) {
             else {
                 $.unblockUI();
             }
-        }, function() {
+        }, function(data) {
             $.unblockUI();
+
+            if (data.noLock) {
+                bootbox.alert("Another user has locked the MERI plan for editing.  Your changes cannot be saved.", function () {
+                    blockUIWithMessage("Reloading page...");
+                    document.location.reload();
+                });
+            } else {
+                document.location.reload();
+            }
+
         });
 
     };

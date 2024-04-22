@@ -329,6 +329,9 @@ class ProjectService  {
             String plannedEndDate = projectDetails.remove('plannedEndDate')
 
             def currentProject = get(id)
+            if (projectDetails.custom?.details && !lockService.userHoldsLock(currentProject.lock)) {
+                return [error:'MERI plan is locked by another user', noLock:true]
+            }
             if (plannedStartDate || plannedEndDate) {
 
                 if (currentProject.plannedStartDate != plannedStartDate || currentProject.plannedEndDate != plannedEndDate) {
