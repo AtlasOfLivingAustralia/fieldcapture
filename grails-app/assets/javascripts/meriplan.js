@@ -594,10 +594,7 @@ function MERIPlan(project, projectService, config) {
                     blockUIWithMessage("Reloading page...");
                     document.location.reload();
                 });
-            } else {
-                document.location.reload();
             }
-
         });
 
     };
