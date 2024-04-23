@@ -421,7 +421,7 @@ function MERIPlan(project, projectService, config) {
     self.removeBaseline = function(baseline) {
 
         if (self.meriPlan().baseline.rows().length == 1 && self.keyThreatsIncludesSurveyTargetMeasures()) {
-            bootbox.alert("If the project is delivering survey services, at least one baseline must be included in the MERI plan.");
+            bootbox.alert("If the project is delivering survey services, at least one baseline must be included in the MERI plan.  To progress, please either remove all survey services from the ‘Key threat(s) and/or key threatening processes’ section, or complete the 'Monitoring methodology' section to add at least one project baseline");
             return;
         }
         var code = ko.utils.unwrapObservable(baseline.code);
