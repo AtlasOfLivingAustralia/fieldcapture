@@ -592,6 +592,7 @@ function MERIPlan(project, projectService, config) {
             if (data.noLock) {
                 bootbox.alert("Another user has locked the MERI plan for editing.  Your changes cannot be saved.", function () {
                     blockUIWithMessage("Reloading page...");
+                    self.meriPlan().cancelAutosave();
                     document.location.reload();
                 });
             }
