@@ -4,32 +4,36 @@
 function MERIPlan(project, projectService, config) {
     var self = this;
 
-    if (config.meriStorageKey && project.custom && project.custom.details) {
+    if (config.hasAdminPermission && config.meriStorageKey && project.custom && project.custom.details) {
         var savedProjectCustomDetails = amplify.store(config.meriStorageKey);
         if (savedProjectCustomDetails) {
             var serverUpdate = project.custom.details.lastUpdated;
             var restored = JSON.parse(savedProjectCustomDetails);
             var localSave = amplify.store(config.meriStorageKey + "-updated");
             $('#restoredData').show();
-            if (restored.custom) {
-                project.custom.details = restored.custom.details;
-            }
-            if (restored.outputTargets) {
-                project.outputTargets = restored.outputTargets;
-            }
-            if (restored.risks) {
-                project.risks = restored.risks;
-            }
 
+            if (!projectService.isProjectDetailsLocked()) {
+                if (restored.custom) {
+                    project.custom.details = restored.custom.details;
+                }
+                if (restored.outputTargets) {
+                    project.outputTargets = restored.outputTargets;
+                }
 
-            var message = "<span class='unsaved-changes label label-warning'>Important</span><p>You have unsaved MERI Plan changes for this project.</p>";
-            if (localSave && serverUpdate) {
-                var saved = moment(localSave);
-                message += "<p>Your unsaved changes were made on <b>" + saved.format("LLLL") + "</b></p><p>The changes we loaded from the server when this page was refreshed were made at <b>" + moment(serverUpdate).format("LLLL") + "</b></p>";
+                var message = "<span class='unsaved-changes label label-warning'>Important</span><p>You have unsaved MERI Plan changes for this project.</p>";
+                if (localSave && serverUpdate) {
+                    var saved = moment(localSave);
+                    message += "<p>Your unsaved changes were made on <b>" + saved.format("LLLL") + "</b></p><p>The changes we loaded from the server when this page was refreshed were made at <b>" + moment(serverUpdate).format("LLLL") + "</b></p>";
+                }
+                message += "<p>Please review the changes then press the 'Save changes' button at the bottom of the page if you want to keep your unsaved changes or the 'Cancel' button if you want to discard your changes.</p>";
+
+                bootbox.alert(message);
             }
-            message += "<p>Please review the changes then press the 'Save changes' button at the bottom of the page if you want to keep your unsaved changes or the 'Cancel' button if you want to discard your changes.</p>";
-
-            bootbox.alert(message);
+            else {
+                amplify.store(config.meriStorageKey, null);
+                var message = "The MERI plan for this project has been locked for editing by another user.  Any unsaved changes you have made have been discarded.";
+                bootbox.alert(message);
+            }
         }
     }
     ReadOnlyMeriPlan.apply(this, [project, projectService, config]);
@@ -392,9 +396,34 @@ function MERIPlan(project, projectService, config) {
     self.removeMonitoringIndicator = function(row) {
         self.meriPlan().monitoring.removeRow(row);
     }
+
+    /**
+     * Returns true if any Key Threat has an associated target measure that is produced by a survey service.
+     * The purpose of this method is to disallow the removal of all baselines if the project is delivering survey services.
+     */
+    self.keyThreatsIncludesSurveyTargetMeasures = function() {
+        return _.find(self.meriPlan().threats.rows() || [], function(keyThreat) {
+            var scoreIds = keyThreat.relatedTargetMeasures();
+            for (var i=0; i<scoreIds.length; i++) {
+                var targetMeasure = _.find(self.allTargetMeasures, function (targetMeasure) {
+                    return targetMeasure.scoreId == scoreIds[i];
+                });
+                if (projectService.isSurveyTargetMeasure(targetMeasure.score)) {
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
+
     /** Called by the extendedBaselineMonitoring template to remove any monitoring indicators associated with a
      * removed baseline */
     self.removeBaseline = function(baseline) {
+
+        if (self.meriPlan().baseline.rows().length == 1 && self.keyThreatsIncludesSurveyTargetMeasures()) {
+            bootbox.alert("If the project is delivering survey services, at least one baseline must be included in the MERI plan.  To progress, please either remove all survey services from the ‘Key threat(s) and/or key threatening processes’ section, or complete the 'Monitoring methodology' section to add at least one project baseline");
+            return;
+        }
         var code = ko.utils.unwrapObservable(baseline.code);
         self.meriPlan().monitoring.rows.remove(function(row) {
             return ko.utils.unwrapObservable(row.relatedBaseline) == code;
@@ -557,8 +586,16 @@ function MERIPlan(project, projectService, config) {
             else {
                 $.unblockUI();
             }
-        }, function() {
+        }, function(data) {
             $.unblockUI();
+
+            if (data.noLock) {
+                bootbox.alert("Another user has locked the MERI plan for editing.  Your changes cannot be saved.", function () {
+                    blockUIWithMessage("Reloading page...");
+                    self.meriPlan().cancelAutosave();
+                    document.location.reload();
+                });
+            }
         });
 
     };
@@ -751,12 +788,23 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
             }
         }
     }
+
     self.allTargetMeasures = _.sortBy(self.allTargetMeasures, 'label');
+    self.keyThreatsTargetMeasures = function() {
+        if (self.meriPlan().baseline.rows().length > 0) {
+            return self.allTargetMeasures;
+        }
+        else {  // To report against a survey (baseline/indicator) target measure, a related baseline is required.
+            return _.filter(self.allTargetMeasures, function(targetMeasure) {
+                return !projectService.isSurveyTargetMeasure(targetMeasure.score);
+            });
+        }
+    };
     self.monitoringTargetMeasures = _.filter(self.allTargetMeasures, function(targetMeasure) {
-        return targetMeasure.score.tags && targetMeasure.score.tags.indexOf('Indicator') >= 0;
+        return projectService.isMonitoringTargetMeasure(targetMeasure.score);
     });
     self.baselineTargetMeasures = _.filter(self.allTargetMeasures, function(targetMeasure) {
-        return targetMeasure.score.tags && targetMeasure.score.tags.indexOf('Baseline') >= 0;
+        return projectService.isBaselineTargetMeasure(targetMeasure.score);
     });
     /**
      * This function allows the UI to convert an array of scoreIds into the same labels

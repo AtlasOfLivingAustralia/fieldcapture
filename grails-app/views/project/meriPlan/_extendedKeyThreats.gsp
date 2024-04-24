@@ -45,7 +45,7 @@
             <select multiple="true"
                     class="form-control form-control-sm"
                     data-validation-engine="validate[required]"
-                    data-bind="options:$root.allTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{preserveColumnWidth:20, value:relatedTargetMeasures}, disable: $root.isProjectDetailsLocked()"></select>
+                    data-bind="options:$root.keyThreatsTargetMeasures(), optionsText:'label', optionsValue:'scoreId', multiSelect2:{preserveColumnWidth:20, value:relatedTargetMeasures}, disable: $root.isProjectDetailsLocked()"></select>
         </td>
         <td class="intervention">
             <textarea

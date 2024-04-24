@@ -50,16 +50,9 @@
                 "name": "numberOfEngagements"
               },
               {
-                "dataType": "number",
-                "name": "numberOfParticipants",
-                "decimalPlaces": 0,
-                "computed": {
-                  "expression": "sum(engagementDetails, \"engagementNoParticipants\")"
-                }
-              },
-              {
                 "name": "engagementDetails",
                 "dataType": "list",
+                "allowRowDelete": false,
                 "columns": [
                   {
                     "dataType": "stringList",
@@ -93,9 +86,18 @@
                     "name": "activityDateTo"
                   }
                 ]
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfParticipants",
+                "decimalPlaces": 0,
+                "computed": {
+                  "expression": "sum(engagementDetails, \"engagementNoParticipants\")"
+                }
               }
             ]
           },
+
           {
             "name": "projectPlans",
             "dataType": "list",
@@ -262,13 +264,6 @@
                 "disableTableUpload": true,
                 "columns": [
                   {
-                    "source": "engagementType",
-                    "type": "selectOne",
-                    "width": "20%",
-                    "title": "Type",
-                    "readonly": true
-                  },
-                  {
                     "source": "engagementTitle",
                     "type": "text",
                     "width": "25%",
@@ -278,7 +273,7 @@
                   {
                     "type": "textarea",
                     "source": "engagementPurpose",
-                    "width": "25%",
+                    "width": "45%",
                     "title": "Purpose",
                     "rows": 4,
                     "readonly": true

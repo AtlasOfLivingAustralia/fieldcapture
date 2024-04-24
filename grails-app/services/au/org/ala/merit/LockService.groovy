@@ -8,6 +8,7 @@ class LockService {
     EmailService emailService
     WebService webService
     GrailsApplication grailsApplication
+    UserService userService
 
     Map lock(String entityId) {
         String path = "lock/lock/"+entityId
@@ -26,5 +27,9 @@ class LockService {
             emailService.sendLockStolenEmail(entity.lock, url, emailSubjectTemplate, emailBodyTemplate)
         }
         result
+    }
+
+    boolean userHoldsLock(Map lock) {
+        lock && (lock.userId == userService.getCurrentUserId())
     }
 }

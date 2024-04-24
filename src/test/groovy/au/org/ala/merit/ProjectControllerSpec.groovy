@@ -843,7 +843,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         controller.ajaxUpdate(projectId)
 
         then:
-        1 * projectService.update(projectId, [name:'test project']) >> [statusCode:HttpStatus.SC_OK, resp:[message:'updated']]
+        1 * projectService.update(projectId, [name:'test project'], false) >> [statusCode:HttpStatus.SC_OK, resp:[message:'updated']]
         response.status == HttpStatus.SC_OK
         response.json == [message:'updated']
     }
@@ -859,7 +859,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
 
         then:
         1 * userServiceStub.userIsSiteAdmin() >> true
-        1 * projectService.update(projectId, [plannedStartDate:'2022-06-09T14:00:00Z', plannedEndDate:'2024-06-29T14:00:00Z']) >> [:]
+        1 * projectService.update(projectId, [plannedStartDate:'2022-06-09T14:00:00Z', plannedEndDate:'2024-06-29T14:00:00Z'], false) >> [:]
     }
 
     def "Only admins can update come properties including programId and config"(boolean isGrantManager) {
@@ -875,7 +875,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         then:
         1 * userServiceStub.userIsSiteAdmin() >> isGrantManager
         1 * userServiceStub.userIsAlaOrFcAdmin() >> false
-        1 * projectService.update(projectId, [:]) >> [:]
+        1 * projectService.update(projectId, [:], false) >> [:]
 
         where:
         isGrantManager | _
@@ -898,7 +898,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         then:
         userServiceStub.userIsSiteAdmin() >> (isAdmin || isGrantManager)
         userServiceStub.userIsAlaOrFcAdmin() >> isAdmin
-        1 * projectService.update(projectId, { it.size() == expectedSize }) >> [:]
+        1 * projectService.update(projectId, { it.size() == expectedSize }, false) >> [:]
 
         where:
         isGrantManager | isAdmin | expectedSize

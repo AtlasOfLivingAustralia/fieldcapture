@@ -378,7 +378,7 @@ class ProjectController {
         def projectSite = values.remove("projectSite")
         def documents = values.remove('documents')
         def links = values.remove('links')
-        def result = projectService.update(id, values)
+        def result = projectService.update(id, values, false)
         log.debug "result is " + result
         if (documents && !result.error) {
             if (!id) id = result.resp.projectId
