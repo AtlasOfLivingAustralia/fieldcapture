@@ -904,7 +904,8 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
         searchBieUrl: config.searchBieUrl,
         speciesListUrl: config.speciesListUrl,
         speciesImageUrl: config.speciesImageUrl,
-        speciesProfileUrl: config.speciesProfileUrl
+        speciesProfileUrl: config.speciesProfileUrl,
+        hasAdminPermission: userRoles.admin || userRoles.grantManager
     });
     self.meriPlan = new MERIPlan(project, projectService, meriPlanConfig);
 

@@ -312,7 +312,16 @@ class ProjectService  {
 
     }
 
-    def update(String id, Map projectDetails) {
+    /**
+     * Updates a project, taking actions as required where important fields (e.g. dates) are changed.
+     * @param id the projectId
+     * @param projectDetails the data to update
+     * @param byPassLockCheck Updates to the MERI plan by users need a lock, however some operations
+     * (e.g. data set updates need to merge the custom object, the org report can bulk update annoucements) can
+     * be performed without a lock.
+     * @return
+     */
+    def update(String id, Map projectDetails, boolean bypassMeriPlanLockCheck = true) {
         def defaultTimeZone = TimeZone.default
         TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
 
@@ -353,6 +362,11 @@ class ProjectService  {
             // the "custom" Map which can contain properties "details" (the MERI plan) and "dataSets" (data set summaries)
             // The longer term solution for this is to model Projects explicitly/correctly in ecodata
             if (projectDetails.custom) {
+
+                if (projectDetails.custom.details && !bypassMeriPlanLockCheck && !lockService.userHoldsLock(currentProject.lock)) {
+                    return [error:'MERI plan is locked by another user', noLock:true]
+                }
+
                 projectDetails.custom.details?.lastUpdated = DateUtils.formatAsISOStringNoMillis(new Date())
 
                 Map custom = currentProject.custom ?: [:]
