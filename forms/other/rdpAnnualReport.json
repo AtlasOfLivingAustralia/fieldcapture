@@ -1,0 +1,879 @@
+{
+  "name": "RDP Annual Report",
+  "sections": [
+    {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "RDP Annual Report",
+      "optional": false,
+      "optionalQuestionText": null,
+      "template": {
+        "dataModel": [
+          {
+            "dataType": "text",
+            "name": "keyAchievements",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "adaptiveManagementActions",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "identifyAdaptiveManagementActions",
+            "description": "Clause 22.2 outlines changes that do not require a Change Order",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "requireChangesAdaptiveManagementActions",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "serviceName"
+              },
+              {
+                "dataType": "text",
+                "name": "targetMeasure",
+                "description": "The target measure identified in the MERI plan"
+              },
+              {
+                "dataType": "text",
+                "name": "scoreId",
+                "description": "Identifier for the target measure"
+              },
+              {
+                "dataType": "text",
+                "name": "annualTarget",
+                "description": "The minimum annual target specified in the MERI plan for the target measure"
+              },
+              {
+                "dataType": "text",
+                "name": "result",
+                "description": "The actual progress towards the target this financial year"
+              },
+              {
+                "dataType": "text",
+                "name": "reasonTargetNotMet",
+                "behaviour": [
+                  {
+                    "condition": "result < annualTarget or result > annualTarget",
+                    "type": "enable_and_clear"
+                  }
+                ],
+                "validate": "required"
+              }
+            ],
+            "dataType": "list",
+            "name": "minimumAnnualTargetsNotMet"
+          },
+          {
+            "dataType": "text",
+            "name": "newRisksIdentified",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "yesNewRisksIdentified",
+            "behaviour": [
+              {
+                "condition": "newRisksIdentified == \"Yes\"",
+                "type": "visible"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "projectEncounteredChange",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "projectEncounteredChangeDetails",
+            "validate": "required,maxSize[1250]",
+            "behaviour": [
+              {
+                "condition": "projectEncounteredChange == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "hasWhsRegisterReview",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "yesWhsRegisterReview",
+            "behaviour": [
+              {
+                "condition": "hasWhsRegisterReview == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "psoMoreDetails",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "yesPsoMoreDetails",
+            "behaviour": [
+              {
+                "condition": "psoMoreDetails == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "name": "communicationsDuringPeriod",
+            "dataType": "list",
+            "allowRowDelete": false,
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "yesCommunicationsMaterial",
+                "readonly": true
+              }
+            ]
+          },
+          {
+            "name": "numberOfCommunicationsMaterialsPublished",
+            "dataType": "number",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(communicationsDuringPeriod, \"yesCommunicationsMaterial\")"
+            }
+          },
+          {
+            "name": "engagementsByType",
+            "dataType": "list",
+            "columns": [
+              {
+                "name": "engagementDetails",
+                "dataType": "list",
+                "columns": [
+                  {
+                    "dataType": "stringList",
+                    "name": "engagementType",
+                    "constraints": [
+                      "One-on-one technical advice",
+                      "Negotiations with the community, etc.",
+                      "Facilitating/Hosting on-ground trials/demos",
+                      "Hosting workshops",
+                      "Facilitating/Hosting conferences/seminars"
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "engagementTitle"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "engagementPurpose"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "engagementNoParticipants"
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "activityDateFrom"
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "activityDateTo"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "engagementType"
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfEngagements"
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfParticipants",
+                "decimalPlaces": 0,
+                "computed": {
+                  "expression": "sum(engagementDetails, \"engagementNoParticipants\")"
+                }
+              }
+            ]
+          },
+          {
+            "name": "projectPlans",
+            "dataType": "list",
+            "allowRowDelete": false,
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "planName",
+                "readonly": true
+              },
+              {
+                "dataType": "text",
+                "name": "planPurpose",
+                "readonly": true
+              }
+            ]
+          },
+          {
+            "dataType": "number",
+            "name": "numberOfPlans",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(projectPlans, \"planName\")"
+            }
+          },
+          {
+            "name": "planningMeetings",
+            "dataType": "list",
+            "allowRowDelete": false,
+            "columns": [
+              {
+                "name": "meetingDateFrom",
+                "dataType": "date",
+                "readonly": true
+              },
+              {
+                "name": "meetingDateTo",
+                "dataType": "date",
+                "readonly": true
+              },
+              {
+                "dataType": "text",
+                "name": "meetingName",
+                "readonly": true
+              },
+              {
+                "dataType": "text",
+                "name": "meetingDescription",
+                "readonly": true
+              }
+            ]
+          },
+          {
+            "dataType": "number",
+            "name": "numberOfMeetings",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "count(planningMeetings, \"meetingName\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "numberOfCommunityGroupsSupported",
+            "validate": "required,min[0]"
+          }
+        ],
+        "modelName": "RDP Annual Report",
+        "title": "Annual Project Services Report",
+        "viewModel": [
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "1. Please outline the key achievements met by the Project including progress against your Project Implementation Plan and progress towards Project outcomes in the past 12 months as defined in the MERI Plan. (1250 character, [approx. 250 word] limit)",
+                "source": "keyAchievements",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "2. Please describe any adaptive management actions undertaken during the past 12 months, this includes addressing/rectifying key issues and challenges, improving Project delivery. (1250 character, [approx. 250 word] limit)",
+                "source": "adaptiveManagementActions",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "2.a Please identify which of the adaptive management actions (if any) were applied in relation to Clause 22.2 in the Deed. (1250 character, [approx. 250 word] limit)",
+                "source": "identifyAdaptiveManagementActions",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "2.b Please identify which of the adaptive management actions (if any) require changes to the MERI Plan and why they are required. (1250 character, [approx. 250 word] limit)",
+                "source": "requireChangesAdaptiveManagementActions",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
+          },
+          {
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "readonly": true,
+                "width": "15%",
+                "source": "serviceName",
+                "type": "textarea",
+                "rows": 3,
+                "title": "Service"
+              },
+              {
+                "readonly": true,
+                "width": "20%",
+                "source": "targetMeasure",
+                "type": "textarea",
+                "rows": 3,
+                "title": "Target measure"
+              },
+              {
+                "readonly": true,
+                "width": "13%",
+                "source": "annualTarget",
+                "type": "text",
+                "title": "Minimum annual target"
+              },
+              {
+                "readonly": true,
+                "width": "12%",
+                "source": "result",
+                "type": "text",
+                "title": "Progress achieved"
+              },
+              {
+                "width": "40%",
+                "source": "reasonTargetNotMet",
+                "type": "textarea",
+                "rows": 3,
+                "title": "Explanation of over delivery/why target not met (500 character, [approx. 100 word] limit)"
+              }
+            ],
+            "userAddedRows": false,
+            "source": "minimumAnnualTargetsNotMet",
+            "title": "<b>3. Progress against Project Services forecasts</b><br/>",
+            "type": "table"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "4. In the past 12 months were any new risks identified during the delivery of the Project?",
+                "css": "span6",
+                "source": "newRisksIdentified",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "",
+                "source": "yesNewRisksIdentified",
+                "preLabel": "<i><b style=\"background-color:yellow\">Please ensure you update the Project risks & threats table in MERIT.</b></i>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "5. In the past 12 months, has this Project encountered any changes to the planned Community and First Nations people participation and investment levels?",
+                "source": "projectEncounteredChange",
+                "type": "selectOne",
+                "rows": 4
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Please outline these changes. (1250 character [approx. 250 word] limit).",
+                "source": "projectEncounteredChangeDetails",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "6. Was the Project WHS Risk Register reviewed in the past 12 months?",
+                "css": "span6",
+                "source": "hasWhsRegisterReview",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "6.a Please provide details of the review and any changes made to the Project WHS Risk Register. Please submit the revised Project Risk Register to your Customer Contract Manager if you have not already done so. (1250 character [approx. 250 word] limit).",
+                "source": "yesWhsRegisterReview",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<h4>7. Project Support & Overheads Summary Data Table</h4>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Communications</h3>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "items": [
+                  {
+                    "type": "number",
+                    "source": "numberOfCommunicationsMaterialsPublished",
+                    "preLabel": "Total number of communications materials published during the year"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "table",
+            "title": "<b>Communications material published during the year</b>",
+            "source": "communicationsDuringPeriod",
+            "userAddedRows": false,
+            "disableTableDownload": true,
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "type": "text",
+                "source": "yesCommunicationsMaterial",
+                "title": "Communications material",
+                "readonly": true,
+                "width": "50%"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Engagement activities or events, to the Community, which are directly relevant to delivery of Project</h3>"
+              }
+            ]
+          },
+          {
+            "type": "repeat",
+            "source": "engagementsByType",
+            "items": [
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "text",
+                    "source": "engagementType",
+                    "preLabel": "Type of engagements",
+                    "readonly": true
+                  },
+                  {
+                    "type": "number",
+                    "source": "numberOfEngagements",
+                    "preLabel": "Number of engagements of this type",
+                    "readonly": true
+                  },
+                  {
+                    "type": "number",
+                    "source": "numberOfParticipants",
+                    "preLabel": "Total number of participants",
+                    "readonly": true
+                  }
+                ]
+              },
+              {
+                "type": "table",
+                "source": "engagementDetails",
+                "title": "<b>Community engagement activities undertaken during the year</b>",
+                "userAddedRows": false,
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "source": "engagementType",
+                    "type": "selectOne",
+                    "width": "20%",
+                    "title": "Type",
+                    "readonly": true
+                  },
+                  {
+                    "source": "engagementTitle",
+                    "type": "text",
+                    "width": "25%",
+                    "title": "Title",
+                    "readonly": true
+                  },
+                  {
+                    "type": "textarea",
+                    "source": "engagementPurpose",
+                    "width": "25%",
+                    "title": "Purpose",
+                    "rows": 4,
+                    "readonly": true
+                  },
+                  {
+                    "source": "engagementNoParticipants",
+                    "type": "number",
+                    "width": "10%",
+                    "title": "Number of participants",
+                    "readonly": true
+                  },
+                  {
+                    "title": "Activity Date from",
+                    "source": "activityDateFrom",
+                    "type": "date",
+                    "width": "10%",
+                    "readonly": true
+                  },
+                  {
+                    "title": "Activity Date to",
+                    "source": "activityDateTo",
+                    "type": "date",
+                    "width": "10%",
+                    "readonly": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Coordinate Projects and MERI</h3>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "items": [
+                  {
+                    "type": "number",
+                    "source": "numberOfPlans",
+                    "preLabel": "Total number of site/ project/ monitoring plans developed"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "table",
+            "source": "projectPlans",
+            "title": "<b>Site / Project / Monitoring plans developed during the year</b>",
+            "userAddedRows": false,
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "source": "planName",
+                "type": "text",
+                "width": "30%",
+                "title": "Title",
+                "readonly": true
+              },
+              {
+                "source": "planPurpose",
+                "type": "textarea",
+                "width": "60%",
+                "title": "Title",
+                "readonly": true
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "items": [
+                  {
+                    "type": "number",
+                    "source": "numberOfMeetings",
+                    "preLabel": "Total number of planning meetings"
+                  }
+                ]
+              }
+
+            ]
+          },
+          {
+            "type": "table",
+            "source": "planningMeetings",
+            "title": "<b>Project meetings held during the year</b>",
+            "userAddedRows": false,
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "source": "meetingDateFrom",
+                "type": "date",
+                "width": "10%",
+                "title": "From",
+                "readonly": true
+              },
+              {
+                "source": "meetingDateTo",
+                "type": "date",
+                "width": "10%",
+                "title": "To",
+                "readonly": true
+              },
+              {
+                "source": "meetingName",
+                "type": "text",
+                "width": "30%",
+                "title": "Name",
+                "readonly": true
+              },
+              {
+                "source": "meetingDescription",
+                "type": "text",
+                "width": "50%",
+                "title": "Description",
+                "readonly": true
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "7.a Please review the Project Support and Overheads table which has been populated with information provided through quarterly reporting. Do you have anything further to add to this table?",
+                "source": "psoMoreDetails",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "7.b If yes, please outline what you would like to include. (1250 character [approx. 250 word] limit).",
+                "source": "yesPsoMoreDetails",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
+          }
+        ],
+        "pre-populate": [
+          {
+            "mapping": [
+              {
+                "mapping": [
+                  {
+                    "source-path": "service",
+                    "target": "serviceName"
+                  },
+                  {
+                    "source-path": "targetMeasure",
+                    "target": "targetMeasure"
+                  },
+                  {
+                    "source-path": "scoreId",
+                    "target": "scoreId"
+                  },
+                  {
+                    "source-path": "financialYearTarget",
+                    "target": "annualTarget"
+                  },
+                  {
+                    "source-path": "financialYearResult",
+                    "target": "result"
+                  }
+                ],
+                "source-path": "targets",
+                "target": "minimumAnnualTargetsNotMet"
+              }
+            ],
+            "merge": {
+              "minimumAnnualTargetsNotMet": {
+                "keys": [
+                  "serviceName",
+                  "targetMeasure"
+                ],
+                "annualTarget": {
+                  "replaceExisting": true
+                },
+                "result": {
+                  "replaceExisting": true
+                },
+                "sort": [
+                  "service",
+                  "outputTargetMeasure"
+                ],
+                "addUnmatchedNewRows": true,
+                "deleteUnmatchedExistingRows": true
+              }
+            },
+            "source": {
+              "params": [
+                {
+                  "expression": "owner.projectId",
+                  "name": "id",
+                  "type": "computed"
+                },
+                {
+                  "expression": "activity.plannedEndDate",
+                  "name": "financialYearEndDate",
+                  "type": "computed"
+                },
+                {
+                  "name": "missedTargetsOnly",
+                  "value": false
+                },
+                {
+                  "name": "onlyNonZeroTargets",
+                  "value": true
+                }
+              ],
+              "url": "/project/scoresByFinancialYear/"
+            }
+          },
+          {
+            "source": {
+              "url": "/project/annualReport/",
+              "params": [
+                {
+                  "expression": "owner.projectId",
+                  "name": "id",
+                  "type": "computed"
+                },
+                {
+                  "expression": "activity.plannedEndDate",
+                  "name": "financialYearEndDate",
+                  "type": "computed"
+                },
+                {
+                  "name": "scoreIds",
+                  "value": [
+                    "e7701823-e534-414e-80f5-86f9eecef50c",
+                    "f474c538-c8d7-4431-86c3-741163a50a35",
+                    "06c401d9-1370-48d1-9c30-9a6846128f71",
+                    "c6b2f62b-06c7-4ea6-9cb3-61ce26ab8200",
+                    "3117521e-a801-45ef-838f-519c31ca59a2"
+                  ]
+                }
+              ]
+            },
+            "merge": {
+              "communicationsDuringPeriod": {
+                "keys": [
+                  "yesCommunicationsMaterial"
+                ],
+                "addUnmatchedNewRows": true,
+                "deleteUnmatchedExistingRows": true
+              },
+              "engagementDetails": {
+                "keys": [
+                  "engagementTitle"
+                ],
+                "addUnmatchedNewRows": true,
+                "deleteUnmatchedExistingRows": true
+              }
+            },
+            "mapping": [
+              {
+                "source-path": "e7701823-e534-414e-80f5-86f9eecef50c",
+                "target": "communicationsDuringPeriod"
+              },
+              {
+                "source-path": "3117521e-a801-45ef-838f-519c31ca59a2",
+                "target": "engagementsByType",
+                "mapping": [
+                  {
+                    "source-path": "group",
+                    "target": "engagementType"
+                  },
+                  {
+                    "source-path": "count",
+                    "target": "numberOfEngagements"
+                  },
+                  {
+                    "source-path": "result",
+                    "target": "engagementDetails"
+                  }
+                ]
+              },
+              {
+                "source-path": "06c401d9-1370-48d1-9c30-9a6846128f71",
+                "target": "projectPlans"
+              },
+              {
+                "source-path": "c6b2f62b-06c7-4ea6-9cb3-61ce26ab8200",
+                "target": "planningMeetings"
+              }
+            ]
+          }
+        ]
+      },
+      "templateName": "rdpAnnualReport",
+      "title": "Annual report"
+    }
+  ],
+  "status": "active",
+  "supportsPhotoPoints": false,
+  "supportsSites": false,
+  "type": "Report"
+}
