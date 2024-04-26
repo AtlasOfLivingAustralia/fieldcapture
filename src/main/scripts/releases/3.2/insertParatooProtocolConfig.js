@@ -564,7 +564,16 @@ var protocols = {
                 "aerial-observation.ferals_aerial_count_survey.available_species.count": {
                     "dwcAttribute": "individualCount"
                 },
+                "aerial-survey.setup_ID.target_species_pest": {
+                    "dataType": "species"
+                },
                 "aerial-observation.survey.setup_ID.target_species_pest": {
+                    "dataType": "species"
+                },
+                "aerial-setup-desktop.target_species_pest": {
+                    "dataType": "species"
+                },
+                "aerial-setup-desktop.survey.setup_ID.target_species_pest": {
                     "dataType": "species"
                 },
                 "aerial-observation.survey.setup_ID.wild_dog": {
@@ -579,6 +588,15 @@ var protocols = {
                     "type": "speciesSelect"
                 },
                 "aerial-observation.survey.setup_ID.wild_dog": {
+                    "type": "speciesSelect"
+                },
+                "aerial-setup-desktop.target_species_pest": {
+                    "type": "speciesSelect"
+                },
+                "aerial-setup-desktop.survey.setup_ID.target_species_pest": {
+                    "type": "speciesSelect"
+                },
+                "aerial-survey.setup_ID.target_species_pest": {
                     "type": "speciesSelect"
                 }
             }
