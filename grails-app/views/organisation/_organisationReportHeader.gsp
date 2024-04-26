@@ -16,7 +16,7 @@
 
     <div class="row mb-2">
         <div class="col-sm-2 header-label">Reporting period end</div>
-        <g:if test="${report.toDate < context.config.organisationReports.periodEnd[0]}">
+        <g:if test="${context.config.organisationReports.periodEnd[0] && report.toDate < context.config.organisationReports.periodEnd[0]}">
             <div class="col-sm-9 value"><g:formatDate format="dd MMM yyyy"
                                                       date="${au.org.ala.merit.DateUtils.parse(report.toDate).minusDays(1).toDate()}"/></div>
         </g:if>
