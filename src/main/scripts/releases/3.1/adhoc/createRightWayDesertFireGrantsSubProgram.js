@@ -12,135 +12,150 @@ var config =
     {
         "meriPlanContents": [
             {
-                "template": "name",
+                "template": "assets",
                 "model": {
-                    "tableFormatting": true
+                    "priorityCategories": [
+                        "Birds",
+                        "Mammals",
+                        "Fish",
+                        "Plants",
+                        "Priority Plants",
+                        "Vertebrate species",
+                        "Reptiles"
+                    ],
+                    "assetHeading": "Asset",
+                    "autoSelectCategory": true,
+                    "assetClass": "asset-with-category",
+                    "viewExplanation": "Species, ecological community or environmental asset(s) the project is targeting",
+                    "explanation": "List the natural assets that will benefit from this project",
+                    "fromPriorities": true,
+                    "assetHelpText": "Scientific and/or common name",
+                    "assetCategoryHelpText": "as identified within the regional workshop reports.  Types with no assets are not selectable",
+                    "placeHolder": "Please select"
                 }
             },
             {
-                "template": "priorityPlace",
+                "template": "activities",
                 "model": {
-                    "priorityPlaceHelpText": "Priority places recognises that some threatened species share the same habitat, and that place-based action can support protection and recovery of more than one species.",
-                    "priorityPlaceLabel": "Does this project directly support a priority place?"
-                }
-            },
-            {
-                "template": "indigenousInvolvement"
-            },
-            {
-                "template": "description",
-                "model": {
-                    "tableFormatting": true,
-                    "maxSize": "1000",
-                    "placeholder": "Please provide a short description of this project. This project description will be visible on the project overview page in MERIT [Free text; limit response to 1000 characters (approx. 150 words)]"
-                }
-            },
-            {
-                "template": "programOutcome",
-                "model": {
-                    "maximumPriorities": "1000",
-                    "priorityHelpText": "Enter the primary investment priority for the primary outcome, noting only one can be selected."
-                }
-            },
-            {
-                "template": "additionalOutcomes",
-                "model": {
-                    "outcomePriority": "Additional outcome/s",
-                    "helpTextHeading": "If the project is not delivering additional benefits, delete the row using the 'x' in the right-most column.",
-                    "title": "Additional benefits",
-                    "priority": "Additional Investment Priorities",
-                    "priorityHelpText": "Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
+                    "includeOther": true,
+                    "noneSelectedMessage": "No priority actions have been nominated for this project",
+                    "singleSelection": false,
+                    "title": "Project Actions",
+                    "explanation": "Please select from the lists of priority action applicable to this project. If the priority action is not listed and ‘other’ is selected, please provide details of the ‘other’ priority within the space provided"
                 }
             },
             {
                 "template": "outcomeStatements",
                 "model": {
-                    "outcomeType": "short",
-                    "helpText": "Outline the degree of impact having undertaken the services for up to three years. Ensure the outcomes are measurable with consideration to the baseline and proposed monitoring regime",
-                    "subtitle": "Short-term outcome statement/s",
-                    "extendedOutcomes": true,
-                    "multiplePriorities": true
+                    "subtitle": "Please provide outcome statements. Outcomes statements should: - Clearly describe the intent of the project, specifically the benefit or change that the project is expected to deliver by June 2022; - Be expressed as a SMART statement (Specific, Measurable, Attainable, Realistic and Time-bound); and - Ensure that the outcomes are measurable with consideration to the monitoring methodology provided below",
+                    "placeholder": "By 30 June 2021, [Free text]",
+                    "title": "Outcome statements"
                 }
             },
             {
-                "template": "extendedKeyThreats",
+                "template": "sectionHeading",
                 "model": {
-                    "servicesHelpText": "Project Services/Target measures selected in this section will be pre-populated into the Project services and targets and Project service forecasts tables",
-                    "threatHelpText": "Describe the key threats or key threatening processes to the investment priority",
-                    "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance",
-                    "interventionHelpText": "Describe the proposed method to address the threat or threatening process",
-                    "title": "Key threat(s) and/or key threatening processes"
+                    "heading": "Project Details"
                 }
             },
             {
-                "template": "projectMethodology",
+                "template": "description",
                 "model": {
-                    "helpText": "In addition to listing your project assumptions, please list any nominated project services that will not be charged for.\nInclude all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not impacted by adverse weather conditions. Ensure what’s documented here aligns to those assumptions documented within the Project Logic.",
-                    "maxSize": "4000",
-                    "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])"
+                    "helpTextHeading": "A succinct overview of the project: (i) what will be done and (ii) why it will be done",
+                    "maxSize": "1000",
+                    "placeholder": "[Free text; limit response to 1000 characters (approx. 150 words)]",
+                    "explanation": " Please provide a short succinct description of this project. The description should state what will be done and why it will be done. This project description will be publicly visible on the project overview page in MERIT"
                 }
             },
             {
                 "template": "projectPartnerships",
                 "model": {
-                    "helpTextHeading": "Note: Not limited to key subcontractors.",
-                    "helpTextPartnerName": "Insert name of project partner. To be a project partner, they need to be actively involved in the planning or delivery of the project"
+                    "namePlaceHolder": "[Free text]",
+                    "helpTextPartnerNature": "If partnership with an organisation: provide the name of the organisation and the role they will play/how you will support them. If partnering with community groups or members of the public: indicate each group or individual you will engage with",
+                    "partnershipPlaceHolder": "[Free text]"
                 }
             },
             {
-                "template": "extendedBaselineMonitoring",
+                "template": "consultation",
                 "model": {
-                    "approachHeading": "Monitoring method",
-                    "indicatorHeading": "Monitoring methodology",
-                    "monitoringServiceHelpText": "Select the relevant Project Services(s)/Target measure(s) that will be used to support ongoing monitoring",
-                    "baselineDataDescriptionHelpText": "Describe the project baseline to be established, or the baseline data that currently exists",
-                    "baselineMethodHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
-                    "baselineDataHelpText": "Existing baseline data needs to be based on best practice methods and be compatible with the EMSA protocols.",
-                    "approachHelpText": "EMSA modules mandatory unless exemption agreed to by the Department. Where an exemption has been provided the user can then select \"Other\"",
-                    "titleHelpText": "Describe the Project Baseline(s) and ongoing monitoring which will be used to report progress towards this projects outcome(s).  Project Services/Target measures selected in this section will be pre-populated into the Project services and targets and Project service forecasts tables",
-                    "evidenceHelpText": "List evidence that will be retained to demonstrate delivery of this service. Refer to Evidence Guide and Project Service Summaries for guidance",
-                    "baselineServiceHelpText": "Select the relevant Project Service(s)/Target measure(s) that will be used to support the development of the baseline",
-                    "newIndicatorText": "New monitoring indicator"
+                    "helpTextHeading": "Indicate the groups or individuals you will consult with",
+                    "title": "Consultation",
+                    "explanation": "Please provide details on all groups or individuals that you will consult with as part of undertaking the project",
+                    "placeHolder": "[Free text] Indicate the groups or individuals you will consult with"
                 }
             },
             {
-                "template": "projectReview",
+                "template": "keyThreats",
                 "model": {
-                    "title": "Project review, improvement and evaluation methodology and approach (3000 character limit [approximately 500 words])"
+                    "threatHelpText": "The key threats (or key threatening processes) that your project will be addressing",
+                    "interventionHelpText": "Describe the proposed interventions to address the threat and how this will deliver on the project outcome",
+                    "title": "Key Threats",
+                    "explanation": "Describe the key threat(s) and/or key threatening processes impacting project assets that the project will be addressing."
+                }
+            },
+            {
+                "template": "projectMethodology",
+                "model": {
+                    "maxSize": "4000",
+                    "title": "Project Methodology",
+                    "explanation": "The methodology should describe how each project service (i.e., action) will be implemented to achieve outcomes and why that specific approach or technique was chosen. The methodology could include the location, partner/s involvement and outputs. The methodology should clearly link to the outcome statement. At least one method for each project outcome should be identified.",
+                    "tableHeading": "Please describe the methodology that will be used to achieve the project’s outcome statements.",
+                    "placeHolder": "[Free text; limit response to 4000 characters (approx. 650 words)]"
+                }
+            },
+            {
+                "template": "monitoringIndicators",
+                "model": {
+                    "approachHeading": "Describe the project monitoring indicator(s) approach",
+                    "indicatorHeading": "Identify the project monitoring indicator(s)",
+                    "indicatorHelpText": "List the indicators of project success that will be monitored. Indicators should link back to the outcome statements and, in most cases, will be quantitative and expressed as a numerical measurable. Where relevant, qualitative indicators can be used. Indicators should measure both project outputs (e.g., area (ha) of rabbit control, length (km) of predator proof fencing) and change the project is aiming to achieve (e.g., change in abundance of X threatened species at Y location, change in vegetation cover (%) etc.)",
+                    "approachHelpText": "Briefly describe the method that will be used to monitor the indicator (including timing of monitoring, who will collect/collate/analyse, data, etc)",
+                    "indicatorPlaceHolder": "[Free text]",
+                    "approachPlaceHolder": "[Free text]",
+                    "title": "Project Monitoring Indicators"
+                }
+            },
+            {
+                "template": "adaptiveManagement",
+                "model": {
+                    "title": "Project Review, Evaluation and Improvement Methodology and Approach",
+                    "explanation": "Outline the methods and processes that will enable adaptive management during the lifetime of this project"
                 }
             },
             {
                 "template": "nationalAndRegionalPlans",
                 "model": {
-                    "includeUrl": true,
-                    "headingTitle": "Conservation and management plans"
+                    "documentNameHelpText": "List the name of the Recovery Plan or Conservation Advice for species listed under the Environment Protection and Biodiversity Conservation Act 1999 (if applicable), or state recovery plan.",
+                    "explanation": "Explain how the project aligns with national and/or state species recovery plans and strategies."
                 }
             },
             {
-                "template": "serviceOutcomeTargets",
+                "template": "serviceTargets",
                 "model": {
-                    "titleHelpText": "Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections",
-                    "title": "Project services and targets",
+                    "showTargetDate": true,
+                    "title": "Actions and Targets Table",
                     "serviceName": "Service"
                 }
             },
             {
-                "template": "serviceForecasts",
+                "template": "meriBudget",
                 "model": {
-                    "titleHelpText": "Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections"
-                },
-                "excludedModes": [
-                    "PRINT"
-                ]
+                    "itemName": "Budget item",
+                    "showThemeColumn": false,
+                    "showActivityColumn": false,
+                    "explanation": "Please detail how project funding will be allocated to project services (action) by species, if more than one species is benefitting from the project. Expenditure should align with the approved project grant application (including the amount identified for project reporting and administration). Each action should be identified as a different line item",
+                    "projectHeadingHelpText": "Planned budget expenditure for each service (action) by species",
+                    "hideHelpText": true
+                }
             }
         ],
         "excludes": [],
         "programServiceConfig": {
-            "serviceFormName": "NHT Output Report",
+            "serviceFormName": null,
             "programServices": [
                 {
                     "serviceTargets": [
-                        "c3276929-b8a9-4985-a329-49b86f14018c"
+                        "0df7c177-2864-4a25-b420-2cf3c45ce749"
                     ],
                     "serviceId": 1
                 },
@@ -154,15 +169,18 @@ var config =
                     "serviceTargets": [
                         "1f8161bc-908b-4ec8-ab7f-edac973a657d",
                         "88908921-1248-4a7c-b185-51c625c737e3",
-                        "fe9f1a6c-e614-489a-80fa-4d6d76f1cf95"
+                        "26a8213e-1770-4dc4-8f99-7e6302197504",
+                        "15a49c6f-2177-4183-9955-c7e487970171",
+                        "fe9f1a6c-e614-489a-80fa-4d6d76f1cf95",
+                        "f7089b5b-333f-4f33-b0df-f7ef88e9f683"
                     ],
                     "serviceId": 3
                 },
                 {
                     "serviceTargets": [
                         "aa0c6b29-285e-4344-987e-dfeaf1d95648",
-                        "a9d98baa-b2ab-4428-82cf-d96185e63aa6",
-                        "c4ea5ce3-4a70-4df8-aff7-ffa929e7df61"
+                        "c464b652-be5e-4658-b62f-02bf1a80bcf8",
+                        "a901232d-8244-40dd-9bb7-ff9e4e9dbeac"
                     ],
                     "serviceId": 4
                 },
@@ -177,128 +195,143 @@ var config =
                 },
                 {
                     "serviceTargets": [
-                        "22771c0d-8403-433b-b468-e36dc16a1d21",
-                        "675cc878-eb80-435f-a841-d89b657fb2e3",
-                        "dd9f8fd4-b6c7-4f09-bbbf-5d721afc7677",
-                        "6f3cb6ab-5c6a-49be-9af9-9226fa751725"
+                        "d97037d2-7ee4-429b-bd26-cdcc5a269d9d",
+                        "e48faf01-72eb-479c-be9b-d2d71d254fa4"
+                    ],
+                    "serviceId": 6
+                },
+                {
+                    "serviceTargets": [
+                        "482bdf4e-6f7a-4bdf-80d5-d619ac7cdf50",
+                        "2ef32f94-14f1-4878-9eb7-c115fa18ce25"
                     ],
                     "serviceId": 7
                 },
                 {
                     "serviceTargets": [
-                        "e0b4cc3e-e94a-4c97-81dc-a4cb868c2cc3",
-                        "b0bcfc54-76fa-4659-accf-276c18b50c31"
+                        "7709de92-0f85-490b-bc5f-2748b3db42c2",
+                        "8025b157-44d7-4283-bc1c-f40fb9b99501",
+                        "0ec5fd50-13e2-4bde-8e01-5955e7145cae"
                     ],
                     "serviceId": 8
                 },
                 {
                     "serviceTargets": [
-                        "9416c9f4-48ca-4bd1-8822-cd45ebb56c58",
-                        "2409e649-2ee2-47fd-9e76-ef2ffa07a5e7",
-                        "d58f8dba-109d-4179-b130-a888cd3d303c",
-                        "01686d38-9165-4497-9648-627ef81945a7"
+                        "46925c6c-e222-4f6a-8553-c69929929d10",
+                        "757d6c9e-ec24-486f-a128-acc9bfb87830",
+                        "ffa44bad-209d-414a-bc96-e8ca3c96092f"
                     ],
                     "serviceId": 9
                 },
                 {
                     "serviceTargets": [
-                        "0e2f8d61-b7b4-4d2d-b07c-4fc20bbe326a",
-                        "bb506258-e907-43d3-99bd-0fe0400f654e"
+                        "edb6e94a-d781-447c-8792-5e06e5c912a8",
+                        "a3afea6e-711c-4ef2-bb20-6d2630b7ee93"
                     ],
                     "serviceId": 10
                 },
                 {
                     "serviceTargets": [
-                        "3c83e639-9c19-4b31-a86f-9d2d5e78123b",
-                        "e901be5e-8336-432e-b164-f278abd7430b"
+                        "607e2cd4-d7c5-4d5b-867f-c2c8e7b62948",
+                        "b7c067e3-6ae7-4e76-809a-312165b75f94"
+                    ],
+                    "serviceId": 11
+                },
+                {
+                    "serviceTargets": [
+                        "d1c10295-05e5-4265-a5f1-8a5683af2efe"
                     ],
                     "serviceId": 12
                 },
                 {
                     "serviceTargets": [
-                        "5557288b-190e-4a3f-a60b-4bdff6ca8fe8",
-                        "902df7a8-92f6-420d-9544-47d4b8cf31ca"
+                        "011a161f-7275-4b5e-986e-3fe4640d0265",
+                        "3e402423-3e0b-4549-9e09-2b71329ea069"
                     ],
                     "serviceId": 13
                 },
                 {
                     "serviceTargets": [
-                        "9deb3edf-50c7-4b04-a1fb-d1451eadf641",
-                        "360c8b86-360c-4ca3-b1aa-626be56f2b11"
+                        "c2dc6f91-ccb1-412e-99d0-a842a4ac4b03"
                     ],
                     "serviceId": 14
                 },
                 {
                     "serviceTargets": [
-                        "7c30bc26-829e-4080-8059-27af9285113b",
-                        "158a5544-78e3-4d00-9f1b-62a85a938268"
+                        "def4e2af-dcad-4a15-8336-3765e6671f08",
+                        "cf3ccbf5-d031-4a22-a746-961cdefa7318"
                     ],
                     "serviceId": 15
                 },
                 {
                     "serviceTargets": [
-                        "4aa201ec-2066-40e1-a457-99daa569c8e2",
-                        "f46f096a-a274-426b-adad-702e7cf8fab7",
-                        "3b1403f3-139a-4206-b325-62ebfe05ddc4",
-                        "7cb13c22-3dcd-43e7-808d-e0e26f5c090d"
+                        "c46842b6-d7b6-4917-b56f-f1b0594663fa",
+                        "ab822db5-ed79-47af-badc-5a3772dab87d"
                     ],
                     "serviceId": 16
                 },
                 {
                     "serviceTargets": [
-                        "5c6db4c1-7fde-452e-8735-e52842fe6217",
-                        "41cb1e2c-59bc-4639-8bf7-fe0f528e006e"
-                    ],
-                    "serviceId": 18
-                },
-                {
-                    "serviceTargets": [
-                        "4f71e00a-2d80-488d-9ce4-947e60589149",
-                        "69a2ffba-41e9-406e-8ea4-5bdeee92cbde"
-                    ],
-                    "serviceId": 42
-                },
-                {
-                    "serviceTargets": [
-                        "26ea592f-ee39-4e6e-b6af-5b53fb1a5675"
+                        "2d877a91-6312-4c44-9ae1-2494ea3e43db"
                     ],
                     "serviceId": 17
                 },
                 {
                     "serviceTargets": [
-                        "3587a984-68f9-4db3-b5af-49f265d853e0",
-                        "9d2d01be-b517-4be2-a225-8b1c887e016e"
+                        "d4ba13a1-00c8-4e7f-8463-36b6ea37eee6",
+                        "01ee5719-e814-43ce-a1b1-4e26063b5a6c"
+                    ],
+                    "serviceId": 18
+                },
+                {
+                    "serviceTargets": [
+                        "4bcab901-879a-402d-83f3-01528c6c86a5"
                     ],
                     "serviceId": 19
                 },
                 {
                     "serviceTargets": [
-                        "d0516817-5acb-46bd-9871-2696c245bad0",
-                        "7fed132d-6a38-448c-b519-381ab9e1e027",
-                        "e08dda14-360c-4b66-b8c5-eb0269c5aa44",
-                        "f3671aa7-773f-447d-9649-ba7f11dbe97a"
+                        "45994b98-21f1-4927-a03e-3d940ac75116"
                     ],
                     "serviceId": 20
                 },
                 {
                     "serviceTargets": [
-                        "5ab2b539-a5b4-40da-a556-a2c18066345b",
-                        "36410625-05f3-42d3-b04f-a3b268498ee1"
+                        "6eaa061c-b77b-4440-8e8f-7ebaa2ff6207"
+                    ],
+                    "serviceId": 21
+                },
+                {
+                    "serviceTargets": [
+                        "0e887410-a3c5-49ca-a6f5-0f2f6fae30db"
+                    ],
+                    "serviceId": 22
+                },
+                {
+                    "serviceTargets": [
+                        "725d9365-0889-4355-8a7f-a21ef260c468",
+                        "996e3dc7-1376-47ad-a941-648cbae246b4"
                     ],
                     "serviceId": 23
                 },
                 {
                     "serviceTargets": [
-                        "0162246b-13fd-40c9-ae26-fb767eee76f8"
+                        "0f11a699-6063-4e91-96ca-53e45cf26b80",
+                        "1144fc3d-4d31-42bd-b9fb-ab5f91db37ca"
                     ],
                     "serviceId": 24
                 },
                 {
                     "serviceTargets": [
-                        "b9e710e4-7dd3-4acc-ac2c-c69f4bcb9787",
-                        "00934509-f102-4d39-a043-7547a8ab9ac8",
-                        "1021bec7-3836-4b33-90b4-76701efd4fe3",
-                        "4dad393e-cbf7-43dd-87bb-62ea8f8afcdd"
+                        "8a5dac4a-0bef-431c-b857-2085eca9ae7c",
+                        "3c2c4aaa-fd5f-43d8-a72f-3567e6dea6f4"
+                    ],
+                    "serviceId": 25
+                },
+                {
+                    "serviceTargets": [
+                        "ed30b80b-7bb9-4c04-9949-093df64d124c",
+                        "3d4f1932-7a5b-45d6-ae68-d0571860ea94"
                     ],
                     "serviceId": 26
                 },
@@ -313,99 +346,94 @@ var config =
                 },
                 {
                     "serviceTargets": [
-                        "3cfa82aa-0b38-49c0-be37-0fa61b5b6e3c",
-                        "91e90861-3ba7-4257-a765-6cab24c6f58a"
+                        "6ab3298e-c24b-49d8-9f86-441e71858b6a",
+                        "f23f9fb0-99ec-4fbf-ade3-b6581fe25dcf",
+                        "fd77b1b1-8234-4d06-8a02-aea6f4abb01d",
+                        "f38fbd9e-d208-4750-96ce-3c032ad37684"
                     ],
                     "serviceId": 28
                 },
                 {
                     "serviceTargets": [
-                        "96be68cf-783d-452a-b8fd-3832163f95db",
-                        "e70c70fd-4f31-41dc-a4b4-07f79efc3055"
+                        "4f747371-fa5f-4200-ae37-6cd59d268fe8"
                     ],
                     "serviceId": 29
                 },
                 {
                     "serviceTargets": [
-                        "598bd978-0907-4cad-a7a6-ec5a8a8bbdc4",
-                        "d29bd931-1dd1-47c4-b456-c175099ff1df"
+                        "685d61e9-2ebd-4198-a83a-ac7a2fc1477a"
                     ],
                     "serviceId": 30
                 },
                 {
                     "serviceTargets": [
-                        "6db1ebd7-92c5-49f2-98b7-2faa700fd752",
-                        "524d93b4-5cd1-4d0d-b1f8-d393028220ad"
+                        "91387f2b-258d-4325-aa60-828d1acf6ac6"
                     ],
                     "serviceId": 31
                 },
                 {
                     "serviceTargets": [
-                        "8040931a-2e6c-41be-9e92-f1035093b2ac",
-                        "5d652e6e-b719-45bf-8ae6-e9f293c24a92"
+                        "ba3d0a20-1e4d-404a-9907-b95239499c2f",
+                        "aa92f559-6260-4947-a714-ae6b80776b47"
                     ],
                     "serviceId": 32
                 },
                 {
                     "serviceTargets": [
-                        "f74182bd-7a53-4157-aeb9-eda281bb0234",
-                        "e7b7bb1e-66c2-4140-90f9-9534aa46ffa3"
+                        "28dd9736-b66a-4ab4-9111-504d5cffba88",
+                        "4670a4ba-62bb-401c-a7ed-4fbd8dc5999c"
                     ],
                     "serviceId": 33
                 },
                 {
                     "serviceTargets": [
-                        "15615a70-ee60-46b8-b5e9-b33d4d88de6b",
-                        "d8dc153b-da23-4f7b-947a-89bc98338d6d",
-                        "5f762c6d-4f42-4458-9855-03c6896959c1",
-                        "5885f105-fc7d-43fd-8c26-c72938a95b76"
+                        "0f9ef068-b2f9-4e6f-9ab5-521857b036f4"
                     ],
                     "serviceId": 34
                 },
                 {
                     "serviceTargets": [
                         "dea1ff8b-f4eb-4987-8073-500bbbf97fcd",
-                        "fba17df1-d5cb-4643-987f-0626055b3c78"
+                        "d48e05f4-a1cb-40e6-a4a3-bafa86b137f0"
                     ],
                     "serviceId": 35
                 },
                 {
                     "serviceTargets": [
-                        "3ec07754-4a7a-46fb-a76d-553921781716",
-                        "fbc2dab8-7454-40f9-94f6-6bf258fcefff",
-                        "7186e284-0cb2-418e-a8cc-4343eb618140"
+                        "72d83731-3cfd-497b-bf6d-33eea76bc181",
+                        "7186e284-0cb2-418e-a8cc-4343eb618140",
+                        "3eea89f9-7c2e-4e4f-be0b-31d292705e3d"
                     ],
                     "serviceId": 36
                 },
                 {
-                    "serviceTargets": [
-                        "3d06b150-bb86-47dc-8ad8-c33a51c3e3b3"
-                    ],
-                    "serviceId": 43
+                    "serviceTargets": [],
+                    "serviceId": 37
                 },
                 {
-                    "serviceTargets": [
-                        "b8304577-afd8-45e0-8ef4-b71ae10998f5"
-                    ],
-                    "serviceId": 44
+                    "serviceTargets": [],
+                    "serviceId": 38
+                },
+                {
+                    "serviceTargets": [],
+                    "serviceId": 39
+                },
+                {
+                    "serviceTargets": [],
+                    "serviceId": 40
+                },
+                {
+                    "serviceTargets": [],
+                    "serviceId": 41
                 }
             ]
         },
         "visibility": "public",
-        "declarationPageType": "rdpReportDeclaration",
+        "organisationRelationship": "Grantee",
+        "excludeFinancialYearData": true,
         "requiresActivityLocking": true,
-        "supportsMeriPlanComparison": true,
         "projectTemplate": "rlp",
         "activityPeriodDescriptor": "Outputs report #",
-        "requireMeritAdminToReturnMeriPlan": true,
-        "emailTemplates": {
-            "reportSubmittedEmailTemplate": "RLP_REPORT_SUBMITTED_EMAIL_TEMPLATE",
-            "reportReturnedEmailTemplate": "RLP_REPORT_RETURNED_EMAIL_TEMPLATE",
-            "planApprovedEmailTemplate": "RLP_PLAN_APPROVED_EMAIL_TEMPLATE",
-            "planReturnedEmailTemplate": "RLP_PLAN_RETURNED_EMAIL_TEMPLATE",
-            "reportApprovedEmailTemplate": "RLP_REPORT_APPROVED_EMAIL_TEMPLATE",
-            "planSubmittedEmailTemplate": "RLP_PLAN_SUBMITTED_EMAIL_TEMPLATE"
-        },
         "meriPlanTemplate": "configurableMeriPlan",
         "riskAndThreatTypes": [
             "Performance",
@@ -417,336 +445,512 @@ var config =
         ],
         "projectReports": [
             {
+                "firstReportingPeriodEnd": "2024-06-30T14:00:00Z",
+                "reportType": "Administrative",
+                "reportDescriptionFormat": "Annual Progress Report %2$tY - %3$tY for %4$s",
+                "reportNameFormat": "Annual Progress Report %2$tY - %3$tY",
+                "reportingPeriodInMonths": 12,
+                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
+                "minimumReportDurationInDays": 1,
+                "label": "Annual",
+                "category": "Annual Progress Reporting",
+                "activityType": "Right-Way Desert Fire Annual Report"
+            },
+            {
                 "reportType": "Single",
+                "firstReportingPeriodEnd": "2026-06-30T14:00:00Z",
                 "reportDescriptionFormat": "Final Report",
                 "reportNameFormat": "Final Report",
                 "reportingPeriodInMonths": 0,
                 "multiple": false,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
-                "alignToOwnerEnd": true,
-                "label": "Final Report",
+                "description": "",
                 "category": "Final Report",
                 "reportsAlignedToCalendar": false,
-                "activityType": "Final Report",
-                "alignToOwnerStart": true
+                "activityType": "Right-Way Desert Fire Final Report"
             }
         ],
-        "keyThreatCodes": [
-            "Climate Change - Changed flooding regime",
-            "Climate Change - Changed rainfall patterns",
-            "Climate Change - Sea level rises",
-            "Climate Change - Unexpected seasonal/temperature extremes",
-            "Disconnection from Country - Altered/disrupted connection with land and sea country",
-            "Disconnection from Country - Altered or disrupted First Nations engagement/leadership in caring for land and sea country",
-            "Disconnection from Country - Altered or disrupted transfer of First Nations knowledge systems",
-            "Disconnection from Country - Inadequate recognition of Traditional knowledge and practices",
-            "Disengagement of community - Community are not informed and are not engaged in managing the environment",
-            "Disease/pathogens - Areas that are infected",
-            "Disease/pathogens - Possible infection of disease free areas",
-            "Fire - Inappropriate fire regime",
-            "Fire - Lack of protection for ecological assets during fire control activities",
-            "Genetics - Bottleneck/inbreeding",
-            "Habitat loss - Breeding place disturbance",
-            "Habitat loss - Dieback/senescence",
-            "Habitat loss - Feeding habitat loss/interference",
-            "Habitat loss - Habitat fragmentation",
-            "Habitat loss - Land clearing",
-            "Habitat loss - Loss of critical ecosystem service supporting habitat",
-            "Human interference - Fish and harvesting aquatic resources (commercial)",
-            "Human interference - Flow-on effects of housing development",
-            "Human interference - Illegal activities",
-            "Human interference - Industrial development",
-            "Human interference - Land use intensification",
-            "Human interference - Recreational fishing",
-            "Human interference - Recreational pressures",
-            "Human interference - Road/vehicle strike",
-            "Land management practices - Changes to hydrology and aquatic systems",
-            "Land management practices - Domestic grazing/stock impacts",
-            "Land management practices - Excess recharge of groundwater",
-            "Land management practices - Excess use (or over-use) of surface water or groundwater resources",
-            "Land management practices - Excessive fertiliser use",
-            "Land management practices - Inappropriate ground cover management",
-            "Land management practices - Runoff",
-            "Native fauna - Competition",
-            "Native fauna - Predation",
-            "Pest - Competition/exclusion",
-            "Pest - Disease transmission",
-            "Pest - Habitat degradation",
-            "Pest - Introduction of new pest animals",
-            "Pest - Predation",
-            "Pollution - Chemical",
-            "Pollution - Eutrophication/algal blooms",
-            "Pollution - Inappropriate waste disposal",
-            "Pollution - Sediment ",
-            "Population size/range - Low habitat area",
-            "Population size/range - Low population numbers",
-            "Weeds - Competition",
-            "Weeds - Introduction of new weed",
-            "Weeds - Spread of weeds from surrounding areas"
+        "activities": [
+            {
+                "name": "Herbivore and/or predator control"
+            },
+            {
+                "name": "Weed control and/or revegetation"
+            },
+            {
+                "name": "Fire management and planning"
+            },
+            {
+                "name": "Species and ecological community specific interventions"
+            },
+            {
+                "name": "Traditional Owner led healing of country"
+            },
+            {
+                "name": "Erosion control"
+            },
+            {
+                "name": "Refugia management"
+            }
         ],
         "navigationMode": "returnToProject",
-        "priorityPlaces": [
-            "Australian Alps – NSW/ACT/VIC",
-            "Brigalow Country – QLD",
-            "Bruny Island – TAS",
-            "Christmas Island – External Territory",
-            "Eastern Forests of Far North Queensland – QLD",
-            "Fitz-Stirlings – WA",
-            "French Island – VIC",
-            "Giant Kelp Ecological Community – TAS",
-            "Greater Blue Mountains – NSW",
-            "Kakadu & West Arnhem – NT",
-            "Kangaroo Island – SA",
-            "MacDonnell Ranges – NT",
-            "Mallee Birds Ecological Community – VIC/SA/NSW",
-            "Midlands region of central Tasmania – TAS",
-            "Norfolk Island – External Territory",
-            "Raine Island – Queensland",
-            "Remnant WA Wheatbelt Woodlands – WA",
-            "South East Coastal Ranges – NSW/VIC",
-            "Southern Plains, including the Western Victorian volcanic plain and karst springs – VIC/SA",
-            "Yampi Sounds and surrounds – WA"
+        "objectives": [
+            "Prevent extinction and limit decline of native species",
+            "Reduce immediate suffering of native animals directly impacted by the fires",
+            "Maximise chances of long-term recovery of native species and communities",
+            "Ensure learning and continual improvement is core of the response"
         ],
-        "supportsParatoo": true,
-        "supportsMeriPlanHistory": true
+        "supportedServiceIds": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41
+        ]
     };
 
 
-var outcomes = [
-    {
-        "priorities": [
-            {
-                "category": "Right Way Desert Fire Grants Threatened Species Primary"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "Right Way Desert Fire Grants Species",
-        "supportsMultiplePrioritiesAsPrimary": true,
-        "category": "Threatened Species",
-        "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome": "1. Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
-    },
-    {
-        "priorities": [
-            {
-                "category": "Right Way Desert Fire Grants Threatened Species Secondary"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "Right Way Desert Fire Grants Species",
-        "category": "Threatened Species",
-        "type": "secondary",
-        "outcome": "1. Species and Landscapes (Long term): Threatened Ecological Communities (TECs) and priority places - The conditions of targeted EPBC Act listed Threatened Ecological Communities and identified priority places under the Threatened Species Action Plan 2022-2032 is improved"
-    },
-    {
-        "category": "Threatened Species",
-        "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Targeted threatened species (TS) are on track for improved trajectory"
-    },
-    {
-        "category": "Threatened Species",
-        "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Species at high risk of imminent extinction are identified and supported to persist"
-    },
-    {
-        "category": "Threatened Species",
-        "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Priority species are being assisted to strengthen reliance and adaptive capacity for climate change"
-    },
-    {
-        "category": "Threatened Species",
-        "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Increased leadership and/or participation of First Nations people in the management and recovery of threatened species"
-    },
-    {
-        "category": "Threatened Species",
-        "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - The implementation of priority actions is leading to an improvement in the condition of targeted TECs and priority places"
-    },
-    {
-        "category": "Threatened Species",
-        "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - Resilience to climate change and extreme events has been increased"
-    },
-    {
-        "category": "Threatened Species",
-        "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - Increased leadership and/or participation of First Nations people in the management and recovery of threatened ecological communities and priority places"
-    },
-    {
-        "category": "World Heritage",
-        "type": "medium",
-        "outcome": "2. World Heritage Protection (Medium term): Threats to the outstanding universal value of world heritage properties listed for their natural heritage value have been reduced through the implementation of priority actions"
-    },
-    {
-        "category": "World Heritage",
-        "type": "medium",
-        "outcome": "2. World Heritage Protection (Medium term): Managing Threats - Threats from climate change, extreme events and invasive species have been reduced"
-    },
-    {
-        "category": "World Heritage",
-        "type": "medium",
-        "outcome": "2. World Heritage Protection (Medium term): Managing Threats - Threats from disease have been reduced"
-    },
-    {
-        "category": "World Heritage",
-        "type": "medium",
-        "outcome": "2. World Heritage Protection (Medium term): Managing Threats - Increased leadership and/or participation of First Nations people in the management of threats to World Heritage properties"
-    },
-    {
-        "category": "Threatened Species",
-        "type": "medium",
-        "outcome": "2. World Heritage Protection (Medium term): Improving land management practices and protecting habitat - Threats from inappropriate fire management are reduced"
-    },
-    {
-        "category": "World Heritage",
-        "type": "medium",
-        "outcome": "2. World Heritage Protection (Medium term): Improving land management practices and protecting habitat - Threats from inappropriate management of human impacts, climate change and extreme events are reduced"
-    },
-    {
-        "category": "World Heritage",
-        "type": "medium",
-        "outcome": "2. World Heritage Protection (Medium term): Improving land management practices and protecting habitat - Increased leadership and/or participation of First Nations people in the management and protection of World Heritage properties"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Priority actions at targeted Ramsar sites will reduce threats, restore or maintain ecological character and increase climate change resilience"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Managing Threats - The critical components, processes and services of the wetland actively maintained and/or improved"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Managing Threats - Absence/reduction of non-native species"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Managing Threats - Increased leadership and/or participation of First Nations people in the management of threats to Ramsar sites"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Managing Threats - Adaptive management planning and actions are building resilience to extreme climate events"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Wetland biota and/or abundance is maintained and improved"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Hydrological regimes have been restored and maintained"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Improved condition of wetland vegetation/habitat"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Quality of breeding, foraging and roosting habitat is improved"
-    },
-    {
-        "category": "Ramsar",
-        "type": "medium",
-        "outcome": "3. Ramsar Wetland Protection (Medium term): Protecting and Improving Habitat - Increased leadership and/or participation of First Nations people in the restoration and/or maintenance of the ecological character of Ramsar sites"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Managing Threats - Pest predator an competitor species have been controlled or are under active, long-term control programs"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Managing Threats - Threats from disease have been contained, reduced or excluded"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Land management practices have improved"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Quality of (TS/TECs) habitat has improved"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Area/Extent of (TS/TECs) habitat has increased"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Increased connectivity between patches"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Quality of breeding and foraging habitat is improved   "
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Creating insurance populations - Existing populations have been protected"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Creating insurance populations - Re-introductions have enhanced wild populations"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in recovery activities"
-    }
-];
+var outcomes = [];
 
 var priorities = [
     {
-        "category": "Right Way Desert Fire Grants Threatened Species Primary",
-        "priority": "Greater Bilby (Macrotis lagotis)"
+        "category": "Birds",
+        "priority": "Australasian Bittern Botaurus poiciloptilus"
     },
     {
-        "category": "Right Way Desert Fire Grants Threatened Species Primary",
-        "priority": "Night Parrot (Pezoporus occidentalis)"
+        "category": "Birds",
+        "priority": "Black-eared Miner Manorina melanotis"
     },
     {
-        "category": "Right Way Desert Fire Grants Threatened Species Primary",
-        "priority": "Princess Parrot (Polytelis alexandrae)"
+        "category": "Birds",
+        "priority": "Carnaby's Cockatoo Calyptorhynchus latirostris"
     },
     {
-        "category": "Right Way Desert Fire Grants Threatened Species Primary",
-        "priority": "Malleefowl (Leipoa ocellata)"
+        "category": "Birds",
+        "priority": "Christmas Island Goshawk Accipiter hiogaster natalis"
     },
     {
-        "category": "Right Way Desert Fire Grants Threatened Species Primary",
-        "priority": "Northern Quoll (Dasyurus hallucatus)"
+        "category": "Birds",
+        "priority": "Eastern Curlew Numenius madagascariensis"
     },
     {
-        "category": "Right Way Desert Fire Grants Threatened Species Primary",
-        "priority": "Central Rock-rat, Antina (Zyzomys pedunculatus)"
+        "category": "Birds",
+        "priority": "Golden-shouldered Parrot, Alwal Psephotus chrysopterygius"
     },
     {
-        "category": "Right Way Desert Fire Grants Threatened Species Primary",
-        "priority": "Great Desert Skink, Tjakura, Warrarna, Mulyamiji (Liopholis kintorei)"
+        "category": "Birds",
+        "priority": "Hooded Plover (eastern) Thinornis cucullatus cucullatus"
     },
     {
-        "category": "Right Way Desert Fire Grants Threatened Species Secondary",
-        "priority": "The community of native species dependent on natural discharge of groundwater from the Great Artesian Basin"
+        "category": "Birds",
+        "priority": "King Island Brown Thornbill Acanthiza pusilla archibaldi"
+    },
+    {
+        "category": "Birds",
+        "priority": "Malleefowl Leipoa ocellata"
+    },
+    {
+        "category": "Birds",
+        "priority": "Night Parrot Pezoporus occidentalis"
+    },
+    {
+        "category": "Birds",
+        "priority": "Norfolk Island Green Parrot Cyanoramphus cookii"
+    },
+    {
+        "category": "Birds",
+        "priority": "Orange-bellied Parrot Neophema chrysogaster"
+    },
+    {
+        "category": "Birds",
+        "priority": "Plains-wanderer Pedionomus torquatus"
+    },
+    {
+        "category": "Birds",
+        "priority": "Princess Parrot Polytelis alexandrae"
+    },
+    {
+        "category": "Birds",
+        "priority": "Red Goshawk Erythrotriorchis radiatus"
+    },
+    {
+        "category": "Birds",
+        "priority": "Red-tailed Black Cockatoo (SE) Calyptorhynchus banksii graptogyne"
+    },
+    {
+        "category": "Birds",
+        "priority": "Regent Honeyeater Anthochaera phrygia"
+    },
+    {
+        "category": "Birds",
+        "priority": "Swift Parrot Lathamus discolor"
+    },
+    {
+        "category": "Birds",
+        "priority": "Western Ground Parrot, Kyloring Pezoporus flaviventris"
+    },
+    {
+        "category": "Birds",
+        "priority": "White-throated Grasswren, Yirlinkirrkirr Amytornis woodwardi"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Australian Sea-lion Neophoca cinerea"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Brush-tailed Rock-wallaby Petrogale penicillata"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Central Rock-rat Antina Zyzomys pedunculatus"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Chuditch, Western Quoll Dasyurus geoffroii"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Eastern Quoll Dasyurus viverrinus"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Gilbert's Potoroo Ngilkat Potorous gilbertii"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Greater Bilby Macrotis lagotis"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Kangaroo Island Echidna Tachyglossus aculeatus multiaculeatus"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Koala (Qld, NSW, ACT) Phascolarctos cinereus"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Leadbeater’s Possum Gymnobelideus leadbeateri"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Mountain Pygmy-possum Burramys parvus"
+    },
+    {
+        "category": "Mammals",
+        "priority": "New Holland Mouse, Pookila Pseudomys novaehollandiae"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Northern Brushtail Possum Trichosurus vulpecula arnhemensis"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Northern Hairy-nosed Wombat, Yaminon Lasiorhinus krefftii"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Northern Hopping-mouse, Woorrentinta Notomys aquilo"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Northern Quoll Dasyurus hallucatus"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Numbat Myrmecobius fasciatus"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Quokka Setonix brachyurus"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Spectacled Flying-fox Pteropus conspicillatus"
+    },
+    {
+        "category": "Mammals",
+        "priority": "Western Ringtail Possum Pseudocheirus occidentalis"
+    },
+    {
+        "category": "Fish",
+        "priority": "Freshwater Sawfish Pristis pristis"
+    },
+    {
+        "category": "Fish",
+        "priority": "Grey Nurse Shark (eastern) Carcharias taurus"
+    },
+    {
+        "category": "Fish",
+        "priority": "Maugean Skate Zearaja maugeana"
+    },
+    {
+        "category": "Fish",
+        "priority": "Murray Hardyhead Craterocephalus fluviatilis"
+    },
+    {
+        "category": "Fish",
+        "priority": "Red Handfish Thymichthys politus"
+    },
+    {
+        "category": "Fish",
+        "priority": "Redfin Blue-eye Scaturiginichthys vermeilipinnis"
+    },
+    {
+        "category": "Fish",
+        "priority": "Stocky Galaxias Galaxias tantangara"
+    },
+    {
+        "category": "Fish",
+        "priority": "Swan Galaxias Galaxias fontanus"
+    },
+    {
+        "category": "Fish",
+        "priority": "White's Seahorse Hippocampus whitei"
+    },
+    {
+        "category": "Frogs",
+        "priority": "Growling Grass Frog, Southern Bell Frog Litoria raniformis"
+    },
+    {
+        "category": "Frogs",
+        "priority": "Kroombit Tinker Frog Taudactylus pleione"
+    },
+    {
+        "category": "Frogs",
+        "priority": "Southern Corroboree Frog Pseudophryne corroboree"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Eucalyptus langleyi (Albatross Mallee)"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Arnhem Land Gorges Skink Bellatorias obiri"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Bellinger River Snapping Turtle Wollumbinia georgesi"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Collared Delma, Adorned Delma Delma torquata"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Great Desert Skink, Tjakura, Warrarna, Mulyamiji Liopholis kintorei"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Green Turtle Chelonia mydas"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Olive Ridley Turtle Lepidochelys olivacea"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Pygmy Blue-tongue Lizard Tiliqua adelaidensis"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Short-nosed Seasnake Aipysurus apraefrontalis"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Yinnietharra Rock-dragon Ctenophorus yinnietharra"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Ammonite Snail Ammoniropa vigens"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Cauliflower Soft Coral Dendronephthya australis"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Eltham Copper Butterfly Paralucia pyrodiscus lucida"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Giant Gippsland Earthworm Megascolides australis"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Lord Howe Island Phasmid Dryococelus australis"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Margaret River Burrowing Crayfish Engaewa pseudoreducta"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Mount Lidgbird Charopid Land Snail Pseudocharopa ledgbirdi"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Pink Underwing Moth Phyllodes imperialis smithersi"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Tasmanian Giant Freshwater Crayfish Astacopsis gouldi"
+    },
+    {
+        "category": "Plants",
+        "priority": "Adamson’s Blown-grass Lachnagrostis adamsonii"
+    },
+    {
+        "category": "Plants",
+        "priority": "Angle-stemmed Myrtle Gossia gonoclada"
+    },
+    {
+        "category": "Plants",
+        "priority": "Arckaringa Daisy Olearia arckaringensis"
+    },
+    {
+        "category": "Plants",
+        "priority": "Border Ranges Lined Fern Antrophyum austroqueenslandicum"
+    },
+    {
+        "category": "Plants",
+        "priority": "Bulberin Nut Macadamia jansenii "
+    },
+    {
+        "category": "Plants",
+        "priority": "Carrington Falls Pomaderris Pomaderris walshii"
+    },
+    {
+        "category": "Plants",
+        "priority": "Davies' Waxflower Phebalium daviesii"
+    },
+    {
+        "category": "Plants",
+        "priority": "Eremophila subangustifolia"
+    },
+    {
+        "category": "Plants",
+        "priority": "Foote's Grevillea Grevillea calliantha"
+    },
+    {
+        "category": "Plants",
+        "priority": "Forked Spyridium Spyridium furculentum"
+    },
+    {
+        "category": "Plants",
+        "priority": "Giant Andersonia Andersonia axilliflora"
+    },
+    {
+        "category": "Plants",
+        "priority": "Graveside Leek-orchid Prasophyllum taphanyx"
+    },
+    {
+        "category": "Plants",
+        "priority": "Imlay Mallee Eucalyptus imlayensis"
+    },
+    {
+        "category": "Plants",
+        "priority": "King Blue-grass Dichanthium queenslandicum"
+    },
+    {
+        "category": "Plants",
+        "priority": "Lax Leek Orchid Prasophyllum laxum"
+    },
+    {
+        "category": "Plants",
+        "priority": "Little Mountain Palm Lepidorrhachis mooreana"
+    },
+    {
+        "category": "Plants",
+        "priority": "MacDonnell Ranges Cycad Macrozamia macdonnellii"
+    },
+    {
+        "category": "Plants",
+        "priority": "Native Guava Rhodomyrtus psidioides"
+    },
+    {
+        "category": "Plants",
+        "priority": "Pimelea cremnophila"
+    },
+    {
+        "category": "Plants",
+        "priority": "Pimelea venosa"
+    },
+    {
+        "category": "Plants",
+        "priority": "Scaly-butt Mallee Eucalyptus leprophloia"
+    },
+    {
+        "category": "Plants",
+        "priority": "Small-flowered Snottygobble Persoonia micranthera"
+    },
+    {
+        "category": "Plants",
+        "priority": "Smooth Davidson's Plum Davidsonia johnsonii"
+    },
+    {
+        "category": "Plants",
+        "priority": "Stiff Groundsel Senecio behrianus"
+    },
+    {
+        "category": "Plants",
+        "priority": "Stirling Range Dryandra Banksia montana"
+    },
+    {
+        "category": "Plants",
+        "priority": "Tangled Wattle Acacia volubilis"
+    },
+    {
+        "category": "Plants",
+        "priority": "Waddy, Waddi, Waddy-wood, Birdsville Wattle Acacia peuce"
+    },
+    {
+        "category": "Plants",
+        "priority": "Wollemi Pine Wollemia nobilis"
+    },
+    {
+        "category": "Plants",
+        "priority": "Wongan Eriostemon Philotheca wonganensis"
+    },
+    {
+        "category": "Plants",
+        "priority": "Wood Well Spyridium Spyridium fontis-woodii "
     }
 ];
 
