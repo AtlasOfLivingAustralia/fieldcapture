@@ -130,7 +130,7 @@
                 "type": "enable"
               }
             ],
-            "validate": "required"
+            "validate": "required,maxSize[1250]"
           },
           {
             "dataType": "text",
@@ -469,7 +469,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<h3>Communications</h3>"
+                "source": "<h4>Communications</h4>"
               }
             ]
           },
@@ -510,7 +510,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<h3>Engagement activities or events, to the Community, which are directly relevant to delivery of Project</h3>"
+                "source": "<h4>Engagement activities or events, to the Community, which are directly relevant to delivery of Project</h4>"
               }
             ]
           },
@@ -600,7 +600,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<h3>Coordinate Projects and MERI</h3>"
+                "source": "<h4>Coordinate Projects and MERI</h4>"
               }
             ]
           },
