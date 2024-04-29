@@ -55,7 +55,7 @@ var protocols = {
         "endDatePath": "end_date"
     },
     "3cbc5277-45fb-4e7a-8f33-19d9bff4cd78": {
-        "name": "Drone Survey", "usesPlotLayout": false, "tags": ["survey"],
+        "name": "Drone Survey", "usesPlotLayout": false, "tags": ["development"],
         "apiEndpoint": "drone-surveys",
         "startDatePath": "date"
     },
