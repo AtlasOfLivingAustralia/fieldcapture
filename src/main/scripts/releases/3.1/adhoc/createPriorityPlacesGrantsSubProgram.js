@@ -391,7 +391,7 @@ var config =
                 }
             ]
         },
-        "visibility": "public",
+        "visibility": "private",
         "declarationPageType": "rdpReportDeclaration",
         "requiresActivityLocking": true,
         "supportsMeriPlanComparison": true,
@@ -531,6 +531,7 @@ var outcomes = [
         "targeted": true,
         "shortDescription": "EPBC Species",
         "category": "Threatened Species",
+        "type": "secondary",
         "outcome": "1.  Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
     },
     {
@@ -544,8 +545,6 @@ var outcomes = [
         "category": "Threatened Ecological Communities",
         "outcome": "1. Species and Landscapes (Long term): Threatened Ecological Communities (TECs) and priority places - The condition of targeted EPBC Act listed Threatened Ecological Communities and identified priority places under the Threatened Species Action Plan 2022-2032 is improved"
     },
-
-
     {
         "type": "short",
         "category": "Priority species related outcome",
