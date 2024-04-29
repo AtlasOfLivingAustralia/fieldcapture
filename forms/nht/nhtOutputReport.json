@@ -370,7 +370,8 @@
                       "expression": "formatDateForValidation(meetingDateFrom)",
                       "type": "computed"
                     }
-                  }]
+                  }
+                ]
               },
               {
                 "dataType": "text",
@@ -1007,7 +1008,6 @@
                   }
                 ]
               },
-
               {
                 "dataType": "feature",
                 "name": "areaOfReleaseSite",
@@ -1072,7 +1072,6 @@
                   }
                 ]
               },
-
               {
                 "columns": [
                   {
@@ -1319,7 +1318,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -1335,7 +1334,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -2182,7 +2181,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -2198,7 +2197,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -2809,7 +2808,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -2825,7 +2824,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -3618,7 +3617,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -3634,7 +3633,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -4033,7 +4032,6 @@
                 "source": "accessControlDetails",
                 "type": "table"
               }
-
             ]
           },
           {
@@ -4476,7 +4474,6 @@
               }
             ]
           },
-
           {
             "dataType": "number",
             "name": "totalAreaPestAnimalsTreatedFollowUp",
@@ -4641,7 +4638,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -4657,7 +4654,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -5648,7 +5645,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -5664,7 +5661,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -6061,7 +6058,6 @@
               }
             ]
           },
-
           {
             "type": "row",
             "items": [
@@ -6728,7 +6724,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -6744,7 +6740,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -7118,7 +7114,6 @@
                   }
                 ]
               },
-
               {
                 "columns": [
                   {
@@ -7185,70 +7180,68 @@
               }
             ]
           },
-
+          {
+            "type": "row",
+            "items": [
               {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "Optionally attach photos",
-                    "source": "photographicEvidence",
-                    "type": "image"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "Clarification, if needed",
-                    "type": "textarea",
-                    "rows": 4,
-                    "css": "span8",
-                    "source": "comments",
-                    "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
-                  },
-                  {
-                    "preLabel": "Data have been uploaded",
-                    "source": "dataUploaded",
-                    "type": "boolean"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "",
-                    "source": "projectAssuranceDetails",
-                    "type": "textarea",
-                    "rows": 4,
-                    "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "table",
-                "source": "assuranceDocuments",
-                "userAddedRows": true,
-                "disableTableUpload": true,
-                "columns": [
-                  {
-                    "title": "Attached documents",
-                    "source": "attachments",
-                    "type": "document"
-                  }
-                ]
+                "preLabel": "Optionally attach photos",
+                "source": "photographicEvidence",
+                "type": "image"
               }
-
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Clarification, if needed",
+                "type": "textarea",
+                "rows": 4,
+                "css": "span8",
+                "source": "comments",
+                "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
+              },
+              {
+                "preLabel": "Data have been uploaded",
+                "source": "dataUploaded",
+                "type": "boolean"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "",
+                "source": "projectAssuranceDetails",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
+              }
+            ]
+          },
+          {
+            "type": "table",
+            "source": "assuranceDocuments",
+            "userAddedRows": true,
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "title": "Attached documents",
+                "source": "attachments",
+                "type": "document"
+              }
+            ]
+          }
         ]
       },
       "modelName": null,
@@ -7773,7 +7766,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -7789,7 +7782,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -8581,7 +8574,7 @@
                 "dataType": "list",
                 "name": "agreementsTable"
               }
-              ],
+            ],
             "dataType": "list",
             "name": "conservationAgreementsControlled"
           },
@@ -8716,7 +8709,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -8732,7 +8725,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -9352,9 +9345,53 @@
                               }
                             ]
                           },
-                          "target":  {
+                          "target": {
                             "type": "singleValue",
                             "name": "sitesTreated"
+                          }
+                        }
+                      },
+                      {
+                        "type": "pre_populate",
+                        "config": {
+                          "waitForInitialisation": true,
+                          "source": {
+                            "url": "/project/getSpeciesRecordsFromActivity",
+                            "params": [
+                              {
+                                "expression": "owner.projectId",
+                                "name": "id",
+                                "type": "computed"
+                              },
+                              {
+                                "expression": "x=find(owner.custom.dataSets, \"dataSetId\", dataSetId); x.activityId",
+                                "name": "activityId",
+                                "type": "computed",
+                                "required": true
+                              }
+                            ]
+                          },
+                          "mapping": [
+                            {
+                              "source-path": "species",
+                              "target": "species"
+                            },
+                            {
+                              "source-path": "threatenedEcologicalCommunity",
+                              "target": "threatenedEcologicalCommunity"
+                            },
+                            {
+                              "source-path": "individualsOrGroups",
+                              "target": "individualsOrGroups"
+                            },
+                            {
+                              "source-path": "individualCount",
+                              "target": "numberOfIndividualsOrGroups"
+                            }
+                          ],
+                          "target": {
+                            "type": "singleLoad",
+                            "name": "farmManagementSurveySpeciesTable"
                           }
                         }
                       }
@@ -9744,7 +9781,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                    "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -9760,7 +9797,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                    "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -10005,7 +10042,6 @@
                               }
                             ]
                           },
-
                           {
                             "type": "col",
                             "css": "span3 col-border-right",
@@ -10335,6 +10371,46 @@
                           "target":  {
                             "type": "singleValue",
                             "name": "sitesCoveredForFaunaSurvey"
+                          }
+                        }
+                      },
+                      {
+                        "type": "pre_populate",
+                        "config": {
+                          "waitForInitialisation": true,
+                          "source": {
+                            "url": "/project/getSpeciesRecordsFromActivity",
+                            "params": [
+                              {
+                                "expression": "owner.projectId",
+                                "name": "id",
+                                "type": "computed"
+                              },
+                              {
+                                "expression": "x=find(owner.custom.dataSets, \"dataSetId\", dataSetId); x.activityId",
+                                "name": "activityId",
+                                "type": "computed",
+                                "required": true
+                              }
+                            ]
+                          },
+                          "mapping": [
+                            {
+                              "source-path": "species",
+                              "target": "species"
+                            },
+                            {
+                              "source-path": "individualsOrGroups",
+                              "target": "individualsOrGroups"
+                            },
+                            {
+                              "source-path": "individualCount",
+                              "target": "numberOfIndividualsOrGroups"
+                            }
+                          ],
+                          "target": {
+                            "type": "singleLoad",
+                            "name": "faunaSurveySpeciesTable"
                           }
                         }
                       }
@@ -10828,7 +10904,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                    "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -10844,7 +10920,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                    "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -11998,7 +12074,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -12014,7 +12090,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -12662,6 +12738,50 @@
                         "config": {
                           "waitForInitialisation": true,
                           "source": {
+                            "url": "/project/getSpeciesRecordsFromActivity",
+                            "params": [
+                              {
+                                "expression": "owner.projectId",
+                                "name": "id",
+                                "type": "computed"
+                              },
+                              {
+                                "expression": "x=find(owner.custom.dataSets, \"dataSetId\", dataSetId); x.activityId",
+                                "name": "activityId",
+                                "type": "computed",
+                                "required": true
+                              }
+                            ]
+                          },
+                          "mapping": [
+                            {
+                              "source-path": "species",
+                              "target": "species"
+                            },
+                            {
+                              "source-path": "threatenedEcologicalCommunity",
+                              "target": "threatenedEcologicalCommunity"
+                            },
+                            {
+                              "source-path": "individualsOrGroups",
+                              "target": "individualsOrGroups"
+                            },
+                            {
+                              "source-path": "individualCount",
+                              "target": "numberOfIndividualsOrGroups"
+                            }
+                          ],
+                          "target": {
+                            "type": "singleLoad",
+                            "name": "floraSurveySpeciesTable"
+                          }
+                        }
+                      },
+                      {
+                        "type": "pre_populate",
+                        "config": {
+                          "waitForInitialisation": true,
+                          "source": {
                             "url": "/site/geojson",
                             "params": [
                               {
@@ -12672,7 +12792,7 @@
                               }
                             ]
                           },
-                          "target":  {
+                          "target": {
                             "type": "singleValue",
                             "name": "sitesCoveredForFloraSurvey"
                           }
@@ -12784,8 +12904,6 @@
                     "dataType": "feature",
                     "name": "sitesCoveredForFloraSurvey",
                     "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
-
-
                   },
                   {
                     "computed": {
@@ -13175,7 +13293,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                    "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -13191,7 +13309,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                    "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -14239,7 +14357,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -14255,7 +14373,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -14812,7 +14930,7 @@
                               }
                             ]
                           },
-                          "target":  {
+                          "target": {
                             "type": "singleValue",
                             "name": "sitesCoveredForHabitatConditionSurvey"
                           }
@@ -15326,7 +15444,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                    "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -15342,7 +15460,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                    "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -16152,7 +16270,6 @@
                     "description": "",
                     "validate": "required,maxSize[300]"
                   },
-
                   {
                     "dataType": "feature",
                     "name": "sitesIdentified",
@@ -16376,7 +16493,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                    "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -16392,7 +16509,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                    "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -17307,7 +17424,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -17323,7 +17440,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -18172,7 +18289,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -18188,7 +18305,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -19102,7 +19219,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -19118,7 +19235,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -20056,7 +20173,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -20072,7 +20189,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -20632,9 +20749,49 @@
                               }
                             ]
                           },
-                          "target":  {
+                          "target": {
                             "type": "singleValue",
                             "name": "sitesCoveredForPestAnimal"
+                          }
+                        }
+                      },
+                      {
+                        "type": "pre_populate",
+                        "config": {
+                          "waitForInitialisation": true,
+                          "source": {
+                            "url": "/project/getSpeciesRecordsFromActivity",
+                            "params": [
+                              {
+                                "expression": "owner.projectId",
+                                "name": "id",
+                                "type": "computed"
+                              },
+                              {
+                                "expression": "x=find(owner.custom.dataSets, \"dataSetId\", dataSetId); x.activityId",
+                                "name": "activityId",
+                                "type": "computed",
+                                "required": true
+                              }
+                            ]
+                          },
+                          "mapping": [
+                            {
+                              "source-path": "species",
+                              "target": "species"
+                            },
+                            {
+                              "source-path": "individualCount",
+                              "target": "individualsOrGroups"
+                            },
+                            {
+                              "source-path": "numberOfIndividualsOrGroups",
+                              "target": "numberOfIndividualsOrGroups"
+                            }
+                          ],
+                          "target": {
+                            "type": "singleLoad",
+                            "name": "pestAnimalSurveySpeciesTable"
                           }
                         }
                       }
@@ -20739,7 +20896,6 @@
                     "dataType": "feature",
                     "name": "sitesCoveredForPestAnimal",
                     "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
-
                   },
                   {
                     "computed": {
@@ -21129,7 +21285,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                    "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -21145,7 +21301,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                    "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -22176,7 +22332,6 @@
             ],
             "defaultValue": ""
           },
-
           {
             "dataType": "number",
             "name": "totalLengthRemediationInitial",
@@ -22241,7 +22396,6 @@
             ],
             "defaultValue": ""
           },
-
           {
             "dataType": "number",
             "name": "totalStructuresInstalled",
@@ -22367,7 +22521,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -22383,7 +22537,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -23552,7 +23706,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                    "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -23568,7 +23722,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                    "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -24559,7 +24713,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -24575,7 +24729,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -25580,7 +25734,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -25596,7 +25750,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -26227,9 +26381,69 @@
                               }
                             ]
                           },
-                          "target":  {
+                          "target": {
                             "type": "singleValue",
                             "name": "sitesCoveredForPlantSurvival"
+                          }
+                        }
+                      },
+                      {
+                        "type": "pre_populate",
+                        "config": {
+                          "waitForInitialisation": true,
+                          "source": {
+                            "url": "/project/getSpeciesRecordsFromActivity",
+                            "params": [
+                              {
+                                "expression": "owner.projectId",
+                                "name": "id",
+                                "type": "computed"
+                              },
+                              {
+                                "expression": "x=find(owner.custom.dataSets, \"dataSetId\", dataSetId); x.activityId",
+                                "name": "activityId",
+                                "type": "computed",
+                                "required": true
+                              }
+                            ]
+                          },
+                          "mapping": [
+                            {
+                              "source-path": "species",
+                              "target": "species"
+                            },
+                            {
+                              "source-path": "plantingMethod",
+                              "target": "plantingMethod"
+                            },
+                            {
+                              "source-path": "hectaresPlanted",
+                              "target": "hectaresPlanted"
+                            },
+                            {
+                              "source-path": "kilosOfDirectSeeding",
+                              "target": "kilosOfDirectSeeding"
+                            },
+                            {
+                              "source-path": "numberPlanted",
+                              "target": "numberPlanted"
+                            },
+                            {
+                              "source-path": "individualsOrGroups",
+                              "target": "individualsOrGroups"
+                            },
+                            {
+                              "source-path": "numberOfIndividualsGroupsSurvived",
+                              "target": "numberOfIndividualsGroupsSurvived"
+                            },
+                            {
+                              "source-path": "survivalRate",
+                              "target": "survivalRate"
+                            }
+                          ],
+                          "target": {
+                            "type": "singleLoad",
+                            "name": "plantSurvivalSurveySpeciesTable"
                           }
                         }
                       }
@@ -26376,7 +26590,6 @@
                     "dataType": "feature",
                     "name": "sitesCoveredForPlantSurvival",
                     "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
-
                   },
                   {
                     "computed": {
@@ -26737,7 +26950,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                    "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -26753,7 +26966,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                    "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -27771,7 +27984,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -27787,7 +28000,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -28309,7 +28522,7 @@
                               }
                             ]
                           },
-                          "target":  {
+                          "target": {
                             "type": "singleValue",
                             "name": "sitesCoveredForSkillsAndKnowledge"
                           }
@@ -28798,7 +29011,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                    "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -28814,7 +29027,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                    "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -29320,7 +29533,7 @@
                               }
                             ]
                           },
-                          "target":  {
+                          "target": {
                             "type": "singleValue",
                             "name": "sitesCoveredForSoilSurvey"
                           }
@@ -29402,8 +29615,6 @@
                     "dataType": "feature",
                     "name": "sitesCoveredForSoilSurvey",
                     "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
-
-
                   },
                   {
                     "computed": {
@@ -29816,7 +30027,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                    "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -29832,7 +30043,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                    "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -30745,7 +30956,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -30761,7 +30972,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -31241,8 +31452,6 @@
                     "name": "monitoringIndicator",
                     "dataType": "stringList",
                     "description": "",
-
-
                     "computed": {
                       "expression": "if(projectBaseline, x=pluck(findAll($context.owner.custom.details.monitoring.rows, \"relatedBaseline\", projectBaseline), \"data1\", \"No monitoring indicators associated with this baseline\"), '')"
                     }
@@ -31433,7 +31642,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -31449,7 +31658,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -31634,7 +31843,6 @@
               }
             ]
           },
-
           {
             "type": "row",
             "items": [
@@ -31983,7 +32191,6 @@
                 "units": "km",
                 "decimalPlaces": 3
               },
-
               {
                 "dataType": "feature",
                 "name": "sitesInterventionsReleased",
@@ -32260,7 +32467,7 @@
               {
                 "width": "20%",
                 "type": "col",
-                "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -32276,7 +32483,7 @@
               {
                 "type": "col",
                 "width": "20%",
-                "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                 "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                 "items": [
                   {
@@ -32558,7 +32765,6 @@
                       }
                     ]
                   },
-
                   {
                     "type": "col",
                     "css": "span3 col-border-right",
@@ -32864,7 +33070,7 @@
                               }
                             ]
                           },
-                          "target":  {
+                          "target": {
                             "type": "singleValue",
                             "name": "sitesCoveredForWaterQuality"
                           }
@@ -33368,7 +33574,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                    "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -33384,7 +33590,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                    "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -34020,9 +34226,53 @@
                               }
                             ]
                           },
-                          "target":  {
+                          "target": {
                             "type": "singleValue",
                             "name": "sitesCoveredForWeedDistribution"
+                          }
+                        }
+                      },
+                      {
+                        "type": "pre_populate",
+                        "config": {
+                          "waitForInitialisation": true,
+                          "source": {
+                            "url": "/project/getSpeciesRecordsFromActivity",
+                            "params": [
+                              {
+                                "expression": "owner.projectId",
+                                "name": "id",
+                                "type": "computed"
+                              },
+                              {
+                                "expression": "x=find(owner.custom.dataSets, \"dataSetId\", dataSetId); x.activityId",
+                                "name": "activityId",
+                                "type": "computed",
+                                "required": true
+                              }
+                            ]
+                          },
+                          "mapping": [
+                            {
+                              "source-path": "species",
+                              "target": "species"
+                            },
+                            {
+                              "source-path": "threatenedEcologicalCommunity",
+                              "target": "threatenedEcologicalCommunity"
+                            },
+                            {
+                              "source-path": "estimatedCoverPercent",
+                              "target": "estimatedCoverPercent"
+                            },
+                            {
+                              "source-path": "weedSurveyObjective",
+                              "target": "weedSurveyObjective"
+                            }
+                          ],
+                          "target": {
+                            "type": "singleLoad",
+                            "name": "weedSurveySpeciesTable"
                           }
                         }
                       }
@@ -34518,7 +34768,7 @@
                   {
                     "width": "20%",
                     "type": "col",
-                    "title": "Total number of people delivering this service <br>(including First Nations people)<b style=\"color:red\">*</b>",
+                    "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {
@@ -34534,7 +34784,7 @@
                   {
                     "type": "col",
                     "width": "20%",
-                    "title": "Total number of First Nations people delivering this service<b style=\"color:red\">*</b>",
+                    "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
                     "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
                     "items": [
                       {

@@ -1,6 +1,7 @@
 package au.org.ala.fieldcapture
 
 import au.org.ala.ws.service.WebService
+import groovy.json.JsonSlurper
 import org.apache.http.entity.ContentType
 import org.grails.testing.GrailsUnitTest
 import org.apache.http.HttpStatus
@@ -54,26 +55,33 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
 
         ]
         Map mintCollectionIdPayload = [
-
-                surveyId: [
-                        projectId : 'monitorProject',
-                        protocol  : [
-                                id     : "guid-1", // Protocol 23 used to obtain representative data for this functional test
-                                version: 1
-                        ],
-                        surveyType: 'soil-pit-characterisation-full',
-                        time      : '2023-08-28T00:34:13.100Z',
-                        uuid   : "123-123-123-123-123"
+                "survey_metadata": [
+                    "survey_details": [
+                        "survey_model": "soil-pit-characterisation-full",
+                        "time": "2023-08-28T00:34:13.100Z",
+                        "uuid": "123-123-123-123-123",
+                        "project_id": "monitorProject",
+                        "protocol_id": "guid-1",
+                        "protocol_version": "1"
+                    ],
+                    "provenance":[
+                        "version_app": "0.0.1-xxxxx",
+                        "version_core": "0.1.0-1fb53f81",
+                        "version_core_documentation": "0.0.1-xxxxx",
+                        "version_org": "4.4-SNAPSHOT",
+                        "system_app": "monitor",
+                        "system_core": "Monitor-dummy-data-production",
+                        "system_org": "MERIT"
+                    ]
                 ]
-        ]
+            ]
+                        
+
         Map collectionPayload = [
-                projectId: 'monitorProject',
-                protocol : [
-                        id     : "guid-1",
-                        version: 1
-                ],
-                userId   : '1',
-                eventTime: '2023-08-28T00:28:15.272Z'
+                "coreProvenance": [
+                        "system_core": "Monitor-test",
+                        "version_core": "1"
+                ]
         ]
 
         when:
@@ -90,11 +98,14 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
         resp = webService.post(url, mintCollectionIdPayload, null, ContentType.APPLICATION_JSON, false, false, headers)
 
         String orgMintedIdentifier = resp.resp.orgMintedIdentifier
+        byte[] jsonBytes = orgMintedIdentifier.decodeBase64()
+        Map json = new JsonSlurper().parse(jsonBytes)
+        String orgMintedUUID = json.survey_metadata.orgMintedUUID
 
         then:
         resp.statusCode == HttpStatus.SC_OK
 
-        orgMintedIdentifier != null
+        orgMintedUUID != null
 
         when:
         url = testConfig.ecodata.baseUrl + 'paratoo/pdp/monitorProject/guid-1/write'
@@ -107,7 +118,7 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
         resp.resp.isAuthorised == true
 
         when:
-        collectionPayload.orgMintedIdentifier = orgMintedIdentifier
+        collectionPayload.orgMintedUUID = orgMintedUUID
         url = testConfig.ecodata.baseUrl + '/paratoo/collection'
         resp = webService.post(url, collectionPayload, null, ContentType.APPLICATION_JSON, false, false, headers)
 

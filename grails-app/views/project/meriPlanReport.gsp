@@ -10,6 +10,11 @@
         serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
         imageLocation:"${assetPath(src:'/')}",
         healthCheckUrl:"${createLink(controller:'ajax', action:'keepSessionAlive')}",
+        bieUrl: "${grailsApplication.config.getProperty('bie.baseURL')}",
+        searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
+        speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
+        speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
+        speciesProfileUrl:"${createLink(controller:'species', action:'speciesProfile')}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
     },
         here = window.location.href;
@@ -47,7 +52,13 @@
     $(function() {
         var project = <fc:modelAsJavascript model="${project}"/>;
 
-        var config = [];
+        var config = {
+            bieUrl: fcConfig.bieUrl,
+            searchBieUrl: fcConfig.searchBieUrl,
+            speciesListUrl: fcConfig.speciesListUrl,
+            speciesImageUrl: fcConfig.speciesImageUrl,
+            speciesProfileUrl: fcConfig.speciesProfileUrl
+        };
         var themes = <fc:modelAsJavascript model="${config.themes?:[]}"/>;
         config.themes = themes;
         var services = <fc:modelAsJavascript model="${config.services?:[]}"/>;
@@ -61,6 +72,7 @@
         config.programActivities = <fc:modelAsJavascript model="${config.program?.config?.activities?.collect{it.name} ?: []}"/>;
         config.excludeFinancialYearData = ${config.program?.config?.excludeFinancialYearData ?: false};
         config.useServiceOutcomesModel = ${config.program?.config?.meriPlanContents?.find{it.template == 'serviceOutcomeTargets'} != null};
+
         var viewModel = new ReadOnlyMeriPlan(project, new ProjectService(project, config), config);
         viewModel.name = project.name;
         viewModel.description = project.description;
@@ -71,6 +83,8 @@
 <g:render template="/shared/pdfInstructions"/>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="projects.js"/>
+<asset:javascript src="forms-manifest.js"/>
+<asset:javascript src="speciesModel.js"/>
 <asset:deferredScripts/>
 <asset:javascript src="print-instructions.js"/>
 </body>

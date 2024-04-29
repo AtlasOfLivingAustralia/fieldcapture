@@ -12,6 +12,16 @@ class Score {
     /** Project services/outputs that been delivered to 200% of the target are considered over delivered and produce a warning */
     private static final int OVER_DELIVERY_PERCENTAGE_THRESHOLD = 200
 
+    /** If the score is tagged with "Survey" it is measuring something from a survey typed activity/service*/
+    static String TAG_SURVEY = "Survey"
+
+    /** If the score is tagged with "Survey" it is measuring something from a survey typed activity/service*/
+    static String TAG_BASELINE = "Baseline"
+
+    /** If the score is tagged with "Survey" it is measuring something from a survey typed activity/service*/
+    static String TAG_INDICATOR = "Indicator"
+
+
     /** The id of the Score this target is based on */
     String scoreId
     String displayType

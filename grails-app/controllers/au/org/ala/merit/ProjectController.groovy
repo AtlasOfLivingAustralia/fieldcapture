@@ -36,6 +36,7 @@ class ProjectController {
     def siteService, documentService, reportService, blogService
     GrailsApplication grailsApplication
     LockService lockService
+    MonitorService monitorService
 
     private def espOverview(Map project, Map user, ProgramConfig config) {
 
@@ -159,6 +160,7 @@ class ProjectController {
         project.outcomes = new JSONArray(config.outcomes ?: [])
         project.hasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
         boolean canRegenerateReports = projectService.canRegenerateReports(project)
+        boolean hasSubmittedOrApprovedFinalReportInCategory = projectService.hasSubmittedOrApprovedFinalReportInCategory(project)
         def meriPlanVisible = config.includesContent(ProgramConfig.ProjectContent.MERI_PLAN)
         boolean canModifyMeriPlan = config.requireMeritAdminToReturnMeriPlan ?  userService.userIsAlaOrFcAdmin() : user?.isCaseManager
         def risksAndThreatsVisible = config.includesContent(ProgramConfig.ProjectContent.RISKS_AND_THREATS) && user?.hasViewAccess
@@ -202,7 +204,7 @@ class ProjectController {
                      site           : [label: 'Sites', visible: config.includesContent(ProgramConfig.ProjectContent.SITES), disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
                      dashboard      : [label: 'Dashboard', visible: config.includesContent(ProgramConfig.ProjectContent.DASHBOARD), disabled: !user?.hasViewAccess, type: 'tab'],
                      datasets       : [label: 'Data set summary', visible: datasetsVisible, template: '/project/dataset/dataSets', type:'tab'],
-                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage', canRegenerateReports: canRegenerateReports, canModifyMeriPlan: canModifyMeriPlan]]
+                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage', canRegenerateReports: canRegenerateReports, hasSubmittedOrApprovedFinalReportInCategory: hasSubmittedOrApprovedFinalReportInCategory, canModifyMeriPlan: canModifyMeriPlan, showRequestLabels:config.supportsParatoo]]
 
         if (template == MERI_ONLY_TEMPLATE) {
             model = [details:model.details]
@@ -254,6 +256,7 @@ class ProjectController {
             rlpModel.admin.showAnnouncementsTab = false
             rlpModel.admin.risksAndThreatsVisible = risksAndThreatsVisible
             rlpModel.admin.showMeriPlanComparison = showMeriPlanComparison
+            rlpModel.admin.showRequestLabels = config.supportsParatoo && projectService.hasSelectedEmsaModules(project)
 
             model = buildRLPTargetsModel(rlpModel, project)
         }
@@ -375,7 +378,7 @@ class ProjectController {
         def projectSite = values.remove("projectSite")
         def documents = values.remove('documents')
         def links = values.remove('links')
-        def result = projectService.update(id, values)
+        def result = projectService.update(id, values, false)
         log.debug "result is " + result
         if (documents && !result.error) {
             if (!id) id = result.resp.projectId
@@ -1137,6 +1140,76 @@ class ProjectController {
             [label:label, value:outcomes]
         }
         render result as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def requestVoucherBarcodeLabels(String id, Integer pageCount) {
+        pageCount = pageCount ?: 1
+        monitorService.requestVoucherBarcodeLabels(id, pageCount,  response)
+        null
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    def getSpeciesRecordsFromActivity (String activityId) {
+        if(!activityId) {
+            render status: HttpStatus.SC_BAD_REQUEST, text: [message: 'Activity ID must be supplied'] as JSON
+            return
+        }
+
+        render projectService.getSpeciesRecordsFromActivity(activityId) as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'editor')
+    /**
+     * This method accepts an end date for a financial year and a list of scoreIds and
+     * returns the requested aggregate data for the year.
+     *
+     * This was developed for the SAF Ag Annual report to pull tabular data into
+     * the report so also flattens the nested Lists that result from the SET score type
+     * into a single list.
+     *
+     */
+    def annualReport(String id) {
+
+        String financialYearEndDate = params.financialYearEndDate
+        List scoreIds = params.getList('scoreIds')
+
+        if (!financialYearEndDate || !scoreIds) {
+            render status:400, error:'Required parameters not provided'
+            return
+        }
+
+        DateTime financialYearStart = DateUtils.alignToFinancialYear(DateUtils.parse(financialYearEndDate))
+        String year = financialYearStart.year + " - " + (financialYearStart.year+1)
+
+
+        Map result = projectService.scoresByFinancialYear(id, scoreIds)
+
+        List financialYearData = result?.resp?.find{it.group == year}?.results ?: []
+
+        println financialYearData
+
+        Map reportData = scoreIds.collectEntries { String scoreId ->
+            Map scoreResult = financialYearData.find{it.scoreId == scoreId}
+            def data = scoreResult?.result
+
+            if (data?.result) {
+                data = data.result
+                if (data instanceof List) {
+                    data = data.flatten() // Collate a List of tables from each report into a flat List for display
+                }
+            }
+            else if (data?.groups) {
+                data = data.groups
+                data.each { Map group ->
+                    group.result = group.results?[0]?.result
+                }
+            }
+
+            [(scoreId): data]
+        }
+
+        render reportData as JSON
     }
 
     private def error(String message, String projectId) {

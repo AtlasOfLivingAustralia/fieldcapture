@@ -56,6 +56,7 @@
     config.projectBaselines = <fc:modelAsJavascript model="${projectBaselines}" default="[]"/>;
     config.projectProtocols = <fc:modelAsJavascript model="${projectProtocols}" default="[]"/>;
     config.invalidNames = <fc:modelAsJavascript model="${dataSetNames}" default="[]"/>;
+    config.serviceBaselineIndicatorOptions = <fc:modelAsJavascript model="${serviceBaselineIndicatorOptions}" default="{}"/>;
     var viewModel = new DataSetViewModel(dataSet, projectService, config);
     $.fn.select2.defaults.set( "theme", "bootstrap" );
     ko.applyBindings(viewModel);

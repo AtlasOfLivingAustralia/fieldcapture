@@ -517,3 +517,6 @@ input#changeProjectStartDate {
     margin-left: 0;
     padding-left: 1rem;
 }
+.meri-plan .input-group.species-select {
+    flex-wrap: unset;
+}

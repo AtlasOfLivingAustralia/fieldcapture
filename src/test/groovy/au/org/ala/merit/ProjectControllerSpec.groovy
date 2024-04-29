@@ -27,7 +27,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
     def siteService = Mock(SiteService)
 
     WebService webService = Mock(WebService)
-
+    MonitorService monitorService = Mock(MonitorService)
     ProjectService realProjectService
 
 
@@ -49,6 +49,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         controller.activityService = activityService
         controller.grailsApplication = grailsApplication
         controller.webService = webService
+        controller.monitorService = monitorService
 
         projectService.getMembersForProjectId(_) >> []
         projectService.getProgramConfiguration(_) >> new ProgramConfig([requiresActivityLocking: true])
@@ -842,7 +843,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         controller.ajaxUpdate(projectId)
 
         then:
-        1 * projectService.update(projectId, [name:'test project']) >> [statusCode:HttpStatus.SC_OK, resp:[message:'updated']]
+        1 * projectService.update(projectId, [name:'test project'], false) >> [statusCode:HttpStatus.SC_OK, resp:[message:'updated']]
         response.status == HttpStatus.SC_OK
         response.json == [message:'updated']
     }
@@ -858,7 +859,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
 
         then:
         1 * userServiceStub.userIsSiteAdmin() >> true
-        1 * projectService.update(projectId, [plannedStartDate:'2022-06-09T14:00:00Z', plannedEndDate:'2024-06-29T14:00:00Z']) >> [:]
+        1 * projectService.update(projectId, [plannedStartDate:'2022-06-09T14:00:00Z', plannedEndDate:'2024-06-29T14:00:00Z'], false) >> [:]
     }
 
     def "Only admins can update come properties including programId and config"(boolean isGrantManager) {
@@ -874,7 +875,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         then:
         1 * userServiceStub.userIsSiteAdmin() >> isGrantManager
         1 * userServiceStub.userIsAlaOrFcAdmin() >> false
-        1 * projectService.update(projectId, [:]) >> [:]
+        1 * projectService.update(projectId, [:], false) >> [:]
 
         where:
         isGrantManager | _
@@ -897,7 +898,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         then:
         userServiceStub.userIsSiteAdmin() >> (isAdmin || isGrantManager)
         userServiceStub.userIsAlaOrFcAdmin() >> isAdmin
-        1 * projectService.update(projectId, { it.size() == expectedSize }) >> [:]
+        1 * projectService.update(projectId, { it.size() == expectedSize }, false) >> [:]
 
         where:
         isGrantManager | isAdmin | expectedSize
@@ -935,6 +936,51 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         controller.hasTarget(1) == true
         controller.hasTarget("1.1") == true
         controller.hasTarget("abc") == true // this is accepted for legacy reasons
+    }
+
+    def "The requestVoucherBarcodeLabels method delegates to the MonitorService and returns null as the response is streamed from Monitor"() {
+        when:
+        def result = controller.requestVoucherBarcodeLabels('p1', 1)
+
+        then:
+        1 * monitorService.requestVoucherBarcodeLabels('p1', 1, response)
+        result == null
+    }
+
+    def "Get species record for an activity id" (String activityId, int statusCode, int numberOfCalls, def data) {
+        when:
+        request.method = 'GET'
+        controller.getSpeciesRecordsFromActivity (activityId)
+
+        then:
+        numberOfCalls * projectService.getSpeciesRecordsFromActivity (activityId) >> data
+        controller.response.status == statusCode
+
+        where:
+        activityId | statusCode | numberOfCalls | data
+        null | 400 | 0 | null
+        "abc" | 200 | 1 | []
+    }
+
+    def "The annualReport method delegates to the projectService to get the data then simplifies the result"() {
+        setup:
+        String projectId = 'p1'
+        List scoreIds = ['s1', 's2']
+        Map resp = [resp:[[group:'2023 - 2024', count:4, results:[
+                [scoreId:'s1', result: [ count: 2, result: ['a', 'b']]],
+                [scoreId:'s2', result: [ count: 2, result: [['a', 'b'], ['c']]]],
+
+        ]]]]
+
+        when:
+        params.id = projectId
+        params.scoreIds = scoreIds
+        params.financialYearEndDate = '2024-06-30'
+        controller.annualReport()
+
+        then:
+        1 * projectService.scoresByFinancialYear(projectId, scoreIds) >> resp
+        response.json == [s1:['a', 'b'], s2:['a', 'b', 'c']]
     }
 
     private Map stubPublicUser() {

@@ -13,6 +13,8 @@ import org.joda.time.Period
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.util.concurrent.locks.Lock
+
 /**
  * Tests the ProjectService class.
  */
@@ -30,6 +32,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
     ProgramConfig projectConfig = new ProgramConfig([activityBasedReporting: true, reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43])
     ProgramService programService = Mock(ProgramService)
     CacheService cacheService = Mock(CacheService)
+    LockService lockService = Mock(LockService)
 
     Map reportConfig = [
             weekDaysToCompleteReport:projectConfig.weekDaysToCompleteReport,
@@ -57,6 +60,8 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         service.projectConfigurationService = projectConfigurationService
         service.auditService = auditService
         service.programService = programService
+        service.lockService = lockService
+        service.speciesService = new SpeciesService()
         userService.userIsAlaOrFcAdmin() >> false
         metadataService.getProgramConfiguration(_,_) >> [reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43]
         projectConfigurationService.getProjectConfiguration(_) >> projectConfig
@@ -1370,13 +1375,14 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         String projectId = 'p1'
         Map meriPlan = [details:[outcomes:[]]]
         Map dataSets = [dataSets:[[dataSetId:1]]]
-        Map baseProject = [projectId:'p1', name:'Project 1', description:'Description 1']
+        Map baseProject = [projectId:'p1', name:'Project 1', description:'Description 1', lock:[userId:'u1', entityId:projectId]]
         Map postData
 
         when:
-        service.update(projectId, [custom:meriPlan])
+        service.update(projectId, [custom:meriPlan], false)
 
         then:
+        1 * lockService.userHoldsLock(_) >> true
         1 * webService.getJson({it.contains("project/"+projectId)}) >> baseProject+[custom:dataSets]
         1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
             postData = data
@@ -1394,6 +1400,24 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
             [status: HttpStatus.SC_OK]
         }
         postData == [custom:(dataSets+meriPlan)]
+    }
+
+    def "When updating the MERI plan or data sets, if the user doesn't hold a lock the update will fail with an error returned"() {
+        setup:
+        String projectId = 'p1'
+        Map meriPlan = [details: [outcomes: []]]
+        Map baseProject = [projectId: 'p1', name: 'Project 1', description: 'Description 1', lock: [userId: 'u1', entityId: projectId]]
+
+        when:
+        Map result = service.update(projectId, [custom: meriPlan], false)
+
+        then:
+        1 * lockService.userHoldsLock(_) >> false
+        1 * webService.getJson({it.contains("project/"+projectId)}) >> baseProject+[custom:[dataSets:[]]]
+        0 * webService.doPost({it.endsWith('project/'+projectId)}, _)
+        result.error != null
+        result.noLock == true
+
     }
 
     def "The project reports can be regenerated, including optionally specifying which categories to regenerate"() {
@@ -1578,10 +1602,23 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         service.filterDataSetSummaries(dataSets)
 
         then:
-        1 * activityService.monitoringProtocolForms() >> [[externalId:'1', name:"Plot Selection"], [externalId:'2', name: "Plot Layout and Visit"]]
+        1 * activityService.monitoringProtocolForms() >> [[externalId:'1', name:"Plot Selection", tags: ["site"]], [externalId:'2', name: "Plot Layout and Visit", tags: ["site"]], [externalId:'3', name: "Not a plot selection", tags: ["survey"]]]
         and:
         dataSets.size() == 1
         dataSets[0].name == 'Not a plot selection'
+    }
+
+    def "Get species records for an activity id and construct species object" (){
+        setup:
+        String activityId = 'a1'
+        def record = [scientificName: "sc1", vernacularName: "vn1", guid: "g1", outputSpeciesId: "o1"]
+        when:
+        def result = service.getSpeciesRecordsFromActivity(activityId)
+
+        then:
+        1 * webService.getJson( {it.contains("record/listForActivity/"+activityId)}) >> [records:[record], statusCode: HttpStatus.SC_OK]
+        result == [record + [species: [scientificName: "sc1", commonName: "vn1", outputSpeciesId: "o1", guid: "g1", name: "sc1 (vn1)"]]]
+
     }
 
     private Map setupActivityModelForFiltering(List services) {

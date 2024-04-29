@@ -3,7 +3,6 @@ package au.org.ala.merit
 import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
-import au.org.ala.merit.reports.ReportLifecycleListener
 import au.org.ala.merit.reports.ReportGenerationOptions
 import au.org.ala.merit.reports.ReportGenerator
 import au.org.ala.merit.reports.ReportOwner
@@ -14,11 +13,7 @@ import org.apache.commons.lang.CharUtils
 import org.apache.http.HttpStatus
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
-import org.joda.time.Days
-import org.joda.time.Interval
-import org.joda.time.Period
+import org.joda.time.*
 
 import java.text.SimpleDateFormat
 
@@ -30,6 +25,9 @@ class ProjectService  {
     static final String COMPLETE = 'completed'
     static final String APPLICATION_STATUS = 'Application'
     static final String ACTIVE = 'active'
+
+    static final String OTHER_EMSA_MODULE = 'Other'
+    static final String PARATOO_FORM_TAG_SURVEY = 'survey'
 
     static dateWithTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
     static dateWithTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
@@ -64,12 +62,11 @@ class ProjectService  {
     }
 
     void filterDataSetSummaries(List dataSetSummaries) {
-        List protocolNamesToHide = grailsApplication.config.getProperty('hidden.dataSet.protocols', List.class, ['Plot Selection', 'Plot Layout and Visit'])
         List<Map> forms = activityService.monitoringProtocolForms()
 
         dataSetSummaries.removeAll { Map dataSetSummary ->
             Map protocolForm = forms.find{it.externalId == dataSetSummary.protocol}
-            protocolForm && (protocolForm.name in protocolNamesToHide)
+            (protocolForm != null) && (!protocolForm.tags.contains(PARATOO_FORM_TAG_SURVEY))
         }
     }
 
@@ -315,7 +312,16 @@ class ProjectService  {
 
     }
 
-    def update(String id, Map projectDetails) {
+    /**
+     * Updates a project, taking actions as required where important fields (e.g. dates) are changed.
+     * @param id the projectId
+     * @param projectDetails the data to update
+     * @param byPassLockCheck Updates to the MERI plan by users need a lock, however some operations
+     * (e.g. data set updates need to merge the custom object, the org report can bulk update annoucements) can
+     * be performed without a lock.
+     * @return
+     */
+    def update(String id, Map projectDetails, boolean bypassMeriPlanLockCheck = true) {
         def defaultTimeZone = TimeZone.default
         TimeZone.setDefault(TimeZone.getTimeZone('UTC'))
 
@@ -356,6 +362,11 @@ class ProjectService  {
             // the "custom" Map which can contain properties "details" (the MERI plan) and "dataSets" (data set summaries)
             // The longer term solution for this is to model Projects explicitly/correctly in ecodata
             if (projectDetails.custom) {
+
+                if (projectDetails.custom.details && !bypassMeriPlanLockCheck && !lockService.userHoldsLock(currentProject.lock)) {
+                    return [error:'MERI plan is locked by another user', noLock:true]
+                }
+
                 projectDetails.custom.details?.lastUpdated = DateUtils.formatAsISOStringNoMillis(new Date())
 
                 Map custom = currentProject.custom ?: [:]
@@ -1123,6 +1134,7 @@ class ProjectService  {
 
     /**
      * Returns true if project reports are allowed to be regenerated.
+     * This allows project dates to be changed while a project is in the Application status
      *  @param project the project to check, expects the reports property to have
      * been populated with project reports.
      */
@@ -2069,6 +2081,17 @@ class ProjectService  {
         outcomes.findAll{it}.unique()
     }
 
+    List getSelectedEmsaModules(Map project) {
+        List baselineProtocols = project.custom?.details?.baseline?.rows?.collect{it.protocols}?.flatten() ?:[]
+        List monitoringProtocols = project.custom?.details?.monitoring?.rows?.collect{it.protocols}?.flatten() ?:[]
+
+        (baselineProtocols + monitoringProtocols).unique().findAll{it}
+    }
+
+    boolean hasSelectedEmsaModules(Map project) {
+        getSelectedEmsaModules(project).findAll{it != OTHER_EMSA_MODULE}.size() > 0
+    }
+
     @Cacheable("programList")
     List<Map> getProgramList() {
         List<Map> programs = programService.listOfAllPrograms()
@@ -2209,4 +2232,24 @@ class ProjectService  {
         result
     }
 
+    List getSpeciesRecordsFromActivity (String activityId) {
+        if (activityId) {
+            String displayFormat = 'SCIENTIFICNAME(COMMONNAME)'
+            String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}record/listForActivity/${activityId}"
+            def records = webService.getJson(url)?.records
+
+            records?.each { record ->
+                record.species = [
+                        scientificName: record.scientificName,
+                        commonName: record.vernacularName,
+                        outputSpeciesId: record.outputSpeciesId,
+                        guid: record.scientificNameID ?: record.guid ?: record.taxonConceptID ?: "A_GUID"
+                ]
+
+                record.species.name = speciesService.formatSpeciesName(displayFormat, record.species)
+            }
+
+            records
+        }
+    }
 }

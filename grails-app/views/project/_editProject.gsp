@@ -8,6 +8,18 @@
         </div>
     </div>
 </div>
+<g:if test="${grailsApplication.config.getProperty("app.enableALAHarvestSetting", Boolean)}">
+<div class="row mb-2">
+    <div class="col-sm-12">
+        <label for="name" class="control-label">Harvest records to ALA</label>
+        <div class="controls">
+            <div>
+                <select class="form-control form-control-sm input-large" data-bind="options: transients.yesNoOptions, value: transients.alaHarvest, optionsCaption: 'Please select'"></select>
+            </div>
+        </div>
+    </div>
+</div>
+</g:if>
 <div class="row mb-2">
     <div class="col-sm-6">
         <label class="control-label" for="organisation">Search for an organisation</label>
@@ -96,18 +108,29 @@
 
 <external-ids params="externalIds:externalIds, externalIdTypes:externalIdTypes, validationNamespace:'projectSettingsExternalId', validate:validateExternalIds"></external-ids>
 
+
+<div class="row mb-2">
+    <div class="col-sm-4">
+        <label for="funding">Project funding</label>
+        <div>
+            <g:textField class="form-control form-control-sm input-small" id="funding" name="funding" data-bind="value:funding" data-validation-engine="validate[custom[number]]"/>
+        </div>
+    </div>
+
+    <div class="col-sm-4">
+        <label for="funding-verification-date">Funding Verification Date</label><fc:iconHelp>If the funding amount is already correct, press the "Verify funding is correct" button to record the verification date.  If you update the funding amount the verification date will automatically be updated.</fc:iconHelp>
+        <div class="input-group input-append">
+            <fc:datePicker targetField="fundingVerificationDate.date" id="funding-verification-date" bs4="true" name="fundingVerificationDate" size="form-control form-control-sm dateControl" readonly="readonly"/>
+            <button class="ml-2 btn btn-warning btn-sm" data-bind="click:verifyFunding">Verify funding is correct</button>
+        </div>
+    </div>
+</div>
+
 <div class="row mb-2">
     <div class="col-sm-4">
         <label class="control-label" for="manager">Project manager</label>
         <div class="controls">
             <g:textField class="form-control form-control-sm input-small" name="manager" data-bind="value:manager"/>
-        </div>
-    </div>
-
-    <div class="col-sm-4">
-        <label class="control-label" for="manager">Project funding</label>
-        <div class="controls">
-            <g:textField class="form-control form-control-sm input-small" id="funding" name="funding" data-bind="value:funding" data-validation-engine="validate[custom[number]]"/>
         </div>
     </div>
 
@@ -161,10 +184,7 @@
         <fc:iconHelp title="Start date">Date the project is intended to commence.</fc:iconHelp>
         </label>
         <div class="input-group input-append">
-            <g:if test="${!canRegenerateReports}">
-                <fc:datePicker targetField="plannedStartDate.date" id="startDate" bs4="true" name="startDate" data-bind="disable:true, datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
-            </g:if>
-            <g:else>
+            <g:if test="${ProjectService.APPLICATION_STATUS == project.status || canRegenerateReports}">
                 <g:if test="${canChangeProjectDates}">
                     <fc:datePicker targetField="plannedStartDate.date" id="startDate" bs4="true" name="startDate" data-bind="disable:!canEditStartDate(), datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
 
@@ -172,23 +192,26 @@
                 <g:else>
                     <input type="text" id="startDate" data-bind="value:plannedStartDate.formattedDate" disabled="disabled" size="form-control form-control-sm input-small"/>
                 </g:else>
+            </g:if>
+            <g:else>
+                <fc:datePicker targetField="plannedStartDate.date" id="startDate" bs4="true" name="startDate" data-bind="disable:true, datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
             </g:else>
         </div>
     </div>
     <div class="col-sm-4">
         <label for="endDate">Planned end date
         <fc:iconHelp title="End date">Date the project is intended to finish.
-            <g:if test="${!canRegenerateReports}">
-                The end date for a project cannot be changed Project status is not Active, or if the last report in any category has been submitted, cancelled or approved
+            <g:if test="${hasSubmittedOrApprovedFinalReportInCategory}">
+                The end date for a project cannot be changed Project status is not Active/Application, or if the last report in any category has been submitted, cancelled or approved
             </g:if>
         </fc:iconHelp>
         </label>
         <div class="input-group input-append">
-            <g:if test="${!canRegenerateReports}">
-                <fc:datePicker targetField="plannedEndDate.date" bs4="true" data-bind="disable:true, datepicker:plannedEndDate.date" name="endDate" data-validation-engine="validate[required, funcCall[validateProjectEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
+            <g:if test="${ProjectService.APPLICATION_STATUS == project.status || canRegenerateReports}">
+                            <fc:datePicker targetField="plannedEndDate.date" bs4="true" data-bind="disable:transients.fixedProjectDuration(), datepicker:plannedEndDate.date" name="endDate" data-validation-engine="validate[required, funcCall[validateProjectEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
             </g:if>
             <g:else>
-                <fc:datePicker targetField="plannedEndDate.date" bs4="true" data-bind="disable:transients.fixedProjectDuration(), datepicker:plannedEndDate.date" name="endDate" data-validation-engine="validate[required, funcCall[validateProjectEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
+                <fc:datePicker targetField="plannedEndDate.date" bs4="true" data-bind="disable:true, datepicker:plannedEndDate.date" name="endDate" data-validation-engine="validate[required, funcCall[validateProjectEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
             </g:else>
 
         </div>

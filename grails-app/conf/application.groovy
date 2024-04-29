@@ -1,5 +1,3 @@
-import grails.util.Environment
-
 /******************************************************************************\
  *  CONFIG MANAGEMENT
  \******************************************************************************/
@@ -160,6 +158,9 @@ if(!upload.images.path){
 if(!app.http.header.userId){
     app.http.header.userId = "X-ALA-userId"
 }
+if (!app.enableALAHarvestSetting) {
+    app.enableALAHarvestSetting = false
+}
 
 ecodata.baseUrl = "https://ecodata-test.ala.org.au/ws/"
 // This is for biocollect/ecodata-client-plugin compatibility
@@ -223,6 +224,7 @@ auth.baseUrl = 'https://auth-test.ala.org.au'
 userDetails.web.url = "${auth.baseUrl}/userdetails/"
 userDetails.api.url = "${auth.baseUrl}/userdetails/userDetails/"
 user.registration.url = "${auth.baseUrl}/userdetails/registration/createAccount"
+monitor.core.baseUrl = "https://dev.core-api.monitor.tern.org.au/api"
 security {
     cas {
         enabled = false

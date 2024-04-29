@@ -54,23 +54,42 @@ class DataSetController {
         List projectServices = projectService.getProjectServices(project)
         project.outputTargets?.each { Map outputTarget ->
             if (outputTarget.outcomeTargets) {
+
                 Map service = projectServices.find{it.scores?.find{score -> score.scoreId == outputTarget.scoreId}}
                 if (service) {
+                    Map score = service.scores.find{it.scoreId == outputTarget.scoreId}
                     outputTarget.outcomeTargets.each {
                         outcomeGroups << [
                                 serviceId: service.id,
                                 service: service.name,
                                 outcomes:it.relatedOutcomes,
-                                label:service.name+" "+it.relatedOutcomes
+                                label:service.name+" "+it.relatedOutcomes,
+                                projectTags:score.tags,
+                                allTags: service.scores?.collect{it.tags}?.flatten()?.unique()
                         ]
                     }
                 }
                 else {
                     log.warn("No service found for scoreId ${outputTarget.scoreId} in project ${project.projectId}")
-                 }
+                }
             }
         }
-        outcomeGroups = outcomeGroups.findAll{it.outcomes}.unique{it.label}.sort{it.label}
+
+        Map outcomeGroupsByServiceId = outcomeGroups.groupBy{it.serviceId}
+        outcomeGroups = outcomeGroups.unique{it.label}.sort{it.label}
+        Map serviceBaselineIndicatorOptions = [:]
+        outcomeGroupsByServiceId.each { int serviceId, List groups ->
+            List tags = groups.collect{it.allTags}.flatten().unique()
+            if (tags?.contains(Score.TAG_SURVEY)) {
+                serviceBaselineIndicatorOptions[serviceId] = [:]
+                if (!tags?.contains(Score.TAG_BASELINE)) {
+                    serviceBaselineIndicatorOptions[serviceId].disableBaseline = true
+                }
+                if (!tags?.contains(Score.TAG_INDICATOR)) {
+                    serviceBaselineIndicatorOptions[serviceId].disableIndicator = true
+                }
+            }
+        }
 
         List projectBaselines = projectService.listProjectBaselines(project)
         projectBaselines = projectBaselines?.collect{
@@ -89,7 +108,8 @@ class DataSetController {
 
         [projectId:projectId, programName:programName, supportsOutcomeTargets:config.supportsOutcomeTargets(),
          priorities:priorities, outcomes: outcomes, project:project, projectOutcomes:outcomeGroups,
-         projectBaselines:projectBaselines, projectProtocols:projectProtocols, dataSetNames:dataSetNames]
+         projectBaselines:projectBaselines, projectProtocols:projectProtocols, dataSetNames:dataSetNames,
+        serviceBaselineIndicatorOptions: serviceBaselineIndicatorOptions]
     }
 
     // Note that authorization is done against a project, so the project id must be supplied to the method.
