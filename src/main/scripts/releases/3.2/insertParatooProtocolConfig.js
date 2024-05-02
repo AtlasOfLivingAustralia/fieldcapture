@@ -19,9 +19,7 @@ var protocols = {
         "usesPlotLayout": false,
         "tags": ["survey"],
         "apiEndpoint": "vegetation-mapping-surveys",
-        "geometryType": "Point",
-        "startDatePath": "start_date_time",
-        "endDatePath": "end_date_time"
+        "geometryType": "Point"
     },
     "a9cb9e38-690f-41c9-8151-06108caf539d":
         {
@@ -34,30 +32,23 @@ var protocols = {
         "name": "Plot Layout and Visit",
         "usesPlotLayout": true,
         "apiEndpoint": "plot-definition-surveys",
-        "tags": ["site"],
-        "startDatePath": "start_date",
-        "endDatePath": "end_date"
+        "tags": ["site"]
     },
     "617df00c-0e4f-4267-9efc-9ca9eae19686": {
         "name": "Plot Description(enhanced)",
         "apiEndpoint": "plot-description-enhanceds",
         "usesPlotLayout": true,
-        "tags": ["site"],
-        "startDatePath": "start_date",
-        "endDatePath": "end_date"
+        "tags": ["site"]
     },
     "dc10f902-e310-45eb-b82a-bebab050b46b": {
         "name": "Plot Description(standard)",
         "apiEndpoint": "plot-description-standards",
         "usesPlotLayout": true,
-        "tags": ["site"],
-        "startDatePath": "start_date",
-        "endDatePath": "end_date"
+        "tags": ["site"]
     },
     "3cbc5277-45fb-4e7a-8f33-19d9bff4cd78": {
         "name": "Drone Survey", "usesPlotLayout": false, "tags": ["development"],
-        "apiEndpoint": "drone-surveys",
-        "startDatePath": "date"
+        "apiEndpoint": "drone-surveys"
     },
     "3d2eaa76-a610-4575-ac30-abf40e57b68a": {
         "name": "Dev sandbox", "usesPlotLayout": false, "tags": ["development"],
@@ -67,33 +58,25 @@ var protocols = {
         "name": "Photopoints - DSLR Panorama",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "photopoints-surveys",
-        "startDatePath": "start_date",
-        "endDatePath": "end_date"
+        "apiEndpoint": "photopoints-surveys"
     },
     "383fa013-c52d-4186-911b-35e9b2375653": {
         "name": "Photopoints - Compact Panorama",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "photopoints-surveys",
-        "startDatePath": "start_date",
-        "endDatePath": "end_date"
+        "apiEndpoint": "photopoints-surveys"
     },
     "2dbb595b-3541-46bd-b200-13db3a823b74": {
         "name": "Photopoints - Device Panorama",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "photopoints-surveys",
-        "startDatePath": "start_date",
-        "endDatePath": "end_date"
+        "apiEndpoint": "photopoints-surveys"
     },
     "e15db26f-55de-4459-841b-d7ef87dea5cd": {
         "name": "Floristics - Enhanced",
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "floristics-veg-survey-fulls",
-        "startDatePath": "start_date",
-        "endDatePath": "end_date",
         "overrides": {
             "dataModel": {
                 "floristics-veg-voucher-full.host_species": {
@@ -112,8 +95,6 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "floristics-veg-survey-lites",
-        "startDatePath": "start_date",
-        "endDatePath": "end_date",
         "overrides": {
             "dataModel": {
                 "floristics-veg-virtual-voucher.host_species": {
@@ -300,8 +281,6 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "basal-area-dbh-measure-surveys",
-        "startDatePath": "start_date",
-        "endDatePath": "start_date",
         "overrides": {
             "dataModel": {
                 "basal-area-dbh-measure-observation.floristics_voucher.voucher_full.host_species": {
@@ -491,9 +470,7 @@ var protocols = {
         "name": "Invertebrate Fauna - Active Search",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "invertebrate-active-search-surveys",
-        "startDatePath": "invertebrate-active-search.start_time",
-        "endDatePath": "invertebrate-active-search.end_time"
+        "apiEndpoint": "invertebrate-active-search-surveys"
     },
     "7f95710a-2003-4119-a2c6-41ce4e34d12a": {
         "name": "Condition - Attributes",
@@ -530,8 +507,6 @@ var protocols = {
         "usesPlotLayout": false,
         "tags": ["survey"],
         "apiEndpoint": "new-targeted-surveys",
-        "startDatePath": "metadata-collection.dataset_time_period.dataset_start_date",
-        "endDatePath": "metadata-collection.dataset_time_period.dataset_end_date",
         "overrides": {
             "dataModel": {
                 "metadata-collection.survey_data.key_target_species": {
@@ -787,8 +762,6 @@ var protocols = {
         "usesPlotLayout": false,
         "tags": ["intervention"],
         "apiEndpoint": "pest-fauna-control-activities",
-        "startDatePath": "start_time",
-        "endDatePath": "end_time",
         "geometryType": "LineString"
     },
     "228e5e1e-aa9f-47a3-930b-c1468757f81d": {
