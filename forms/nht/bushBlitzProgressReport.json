@@ -117,23 +117,6 @@
             ]
           },
           {
-            "dataType": "list",
-            "description": "",
-            "name": "goodNewsStories",
-            "columns": [
-              {
-                "dataType": "text",
-                "description": "",
-                "name": "storyDetails",
-                "validate": "required,maxSize[1250]"
-              },
-              {
-                "dataType": "image",
-                "name": "photo"
-              }
-            ]
-          },
-          {
             "dataType": "text",
             "description": "",
             "name": "projectMonitoringAndLearnings",
@@ -181,7 +164,7 @@
             "items": [
               {
                 "source": "projectContactDetailsChanged",
-                "preLabel": "Has there been a change to key project contacts or their details?",
+                "preLabel": "Has there been a change to key project contacts or their details and/or to your organisation’s details?",
                 "type": "selectOne",
                 "helpText": "(e.g. Name, position, role, email, telephone or address of key contacts)"
               }
@@ -308,7 +291,7 @@
           {
             "items": [
               {
-                "source": "<h4>2. Good News Stories</h4>",
+                "source": "<h4>2. Monitoring, Evaluation and Project Learnings</h3>",
                 "type": "literal"
               }
             ],
@@ -317,54 +300,7 @@
           {
             "items": [
               {
-                "source": "2.1 <b>Please provide good news stories that highlight what the project is doing/achieving.</b> This information is intended for potential use by the Department in publicly promoting the program. Photos may be attached to this report via attachment to email however please ensure permissions of persons in the photos are obtained prior to the photos being attached and used for promotional purposes.",
-                "type": "literal"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "columns": [
-              {
-                "source": "",
-                "type": "literal",
-                "width": "5%",
-                "preLabel": {
-                  "computed": "\\'No. \\' || (index + 1)"
-                },
-                "title": "Story No."
-              },
-              {
-                "source": "storyDetails",
-                "type": "textarea",
-                "rows": 4,
-                "title": "Good News Story Details",
-                "width": "50%"
-              },
-              {
-                "type": "image",
-                "source": "photo",
-                "title": "",
-                "width": "45%"
-              }
-            ],
-            "userAddedRows": true,
-            "source": "goodNewsStories",
-            "type": "table"
-          },
-          {
-            "items": [
-              {
-                "source": "<h4>3. Monitoring, Evaluation and Project Learnings</h3>",
-                "type": "literal"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "items": [
-              {
-                "preLabel": "3.1 Provide a summary of any monitoring or evaluation activities undertaken this period, and of any project learnings. Comment on key findings and any changes you have made in response to these (where required)",
+                "preLabel": "2.1 Provide a summary of any monitoring or evaluation activities undertaken this period, and of any project learnings. Comment on key findings and any changes you have made in response to these (where required)",
                 "source": "projectMonitoringAndLearnings",
                 "type": "textarea",
                 "rows": 5
@@ -394,7 +330,7 @@
           {
             "items": [
               {
-                "source": "<h4>4. Activity Reporting</h4></br><b>Only selected services in the MERI Plan is auto-populated and viewed in the Progress Report/s.<br>Reported data from each of the Progress Report/s is aggregated into the Final Report.</b>",
+                "source": "<h4>3. Activity Reporting</h4></br><b>Only selected services in the MERI Plan are auto-populated and viewed in the Progress Report/s.<br>Reported data from each of the Progress Report/s is aggregated into the Final Report.</b>",
                 "type": "literal"
               }
             ],
@@ -638,7 +574,8 @@
                   "Conferences / seminars",
                   "One-on-one technical advice interactions",
                   "On-ground trials / demonstrations",
-                  "On-ground works"
+                  "On-ground works",
+                  "Scientific expedition"
                 ],
                 "validate": "required"
               },
@@ -671,14 +608,16 @@
                 "dataType": "stringList",
                 "name": "industryType",
                 "constraints": [
+                  "Academic/Research",
+                  "Aquaculture",
                   "Cropping",
                   "Dairy",
                   "Dryland agriculture",
-                  "Horticulture",
-                  "Grazing",
+                  "Environmental",
                   "Fisheries",
-                  "Aquaculture",
-                  "Environmental"
+                  "Grazing",
+                  "Horticulture",
+                  "Not applicable"
                 ],
                 "validate": "required"
               },
@@ -12652,18 +12591,6 @@
             ]
           },
           {
-            "dataType": "text",
-            "description": "",
-            "name": "reasonOfOverBudget",
-            "behaviour": [
-              {
-                "condition": "isExpenditureWithinBudget == \"No\" or ifBudgetBeenReceived == \"No\"",
-                "type": "enable"
-              }
-            ],
-            "validate": "required,maxSize[1000]"
-          },
-          {
             "dataType": "list",
             "description": "",
             "name": "budgetIssue",
@@ -12719,7 +12646,7 @@
           {
             "items": [
               {
-                "source": "<h4>5. Project Income And Expenditure</h4>",
+                "source": "<h4>4. Project Income And Expenditure</h4>",
                 "type": "literal"
               }
             ],
@@ -12729,7 +12656,7 @@
             "items": [
               {
                 "source": "isExpenditureWithinBudget",
-                "preLabel": "5.1 Is the project's expenditure proceeding in accordance with the budget, the expected rate of expenditure and within the total project budget?",
+                "preLabel": "4.1 Is the project's expenditure proceeding in accordance with the budget, the expected rate of expenditure and within the total project budget?",
                 "type": "selectOne"
               }
             ],
@@ -12739,67 +12666,59 @@
             "items": [
               {
                 "source": "ifBudgetBeenReceived",
-                "preLabel": "5.2 If your project budget includes 'Recipient' or 'Other' cash contributions, have they been received and / or been contracted to be received?",
+                "preLabel": "4.2 If your project budget includes 'Recipient' or 'Other' cash contributions, have they been received and / or been contracted to be received?",
                 "type": "selectOne"
               }
             ],
             "type": "row"
           },
           {
+            "type": "row",
+            "behaviour": [
+              {
+                "condition": "isExpenditureWithinBudget == \"No\" or ifBudgetBeenReceived == \"No\"",
+                "type": "if_expression"
+              }
+            ],
             "items": [
               {
-                "preLabel": "5.3 If you answered 'No' to question 5.1 or 5.2, please explain here: a) the nature of the issues; b) how you are managing (or proposing to manage) the issues, and c) implications for the project.",
-                "source": "reasonOfOverBudget",
-                "type": "textarea",
-                "rows": 3
+                "columns": [
+                  {
+                    "source": "",
+                    "type": "literal",
+                    "preLabel": {
+                      "computed": "\\'No. \\' || (index + 1)"
+                    },
+                    "title": "Issue No."
+                  },
+                  {
+                    "source": "budgetIssueNature",
+                    "type": "textarea",
+                    "title": "Nature of the budget issue"
+                  },
+                  {
+                    "source": "howTheIssueBeingManaged",
+                    "type": "textarea",
+                    "title": "How you are managing, or proposing to manage, the issue?"
+                  },
+                  {
+                    "source": "projectImplications",
+                    "type": "textarea",
+                    "title": "Implications for the project"
+                  }
+                ],
+                "userAddedRows": true,
+                "source": "budgetIssue",
+                "type": "table",
+                "title": "<b>4.3 If you answered 'No' to question 4.1 or 4.2, please explain here: a) the nature of the issues; b) how you are managing (or proposing to manage) the issues, and c) implications for the project.</b><br>Only complete if applicable. Note - cash contributions are expected to be provided in line with the MoU, otherwise it constitutes a variation."
               }
-            ],
-            "type": "row"
-          },
-          {
-            "items": [
-              {
-                "source": "<b><i>Only complete if applicable. Note - cash contributions are expected to be provided in line with the MoU, otherwise it constitutes a variation.</b></i>",
-                "type": "literal"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "columns": [
-              {
-                "source": "",
-                "type": "literal",
-                "preLabel": {
-                  "computed": "\\'No. \\' || (index + 1)"
-                },
-                "title": "Issue No."
-              },
-              {
-                "source": "budgetIssueNature",
-                "type": "textarea",
-                "title": "Nature of the budget issue"
-              },
-              {
-                "source": "howTheIssueBeingManaged",
-                "type": "textarea",
-                "title": "How you are managing, or proposing to manage, the issue?"
-              },
-              {
-                "source": "projectImplications",
-                "type": "textarea",
-                "title": "Implications for the project"
-              }
-            ],
-            "userAddedRows": true,
-            "source": "budgetIssue",
-            "type": "table"
+            ]
           },
           {
             "items": [
               {
                 "source": "additionalComments",
-                "preLabel": "5.4 If you have additional comments on the project's income, expenditure or budget, please provide them here.",
+                "preLabel": "If you have additional comments on the project's income, expenditure or budget, please provide them here.",
                 "type": "textarea"
               }
             ],
