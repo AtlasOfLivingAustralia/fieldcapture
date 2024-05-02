@@ -12,7 +12,8 @@ var config =
                 "template": "programOutcome",
                 "model": {
                     "maximumPriorities": "1000",
-                    "helpTextHeading": "Bushfire program outcomes are listed in the secondary outcomes"
+                    "helpTextHeading": "",
+                    "priorityHelpText": "Enter the primary investment priority for the primary outcome."
                 }
             },
             {
@@ -48,9 +49,9 @@ var config =
             {
                 "template": "projectMethodology",
                 "model": {
+                    "helpText": "Include all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not impacted by adverse weather conditions. Ensure what’s documented here aligns to those assumptions documented within the Project Logic.",
                     "maxSize": "4000",
-                    "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])",
-                    "helpText": "Include all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not impacted by adverse weather conditions. Ensure what’s documented here aligns to those assumptions documented within the Project Logic."
+                    "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])"
                 }
             },
             {
@@ -79,8 +80,8 @@ var config =
             {
                 "template": "monitoringBaseline",
                 "model": {
-                    "baselineMethodHelpText": "Describe the project baseline (s) units of measure or data which will be used to report progress towards this project’s outcome and the monitoring design",
-                    "titleHelpText": "Describe the project baseline(s) units of measure or data which will be used to report progress towards this project’s outcomes and the monitoring design. Refer to the Regional Land Partnerships Evaluation Plan which provides guidance on baselines and the monitoring indicators for each outcome. Note, other monitoring indicators can also be used."
+                    "baselineMethodHelpText": "Describe the project baseline(s) units of measure or data which will be used to report progress towards this projects outcome(s) and the monitoring design",
+                    "titleHelpText": "Describe the project baseline(s) units of measure or data which will be used to report progress towards this projects outcome(s) and the monitoring design."
                 }
             },
             {
@@ -195,12 +196,11 @@ var config =
                 "reportNameFormat": "Final Report",
                 "reportingPeriodInMonths": 0,
                 "multiple": false,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
                 "alignToOwnerEnd": true,
                 "label": "Final Report",
                 "category": "Final Report",
                 "reportsAlignedToCalendar": false,
-                "activityType": "Koala Conservation Final Report",
+                "activityType": "Bush Blitz Final Report",
                 "alignToOwnerStart": true
             }
         ],
