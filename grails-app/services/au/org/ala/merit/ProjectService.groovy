@@ -2110,55 +2110,6 @@ class ProjectService  {
         return programList
     }
 
-    Map saveDataSet(String projectId, Map dataSet) {
-        Map project = get(projectId)
-        if (!project) {
-            throw new  IllegalArgumentException("Project "+projectId+" does not exist")
-        }
-        if (!project.custom) {
-            project.custom = [:]
-        }
-        if (!project.custom.dataSets) {
-            project.custom.dataSets = []
-        }
-
-        if(!dataSet.progress) {
-            dataSet.progress = ActivityService.PROGRESS_STARTED
-        }
-
-        if(!dataSet.dataCollectionOngoing) {
-            dataSet.dataCollectionOngoing = false
-        }
-        dataSet.lastUpdated = DateUtils.formatAsISOStringNoMillis(new Date())
-
-        if (!dataSet.dataSetId) {
-            dataSet.dataSetId = UUID.randomUUID().toString()
-            dataSet.dateCreated = DateUtils.formatAsISOStringNoMillis(new Date())
-            project.custom.dataSets << dataSet
-        }
-        else {
-            int i = project.custom.dataSets.findIndexOf({it.dataSetId == dataSet.dataSetId})
-            if (i < 0)  {
-                throw new  IllegalArgumentException("Data set "+dataSet.dataSetId+" does not exist")
-            }
-            project.custom.dataSets[i] = dataSet
-        }
-
-        updateUnchecked(projectId, [custom: project.custom])
-    }
-
-    Map deleteDataSet(String projectId, String dataSetId) {
-        Map project = get(projectId)
-        if (!project) {
-            throw new IllegalArgumentException("Project "+projectId+" does not exist")
-        }
-        boolean found  = project.custom?.dataSets?.removeAll{ it.dataSetId == dataSetId}
-        if (!found)  {
-            throw new IllegalArgumentException("Data set "+dataSetId+" does not exist")
-        }
-        updateUnchecked(projectId, [custom: project.custom])
-    }
-
     /**
      * when reports are generated using the program or management unit pages,
      * reports should only be generated for projects with at least one existing report
