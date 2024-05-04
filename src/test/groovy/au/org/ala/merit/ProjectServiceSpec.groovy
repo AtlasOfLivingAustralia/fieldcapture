@@ -1266,7 +1266,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         filteredModel.outputs == ['o1', 'o2', 'o4', 'non service']
     }
 
-    def "When updating the MERI plan or data sets, the contents of the Project custom attribute will be merged"() {
+    def "When updating the MERI plan or data sets, the contents of the Project custom attribute will NOT be merged"() {
         setup:
         String projectId = 'p1'
         Map meriPlan = [details:[outcomes:[]]]
@@ -1284,7 +1284,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
             postData = data
             [status: HttpStatus.SC_OK]
         }
-        postData == [custom:(dataSets+meriPlan)]
+        postData == [custom:meriPlan]
 
         when:
         service.update(projectId, [custom:dataSets])
@@ -1295,7 +1295,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
             postData = data
             [status: HttpStatus.SC_OK]
         }
-        postData == [custom:(dataSets+meriPlan)]
+        postData == [custom:dataSets]
     }
 
     def "When updating the MERI plan or data sets, if the user doesn't hold a lock the update will fail with an error returned"() {

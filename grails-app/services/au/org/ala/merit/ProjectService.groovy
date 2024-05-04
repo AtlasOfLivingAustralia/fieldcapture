@@ -358,21 +358,16 @@ class ProjectService  {
                 }
             }
 
-            // The update algorithm only merges updates at the project base level, so we need to manually merge
-            // the "custom" Map which can contain properties "details" (the MERI plan) and "dataSets" (data set summaries)
-            // The longer term solution for this is to model Projects explicitly/correctly in ecodata
+            // Don't allow MERI plan updates unless the user holds the lock.
+            // Since it is modelled as an embedded object, we manually update the lastUpdated date as GORM
+            // won't do it automatically.
+            // The MERI Plan and data set summaries should be modelled as separate entities in a future change.
             if (projectDetails.custom) {
 
                 if (projectDetails.custom.details && !bypassMeriPlanLockCheck && !lockService.userHoldsLock(currentProject.lock)) {
                     return [error:'MERI plan is locked by another user', noLock:true]
                 }
-
                 projectDetails.custom.details?.lastUpdated = DateUtils.formatAsISOStringNoMillis(new Date())
-
-                Map custom = currentProject.custom ?: [:]
-                custom.putAll(projectDetails.custom)
-
-                projectDetails.custom = custom
             }
         }
 
