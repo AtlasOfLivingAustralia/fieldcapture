@@ -43,6 +43,7 @@ class ProjectService  {
     ProjectConfigurationService projectConfigurationService
     def programService
     LockService lockService
+    DataSetSummaryService dataSetSummaryService
 
     def get(id, levelOfDetail = "", includeDeleted = false) {
 
@@ -2120,13 +2121,15 @@ class ProjectService  {
      * @return
      */
     Map bulkUpdateDataSetSummaries(String projectId, String reportId, List dataSetIds, Map properties) {
-        boolean dirty = false
+
         List errors = []
         Map project = get(projectId)
+        List<Map> toUpdate = []
         dataSetIds?.each { String dataSetId ->
 
             Map dataSet = project.custom?.dataSets?.find{it.dataSetId == dataSetId}
             if (dataSet) {
+                boolean dirty = false
                 // Associate the data set with the report
                 if (!dataSet.reportId) {
                     dataSet.reportId = reportId
@@ -2150,6 +2153,9 @@ class ProjectService  {
                         dirty = true
                     }
                 }
+                if (dirty) {
+                    toUpdate << dataSet
+                }
             }
             else {
                 errors << "Report ${reportId} references data set ${dataSetId} which does not exist in project ${projectId}"
@@ -2161,13 +2167,13 @@ class ProjectService  {
         }.each {
             it.reportId = null
             it.publicationStatus = null
-            dirty = true
+            toUpdate << it
         }
 
         Map result = [:]
-        if (dirty) {
+        if (toUpdate) {
             // Save the changes to the data sets
-            result = updateUnchecked(project.projectId, [custom: project.custom])
+            result = dataSetSummaryService.bulkUpdateDataSets(projectId, toUpdate)
             if (result?.error) {
                 errors << result.error
             }

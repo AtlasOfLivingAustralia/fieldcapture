@@ -6,6 +6,7 @@ import org.apache.http.HttpStatus
 class DataSetSummaryService {
 
     static String DATA_SET_PATH_PREFIX = 'dataSetSummary/'
+    static String BULK_UPDATE_PATH = 'bulkUpdate/'
     WebService webService
     GrailsApplication grailsApplication
 
@@ -27,6 +28,12 @@ class DataSetSummaryService {
 
         String url = grailsApplication.config.getProperty('ecodata.baseUrl')+DATA_SET_PATH_PREFIX+projectId
         webService.doPost(url, dataSet)
+    }
+
+    Map bulkUpdateDataSets(String projectId, List dataSets) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl')+
+                DATA_SET_PATH_PREFIX+BULK_UPDATE_PATH+projectId
+        webService.doPost(url, [dataSets:dataSets])
     }
 
     Map deleteDataSet(String projectId, String dataSetId) {
