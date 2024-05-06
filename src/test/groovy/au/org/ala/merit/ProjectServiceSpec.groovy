@@ -1225,110 +1225,6 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         results.size() == 0
     }
 
-    def "A new dataset can be added"()  {
-        setup:
-        String projectId = 'p1'
-        Map dataset = [name:'data set 1']
-        Map project = [projectId:projectId, reports:[[reportId:'r1']]]
-        Map postData
-
-        when:
-        Map result = service.saveDataSet(projectId, dataset)
-
-        then:
-        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
-        1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
-            postData = data
-            [status: HttpStatus.SC_OK]
-        }
-
-        postData.size() == 1
-        postData.custom.size() == 1
-        postData.custom.dataSets.size() == 1
-        postData.custom.dataSets[0].name =='data set 1'
-        postData.custom.dataSets[0].dataSetId != null
-        result == [status: HttpStatus.SC_OK]
-    }
-
-    def "A dataset can be edited"()  {
-        setup:
-        String projectId = 'p1'
-        Map dataset = [name:'data set 1', dataSetId:'d1']
-        List existingDataSets = [[name:'data set 1 - old name', dataSetId:'d1'], [name:'data set 2', dataSetId:'d2'], [name:'data set 3', dataSetId:'d3']]
-        Map project = [projectId:projectId, custom:[dataSets:existingDataSets]]
-        Map postData
-
-        when:
-        Map result = service.saveDataSet(projectId, dataset)
-
-        then:
-        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
-        1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
-            postData = data
-            [status: HttpStatus.SC_OK]
-        }
-
-        postData.size() == 1
-        postData.custom.size() == 1
-        postData.custom.dataSets.size() == 3
-        postData.custom.dataSets[0].name =='data set 1'
-        postData.custom.dataSets[0].dataSetId == 'd1'
-        postData.custom.dataSets[1] == existingDataSets[1]
-        postData.custom.dataSets[2] == existingDataSets[2]
-
-        result == [status: HttpStatus.SC_OK]
-    }
-
-    def "If the data set does not exist when saving an exception will be thrown"()  {
-        setup:
-        String projectId = 'p1'
-        Map dataset = [name:'data set 1', dataSetId:'d2']
-        Map project = [projectId:projectId, custom:[dataSets:[[dataSetId:'d1', name:"old name"]]]]
-
-        when:
-        service.saveDataSet(projectId, dataset)
-
-        then:
-        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
-        thrown IllegalArgumentException
-    }
-
-    def "A dataset can be deleted"()  {
-        setup:
-        String projectId = 'p1'
-        String datasetId = 'd1'
-        Map project = [projectId:projectId, custom:[dataSets:[[dataSetId:'d1', name:"name"]]]]
-        Map postData
-
-        when:
-        Map result = service.deleteDataSet(projectId, datasetId)
-
-        then:
-        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
-        1 * webService.doPost({it.endsWith('project/'+projectId)}, _) >> { id, data ->
-            postData = data
-            [status: HttpStatus.SC_OK]
-        }
-
-        postData.size() == 1
-        postData.custom.size() == 1
-        postData.custom.dataSets.size() == 0
-        result == [status: HttpStatus.SC_OK]
-    }
-
-    def "If the data set does not exist when deleting an exception will be thrown"()  {
-        setup:
-        String projectId = 'p1'
-        String datasetId = 'd2'
-        Map project = [projectId:projectId, custom:[dataSets:[[dataSetId:'d1', name:"old name"]]]]
-
-        when:
-        service.deleteDataSet(projectId, datasetId)
-
-        then:
-        1 * webService.getJson({it.contains("project/"+projectId)}) >> project
-        thrown IllegalArgumentException
-    }
 
     def "for the output report, only outputs matching the project services will be displayed"() {
 
@@ -1370,7 +1266,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         filteredModel.outputs == ['o1', 'o2', 'o4', 'non service']
     }
 
-    def "When updating the MERI plan or data sets, the contents of the Project custom attribute will be merged"() {
+    def "When updating the MERI plan or data sets, the contents of the Project custom attribute will NOT be merged"() {
         setup:
         String projectId = 'p1'
         Map meriPlan = [details:[outcomes:[]]]
@@ -1388,7 +1284,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
             postData = data
             [status: HttpStatus.SC_OK]
         }
-        postData == [custom:(dataSets+meriPlan)]
+        postData == [custom:meriPlan]
 
         when:
         service.update(projectId, [custom:dataSets])
@@ -1399,7 +1295,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
             postData = data
             [status: HttpStatus.SC_OK]
         }
-        postData == [custom:(dataSets+meriPlan)]
+        postData == [custom:dataSets]
     }
 
     def "When updating the MERI plan or data sets, if the user doesn't hold a lock the update will fail with an error returned"() {

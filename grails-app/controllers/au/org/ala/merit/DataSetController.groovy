@@ -11,6 +11,7 @@ class DataSetController {
     static allowedMethods = [create:'GET', edit:'GET', save:'POST', delete:'POST']
 
     ProjectService projectService
+    DataSetSummaryService dataSetSummaryService
 
     // Note that authorization is done against a project, so the project id must be supplied to the method.
     @PreAuthorise(accessLevel = 'editor')
@@ -152,7 +153,7 @@ class DataSetController {
 
         Map dataSet = request.JSON
 
-        Map response = projectService.saveDataSet(id, dataSet)
+        Map response = dataSetSummaryService.saveDataSet(id, dataSet)
         render response as JSON
     }
 
@@ -165,7 +166,7 @@ class DataSetController {
             render status:HttpStatus.NOT_FOUND, text:"A dataSetId must be supplied"
         }
 
-        Map response = projectService.deleteDataSet(id, dataSetId)
+        Map response = dataSetSummaryService.deleteDataSet(id, dataSetId)
         render response as JSON
 
     }
