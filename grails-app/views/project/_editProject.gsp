@@ -120,7 +120,7 @@
     <div class="col-sm-4">
         <label for="funding-verification-date">Funding Verification Date</label><fc:iconHelp>If the funding amount is already correct, press the "Verify funding is correct" button to record the verification date.  If you update the funding amount the verification date will automatically be updated.</fc:iconHelp>
         <div class="input-group input-append">
-            <fc:datePicker targetField="fundingVerificationDate.date" id="funding-verification-date" bs4="true" name="fundingVerificationDate" size="form-control form-control-sm dateControl" readonly="readonly"/>
+            <fc:datePicker targetField="fundingVerificationDate.date" id="funding-verification-date" bs4="true" name="fundingVerificationDate" size="form-control form-control-sm dateControl" readonly="readonly" autocomplete="off"/>
             <button class="ml-2 btn btn-warning btn-sm" data-bind="click:verifyFunding">Verify funding is correct</button>
         </div>
     </div>
@@ -186,7 +186,7 @@
         <div class="input-group input-append">
             <g:if test="${ProjectService.APPLICATION_STATUS == project.status || canRegenerateReports}">
                 <g:if test="${canChangeProjectDates}">
-                    <fc:datePicker targetField="plannedStartDate.date" id="startDate" bs4="true" name="startDate" data-bind="disable:!canEditStartDate(), datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
+                    <fc:datePicker targetField="plannedStartDate.date" id="startDate" bs4="true" name="startDate" data-bind="disable:!canEditStartDate(), datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl" autocomplete="off"/>
 
                 </g:if>
                 <g:else>
@@ -194,7 +194,7 @@
                 </g:else>
             </g:if>
             <g:else>
-                <fc:datePicker targetField="plannedStartDate.date" id="startDate" bs4="true" name="startDate" data-bind="disable:true, datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
+                <fc:datePicker targetField="plannedStartDate.date" id="startDate" bs4="true" name="startDate" data-bind="disable:true, datepicker:plannedStartDate.date" data-validation-engine="validate[required, past[plannedEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl" autocomplete="off"/>
             </g:else>
         </div>
     </div>
@@ -208,10 +208,10 @@
         </label>
         <div class="input-group input-append">
             <g:if test="${ProjectService.APPLICATION_STATUS == project.status || canRegenerateReports}">
-                            <fc:datePicker targetField="plannedEndDate.date" bs4="true" data-bind="disable:transients.fixedProjectDuration(), datepicker:plannedEndDate.date" name="endDate" data-validation-engine="validate[required, funcCall[validateProjectEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
+                            <fc:datePicker targetField="plannedEndDate.date" bs4="true" data-bind="disable:transients.fixedProjectDuration(), datepicker:plannedEndDate.date" name="endDate" data-validation-engine="validate[required, funcCall[validateProjectEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl" autocomplete="off"/>
             </g:if>
             <g:else>
-                <fc:datePicker targetField="plannedEndDate.date" bs4="true" data-bind="disable:true, datepicker:plannedEndDate.date" name="endDate" data-validation-engine="validate[required, funcCall[validateProjectEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
+                <fc:datePicker targetField="plannedEndDate.date" bs4="true" data-bind="disable:true, datepicker:plannedEndDate.date" name="endDate" data-validation-engine="validate[required, funcCall[validateProjectEndDate]]" printable="${printView}" size="form-control form-control-sm dateControl" autocomplete="off"/>
             </g:else>
 
         </div>
@@ -272,7 +272,7 @@
         <fc:iconHelp title="Contract Start date">Contracted start date.</fc:iconHelp>
         </label>
         <div class="input-group input-append">
-            <fc:datePicker targetField="contractStartDate.date" bs4="true" name="contractStartDate" printable="${printView}" size="form-control form-control-sm dateControl"/>
+            <fc:datePicker targetField="contractStartDate.date" bs4="true" name="contractStartDate" printable="${printView}" size="form-control form-control-sm dateControl" autocomplete="off"/>
         </div>
     </div>
     <div class="col-sm-4">
@@ -280,7 +280,7 @@
         <fc:iconHelp title="Contract End date">Date the project is contracted to finish.</fc:iconHelp>
         </label>
         <div class="input-group input-append">
-            <fc:datePicker targetField="contractEndDate.date" bs4="true" name="contractEndDate" data-validation-engine="validate[future[contractStartDate]]" printable="${printView}" size="form-control form-control-sm dateControl"/>
+            <fc:datePicker targetField="contractEndDate.date" bs4="true" name="contractEndDate" data-validation-engine="validate[future[contractStartDate]]" printable="${printView}" size="form-control form-control-sm dateControl" autocomplete="off"/>
         </div>
 
     </div>
