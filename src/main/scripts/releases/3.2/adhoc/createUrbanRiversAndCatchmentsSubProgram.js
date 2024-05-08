@@ -153,7 +153,7 @@ var config =
         ],
         "excludes": [],
         "programServiceConfig": {
-            "serviceFormName": "NHT Output Report",
+            "serviceFormName": "Priority Threatened Species Progress Report",
             "programServices": [
                 {
                     "serviceTargets": [
@@ -390,7 +390,8 @@ var config =
                     "serviceTargets": [
                         "3ec07754-4a7a-46fb-a76d-553921781716",
                         "fbc2dab8-7454-40f9-94f6-6bf258fcefff",
-                        "7186e284-0cb2-418e-a8cc-4343eb618140"
+                        "7186e284-0cb2-418e-a8cc-4343eb618140",
+                        "c7d0963e-2847-4f5f-8a1c-e149dfa4c9d1"
                     ],
                     "serviceId": 36
                 },
@@ -408,12 +409,7 @@ var config =
                 }
             ]
         },
-        "visibility": "public",
         "requiresActivityLocking": true,
-        "reportData": {
-            "NHT Output Report": "nhtOutputReportData"
-        },
-        "supportsMeriPlanComparison": true,
         "projectTemplate": "rlp",
         "activityPeriodDescriptor": "Outputs report #",
         "requireMeritAdminToReturnMeriPlan": true,
@@ -436,23 +432,43 @@ var config =
         ],
         "projectReports": [
             {
-                "firstReportingPeriodEnd": "2024-06-30T14:00:00Z",
-                "reportType": "Administrative",
-                "reportDescriptionFormat": "Annual Progress Report %2$tY - %3$tY for %4$s",
-                "reportNameFormat": "Annual Progress Report %2$tY - %3$tY",
+                "reportType": "Activity",
+                "reportDescriptionFormat": "Progress Report %1d",
+                "reportNameFormat": "Progress Report %1d",
                 "reportingPeriodInMonths": 12,
-                "category": "Annual Progress Reporting",
-                "activityType": annualReportFormName,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
-                "label": "Annual",
-                "minimumReportDurationInDays": 1
+                "description": "_Please note that the reporting fields for these reports are currently being developed_",
+                "minimumReportDurationInDays": 3,
+                "label": "Semester",
+                "category": "12 Monthly Progress Reports",
+                "activityType": "Priority Threatened Species Progress Report",
+                "reportsAlignedToCalendar": true,
+                "canSubmitDuringReportingPeriod": true
             },
+            {
+                "reportType": "Single",
+                "reportDescriptionFormat": "Final Report",
+                "reportNameFormat": "Final Report",
+                "reportingPeriodInMonths": 0,
+                "multiple": false,
+                "description": "_Please note that the reporting fields for these reports are currently being developed_",
+                "alignToOwnerEnd": true,
+                "label": "Final Report",
+                "category": "Final Report",
+                "reportsAlignedToCalendar": false,
+                "activityType": "Priority Threatened Species Final Report",
+                "alignToOwnerStart": true
+            }
         ],
         "keyThreatCodes": [
             "Climate Change - Changed flooding regime",
             "Climate Change - Changed rainfall patterns",
             "Climate Change - Sea level rises",
             "Climate Change - Unexpected seasonal/temperature extremes",
+            "Disconnection from Country - Altered/disrupted connection with land and sea country",
+            "Disconnection from Country - Altered or disrupted First Nations engagement/leadership in caring for land and sea country",
+            "Disconnection from Country - Altered or disrupted transfer of First Nations knowledge systems",
+            "Disconnection from Country - Inadequate recognition of Traditional knowledge and practices",
+            "Disengagement of community - Community are not informed and are not engaged in managing the environment",
             "Disease/pathogens - Areas that are infected",
             "Disease/pathogens - Possible infection of disease free areas",
             "Fire - Inappropriate fire regime",
