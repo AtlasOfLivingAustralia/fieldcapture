@@ -280,7 +280,7 @@ var parent = createOrFindProgram(programName);
 var subprograms = ["Bush Blitz"]
 
 subprograms.forEach(function (subProgram){
-    createOrFindProgram(subProgram, parent._id, "Habitat Restoration Projects - Grants");
+    createOrFindProgram(subProgram, parent._id);
 });
 
 subprograms.forEach(function (subprogram){
@@ -289,5 +289,6 @@ subprograms.forEach(function (subprogram){
         var p = program.next();
         print("sub program ID: " + p.programId)
         db.program.updateOne({programId:p.programId}, {$set:{config:config, outcomes:outcomes, priorities:priorities}});
+        useNhtServiceLabels(p.name);
     }
 });
