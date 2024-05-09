@@ -578,6 +578,17 @@ class ProjectController {
 
     }
 
+    @PreAuthorise(accessLevel = 'siteAdmin')
+    def ajaxUnCancelReport(String id) {
+
+        def reportDetails = request.JSON
+
+        def result = projectService.unCancelReport(id, reportDetails)
+
+        render result as JSON
+
+    }
+
     /**
      * Deletes all of the activities in the stage.
      * @param id the project id

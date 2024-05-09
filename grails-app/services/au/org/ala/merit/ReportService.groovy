@@ -360,6 +360,22 @@ class ReportService {
         return [success:true]
     }
 
+    Map unCancelReport(String reportId, List reportActivityIds, String reason, Map reportOwner, List ownerUsersAndRoles) {
+
+        Map resp = reject(reportId, [""], reason)
+        Map report = get(reportId)
+
+        if (!resp.error) {
+            ReportLifecycleListener listener = reportLifeCycleListener(report)
+            listener.reportUnCancelled(report, reportActivityIds, reportOwner)
+            activityService.rejectActivitiesForPublication(reportActivityIds)
+        }
+        else {
+            return [success:false, error:resp.error]
+        }
+        return [success:true]
+    }
+
     /**
      * Creates a report to offset the scores produced by the supplied report without having to unapprove the original report and edit the data.
      * @param reportId the report that needs adjustment

@@ -22,6 +22,7 @@ class ReportLifecycleListener {
     Map reportApproved(Map report, List reportActivityIds, Map reportOwner) { [:] }
     Map reportRejected(Map report, List reportActivityIds, Map reportOwner) { [:] }
     Map reportCancelled(Map report, List reportActivityIds, Map reportOwner) { [:] }
+    Map reportUnCancelled(Map report, List reportActivityIds, Map reportOwner) { [:] }
     Map reportReset(Map report) { [:] }
 
     private List<Map> findReferencedEntityTypes(String activityFormType) {
