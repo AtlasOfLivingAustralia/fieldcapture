@@ -47,7 +47,7 @@ var config =
             {
                 "template": "outcomeStatements",
                 "model": {
-                    "subtitle": "Please provide outcome statements. Outcomes statements should: - Clearly describe the intent of the project, specifically the benefit or change that the project is expected to deliver by June 2022; - Be expressed as a SMART statement (Specific, Measurable, Attainable, Realistic and Time-bound); and - Ensure that the outcomes are measurable with consideration to the monitoring methodology provided below",
+                    "subtitle": "Please provide outcome statements. Outcomes statements should: - Clearly describe the intent of the project, specifically the benefit or change that the project is expected to deliver; - Be expressed as a SMART statement (Specific, Measurable, Attainable, Realistic and Time-bound); and - Ensure that the outcomes are measurable with consideration to the monitoring methodology provided below",
                     "placeholder": "By 30 June 2021, [Free text]",
                     "title": "Outcome statements"
                 }
@@ -444,18 +444,6 @@ var config =
             "Natural Environment"
         ],
         "projectReports": [
-            {
-                "firstReportingPeriodEnd": "2024-06-30T14:00:00Z",
-                "reportType": "Administrative",
-                "reportDescriptionFormat": "Annual Progress Report %2$tY - %3$tY for %4$s",
-                "reportNameFormat": "Annual Progress Report %2$tY - %3$tY",
-                "reportingPeriodInMonths": 12,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
-                "minimumReportDurationInDays": 1,
-                "label": "Annual",
-                "category": "Annual Progress Reporting",
-                "activityType": "Right-Way Desert Fire Annual Report"
-            },
             {
                 "reportType": "Single",
                 "firstReportingPeriodEnd": "2026-06-30T14:00:00Z",

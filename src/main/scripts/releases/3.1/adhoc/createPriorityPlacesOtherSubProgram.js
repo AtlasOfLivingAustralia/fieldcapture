@@ -139,240 +139,239 @@ var config =
             "programServices": [
                 {
                     "serviceTargets": [
-                        "c3276929-b8a9-4985-a329-49b86f14018c"
+                        "58422487-fe0a-4cc6-85b6-761e9f2752b9"
                     ],
                     "serviceId": 1
                 },
                 {
                     "serviceTargets": [
-                        "69deaaf9-cdc2-439a-b684-4cffdc7f224e"
+                        "7abd62ba-2e44-4318-800b-b659c73dc12b"
                     ],
                     "serviceId": 2
                 },
                 {
                     "serviceTargets": [
-                        "1f8161bc-908b-4ec8-ab7f-edac973a657d",
-                        "88908921-1248-4a7c-b185-51c625c737e3",
-                        "fe9f1a6c-e614-489a-80fa-4d6d76f1cf95"
+                        "f9c85612-602e-465c-89e0-e155b34b1f31"
                     ],
                     "serviceId": 3
                 },
                 {
                     "serviceTargets": [
-                        "aa0c6b29-285e-4344-987e-dfeaf1d95648",
-                        "a9d98baa-b2ab-4428-82cf-d96185e63aa6",
-                        "c4ea5ce3-4a70-4df8-aff7-ffa929e7df61"
+                        "e30b721b-99d7-4292-9395-e10ad8b1b9e1",
+                        "eedf53df-e2f1-4fde-b955-41b46ac83282",
+                        "6c92881f-d8ae-434c-9275-3373ce8023fb"
                     ],
                     "serviceId": 4
                 },
                 {
                     "serviceTargets": [
-                        "55d76c03-c89d-40fe-867b-93f7a48ff9c1",
-                        "3cbf653f-f74c-4066-81d2-e3f78268185c",
-                        "3855d565-3b77-497b-90af-addb271aa598",
-                        "5dbfb32a-5933-4d8a-9937-41f350fb5f75"
+                        "e037c2d7-a5e5-4e5c-a173-a2f426d39e95",
+                        "dd4a0ab0-f760-44e9-ae37-5589a06678dd",
+                        "7ba84972-750a-4952-921d-1552743bc09b",
+                        "64555f23-a7f0-4fbd-a509-2a5492f7e91b"
                     ],
                     "serviceId": 5
                 },
                 {
                     "serviceTargets": [
-                        "22771c0d-8403-433b-b468-e36dc16a1d21",
-                        "675cc878-eb80-435f-a841-d89b657fb2e3",
-                        "dd9f8fd4-b6c7-4f09-bbbf-5d721afc7677",
-                        "6f3cb6ab-5c6a-49be-9af9-9226fa751725"
+                        "ab61838c-eba7-4007-bb06-65fe0bfcf604",
+                        "d75389ba-e4a7-4735-9e52-93d86667d519",
+                        "cb7c9d74-c1fc-4503-b4d8-96586b7d28c5",
+                        "50e4a1a1-31cb-4236-b23e-3949edcfba06"
                     ],
                     "serviceId": 7
                 },
                 {
                     "serviceTargets": [
-                        "e0b4cc3e-e94a-4c97-81dc-a4cb868c2cc3",
-                        "b0bcfc54-76fa-4659-accf-276c18b50c31"
+                        "e4cedcec-6a4c-4125-8d27-9230d6a21ba5",
+                        "2504bde1-6389-4d65-8a5d-95bccefccd0a"
                     ],
                     "serviceId": 8
                 },
                 {
                     "serviceTargets": [
-                        "9416c9f4-48ca-4bd1-8822-cd45ebb56c58",
-                        "2409e649-2ee2-47fd-9e76-ef2ffa07a5e7",
-                        "d58f8dba-109d-4179-b130-a888cd3d303c",
-                        "01686d38-9165-4497-9648-627ef81945a7"
+                        "11dc6641-488a-482b-9e4d-4d1ab1fad282",
+                        "a253fcea-320d-4d12-a736-a1189c732b17",
+                        "4feac7e6-b5bd-4b5b-869d-3e3fdfced31b",
+                        "82db08b5-58e8-4d35-8335-037801ef4067"
                     ],
                     "serviceId": 9
                 },
                 {
                     "serviceTargets": [
-                        "0e2f8d61-b7b4-4d2d-b07c-4fc20bbe326a",
-                        "bb506258-e907-43d3-99bd-0fe0400f654e"
+                        "23261000-91f6-4480-8368-fa910649f3e1",
+                        "8990164b-73c1-4ec1-90aa-b1b6e306e186"
                     ],
                     "serviceId": 10
                 },
                 {
                     "serviceTargets": [
-                        "3c83e639-9c19-4b31-a86f-9d2d5e78123b",
-                        "e901be5e-8336-432e-b164-f278abd7430b"
+                        "1246a484-cade-497d-a76e-e5fdf881e46f",
+                        "b80aaccc-5f28-43f0-a754-338b9b1c0edd"
                     ],
                     "serviceId": 12
                 },
                 {
                     "serviceTargets": [
-                        "5557288b-190e-4a3f-a60b-4bdff6ca8fe8",
-                        "902df7a8-92f6-420d-9544-47d4b8cf31ca"
+                        "e0a2e283-77a2-4f74-94de-550578cc4612",
+                        "65dbe133-29c2-46a8-a91f-c76ece73e2fc"
                     ],
                     "serviceId": 13
                 },
                 {
                     "serviceTargets": [
-                        "9deb3edf-50c7-4b04-a1fb-d1451eadf641",
-                        "360c8b86-360c-4ca3-b1aa-626be56f2b11"
+                        "a2ba766b-f9ce-4948-b331-b4989e8edfc8",
+                        "6a7f9150-3107-46fc-967d-143b595f39a3"
                     ],
                     "serviceId": 14
                 },
                 {
                     "serviceTargets": [
-                        "7c30bc26-829e-4080-8059-27af9285113b",
-                        "158a5544-78e3-4d00-9f1b-62a85a938268"
+                        "c0b0a691-057e-4af4-a0d2-647988354931",
+                        "e5de1384-40b8-4347-b3b3-e1efb8f0b09b"
                     ],
                     "serviceId": 15
                 },
                 {
                     "serviceTargets": [
-                        "4aa201ec-2066-40e1-a457-99daa569c8e2",
-                        "f46f096a-a274-426b-adad-702e7cf8fab7",
-                        "3b1403f3-139a-4206-b325-62ebfe05ddc4",
-                        "7cb13c22-3dcd-43e7-808d-e0e26f5c090d"
+                        "ede35cd2-bb14-44b6-8d47-6b0ea55cb2d1",
+                        "da7e114f-24ed-4924-b763-4843fbe85152",
+                        "88d2eddf-5633-4220-948c-f5b5d690b896",
+                        "6d3971f4-a393-499e-ad7d-6d030a0ace7e"
                     ],
                     "serviceId": 16
                 },
                 {
                     "serviceTargets": [
-                        "5c6db4c1-7fde-452e-8735-e52842fe6217",
-                        "41cb1e2c-59bc-4639-8bf7-fe0f528e006e"
+                        "9e17ef60-59e4-4509-a396-0f0a8e3d77d4",
+                        "0a973540-78c8-45b8-9074-5d99b0c8a8ef"
                     ],
                     "serviceId": 18
                 },
                 {
                     "serviceTargets": [
-                        "4f71e00a-2d80-488d-9ce4-947e60589149",
-                        "69a2ffba-41e9-406e-8ea4-5bdeee92cbde"
+                        "91185422-300a-43c9-8148-3074aa9b9bf2",
+                        "88b6be7f-8b43-4514-b6f5-7176d5a6a23b"
                     ],
                     "serviceId": 42
                 },
                 {
                     "serviceTargets": [
-                        "26ea592f-ee39-4e6e-b6af-5b53fb1a5675"
+                        "6902a27f-a4bb-4a85-82e9-ea2e361510c2"
                     ],
                     "serviceId": 17
                 },
                 {
                     "serviceTargets": [
-                        "3587a984-68f9-4db3-b5af-49f265d853e0",
-                        "9d2d01be-b517-4be2-a225-8b1c887e016e"
+                        "de5f262d-5474-40ef-92fc-a631bd2866ff",
+                        "eb72cc6e-6e0b-449b-954d-d76b5c9dfe10"
                     ],
                     "serviceId": 19
                 },
                 {
                     "serviceTargets": [
-                        "d0516817-5acb-46bd-9871-2696c245bad0",
-                        "7fed132d-6a38-448c-b519-381ab9e1e027",
-                        "e08dda14-360c-4b66-b8c5-eb0269c5aa44",
-                        "f3671aa7-773f-447d-9649-ba7f11dbe97a"
+                        "210ade50-7e53-44d5-a170-a8271e4a5448",
+                        "30fcbc69-07de-4cee-a952-17dfdcc99841",
+                        "48d7b144-ae3a-4b45-a022-0654c38dcc5a",
+                        "8ba07e59-2d5a-4b08-8775-2643c67126f7"
                     ],
                     "serviceId": 20
                 },
                 {
                     "serviceTargets": [
-                        "5ab2b539-a5b4-40da-a556-a2c18066345b",
-                        "36410625-05f3-42d3-b04f-a3b268498ee1"
+                        "86d53f79-9847-4c1c-91b6-0df157bfbb46",
+                        "d02595ef-b0f0-464e-9950-a38ea17e7449"
                     ],
                     "serviceId": 23
                 },
                 {
                     "serviceTargets": [
-                        "0162246b-13fd-40c9-ae26-fb767eee76f8"
+                        "f4f3790d-8af6-4d75-8b5c-da5834359837"
                     ],
                     "serviceId": 24
                 },
                 {
                     "serviceTargets": [
-                        "b9e710e4-7dd3-4acc-ac2c-c69f4bcb9787",
-                        "00934509-f102-4d39-a043-7547a8ab9ac8",
-                        "1021bec7-3836-4b33-90b4-76701efd4fe3",
-                        "4dad393e-cbf7-43dd-87bb-62ea8f8afcdd"
+                        "a7e6b1ee-d458-4330-a1b2-fd9fc1636955",
+                        "d8d501c9-f18b-4dcd-88d8-1a3b947b4a87",
+                        "adf68191-6ed1-46cb-9d6c-ab4a02cccb5d",
+                        "f6ba8663-b014-4033-84d6-0dd96e593385",
+                        "7299cb0e-b811-49ec-8ea2-08ac75c39647"
                     ],
                     "serviceId": 26
                 },
                 {
                     "serviceTargets": [
-                        "a516c78d-740f-463b-a1ce-5b02b8c82dd3",
-                        "4cbcb2b5-45cd-42dc-96bf-a9a181a4865b",
-                        "fbc45154-1d60-4f5e-a484-fdff514f9d51",
-                        "85191c99-f56d-46e6-9311-a58c1f37965d"
+                        "29f64aa4-e4e5-4e27-bdac-0a259730f3a1",
+                        "97afd8a0-aa10-4987-8e9e-4c572f6a80b3",
+                        "cf1794d1-5d9b-410b-9092-372ebf691b96",
+                        "14230564-70c2-47e6-9e75-ddc407fc9916"
                     ],
                     "serviceId": 27
                 },
                 {
                     "serviceTargets": [
-                        "3cfa82aa-0b38-49c0-be37-0fa61b5b6e3c",
-                        "91e90861-3ba7-4257-a765-6cab24c6f58a"
+                        "53341328-38fc-460b-a330-4906543dd468",
+                        "49fbabc3-cad5-4504-b06b-721482393613"
                     ],
                     "serviceId": 28
                 },
                 {
                     "serviceTargets": [
-                        "96be68cf-783d-452a-b8fd-3832163f95db",
-                        "e70c70fd-4f31-41dc-a4b4-07f79efc3055"
+                        "cc50184f-4b1b-4086-9ef8-387c88799acf",
+                        "2dbb1e1f-b00b-4f09-8af9-eefee9474695"
                     ],
                     "serviceId": 29
                 },
                 {
                     "serviceTargets": [
-                        "598bd978-0907-4cad-a7a6-ec5a8a8bbdc4",
-                        "d29bd931-1dd1-47c4-b456-c175099ff1df"
+                        "5de1fddf-5089-496b-8e8f-6127ff39c3a1",
+                        "e8559392-8a14-46a2-b962-cf8be46bc476"
                     ],
                     "serviceId": 30
                 },
                 {
                     "serviceTargets": [
-                        "6db1ebd7-92c5-49f2-98b7-2faa700fd752",
-                        "524d93b4-5cd1-4d0d-b1f8-d393028220ad"
+                        "36481317-5db0-4d87-93ae-9ffcabbfa6a0",
+                        "0c44f773-fb12-4753-9d0a-6900a2858230"
                     ],
                     "serviceId": 31
                 },
                 {
                     "serviceTargets": [
-                        "8040931a-2e6c-41be-9e92-f1035093b2ac",
-                        "5d652e6e-b719-45bf-8ae6-e9f293c24a92"
+                        "a82d04c9-4cdf-40c2-9bed-78539b92bf58",
+                        "edaefddb-e55d-40ba-bb7b-a163f9678125"
                     ],
                     "serviceId": 32
                 },
                 {
                     "serviceTargets": [
-                        "f74182bd-7a53-4157-aeb9-eda281bb0234",
-                        "e7b7bb1e-66c2-4140-90f9-9534aa46ffa3"
+                        "a9bd257e-ebfe-4dc6-98c5-98488c80c12d",
+                        "b6a2c1f2-9daa-4256-b79c-6fc3a2df3b05"
                     ],
                     "serviceId": 33
                 },
                 {
                     "serviceTargets": [
-                        "15615a70-ee60-46b8-b5e9-b33d4d88de6b",
-                        "d8dc153b-da23-4f7b-947a-89bc98338d6d",
-                        "5f762c6d-4f42-4458-9855-03c6896959c1",
-                        "5885f105-fc7d-43fd-8c26-c72938a95b76"
+                        "c43c95a6-2698-4e2d-8d5d-9f8bcc5bbc0a",
+                        "a8687dcf-7a08-4d7e-9cba-7c14b701048c",
+                        "21a7fd05-79b4-46b2-b939-c90ee4699867",
+                        "c1e99d44-369d-4c85-b20d-c35685c32a80"
                     ],
                     "serviceId": 34
                 },
                 {
                     "serviceTargets": [
-                        "dea1ff8b-f4eb-4987-8073-500bbbf97fcd",
-                        "fba17df1-d5cb-4643-987f-0626055b3c78"
+                        "332bd6c4-3209-4691-b454-3dbe4f011385",
+                        "2695a9b8-54db-4483-90e5-c83c5a230060"
                     ],
                     "serviceId": 35
                 },
                 {
                     "serviceTargets": [
-                        "3ec07754-4a7a-46fb-a76d-553921781716",
-                        "fbc2dab8-7454-40f9-94f6-6bf258fcefff",
-                        "7186e284-0cb2-418e-a8cc-4343eb618140",
+                        "a0cc136c-094a-4e57-b5e0-f410dbb3ae51",
+                        "2930c94c-cb39-4df6-9593-6ce76a5bb9e9",
+                        "b2299148-ec80-4c02-ac91-afbe780f7344",
                         "c7d0963e-2847-4f5f-8a1c-e149dfa4c9d1"
                     ],
                     "serviceId": 36
@@ -391,7 +390,7 @@ var config =
                 }
             ]
         },
-        "visibility": "public",
+        "visibility": "private",
         "declarationPageType": "rdpReportDeclaration",
         "requiresActivityLocking": true,
         "supportsMeriPlanComparison": true,
@@ -526,11 +525,24 @@ var outcomes = [
         "priorities": [
             {
                 "category": "Priority Threatened Species Primary"
+            },
+            {
+                "category": "Birds"
+            },
+            {
+                "category": "Invertebrates"
+            },
+            {
+                "category": "Plants"
+            },
+            {
+                "category": "Reptiles"
             }
         ],
         "targeted": true,
         "shortDescription": "EPBC Species",
         "category": "Threatened Species",
+        "type": "secondary",
         "outcome": "1.  Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
     },
     {
@@ -544,8 +556,6 @@ var outcomes = [
         "category": "Threatened Ecological Communities",
         "outcome": "1. Species and Landscapes (Long term): Threatened Ecological Communities (TECs) and priority places - The condition of targeted EPBC Act listed Threatened Ecological Communities and identified priority places under the Threatened Species Action Plan 2022-2032 is improved"
     },
-
-
     {
         "type": "short",
         "category": "Priority species related outcome",
@@ -645,16 +655,280 @@ var outcomes = [
 
 var priorities = [
     {
-        "category": "Priority Threatened Species Primary",
-        "priority": "Gamba Grass (Andropogon gayanus)"
+        "category": "Plants",
+        "priority": "A creeper Calystegia affinis"
+    },
+    {
+        "category": "Plants",
+        "priority": "A daisy Senecio australis"
+    },
+    {
+        "category": "Plants",
+        "priority": "A daisy Senecio evansianus"
+    },
+    {
+        "category": "Plants",
+        "priority": "A daisy Senecio hooglandii"
+    },
+    {
+        "category": "Plants",
+        "priority": "A herb Euphorbia obliqua"
+    },
+    {
+        "category": "Birds",
+        "priority": "Abbott’s Booby Papasula abbotti"
+    },
+    {
+        "category": "Plants",
+        "priority": "An orchid Phreatia paleata"
     },
     {
         "category": "Threatened Ecological Communities",
         "priority": "Arnhem Plateau sandstone shrubland complex"
     },
     {
+        "category": "Plants",
+        "priority": "Bastard ironwood Planchonella costata"
+    },
+    {
+        "category": "Plants",
+        "priority": "Bastard oak Ungeria floribunda"
+    },
+    {
+        "category": "Plants",
+        "priority": "Beech Myrsine ralstoniae"
+    },
+    {
+        "category": "Plants",
+        "priority": "Broad-leaved meryta Meryta latifolia"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Campbell's keeled glass snail Advena campbellii"
+    },
+    {
+        "category": "Plants",
+        "priority": "Chaff tree, soft-wood Achyranthes arborescens"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Christmas Island"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Christmas Island Blue-tailed skink Cryptoblepharus egeriae"
+    },
+    {
+        "category": "Birds",
+        "priority": "Christmas Island Emerald Dove Chalcophaps indica natalis"
+    },
+    {
+        "category": "Birds",
+        "priority": "Christmas Island Flying Fox Pteropus natalis"
+    },
+    {
+        "category": "Birds",
+        "priority": "Christmas Island Frigatebird Fregata andrewsi"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Christmas Island Giant Gecko Cyrtodactylus sadleiri"
+    },
+    {
+        "category": "Birds",
+        "priority": "Christmas Island Goshawk Accipiter hiogaster natalis"
+    },
+    {
+        "category": "Birds",
+        "priority": "Christmas Island Imperial Pigeon Ducula whartoni"
+    },
+    {
+        "category": "Invertebrates",
+        "priority": "Christmas Island red crab  Gecarcoidea natalis"
+    },
+    {
+        "category": "Plants",
+        "priority": "Christmas Island Spleenwort Asplenium listeri"
+    },
+    {
+        "category": "Birds",
+        "priority": "Christmas Island Thrush Turdus poliocephalus erythropleurus"
+    },
+    {
+        "category": "Plants",
+        "priority": "Clematis Clematis dubia"
+    },
+    {
+        "category": "Plants",
+        "priority": "Coastal coprosma Coprosma baueri"
+    },
+    {
+        "category": "Plants",
+        "priority": "Downy ground-fern, brake fern, ground fern Hypolepis dicksonioides"
+    },
+    {
+        "category": "Plants",
+        "priority": "Hanging fork-fern Tmesipteris norfolkensis"
+    },
+    {
+        "category": "Birds",
+        "priority": "Golden Bosunbird Phaethon lepturus fulvus"
+    },
+    {
+        "category": "Birds",
+        "priority": "Indian Ocean Red-tailed Tropicbird Phaethon rubricauda westralis"
+    },
+    {
         "category": "Threatened Ecological Communities",
         "priority": "Kakadu and West Arnhem"
+    },
+    {
+        "category": "Plants",
+        "priority": "King fern, para, potato fern Marattia salicina (Ptisana salicina)"
+    },
+    {
+        "category": "Plants",
+        "priority": "King’s brakefern Pteris kingiana"
+    },
+    {
+        "category": "Plants",
+        "priority": "Kurrajong Wikstroemia australis"
+    },
+    {
+        "category": "Reptiles",
+        "priority": "Lister’s Gecko Lepidodactylus listeri"
+    },
+    {
+        "category": "Plants",
+        "priority": "Middle filmy fern Polyphlebium endlicherianum"
+    },
+    {
+        "category": "Plants",
+        "priority": "Minute orchid, ribbon-root orchid Taeniophyllum norfolkianum"
+    },
+    {
+        "category": "Plants",
+        "priority": "Mistletoe Ileostylus micranthus"
+    },
+    {
+        "category": "Plants",
+        "priority": "Mountain coprosma Coprosma pilosa"
+    },
+    {
+        "category": "Plants",
+        "priority": "Mountain procris Elatostema montanum"
+    },
+    {
+        "category": "Plants",
+        "priority": "Narrow-leaved meryta Meryta angustifolia"
+    },
+    {
+        "category": "Plants",
+        "priority": "Native cucumber, giant cucumber Zehneria baueriana"
+    },
+    {
+        "category": "Plants",
+        "priority": "Netted brakefern Pteris zahlbruckneriana"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Norfolk Island"
+    },
+    {
+        "category": "Plants",
+        "priority": "Norfolk Island abutilon Abutilon julianae"
+    },
+    {
+        "category": "Plants",
+        "priority": "Norfolk Island euphorbia Euphorbia norfolkiana"
+    },
+    {
+        "category": "Birds",
+        "priority": "Norfolk Island Golden Whistler Pachycephala pectoralis xanthoprocta"
+    },
+    {
+        "category": "Birds",
+        "priority": "Norfolk Island Green Parrot Cyanoramphus cookii"
+    },
+    {
+        "category": "Plants",
+        "priority": "Norfolk Island mahoe Melicytus latifolius"
+    },
+    {
+        "category": "Birds",
+        "priority": "Norfolk Island morepork Ninox novaeseelandiae undulata"
+    },
+    {
+        "category": "Plants",
+        "priority": "Norfolk Island orchid Dendrobium brachypus"
+    },
+    {
+        "category": "Plants",
+        "priority": "Norfolk Island phreatia Phreatia limenophylax"
+    },
+    {
+        "category": "Birds",
+        "priority": "Norfolk Island robin Petroica multicolor"
+    },
+    {
+        "category": "Plants",
+        "priority": "Norfolk Island water-fern Blechnum norfolkianum"
+    },
+    {
+        "category": "Plants",
+        "priority": "Oleander Pittosporum bracteolatum"
+    },
+    {
+        "category": "Plants",
+        "priority": "Pennantia Pennantia endlicheri"
+    },
+    {
+        "category": "Plants",
+        "priority": "Phillip Island chaffy tree Achyranthes margaretarum"
+    },
+    {
+        "category": "Plants",
+        "priority": "Phillip Island hibiscus Hibiscus insularis"
+    },
+    {
+        "category": "Plants",
+        "priority": "Phillip Island wheat grass Anthosachne kingiana subsp. Kingiana"
+    },
+    {
+        "category": "Plants",
+        "priority": "Popwood Myoporum obscurum"
+    },
+    {
+        "category": "Plants",
+        "priority": "Shade tree Melicope littoralis"
+    },
+    {
+        "category": "Plants",
+        "priority": "Sharkwood Dysoxylum bijugum"
+    },
+    {
+        "category": "Plants",
+        "priority": "Shield-fern Lastreopsis calantha"
+    },
+    {
+        "category": "Plants",
+        "priority": "Shrubby creeper, pohuehue Muehlenbeckia australis"
+    },
+    {
+        "category": "Plants",
+        "priority": "Siah’s backbone Streblus pendulinus"
+    },
+    {
+        "category": "Plants",
+        "priority": "Ti Cordyline obtecta"
+    },
+    {
+        "category": "Plants",
+        "priority": "Tree nettle, nettletree Boehmeria australis subsp. Australis"
+    },
+    {
+        "category": "Plants",
+        "priority": "Whiteywood Melicytus ramiflorus subsp. Oblongifolius"
     }
 ];
 

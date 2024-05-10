@@ -35,7 +35,7 @@ class MonitorService {
         ]
 
         url += commonService.buildUrlParamsFromMap(params)
-        println url
+
         webService.proxyGetRequest(response, url, WebService.AUTHORIZATION_HEADER_TYPE_USER_BEARER_TOKEN)
     }
 }
