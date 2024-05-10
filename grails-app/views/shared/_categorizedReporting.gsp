@@ -108,7 +108,7 @@
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
         <div class="mt-2" data-bind="visible:!hasData()">
             <p>
-                <button type="button" data-bind="click:unCancelReport" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Report required</button>
+                <button type="button" data-bind="click:unCancelReport" class="btn btn-success btn-sm"><i class="fa fa-remove icon-white"></i> Require report</button>
             </p>
         </div>
     </g:if>

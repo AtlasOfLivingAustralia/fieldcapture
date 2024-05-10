@@ -335,7 +335,7 @@ class ReportService {
         if (!resp.error) {
             ReportLifecycleListener listener = reportLifeCycleListener(report)
             listener.reportRejected(report, reportActivityIds, reportOwner)
-            activityService.rejectActivitiesForPublication(reportActivityIds)
+            activityService.rejectOrUncancelActivitiesForPublication(reportActivityIds)
             emailService.sendEmail(emailTemplate, [reportOwner:reportOwner, report:report, categories: reasonCategories, reason:reason], ownerUsersAndRoles, RoleService.GRANT_MANAGER_ROLE)
         }
         else {
@@ -362,13 +362,13 @@ class ReportService {
 
     Map unCancelReport(String reportId, List reportActivityIds, String reason, Map reportOwner, List ownerUsersAndRoles) {
 
-        Map resp = reject(reportId, [""], reason)
+        Map resp = unCancel(reportId, "", reason)
         Map report = get(reportId)
 
         if (!resp.error) {
             ReportLifecycleListener listener = reportLifeCycleListener(report)
             listener.reportUnCancelled(report, reportActivityIds, reportOwner)
-            activityService.rejectActivitiesForPublication(reportActivityIds)
+            activityService.rejectOrUncancelActivitiesForPublication(reportActivityIds)
         }
         else {
             return [success:false, error:resp.error]
@@ -464,6 +464,10 @@ class ReportService {
 
     def cancel(String reportId, String category, String reason) {
         webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/cancel/${reportId}", [comment:reason, category:category])
+    }
+
+    def unCancel(String reportId, String category, String reason) {
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/returnForRework/${reportId}", [comment:reason, category:category])
     }
 
     def create(report) {
