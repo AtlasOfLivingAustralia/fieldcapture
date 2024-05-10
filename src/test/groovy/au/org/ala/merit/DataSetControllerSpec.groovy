@@ -7,8 +7,10 @@ import grails.testing.web.controllers.ControllerUnitTest
 class DataSetControllerSpec extends Specification implements ControllerUnitTest<DataSetController>{
 
     ProjectService projectService = Mock(ProjectService)
+    DataSetSummaryService dataSetSummaryService = Mock(DataSetSummaryService)
     def setup() {
         controller.projectService = projectService
+        controller.dataSetSummaryService = dataSetSummaryService
     }
 
     def cleanup() {
@@ -103,7 +105,7 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         controller.save('p1')
 
         then:
-        1 * projectService.saveDataSet('p1', dataSet) >> [status:HttpStatus.SC_OK]
+        1 * dataSetSummaryService.saveDataSet('p1', dataSet) >> [status:HttpStatus.SC_OK]
         response.status == HttpStatus.SC_OK
         response.json == [status:HttpStatus.SC_OK]
     }
@@ -118,7 +120,7 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         controller.delete('p1')
 
         then:
-        1 * projectService.deleteDataSet('p1', dataSet.dataSetId) >> [status:HttpStatus.SC_OK]
+        1 * dataSetSummaryService.deleteDataSet('p1', dataSet.dataSetId) >> [status:HttpStatus.SC_OK]
         response.status == HttpStatus.SC_OK
         response.json == [status:HttpStatus.SC_OK]
     }
