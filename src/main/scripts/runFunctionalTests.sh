@@ -9,7 +9,7 @@ fi
 
 BRANCH=$3
 if [ -z $BRANCH ]; then
-    BRANCH=dev
+    BRANCH=release/4.6
 fi
 
 ECODATA_LOCAL_DIR=$2
