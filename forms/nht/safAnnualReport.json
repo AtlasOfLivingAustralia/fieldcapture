@@ -338,14 +338,14 @@
                 "source": "planName",
                 "type": "text",
                 "width": "30%",
-                "title": "Title",
+                "title": "Name of Plan",
                 "readonly": true
               },
               {
                 "source": "planPurpose",
                 "type": "textarea",
                 "width": "60%",
-                "title": "Title",
+                "title": "Purpose of Plan",
                 "readonly": true
               }
             ]
@@ -377,28 +377,28 @@
                 "source": "meetingDateFrom",
                 "type": "date",
                 "width": "10%",
-                "title": "From",
+                "title": "Date From",
                 "readonly": true
               },
               {
                 "source": "meetingDateTo",
                 "type": "date",
                 "width": "10%",
-                "title": "To",
+                "title": "Date To ",
                 "readonly": true
               },
               {
                 "source": "meetingName",
                 "type": "text",
                 "width": "30%",
-                "title": "Name",
+                "title": "Name of Event",
                 "readonly": true
               },
               {
                 "source": "meetingDescription",
                 "type": "text",
                 "width": "50%",
-                "title": "Description",
+                "title": "Purpose of the Meeting/Workshop",
                 "readonly": true
               }
             ]
