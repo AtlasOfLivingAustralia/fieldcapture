@@ -49,7 +49,7 @@ class ProjectDashboardTabSpec extends StubbedCasSpec {
         dashboardTab.click()
 
         then:
-        waitFor{ dashboardTab.displayed }
+        waitFor{ $("#services-dashboard").displayed }
         waitFor 20,{dashboard.size() == 3}
         def dashboardList = dashboard
 
