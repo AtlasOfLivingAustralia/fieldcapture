@@ -1,7 +1,7 @@
 package au.org.ala.fieldcapture
 
+import pages.AdminClearCachePage
 import pages.AdminTools
-import pages.ProjectExplorer
 import pages.ProjectIndex
 
 class ProjectDashboardTabSpec extends StubbedCasSpec {
@@ -30,15 +30,12 @@ class ProjectDashboardTabSpec extends StubbedCasSpec {
         waitFor {$("#btnClearMetadataCache").displayed}
         $("#btnClearMetadataCache").click()
 
-        when:
-        to AdminTools
-
-        then:
-        at AdminTools
-
-
         when: "Reindex to ensure the project explorer will have predictable data"
+        to AdminTools
         reindex()
+        to AdminClearCachePage
+        clearServiceListCache()
+
         to ProjectIndex, projectId
 
         then:
@@ -51,7 +48,7 @@ class ProjectDashboardTabSpec extends StubbedCasSpec {
         then:
         waitFor{ $("#services-dashboard").displayed }
         waitFor 20,{dashboard.size() == 3}
-        def dashboardList = dashboard
+        List dashboardList = dashboard
 
         and:
         dashboardList[0].serviceTitle.text() == "Collecting, or synthesising baseline data"
