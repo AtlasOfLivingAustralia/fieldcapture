@@ -20781,11 +20781,11 @@
                               "target": "species"
                             },
                             {
-                              "source-path": "individualCount",
+                              "source-path": "individualsOrGroups",
                               "target": "individualsOrGroups"
                             },
                             {
-                              "source-path": "numberOfIndividualsOrGroups",
+                              "source-path": "individualCount",
                               "target": "numberOfIndividualsOrGroups"
                             }
                           ],
