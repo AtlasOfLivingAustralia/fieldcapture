@@ -38,13 +38,13 @@ var protocols = {
         "name": "Plot Description(enhanced)",
         "apiEndpoint": "plot-description-enhanceds",
         "usesPlotLayout": true,
-        "tags": ["site"]
+        "tags": ["survey"]
     },
     "dc10f902-e310-45eb-b82a-bebab050b46b": {
         "name": "Plot Description(standard)",
         "apiEndpoint": "plot-description-standards",
         "usesPlotLayout": true,
-        "tags": ["site"]
+        "tags": ["survey"]
     },
     "3cbc5277-45fb-4e7a-8f33-19d9bff4cd78": {
         "name": "Drone Survey", "usesPlotLayout": false, "tags": ["development"],
