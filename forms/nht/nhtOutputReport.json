@@ -26433,7 +26433,7 @@
                               "target": "individualsOrGroups"
                             },
                             {
-                              "source-path": "numberOfIndividualsGroupsSurvived",
+                              "source-path": "individualCount",
                               "target": "numberOfIndividualsGroupsSurvived"
                             },
                             {
