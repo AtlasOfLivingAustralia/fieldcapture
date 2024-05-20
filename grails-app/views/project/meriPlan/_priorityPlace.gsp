@@ -25,7 +25,7 @@
     <select id="priority-place"
             multiple="multiple"
             class="form-control form-control-sm"
-            data-bind="disable: isProjectDetailsLocked(), options:priorityPlaces, multiSelect2:{value:details.supportedPriorityPlaces}"
+            data-bind="disable: isProjectDetailsLocked(), options:priorityPlaces, multiSelect2:{tags: false, value:details.supportedPriorityPlaces}"
             data-validation-engine="validate[required]">
     </select>
 
