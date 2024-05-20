@@ -1,12 +1,12 @@
 {
-  "name": "RDP Annual Report",
+  "name": "NHT RDP Annual Report",
   "sections": [
     {
       "class": "au.org.ala.ecodata.FormSection",
       "id": null,
       "collapsedByDefault": false,
       "modelName": null,
-      "name": "RDP Annual Report",
+      "name": "NHT RDP Annual Report",
       "optional": false,
       "optionalQuestionText": null,
       "template": {
@@ -127,6 +127,17 @@
             "behaviour": [
               {
                 "condition": "hasWhsRegisterReview == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "noWhsRegisterReview",
+            "behaviour": [
+              {
+                "condition": "hasWhsRegisterReview == \"No\"",
                 "type": "enable"
               }
             ],
@@ -297,14 +308,14 @@
             "validate": "required,min[0]"
           }
         ],
-        "modelName": "RDP Annual Report",
+        "modelName": "NHT RDP Annual Report",
         "title": "Annual Project Services Report",
         "viewModel": [
           {
             "type": "row",
             "items": [
               {
-                "preLabel": "1. Please outline the key achievements met by the Project including progress against your Project Implementation Plan and progress towards Project outcomes in the past 12 months as defined in the MERI Plan. (1250 character, [approx. 250 word] limit)",
+                "preLabel": "1. Please outline the key Project achievements over the past 12 months, including emerging trends from monitoring, and progress against your Project Implementation Plan and towards your Project MERI Plan Outcomes (PSP 4.1(b)(i) and (ii)).",
                 "source": "keyAchievements",
                 "type": "textarea",
                 "rows": 4
@@ -315,7 +326,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "2. Please describe any adaptive management actions undertaken during the past 12 months, this includes addressing/rectifying key issues and challenges, improving Project delivery. (1250 character, [approx. 250 word] limit)",
+                "preLabel": "2. If applicable, please describe any adaptive management actions undertaken during the past 12 months to address/rectify key issues and challenges and to improve the effectiveness of Project coordination and delivery (PSP 4.1(b)(iii)).",
                 "source": "adaptiveManagementActions",
                 "type": "textarea",
                 "rows": 4
@@ -326,7 +337,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "2.a Please identify which of the adaptive management actions (if any) were applied in relation to Clause 22.2 in the Deed. (1250 character, [approx. 250 word] limit)",
+                "preLabel": "2.a If applicable, please identify which of the adaptive management actions were applied to the Project in relation to Clause 22.2 of the Deed (i.e., changes not requiring a change order).",
                 "source": "identifyAdaptiveManagementActions",
                 "type": "textarea",
                 "rows": 4
@@ -337,7 +348,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "2.b Please identify which of the adaptive management actions (if any) require changes to the MERI Plan and why they are required. (1250 character, [approx. 250 word] limit)",
+                "preLabel": "2.b If applicable, please identify which of the adaptive management actions require changes to the MERI Plan or Work Order, the nature of the changes, and why they are required.",
                 "source": "requireChangesAdaptiveManagementActions",
                 "type": "textarea",
                 "rows": 4
@@ -353,7 +364,7 @@
                 "source": "serviceName",
                 "type": "textarea",
                 "rows": 3,
-                "title": "Service"
+                "title": "Project Service"
               },
               {
                 "readonly": true,
@@ -368,21 +379,21 @@
                 "width": "13%",
                 "source": "annualTarget",
                 "type": "text",
-                "title": "Minimum annual target"
+                "title": "Minimum annual target (for this reporting period)"
               },
               {
                 "readonly": true,
                 "width": "12%",
                 "source": "result",
                 "type": "text",
-                "title": "Progress achieved"
+                "title": "Actual achievement"
               },
               {
                 "width": "40%",
                 "source": "reasonTargetNotMet",
                 "type": "textarea",
                 "rows": 3,
-                "title": "Explanation of over delivery/why target not met (500 character, [approx. 100 word] limit)"
+                "title": "Explanation of target under or over delivery (500 character, [approx. 100 word] limit)"
               }
             ],
             "userAddedRows": false,
@@ -394,8 +405,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "4. In the past 12 months were any new risks identified during the delivery of the Project?",
-                "css": "span6",
+                "preLabel": "4. In the past 12 months were any new risks identified and/or any risk mitigation strategies adjusted during the delivery of the Project? (PSP 4.1(b)(iv))",
                 "source": "newRisksIdentified",
                 "type": "selectOne"
               }
@@ -415,7 +425,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "5. In the past 12 months, has this Project encountered any changes to the planned Community and First Nations people participation and investment levels?",
+                "preLabel": "5. In the past 12 months, has this Project encountered any changes to the total planned Community and First Nations people participation and investment levels over the Project’s life? (PSP 4.1(b)(v))?",
                 "source": "projectEncounteredChange",
                 "type": "selectOne",
                 "rows": 4
@@ -426,7 +436,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "Please outline these changes. (1250 character [approx. 250 word] limit).",
+                "preLabel": "Please outline these changes.",
                 "source": "projectEncounteredChangeDetails",
                 "type": "textarea",
                 "rows": 4
@@ -437,7 +447,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "6. Was the Project WHS Risk Register reviewed in the past 12 months?",
+                "preLabel": "6. Was the Project WHS Risk Register reviewed in the past 12 months? (PSP 4.1(b)(iv))",
                 "css": "span6",
                 "source": "hasWhsRegisterReview",
                 "type": "selectOne"
@@ -448,8 +458,19 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "6.a Please provide details of the review and any changes made to the Project WHS Risk Register. Please submit the revised Project Risk Register to your Customer Contract Manager if you have not already done so. (1250 character [approx. 250 word] limit).",
+                "preLabel": "6.a Please provide details of the review and any changes made to the Project WHS Risk Register. Please submit the revised Project Risk Register to your Customer Contract Manager if you have not already done so.",
                 "source": "yesWhsRegisterReview",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "6.b Please provide an explanation of why the Project WHS Risk Register has not been reviewed.",
+                "source": "noWhsRegisterReview",
                 "type": "textarea",
                 "rows": 4
               }
@@ -461,6 +482,27 @@
               {
                 "source": "<h4>7. Project Support & Overheads Summary Data Table</h4>",
                 "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "7.a Please review the Project Support and Overheads tables below which have been populated with information provided through quarterly reporting.<br> Do you have anything further to add to these tables?",
+                "source": "psoMoreDetails",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "7.b If yes, please outline what you would like to include.",
+                "source": "yesPsoMoreDetails",
+                "type": "textarea",
+                "rows": 4
               }
             ]
           },
@@ -630,14 +672,14 @@
                 "source": "planName",
                 "type": "text",
                 "width": "30%",
-                "title": "Title",
+                "title": "Name of Plan",
                 "readonly": true
               },
               {
                 "source": "planPurpose",
                 "type": "textarea",
                 "width": "60%",
-                "title": "Title",
+                "title": "Purpose of Plan",
                 "readonly": true
               }
             ]
@@ -669,50 +711,29 @@
                 "source": "meetingDateFrom",
                 "type": "date",
                 "width": "10%",
-                "title": "From",
+                "title": "Date From",
                 "readonly": true
               },
               {
                 "source": "meetingDateTo",
                 "type": "date",
                 "width": "10%",
-                "title": "To",
+                "title": "Date To",
                 "readonly": true
               },
               {
                 "source": "meetingName",
                 "type": "text",
                 "width": "30%",
-                "title": "Name",
+                "title": "Name of Event",
                 "readonly": true
               },
               {
                 "source": "meetingDescription",
                 "type": "text",
                 "width": "50%",
-                "title": "Description",
+                "title": "Purpose of the Meeting/Workshop",
                 "readonly": true
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "preLabel": "7.a Please review the Project Support and Overheads table which has been populated with information provided through quarterly reporting. Do you have anything further to add to this table?",
-                "source": "psoMoreDetails",
-                "type": "selectOne"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "preLabel": "7.b If yes, please outline what you would like to include. (1250 character [approx. 250 word] limit).",
-                "source": "yesPsoMoreDetails",
-                "type": "textarea",
-                "rows": 4
               }
             ]
           }
