@@ -24,7 +24,7 @@
             <select multiple="true"
                     class="form-control form-control-sm"
                     data-validation-engine="validate[required]"
-                    data-bind="options:$root.selectedOutcomes, optionsCaption:'Please select...', optionsText:'code', optionsValue:'code', multiSelect2:{value:relatedOutcomes, templateResult:$root.renderOutcome, preserveColumnWidth:10}, disable: $root.isProjectDetailsLocked()">
+                    data-bind="options:$root.selectedOutcomes, optionsCaption:'Please select...', optionsText:'code', optionsValue:'code', multiSelect2:{tags:false, value:relatedOutcomes, templateResult:$root.renderOutcome, preserveColumnWidth:10}, disable: $root.isProjectDetailsLocked()">
             </select>
         </td>
         <th class="monitoring-data">
@@ -44,13 +44,13 @@
                     multiple="true"
                     class="form-control form-control-sm"
                     data-validation-engine="validate[required]"
-                    data-bind="options:$root.baselineTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedTargetMeasures, preserveColumnWidth:20}, disable: monitoringDataStatus() != 'Needs to be collected' || $root.isProjectDetailsLocked()"></select>
+                    data-bind="options:$root.baselineTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{tags:false, value:relatedTargetMeasures, preserveColumnWidth:20}, disable: monitoringDataStatus() != 'Needs to be collected' || $root.isProjectDetailsLocked()"></select>
         </td>
         <td class="baseline-method">
             <select multiple="multiple"
                     class="form-control form-control-sm"
                     data-validation-engine="validate[required]"
-                    data-bind="options:$root.monitoringProtocols, optionsText:'label', optionsValue:'value', multiSelect2:{value:protocols, preserveColumnWidth:20}, optionsCaption:'Please select...', disable: monitoringDataStatus() != 'Needs to be collected' || $root.isProjectDetailsLocked()">
+                    data-bind="options:$root.monitoringProtocols, optionsText:'label', optionsValue:'value', multiSelect2:{tags:false, value:protocols, preserveColumnWidth:20}, optionsCaption:'Please select...', disable: monitoringDataStatus() != 'Needs to be collected' || $root.isProjectDetailsLocked()">
             </select>
 
             <!-- ko if: _.contains(protocols(), 'Other') -->
