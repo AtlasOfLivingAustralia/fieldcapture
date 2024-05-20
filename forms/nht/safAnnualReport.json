@@ -18,6 +18,26 @@
         "title": "Sustainable Agriculture Facilitators (SAF) Annual Report",
         "dataModel": [
           {
+            "dataType": "text",
+            "name": "psoMoreDetails",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "yesPsoMoreDetails",
+            "behaviour": [
+              {
+                "condition": "psoMoreDetails == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[1250]"
+          },
+          {
             "name": "communicationsDuringPeriod",
             "dataType": "list",
             "allowRowDelete": false,
@@ -175,7 +195,28 @@
             "items": [
               {
                 "type": "literal",
-                "source": "This section provides a summary of the reported Project Support & Overheads data during the previous finanical year."
+                "source": "<b>This section provides a summary of the reported Project Support & Overheads data during the previous finanical year.</b>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Please review the Project Support and Overheads tables below which have been populated with information provided through quarterly reporting.<br> Do you have anything further to add to these tables?",
+                "source": "psoMoreDetails",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "If yes, please outline what you would like to include.",
+                "source": "yesPsoMoreDetails",
+                "type": "textarea",
+                "rows": 4
               }
             ]
           },
