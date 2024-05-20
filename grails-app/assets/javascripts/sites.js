@@ -996,13 +996,14 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
         }
         site.filterType = 'P';
         site.filterTypeLabel = 'Planning site';
-        if (site.type === 'compound') {
-            site.filterType = 'R';
-            site.filterTypeLabel = 'Reporting site';
-        }
-        else if (site.externalIds && site.externalIds[0] && site.externalIds[0].idType == 'MONITOR_PLOT_GUID') {
+
+        if (site.externalIds && site.externalIds[0] && site.externalIds[0].idType == 'MONITOR_PLOT_GUID') {
             site.filterType = 'E';
             site.filterTypeLabel = 'Site created via EMSA protocol using the Monitor App';
+        }
+        else if (site.type === 'compound') {
+            site.filterType = 'R';
+            site.filterTypeLabel = 'Reporting site';
         }
 
         site.readOnly = site.type == 'compound' || PublicationStatus.isReadOnly(site.publicationStatus);
