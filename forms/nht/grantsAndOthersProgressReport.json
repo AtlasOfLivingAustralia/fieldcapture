@@ -12,7 +12,7 @@
   "publicationStatus": "published",
   "externalIds": null,
   "gmsId": null,
-  "name": "Grants Output Report",
+  "name": "Grants and Others Progress Report",
   "sections": [
     {
       "collapsedByDefault": false,
@@ -30248,7 +30248,7 @@
     }
   ],
   "type": "Report",
-  "category": "Grants Reports",
+  "category": "Grants and Others Reports",
   "status": "active",
   "lastUpdatedUserId": "56575",
   "description": null,
