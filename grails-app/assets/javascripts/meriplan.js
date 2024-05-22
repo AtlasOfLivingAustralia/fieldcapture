@@ -1005,6 +1005,22 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
         return new AssetViewModel(asset);
     }));
 
+    function clearHiddenFields(jsData) {
+        // Several questions have "Yes"/"No" answers
+        var YES = 'Yes';
+        var NO = 'No';
+        // Some fields are only relevant if certain answers are selected for other fields and are otherwise hidden.
+        // We clear any data for hidden fields here so they aren't saved in the database (and come out in downloads)
+        if (jsData.custom.details.indigenousInvolved != YES) {
+            jsData.custom.details.indigenousInvolvementType = null;
+        }
+        if (jsData.custom.details.indigenousInvolved != NO) {
+            jsData.custom.details.indigenousInvolvementComment = null;
+        }
+        if (jsData.custom.details.supportsPriorityPlace != YES) {
+            jsData.custom.details.supportedPriorityPlaces = null;
+        }
+    };
     self.modelAsJSON = function () {
         var tmp = {};
         tmp.details = ko.mapping.toJS(self);
@@ -1018,6 +1034,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
         }
 
         var jsData = {"custom": tmp};
+        clearHiddenFields(jsData);
 
         // For compatibility with other projects, move the targets to the top level of the data structure, if they
         // are in the MERI plan.
