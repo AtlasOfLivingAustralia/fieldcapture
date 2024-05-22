@@ -94,6 +94,7 @@
                 editDataSetUrl: "${createLink(controller:'dataSet', action:'edit', id:project.projectId)}",
                 deleteDataSetUrl: "${createLink(controller:'dataSet', action:'delete', id:project.projectId)}",
                 viewDataSetUrl: "${createLink(controller:'dataSet', action:'view', id:project.projectId)}",
+                downloadDataSetUrl: "${createLink(controller:'dataSet', action:'download', id:project.projectId)}",
                 unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}",
                 projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:project.projectId)}",
                 i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
@@ -298,6 +299,8 @@ var config = {
             editDataSetUrl: fcConfig.editDataSetUrl,
             deleteDataSetUrl: fcConfig.deleteDataSetUrl,
             viewDataSetUrl: fcConfig.viewDataSetUrl,
+            downloadDataSetUrl: fcConfig.downloadDataSetUrl,
+            downloadableProtocols: <fc:modelAsJavascript model="${projectContent.datasets.downloadableProtocols}" default="[]"/>,
             returnToUrl: fcConfig.returnTo
         };
 

@@ -36,6 +36,10 @@
                 <a class="btn btn-container btn-sm" href="#" data-bind="visible:!readOnly,click:deleteDataSet">
                     <i class="fa fa-remove" title="Delete this dataset"></i>
                 </a>
+                <a class="btn btn-container btn-sm" href="#" data-bind="if:downloadUrl,attr:{href:downloadUrl}">
+                    <i class="fa fa-download" title="Download data for this dataset from the BDR"></i>
+                </a>
+
             </td>
             <td class="dataset-name" data-bind="text:name"></td>
             <td class="service" data-bind="text:service"></td>

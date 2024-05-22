@@ -1,4 +1,4 @@
-
+import au.org.ala.merit.config.BdrTokenConfig
 import au.org.ala.merit.hub.HubAwareLinkGenerator
 import au.org.ala.merit.StatisticsFactory
 import au.org.ala.merit.CheckRisksAndThreatsTask
@@ -21,4 +21,6 @@ beans = {
 
     // The non-standard case is used because the name is derived from the activity type
     NHTOutputReport(NHTOutputReportLifecycleListener)
+
+    bdrTokenConfig(BdrTokenConfig)
 }

@@ -40,6 +40,13 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         return (report && report.name);
     }
 
+    function isDownloadableMonitorDataSet(dataSet) {
+        var protocolId = dataSet.protocol;
+        var downloadableProtocols = config.downloadableProtocols || [];
+
+        return downloadableProtocols.indexOf(protocolId) >= 0;
+    }
+
     /** View model backing for a single row in the data set summary table */
     function DataSetSummary(dataSet) {
 
@@ -66,6 +73,11 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
                 }
             });
         };
+
+        this.downloadUrl = null;
+        if (isDownloadableMonitorDataSet(dataSet)) {
+            this.downloadUrl = config.downloadDataSetUrl + '/' + dataSet.dataSetId;
+        }
     }
 };
 

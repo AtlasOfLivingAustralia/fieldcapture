@@ -250,6 +250,11 @@ security {
         requiredClaims = ["sub", "iat", "exp", "jti", "client_id"]
     }
 }
+bdr.api.url="https://changeMe.org.au/api"
+bdr.clientId="changeMe"
+bdr.clientSecret="changeMe"
+bdr.discoveryUri="https://changeMe.org.au/.well-known"
+bdr.jwtScopes="read"
 
 webservice.jwt = false
 webservice['jwt-scopes'] = "ala/internal users/read ala/attrs users/read ecodata/write_test ecodata/read_test"
