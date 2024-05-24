@@ -734,7 +734,7 @@ var protocols = {
     "a76dac21-94f4-4851-af91-31f6dd00750f": {
         "name": "Fauna Ground Counts Transects",
         "usesPlotLayout": true,
-        "createSpeciesRecord":false,
+        "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "fauna-ground-counts-surveys",
         "overrides": {
@@ -744,22 +744,10 @@ var protocols = {
                 },
                 "fauna-ground-counts-observation.observation.pest_species": {
                     "dataType": "species"
-                },
-                "fauna-ground-counts-observation.target_species.lut": {
-                    "dataType": "species"
-                },
-                "fauna-ground-counts-observation.target_species.other_species.other_species": {
-                    "dataType": "species"
                 }
             },
             "viewModel": {
                 "fauna-ground-counts-observation.observation.pest_species": {
-                    "type": "speciesSelect"
-                },
-                "fauna-ground-counts-observation.target_species.lut": {
-                    "type": "speciesSelect"
-                },
-                "fauna-ground-counts-observation.target_species.other_species.other_species": {
                     "type": "speciesSelect"
                 }
             }
@@ -899,28 +887,16 @@ var protocols = {
     "d706fd34-2f05-4559-b738-a65615a3d756": {
         "name": "Fauna Ground Counts Vantage Point",
         "usesPlotLayout": true,
-        "createSpeciesRecord":false,
+        "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "ground-counts-vantage-point-surveys",
         "overrides": {
             "dataModel": {
-                "ground-counts-vantage-point-setup.target_species.lut": {
-                    "dataType": "species"
-                },
-                "ground-counts-vantage-point-setup.target_species.other_species.other_species": {
-                    "dataType": "species"
-                },
                 "ground-counts-vantage-point-setup.observations.count_of_individuals": {
                     "dwcAttribute": "individualCount"
                 }
             },
             "viewModel": {
-                "ground-counts-vantage-point-setup.target_species.lut": {
-                    "type": "speciesSelect"
-                },
-                "ground-counts-vantage-point-setup.target_species.other_species.other_species": {
-                    "type": "speciesSelect"
-                }
             }
         }
     },
