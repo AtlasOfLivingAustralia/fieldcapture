@@ -39,13 +39,13 @@
                             <select multiple="multiple"
                                     class="form-control form-control-sm"
                                     data-validation-engine="validate[required]"
-                                    data-bind="options:$root.monitoringTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{value:relatedTargetMeasures, preserveColumnWidth:20}, disable: $root.isProjectDetailsLocked()"></select>
+                                    data-bind="options:$root.monitoringTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{tags:false, value:relatedTargetMeasures, preserveColumnWidth:20}, disable: $root.isProjectDetailsLocked()"></select>
                         </td>
                         <td class="monitoring-method">
                             <select multiple="multiple"
                                     class="form-control form-control-sm"
                                     data-validation-engine="validate[required]"
-                                    data-bind="options:$root.monitoringProtocols, optionsText:'label', optionsValue:'value', multiSelect2:{value:protocols, preserveColumnWidth:20}, optionsCaption:'Please select...', disable: $root.isProjectDetailsLocked()">
+                                    data-bind="options:$root.monitoringProtocols, optionsText:'label', optionsValue:'value', multiSelect2:{tags:false, value:protocols, preserveColumnWidth:20}, optionsCaption:'Please select...', disable: $root.isProjectDetailsLocked()">
                             </select>
 
                             <!-- ko if: _.contains(protocols(), 'Other') -->

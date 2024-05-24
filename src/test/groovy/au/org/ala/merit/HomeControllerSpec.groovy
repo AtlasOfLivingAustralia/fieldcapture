@@ -15,6 +15,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
     HubSettings hubSettings = new HubSettings(availableFacets:['nameFacet', 'descriptionFacet', 'admin'], availableMapFacets:['adminMap'], adminFacets:['admin', 'adminMap'])
     SettingService settingService = Mock(SettingService)
     MetadataService metadataService = Mock(MetadataService)
+    ActivityService activityService = Mock(ActivityService)
 
     def setup() {
         controller.searchService = searchService
@@ -22,6 +23,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         controller.userService = userService
         controller.settingService = settingService
         controller.metadataService = metadataService
+        controller.activityService = activityService
     }
 
     def "The geoservice method delegates to SearchService.allProjects if the geo param is absent"() {
@@ -245,7 +247,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
     def "MERIT admin users receive a filtered view of activities to download"(List terms, List expectedActivityTypes) {
         setup:
         Map resp = [facets:[(HomeController.ACTIVITY_TYPE_FACET_NAME):[terms:terms.collect{[term:it]}]]]
-        List activityTypes = [[name:'Category 1', list:[[name:'a1'], [name:'a2'], [name:'a3']]], [name:'Category 2', list:[[name:'a4'], [name:'a5'], [name:'a6'], [name:'a7']]]]
+        List activityTypes = [[name:'Category 1', list:[[name:'a1'], [name:'a2'], [name:'a3']]], [name:'Category 2', list:[[name:'a4'], [name:'a5'], [name:'a6'], [name:'a7'], [name:'EMSA 1']]]]
 
         when:
         params.fq="status:active"
@@ -256,6 +258,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         1 * searchService.HomePageFacets(params) >> resp
         1 * settingService.getSettingText(_) >> "Project explorer description"
         1 * metadataService.activityTypesList() >> activityTypes
+        1 * activityService.monitoringProtocolForms() >> [[name:"EMSA 1"]]
 
         and:
         model.includeDownloads == true
@@ -265,7 +268,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         terms | expectedActivityTypes
         ['a1', 'a3', 'a4']  | [[name:'Category 1', list:[[name:'a1'], [name:'a3']]], [name:'Category 2', list:[[name:'a4']]]]
         ['a2'] | [[name:'Category 1', list:[[name:'a2']]]]
-        ['a5'] | [[name:'Category 2', list:[[name:'a5']]]]
+        ['a5', 'EMSA 1'] | [[name:'Category 2', list:[[name:'a5']]]]
     }
 
 }
