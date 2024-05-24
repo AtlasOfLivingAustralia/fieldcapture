@@ -325,12 +325,12 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         result.success == true
         1 * webService.getJson({it.endsWith('report/'+reportId)}) >> [reportId:reportId]
         1 * webService.doPost({it.endsWith('report/returnForRework/'+reportId)}, [comment:reason, categories:categories]) >> [:]
-        1 * activityService.rejectActivitiesForPublication(activityIds)
+        1 * activityService.rejectOrUncancelActivitiesForPublication(activityIds)
         1 * emailService.sendEmail(template, [reportOwner:[:], reason:reason, categories: categories, report:[reportId:reportId]], roles, RoleService.GRANT_MANAGER_ROLE)
 
     }
 
-    def "when a report is returned, all associated activities should be marked as cancelled"() {
+    def "when a report is not required, all associated activities should be marked as cancelled"() {
 
         setup:
         String reportId = 'r1'
@@ -347,6 +347,26 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         1 * webService.getJson({it.endsWith('report/'+reportId)}) >> [reportId:reportId]
         1 * webService.doPost({it.endsWith('report/cancel/'+reportId)}, [comment:reason, category:category]) >> [:]
         1 * activityService.cancelActivitiesForPublication(activityIds)
+
+    }
+
+    def "when a report is required, all associated activities should be marked as not published"() {
+
+        setup:
+        String reportId = 'r1'
+        List activityIds = ['a1', 'a2']
+        List roles = []
+        String reason = ''
+        String category = ''
+
+        when:
+        Map result = service.unCancelReport(reportId, activityIds, reason, [:], roles)
+
+        then:
+        result.success == true
+        1 * webService.getJson({it.endsWith('report/'+reportId)}) >> [reportId:reportId]
+        1 * webService.doPost({it.endsWith('report/returnForRework/'+reportId)}, [comment:reason, category:category]) >> [:]
+        1 * activityService.rejectOrUncancelActivitiesForPublication(activityIds)
 
     }
 

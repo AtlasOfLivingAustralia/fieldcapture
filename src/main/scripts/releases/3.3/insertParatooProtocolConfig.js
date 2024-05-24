@@ -523,12 +523,14 @@ var protocols = {
     "949ae38f-c047-42a7-8164-38c24ede35d5": {
         "name": "Camera Trap Reequipping",
         "usesPlotLayout": false,
+        "createSpeciesRecord":false,
         "tags": ["survey"],
         "apiEndpoint": "camera-trap-reequipping-surveys"
     },
     "90c0f4cc-a22a-4820-9a8b-a01564bc197a": {
         "name": "Fauna Aerial Survey",
         "usesPlotLayout": false,
+        "createSpeciesRecord":false,
         "tags": ["survey"],
         "apiEndpoint": "aerial-surveys",
         "overrides": {
@@ -634,18 +636,21 @@ var protocols = {
     "ad088dbe-02b2-472a-901f-bd081e590bcf": {
         "name": "Camera Trap Deployment",
         "usesPlotLayout": false,
+        "createSpeciesRecord":false,
         "tags": ["survey"],
         "apiEndpoint": "camera-trap-deployment-surveys"
     },
     "3db7f7b6-a96d-495a-9981-5d6170a7458d": {
         "name": "Camera Trap Retrieval",
         "usesPlotLayout": false,
+        "createSpeciesRecord":false,
         "tags": ["survey"],
         "apiEndpoint": "camera-trap-retrieval-surveys"
     },
     "648d545a-cdae-4c19-bc65-0c9f93d9c0eb": {
         "name": "Sign-based Fauna Surveys - Within-plot Belt Transect",
         "usesPlotLayout": true,
+        "createSpeciesRecord":false,
         "tags": ["survey"],
         "apiEndpoint": "within-plot-belt-transect-surveys",
         "overrides": {
@@ -679,6 +684,7 @@ var protocols = {
     "2cd7b489-b582-41f6-9dcc-264f6ea7801a": {
         "name": "Sign-based Fauna Surveys - Off-plot Belt Transect",
         "usesPlotLayout": false,
+        "createSpeciesRecord":false,
         "tags": ["survey"],
         "apiEndpoint": "off-plot-belt-transect-surveys",
         "overrides": {
@@ -700,6 +706,7 @@ var protocols = {
     "0c5d1d14-c71b-467f-aced-abe1c83c15d3": {
         "name": "Sign-based Fauna - Vehicle Track",
         "usesPlotLayout": false,
+        "createSpeciesRecord":false,
         "tags": ["survey"],
         "apiEndpoint": "sign-based-vehicle-track-set-ups",
         "overrides": {
@@ -727,6 +734,7 @@ var protocols = {
     "a76dac21-94f4-4851-af91-31f6dd00750f": {
         "name": "Fauna Ground Counts Transects",
         "usesPlotLayout": true,
+        "createSpeciesRecord":false,
         "tags": ["survey"],
         "apiEndpoint": "fauna-ground-counts-surveys",
         "overrides": {
@@ -767,6 +775,7 @@ var protocols = {
     "228e5e1e-aa9f-47a3-930b-c1468757f81d": {
         "name": "Herbivory and Physical Damage - Active Plot Search",
         "usesPlotLayout": true,
+        "createSpeciesRecord":false,
         "tags": ["survey"],
         "apiEndpoint": "herbivory-and-physical-damage-active-search-setups",
         "overrides": {
@@ -821,6 +830,7 @@ var protocols = {
     "cc826a19-a1e7-4dfe-8d6e-f135d258d7f9": {
         "name": "Sign-based Fauna - Plot Sign Search",
         "usesPlotLayout": true,
+        "createSpeciesRecord":false,
         "tags": ["survey"],
         "apiEndpoint": "sign-based-active-plot-search-surveys",
         "overrides": {
@@ -875,6 +885,7 @@ var protocols = {
     "685b5e9b-20c2-4688-9b04-b6caaf084aad": {
         "name": "Sign-based Fauna - Track Station",
         "usesPlotLayout": false,
+        "createSpeciesRecord":false,
         "tags": ["survey"],
         "overrides": {
             "dataModel": {
@@ -888,6 +899,7 @@ var protocols = {
     "d706fd34-2f05-4559-b738-a65615a3d756": {
         "name": "Fauna Ground Counts Vantage Point",
         "usesPlotLayout": true,
+        "createSpeciesRecord":false,
         "tags": ["survey"],
         "apiEndpoint": "ground-counts-vantage-point-surveys",
         "overrides": {
@@ -915,6 +927,7 @@ var protocols = {
     "06cd903e-b8b3-40a5-add4-f779739cce35": {
         "name": "Herbivory and Physical Damage - Within-plot Belt Transect",
         "usesPlotLayout": true,
+        "createSpeciesRecord":false,
         "tags": ["survey"],
         "apiEndpoint": "herbivory-and-physical-damage-belt-transect-setups",
         "overrides": {
@@ -951,6 +964,7 @@ var protocols = {
     "49d02f5d-b148-4b5b-ad6a-90e48c81b294": {
         "name": "Herbivory and Physical Damage - Off-plot Transect",
         "usesPlotLayout": false,
+        "createSpeciesRecord":false,
         "tags": ["survey"],
         "apiEndpoint": "herbivory-off-plot-belt-transect-setups",
         "overrides": {

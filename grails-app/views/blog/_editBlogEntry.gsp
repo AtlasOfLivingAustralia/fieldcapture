@@ -15,7 +15,7 @@
                for="date">Date: <fc:iconHelp>The date for this blog entry</fc:iconHelp></label>
         <div class="col-sm-9">
             <div class="input-group input-append input-small">
-                <fc:datePicker targetField="date.date" bs4="true" class="form-control form-control-sm" name="date" data-validation-engine="validate[required]"/>
+                <fc:datePicker targetField="date.date" bs4="true" class="form-control form-control-sm" name="date" data-validation-engine="validate[required]" autocomplete="off"/>
             </div>
         </div>
     </div>
