@@ -3,6 +3,7 @@ package au.org.ala.merit
 import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportOwner
+import org.grails.web.json.JSONArray
 import org.joda.time.Period
 
 /**
@@ -32,6 +33,22 @@ class OrganisationService {
         if (view != 'flat') {
             organisation.reports = getReportsForOrganisation(organisation, getReportConfig(id))
         }
+
+        // If the user is an admin for a management unit or has the FC_READ_ONLY role, they are allowed
+        // to view the reports and all documents.
+        boolean hasExtendedAccess = userService.isUserAdminForOrganisation(userService.getCurrentUserId(), id) || userService.userHasReadOnlyAccess()
+
+        Map documentSearchParameters = [organisationId: id]
+        if (!hasExtendedAccess) {
+            documentSearchParameters['public'] = true
+        }
+
+        Map results = documentService.search(documentSearchParameters)
+        if (results && results.documents) {
+            List categorisedDocs = results.documents.split{it.type == DocumentService.TYPE_LINK}
+            organisation.documents = new JSONArray(categorisedDocs[1])
+        }
+
         organisation
     }
 
