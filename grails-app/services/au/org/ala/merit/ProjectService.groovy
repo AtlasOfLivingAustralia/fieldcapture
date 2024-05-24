@@ -721,6 +721,17 @@ class ProjectService  {
         result
     }
 
+    def unCancelReport(String projectId, Map reportDetails) {
+        Map reportInformation = prepareReport(projectId, reportDetails)
+        if (reportInformation.error) {
+            return [success:false, error:reportInformation.error]
+        }
+
+        Map result = reportService.unCancelReport(reportDetails.reportId, reportDetails.activityIds, reportDetails.reason, reportInformation.project, reportInformation.roles)
+
+        result
+    }
+
     /**
      * Creates a report to offset the scores produced by the supplied report without having to unapprove the original report and edit the data.
      * @param projectId the project the report belongs to.
