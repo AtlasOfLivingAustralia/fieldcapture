@@ -120,7 +120,7 @@
                             <label class="control-label" for="fromDate">From</label>
 
                             <div class="controls">
-                                <fc:datePicker class="form-control" targetField="fromDate.date" name="fromDate" data-validation-engine="validate[required]" printable="${printView}"/>
+                                <fc:datePicker class="form-control" targetField="fromDate.date" name="fromDate" data-validation-engine="validate[required]" printable="${printView}" autocomplete="off"/>
                             </div>
                         </div>
 
@@ -128,7 +128,7 @@
                             <label class="control-label" for="toDate">To</label>
 
                             <div class="controls form-group">
-                                <fc:datePicker class="form-control" targetField="toDate.date" name="toDate" data-validation-engine="validate[required]" printable="${printView}"/>
+                                <fc:datePicker class="form-control" targetField="toDate.date" name="toDate" data-validation-engine="validate[required]" printable="${printView}" autocomplete="off"/>
                             </div>
                         </div>
                     </form>

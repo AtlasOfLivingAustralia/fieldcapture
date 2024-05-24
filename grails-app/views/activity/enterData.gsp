@@ -166,14 +166,14 @@
                         <g:if test="${printView}">
                             <div class="row">
                                 <div class="input-group">
-                                    <fc:datePicker targetField="startDate.date" bs4="true" class="form-control form-control-sm col-sm-2" name="startDate" data-validation-engine="validate[required,funcCall[validateDateField]]" printable="${printView}"/>
+                                    <fc:datePicker targetField="startDate.date" bs4="true" class="form-control form-control-sm col-sm-2" name="startDate" data-validation-engine="validate[required,funcCall[validateDateField]]" printable="${printView}" autocomplete="off"/>
                                 </div>
 
                             </div>
                         </g:if>
                         <g:else>
                             <div class="input-group">
-                                <fc:datePicker targetField="startDate.date" bs4="true" class="form-control form-control-sm col-sm-2" name="startDate" data-validation-engine="validate[required,funcCall[validateDateField]]" printable="${printView}"/>
+                                <fc:datePicker targetField="startDate.date" bs4="true" class="form-control form-control-sm col-sm-2" name="startDate" data-validation-engine="validate[required,funcCall[validateDateField]]" printable="${printView}" autocomplete="off"/>
                             </div>
                         </g:else>
                     </div>
@@ -184,14 +184,14 @@
                         <g:if test="${printView}">
                             <div class="row">
                                 <div class="input-group">
-                                    <fc:datePicker targetField="endDate.date" bs4="true" class="form-control form-control-sm col-sm-2" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
+                                    <fc:datePicker targetField="endDate.date" bs4="true" class="form-control form-control-sm col-sm-2" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" autocomplete="off"/>
                                 </div>
 
                             </div>
                         </g:if>
                         <g:else>
                             <div class="input-group">
-                                <fc:datePicker targetField="endDate.date" bs4="true" class="form-control form-control-sm col-sm-2" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" />
+                                <fc:datePicker targetField="endDate.date" bs4="true" class="form-control form-control-sm col-sm-2" name="endDate" data-validation-engine="validate[future[startDate]]" printable="${printView}" autocomplete="off"/>
                             </div>
                         </g:else>
                     </div>
