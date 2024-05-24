@@ -88,7 +88,7 @@
                 <fc:iconHelp title="Planned start date" printable="${printView}">Date the activity is intended to start.</fc:iconHelp>
                 </label>
                 <div class="input-group">
-                    <fc:datePicker targetField="plannedStartDate.date" class="form-control form-control-sm" bs4="true" name="plannedStartDate" data-validation-engine="validate[required,future[${earliestStartDate}]]" printable="${printView}"/>
+                    <fc:datePicker targetField="plannedStartDate.date" class="form-control form-control-sm" bs4="true" name="plannedStartDate" data-validation-engine="validate[required,future[${earliestStartDate}]]" printable="${printView}" autocomplete="off"/>
                 </div>
             </div>
             <div class="col-sm-4">
@@ -96,7 +96,7 @@
                 <fc:iconHelp title="Planned end date" printable="${printView}">Date the activity is intended to finish.</fc:iconHelp>
                 </label>
                 <div class="input-group">
-                    <fc:datePicker targetField="plannedEndDate.date" class="form-control form-control-sm" bs4="true" name="plannedEndDate" data-validation-engine="validate[required,future[plannedStartDate],funcCall[validateEndDate]]" printable="${printView}" />
+                    <fc:datePicker targetField="plannedEndDate.date" class="form-control form-control-sm" bs4="true" name="plannedEndDate" data-validation-engine="validate[required,future[plannedStartDate],funcCall[validateEndDate]]" printable="${printView}" autocomplete="off"/>
                 </div>
             </div>
         </div>

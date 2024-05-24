@@ -12,7 +12,7 @@
   "publicationStatus": "published",
   "externalIds": null,
   "gmsId": null,
-  "name": "Procurement Output Report",
+  "name": "Procurement Progress Report",
   "sections": [
     {
       "collapsedByDefault": false,
@@ -1334,18 +1334,22 @@
               {
                 "dataType": "text",
                 "name": "communicationMaterialType",
+                "description": "Please refer to project service summary to clarify the type of communication material/s accepted.",
                 "constraints": [
                   "Advertising",
+                  "Books",
                   "Booklets",
                   "Educational/Interpretive Signage",
+                  "Event Flyers",
                   "Extension materials",
-                  "Fact Sheets/Brochures",
-                  "Fliers",
-                  "Media release",
-                  "Report",
+                  "Fact Sheets",
+                  "Marketing materials",
+                  "Media releases",
+                  "Newsletters",
+                  "Newspaper articles",
+                  "Reports",
                   "Social media posts",
-                  "Videos",
-                  "Other"
+                  "Videos"
                 ],
                 "validate": "required"
               },
@@ -1909,12 +1913,15 @@
                 "name": "eventType",
                 "description": "Type of engagement events are training/workshops, on-ground trials/demonstrations and field days. Note field days should be reported as an event e.g, 3 field days is considered 1 event NOT 3 days",
                 "constraints": [
-                  "Conferences/seminars",
                   "Field days",
                   "One-on-one technical advice interactions",
-                  "On-ground trials / demonstrations facilitated or hosted",
-                  "On-ground works",
-                  "Training workshops hosted"
+                  "Video conferences/meetings",
+                  "Hosting workshops",
+                  "Facilitating/hosting on ground trials/demonstrations",
+                  "Meetings – Steering Committee/Planning",
+                  "Negotiations with the community etc",
+                  "Facilitating/hosting conferences/seminars",
+                  "Participating in conference/seminars, training events, workshops, on-ground trials/demonstrations"
                 ],
                 "validate": "required"
               },
@@ -1962,7 +1969,8 @@
               {
                 "dataType": "text",
                 "name": "eventPurpose",
-                "validate": "required,maxSize[300]"
+                "validate": "required,maxSize[300]",
+                "description": "Please refer to project service summary to clarify the type of engagement event and provide more information e.g. facilitated or hosted and evidence required for each of the type of event."
               },
               {
                 "dataType": "date",
@@ -11046,7 +11054,7 @@
                 "description": "Manually enter correct figure for this reporting period if different to mapped value.",
                 "units": "ha",
                 "decimalPlaces": 3,
-                "validate": "required,min[0]"
+                "validate": "min[0]"
               },
               {
                 "dataType": "text",
@@ -11138,25 +11146,13 @@
                     "dataType": "text",
                     "name": "surveyObjective",
                     "description": "",
-                    "validate": "required,maxSize[300]",
-                    "behaviour": [
-                      {
-                        "condition": "activityTypeUndertaken == \"Survey\" or activityTypeUndertaken == \"Assessment\"",
-                        "type": "enable"
-                      }
-                    ]
+                    "validate": "maxSize[300]"
                   },
                   {
                     "dataType": "text",
                     "name": "surveyTechnique",
                     "description": "",
-                    "validate": "required,maxSize[300]",
-                    "behaviour": [
-                      {
-                        "condition": "activityTypeUndertaken == \"Survey\" or activityTypeUndertaken == \"Assessment\"",
-                        "type": "enable"
-                      }
-                    ]
+                    "validate": "maxSize[300]"
                   },
                   {
                     "dataType": "text",
@@ -11167,25 +11163,13 @@
                       "Good",
                       "Excellent"
                     ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "activityTypeUndertaken == \"Survey\" or activityTypeUndertaken == \"Assessment\"",
-                        "type": "enable"
-                      }
-                    ]
+                    "validate": ""
                   },
                   {
                     "dataType": "text",
                     "name": "siteConditionDetails",
                     "description": "",
-                    "validate": "required,maxSize[300]",
-                    "behaviour": [
-                      {
-                        "condition": "activityTypeUndertaken == \"Survey\" or activityTypeUndertaken == \"Assessment\"",
-                        "type": "enable"
-                      }
-                    ]
+                    "validate": "maxSize[300]"
                   }
                 ],
                 "dataType": "list",

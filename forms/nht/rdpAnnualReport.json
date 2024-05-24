@@ -19,18 +19,18 @@
           {
             "dataType": "text",
             "name": "adaptiveManagementActions",
-            "validate": "required,maxSize[1250]"
+            "validate": "maxSize[1250]"
           },
           {
             "dataType": "text",
             "name": "identifyAdaptiveManagementActions",
             "description": "Clause 22.2 outlines changes that do not require a Change Order",
-            "validate": "required,maxSize[1250]"
+            "validate": "maxSize[1250]"
           },
           {
             "dataType": "text",
             "name": "requireChangesAdaptiveManagementActions",
-            "validate": "required,maxSize[1250]"
+            "validate": "maxSize[1250]"
           },
           {
             "columns": [
@@ -480,7 +480,7 @@
             "type": "row",
             "items": [
               {
-                "source": "<h4>7. Project Support & Overheads Summary Data Table</h4>",
+                "source": "<h4>7. Project Support and Overheads Summary Data Tables</h4>",
                 "type": "literal"
               }
             ]

@@ -209,7 +209,7 @@
     </div>
     <div class="row form-group required">
         <label for="dateTaken" class="col-sm-4">Date Taken: <i class="fa fa-question-circle" data-bind="popover:{container:'body', content:'Please ensure that this information is accurate and the date that the photograph was taken, not the date it was uploaded (unless they are the same date).', placement:'top'}">&nbsp;</i></label>
-        <div class="input-group col-sm-8 dateInput"><fc:datePicker size="input-small" bs4="true" class="form-control form-control-sm" targetField="dateTaken.date" id="dateTaken" name="dateTaken" data-validation-engine="validate[required]"/></div>
+        <div class="input-group col-sm-8 dateInput"><fc:datePicker size="input-small" bs4="true" class="form-control form-control-sm" targetField="dateTaken.date" id="dateTaken" name="dateTaken" data-validation-engine="validate[required]" autocomplete="off"/></div>
     </div>
     <div class="row form-group">
         <label for="attribution" class="col-sm-4">Attribution: <i class="fa fa-question-circle" data-bind="popover:{content:'The name of the photographer', placement:'top'}">&nbsp;</i></label>
