@@ -505,6 +505,7 @@ var protocols = {
     "6000cb5f-ad75-41e2-9e3e-c070c527453a": {
         "name": "Metadata Collection",
         "usesPlotLayout": false,
+        "createSpeciesRecord":false,
         "tags": ["survey"],
         "apiEndpoint": "new-targeted-surveys",
         "overrides": {
@@ -718,7 +719,7 @@ var protocols = {
     "0c5d1d14-c71b-467f-aced-abe1c83c15d3": {
         "name": "Sign-based Fauna - Vehicle Track",
         "usesPlotLayout": false,
-        "createSpeciesRecord":false,
+        "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "sign-based-vehicle-track-set-ups",
         "overrides": {
@@ -866,7 +867,7 @@ var protocols = {
     "cc826a19-a1e7-4dfe-8d6e-f135d258d7f9": {
         "name": "Sign-based Fauna - Plot Sign Search",
         "usesPlotLayout": true,
-        "createSpeciesRecord":false,
+        "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "sign-based-active-plot-search-surveys",
         "overrides": {
@@ -933,7 +934,7 @@ var protocols = {
     "685b5e9b-20c2-4688-9b04-b6caaf084aad": {
         "name": "Sign-based Fauna - Track Station",
         "usesPlotLayout": false,
-        "createSpeciesRecord":false,
+        "createSpeciesRecord":true,
         "tags": ["survey"],
         "overrides": {
             "dataModel": {
