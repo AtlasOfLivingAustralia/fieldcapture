@@ -505,6 +505,7 @@ var protocols = {
     "6000cb5f-ad75-41e2-9e3e-c070c527453a": {
         "name": "Metadata Collection",
         "usesPlotLayout": false,
+        "createSpeciesRecord":false,
         "tags": ["survey"],
         "apiEndpoint": "new-targeted-surveys",
         "overrides": {
@@ -655,9 +656,6 @@ var protocols = {
         "apiEndpoint": "within-plot-belt-transect-surveys",
         "overrides": {
             "dataModel": {
-                "within-plot-belt-transect.quadrat.sign_observed.attributable_fauna_species.lut": {
-                    "dataType": "species"
-                },
                 "within-plot-belt-transect.quadrat.sign_observed.attributable_fauna_species.attributable_fauna_species": {
                     "dataType": "species"
                 },
@@ -672,17 +670,14 @@ var protocols = {
                 }
             },
             "viewModel": {
-                "within-plot-belt-transect.quadrat.sign_observed.attributable_fauna_species.lut": {
+                "within-plot-belt-transect.quadrat.sign_observed.attributable_fauna_species.attributable_fauna_species": {
                     "type": "speciesSelect"
                 },
-                "within-plot-belt-transect.quadrat.sign_observed.attributable_fauna_species.attributable_fauna_species": {
-                    "dataType": "speciesSelect"
-                },
                 "within-plot-belt-transect.quadrat.sign_observed.attributable_fauna_species.attributable_wild_dog": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "within-plot-belt-transect.quadrat.sign_observed.attributable_fauna_species.attributable_deer": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 }
             }
         }
@@ -695,9 +690,6 @@ var protocols = {
         "apiEndpoint": "off-plot-belt-transect-surveys",
         "overrides": {
             "dataModel": {
-                "within-plot-belt-transect.quadrat.sign_observed.attributable_fauna_species.lut": {
-                    "dataType": "species"
-                },
                 "off-plot-belt-transect.quadrat.sign_observed.attributable_fauna_species.attributable_fauna_species": {
                     "dataType": "species"
                 },
@@ -712,17 +704,14 @@ var protocols = {
                 }
             },
             "viewModel": {
-                "within-plot-belt-transect.quadrat.sign_observed.attributable_fauna_species.lut": {
+                "off-plot-belt-transect.quadrat.sign_observed.attributable_fauna_species.attributable_fauna_species": {
                     "type": "speciesSelect"
                 },
-                "off-plot-belt-transect.quadrat.sign_observed.attributable_fauna_species.attributable_fauna_species": {
-                    "dataType": "speciesSelect"
-                },
                 "off-plot-belt-transect.quadrat.sign_observed.attributable_fauna_species.attributable_wild_dog": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "off-plot-belt-transect.quadrat.sign_observed.attributable_fauna_species.attributable_deer": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 }
             }
         }
@@ -730,11 +719,20 @@ var protocols = {
     "0c5d1d14-c71b-467f-aced-abe1c83c15d3": {
         "name": "Sign-based Fauna - Vehicle Track",
         "usesPlotLayout": false,
-        "createSpeciesRecord":false,
+        "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "sign-based-vehicle-track-set-ups",
         "overrides": {
             "dataModel": {
+                "sign-based-vehicle-track-observation.observations.attributable_fauna_species.attributable_fauna_species": {
+                    "dataType": "species"
+                },
+                "sign-based-vehicle-track-observation.observations.attributable_fauna_species.attributable_wild_dog": {
+                    "dataType": "species"
+                },
+                "sign-based-vehicle-track-observation.observations.attributable_fauna_species.attributable_deer": {
+                    "dataType": "species"
+                },
                 "sign-based-vehicle-track-observation.observations.number_of_individuals": {
                     "dwcAttribute": "individualCount"
                 },
@@ -751,6 +749,15 @@ var protocols = {
                 },
                 "sign-based-vehicle-track-observation.points": {
                     "type": "feature"
+                },
+                "sign-based-vehicle-track-observation.observations.attributable_fauna_species.attributable_fauna_species": {
+                    "type": "speciesSelect"
+                },
+                "sign-based-vehicle-track-observation.observations.attributable_fauna_species.attributable_wild_dog": {
+                    "type": "speciesSelect"
+                },
+                "sign-based-vehicle-track-observation.observations.attributable_fauna_species.attributable_deer": {
+                    "type": "speciesSelect"
                 }
             }
         }
@@ -778,6 +785,18 @@ var protocols = {
             },
             "viewModel": {
                 "fauna-ground-counts-observation.observation.pest_species": {
+                    "type": "speciesSelect"
+                },
+                "fauna-ground-counts-conduct-survey.observation.species.attributable_fauna_species": {
+                    "type": "speciesSelect"
+                },
+                "fauna-ground-counts-conduct-survey.observation.species.attributable_wild_dog": {
+                    "type": "speciesSelect"
+                },
+                "fauna-ground-counts-conduct-survey.observation.species.attributable_deer": {
+                    "type": "speciesSelect"
+                },
+                "fauna-ground-counts-conduct-survey.observation.species.other_attributable_species": {
                     "type": "speciesSelect"
                 }
             }
@@ -825,22 +844,22 @@ var protocols = {
                     "type": "feature"
                 },
                 "herbivory-and-physical-damage-active-search-transect.hapd_observed.physical_damage_attributable_fauna_species.attributable_fauna_species": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "herbivory-and-physical-damage-active-search-transect.hapd_observed.physical_damage_attributable_fauna_species.attributable_wild_dog": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "herbivory-and-physical-damage-active-search-transect.hapd_observed.physical_damage_attributable_fauna_species.attributable_deer": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "herbivory-and-physical-damage-active-search-transect.hapd_observed.herbivory_attributable_fauna_species.attributable_fauna_species": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "herbivory-and-physical-damage-active-search-transect.hapd_observed.herbivory_attributable_fauna_species.attributable_wild_dog": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "herbivory-and-physical-damage-active-search-transect.hapd_observed.herbivory_attributable_fauna_species.attributable_deer": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 }
             }
         }
@@ -848,22 +867,31 @@ var protocols = {
     "cc826a19-a1e7-4dfe-8d6e-f135d258d7f9": {
         "name": "Sign-based Fauna - Plot Sign Search",
         "usesPlotLayout": true,
-        "createSpeciesRecord":false,
+        "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "sign-based-active-plot-search-surveys",
         "overrides": {
             "dataModel": {
-                "sign-based-active-plot-search.active_search_survey.target_species.lut": {
+                "sign-based-active-plot-search.sign.attributable_fauna_species.attributable_fauna_species": {
                     "dataType": "species"
                 },
-                "sign-based-active-plot-search.active_search_survey.target_species.other_species.other_species": {
+                "sign-based-active-plot-search.sign.attributable_fauna_species.attributable_wild_dog": {
+                    "dataType": "species"
+                },
+                "sign-based-active-plot-search.sign.attributable_fauna_species.attributable_deer": {
+                    "dataType": "species"
+                },
+                "sign-based-nearby-track-plot.sign.attributable_fauna_species.attributable_fauna_species": {
+                    "dataType": "species"
+                },
+                "sign-based-nearby-track-plot.sign.attributable_fauna_species.attributable_wild_dog": {
+                    "dataType": "species"
+                },
+                "sign-based-nearby-track-plot.sign.attributable_fauna_species.attributable_deer": {
                     "dataType": "species"
                 },
                 "sign-based-active-plot-search.track_log": {
                     "dataType": "feature"
-                },
-                "sign-based-active-plot-search.sign.attributable_fauna_species.lut": {
-                    "dataType": "species"
                 },
                 "sign-based-active-plot-search.sign.attributable_fauna_species.count": {
                     "dwcAttribute": "individualCount"
@@ -871,24 +899,27 @@ var protocols = {
                 "sign-based-nearby-track-plot.track_log": {
                     "dataType": "feature"
                 },
-                "sign-based-nearby-track-plot.sign.attributable_fauna_species.lut": {
-                    "dataType": "species"
-                },
                 "sign-based-nearby-track-plot.sign.count": {
                     "dwcAttribute": "individualCount"
                 }
             },
             "viewModel": {
-                "sign-based-active-plot-search.active_search_survey.target_species.lut": {
+                "sign-based-active-plot-search.sign.attributable_fauna_species.attributable_fauna_species": {
                     "type": "speciesSelect"
                 },
-                "sign-based-active-plot-search.active_search_survey.target_species.other_species.other_species": {
+                "sign-based-active-plot-search.sign.attributable_fauna_species.attributable_wild_dog": {
                     "type": "speciesSelect"
                 },
-                "sign-based-active-plot-search.sign.attributable_fauna_species.lut": {
+                "sign-based-active-plot-search.sign.attributable_fauna_species.attributable_deer": {
                     "type": "speciesSelect"
                 },
-                "sign-based-nearby-track-plot.sign.attributable_fauna_species.lut": {
+                "sign-based-nearby-track-plot.sign.attributable_fauna_species.attributable_fauna_species": {
+                    "type": "speciesSelect"
+                },
+                "sign-based-nearby-track-plot.sign.attributable_fauna_species.attributable_wild_dog": {
+                    "type": "speciesSelect"
+                },
+                "sign-based-nearby-track-plot.sign.attributable_fauna_species.attributable_deer": {
                     "type": "speciesSelect"
                 },
                 "sign-based-nearby-track-plot.track_log": {
@@ -903,12 +934,32 @@ var protocols = {
     "685b5e9b-20c2-4688-9b04-b6caaf084aad": {
         "name": "Sign-based Fauna - Track Station",
         "usesPlotLayout": false,
-        "createSpeciesRecord":false,
+        "createSpeciesRecord":true,
         "tags": ["survey"],
         "overrides": {
             "dataModel": {
-                "sign-based-track-station-observation.tracks.number_of_individuals": {
+                "sign-based-track-station-observation.observations.attributable_fauna_species.attributable_fauna_species": {
+                    "dataType": "species"
+                },
+                "sign-based-track-station-observation.observations.attributable_fauna_species.attributable_wild_dog": {
+                    "dataType": "species"
+                },
+                "sign-based-track-station-observation.observations.attributable_fauna_species.attributable_deer": {
+                    "dataType": "species"
+                },
+                "sign-based-track-station-observation.observations.number_of_individuals": {
                     "dwcAttribute": "individualCount"
+                }
+            },
+            "viewModel": {
+                "sign-based-track-station-observation.observations.attributable_fauna_species.attributable_fauna_species": {
+                    "type": "speciesSelect"
+                },
+                "sign-based-track-station-observation.observations.attributable_fauna_species.attributable_wild_dog": {
+                    "type": "speciesSelect"
+                },
+                "sign-based-track-station-observation.observations.attributable_fauna_species.attributable_deer": {
+                    "type": "speciesSelect"
                 }
             }
         },
@@ -940,13 +991,13 @@ var protocols = {
             },
             "viewModel": {
                 "ground-counts-vantage-point-setup.observations.species.attributable_fauna_species": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "ground-counts-vantage-point-setup.observations.species.attributable_wild_dog": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "ground-counts-vantage-point-setup.observations.species.attributable_deer": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 }
             }
         }
@@ -980,22 +1031,22 @@ var protocols = {
             },
             "viewModel": {
                 "herbivory-and-physical-damage-transect.quadrat.quadrat_observation.physical_damage_attributable_fauna_species.attributable_fauna_species": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "herbivory-and-physical-damage-transect.quadrat.quadrat_observation.physical_damage_attributable_fauna_species.attributable_wild_dog": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "herbivory-and-physical-damage-transect.quadrat.quadrat_observation.physical_damage_attributable_fauna_species.attributable_deer": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "herbivory-and-physical-damage-transect.quadrat.quadrat_observation.herbivory_attributable_fauna_species.attributable_fauna_species": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "herbivory-and-physical-damage-transect.quadrat.quadrat_observation.herbivory_attributable_fauna_species.attributable_wild_dog": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "herbivory-and-physical-damage-transect.quadrat.quadrat_observation.herbivory_attributable_fauna_species.attributable_deer": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 }
             }
         }
@@ -1029,22 +1080,22 @@ var protocols = {
             },
             "viewModel": {
                 "herbivory-off-plot-transect.quadrat.quadrat_observation.physical_damage_attributable_fauna_species.attributable_fauna_species": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "herbivory-off-plot-transect.quadrat.quadrat_observation.physical_damage_attributable_fauna_species.attributable_wild_dog": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "herbivory-off-plot-transect.quadrat.quadrat_observation.physical_damage_attributable_fauna_species.attributable_deer": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "herbivory-off-plot-transect.quadrat.quadrat_observation.herbivory_attributable_fauna_species.attributable_fauna_species": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "herbivory-off-plot-transect.quadrat.quadrat_observation.herbivory_attributable_fauna_species.attributable_wild_dog": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 },
                 "herbivory-off-plot-transect.quadrat.quadrat_observation.herbivory_attributable_fauna_species.attributable_deer": {
-                    "dataType": "speciesSelect"
+                    "type": "speciesSelect"
                 }
             }
         }
