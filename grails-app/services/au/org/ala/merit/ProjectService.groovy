@@ -39,6 +39,10 @@ class ProjectService  {
     static final String PLAN_UNLOCKED = 'unlocked for correction'
     public static final String DOCUMENT_ROLE_APPROVAL = 'approval'
 
+    // All projects can use the Plot Selection and Layout, Plot Description and Opportune modules, but
+    // we don't want users recording data sets for Plot Selection and Layout so it's not included here.
+    final List DEFAULT_EMSA_MODULES = Collections.synchronizedList(['Plot Description', 'Opportune'])
+
     def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService, commonService
     ProjectConfigurationService projectConfigurationService
     def programService
@@ -2013,11 +2017,13 @@ class ProjectService  {
     }
 
     List listProjectProtocols(Map project) {
+
+        List defaultModules = grailsApplication.config.getProperty('emsa.modules.defaults', List.class, DEFAULT_EMSA_MODULES)
         List<Map> forms = activityService.monitoringProtocolForms()
         List baselineProtocols = project?.custom?.details?.baseline?.rows?.collect{it.protocols}?.flatten() ?:[]
         List monitoringProtocols = project?.custom?.details?.monitoring?.rows?.collect{it.protocols}?.flatten() ?:[]
 
-        List modules = (baselineProtocols + monitoringProtocols).unique().findAll{it}
+        List modules = (baselineProtocols + monitoringProtocols + defaultModules).unique().findAll{it}
         forms?.findAll{it.category in modules}
     }
 
