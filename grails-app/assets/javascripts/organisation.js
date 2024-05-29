@@ -149,14 +149,8 @@ OrganisationViewModel = function (props, options) {
 
 
 OrganisationPageViewModel = function (props, options) {
-    var self = $.extend(this, new Documents(options));
-
-    self.organisationId = props.organisationId;
-    self.description = ko.observable(props.description).extend({markdown:true});
-    self.abn = ko.observable(props.abn);
-    self.url = ko.observable(props.url);
-    self.name = props.name;
-
+    var self = this;
+    _.extend(self, new OrganisationViewModel(props, options));
 
     var tabs = {
         'about': {
