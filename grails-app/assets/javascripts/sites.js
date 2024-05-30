@@ -997,7 +997,7 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
         site.filterType = 'P';
         site.filterTypeLabel = 'Planning site';
 
-        if (site.externalIds && site.externalIds[0] && site.externalIds[0].idType == 'MONITOR_PLOT_GUID') {
+        if (site.externalIds && site.externalIds[0] && site.externalIds[0].idType && site.externalIds[0].idType.indexOf('MONITOR') >= 0) {
             site.filterType = 'E';
             site.filterTypeLabel = 'Site created via EMSA protocol using the Monitor App';
         }
