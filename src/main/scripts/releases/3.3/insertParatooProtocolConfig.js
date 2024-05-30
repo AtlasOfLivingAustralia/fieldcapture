@@ -32,6 +32,8 @@ var protocols = {
         "name": "Plot Layout and Visit",
         "usesPlotLayout": true,
         "apiEndpoint": "plot-definition-surveys",
+        "startDatePath": "plot_visit.start_date",
+        "endDatePath": "plot_visit.end_date",
         "tags": ["site"]
     },
     "617df00c-0e4f-4267-9efc-9ca9eae19686": {
@@ -446,6 +448,8 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "bird-surveys",
+        "startDatePath": "start_date",
+        "endDatePath": "end_date",
         "overrides": {
             "dataModel": {
                 "bird-survey-observation.count": {
@@ -667,6 +671,12 @@ var protocols = {
                 },
                 "within-plot-belt-transect.quadrat.sign_observed.count": {
                     "dwcAttribute": "individualCount"
+                },
+                "within-plot-belt-transect.survey.other_target_species.other_species": {
+                    "dataType": "text"
+                },
+                "within-plot-belt-transect-survey.other_target_species.other_species": {
+                    "dataType": "text"
                 }
             },
             "viewModel": {
@@ -701,6 +711,9 @@ var protocols = {
                 },
                 "within-plot-belt-transect.quadrat.sign_observed.count": {
                     "dwcAttribute": "individualCount"
+                },
+                "off-plot-belt-transect-survey-setup.other_target_species.other_species": {
+                    "dataType": "text"
                 }
             },
             "viewModel": {
@@ -741,6 +754,12 @@ var protocols = {
                 },
                 "sign-based-vehicle-track-observation.points": {
                     "dataType": "feature"
+                },
+                "sign-based-vehicle-track-observation.survey.other_target_species.other_species": {
+                    "dataType": "text"
+                },
+                "sign-based-vehicle-track-set-up.other_target_species.other_species": {
+                    "dataType": "text"
                 }
             },
             "viewModel":{
@@ -781,6 +800,9 @@ var protocols = {
                 },
                 "fauna-ground-counts-conduct-survey.observation.species.other_attributable_species": {
                     "dataType": "species"
+                },
+                "fauna-ground-counts-observation.other_target_species.other_species": {
+                    "dataType": "text"
                 }
             },
             "viewModel": {
@@ -837,6 +859,12 @@ var protocols = {
                 },
                 "herbivory-and-physical-damage-active-search-transect.hapd_observed.herbivory_attributable_fauna_species.attributable_deer": {
                     "dataType": "species"
+                },
+                "herbivory-and-physical-damage-active-search-transect.active_search_setup.other_target_species.other_species": {
+                    "dataType": "text"
+                },
+                "herbivory-and-physical-damage-active-search-setup.other_target_species.other_species": {
+                    "dataType": "text"
                 }
             },
             "viewModel": {
@@ -901,6 +929,15 @@ var protocols = {
                 },
                 "sign-based-nearby-track-plot.sign.count": {
                     "dwcAttribute": "individualCount"
+                },
+                "sign-based-active-plot-search.active_search_survey.other_target_species.other_species": {
+                    "dataType": "text"
+                },
+                "sign-based-nearby-track-plot.active_search_survey.other_target_species.other_species": {
+                    "dataType": "text"
+                },
+                "sign-based-active-plot-search-survey.other_target_species.other_species": {
+                    "dataType": "text"
                 }
             },
             "viewModel": {
@@ -949,6 +986,9 @@ var protocols = {
                 },
                 "sign-based-track-station-observation.observations.number_of_individuals": {
                     "dwcAttribute": "individualCount"
+                },
+                "sign-based-track-station-survey-setup.other_target_species.other_species": {
+                    "dataType": "text"
                 }
             },
             "viewModel": {
@@ -987,6 +1027,9 @@ var protocols = {
                 },
                 "ground-counts-vantage-point-setup.observations.spotters_name": {
                     "dataType": "recordedBy"
+                },
+                "ground-counts-vantage-point-setup.other_target_species.other_species": {
+                    "dataType": "text"
                 }
             },
             "viewModel": {
@@ -1027,6 +1070,12 @@ var protocols = {
                 },
                 "herbivory-and-physical-damage-transect.quadrat.quadrat_observation.herbivory_attributable_fauna_species.attributable_deer": {
                     "dataType": "species"
+                },
+                "herbivory-and-physical-damage-belt-transect-setup.other_target_species.other_species": {
+                    "dataType": "text"
+                },
+                "herbivory-and-physical-damage-transect.within_plot_setup.other_target_species.other_species": {
+                    "dataType": "text"
                 }
             },
             "viewModel": {
@@ -1076,6 +1125,9 @@ var protocols = {
                 },
                 "herbivory-off-plot-transect.quadrat.quadrat_observation.herbivory_attributable_fauna_species.attributable_deer": {
                     "dataType": "species"
+                },
+                "herbivory-off-plot-belt-survey-setup.other_target_species.other_species": {
+                    "dataType": "text"
                 }
             },
             "viewModel": {
