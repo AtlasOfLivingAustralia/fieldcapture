@@ -1719,8 +1719,14 @@
                 "description": "Type of engagement events are training/workshops, on-ground trials/demonstrations and field days. Note field days should be reported as an event e.g, 3 field days is considered 1 event NOT 3 days",
                 "constraints": [
                   "Field days",
-                  "On-ground trials / demonstrations facilitated or hosted",
-                  "Training workshops hosted"
+                  "One-on-one technical advice interactions",
+                  "Video conferences/meetings",
+                  "Hosting workshops",
+                  "Facilitating/hosting on ground trials/demonstrations",
+                  "Meetings – Steering Committee/Planning",
+                  "Negotiations with the community etc",
+                  "Facilitating/hosting conferences/seminars",
+                  "Participating in conference/seminars, training events, workshops, on-ground trials/demonstrations"
                 ],
                 "validate": "required"
               },
