@@ -12,14 +12,14 @@
   "publicationStatus": "published",
   "externalIds": null,
   "gmsId": null,
-  "name": "Procurement Progress Report",
+  "name": "Procurement Output Report",
   "sections": [
     {
       "class": "au.org.ala.ecodata.FormSection",
       "id": null,
       "collapsedByDefault": false,
       "modelName": null,
-      "name": "Overview Progress Report",
+      "name": "Overview Output Report",
       "optional": false,
       "optionalQuestionText": null,
       "template": {
@@ -201,7 +201,7 @@
             ]
           }
         ],
-        "modelName": "Progress Report",
+        "modelName": "Output Report",
         "title": "Overview of Project Progress",
         "viewModel": [
           {
