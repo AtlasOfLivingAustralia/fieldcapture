@@ -105,6 +105,13 @@
 <script id="cancelled" type="text/html">
     <p><span class="badge p-1 text-white badge-danger">Report not required
     </span><fc:iconHelp dynamic-help="cancelledCommentText"></fc:iconHelp></p>
+    <g:if test="${fc.userIsAlaOrFcAdmin()}">
+        <div class="mt-2" data-bind="visible:!hasData()">
+            <p>
+                <button type="button" data-bind="click:unCancelReport" class="btn btn-success btn-sm"><i class="fa fa-remove icon-white"></i> Require report</button>
+            </p>
+        </div>
+    </g:if>
 </script>
 
 <script id="reportTable" type="text/html">

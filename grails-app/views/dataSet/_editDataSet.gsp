@@ -3,7 +3,7 @@
     <div class="form-group row">
         <label for="title" class="col-sm-5 col-form-label required">1. Dataset title</label>
         <div class="col-sm-7">
-            <input type="text" class="form-control" id="title" placeholder="" data-validation-engine="validate[required,maxSize[150],funcCall[uniqueName]]" data-bind="value:name">
+            <input type="text" class="form-control" id="title" placeholder="" data-validation-engine="validate[required,maxSize[200],funcCall[uniqueName]]" data-bind="value:name">
         </div>
     </div>
     <div class="row form-subheading">
@@ -105,7 +105,7 @@
     </div>
 
     <div class="form-group row">
-        <label for="measurementTypes" class="col-sm-5 col-form-label required">9b. What types of measurements or observations does the dataset include? <br/>To select more than one answer, hold down the ‘CTRL’ button whilst selecting an option from the drop-down list</label>
+        <label for="measurementTypes" class="col-sm-5 col-form-label required">9b. What types of measurements or observations does the dataset include?</label>
         <div class="col-sm-7">
             <select multiple="multiple" type="text" class="form-control" id="measurementTypes" data-validation-engine="validate[required]" data-bind="disable: protocol() != 'other', multiSelect2:{value:measurementTypes}">
                 <option>Abundance</option>
@@ -144,7 +144,7 @@
         </div>
     </div>
     <div class="form-group row">
-        <label for="methods" class="col-sm-5 col-form-label required">10. Identify the method(s) used to collect the data. <br/>To select more than one answer, hold down the ‘CTRL’ button whilst selecting an option from the drop-down list</label>
+        <label for="methods" class="col-sm-5 col-form-label required">10. Identify the method(s) used to collect the data.</label>
         <div class="col-sm-7">
             <select class="form-control" multiple="multiple" id="methods" data-validation-engine="validate[required]" data-bind="disable: protocol() != 'other', multiSelect2:{value:methods}">
                 <option>Active searching</option>

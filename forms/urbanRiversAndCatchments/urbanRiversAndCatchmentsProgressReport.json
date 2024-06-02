@@ -1640,16 +1640,19 @@
                 "name": "communicationMaterialType",
                 "constraints": [
                   "Advertising",
+                  "Books",
                   "Booklets",
                   "Educational/Interpretive Signage",
+                  "Event Flyers",
                   "Extension materials",
-                  "Fact Sheets/Brochures",
-                  "Fliers",
-                  "Media release",
-                  "Report",
+                  "Fact Sheets",
+                  "Marketing materials",
+                  "Media releases",
+                  "Newsletters",
+                  "Newspaper articles",
+                  "Reports",
                   "Social media posts",
-                  "Videos",
-                  "Other"
+                  "Videos"
                 ],
                 "validate": "required"
               },
@@ -2122,17 +2125,23 @@
             ]
           },
           {
+            "dataType": "text",
+            "name": "invoicingThisActivity",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
             "columns": [
               {
                 "dataType": "text",
                 "name": "eventType",
                 "description": "Type of engagement events are training/workshops, on-ground trials/demonstrations and field days. Note field days should be reported as an event e.g, 3 field days is considered 1 event NOT 3 days",
                 "constraints": [
-                  "Conferences/seminars",
                   "Field days",
-                  "One-on-one technical advice interactions",
                   "On-ground trials / demonstrations facilitated or hosted",
-                  "On-ground works",
                   "Training workshops hosted"
                 ],
                 "validate": "required"
@@ -2215,8 +2224,41 @@
             "decimalPlaces": 0,
             "defaultValue": 1,
             "computed": {
-              "expression": "sum(events, \"numberOfEvents\")"
+              "expression": "sum(events, \"eventType ? 1 : 0\")"
             }
+          },
+          {
+            "dataType": "number",
+            "name": "totalNumberEngagementHeldInvoiced",
+            "description": "Number of events invoiced for this reporting period.",
+            "defaultValue": "",
+            "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "totalNumberEngagementHeld",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "totalNumberEngagementInvoicedMismatched",
+            "description": "Please explain why the Total invoiced field is different from the Totals tally field.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "+totalNumberEngagementHeldInvoiced < +totalNumberEngagementHeld",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -2245,7 +2287,7 @@
           {
             "name": "projectAssuranceDetails",
             "dataType": "text",
-            "validate": "maxSize[5000]"
+            "validate": "required,maxSize[5000]"
           },
           {
             "dataType": "list",
@@ -2351,6 +2393,34 @@
                     ]
                   }
                 ]
+              },
+              {
+                "type": "col",
+                "css": "span5 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(ii) Total number of events <u><i>invoiced</i></u> for this reporting period",
+                        "source": "totalNumberEngagementHeldInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                "source": "totalNumberEngagementInvoicedMismatched",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": ""
               }
             ]
           },
@@ -2391,6 +2461,22 @@
                         ]
                       }
                     ]
+                  },
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "invoicingThisActivity",
+                            "preLabel": "Are you invoicing for this activity in this reporting period?",
+                            "type": "selectOne"
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               },
@@ -2415,13 +2501,7 @@
                     "type": "selectOne"
                   },
                   {
-                    "width": "10%",
-                    "source": "numberOfEvents",
-                    "title": "Number of engagement events",
-                    "type": "number"
-                  },
-                  {
-                    "width": "10%",
+                    "width": "20%",
                     "source": "eventPurpose",
                     "title": "Purpose of engagement",
                     "type": "textarea"
@@ -2460,6 +2540,7 @@
                 "userAddedRows": true,
                 "disableTableUpload": true,
                 "source": "events",
+                "title": "<b>Please report each Community/Stakeholder engagement event as a separate row</b>",
                 "type": "table"
               },
               {
@@ -2490,7 +2571,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements."
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -9952,7 +10033,7 @@
                 "description": "Manually enter correct figure for this reporting period if different to mapped value.",
                 "units": "ha",
                 "decimalPlaces": 3,
-                "validate": "required,min[0]"
+                "validate": "min[0]"
               },
               {
                 "dataType": "text",
@@ -10044,25 +10125,13 @@
                     "dataType": "text",
                     "name": "surveyObjective",
                     "description": "",
-                    "validate": "required,maxSize[300]",
-                    "behaviour": [
-                      {
-                        "condition": "activityTypeUndertaken == \"Survey\" or activityTypeUndertaken == \"Assessment\"",
-                        "type": "enable"
-                      }
-                    ]
+                    "validate": "maxSize[300]"
                   },
                   {
                     "dataType": "text",
                     "name": "surveyTechnique",
                     "description": "",
-                    "validate": "required,maxSize[300]",
-                    "behaviour": [
-                      {
-                        "condition": "activityTypeUndertaken == \"Survey\" or activityTypeUndertaken == \"Assessment\"",
-                        "type": "enable"
-                      }
-                    ]
+                    "validate": "maxSize[300]"
                   },
                   {
                     "dataType": "text",
@@ -10073,25 +10142,13 @@
                       "Good",
                       "Excellent"
                     ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "activityTypeUndertaken == \"Survey\" or activityTypeUndertaken == \"Assessment\"",
-                        "type": "enable"
-                      }
-                    ]
+                    "validate": ""
                   },
                   {
                     "dataType": "text",
                     "name": "siteConditionDetails",
                     "description": "",
-                    "validate": "required,maxSize[300]",
-                    "behaviour": [
-                      {
-                        "condition": "activityTypeUndertaken == \"Survey\" or activityTypeUndertaken == \"Assessment\"",
-                        "type": "enable"
-                      }
-                    ]
+                    "validate": "maxSize[300]"
                   }
                 ],
                 "dataType": "list",

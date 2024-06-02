@@ -12,8 +12,430 @@
   "publicationStatus": "published",
   "externalIds": null,
   "gmsId": null,
-  "name": "Procurement Progress Report",
+  "name": "Procurement Output Report",
   "sections": [
+    {
+      "class": "au.org.ala.ecodata.FormSection",
+      "id": null,
+      "collapsedByDefault": false,
+      "modelName": null,
+      "name": "Overview Output Report",
+      "optional": false,
+      "optionalQuestionText": null,
+      "template": {
+        "pre-populate": [
+          {
+            "mapping": [
+              {
+                "mapping": [],
+                "source-path": "issue",
+                "target": "issue"
+              }
+            ],
+            "merge": false,
+            "source": {
+              "literal": {
+                "issue": []
+              }
+            }
+          }
+        ],
+        "dataModel": [
+          {
+            "dataType": "text",
+            "name": "progressSummary",
+            "description": "Provide a short summary of what has been achieved to date against the project outcomes during the reporting period. This includes if the project is on track to meet targets overall, any key governance or project milestones or if there have been  issues or delays. Keep your answer concise and do not repeat activity specific information which will be reported against activity targets below. You may wish to reference outcomes for clarity e.g. 'under Outcome 1/MT1'.",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "name": "undergoneReview",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No",
+              "NA"
+            ]
+          },
+          {
+            "name": "yesUndergoneReview",
+            "dataType": "text",
+            "validate": "required,maxSize[4000]",
+            "behaviour": [
+              {
+                "condition": "undergoneReview == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "workOrderVariation",
+            "dataType": "text",
+            "validate": "required",
+            "behaviour": [
+              {
+                "condition": "undergoneReview == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "constraints": [
+              "Yes",
+              "No",
+              "Not Applicable"
+            ]
+          },
+          {
+            "name": "emergingRisks",
+            "dataType": "text",
+            "description": "As distinct from WHS risks to personnel and subcontractors, for example, there may have been a flooding event on site which impacts works. Please describe any new or emerging project delivery risks.",
+            "validate": "required,maxSize[4000]"
+          },
+          {
+            "name": "anyGoodNews",
+            "dataType": "text",
+            "validate": "required",
+            "description": "Please include a description and attach images. This information is intended for potential use by the Department in publicly promoting the program. Photos may be attached to this report via attachment to email however please ensure permissions of persons in the photos are obtained prior to the photos being attached. Please only consider high quality images and stories which communicate the outcomes of the project to a layperson",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "name": "goodNewsLink",
+            "dataType": "text",
+            "validate": "required,maxSize[300]",
+            "behaviour": [
+              {
+                "condition": "anyGoodNews == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "dataType": "image",
+            "name": "goodNewsEvidence"
+          },
+          {
+            "name": "nhtCommunications",
+            "dataType": "text",
+            "description": "This <u>does not</u> include communication activities undertaken under the “communication materials” activity if this is an activity target for your project. All communication materials must correctly acknowledge Australian Government funding.",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "name": "yesCommunicationsMaterial",
+            "dataType": "text",
+            "validate": "required,maxSize[300]",
+            "behaviour": [
+              {
+                "condition": "nhtCommunications == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "hasNotifiableIncident",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "name": "yesHasNotifiableIncident",
+            "dataType": "text",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "behaviour": [
+              {
+                "condition": "hasNotifiableIncident == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "hasVerifiedSubContractors",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No",
+              "Not Applicable"
+            ]
+          },
+          {
+            "name": "notVerifiedSubContractors",
+            "dataType": "text",
+            "validate": "required,maxSize[300]",
+            "behaviour": [
+              {
+                "condition": "hasVerifiedSubContractors == \"No\"",
+                "type": "enable"
+              }
+            ]
+          },
+
+          {
+            "dataType": "text",
+            "name": "projectContactDetailsChanged",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "name": "yesProjectContactDetailsChanged",
+            "dataType": "text",
+            "behaviour": [
+              {
+                "condition": "projectContactDetailsChanged == \"Yes\"",
+                "type": "visible"
+              }
+            ]
+          }
+        ],
+        "modelName": "Output Report",
+        "title": "Overview of Project Progress",
+        "viewModel": [
+          {
+            "items": [
+              {
+                "source": "<h4>Organisation and Contact Details</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "projectContactDetailsChanged",
+                "preLabel": "Has there been a change to key project contacts or their details?",
+                "type": "selectOne",
+                "helpText": "(e.g. Name, position, role, email, telephone or address of key contacts)"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "",
+                "source": "yesProjectContactDetailsChanged",
+                "preLabel": "<i><b style=\"background-color:yellow\">If yes, please provide updated details to the department.</b></i>"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>Project progress</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "preLabel": "How has the project progressed since the last reporting period?",
+                "source": "progressSummary",
+                "type": "textarea",
+                "rows": 5
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span6",
+                "type": "selectOne",
+                "source": "undergoneReview",
+                "preLabel": "During this reporting period has the plan for project implementation undergone a review or amendment?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "yesUndergoneReview",
+                "preLabel": "If yes, please provide a summary of the changes."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "workOrderVariation",
+                "preLabel": "Will these changes require a formal Project Work Plan variation? If yes, your project manager will follow up with you to seek a variation request."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "emergingRisks",
+                "preLabel": "Are there any new or emerging risks to the delivery of the Project?"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>Communications and good news stories</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "anyGoodNews",
+                "preLabel": "Are there any good news stories, project achievements, or major milestones which highlight what the project is doing/achieving?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "goodNewsLink",
+                "preLabel": "If yes, please provide link or copy of the material."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Optionally attach photos",
+                "source": "goodNewsEvidence",
+                "type": "image"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "nhtCommunications",
+                "preLabel": "During this reporting period was any communication material developed and published?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "yesCommunicationsMaterial",
+                "preLabel": "If yes, please provide link or copy of the material."
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>Project WHS Risk</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "hasNotifiableIncident",
+                "preLabel": "In the past reporting period, have any notifiable incidents or events occurred during the delivery of the project services?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "yesHasNotifiableIncident",
+                "preLabel": "If yes, has the incident/event been reported to the department and the relevant documentation provided? Please note, the department should be informed of notifiable incidents as soon as practical."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "hasVerifiedSubContractors",
+                "preLabel": "Have you verified that all subcontractors engaged during the reporting period (existing and new) are meeting WHS requirements under the Deed and this contract, and that corroborating documentation such as relevant permits, licences etc have been retained?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "notVerifiedSubContractors",
+                "preLabel": "If no, provide reason on why checks have not been undertaken."
+              }
+            ]
+          }
+        ],
+        "pre-populate": [
+          {
+            "source": {
+              "context-path": "owner"
+            },
+            "merge": {
+              "projectOutcomes": {
+                "deleteUnmatchedExistingRows": true,
+                "addUnmatchedNewRows": true,
+                "keys": [
+                  "outcomeStatement"
+                ]
+              }
+            },
+            "mapping": [
+              {
+                "target": "projectOutcomes",
+                "mapping": [
+                  {
+                    "target": "outcomeStatement",
+                    "source-path": "description"
+                  }
+                ],
+                "source-path": "custom.details.outcomes.shortTermOutcomes"
+              }
+            ]
+          }
+        ]
+      },
+      "templateName": "overviewProgressReport",
+      "title": null
+    },
     {
       "collapsedByDefault": false,
       "template": {
@@ -1334,18 +1756,22 @@
               {
                 "dataType": "text",
                 "name": "communicationMaterialType",
+                "description": "Please refer to project service summary to clarify the type of communication material/s accepted.",
                 "constraints": [
                   "Advertising",
+                  "Books",
                   "Booklets",
                   "Educational/Interpretive Signage",
+                  "Event Flyers",
                   "Extension materials",
-                  "Fact Sheets/Brochures",
-                  "Fliers",
-                  "Media release",
-                  "Report",
+                  "Fact Sheets",
+                  "Marketing materials",
+                  "Media releases",
+                  "Newsletters",
+                  "Newspaper articles",
+                  "Reports",
                   "Social media posts",
-                  "Videos",
-                  "Other"
+                  "Videos"
                 ],
                 "validate": "required"
               },
@@ -1909,12 +2335,15 @@
                 "name": "eventType",
                 "description": "Type of engagement events are training/workshops, on-ground trials/demonstrations and field days. Note field days should be reported as an event e.g, 3 field days is considered 1 event NOT 3 days",
                 "constraints": [
-                  "Conferences/seminars",
                   "Field days",
                   "One-on-one technical advice interactions",
-                  "On-ground trials / demonstrations facilitated or hosted",
-                  "On-ground works",
-                  "Training workshops hosted"
+                  "Video conferences/meetings",
+                  "Hosting workshops",
+                  "Facilitating/hosting on ground trials/demonstrations",
+                  "Meetings – Steering Committee/Planning",
+                  "Negotiations with the community etc",
+                  "Facilitating/hosting conferences/seminars",
+                  "Participating in conference/seminars, training events, workshops, on-ground trials/demonstrations"
                 ],
                 "validate": "required"
               },
@@ -1996,7 +2425,7 @@
             "decimalPlaces": 0,
             "defaultValue": 1,
             "computed": {
-              "expression": "sum(events, \"numberOfEvents\")"
+              "expression": "sum(events, \"eventType ? 1 : 0\")"
             }
           },
           {
@@ -2273,13 +2702,7 @@
                     "type": "selectOne"
                   },
                   {
-                    "width": "10%",
-                    "source": "numberOfEvents",
-                    "title": "Number of engagement events",
-                    "type": "number"
-                  },
-                  {
-                    "width": "10%",
+                    "width": "20%",
                     "source": "eventPurpose",
                     "title": "Purpose of engagement",
                     "type": "textarea"
@@ -2318,6 +2741,7 @@
                 "userAddedRows": true,
                 "disableTableUpload": true,
                 "source": "events",
+                "title": "<b>Please report each Community/Stakeholder engagement event as a separate row</b>",
                 "type": "table"
               },
               {
@@ -11046,7 +11470,7 @@
                 "description": "Manually enter correct figure for this reporting period if different to mapped value.",
                 "units": "ha",
                 "decimalPlaces": 3,
-                "validate": "required,min[0]"
+                "validate": "min[0]"
               },
               {
                 "dataType": "text",
@@ -11138,25 +11562,13 @@
                     "dataType": "text",
                     "name": "surveyObjective",
                     "description": "",
-                    "validate": "required,maxSize[300]",
-                    "behaviour": [
-                      {
-                        "condition": "activityTypeUndertaken == \"Survey\" or activityTypeUndertaken == \"Assessment\"",
-                        "type": "enable"
-                      }
-                    ]
+                    "validate": "maxSize[300]"
                   },
                   {
                     "dataType": "text",
                     "name": "surveyTechnique",
                     "description": "",
-                    "validate": "required,maxSize[300]",
-                    "behaviour": [
-                      {
-                        "condition": "activityTypeUndertaken == \"Survey\" or activityTypeUndertaken == \"Assessment\"",
-                        "type": "enable"
-                      }
-                    ]
+                    "validate": "maxSize[300]"
                   },
                   {
                     "dataType": "text",
@@ -11167,25 +11579,13 @@
                       "Good",
                       "Excellent"
                     ],
-                    "validate": "required",
-                    "behaviour": [
-                      {
-                        "condition": "activityTypeUndertaken == \"Survey\" or activityTypeUndertaken == \"Assessment\"",
-                        "type": "enable"
-                      }
-                    ]
+                    "validate": ""
                   },
                   {
                     "dataType": "text",
                     "name": "siteConditionDetails",
                     "description": "",
-                    "validate": "required,maxSize[300]",
-                    "behaviour": [
-                      {
-                        "condition": "activityTypeUndertaken == \"Survey\" or activityTypeUndertaken == \"Assessment\"",
-                        "type": "enable"
-                      }
-                    ]
+                    "validate": "maxSize[300]"
                   }
                 ],
                 "dataType": "list",

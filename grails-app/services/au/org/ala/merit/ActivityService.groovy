@@ -128,7 +128,7 @@ class ActivityService {
         updatePublicationStatus(activityIds, 'published')
     }
 
-    def rejectActivitiesForPublication(activityIds) {
+    def rejectOrUncancelActivitiesForPublication(activityIds) {
         updatePublicationStatus(activityIds, 'unpublished')
     }
 

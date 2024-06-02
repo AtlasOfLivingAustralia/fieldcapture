@@ -12,7 +12,7 @@
                 data-bind="disable: isProjectDetailsLocked(), value:details.supportsPriorityPlace, optionsCaption:'Please select...'"
                 data-validation-engine="validate[required]">
             <option value="">Please select...</option>
-            <option>Yes</option>
+            <option>Yes</option> <%-- The view model has a dependency on these values.  Don't change without updating the view model --%>
             <option>No</option>
         </select>
     </div>
@@ -25,7 +25,7 @@
     <select id="priority-place"
             multiple="multiple"
             class="form-control form-control-sm"
-            data-bind="disable: isProjectDetailsLocked(), options:priorityPlaces, multiSelect2:{value:details.supportedPriorityPlaces}"
+            data-bind="disable: isProjectDetailsLocked(), options:priorityPlaces, multiSelect2:{tags: false, value:details.supportedPriorityPlaces}"
             data-validation-engine="validate[required]">
     </select>
 

@@ -52,13 +52,13 @@
                 <div class="form-group">
                     <label for="start-date">Start date</label>
                     <div class="input-group">
-                        <fc:datePicker class="form-control dateControl" id="start-date" name="start-date" bs4="bs4" targetField="startDate.date" data-validation-engine="validate[required,future[30-06-2018]]"/>
+                        <fc:datePicker class="form-control dateControl" id="start-date" name="start-date" bs4="bs4" targetField="startDate.date" data-validation-engine="validate[required,future[30-06-2018]]" autocomplete="off"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="end-date">End date</label>
                     <div class="input-group">
-                        <fc:datePicker class="form-control dateControl" id="end-date" name="end-date" bs4="bs4" targetField="endDate.date" data-validation-engine="validate[required,future[start-date]]"/>
+                        <fc:datePicker class="form-control dateControl" id="end-date" name="end-date" bs4="bs4" targetField="endDate.date" data-validation-engine="validate[required,future[start-date]]" autocomplete="off"/>
                     </div>
                 </div>
 

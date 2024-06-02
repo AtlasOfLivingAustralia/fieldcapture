@@ -2707,7 +2707,7 @@
             "decimalPlaces": 0,
             "defaultValue": 1,
             "computed": {
-              "expression": "sum(events, \"numberOfEvents\")"
+              "expression": "sum(events, \"eventType ? 1 : 0\")"
             }
           },
           {
@@ -2984,13 +2984,7 @@
                     "type": "selectOne"
                   },
                   {
-                    "width": "10%",
-                    "source": "numberOfEvents",
-                    "title": "Number of engagement events",
-                    "type": "number"
-                  },
-                  {
-                    "width": "10%",
+                    "width": "20%",
                     "source": "eventPurpose",
                     "title": "Purpose of engagement",
                     "type": "textarea"
@@ -3029,6 +3023,7 @@
                 "userAddedRows": true,
                 "disableTableUpload": true,
                 "source": "events",
+                "title": "<b>Please report each Community/Stakeholder engagement event as a separate row</b>",
                 "type": "table"
               },
               {
@@ -20781,11 +20776,11 @@
                               "target": "species"
                             },
                             {
-                              "source-path": "individualCount",
+                              "source-path": "individualsOrGroups",
                               "target": "individualsOrGroups"
                             },
                             {
-                              "source-path": "numberOfIndividualsOrGroups",
+                              "source-path": "individualCount",
                               "target": "numberOfIndividualsOrGroups"
                             }
                           ],
@@ -26433,7 +26428,7 @@
                               "target": "individualsOrGroups"
                             },
                             {
-                              "source-path": "numberOfIndividualsGroupsSurvived",
+                              "source-path": "individualCount",
                               "target": "numberOfIndividualsGroupsSurvived"
                             },
                             {

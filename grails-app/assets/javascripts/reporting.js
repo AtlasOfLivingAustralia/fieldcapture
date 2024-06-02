@@ -322,6 +322,19 @@ var ReportViewModel = function(report, config) {
         self.showReportStatusChangeModal(options);
     };
 
+    self.unCancelReport = function() {
+        var options = {
+            explanationText:'Do you wish to set this report as “required”? Please enter the reason the report is required.',
+            title:'Reason this report is required',
+            buttonText: 'Yes',
+            action: 'cancel',
+            blockingMessage: 'Marking this report as required...',
+            successMessage: 'Report is now required.',
+            actionUrl: config.unCancelReportUrl
+        };
+        self.showReportStatusChangeModal(options);
+    };
+
     self.resetReport = function() {
         bootbox.confirm("<h4>Delete report contents</h4>Are you sure you want to delete the data entered for this report?<br/><b>This action cannot be undone</b>", function(result) {
             var url = config.resetReportUrl+'?reportId='+report.reportId;
