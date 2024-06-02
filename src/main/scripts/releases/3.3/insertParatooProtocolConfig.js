@@ -586,7 +586,7 @@ var protocols = {
     },
     "2c5bb8d7-b624-4dc4-93d7-3f1276e65ad5": {
         "name": "Vertebrate Fauna - Trapping Survey Setup",
-        "usesPlotLayout": false,
+        "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "vertebrate-trapping-setup-surveys"
     },
@@ -597,8 +597,8 @@ var protocols = {
         "apiEndpoint": "vertebrate-trap-check-surveys"
     },
     "9d2c3fcf-881b-41df-944d-33bb6ef8ac51": {
-        "name": "Vertebrate true - Active and Passive Search",
-        "usesPlotLayout": false,
+        "name": "Vertebrate Fauna - Active and Passive Search",
+        "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "vertebrate-active-passive-search-surveys"
     },
