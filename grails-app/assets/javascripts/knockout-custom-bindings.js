@@ -906,7 +906,9 @@ var ACTIVITY_PROGRESS_CLASSES = {
   'finished':'btn-info',
   'deferred':'btn-danger',
   'cancelled':'btn-inverse',
-  'corrected':'btn-danger'
+  'corrected':'btn-danger',
+  'error syncing':'btn-danger',  // Used only by data sets that come from the Monitor app
+  'sync in progress':'btn-warning' //// Used only by data sets that come from the Monitor app
 };
 
 

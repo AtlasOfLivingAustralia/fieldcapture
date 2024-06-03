@@ -66,6 +66,21 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
                 }
             });
         };
+
+        if (this.createdIn === MONITOR_APP) {
+            if (this.progress == ActivityProgress.planned) {
+                var now = moment();
+                var creationDate = moment(dataSet.dateCreated);
+                if (creationDate.add(1, 'minutes').isBefore(now)) {
+                    this.progress = 'error syncing';
+                }
+                else {
+                    this.progress = 'sync in progress';
+                }
+
+            }
+        }
+
     }
 };
 
