@@ -907,7 +907,7 @@ var ACTIVITY_PROGRESS_CLASSES = {
   'deferred':'btn-danger',
   'cancelled':'btn-inverse',
   'corrected':'btn-danger',
-  'error syncing':'btn-danger',  // Used only by data sets that come from the Monitor app
+  'sync error':'btn-danger',  // Used only by data sets that come from the Monitor app
   'sync in progress':'btn-warning' //// Used only by data sets that come from the Monitor app
 };
 

@@ -21,7 +21,27 @@
             <th class="last-updated">Date last updated</th>
             <th class="last-updated-hidden">Date last updated (ISO format)</th>
             <th class="created-in">Created in</th>
-            <th class="dataset-progress">Status</th>
+            <th class="dataset-progress">Status  <fc:iconHelp html="true">
+
+                <div class="row mb-2">
+                    <span class="col-4"><span class="btn btn-success">started</span></span>
+                    <span class="col-8">Data entry has started but the 'This form is complete' checkbox has not been selected</span>
+                </div>
+                <div class="row mb-2">
+                    <span class="col-4"><span class="btn btn-info">finished</span></span>
+                    <span class="col-8">Data entry has finished and the data set summary is ready for use in reporting forms</span>
+                </div>
+                <div class="row mb-2">
+                    <span class="col-4"><span class="btn btn-warning">sync in progress</span></span>
+                    <span class="col-8">The Monitor app is syncing the data set with MERIT</span>
+                </div>
+                <div class="row mb-2">
+                    <span class="col-4"><span class="btn btn-danger">sync error</span></span>
+                    <span class="col-8">There was an error syncing data from the Monitor app</span>
+                </div>
+
+            </fc:iconHelp></th>
+
         </tr>
         </thead>
         <tbody data-bind="foreach:dataSets">
@@ -50,6 +70,7 @@
                 <button type="button" class="btn btn-sm" data-bind="activityProgress:progress">
                 <span data-bind="text: progress"></span>
                 </button>
+
             </td>
         </tr>
         </tbody>

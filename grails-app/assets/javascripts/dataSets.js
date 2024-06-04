@@ -72,7 +72,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
                 var now = moment();
                 var creationDate = moment(dataSet.dateCreated);
                 if (creationDate.add(1, 'minutes').isBefore(now)) {
-                    this.progress = 'error syncing';
+                    this.progress = 'sync error';
                 }
                 else {
                     this.progress = 'sync in progress';
