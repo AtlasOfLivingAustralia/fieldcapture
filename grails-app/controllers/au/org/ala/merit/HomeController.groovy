@@ -21,6 +21,7 @@ class HomeController {
     def statisticsFactory
     def blogService
     def commonService
+    ActivityService activityService
     GrailsApplication grailsApplication
 
     /** Cookie issued by the ALA authentication system that indicates an SSO session may be available*/
@@ -134,6 +135,11 @@ class HomeController {
         if (activityTypesFacet) {
             filteredActivityTypes = []
             List selectableActivityTypes = activityTypesFacet?.terms?.collect{it.term}
+            List emsaFormNames = activityService.monitoringProtocolForms()?.collect{it.name}
+            if (emsaFormNames) {
+                selectableActivityTypes.removeAll(emsaFormNames)
+            }
+
             allActivityTypes.each {
                 List matchingTypes = it.list?.findAll{it.name in selectableActivityTypes}
                 if (matchingTypes) {

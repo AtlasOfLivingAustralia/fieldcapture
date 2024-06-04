@@ -1,743 +1,22 @@
 {
-  "id": "64bf6c1ac9126a73736284ff",
-  "dateCreated": "2023-07-25T06:30:50Z",
-  "minOptionalSectionsCompleted": 0,
+  "id": "662f1c2a272e956a34bd6577",
+  "dateCreated": "2024-04-29T04:03:54Z",
+  "minOptionalSectionsCompleted": 1,
   "supportsSites": true,
-  "lastUpdated": "2023-10-04T11:46:09Z",
-  "createdUserId": "1493",
+  "tags": [],
+  "lastUpdated": "2024-04-29T06:39:05Z",
+  "createdUserId": "56575",
   "external": false,
   "activationDate": null,
   "supportsPhotoPoints": false,
   "publicationStatus": "published",
   "externalIds": null,
   "gmsId": null,
-  "name": "NHT Output Report",
+  "name": "Procurement Output Report",
   "sections": [
     {
       "collapsedByDefault": false,
       "template": {
-        "name": "NHT - Communications",
-        "title": "Communications",
-        "dataModel": [
-          {
-            "name": "nhtCommunications",
-            "dataType": "text",
-            "description": "This <u>does not</u> include communication activities undertaken under the 'Communication Materials' Project Service or regional capacity service. Refer to the Project Services  and Overheads (PS&O) service summary to clarify what type of communications activity is paid under the PS&O service. All Communication Materials must correctly acknowledge Australian Government funding.",
-            "validate": "required",
-            "constraints": [
-              "Yes",
-              "No"
-            ]
-          },
-          {
-            "name": "yesCommunicationsMaterial",
-            "dataType": "text",
-            "validate": "required,maxSize[300]",
-            "description": "Upload documents by clicking onto the 'Attach Document' button or provide a link in the free text field.",
-            "behaviour": [
-              {
-                "condition": "nhtCommunications == \"Yes\"",
-                "type": "enable"
-              }
-            ]
-          },
-          {
-            "dataType": "document",
-            "name": "attachments",
-            "description": "Please attach any Evidence of Service Delivery here."
-          }
-        ],
-        "viewModel": [
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span6",
-                "type": "selectOne",
-                "source": "nhtCommunications",
-                "preLabel": "During this reporting period was any communication material developed and published?"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "textarea",
-                "source": "yesCommunicationsMaterial",
-                "preLabel": "If yes, please provide link or copy of the material."
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "nhtCommunications == \"Yes\""
-              }
-            ],
-            "items": [
-              {
-                "type": "col",
-                "items": [
-                  {
-                    "title": "Attached documents",
-                    "source": "attachments",
-                    "type": "document"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "modelName": null,
-      "templateName": "nhtOutputCommunications",
-      "optional": false,
-      "optionalQuestionText": null,
-      "title": "NHT - Communications",
-      "collapsibleHeading": null,
-      "name": "NHT - Communications",
-      "description": null
-    },
-    {
-      "collapsedByDefault": false,
-      "template": {
-        "title": "Engagement activities or events, to the Community, which are directly relevant to delivery of Project",
-        "modelName": "NHT - Project Engagements",
-        "dataModel": [
-          {
-            "dataType": "list",
-            "name": "engagementDetails",
-            "columns": [
-              {
-                "dataType": "stringList",
-                "name": "engagementType",
-                "constraints": [
-                  "One-on-one technical advice",
-                  "Negotiations with the community, etc.",
-                  "Facilitating/Hosting on-ground trials/demos",
-                  "Hosting workshops",
-                  "Facilitating/Hosting conferences/seminars"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "engagementTitle",
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "engagementPurpose",
-                "validate": "required"
-              },
-              {
-                "dataType": "number",
-                "name": "engagementNoParticipants",
-                "validate": "required"
-              },
-              {
-                "dataType": "date",
-                "name": "activityDateFrom",
-                "validate": "required"
-              },
-              {
-                "dataType": "date",
-                "name": "activityDateTo",
-                "validate": [
-                  {
-                    "rule": "required"
-                  },
-                  {
-                    "rule": "future",
-                    "param": {
-                      "expression": "formatDateForValidation(activityDateFrom)",
-                      "type": "computed"
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "dataType": "text",
-            "name": "comments",
-            "validate": "maxSize[1500]"
-          },
-          {
-            "dataType": "boolean",
-            "name": "dataUploaded",
-            "description": ""
-          },
-          {
-            "name": "projectAssuranceDetails",
-            "dataType": "text",
-            "validate": "required,maxSize[5000]"
-          },
-          {
-            "dataType": "list",
-            "name": "assuranceDocuments",
-            "columns": [
-              {
-                "dataType": "document",
-                "name": "attachments",
-                "description": "Please attach any Evidence of Service Delivery here."
-              }
-            ]
-          }
-        ],
-        "viewModel": [
-          {
-            "items": [
-              {
-                "type": "table",
-                "source": "engagementDetails",
-                "title": "<b>Please list community engagement activities undertaken, including the title, description, and the number of participants for each activity undertaken in this reporting period, if any.</b><br><br><b>Each activity must be reported in a separate row.</b><br>This does not include engagement activities undertaken in community/stakeholder engagement service or regional capacity service. The Register of Engagement must be retained as evidence.",
-                "preLabel": "If yes, please provide link or copy of the material.",
-                "userAddedRows": true,
-                "columns": [
-                  {
-                    "source": "engagementType",
-                    "type": "selectOne",
-                    "width": "20%",
-                    "title": "Type"
-                  },
-                  {
-                    "source": "engagementTitle",
-                    "type": "text",
-                    "width": "25%",
-                    "title": "Title"
-                  },
-                  {
-                    "type": "textarea",
-                    "source": "engagementPurpose",
-                    "width": "25%",
-                    "title": "Purpose",
-                    "rows": 4
-                  },
-                  {
-                    "source": "engagementNoParticipants",
-                    "type": "number",
-                    "width": "10%",
-                    "title": "Number of participants"
-                  },
-                  {
-                    "title": "Activity Date from",
-                    "source": "activityDateFrom",
-                    "type": "date",
-                    "width": "10%"
-                  },
-                  {
-                    "title": "Activity Date to",
-                    "source": "activityDateTo",
-                    "type": "date",
-                    "width": "10%"
-                  }
-                ]
-              }
-            ],
-            "type": "section"
-          }
-        ]
-      },
-      "modelName": null,
-      "templateName": "nhtProjectEngagements",
-      "optional": false,
-      "optionalQuestionText": null,
-      "title": "NHT - Project Engagements",
-      "collapsibleHeading": null,
-      "name": "NHT - Project Engagements",
-      "description": null
-    },
-    {
-      "collapsedByDefault": false,
-      "template": {
-        "title": "Coordinate Projects and MERI",
-        "modelName": "NHT - Coordinate",
-        "dataModel": [
-          {
-            "name": "undergoneReview",
-            "dataType": "text",
-            "validate": "required",
-            "constraints": [
-              "Yes",
-              "No",
-              "NA"
-            ]
-          },
-          {
-            "name": "yesUndergoneReview",
-            "dataType": "text",
-            "validate": "required,maxSize[4000]",
-            "behaviour": [
-              {
-                "condition": "undergoneReview == \"Yes\"",
-                "type": "enable"
-              }
-            ]
-          },
-          {
-            "name": "workOrderVariation",
-            "dataType": "text",
-            "validate": "required",
-            "behaviour": [
-              {
-                "condition": "undergoneReview == \"Yes\"",
-                "type": "enable"
-              }
-            ],
-            "constraints": [
-              "Yes",
-              "No",
-              "Not Applicable"
-            ]
-          },
-          {
-            "name": "plansDeveloped",
-            "dataType": "text",
-            "validate": "required",
-            "constraints": [
-              "Yes",
-              "No",
-              "Not Applicable"
-            ]
-          },
-          {
-            "name": "planName",
-            "dataType": "text",
-            "validate": "required,maxSize[100]",
-            "behaviour": [
-              {
-                "condition": "plansDeveloped == \"Yes\"",
-                "type": "enable"
-              }
-            ]
-          },
-          {
-            "name": "planPurpose",
-            "dataType": "text",
-            "validate": "required,maxSize[300]",
-            "behaviour": [
-              {
-                "condition": "plansDeveloped == \"Yes\"",
-                "type": "enable"
-              }
-            ]
-          },
-          {
-            "name": "facilitatedPlanningMeetings",
-            "dataType": "text",
-            "validate": "required",
-            "constraints": [
-              "Yes",
-              "No",
-              "Not Applicable"
-            ]
-          },
-          {
-            "dataType": "list",
-            "name": "meetingDetails",
-            "columns": [
-              {
-                "dataType": "date",
-                "behaviour": [
-                  {
-                    "type": "enable_and_clear",
-                    "condition": "facilitatedPlanningMeetings == \"Yes\""
-                  }
-                ],
-                "name": "meetingDateFrom",
-                "validate": "required"
-              },
-              {
-                "dataType": "date",
-                "behaviour": [
-                  {
-                    "type": "enable_and_clear",
-                    "condition": "facilitatedPlanningMeetings == \"Yes\""
-                  }
-                ],
-                "name": "meetingDateTo",
-                "validate": [
-                  {
-                    "rule": "required"
-                  },
-                  {
-                    "rule": "future",
-                    "param": {
-                      "expression": "formatDateForValidation(meetingDateFrom)",
-                      "type": "computed"
-                    }
-                  }
-                ]
-              },
-              {
-                "dataType": "text",
-                "behaviour": [
-                  {
-                    "type": "enable_and_clear",
-                    "condition": "facilitatedPlanningMeetings == \"Yes\""
-                  }
-                ],
-                "name": "meetingName",
-                "validate": "required,maxSize[100]"
-              },
-              {
-                "dataType": "text",
-                "behaviour": [
-                  {
-                    "type": "enable_and_clear",
-                    "condition": "facilitatedPlanningMeetings == \"Yes\""
-                  }
-                ],
-                "name": "meetingDescription",
-                "validate": "required,maxSize[4000]"
-              }
-            ]
-          },
-          {
-            "dataType": "text",
-            "name": "comments",
-            "validate": "maxSize[1500]"
-          },
-          {
-            "dataType": "boolean",
-            "name": "dataUploaded",
-            "description": ""
-          },
-          {
-            "name": "projectAssuranceDetails",
-            "dataType": "text",
-            "validate": "required,maxSize[5000]"
-          },
-          {
-            "dataType": "list",
-            "name": "assuranceDocuments",
-            "columns": [
-              {
-                "dataType": "document",
-                "name": "attachments",
-                "description": "Please attach any Evidence of Service Delivery here."
-              }
-            ]
-          }
-        ],
-        "viewModel": [
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span6",
-                "type": "selectOne",
-                "source": "undergoneReview",
-                "preLabel": "During this reporting period has the project implementation plan undergone a review or amendment?"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "textarea",
-                "source": "yesUndergoneReview",
-                "preLabel": "If yes, please provide a summary of the changes."
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span6",
-                "type": "selectOne",
-                "source": "workOrderVariation",
-                "preLabel": "Will these changes require a work order variation?"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span6",
-                "type": "selectOne",
-                "source": "plansDeveloped",
-                "preLabel": "During this reporting period have any site/project/monitoring plans been developed to support project delivery? "
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span3",
-                "type": "text",
-                "source": "planName",
-                "preLabel": "Name of plan"
-              },
-              {
-                "css": "span6",
-                "type": "textarea",
-                "source": "planPurpose",
-                "preLabel": "Purpose of plan"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span6",
-                "type": "selectOne",
-                "source": "facilitatedPlanningMeetings",
-                "preLabel": "During this reporting period did you facilitate/host any steering/technical advisory/stakeholder planning meetings?"
-              }
-            ]
-          },
-          {
-            "items": [
-              {
-                "type": "table",
-                "source": "meetingDetails",
-                "userAddedRows": true,
-                "columns": [
-                  {
-                    "source": "meetingDateFrom",
-                    "type": "date",
-                    "width": "10%",
-                    "title": "Date from"
-                  },
-                  {
-                    "source": "meetingDateTo",
-                    "type": "date",
-                    "width": "10%",
-                    "title": "Date to"
-                  },
-                  {
-                    "type": "text",
-                    "source": "meetingName",
-                    "title": "Name of event",
-                    "rows": 4
-                  },
-                  {
-                    "type": "textarea",
-                    "source": "meetingDescription",
-                    "title": "Purpose of the Meeting/Workshop",
-                    "rows": 4
-                  }
-                ]
-              }
-            ],
-            "type": "section"
-          }
-        ]
-      },
-      "modelName": null,
-      "templateName": "nhtCoordinate",
-      "optional": false,
-      "optionalQuestionText": null,
-      "title": "NHT - Coordinate",
-      "collapsibleHeading": null,
-      "name": "NHT - Coordinate",
-      "description": null
-    },
-    {
-      "collapsedByDefault": false,
-      "template": {
-        "name": "NHT - Project Commencement",
-        "title": "Project Commencement",
-        "dataModel": [],
-        "viewModel": [
-          {
-            "type": "row",
-            "items": [
-              {
-                "source": "<i>‘Any service delivered using the commencement payment should be reported in the relevant reporting field.’</i>",
-                "type": "literal"
-              }
-            ]
-          }
-        ]
-      },
-      "modelName": null,
-      "templateName": "nhtProjectCommencement",
-      "optional": false,
-      "optionalQuestionText": null,
-      "title": "NHT - Project Commencement",
-      "collapsibleHeading": null,
-      "name": "NHT - Project Commencement",
-      "description": null
-    },
-    {
-      "collapsedByDefault": false,
-      "template": {
-        "name": "NHT - Project WHS",
-        "title": "Project WHS Risk Register",
-        "dataModel": [
-          {
-            "name": "undergoneWhsReview",
-            "dataType": "text",
-            "validate": "required",
-            "description": "The WHS risk register for project services must be reviewed and updated where new risks are identified, or control measures have changed.",
-            "constraints": [
-              "Yes",
-              "No"
-            ]
-          },
-          {
-            "name": "yesUndergoneWhsReview",
-            "dataType": "text",
-            "validate": "required,maxSize[300]",
-            "behaviour": [
-              {
-                "condition": "undergoneWhsReview == \"Yes\"",
-                "type": "enable"
-              }
-            ]
-          },
-          {
-            "name": "hasNotifiableIncident",
-            "dataType": "text",
-            "validate": "required",
-            "description": "A WHS Notifiable incident is defined within Work Health and Safety Act (Cth) 2011 Part 3 – Incident Notification. (https://www.legislation.gov.au/Details/C2018C00293). Refer to Deed of Standing offer clause 42 Work Health and Safety for further information on these requirements.",
-            "constraints": [
-              "Yes",
-              "No"
-            ]
-          },
-          {
-            "name": "yesHasNotifiableIncident",
-            "dataType": "text",
-            "constraints": [
-              "Yes",
-              "No"
-            ],
-            "behaviour": [
-              {
-                "condition": "hasNotifiableIncident == \"Yes\"",
-                "type": "enable"
-              }
-            ]
-          },
-          {
-            "name": "hasVerifiedSubContractors",
-            "dataType": "text",
-            "validate": "required",
-            "description": "If there have been no current or new subcontracting arrangement during this reporting period, please report as Not Applicable. Refer to Deed of standing offer clause 20 Subcontracting and 42 Work Health and Safety for further information on these requirements.",
-            "constraints": [
-              "Yes",
-              "No",
-              "Not Applicable"
-            ]
-          },
-          {
-            "name": "notVerifiedSubContractors",
-            "dataType": "text",
-            "validate": "required,maxSize[300]",
-            "behaviour": [
-              {
-                "condition": "hasVerifiedSubContractors == \"No\"",
-                "type": "enable"
-              }
-            ]
-          }
-        ],
-        "viewModel": [
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span6",
-                "type": "selectOne",
-                "source": "undergoneWhsReview",
-                "preLabel": "Have any project WHS risks or control measures in the project WHS risk register been reviewed and updated during the reporting period?"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "textarea",
-                "source": "yesUndergoneWhsReview",
-                "preLabel": "If yes, please provide a brief description of the changes made."
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span6",
-                "type": "selectOne",
-                "source": "hasNotifiableIncident",
-                "preLabel": "In the past reporting period, have any notifiable incidents or events occurred during the delivery of the project services?"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span6",
-                "type": "selectOne",
-                "source": "yesHasNotifiableIncident",
-                "preLabel": "If yes, has the incident/event been reported to the department and the relevant documentation provided?"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "yesHasNotifiableIncident == \"No\""
-              }
-            ],
-            "items": [
-              {
-                "source": "<span class=\"preLabel required\"><label><i>If no, provide notification as outlined in the Deed of Standing offer clause 42.3 Notifying the customer.</i>",
-                "type": "literal"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span6",
-                "type": "selectOne",
-                "source": "hasVerifiedSubContractors",
-                "preLabel": "Have you verified that all subcontractors engaged during the reporting period (existing and new) are meeting WHS requirements under the Deed and this contract, and that corroborating documentation such as relevant permits, licences etc have been retained?"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "textarea",
-                "source": "notVerifiedSubContractors",
-                "preLabel": "If no, provide reason on why checks have not been undertaken."
-              }
-            ]
-          }
-        ]
-      },
-      "modelName": null,
-      "templateName": "nhtProjectWHS",
-      "optional": false,
-      "optionalQuestionText": null,
-      "title": "NHT - Project WHS",
-      "collapsibleHeading": null,
-      "name": "NHT - Project WHS",
-      "description": null
-    },
-    {
-      "collapsedByDefault": false,
-      "template":   {
         "dataModel": [
           {
             "allowRowDelete": "false",
@@ -1881,7 +1160,7 @@
       "templateName": "nhtExSituBreedingSites",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Establishing ex-situ breeding program",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Establishing ex-situ breeding programs",
       "description": null
@@ -2056,10 +1335,17 @@
                 "dataType": "text",
                 "name": "communicationMaterialType",
                 "constraints": [
+                  "Advertising",
                   "Booklets",
                   "Educational/Interpretive Signage",
+                  "Extension materials",
                   "Fact Sheets/Brochures",
-                  "Videos"
+                  "Fliers",
+                  "Media release",
+                  "Report",
+                  "Social media posts",
+                  "Videos",
+                  "Other"
                 ],
                 "validate": "required"
               },
@@ -2447,7 +1733,7 @@
       "templateName": "nhtCommunicationMaterials",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Communication materials",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Communication materials",
       "description": null
@@ -2623,8 +1909,11 @@
                 "name": "eventType",
                 "description": "Type of engagement events are training/workshops, on-ground trials/demonstrations and field days. Note field days should be reported as an event e.g, 3 field days is considered 1 event NOT 3 days",
                 "constraints": [
+                  "Conferences/seminars",
                   "Field days",
+                  "One-on-one technical advice interactions",
                   "On-ground trials / demonstrations facilitated or hosted",
+                  "On-ground works",
                   "Training workshops hosted"
                 ],
                 "validate": "required"
@@ -3101,7 +2390,7 @@
       "templateName": "nhtCommunityEngagement",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Community/stakeholder engagement",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Community engagement",
       "description": null
@@ -4102,7 +3391,7 @@
       "templateName": "nhtControllingAccess",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Controlling access",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Controlling access",
       "description": null
@@ -5125,7 +4414,7 @@
       "templateName": "nhtPestAnimalManagement",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Controlling pest animals",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Pest animal management",
       "description": null
@@ -6126,7 +5415,7 @@
       "templateName": "nhtDebrisRemoval",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Debris removal",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Debris removal",
       "description": null
@@ -7248,7 +6537,7 @@
       "templateName": "nhtErosionManagement",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Erosion management",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Erosion Management",
       "description": null
@@ -8217,7 +7506,7 @@
       "templateName": "nhtFeralFreeEnclosures",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Establishing and maintaining feral-free enclosures",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Maintaining feral free enclosures",
       "description": null
@@ -9149,7 +8438,7 @@
       "templateName": "nhtEstablishingAgreements",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Establishing and Implementing Conservation Agreements",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Establishing Agreements",
       "description": null
@@ -10281,7 +9570,7 @@
       "templateName": "nhtFarmManagementSurvey",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Farm management survey",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Farm Management Survey",
       "description": null
@@ -10368,7 +9657,7 @@
                               }
                             ]
                           },
-                          "target":  {
+                          "target": {
                             "type": "singleValue",
                             "name": "sitesCoveredForFaunaSurvey"
                           }
@@ -11430,7 +10719,7 @@
       "templateName": "nhtFaunaSurvey",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Fauna survey",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Fauna survey",
       "description": null
@@ -12654,7 +11943,7 @@
       "templateName": "nhtFirstNation",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "First Nations Australians Cultural Practices",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - First nations australians cultural practices",
       "description": null
@@ -13825,7 +13114,7 @@
       "templateName": "nhtFloraSurvey",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Flora survey",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Flora survey",
       "description": null
@@ -14836,7 +14125,7 @@
       "templateName": "nhtHabitatAugmentation",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Habitat augmentation",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Habitat augmentation",
       "description": null
@@ -15964,7 +15253,7 @@
       "templateName": "nhtHabitatConditionAssessmentSurvey",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Habitat condition assessment",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Habitat condition assessment",
       "description": null
@@ -16959,7 +16248,7 @@
       "templateName": "nhtIdentifyingSites",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Identifying and Prioritising the Location of Potential Sites",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Identifying sites",
       "description": null
@@ -17840,7 +17129,7 @@
       "templateName": "nhtFireManagement",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Fire management actions",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Fire management",
       "description": null
@@ -18739,7 +18028,7 @@
       "templateName": "nhtImprovingHydrologicalRegimes",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Improving hydrological regimes",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Improving hydrological regimes",
       "description": null
@@ -19655,7 +18944,7 @@
       "templateName": "nhtLandManagementPractices",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Improving land management practices",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Improving land management practices",
       "description": null
@@ -20649,7 +19938,7 @@
       "templateName": "nhtDiseaseManagement",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Managing disease",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Disease management",
       "description": null
@@ -20781,11 +20070,11 @@
                               "target": "species"
                             },
                             {
-                              "source-path": "individualsOrGroups",
+                              "source-path": "individualCount",
                               "target": "individualsOrGroups"
                             },
                             {
-                              "source-path": "individualCount",
+                              "source-path": "numberOfIndividualsOrGroups",
                               "target": "numberOfIndividualsOrGroups"
                             }
                           ],
@@ -21811,7 +21100,7 @@
       "templateName": "nhtPestAnimalSurvey",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Pest animal survey",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Pest animal survey",
       "description": null
@@ -23154,7 +22443,7 @@
       "templateName": "nhtRemediatingRiparianAndAquaticAreas",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Remediating riparian and aquatic areas",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Remediating riparian and aquatic areas",
       "description": null
@@ -24180,7 +23469,7 @@
       "templateName": "nhtWeedTreatment",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Removing weeds",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Weed treatment",
       "description": null
@@ -25165,7 +24454,7 @@
       "templateName": "nhtRevegetatingHabitat",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Revegetating habitat",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Revegetating habitat",
       "description": null
@@ -26433,7 +25722,7 @@
                               "target": "individualsOrGroups"
                             },
                             {
-                              "source-path": "individualCount",
+                              "source-path": "numberOfIndividualsGroupsSurvived",
                               "target": "numberOfIndividualsGroupsSurvived"
                             },
                             {
@@ -27476,7 +26765,7 @@
       "templateName": "nhtPlantSurvivalSurvey",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Plant survival survey",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Plant survival survey",
       "description": null
@@ -28422,7 +27711,7 @@
       "templateName": "nhtSitePreparation",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Site preparation",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Site preparation",
       "description": null
@@ -29439,7 +28728,7 @@
       "templateName": "nhtSkillsAndKnowledgeSurvey",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Skills and knowledge survey",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Skills and knowledge survey",
       "description": null
@@ -30559,7 +29848,7 @@
       "templateName": "nhtSoilTesting",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Soil testing",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Soil testing",
       "description": null
@@ -31300,7 +30589,7 @@
       "templateName": "nhtSustainableAgricultureFacilitators",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Sustainable agriculture facilitators",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Sustainable agriculture facilitators",
       "description": null
@@ -31901,7 +31190,7 @@
       "templateName": "nhtBaselineData",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Collecting, or synthesising baseline data",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Baseline data",
       "description": null
@@ -32961,7 +32250,7 @@
       "templateName": "nhtEmergencyInterventions",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Undertaking emergency interventions to prevent extinctions",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Emergency Interventions",
       "description": null
@@ -34126,7 +33415,7 @@
       "templateName": "nhtWaterQualitySurvey",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Water Quality or Hydrology Survey",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Water quality survey",
       "description": null
@@ -35300,14 +34589,14 @@
       "templateName": "nhtWeedDistributionSurvey",
       "optional": true,
       "optionalQuestionText": null,
-      "title": "Weed distribution survey",
+      "title": null,
       "collapsibleHeading": null,
       "name": "NHT - Weed distribution survey",
       "description": null
     }
   ],
   "type": "Report",
-  "category": "NHT Reports",
+  "category": "Procurement Reports",
   "status": "active",
   "lastUpdatedUserId": "56575",
   "description": null,

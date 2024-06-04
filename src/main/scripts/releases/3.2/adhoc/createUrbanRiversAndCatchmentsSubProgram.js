@@ -48,8 +48,19 @@ var config =
                     "outcomePriority": "Additional outcome/s",
                     "helpTextHeading": "If the project is not delivering additional benefits, delete the row using the 'x' in the right-most column.",
                     "title": "Additional benefits",
-                    "priority": "Additional investment priorities",
+                    "priority": "Additional Investment Priorities",
                     "priorityHelpText": "Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
+                }
+            },
+            {
+                "template": "outcomeStatements",
+                "model": {
+                    "outcomeType": "mid",
+                    "helpText": "Projects more than 3 years in duration must set medium-term Project outcomes achievable at project completion. Ensure proposed outcomes are measurable with consideration to the baseline and proposed monitoring regime",
+                    "minimumNumberOfOutcomes": 0,
+                    "subtitle": "Medium-term outcome statement/s",
+                    "title": "Project Outcomes",
+                    "extendedOutcomes": true
                 }
             },
             {
@@ -74,7 +85,7 @@ var config =
             {
                 "template": "projectMethodology",
                 "model": {
-                    "helpText": "In addition to listing your project assumptions, please list any nominated project services that will not be charged for.\nInclude all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not impacted by adverse weather conditions. Ensure what’s documented here aligns to those assumptions documented within the Project Logic.",
+                    "helpText": "Include all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not impacted by adverse weather conditions. Ensure what’s documented here aligns to those assumptions documented within the Project Logic.",
                     "maxSize": "4000",
                     "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])"
                 }
@@ -131,11 +142,18 @@ var config =
                 "excludedModes": [
                     "PRINT"
                 ]
+            },
+            {
+                "template": "attachmentFooter",
+                "model": {
+                    "heading": "MERI Attachments",
+                    "attachmentText": "Please attach Project logic to your MERI plan using the documents function on the Admin tab.  A \"Document type\" of \"Project Logic\" should be selected when uploading the document."
+                }
             }
         ],
         "excludes": [],
         "programServiceConfig": {
-            "serviceFormName": "NHT Output Report",
+            "serviceFormName": "Priority Threatened Species Progress Report",
             "programServices": [
                 {
                     "serviceTargets": [
@@ -391,10 +409,7 @@ var config =
                 }
             ]
         },
-        "visibility": "private",
-        "declarationPageType": "rdpReportDeclaration",
         "requiresActivityLocking": true,
-        "supportsMeriPlanComparison": true,
         "projectTemplate": "rlp",
         "activityPeriodDescriptor": "Outputs report #",
         "requireMeritAdminToReturnMeriPlan": true,
@@ -418,15 +433,14 @@ var config =
         "projectReports": [
             {
                 "reportType": "Activity",
-                "firstReportingPeriodEnd": "2024-06-30T14:00:00Z",
                 "reportDescriptionFormat": "Progress Report %1d",
                 "reportNameFormat": "Progress Report %1d",
-                "reportingPeriodInMonths": 6,
+                "reportingPeriodInMonths": 12,
                 "description": "_Please note that the reporting fields for these reports are currently being developed_",
                 "minimumReportDurationInDays": 3,
                 "label": "Semester",
-                "category": "Progress Reports",
-                "activityType": "Progress Report",
+                "category": "12 Monthly Progress Reports",
+                "activityType": "Priority Threatened Species Progress Report",
                 "reportsAlignedToCalendar": true,
                 "canSubmitDuringReportingPeriod": true
             },
@@ -441,7 +455,7 @@ var config =
                 "label": "Final Report",
                 "category": "Final Report",
                 "reportsAlignedToCalendar": false,
-                "activityType": "Final Report",
+                "activityType": "Priority Threatened Species Final Report",
                 "alignToOwnerStart": true
             }
         ],
@@ -450,6 +464,11 @@ var config =
             "Climate Change - Changed rainfall patterns",
             "Climate Change - Sea level rises",
             "Climate Change - Unexpected seasonal/temperature extremes",
+            "Disconnection from Country - Altered/disrupted connection with land and sea country",
+            "Disconnection from Country - Altered or disrupted First Nations engagement/leadership in caring for land and sea country",
+            "Disconnection from Country - Altered or disrupted transfer of First Nations knowledge systems",
+            "Disconnection from Country - Inadequate recognition of Traditional knowledge and practices",
+            "Disengagement of community - Community are not informed and are not engaged in managing the environment",
             "Disease/pathogens - Areas that are infected",
             "Disease/pathogens - Possible infection of disease free areas",
             "Fire - Inappropriate fire regime",
@@ -508,7 +527,7 @@ var config =
             "Kangaroo Island – SA",
             "MacDonnell Ranges – NT",
             "Mallee Birds Ecological Community – VIC/SA/NSW",
-            "Midlands region of central Tasmanian – TAS",
+            "Midlands region of central Tasmania – TAS",
             "Norfolk Island – External Territory",
             "Raine Island – Queensland",
             "Remnant WA Wheatbelt Woodlands – WA",
@@ -525,143 +544,215 @@ var outcomes = [
     {
         "priorities": [
             {
-                "category": "Priority Threatened Species Primary"
+                "category": "Waterways"
+            },
+            {
+                "category": "Threatened Species"
             }
         ],
         "targeted": true,
-        "shortDescription": "EPBC Species",
-        "category": "Threatened Species",
-        "type": "secondary",
-        "outcome": "1.  Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
+        "shortDescription": "Ecological health",
+        "category": "Waterways",
+        "outcome": "The ecological health and condition of waterways is improved and/or repaired to benefit native plants and animals (including threatened species), threatened ecological communities, and the ecological character of Ramsar sites, in urban, outer urban /peri-urban and regional centres"
     },
     {
         "priorities": [
             {
-                "category": "Threatened Ecological Communities"
+                "category": "Waterways"
             }
         ],
         "targeted": true,
-        "shortDescription": "Threatened Ecological Communities",
-        "category": "Threatened Ecological Communities",
-        "outcome": "1. Species and Landscapes (Long term): Threatened Ecological Communities (TECs) and priority places - The condition of targeted EPBC Act listed Threatened Ecological Communities and identified priority places under the Threatened Species Action Plan 2022-2032 is improved"
+        "shortDescription": "River health",
+        "category": "River health",
+        "outcome": "The health and qualities of waterways is improved and/or repaired to benefit local communities in urban, outer urban /peri-urban and regional centres."
     },
     {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "All priority species are on track for improved trajectory"
+        "category": "Threatened Species",
+        "type": "medium",
+        "outcome": "By 30 June 2028, there is measurable repair of waterway habitats (in-stream and terrestrial) to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
     },
     {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "Implementation of priority actions for priority species is tracked and published"
+        "category": "Threatened Species",
+        "type": "medium",
+        "outcome": "By 30 June 2028, there is measurable repair of water quality, hydrology and in stream connectivity to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
     },
     {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "Species at high risk of imminent extinction are identified and supported to persist"
+        "category": "Threatened Species",
+        "type": "medium",
+        "outcome": "By June 2028 there is a measurable improvement to the services provided by urban green and blue space to benefit local communities in urban, outer urban /peri-urban and regional centres."
     },
     {
+        "category": "River health",
         "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "All priority places are on track to have improved condition"
+        "outcome": "By 30 June 2025, there is measurable repair of waterway habitats (in-stream and terrestrial) to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
     },
     {
+        "category":"River health",
         "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "Implementation of priority actions for priority places is tracked and published"
+        "outcome": " By 30 June 2025, there is measurable repair of water quality, hydrology and in stream connectivity to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
     },
     {
+        "category":"River health",
         "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "The area managed for conservation is increased by 50 million hectares"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "Impacts of climate change on priority species and places are identified and actions are underway to strengthen resilience and adaptive capacity"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "Feral cats and foxes are managed across all important habitats for susceptible priority species using best practice methods"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "Feral cats and foxes are managed in all priority places where they are a key threat to condition, using best practice methods for the location"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "Gamba Grass is reduced to an area less than its 2022 range"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "Introduction and establishment of new exotic environmental pests, weeds and diseases is reduced"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "Five new populations of appropriate species are added across the national safe haven network to improve representation of invasive predator-susceptible threatened species"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "At least 80 per cent of nationally listed threatened plant species are secured in insurance collections"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "All nationally listed threatened plant species affected by Myrtle Rust are secured in insurance collections and populations"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "First Nations-led recovery activities for threatened species and ecological communities are increased"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "Emergency response management and planning for critical biodiversity assets improves across jurisdictions"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "At least 5 new tools are developed to mitigate the impact of broad-scale threats on threatened species"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "At least half the number of projects that benefit priority species and priority places receive private investment or support from partners"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "Community groups lead or participate in recovery activities for all accessible priority species and places, including through citizen science"
+        "outcome": "By June 2025 there is a measurable improvement to the services provided by urban green and blue space to benefit local communities in urban, outer urban /peri-urban and regional centres."
     }
 ];
 
 var priorities = [
     {
-        "category": "Priority Threatened Species Primary",
-        "priority": "Gamba Grass (Andropogon gayanus)"
+        "category": "Waterways",
+        "priority": "Saltwater Creek, Cairns"
     },
     {
-        "category": "Threatened Ecological Communities",
-        "priority": "Arnhem Plateau sandstone shrubland complex"
+        "category": "Waterways",
+        "priority": "Bulimba Creek"
     },
     {
-        "category": "Threatened Ecological Communities",
-        "priority": "Kakadu and West Arnhem"
+        "category": "Waterways",
+        "priority": "Cubberla Creek"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Bremer River"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Saltwater Creek, Gold Coast"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Fig Tree Creek, Yeppoon"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Downfall Creek"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Dowse Lagoon"
+    },
+    {
+        "category": "Waterways",
+        "priority": "McCready's Creek, Mackay"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Slacks Creek"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Lake Macquarie"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Hawkesbury River"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Tuggerah Lakes"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Shoalhaven and Crookshaven Rivers"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Cooks River"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Canberra Waterways"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Peter Hopper Lake"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Moonee Ponds Creek"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Karaaf Wetlands"
+    },
+    {
+        "category": "Waterways",
+        "priority": "KooyongKoot (Tooronga Park wetland)"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Diamond Creek"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Yarra Flats"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Elster Creek"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Redan Wetlands and Yarrowee River"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Werribee River"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Darebin Creek"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Merri Creek"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Gardiners Creek"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Derwent River"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Tamar Estuary"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Onkaparinga River"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Pedler Creek"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Brownhill Creek"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Port River"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Sturt River"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Swan and Canning Rivers"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Darwin creeks (Rapid Creek, Mitchell Creek, Ludmilla Creek and Sandy Creek)"
     }
 ];
 
-
 //Create the parent program
-let programName = "Saving Native Species";
+let programName = "Urban Rivers and Catchments Program";
 var parent = createOrFindProgram(programName);
-var subprograms = ["Priority Places - Grants"]
+var subprograms = ["Urban Rivers and Catchments Round 2 Competitive Grants"]
 
 subprograms.forEach(function (subProgram){
     createOrFindProgram(subProgram, parent._id);
@@ -676,4 +767,5 @@ subprograms.forEach(function (subprogram){
         useNhtServiceLabels(p.name);
     }
 });
+
 

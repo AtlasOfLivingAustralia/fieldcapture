@@ -39,10 +39,15 @@ class ProjectService  {
     static final String PLAN_UNLOCKED = 'unlocked for correction'
     public static final String DOCUMENT_ROLE_APPROVAL = 'approval'
 
+    // All projects can use the Plot Selection and Layout, Plot Description and Opportune modules, but
+    // we don't want users recording data sets for Plot Selection and Layout so it's not included here.
+    final List DEFAULT_EMSA_MODULES = Collections.synchronizedList(['Plot Description', 'Opportune'])
+
     def webService, grailsApplication, siteService, activityService, emailService, documentService, userService, metadataService, settingService, reportService, auditService, speciesService, commonService
     ProjectConfigurationService projectConfigurationService
     def programService
     LockService lockService
+    DataSetSummaryService dataSetSummaryService
 
     def get(id, levelOfDetail = "", includeDeleted = false) {
 
@@ -358,21 +363,16 @@ class ProjectService  {
                 }
             }
 
-            // The update algorithm only merges updates at the project base level, so we need to manually merge
-            // the "custom" Map which can contain properties "details" (the MERI plan) and "dataSets" (data set summaries)
-            // The longer term solution for this is to model Projects explicitly/correctly in ecodata
+            // Don't allow MERI plan updates unless the user holds the lock.
+            // Since it is modelled as an embedded object, we manually update the lastUpdated date as GORM
+            // won't do it automatically.
+            // The MERI Plan and data set summaries should be modelled as separate entities in a future change.
             if (projectDetails.custom) {
 
                 if (projectDetails.custom.details && !bypassMeriPlanLockCheck && !lockService.userHoldsLock(currentProject.lock)) {
                     return [error:'MERI plan is locked by another user', noLock:true]
                 }
-
                 projectDetails.custom.details?.lastUpdated = DateUtils.formatAsISOStringNoMillis(new Date())
-
-                Map custom = currentProject.custom ?: [:]
-                custom.putAll(projectDetails.custom)
-
-                projectDetails.custom = custom
             }
         }
 
@@ -2017,11 +2017,13 @@ class ProjectService  {
     }
 
     List listProjectProtocols(Map project) {
+
+        List defaultModules = grailsApplication.config.getProperty('emsa.modules.defaults', List.class, DEFAULT_EMSA_MODULES)
         List<Map> forms = activityService.monitoringProtocolForms()
         List baselineProtocols = project?.custom?.details?.baseline?.rows?.collect{it.protocols}?.flatten() ?:[]
         List monitoringProtocols = project?.custom?.details?.monitoring?.rows?.collect{it.protocols}?.flatten() ?:[]
 
-        List modules = (baselineProtocols + monitoringProtocols).unique().findAll{it}
+        List modules = (baselineProtocols + monitoringProtocols + defaultModules).unique().findAll{it}
         forms?.findAll{it.category in modules}
     }
 
@@ -2110,55 +2112,6 @@ class ProjectService  {
         return programList
     }
 
-    Map saveDataSet(String projectId, Map dataSet) {
-        Map project = get(projectId)
-        if (!project) {
-            throw new  IllegalArgumentException("Project "+projectId+" does not exist")
-        }
-        if (!project.custom) {
-            project.custom = [:]
-        }
-        if (!project.custom.dataSets) {
-            project.custom.dataSets = []
-        }
-
-        if(!dataSet.progress) {
-            dataSet.progress = ActivityService.PROGRESS_STARTED
-        }
-
-        if(!dataSet.dataCollectionOngoing) {
-            dataSet.dataCollectionOngoing = false
-        }
-        dataSet.lastUpdated = DateUtils.formatAsISOStringNoMillis(new Date())
-
-        if (!dataSet.dataSetId) {
-            dataSet.dataSetId = UUID.randomUUID().toString()
-            dataSet.dateCreated = DateUtils.formatAsISOStringNoMillis(new Date())
-            project.custom.dataSets << dataSet
-        }
-        else {
-            int i = project.custom.dataSets.findIndexOf({it.dataSetId == dataSet.dataSetId})
-            if (i < 0)  {
-                throw new  IllegalArgumentException("Data set "+dataSet.dataSetId+" does not exist")
-            }
-            project.custom.dataSets[i] = dataSet
-        }
-
-        updateUnchecked(projectId, [custom: project.custom])
-    }
-
-    Map deleteDataSet(String projectId, String dataSetId) {
-        Map project = get(projectId)
-        if (!project) {
-            throw new IllegalArgumentException("Project "+projectId+" does not exist")
-        }
-        boolean found  = project.custom?.dataSets?.removeAll{ it.dataSetId == dataSetId}
-        if (!found)  {
-            throw new IllegalArgumentException("Data set "+dataSetId+" does not exist")
-        }
-        updateUnchecked(projectId, [custom: project.custom])
-    }
-
     /**
      * when reports are generated using the program or management unit pages,
      * reports should only be generated for projects with at least one existing report
@@ -2174,13 +2127,15 @@ class ProjectService  {
      * @return
      */
     Map bulkUpdateDataSetSummaries(String projectId, String reportId, List dataSetIds, Map properties) {
-        boolean dirty = false
+
         List errors = []
         Map project = get(projectId)
+        List<Map> toUpdate = []
         dataSetIds?.each { String dataSetId ->
 
             Map dataSet = project.custom?.dataSets?.find{it.dataSetId == dataSetId}
             if (dataSet) {
+                boolean dirty = false
                 // Associate the data set with the report
                 if (!dataSet.reportId) {
                     dataSet.reportId = reportId
@@ -2204,6 +2159,9 @@ class ProjectService  {
                         dirty = true
                     }
                 }
+                if (dirty) {
+                    toUpdate << dataSet
+                }
             }
             else {
                 errors << "Report ${reportId} references data set ${dataSetId} which does not exist in project ${projectId}"
@@ -2215,13 +2173,13 @@ class ProjectService  {
         }.each {
             it.reportId = null
             it.publicationStatus = null
-            dirty = true
+            toUpdate << it
         }
 
         Map result = [:]
-        if (dirty) {
+        if (toUpdate) {
             // Save the changes to the data sets
-            result = updateUnchecked(project.projectId, [custom: project.custom])
+            result = dataSetSummaryService.bulkUpdateDataSets(projectId, toUpdate)
             if (result?.error) {
                 errors << result.error
             }
