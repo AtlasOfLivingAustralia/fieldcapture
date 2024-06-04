@@ -20,8 +20,7 @@ var config = {
         "DATA_SETS",
         "DASHBOARD",
         "REPORTING",
-        "RISKS_AND_THREATS",
-        "DOCUMENTS"
+        "RISKS_AND_THREATS"
     ],
     "visibility": "private",
     "projectTemplate": "rlp",
