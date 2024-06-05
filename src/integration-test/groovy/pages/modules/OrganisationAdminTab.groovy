@@ -17,6 +17,16 @@ class OrganisationAdminTab extends Module{
         reportingSectionTab(required:false) { $('#reporting-config-tab') }
         reportingSection(required:false) { $('#reporting-config').module OrganisationAdminReportSection }
 
+        documentsTab { $('#edit-documents-tab') }
+        documents { module AdminDocumentsTab }
+
+    }
+
+    def attachDocument() {
+        documentsTab.click()
+        waitFor { documents.displayed }
+        documents.attachDocumentButton.click()
+        documents.attachDocumentDialog
     }
 
     def viewEditSection() {

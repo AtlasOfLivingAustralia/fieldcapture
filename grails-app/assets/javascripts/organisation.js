@@ -1,4 +1,5 @@
 //= require tab-init.js
+//= require attach-document-no-ui
 //= require reportService
 /**
  * Knockout view model for organisation pages.
@@ -223,6 +224,26 @@ OrganisationPageViewModel = function (props, options) {
                 // restore state if saved
                 if (storedAdminTab) {
                     $(storedAdminTab + "-tab").tab('show');
+                }
+
+                var documentViewModelOptions = {
+                    reports: undefined,
+                    owner: {
+                        organisationId:props.organisationId
+                    },
+                    documentDefaults: {
+                        role: DOCUMENT_CONTRACT_ASSURANCE,
+                        public: false
+                    },
+                    modalSelector: '#attachDocument',
+                    documentUpdateUrl: options.documentUpdateUrl,
+                    documentDeleteUrl: options.documentDeleteUrl,
+                    imageLocation: options.imageLocation
+                };
+                var viewModel = new EditableDocumentsViewModel(documentViewModelOptions);
+                viewModel.loadDocuments(props.documents);
+                if (document.getElementById('edit-documents')) {
+                    ko.applyBindings(viewModel, document.getElementById('edit-documents'))
                 }
             }
         }
