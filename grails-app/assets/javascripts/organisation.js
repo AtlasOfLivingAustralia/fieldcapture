@@ -140,7 +140,7 @@ OrganisationViewModel = function (props, options) {
     // links
     if (props.links) {
         $.each(props.links, function(i, link) {
-            self.addLink(link.role, link.url);
+            self.addLink(link.role, link.url, link.documentId);
         });
     }
 
