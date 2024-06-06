@@ -5,7 +5,11 @@
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
             <a class="nav-link" data-toggle="pill" href="#reporting-config" id="reporting-config-tab" role="tab">Reporting</a>
             <a class="nav-link" data-toggle="pill" href="#config" id="config-tab" role="tab">Configuration</a>
+            <a id="edit-documents-tab" class="nav-link" data-toggle="pill" href="#edit-documents" role="tab">Documents</a>
         </g:if>
+        <g:elseif test="${fc.userHasReadOnlyAccess()}">
+            <a id="edit-documents-tab" class="nav-link" data-toggle="pill" href="#edit-documents" role="tab">Documents</a>
+        </g:elseif>
     </div>
 
     <div class="tab-content col-9">
@@ -48,13 +52,13 @@
                 <div class="form-group">
                     <label for="start-date">Start date</label>
                     <div class="input-group">
-                        <fc:datePicker class="form-control dateControl" id="start-date" name="start-date" bs4="bs4" targetField="startDate.date" data-validation-engine="validate[required,future[30-06-2018]]"/>
+                        <fc:datePicker class="form-control dateControl" id="start-date" name="start-date" bs4="bs4" targetField="startDate.date" data-validation-engine="validate[required,future[30-06-2018]]" autocomplete="off"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="end-date">End date</label>
                     <div class="input-group">
-                        <fc:datePicker class="form-control dateControl" id="end-date" name="end-date" bs4="bs4" targetField="endDate.date" data-validation-engine="validate[required,future[start-date]]"/>
+                        <fc:datePicker class="form-control dateControl" id="end-date" name="end-date" bs4="bs4" targetField="endDate.date" data-validation-engine="validate[required,future[start-date]]" autocomplete="off"/>
                     </div>
                 </div>
 
@@ -82,6 +86,65 @@
 
                 </textarea>
             </div>
+        <!-- ko stopBinding:true -->
+        <div id="edit-documents" class="tab-pane">
+            <div class="attachDocumentModal">
+                <div class="row">
+                    <h3 class="col-3 d-inline-block">Documents</h3>
+                    <form class="col-9 form-inline justify-content-end">
+
+                        <label class="col-auto col-form-label">Filter documents:
+                            <select class="form-control form-control-sm" data-bind="optionsCaption:'No filter', options:documentRoles, optionsText:'name', optionsValue:'id', value:documentFilter"></select>
+                        </label>
+                        <button class="btn btn-info btn-sm form-control" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
+
+                    </form>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <hr/>
+            <div class="row-fluid">
+                <div class="span10">
+
+                    <g:render template="/shared/editDocuments"
+                              model="[useExistingModel: true, documents: organisation.documents, editable:true, filterBy: 'all', ignore: '', imageUrl:assetPath(src:'filetypes'),containerId:'adminDocumentList']"/>
+
+                </div>
+            </div>
+            %{--The modal view containing the contents for a modal dialog used to attach a document--}%
+            <g:render template="/shared/attachDocument"/>
+
+        </div>
+        <!-- /ko -->
         </g:if>
+        <g:elseif test="${fc.userHasReadOnlyAccess()}">
+        <!-- ko stopBinding:true -->
+        <div id="edit-documents" class="tab-pane">
+            <div class="attachDocumentModal">
+                <div class="row">
+                    <h3 class="col-3 d-inline-block">Documents</h3>
+                    <form class="col-9 form-inline justify-content-end">
+
+                        <label class="col-auto col-form-label">Filter documents:
+                            <select class="form-control form-control-sm" data-bind="optionsCaption:'No filter', options:documentRoles, optionsText:'name', optionsValue:'id', value:documentFilter"></select>
+                        </label>
+                    </form>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <hr/>
+            <div class="row-fluid">
+                <div class="span10">
+
+                    <g:render template="/shared/editDocuments"
+                              model="[useExistingModel: true, documents: organisation.documents, editable:true, filterBy: 'all', ignore: '', imageUrl:assetPath(src:'filetypes'),containerId:'adminDocumentList']"/>
+                    %{--The modal view containing the contents for a modal dialog used to attach a document--}%
+                    <g:render template="/shared/attachDocument"/>
+
+                </div>
+            </div>
+        </div>
+        <!-- /ko -->
+        </g:elseif>
     </div>
 </div>

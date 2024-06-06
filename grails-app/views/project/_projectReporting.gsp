@@ -18,7 +18,7 @@
                             <fc:iconHelp title="Start date">Date the project is intended to commence.</fc:iconHelp>
                             </label>
                             <div class="input-group input-append">
-                                <fc:datePicker class="form-control form-control-sm" bs4="true" targetField="plannedStartDate.date" id= "startDate" name="startDate" data-validation-engine="validate[required, past[endDate]]"/>
+                                <fc:datePicker class="form-control form-control-sm" bs4="true" targetField="plannedStartDate.date" id= "startDate" name="startDate" data-validation-engine="validate[required, past[endDate]]" autocomplete="off"/>
                             </div>
                         </div>
                         <div class="col-sm-2">
@@ -26,7 +26,7 @@
                             <fc:iconHelp title="End date">Date the project is intended to finish.</fc:iconHelp>
                             </label>
                             <div class="input-group input-append">
-                                <fc:datePicker class="form-control form-control-sm" bs4="true" targetField="plannedEndDate.date" id="endDate" name="endDate" data-validation-engine="validate[required, future[startDate]"/>
+                                <fc:datePicker class="form-control form-control-sm" bs4="true" targetField="plannedEndDate.date" id="endDate" name="endDate" data-validation-engine="validate[required, future[startDate]" autocomplete="off"/>
                             </div>
                         </div>
                     </div>

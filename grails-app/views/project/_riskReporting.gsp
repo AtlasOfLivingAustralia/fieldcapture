@@ -11,7 +11,7 @@
 
             <div class="controls">
                 <div class=" input-group input-append">
-                <fc:datePicker class="form-control form-control-sm input-small dateControl" id="risks-changes-from-date" bs4="true" targetField="fromDate.date"/>
+                <fc:datePicker class="form-control form-control-sm input-small dateControl" id="risks-changes-from-date" bs4="true" targetField="fromDate.date" autocomplete="off"/>
                 </div>
             </div>
         </div>
@@ -20,7 +20,7 @@
 
             <div class="controls">
                 <div class="input-group input-append">
-                <fc:datePicker id="risks-changes-to-date" bs4="true" class="form-control form-control-sm input-small dateControl" targetField="toDate.date"/>
+                <fc:datePicker id="risks-changes-to-date" bs4="true" class="form-control form-control-sm input-small dateControl" targetField="toDate.date" autocomplete="off"/>
                 </div>
             </div>
         </div>

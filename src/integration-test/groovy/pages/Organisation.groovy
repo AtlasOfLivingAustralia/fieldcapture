@@ -43,6 +43,12 @@ class Organisation extends ReloadablePage {
         waitFor 10, { adminTabContent.displayed }
     }
 
+    void openDocumentDialog() {
+        adminTab.click()
+        waitFor { adminTabContent.displayed }
+        adminTabContent.attachDocument()
+    }
+
     void displayReportsTab() {
         waitFor {reportingTab.displayed}
         reportingTab.click()

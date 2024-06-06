@@ -636,10 +636,11 @@ function Documents(options) {
         }
         return null;
     };
-    self.addLink = function(role, url) {
+    self.addLink = function(role, url, documentId) {
         self.links.push(new DocumentViewModel({
             role: role,
-            url: url
+            url: url,
+            documentId: documentId
         }));
     };
     self.fixLinkDocumentIds = function(existingLinks) {

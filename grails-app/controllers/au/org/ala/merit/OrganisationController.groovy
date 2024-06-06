@@ -175,6 +175,7 @@ class OrganisationController {
     }
 
     private void createOrUpdateOrganisation(String organisationId, Map organisationDetails) {
+        def originalOrganisation = organisationService.get(organisationId)
         def documents = organisationDetails.remove('documents')
         def links = organisationDetails.remove('links')
         def result = organisationService.update(organisationId, organisationDetails)
@@ -190,6 +191,17 @@ class OrganisationController {
             links.each { link ->
                 link.organisationId = organisationId
                 documentService.saveLink(link)
+            }
+        }
+
+        List existingLinks = links?.findResults { it.documentId }
+        List toDeleteLinks = originalOrganisation?.links?.findAll { !existingLinks.contains(it.documentId) }
+        // delete any links that were removed.
+        if (toDeleteLinks && !result.error) {
+            toDeleteLinks.each { link ->
+                if (link.documentId) {
+                    documentService.delete(link.documentId)
+                }
             }
         }
 

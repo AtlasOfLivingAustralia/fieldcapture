@@ -489,7 +489,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "7.a Please review the Project Support and Overheads tables below which have been populated with information provided through quarterly reporting.<br> Do you have anything further to add to these tables?",
+                "preLabel": "7.a This report aggregates data from the Project Support & Overheads fields reported in the last 12 months through quarterly reporting. Please review for accuracy.<br> Do you require any changes to these tables?",
                 "source": "psoMoreDetails",
                 "type": "selectOne"
               }
@@ -499,7 +499,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "7.b If yes, please outline what you would like to include.",
+                "preLabel": "7.b If yes, please outline the required changes below:",
                 "source": "yesPsoMoreDetails",
                 "type": "textarea",
                 "rows": 4

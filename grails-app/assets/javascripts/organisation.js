@@ -1,4 +1,5 @@
 //= require tab-init.js
+//= require attach-document-no-ui
 //= require reportService
 /**
  * Knockout view model for organisation pages.
@@ -139,7 +140,7 @@ OrganisationViewModel = function (props, options) {
     // links
     if (props.links) {
         $.each(props.links, function(i, link) {
-            self.addLink(link.role, link.url);
+            self.addLink(link.role, link.url, link.documentId);
         });
     }
 
@@ -149,14 +150,8 @@ OrganisationViewModel = function (props, options) {
 
 
 OrganisationPageViewModel = function (props, options) {
-    var self = $.extend(this, new Documents(options));
-
-    self.organisationId = props.organisationId;
-    self.description = ko.observable(props.description).extend({markdown:true});
-    self.abn = ko.observable(props.abn);
-    self.url = ko.observable(props.url);
-    self.name = props.name;
-
+    var self = this;
+    _.extend(self, new OrganisationViewModel(props, options));
 
     var tabs = {
         'about': {
@@ -229,6 +224,26 @@ OrganisationPageViewModel = function (props, options) {
                 // restore state if saved
                 if (storedAdminTab) {
                     $(storedAdminTab + "-tab").tab('show');
+                }
+
+                var documentViewModelOptions = {
+                    reports: undefined,
+                    owner: {
+                        organisationId:props.organisationId
+                    },
+                    documentDefaults: {
+                        role: DOCUMENT_CONTRACT_ASSURANCE,
+                        public: false
+                    },
+                    modalSelector: '#attachDocument',
+                    documentUpdateUrl: options.documentUpdateUrl,
+                    documentDeleteUrl: options.documentDeleteUrl,
+                    imageLocation: options.imageLocation
+                };
+                var viewModel = new EditableDocumentsViewModel(documentViewModelOptions);
+                viewModel.loadDocuments(props.documents);
+                if (document.getElementById('edit-documents')) {
+                    ko.applyBindings(viewModel, document.getElementById('edit-documents'))
                 }
             }
         }

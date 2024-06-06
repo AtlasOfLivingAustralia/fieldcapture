@@ -273,7 +273,7 @@ environments {
         security.cas.contextPath =
         ecodata.baseUrl = 'http://localhost:8080/ws/'
         upload.images.url = grails.serverURL+'/image/'
-        upload.images.path = "~/data/${appName}/images/"
+        upload.images.path = "${System.getProperty('user.home')}/data/${appName}/images/"
         emailFilter = /[A-z0-9._%-]+@csiro\.au|chris\.godwin\.ala@gmail.com|[A-z0-9._%-]+@dcceew\.gov\.au/
         logging.dir = '.'
         ecodata.service.url = 'http://localhost:8080/ws'
