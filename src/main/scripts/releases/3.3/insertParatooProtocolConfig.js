@@ -783,7 +783,7 @@ var protocols = {
     },
     "a76dac21-94f4-4851-af91-31f6dd00750f": {
         "name": "Fauna Ground Counts Transects",
-        "usesPlotLayout": true,
+        "usesPlotLayout": false,
         "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "fauna-ground-counts-surveys",
@@ -1007,7 +1007,7 @@ var protocols = {
     },
     "d706fd34-2f05-4559-b738-a65615a3d756": {
         "name": "Fauna Ground Counts Vantage Point",
-        "usesPlotLayout": true,
+        "usesPlotLayout": false,
         "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "ground-counts-vantage-point-surveys",
