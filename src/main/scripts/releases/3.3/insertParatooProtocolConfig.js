@@ -803,7 +803,10 @@ var protocols = {
                 },
                 "fauna-ground-counts-observation.other_target_species.other_species": {
                     "dataType": "text"
-                }
+                },
+                "fauna-ground-counts-conduct-survey.observation.count": {
+                    "dwcAttribute": "individualCount"
+                },
             },
             "viewModel": {
                 "fauna-ground-counts-observation.observation.pest_species": {
@@ -1013,22 +1016,22 @@ var protocols = {
         "apiEndpoint": "ground-counts-vantage-point-surveys",
         "overrides": {
             "dataModel": {
-                "ground-counts-vantage-point-setup.observations.count_of_individuals": {
+                "vantage-point-conduct-survey.observations.count_of_individuals": {
                     "dwcAttribute": "individualCount"
                 },
-                "ground-counts-vantage-point-setup.observations.species.attributable_fauna_species": {
+                "vantage-point-conduct-survey.observations.species.attributable_fauna_species": {
                     "dataType": "species"
                 },
-                "ground-counts-vantage-point-setup.observations.species.attributable_wild_dog": {
+                "vantage-point-conduct-survey.observations.species.attributable_wild_dog": {
                     "dataType": "species"
                 },
-                "ground-counts-vantage-point-setup.observations.species.attributable_deer": {
+                "vantage-point-conduct-survey.observations.species.attributable_deer": {
                     "dataType": "species"
                 },
-                "ground-counts-vantage-point-setup.observations.spotters_name": {
+                "vantage-point-conduct-survey.observations.spotters_name": {
                     "dataType": "recordedBy"
                 },
-                "ground-counts-vantage-point-setup.other_target_species.other_species": {
+                "vantage-point-conduct-survey.other_target_species.other_species": {
                     "dataType": "text"
                 }
             },
