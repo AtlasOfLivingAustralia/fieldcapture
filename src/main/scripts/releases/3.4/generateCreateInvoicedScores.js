@@ -53,6 +53,10 @@ for (let i=0; i<scoreIds.length; i++) {
 
     printjson(invoicedScore);
     print(',')
+    actualScore.relatedScores = [{description:'Invoiced by', scoreId:invoicedScore.scoreId}]
+    printjson(actualScore);
+
+    print(',')
     pairs.push([{label: actualScore.label, scoreId:actualScore.scoreId},  {label:invoicedScore.label, scoreId: invoicedScore.scoreId}]);
 }
 
