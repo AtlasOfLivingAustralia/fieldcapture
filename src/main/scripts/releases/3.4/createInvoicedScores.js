@@ -89,56 +89,8 @@ let scores = [
     label: 'Invoiced number of communication materials published',
     description: '',
     configuration: {
-      label: 'Number of communication materials published',
       childAggregations: [
-        {
-          filter: {
-            filterValue: 'RLP - Output Report Adjustment',
-            type: 'filter',
-            property: 'name'
-          },
-          childAggregations: [
-            {
-              filter: {
-                filterValue: '69deaaf9-cdc2-439a-b684-4cffdc7f224e',
-                type: 'filter',
-                property: 'data.adjustments.scoreId'
-              },
-              childAggregations: [
-                {
-                  property: 'data.adjustments.adjustment',
-                  type: 'SUM'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          filter: {
-            filterValue: 'RLP - Communication materials',
-            property: 'name',
-            type: 'filter'
-          },
-          childAggregations: [
-            {
-              property: 'data.communicationMaterials.numberOfCommunicationMaterialsPublished',
-              type: 'SUM'
-            }
-          ]
-        },
-        {
-          filter: {
-            filterValue: 'Communication materials',
-            property: 'name',
-            type: 'filter'
-          },
-          childAggregations: [
-            {
-              property: 'data.communicationMaterials.numberOfCommunicationMaterialsPublished',
-              type: 'SUM'
-            }
-          ]
-        },
+
         {
           filter: {
             filterValue: 'NHT - Communication materials',
@@ -217,7 +169,7 @@ let scores = [
           },
           childAggregations: [
             {
-              property: 'data.totalMaterialsPublishedInvoiced',
+              property: 'data.totalMaterialsPublished',
               type: 'SUM'
             }
           ]
@@ -259,54 +211,6 @@ let scores = [
     description: '',
     configuration: {
       childAggregations: [
-        {
-          filter: {
-            filterValue: 'RLP - Output Report Adjustment',
-            type: 'filter',
-            property: 'name'
-          },
-          childAggregations: [
-            {
-              filter: {
-                filterValue: '06514e13-3aa4-4f3e-805a-16c7b67d3524',
-                type: 'filter',
-                property: 'data.adjustments.scoreId'
-              },
-              childAggregations: [
-                {
-                  property: 'data.adjustments.adjustment',
-                  type: 'SUM'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          filter: {
-            filterValue: 'RLP - Community engagement',
-            property: 'name',
-            type: 'filter'
-          },
-          childAggregations: [
-            {
-              property: 'data.events.numberOfEvents',
-              type: 'SUM'
-            }
-          ]
-        },
-        {
-          filter: {
-            filterValue: 'Community engagement',
-            property: 'name',
-            type: 'filter'
-          },
-          childAggregations: [
-            {
-              property: 'data.events.numberOfEvents',
-              type: 'SUM'
-            }
-          ]
-        },
         {
           filter: {
             filterValue: 'NHT - Community engagement',
@@ -928,7 +832,7 @@ let scores = [
           },
           childAggregations: [
             {
-              property: 'data.totalAreaPestAnimalsTreatedFollowUpInvoiced',
+              property: 'data.totalAreaPestAnimalsTreatedFollowUp',
               type: 'SUM'
             }
           ]
@@ -1562,7 +1466,7 @@ let scores = [
           },
           childAggregations: [
             {
-              property: 'data.totalAreaConservationAgreementsInvoiced',
+              property: 'data.totalAreaConservationAgreements',
               type: 'SUM'
             }
           ]
