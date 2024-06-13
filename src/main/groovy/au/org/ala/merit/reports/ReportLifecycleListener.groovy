@@ -3,7 +3,6 @@ package au.org.ala.merit.reports
 import au.org.ala.ecodata.forms.ActivityFormService
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
-
 /**
  * Responsible for obtaining report specific data to render into a report template.
  * Report config beans are looked up in the applicationContext by name based on the report type and the
@@ -11,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
  */
 @Slf4j
 class ReportLifecycleListener {
-
+    boolean deleteSiteOnReset = true
     @Autowired
     ActivityFormService activityFormService
 

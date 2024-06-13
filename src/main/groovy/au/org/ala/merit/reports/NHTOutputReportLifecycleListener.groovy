@@ -3,6 +3,7 @@ package au.org.ala.merit.reports
 import au.org.ala.merit.ActivityService
 import au.org.ala.merit.ProjectService
 import au.org.ala.merit.PublicationStatus
+import au.org.ala.merit.SiteService
 import groovy.util.logging.Slf4j
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
@@ -18,6 +19,8 @@ class NHTOutputReportLifecycleListener extends ReportLifecycleListener {
     ProjectService projectService
     @Autowired
     ActivityService activityService
+    @Autowired
+    SiteService siteService
 
     boolean containsEntityReferences() {
         true
@@ -93,8 +96,24 @@ class NHTOutputReportLifecycleListener extends ReportLifecycleListener {
         updateDataSetPublicationStatus(report, reportActivityIds, PublicationStatus.CANCELLED)
     }
     Map reportReset(Map report) {
+        deleteAssociatedSite(report)
         // This is dissociate all data set summaries from the report because of the empty array of data set ids.
         projectService.bulkUpdateDataSetSummaries(report.projectId, report.reportId, [], [:])
+    }
+
+    private boolean deleteAssociatedSite (Map report){
+        if (deleteSiteOnReset) {
+            Map activity = activityService.get(report.activityId)
+            if (activity?.siteId) {
+                Map resp = activityService.update(activity.activityId, [activityId:activity.activityId, siteId: null])
+                if (!resp.error) {
+                    siteService.delete(activity.siteId)
+                    return true
+                }
+            }
+        }
+
+        return false
     }
 
     private Map updateDataSetPublicationStatus(Map report, List reportActivityIds, String newStatus) {
