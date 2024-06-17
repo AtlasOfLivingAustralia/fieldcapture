@@ -8,7 +8,7 @@
         <div class="dashboard-section" style="padding:10px; margin-top:10px;">
             <h3 class="serviceTitle">${service.name}</h3>
             <g:each in="${service.scores}" var="score">
-                <fc:renderScore score="${score}"></fc:renderScore>
+                <fc:renderScore score="${score}" includeInvoiced="${includeInvoiced}"></fc:renderScore>
             </g:each>
 
         </div>

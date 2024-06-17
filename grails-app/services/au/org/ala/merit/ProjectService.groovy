@@ -1618,7 +1618,7 @@ class ProjectService  {
                     name:service.name,
                     id: service.id,
                     scores: service.scores?.collect { score ->
-                        new Score([scoreId: score.scoreId, label: score.label, isOutputTarget:score.isOutputTarget])
+                        new Score([scoreId: score.scoreId, label: score.label, isOutputTarget:score.isOutputTarget, relatedScores:score.relatedScores])
                     }
             ]
         }
@@ -1861,7 +1861,16 @@ class ProjectService  {
     Map getServiceDashboardData(String projectId, boolean approvedDataOnly) {
 
         List<Score> projectServices = getProjectServicesWithTargets(projectId)
-        List scoreIds = projectServices.collect{it.scores?.collect{score -> score.scoreId}}.flatten()
+        List scoreIds = projectServices.collect{it.scores?.collect{ score ->
+
+            if (score.relatedScores) {
+                return score.relatedScores.collect{it.scoreId} + score.scoreId
+            }
+            else {
+                return score.scoreId
+            }
+
+        }}.flatten()
 
         Map scoreSummary = projectSummary(projectId, approvedDataOnly, scoreIds)
 
@@ -1876,6 +1885,20 @@ class ProjectService  {
                     if (scoreData?.result) {
                         score.result = scoreData.result ?: [result:0]
                         deliveredAgainstTargets += score.result?.result ?: 0
+                    }
+                    if (score.relatedScores) {
+                        score.relatedScores.each { Map relatedScore ->
+
+                            Score relatedScoreData = scoreSummary.resp?.find{it.scoreId == relatedScore.scoreId}
+
+                            Score invoicedScore = new Score(
+                                    [scoreId:relatedScoreData.scoreId,
+                                     label:relatedScoreData.label,
+                                     target:score.target,
+                                     result:relatedScoreData.result ?: [result:0],
+                                     overDeliveryThreshold: 100])
+                            relatedScore.score = invoicedScore
+                        }
                     }
                     scores << score
                 }

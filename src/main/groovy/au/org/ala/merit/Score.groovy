@@ -21,6 +21,8 @@ class Score {
     /** If the score is tagged with "Survey" it is measuring something from a survey typed activity/service*/
     static String TAG_INDICATOR = "Indicator"
 
+    static String INVOICED_SCORE_DESCRIPTION = "Invoiced by"
+
 
     /** The id of the Score this target is based on */
     String scoreId
@@ -32,6 +34,7 @@ class Score {
     String category
     boolean isOutputTarget
 
+    int overDeliveryThreshold = OVER_DELIVERY_PERCENTAGE_THRESHOLD
     BigDecimal target
     Map result
     List<Map> periodTargets
@@ -71,8 +74,14 @@ class Score {
         if (target && singleResult()) {
             BigDecimal result = new BigDecimal(singleResult())
 
-            overDelivered = target * OVER_DELIVERY_PERCENTAGE_THRESHOLD / 100 <= result
+            overDelivered = target * overDeliveryThreshold / 100 <= result
         }
         overDelivered
+    }
+
+    List relatedScores
+
+    Score getInvoicedScore() {
+        relatedScores.find{it.description == INVOICED_SCORE_DESCRIPTION}?.score
     }
 }
