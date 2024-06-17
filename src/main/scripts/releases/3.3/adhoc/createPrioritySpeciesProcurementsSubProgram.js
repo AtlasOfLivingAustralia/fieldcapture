@@ -521,6 +521,129 @@ var config =
         "supportsMeriPlanHistory": true
     };
 
+var outcomes = [
+    {
+        "priorities": [
+            {
+                "category": "Priority Threatened Species Primary"
+            }
+        ],
+        "targeted": true,
+        "supportsMultiplePrioritiesAsPrimary": false,
+        "shortDescription": "Threatened Species Strategy",
+        "type": "primary",
+        "category": "environment",
+        "supportsMultiplePrioritiesAsSecondary": true,
+        "outcome": "1. Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
+    },
+    {
+        "priorities": [
+            {
+                "category": "Priority Threatened Species Primary"
+            }
+        ],
+        "targeted": true,
+        "shortDescription": "EPBC Species",
+        "category": "Threatened Species",
+        "type": "secondary",
+        "outcome": "1.  Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
+    },
+    {
+        "priorities": [
+            {
+                "category": "Priority Threatened Species Primary"
+            }
+        ],
+        "shortDescription": "New extinctions",
+        "category": "Threatened Species",
+        "type": "secondary",
+        "outcome": "1.  Species and Landscapes (Long term): Threatened Species (TS) - New extinctions of plants and animals are prevented"
+    },
+    {
+        "priorities": [
+            {
+                "category": "Threatened Ecological Communities"
+            }
+        ],
+        "shortDescription": "Threatened Ecological Communities",
+        "category": "Threatened Ecological Communities",
+        "type": "secondary",
+        "outcome": "1.  Species and Landscapes (Long term): Threatened Ecological Communities (TECs) and priority places - The condition of targeted EPBC Act listed Threatened Ecological Communities and identified priority places under the Threatened Species Action Plan 2022-2032 is improved"
+    },
+    {
+        "priorities": [
+            {
+                "category": "World Heritage Sites"
+            }
+        ],
+        "shortDescription": "World Heritage",
+        "category": "World Heritage Sites",
+        "type": "secondary",
+        "outcome": "2: World Heritage Protection (Long term): The outstanding universal value of world heritage properties listed for their natural heritage value is maintained and improved"
+    },
+    {
+        "priorities": [
+            {
+                "category": "Ramsar"
+            }
+        ],
+        "shortDescription": "Ramsar Sites",
+        "category": "Ramsar",
+        "type": "secondary",
+        "outcome": "3: Ramsar Wetland Protection (Long term): The ecological character of targeted Ramsar sites is maintained and/or improved, building resilience to climate change"
+    },
+    {
+        "type": "short",
+        "category": "Tracking species trajectories related outcome",
+        "outcome": "All nationally listed threatened plant species affected by Myrtle Rust are secured in insurance collections and populations"
+    },
+    {
+        "type": "short",
+        "category": "Tracking species trajectories related outcome",
+        "outcome": "At least 80 per cent of nationally listed threatened plant species are secured in insurance collections"
+    },
+    {
+        "type": "short",
+        "category": "Tracking species trajectories related outcome",
+        "outcome": "At least half the number of projects that benefit priority species and priority places receive private investment or support from partners"
+    },
+    {
+        "type": "short",
+        "category": "Tracking species trajectories related outcome",
+        "outcome": "Community groups lead or participate in recovery activities for all accessible priority species and places, including through citizen science"
+    },
+    {
+        "type": "short",
+        "category": "Tracking species trajectories related outcome",
+        "outcome": "Feral cats and foxes are managed across all important habitats for susceptible priority species using best practice methods"
+    },
+    {
+        "type": "short",
+        "category": "Tracking species trajectories related outcome",
+        "outcome": "Five new populations of appropriate species are added across the national safe haven network to improve representation of invasive predator-susceptible threatened species"
+    },
+    {
+        "type": "short",
+        "category": "Tracking species trajectories related outcome",
+        "outcome": "First Nations-led recovery activities for threatened species and ecological communities are increased"
+    },
+    {
+        "type": "short",
+        "category": "Tracking species trajectories related outcome",
+        "outcome": "Gamba Grass is reduced to an area less than its 2022 range"
+    },
+    {
+        "type": "short",
+        "category": "Tracking species trajectories related outcome",
+        "outcome": "Impacts of climate change on priority species and places are identified and actions are underway to strengthen resilience and adaptive capacity"
+    },
+    {
+        "type": "short",
+        "category": "Tracking species trajectories related outcome",
+        "outcome": "Species at high risk of imminent extinction are identified and supported to persist"
+    }
+];
+
 var priorities = [
     {
         "category": "Plants",
