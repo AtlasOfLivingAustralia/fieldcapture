@@ -4,7 +4,6 @@ import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import grails.core.GrailsApplication
 import org.apache.commons.lang.StringUtils
-import org.joda.time.DateTime
 
 import javax.servlet.http.Cookie
 import java.text.SimpleDateFormat
