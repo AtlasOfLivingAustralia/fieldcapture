@@ -1890,14 +1890,18 @@ class ProjectService  {
                         score.relatedScores.each { Map relatedScore ->
 
                             Score relatedScoreData = scoreSummary.resp?.find{it.scoreId == relatedScore.scoreId}
-
-                            Score invoicedScore = new Score(
-                                    [scoreId:relatedScoreData.scoreId,
-                                     label:relatedScoreData.label,
-                                     target:score.target,
-                                     result:relatedScoreData.result ?: [result:0],
-                                     overDeliveryThreshold: 100])
-                            relatedScore.score = invoicedScore
+                            if (relatedScoreData) {
+                                Score invoicedScore = new Score(
+                                        [scoreId:relatedScoreData.scoreId,
+                                         label:relatedScoreData.label,
+                                         target:score.target,
+                                         result:relatedScoreData.result ?: [result:0],
+                                         overDeliveryThreshold: 100])
+                                relatedScore.score = invoicedScore
+                            }
+                            else {
+                                log.warn("Could not find score data for related score ${relatedScore.scoreId}")
+                            }
                         }
                     }
                     scores << score
