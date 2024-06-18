@@ -399,6 +399,8 @@ var config = {
                 $.event.trigger({type:'dashboardShown'});
             }
         },
+        'serviceDelivery': {
+        },
         'documents': {
             initialiser: function() {
                 initialiseDocumentTable('#overviewDocumentList');
