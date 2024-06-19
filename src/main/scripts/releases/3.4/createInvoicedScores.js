@@ -1,3 +1,5 @@
+load('../../utils/audit.js');
+let adminUserId = '1493'
 let scores = [
   {
     scoreId: '9c3991c4-50d9-42cf-9b91-44a8f48690c8',
@@ -6616,13 +6618,22 @@ for (let i=0; i<scores.length; i+=2) {
 
   let savedInvoiced = db.score.findOne({scoreId: invoiced.scoreId});
   if (!savedInvoiced) {
+    audit(invoiced, invoiced.scoreId, 'au.org.ala.ecodata.Score', adminUserId, null, 'Insert');
     db.score.insertOne(invoiced);
   }
   else {
     savedInvoiced.configuration = invoiced.configuration;
     db.score.replaceOne({scoreId: invoiced.scoreId}, savedInvoiced);
+    audit(savedInvoiced, savedInvoiced.scoreId, 'au.org.ala.ecodata.Score', adminUserId, null, 'Update');
+
   }
 
+  //Audit the old score as there is a good chance it wasn't audited on insert unless updated manually
+  audit(delivered, delivered.scoreId, 'au.org.ala.ecodata.Score', adminUserId, null, 'Update');
   // Can't use scoreId/_id for delivered as the ids can be different between environments.
   db.score.updateOne({label: delivered.label}, {$set:{relatedScores:delivered.relatedScores, configuration:delivered.configuration}});
+
+  // Audit the updated score.
+  delivered = db.score.findOne({scoreId:delivered.scoreId});
+  audit(delivered, delivered.scoreId, 'au.org.ala.ecodata.Score', adminUserId, null, 'Update');
 }

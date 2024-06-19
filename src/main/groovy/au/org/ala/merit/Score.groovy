@@ -74,7 +74,7 @@ class Score {
         if (target && singleResult()) {
             BigDecimal result = new BigDecimal(singleResult())
 
-            overDelivered = target * overDeliveryThreshold / 100 <= result
+            overDelivered = target * overDeliveryThreshold / 100 < result
         }
         overDelivered
     }
