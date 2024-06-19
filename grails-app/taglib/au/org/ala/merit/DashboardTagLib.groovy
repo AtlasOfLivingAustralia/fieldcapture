@@ -121,7 +121,7 @@ class DashboardTagLib {
             out << "<div class=\"border px-2 \">"
             out << "<h4>${score.label}</h4>"
             renderProgressBar(score, target, "Delivered", "Target overdelivered", "overdelivered", "info", attrs)
-            renderProgressBar(score.invoicedScore, target, "Invoiced", "Amount invoiced exceed MERI plan target", "danger", "warning", attrs)
+            renderProgressBar(score.invoicedScore, target, "Invoiced", "Amount invoiced exceed MERI plan target", "danger", "success", attrs)
 
         }
         else {

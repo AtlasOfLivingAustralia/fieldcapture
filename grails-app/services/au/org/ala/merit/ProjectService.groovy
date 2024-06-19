@@ -1888,16 +1888,17 @@ class ProjectService  {
                     }
                     if (score.relatedScores) {
                         score.relatedScores.each { Map relatedScore ->
-
-                            Score relatedScoreData = scoreSummary.resp?.find{it.scoreId == relatedScore.scoreId}
-
                             Score invoicedScore = new Score(
-                                    [scoreId:relatedScoreData.scoreId,
-                                     label:relatedScoreData.label,
+                                    [scoreId:relatedScore.scoreId,
+                                     label:relatedScore.label,
                                      target:score.target,
-                                     result:relatedScoreData.result ?: [result:0],
                                      overDeliveryThreshold: 100])
                             relatedScore.score = invoicedScore
+
+                            Score relatedScoreData = scoreSummary.resp?.find{it.scoreId == relatedScore.scoreId}
+                            if (relatedScoreData) {
+                                invoicedScore.result = relatedScoreData.result ?: [result:0]
+                            }
                         }
                     }
                     scores << score

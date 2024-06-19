@@ -4,7 +4,7 @@ import spock.lang.Specification
 
 class ScoreSpec extends Specification {
 
-    def "A Score should be considered over-delivered if the result is 200% or more of the target"() {
+    def "A Score should be considered over-delivered if the result is > 200%  of the target"() {
 
         when:
         Score score = new Score()
@@ -13,6 +13,12 @@ class ScoreSpec extends Specification {
 
         then:
         score.hasTarget()
+        !score.isOverDelivered()
+
+        when:
+        score.result = [result:20.1]
+
+        then:
         score.isOverDelivered()
     }
 }
