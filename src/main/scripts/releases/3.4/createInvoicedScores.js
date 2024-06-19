@@ -1,5 +1,5 @@
 load('../../utils/audit.js');
-let adminUserId = '1493'
+let adminUserId = '<tbd>'
 let scores = [
   {
     scoreId: '9c3991c4-50d9-42cf-9b91-44a8f48690c8',
