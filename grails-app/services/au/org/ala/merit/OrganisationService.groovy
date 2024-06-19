@@ -255,6 +255,14 @@ class OrganisationService {
         return reportService.cancelReport(reportId, reportData.reportActivities, reason, reportData.organisation, reportData.members)
     }
 
+    def unCancelReport(String organisationId, Map reportDetails) {
+        Map reportData = setupReportLifeCycleChange(organisationId, reportDetails.reportId)
+
+        Map result = reportService.unCancelReport(reportDetails.reportId, reportDetails.activityIds, reportDetails.reason, reportData.organisation, reportData.members)
+
+        result
+    }
+
     /**
      * Performs the common setup required for a report lifecycle state change (e.g. submit/approve/return)
      * @param organisationId the ID of the program that owns the report
