@@ -29,7 +29,6 @@ class DashboardTagLib {
             }
         }
         catch (Exception e) {
-            e.printStackTrace()
             log.warn("Found non-numeric target or result for score: "+score.label)
         }
 
