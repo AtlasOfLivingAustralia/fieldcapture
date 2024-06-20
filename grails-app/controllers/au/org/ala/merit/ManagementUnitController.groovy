@@ -14,7 +14,7 @@ import org.apache.http.HttpStatus
  */
 class ManagementUnitController {
 
-    static allowedMethods = [regenerateManagementUnitReports: "POST", ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST", saveReport: "POST", ajaxSubmitReport: "POST", ajaxApproveReport: "POST", ajaxRejectReport: "POST"]
+    static allowedMethods = [regenerateManagementUnitReports: "POST", ajaxDelete: "POST", delete: "POST", ajaxUpdate: "POST", saveReport: "POST", ajaxSubmitReport: "POST", ajaxApproveReport: "POST", ajaxRejectReport: "POST", ajaxCancelReport: "POST", ajaxUnCancelReport: "POST"]
 
     def managementUnitService, programService, documentService, userService, roleService, commonService, webService, siteService
 
@@ -386,6 +386,27 @@ class ManagementUnitController {
                 model: model
         ]
         render response as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'siteAdmin')
+    def ajaxCancelReport(String id) {
+
+        def reportDetails = request.JSON
+
+        def result = managementUnitService.cancelReport(id, reportDetails.reportId, reportDetails.reason)
+
+        render result as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'siteAdmin')
+    def ajaxUnCancelReport(String id) {
+
+        def reportDetails = request.JSON
+
+        def result = managementUnitService.unCancelReport(id, reportDetails)
+
+        render result as JSON
+
     }
 
 
