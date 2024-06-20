@@ -662,6 +662,17 @@ class OrganisationController {
         render result as JSON
     }
 
+    @PreAuthorise(accessLevel = 'siteAdmin')
+    def ajaxUnCancelReport(String id) {
+
+        def reportDetails = request.JSON
+
+        def result = organisationService.unCancelReport(id, reportDetails)
+
+        render result as JSON
+
+    }
+
     @PreAuthorise(accessLevel = 'caseManager')
     def regenerateOrganisationReports(String id) {
         Map resp
