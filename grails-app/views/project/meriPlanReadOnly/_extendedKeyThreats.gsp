@@ -21,7 +21,7 @@
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
         <td class="related-outcomes">
-            <span data-bind="text:relatedOutcomes"></span>
+            <span data-bind="arrayAsCommaSeparatedText:relatedOutcomes"></span>
         </td>
         <td class="threat-code">
             <span data-bind="text:threatCode"></span>
