@@ -215,6 +215,14 @@ function MERIPlan(project, projectService, config) {
         window.open(url,'meri-plan-report');
     };
 
+    /** If a project is active (as opposed to completed or terminated) it means the MERI plan has been
+     * approved at least once.  If the plan is currently approved there is no point comparing to itself.
+     * @returns {*|boolean}
+     */
+    self.canCompareWithLatestApprovedPlan = function() {
+        return projectService.isActive() && !projectService.isApproved();
+    }
+
     self.meriPlanChanges = function() {
         var url = config.meriPlanChangesUrl;
         window.open(url,'meri-planchanges-report');

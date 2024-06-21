@@ -487,22 +487,22 @@ input#changeProjectStartDate {
 }
 
 .meri-plan .extended-threats .threat-code {
-    width:15%;
+    width:10%;
 }
 .meri-plan .extended-threats .threat {
     width:20%;
 }
 .meri-plan .extended-threats .services {
-    width:20%;
+    width:22%;
 }
 .meri-plan .extended-threats .intervention {
-    width:20%;
+    width:28%;
 }
 .meri-plan .extended-threats .evidence {
-    width:20%;
+    width:15%;
 }
 .meri-plan .extended-threats .related-outcomes {
-    width:10%;
+    width:5%;
 }
 
 .meri-plan .select2-selection {

@@ -117,7 +117,7 @@ class DashboardTagLib {
      */
     private void renderTarget(score, double target, attrs) {
 
-        if (attrs.includeInvoiced && score.getInvoicedScore()) {
+        if (attrs.includeInvoiced && score.invoicedScore) {
             out << "<div class=\"border px-2 \">"
             out << "<h4>${score.label}</h4>"
             renderProgressBar(score, target, "Delivered", "Target overdelivered", "overdelivered", "info", attrs)
@@ -131,7 +131,7 @@ class DashboardTagLib {
         out << "</div>"
     }
 
-    private void renderProgressBar(Score score, double target, String label, String overDeliveredLabel, String overDeliveredClass, String progressClass, attrs) {
+    private void renderProgressBar(score, double target, String label, String overDeliveredLabel, String overDeliveredClass, String progressClass, attrs) {
 
         out << "<strong class='helpText'>${label}${helpText(score, attrs)}</strong>"
         def result = score.result?.result ?: 0
