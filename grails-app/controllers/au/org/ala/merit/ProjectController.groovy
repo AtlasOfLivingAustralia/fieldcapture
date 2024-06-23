@@ -1205,13 +1205,13 @@ class ProjectController {
             Map scoreResult = financialYearData.find{it.scoreId == scoreId}
             def data = scoreResult?.result
 
-            if (data?.result) {
+            if (data?.result != null) {
                 data = data.result
                 if (data instanceof List) {
                     data = data.flatten() // Collate a List of tables from each report into a flat List for display
                 }
             }
-            else if (data?.groups) {
+            else if (data?.groups != null) {
                 data = data.groups
                 data.each { Map group ->
                     group.result = group.results?[0]?.result
