@@ -1,7 +1,12 @@
+var currentPath = pwd(),
+    devPath = true,
+    srcPath = devPath ? currentPath + "src/main/scripts/utils/" : currentPath
+
 load("../../../utils/uuid.js");
-load("../../../utils/audit.js");
+load( "../../../utils/audit.js");
 function addService (newServiceName, legacyId,  serviceFormName, sectionName, outputs, userId) {
     var eventType;
+    legacyId = NumberInt(legacyId);
     if (!outputs) {
         outputs = [
             {
