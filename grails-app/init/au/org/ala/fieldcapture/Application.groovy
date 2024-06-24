@@ -33,7 +33,6 @@ class Application extends GrailsAutoConfiguration {
 
         return {
             log.info("doWithSpring....")
-            sessionLogger(new ServletListenerRegistrationBean(new SessionLogger()))
         }
     }
 
