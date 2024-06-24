@@ -5,12 +5,12 @@
       "class": "au.org.ala.ecodata.FormSection",
       "id": null,
       "collapsedByDefault": false,
-      "modelName": "RCS  annual report",
-      "name": "RCS  annual report",
+      "modelName": "RLP - Core services annual report",
+      "name": "RLP - Core services annual report",
       "optional": false,
       "optionalQuestionText": null,
       "template": {
-        "modelName": "RCS  annual report",
+        "modelName": "RLP - Core services annual report",
         "dataModel": [
           {
             "dataType": "text",
@@ -410,8 +410,14 @@
               }
             ]
           },
-
-
+          {
+            "dataType": "number",
+            "name": "totalProjectDesignRequested"
+          },
+          {
+            "dataType": "number",
+            "name": "totalWorkOrderExecuted"
+          },
           {
             "dataType": "list",
             "name": "projectContractsTable",
@@ -995,9 +1001,10 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "Q14(a). Your organisation has reported that it received <<Tallied up responses from Q12 in the preceding 4 quarterly RCS reports (Whole positive integer only)>> Requests for Project Design from Customers other than DCCEEW and DAFF (RCS 9.1(c)(i)). Is this correct?",
-                "source": "talliedProjectDesignRequestsQ12",
-                "type": "selectOne"
+                "preLabel": "Q14(a). Your organisation has reported that it received below Total Requests for Project Design from Customers other than DCCEEW and DAFF (RCS 9.1(c)(i)).",
+                "source": "totalProjectDesignRequested",
+                "type": "number",
+                "readonly": true
               }
             ]
           },
@@ -1005,7 +1012,18 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "Q14(a)(i). Please enter the correct number of Requests for Project Design received from Customers other than DCCEEW and DAFF.",
+                "preLabel": "Q14(a)(i). Is the total above correct?",
+                "source": "talliedProjectDesignRequestsQ12",
+                "type": "selectOne"
+              }
+            ]
+          },
+
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q14(a)(ii). Please enter the correct number of Requests for Project Design received from Customers other than DCCEEW and DAFF.",
                 "source": "correctProjectDesignRequestsQ12",
                 "type": "number"
               }
@@ -1015,7 +1033,18 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "Q14(b). Your organisation has reported that it executed <<Tallied up responses from Q13 in the preceding 4 quarterly RCS reports (Whole positive integer only)>> Work Orders with Customers other than DCCEEW and DAFF (RCS 9.1(c)(ii)). Is this correct?",
+                "preLabel": "Q14(b). Your organisation has reported that it executed below Total Work Orders with Customers other than DCCEEW and DAFF (RCS 9.1(c)(ii)).",
+                "source": "totalWorkOrderExecuted",
+                "type": "number",
+                "readonly": true
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q14(b)(i). Is the total above correct?",
                 "source": "talliedProjectDesignRequestsQ13",
                 "type": "selectOne"
               }
@@ -1025,7 +1054,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "Q14(b)(i). Please enter the correct number of Requests for Project Design received from Customers other than DCCEEW and DAFF.",
+                "preLabel": "Q14(b)(ii). Please enter the correct number of Requests for Project Design received from Customers other than DCCEEW and DAFF.",
                 "source": "correctProjectDesignRequestsQ13",
                 "type": "number"
               }
@@ -1102,12 +1131,54 @@
         ],
         "pre-populate": [
           {
+            "mapping": [
+              {
+                "source-path": "9ae784ec-c50e-4c45-a88e-d9317aaac2ed",
+                "target": "totalProjectDesignRequested"
+              },
+              {
+                "source-path": "2f771f77-a6c3-4b86-8a2a-929254f5c5f3",
+                "target": "totalWorkOrderExecuted"
+              }
+            ],
+            "merge": {
+              "totalProjectDesignRequested": {
+                "replaceExisting": true
+              },
+              "totalWorkOrderExecuted": {
+                "replaceExisting": true
+              }
+            },
+            "source": {
+              "params": [
+                {
+                  "expression": "owner.organisationId",
+                  "name": "id",
+                  "type": "computed"
+                },
+                {
+                  "expression": "reportId",
+                  "name": "reportId",
+                  "type": "computed"
+                },
+                {
+                  "name": "scoreIds",
+                  "value": [
+                    "9ae784ec-c50e-4c45-a88e-d9317aaac2ed",
+                    "2f771f77-a6c3-4b86-8a2a-929254f5c5f3"
+                  ]
+                }
+              ],
+              "url": "/organisation/scoresForOrgReport/"
+            }
+          },
+          {
             "source": {
               "type": "literal",
               "literal": {
                 "coreServicesPlansTable": [
                   {
-                    "coreServicesPlans": "Community Participation Plan"
+                    "coreServicesPlans": "Community Participation Plan xX"
                   },
                   {
                     "coreServicesPlans": "Indigenous Participation Plan"
@@ -1142,7 +1213,7 @@
           }
         ]
       },
-      "templateName": "rcsAnnualReport ",
+      "templateName": "regionalCapacityServicesAnnualReport ",
       "title": null
     }
   ],
@@ -1151,4 +1222,3 @@
   "supportsSites": false,
   "type": "Report"
 }
-
