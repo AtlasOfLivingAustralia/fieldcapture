@@ -9,8 +9,11 @@ var newOutputs = [
     {formName: "Procurement Output Report", sectionName: sectionName}
 ];
 // RDP panel procurements are excluded
-var excludedPrograms = ["Priority Places - Procurements", "Priority Species - Procurements - RDP"]
-
+var excludedPrograms = []
+db.program.find({'config.programServiceConfig.serviceFormName': {"$ne": 'NHT Output Report'}})
+    .forEach(function (program) {
+        excludedPrograms.push(program.name)
+    });
 // find "Developing farm/project/site management plan" service
 var service = db.service.findOne({name: serviceName})
 if (!service) {
