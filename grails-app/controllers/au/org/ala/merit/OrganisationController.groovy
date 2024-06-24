@@ -697,4 +697,14 @@ class OrganisationController {
         }
 
     }
+
+    @PreAuthorise
+    def scoresForOrgReport(String id) {
+        List scoreIds = params.getList('scoreIds')
+        String reportId = params.get('reportId')
+
+        Map result = organisationService.scoresForOrganisationReport(id, reportId, scoreIds)
+
+        render result as JSON
+    }
 }
