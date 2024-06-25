@@ -541,7 +541,7 @@ class OrganisationController {
         }
 
         if (cmd.report.type ==  ReportService.PERFORMANCE_MANAGEMENT_REPORT) {
-            viewOrEditOrganisationReport(cmd.report, true)
+            viewOrEditOrganisationReport(cmd.model, true)
         }
         else {
             cmd.processEdit(this)

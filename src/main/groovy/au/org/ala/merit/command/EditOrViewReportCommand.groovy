@@ -38,7 +38,7 @@ abstract class EditOrViewReportCommand implements Validateable {
             model.returnTo = linkGenerator.link(controller:entityType, action:'index', id: id)
             model.contextViewUrl = model.returnTo
             model.saveReportUrl = linkGenerator.link(controller:entityType, action:'saveReport', id:id)
-            model.documentOwner = [activityId:model.activity.activityId, reportId:reportId]
+            model.documentOwner = [activityId:model.activity?.activityId, reportId:reportId]
             model.documentOwner[getEntityIdField()] = id
         }
     }
