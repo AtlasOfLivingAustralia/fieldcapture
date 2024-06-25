@@ -10,7 +10,7 @@ var newOutputs = [
 ];
 // RDP panel procurements are excluded
 var excludedPrograms = []
-db.program.find({'config.programServiceConfig.serviceFormName': {"$ne": 'NHT Output Report'}})
+db.program.find({'config.programServiceConfig.serviceFormName': {"$eq": 'NHT Output Report'}})
     .forEach(function (program) {
         excludedPrograms.push(program.name)
     });
