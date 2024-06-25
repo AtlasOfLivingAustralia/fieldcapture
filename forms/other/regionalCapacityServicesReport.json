@@ -222,7 +222,7 @@
               {
                 "name": "workshopDate",
                 "dataType": "date",
-                "validate": "required",
+                "validate": "required,past[now]",
                 "behaviour": [
                   {
                     "type": "enable_and_clear",
