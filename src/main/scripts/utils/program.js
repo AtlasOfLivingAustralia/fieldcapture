@@ -98,3 +98,38 @@ function useNhtServiceLabels(programName, programNameToCopy) {
         db.service.replaceOne({_id: service._id}, service);
     }
 }
+
+/**
+ * Updates the program service configuration for the given program with service id and score ids.
+ * This method ensures duplicates are not created.
+ * @param program
+ * @param legacyId
+ * @param scoreIds
+ */
+function updateProgramServiceConfig(program, legacyId, scoreIds){
+    if (!program || !program.config) {
+        print("Program not found ");
+        return;
+    }
+
+    program.config.programServiceConfig = program.config.programServiceConfig || {};
+    program.config.programServiceConfig.programServices = program.config.programServiceConfig.programServices || [];
+
+    var service = program.config.programServiceConfig.programServices.find(function (service) {
+        return service.serviceId === legacyId;
+    });
+
+    if (!service) {
+        service = {serviceId: legacyId, serviceTargets: scoreIds};
+        program.config.programServiceConfig.programServices.push(service);
+    }
+    else {
+        scoreIds.forEach(function (scoreId) {
+            service.serviceTargets = service.serviceTargets || [];
+            if (service.serviceTargets.indexOf(scoreId) === -1)
+                service.serviceTargets.push(scoreId);
+        });
+    }
+
+    return program;
+}
