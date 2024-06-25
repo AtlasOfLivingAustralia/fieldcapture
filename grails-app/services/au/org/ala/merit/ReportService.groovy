@@ -1065,4 +1065,18 @@ class ReportService {
         }
         reportData
     }
+
+    Map dateHistogramOrgsForScores(String organisationId, List dateBuckets, String format, List scoreIds) {
+
+        Map dateGrouping = [type:'date', buckets:dateBuckets, format:format, property:'activity.plannedEndDate']
+
+        String url =  grailsApplication.config.getProperty('ecodata.baseUrl')+"organisation/organisationMetrics/"+organisationId
+
+        Map params = [aggregationConfig: dateGrouping, approvedOnly:false, scoreIds: scoreIds]
+
+        Map report = webService.doPost(url, params)
+
+        return report
+    }
+
 }
