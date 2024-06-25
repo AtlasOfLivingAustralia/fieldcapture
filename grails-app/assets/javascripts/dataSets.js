@@ -134,6 +134,12 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.projectProtocols = config.projectProtocols;
 
     self.protocol = ko.observable(dataSet.protocol);
+    self.protocolLabel = ko.computed(function() {
+        var protocolLabelAndValue = _.find(self.projectProtocols || [], function(protocol) {
+            return protocol.value == self.protocol();
+        });
+        return protocolLabelAndValue ? protocolLabelAndValue.label : '';
+    })
     self.projectOutcomeList = ko.observableArray(options.projectOutcomes);
     self.serviceId = ko.computed(function() {
         var selectedOutcome = _.find(options.projectOutcomes || [], function(serviceAndOutcome) {
@@ -258,7 +264,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
                     'grantId', 'projectName', 'programName', 'validate', 'save', 'cancel',
                         'investmentOtherSelected', 'siteUrl', 'isAutoCreated', 'serviceAndOutcomes',
                         'projectOutcomeList', 'projectBaselines', 'projectProtocols', 'disableBaseline',
-                        'disableIndicator']});
+                        'disableIndicator', 'protocolLabel']});
             projectService.saveDataSet(dataSet).done(function() {
                 // return to project
                 window.location.href = config.returnToUrl;
