@@ -85,7 +85,7 @@
     <div class="form-group row">
         <label class="col-sm-5 col-form-label required">9a. What EMSA protocol was used when collecting the data?</label>
         <div class="col-sm-7">
-            <span data-bind="text:protocol"></span>
+            <span data-bind="text:protocolLabel"></span>
         </div>
     </div>
     <div class="form-group row">
