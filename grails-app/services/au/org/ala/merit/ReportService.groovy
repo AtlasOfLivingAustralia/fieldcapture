@@ -1072,7 +1072,7 @@ class ReportService {
 
         String url =  grailsApplication.config.getProperty('ecodata.baseUrl')+"organisation/organisationMetrics/"+organisationId
 
-        Map params = [aggregationConfig: dateGrouping, approvedOnly:false, scoreIds: scoreIds, includeTargets:false]
+        Map params = [aggregationConfig: dateGrouping, approvedOnly:false, scoreIds: scoreIds]
 
         Map report = webService.doPost(url, params)
 
