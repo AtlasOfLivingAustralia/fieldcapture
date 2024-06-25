@@ -121,7 +121,10 @@ class SaveReportDataCommand implements Validateable {
             }
             // Setting the activityId in the payload is necessary for ecodata to update the activity as well as outputs.
             activity.activityId = activityId
-            activity.organisationId = report?.organisationId
+
+            if (report.organisationId) {
+                activity.organisationId = report.organisationId
+            }
 
             result = activityService.update(activityId, activity)
 
