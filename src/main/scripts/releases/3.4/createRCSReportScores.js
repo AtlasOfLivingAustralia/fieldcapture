@@ -13,18 +13,21 @@ let scores = [
         label: 'Total project design requested',
         description: 'An aggregate of the values reported in the RCS quarterly question number 11',
         configuration: {
-            filter: {
-                filterValue: 'Regional capacity services - reporting',
-                type: 'filter',
-                property: 'name'
-            },
             childAggregations: [
                 {
                     filter: {
-                        type: 'SUM',
-                        property: 'data.projectDesignRequested'
-                    }
-                }]
+                        filterValue: "Regional capacity services - reporting",
+                        property: "name",
+                        type: "filter"
+                    },
+                    childAggregations: [
+                        {
+                            property: "data.projectDesignRequested",
+                            type: "SUM"
+                        }
+                    ]
+                }
+            ]
         }
     },
 
@@ -41,18 +44,21 @@ let scores = [
         label: 'Total work order executed',
         description: 'An aggregate of the values reported in the RCS quarterly question number 12',
         configuration: {
-            filter: {
-                filterValue: 'Regional capacity services - reporting',
-                type: 'filter',
-                property: 'name'
-            },
             childAggregations: [
                 {
                     filter: {
-                        type: 'SUM',
-                        property: 'data.workOrderExecuted'
-                    }
-                }]
+                        filterValue: "Regional capacity services - reporting",
+                        property: "name",
+                        type: "filter"
+                    },
+                    childAggregations: [
+                        {
+                            property: "data.workOrderExecuted",
+                            type: "SUM"
+                        }
+                    ]
+                }
+            ]
         }
     }
 ];

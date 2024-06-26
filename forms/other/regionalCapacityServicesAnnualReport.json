@@ -3,13 +3,13 @@
   "type": "Report",
   "sections": [
     {
-      "name": "Regional capacity services - reporting",
+      "name": "Regional capacity services - annual reporting",
       "optionalQuestionText": null,
       "optional": false,
       "collapsedByDefault": false,
       "templateName": "regionalCapacityServicesReport",
       "template": {
-        "modelName": "Regional capacity services - reporting",
+        "modelName": "Regional capacity services - annual reporting",
         "dataModel": [
           {
             "dataType": "text",
@@ -473,7 +473,7 @@
           }
         ],
         "name": "Regional Capacity Services Annual Report",
-        "title": "Regional Capacity Services – Reporting",
+        "title": "Regional Capacity Services Annual Report",
         "viewModel": [
           {
             "type": "row",
