@@ -386,6 +386,9 @@ var PidLocation = function (l) {
                     url: fcConfig.featuresService + '?layerId=' +self.chosenLayer(),
                     dataType:'json'
                 }).done(function(data) {
+                    data = _.sortBy(data, function(item) {
+                        return item && item.name;
+                    });
                     self.layerObjects(data);
                     // During initialisation of the object list, any existing value for the chosen layer will have
                     // been set to undefined because it can't match a value in the list.
@@ -415,7 +418,7 @@ var PidLocation = function (l) {
     if (l.fid == USER_UPLOAD_FID) {
         self.layers().push({id:USER_UPLOAD_FID, name:'User Uploaded'});
     }
-    else if ($.inArray(l.fid,OLD_NRM_LAYER_FIDS)) {
+    else if (_.contains(OLD_NRM_LAYER_FIDS, l.fid)) {
         self.layers().push({id: l.fid, name:'NRM Regions - pre 2023'});
     }
 
