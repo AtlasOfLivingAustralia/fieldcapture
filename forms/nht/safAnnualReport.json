@@ -62,6 +62,7 @@
             "name": "communicationsDuringPeriod",
             "dataType": "list",
             "allowRowDelete": false,
+            "defaultRows": [],
             "columns": [
               {
                 "dataType": "text",
@@ -81,6 +82,7 @@
           {
             "name": "engagementsByType",
             "dataType": "list",
+            "defaultRows": [],
             "columns": [
               {
                 "dataType": "text",
@@ -143,6 +145,7 @@
             "name": "projectPlans",
             "dataType": "list",
             "allowRowDelete": false,
+            "defaultRows": [],
             "columns": [
               {
                 "dataType": "text",
@@ -168,6 +171,7 @@
             "name": "planningMeetings",
             "dataType": "list",
             "allowRowDelete": false,
+            "defaultRows": [],
             "columns": [
               {
                 "name": "meetingDateFrom",

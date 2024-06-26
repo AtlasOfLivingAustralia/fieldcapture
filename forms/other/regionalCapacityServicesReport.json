@@ -295,13 +295,12 @@
           {
             "dataType": "number",
             "name": "projectDesignRequested",
-            "validate": "required,min[0]",
-            "decimalPlaces": 0
+            "validate": "integer"
           },
           {
             "dataType": "number",
             "name": "workOrderExecuted",
-            "validate": "required,min[0]"
+            "validate": "integer"
           }
         ],
         "modelName": "Regional capacity services - reporting",
