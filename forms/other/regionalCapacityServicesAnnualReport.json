@@ -1,5 +1,5 @@
 {
-  "name": "Regional Capacity Services Report",
+  "name": "Regional Capacity Services Annual Report",
   "type": "Report",
   "sections": [
     {
@@ -9,175 +9,270 @@
       "collapsedByDefault": false,
       "templateName": "regionalCapacityServicesReport",
       "template": {
+        "modelName": "Regional capacity services - reporting",
         "dataModel": [
           {
-            "name": "governanceAndFinancialFrameworksOnTrack",
             "dataType": "text",
-            "validate": "required",
+            "name": "coreServicesProgress",
+            "validate": "required,maxSize[2500]"
+          },
+          {
+            "dataType": "text",
+            "name": "coreServicesIssues",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "governanceFinancialManagementQ3a",
+            "description": "If no actions were undertaken, insert ‘No actions have been undertaken.",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "governanceFinancialManagementQ3b",
             "constraints": [
               "Yes",
               "No"
-            ]
+            ],
+            "validate": "required"
           },
           {
-            "name": "governanceAndFinancialFrameworksActions",
+            "name": "noGovernanceFinancialManagementQ3b",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
             "behaviour": [
               {
-                "condition": "governanceAndFinancialFrameworksOnTrack == \"No\"",
-                "type": "enable_and_clear"
+                "condition": "governanceFinancialManagementQ3b == \"No\"",
+                "type": "visible"
               }
             ]
           },
           {
-            "name": "whsUndergoneReview",
-            "description": "An RDP must ensure its WHS Plan is up to date and conduct regular reviews to ensure its continuing suitability, adequacy, and effectiveness. Triggers to warrant a review include:<ul><li>In the event of a new Contract or significant change to these scope of an existing Contract</li><li>Change in Executive Staff</li><li>Changes in Legislation</li><li>As a result of an incident or event</li><li>As a result of an internal or external audit or assurance activity.</li></ul>",
             "dataType": "text",
-            "validate": "required",
+            "name": "governanceFinancialManagementQ3c",
+            "description": "Examples of application processes may include EOIs, tenders, grant applications, etc,. Examples of financial arrangements may include landholder agreements, direct procurements, grant agreements, etc., where a third party has been engaged to deliver Regional Capacity Services or Project Services.",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "governanceFinancialManagementQ3d",
             "constraints": [
               "Yes",
               "No"
-            ]
+            ],
+            "validate": "required"
           },
           {
-            "name": "whsChangesDescription",
             "dataType": "text",
-            "validate": "required,maxSize[5000]",
+            "name": "governanceFinancialManagementQ3e",
+            "description": "The Subcontractor register should include subcontractor name, ABN (where it exists), description of the subcontracting agreement, start and finish dates, value of the subcontract, and whether the subcontractor is an Indigenous owned and/or operated organisation.",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "name": "noGovernanceFinancialManagementQ3e",
+            "dataType": "text",
             "behaviour": [
               {
-                "condition": "whsUndergoneReview == \"Yes\"",
-                "type": "enable_and_clear"
+                "condition": "governanceFinancialManagementQ3e == \"No\"",
+                "type": "visible"
               }
             ]
           },
           {
-            "name": "whsRevisedSubmitted",
+            "dataType": "text",
+            "name": "riskManagementDocumentedImplemented",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "name": "noRiskManagementDocumentedImplemented",
+            "dataType": "text",
+            "behaviour": [
+              {
+                "condition": "riskManagementDocumentedImplemented == \"No\"",
+                "type": "visible"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "workHealthSafetyReportedQ5a",
+            "description" : "Refer to Deed of Standing Offer clause 42.3(b) ‘Notifying the Customer’ for the list of WHS notification requirements.",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "name": "noWorkHealthSafetyReportedQ5a",
+            "dataType": "text",
+            "behaviour": [
+              {
+                "condition": "workHealthSafetyReportedQ5a == \"No\"",
+                "type": "visible"
+              }
+            ]
+          },
+          {
+            "name": "yesWorkHealthSafetyReportedQ5a",
+            "dataType": "text",
+            "validate": "required,maxSize[1250]",
+            "behaviour": [
+              {
+                "condition": "workHealthSafetyReportedQ5a == \"Yes\"",
+                "type": "visible"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "workHealthSafetyReportedQ5b",
+            "description" : "the RDP must ensure its WHS Plan is up to date and regularly review its WHS plan to ensure its continuing suitability, adequacy, and effectiveness (Clause 42.5 of the Deed; RCS 8.4; RCS 9.2(d)). Triggers to warrant a review may include:<br><ul><li>In the event of a new contract or a significant change to the scope of an existing contract</li><li>On the third anniversary of the Deed Commencement Date</li><li>Change in Executive Staff</li><li>Changes in Legislation</li><li>As a result of an incident or event</li><li>As a result of an internal or external audit or assurance activity.</li></ul>",
+            "constraints": [
+              "Yes (Reviewed only)",
+              "Yes (Reviewed and Updated)",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "name": "yesWorkHealthSafetyReportedQ5b",
+            "dataType": "text",
+            "validate": "required,maxSize[1250]",
+            "behaviour": [
+              {
+                "condition": "workHealthSafetyReportedQ5b == \"Yes (Reviewed only)\" or workHealthSafetyReportedQ5b == \"Yes (Reviewed and Updated)\"",
+                "type": "visible"
+              }
+            ]
+          },
+          {
+            "name": "noWorkHealthSafetyReportedQ5b",
             "dataType": "text",
             "validate": "required",
+            "description": "At a minimum, the Plan must be reviewed for each new Contract, in the event of a significant change to the scope of a Contract, and on the third anniversary of the Deed Commencement Date.",
             "constraints": [
               "Yes",
               "No"
             ],
             "behaviour": [
               {
-                "condition": "whsUndergoneReview == \"Yes\"",
-                "type": "enable_and_clear"
-              }
-            ]
-          },
-          {
-            "name": "whsRevisedPlan",
-            "dataType": "text",
-            "behaviour": [
-              {
-                "condition": "whsRevisedSubmitted == \"No\"",
+                "condition": "workHealthSafetyReportedQ5b == \"No\"",
                 "type": "visible"
               }
             ]
           },
           {
-            "name": "whsIncidentsOccured",
-            "description": "Refer to Deed of Standing Offer (Clause 42 Work Health and Safety) for further information on these requirements.",
+            "name": "noWorkHealthSafetyReportedQ5bii",
             "dataType": "text",
-            "validate": "required",
-            "constraints": [
-              "Yes",
-              "No"
+            "behaviour": [
+              {
+                "condition": "noWorkHealthSafetyReportedQ5b == \"No\"",
+                "type": "visible"
+              }
             ]
           },
           {
-            "name": "whsIncidentReported",
+            "dataType": "text",
+            "name": "nrmQ6a",
+            "validate": "required,maxSize[2500]",
+            "description": "Note that publicly communicating an annual update on natural resource management trends in the Management Unit(s) (including against the 5-year Outcomes and related Community knowledge, attitudes, and behaviours), is identified as a requirement in RCS 3.4(c)(vi)."
+          },
+          {
+            "name": "nrmQ6b",
             "dataType": "text",
             "validate": "required",
+            "description": "A new or revised Plan is required with 48 months of Deed commencement.",
+            "constraints": [
+              "New NRM Plan",
+              "Revised NRM Plan",
+              "Not due",
+              "Not required"
+            ]
+          },
+
+          {
+            "dataType": "list",
+            "name": "coreServicesPlansTable",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "name": "coreServicesPlans",
+                "dataType": "text"
+              },
+              {
+                "name": "coreServicesPlanLastReviewed",
+                "dataType": "date",
+                "validate": "required"
+              },
+              {
+                "name": "coreServicesPlanStatus",
+                "dataType": "text",
+                "validate": "required",
+                "constraints": [
+                  "On track",
+                  "Not on track"
+                ]
+              },
+              {
+                "name": "coreServicesPlanStatusNotOnTrack",
+                "dataType": "text",
+                "validate": "required,maxSize[1250]",
+                "behaviour": [
+                  {
+                    "condition": "coreServicesPlanStatus == \"Not on track\"",
+                    "type": "enable"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "anyContactDetailsChanges",
             "constraints": [
               "Yes",
               "No"
             ],
-            "behaviour": [
-              {
-                "condition": "whsIncidentsOccured == \"Yes\"",
-                "type": "enable_and_clear"
-              }
-            ]
-          },
-          {
-            "name": "whsIncidentNotReported",
-            "dataType": "text",
-            "behaviour": [
-              {
-                "condition": "whsIncidentReported == \"No\"",
-                "type": "visible"
-              }
-            ]
-          },
-          {
-            "name": "deedOfStandingOfferActions",
-            "description": "This Schedule relates to additional conditions that apply to your organisation’s Indigenous Participation Plan. If your organisation’s Deed of Standing Offer does not include a Schedule 10, enter ‘Not applicable’.",
-            "dataType": "text",
-            "validate": "required,maxSize[5000]"
-          },
-          {
-            "name": "indigenousTargetMeasuresOnTrack",
-            "dataType": "text",
-            "validate": "required",
-            "constraints": [
-              "Yes",
-              "No"
-            ]
-          },
-          {
-            "name": "indigenousTargetMeasuresNotOnTrack",
-            "dataType": "text",
-            "validate": "required,maxSize[5000]",
-            "behaviour": [
-              {
-                "condition": "indigenousTargetMeasuresOnTrack == \"No\"",
-                "type": "enable_and_clear"
-              }
-            ]
+            "validate": "required"
           },
           {
             "dataType": "boolean",
-            "name": "reportedToIpprs",
-            "description": ""
-          },
-          {
-            "dataType": "document",
-            "name": "ipprsReport",
-            "description": ""
-          },
-          {
-            "name": "staffDevelopmentOpportunities",
-            "description": "This includes on-the-job, informal, and formal training. If no activities were undertaken, enter ‘Nil’.",
-            "dataType": "text",
-            "validate": "required,maxSize[5000]"
-          },
-          {
-            "name": "communityTargetMeasuresOnTrack",
-            "dataType": "text",
-            "description": "If the plan is in development select ‘No’ and explain when the plan will be completed.",
+            "name": "yesContactDetailsChanges",
             "validate": "required",
             "constraints": [
               "Yes",
               "No"
-            ]
-          },
-          {
-            "name": "communityTargetMeasuresNotOnTrack",
-            "dataType": "text",
-            "validate": "required,maxSize[5000]",
+            ],
             "behaviour": [
               {
-                "condition": "communityTargetMeasuresOnTrack == \"No\"",
-                "type": "enable_and_clear"
+                "condition": "anyContactDetailsChanges == \"Yes\"",
+                "type": "visible"
               }
             ]
           },
           {
-            "name": "communityConductWorkshops",
             "dataType": "text",
-            "description": "This question relates only to RCS 2.3. It does not include engagement activities covered by Project Support and Overhead Services.",
+            "name": "communityIndigenousParticipation",
+            "description": "Do not include activities reported under Projects and Project Support and Overheads.",
+            "validate": "required,maxSize[2500]"
+          },
+          {
+            "dataType": "text",
+            "name": "indigenousEmploymentInvestmentQ9a",
+            "description": "For example, outline what initiatives you employed to increase purchasing from Indigenous Enterprises and to increase the employment of First Nations people.",
+            "validate": "required,maxSize[2500]"
+          },
+          {
+            "dataType": "boolean",
+            "name": "indigenousEmploymentInvestmentQ9b",
             "validate": "required",
             "constraints": [
               "Yes",
@@ -185,134 +280,207 @@
             ]
           },
           {
-            "columns": [
-              {
-                "name": "workshopEventType",
-                "dataType": "text",
-                "validate": "required,maxSize[500]",
-                "behaviour": [
-                  {
-                    "type": "enable_and_clear",
-                    "condition": "communityConductWorkshops == \"Yes\""
-                  }
-                ]
-              },
-              {
-                "name": "workshopTitle",
-                "dataType": "text",
-                "validate": "required,maxSize[500]",
-                "behaviour": [
-                  {
-                    "type": "enable_and_clear",
-                    "condition": "communityConductWorkshops == \"Yes\""
-                  }
-                ]
-              },
-              {
-                "name": "workshopPurpose",
-                "dataType": "text",
-                "validate": "required,maxSize[5000]",
-                "behaviour": [
-                  {
-                    "type": "enable_and_clear",
-                    "condition": "communityConductWorkshops == \"Yes\""
-                  }
-                ]
-              },
-              {
-                "name": "workshopDate",
-                "dataType": "date",
-                "validate": "required,past[now]",
-                "behaviour": [
-                  {
-                    "type": "enable_and_clear",
-                    "condition": "communityConductWorkshops == \"Yes\""
-                  }
-                ]
-              }
-            ],
-            "dataType": "list",
-            "name": "workshopList"
-          },
-          {
-            "name": "communicationsTargetMeasuresOnTrack",
             "dataType": "text",
-            "description": "If the plan is in development select ‘No’ and explain when the plan will be completed.",
-            "validate": "required",
-            "constraints": [
-              "Yes",
-              "No"
-            ]
-          },
-          {
-            "name": "communicationsTargetMeasuresNotOnTrack",
-            "dataType": "text",
-            "validate": "required,maxSize[5000]",
+            "name": "indigenousEmploymentInvestmentQ9bi",
+            "description": "The question relates to the last 12 months (or part thereof where applicable). Where you have previously provided information, identify the date(s) you provided your response(s) to the Department and which Schedule 10 clause(s) you addressed.",
+            "validate": "required,maxSize[2500]",
             "behaviour": [
               {
-                "condition": "communicationsTargetMeasuresOnTrack == \"No\"",
-                "type": "enable_and_clear"
+                "condition": "indigenousEmploymentInvestmentQ9b == \"Yes\"",
+                "type": "visible"
               }
             ]
           },
+
           {
-            "name": "communicationMaterialPublished",
             "dataType": "text",
-            "description": "This does not include communication activities undertaken under the ‘Communication Materials’ Project Service or regional capacity service. All Communication Materials must correctly acknowledge Australian Government funding.",
-            "validate": "required",
+            "name": "descriptionIndigenousParticipation",
+            "description": "For example, outline what initiatives you took to try and increase purchasing from Indigenous Enterprises and increase the employment of First Nations people.",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "deedIncludesScheduleTen",
+            "description": "For the last 12 months, identify the date you provided your response to the Department and which Schedule 10 clause you addressed.",
             "constraints": [
               "Yes",
               "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "boolean",
+            "name": "deedIncluded",
+            "validate": "required",
+            "behaviour": [
+              {
+                "condition": "deedIncludesScheduleTen == \"Yes\"",
+                "type": "visible"
+              }
             ]
           },
           {
-            "columns": [
-              {
-                "name": "communicationMaterialLink",
-                "dataType": "text",
-                "validate": "required,maxSize[500]",
-                "behaviour": [
-                  {
-                    "type": "enable_and_clear",
-                    "condition": "communicationMaterialPublished == \"Yes\""
-                  }
-                ]
-              }
-            ],
-            "dataType": "list",
-            "name": "communicationMaterialLinkList"
+            "dataType": "text",
+            "name": "maintainCapability",
+            "description": "Regional Capacity Services quarterly reports, Project Support and Overheads or Project Services reports.",
+            "validate": "required,maxSize[2500]"
           },
           {
-            "name": "communicationsMaterialAttachments",
-            "dataType": "list",
-            "columns": [
+            "dataType": "text",
+            "name": "environmentalSustainability",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "hasOutstandingActions",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "boolean",
+            "name": "yesHasOutstandingActions",
+            "validate": "required,maxSize[1250]",
+            "behaviour": [
               {
-                "name": "communicationsMaterialAttachment",
-                "dataType": "document"
+                "condition": "hasOutstandingActions == \"Yes\"",
+                "type": "visible"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "hasInsurance",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "boolean",
+            "name": "noInsurance",
+            "behaviour": [
+              {
+                "condition": "hasInsurance == \"No\"",
+                "type": "visible"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "Note Reef and Saving Native Species are part of DCCEEW.",
+            "name": "talliedProjectDesignRequestsQ12",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "correctProjectDesignRequestsQ12",
+            "behaviour": [
+              {
+                "condition": "talliedProjectDesignRequestsQ12 == \"No\"",
+                "type": "visible"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "Note Reef and Saving Native Species are part of DCCEEW.",
+            "name": "talliedProjectDesignRequestsQ13",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "correctProjectDesignRequestsQ13",
+            "behaviour": [
+              {
+                "condition": "talliedProjectDesignRequestsQ13 == \"No\"",
+                "type": "visible"
               }
             ]
           },
           {
             "dataType": "number",
-            "name": "projectDesignRequested",
-            "validate": "required,min[0]",
-            "decimalPlaces": 0
+            "name": "totalProjectDesignRequested"
           },
           {
             "dataType": "number",
-            "name": "workOrderExecuted",
-            "validate": "required,min[0]"
+            "name": "totalWorkOrderExecuted"
+          },
+          {
+            "dataType": "list",
+            "name": "projectContractsTable",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "name": "projectTitle",
+                "dataType": "text",
+                "validate": "required,maxSize[200]"
+              },
+              {
+                "name": "customerGovtAgency",
+                "dataType": "text",
+                "validate": "required,maxSize[150]"
+              },
+              {
+                "name": "program",
+                "dataType": "text",
+                "validate": "required,maxSize[150]"
+              },
+              {
+                "name": "contracted",
+                "dataType": "text",
+                "validate": "required",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ]
+              },
+              {
+                "name": "contractId",
+                "dataType": "text",
+                "validate": "required,maxSize[50]"
+              },
+              {
+                "name": "totalDcceewContracts",
+                "dataType": "number",
+                "validate": "required",
+                "decimalPlaces": 2
+              },
+              {
+                "name": "totalDaffContracts",
+                "dataType": "number",
+                "validate": "required",
+                "decimalPlaces": 2
+              },
+              {
+                "name": "totalDcceewSubContracts",
+                "dataType": "number",
+                "validate": "required",
+                "decimalPlaces": 2
+              }
+            ]
           }
         ],
-        "modelName": "Regional capacity services - reporting",
+        "name": "Regional Capacity Services Annual Report",
         "title": "Regional Capacity Services – Reporting",
         "viewModel": [
           {
             "type": "row",
             "items": [
               {
-                "type": "literal",
-                "source": "<h4>Governance</h4>"
+                "source": "<h4>Note:</h4>",
+                "type": "literal"
               }
             ]
           },
@@ -320,10 +488,8 @@
             "type": "row",
             "items": [
               {
-                "css": "span7",
-                "type": "selectOne",
-                "source": "governanceAndFinancialFrameworksOnTrack",
-                "preLabel": "Q1. As a Regional Delivery Partner, has your organisation maintained appropriate governance and financial frameworks as per Regional Capacity Services RCS 7?"
+                "source": "<b><ul><li>this report applies to Regional Capacity Services (Schedule 2) delivered under the Deed in the last 12 months (or part thereof where applicable).</li><li>Your organisation must submit the Quarter 4 Regional Capacity Services Report prior to submitting this report.</li></ul></b>",
+                "type": "literal"
               }
             ]
           },
@@ -331,10 +497,8 @@
             "type": "row",
             "items": [
               {
-                "type": "textarea",
-                "rows": 4,
-                "source": "governanceAndFinancialFrameworksActions",
-                "preLabel": "Q1(a). Explain what actions are planned to get back on track."
+                "source": "<b>1. Key achievements</b>",
+                "type": "literal"
               }
             ]
           },
@@ -342,8 +506,9 @@
             "type": "row",
             "items": [
               {
-                "type": "literal",
-                "source": "<h4>Work Health and Safety</h4>"
+                "preLabel": "Q1. Please outline key achievements in the delivery of the Regional Capacity Services (RCS 9.2(a)). (2500 character, [approx. 500 word] limit)",
+                "source": "coreServicesProgress",
+                "type": "textarea"
               }
             ]
           },
@@ -351,10 +516,8 @@
             "type": "row",
             "items": [
               {
-                "css": "span7",
-                "type": "selectOne",
-                "source": "whsUndergoneReview",
-                "preLabel": "Q2. During the reporting period has the WHS Plan undergone a revision or update? (Clause 42.5(b) of the Deed)"
+                "source": "<b>2. Delivery issues and adaptive management</b>",
+                "type": "literal"
               }
             ]
           },
@@ -362,10 +525,9 @@
             "type": "row",
             "items": [
               {
-                "type": "textarea",
-                "rows": 4,
-                "source": "whsChangesDescription",
-                "preLabel": "Q2(a). Provide a brief description of the changes to the WHS Plan."
+                "preLabel": "Q2. Please outline key issues in the delivery of the Regional Capacity Services and how they were (or are being) managed/rectified. Please include how adaptive management actions have been (or are being) implemented (RCS 9.2(a) and (b)). (1,250 character, [approx. 250 word] limit)",
+                "source": "coreServicesIssues",
+                "type": "textarea"
               }
             ]
           },
@@ -373,10 +535,8 @@
             "type": "row",
             "items": [
               {
-                "css": "span6",
-                "type": "selectOne",
-                "source": "whsRevisedSubmitted",
-                "preLabel": "Q2(b). Has the revised WHS plan been submitted to the Customer Contract Manager?"
+                "source": "<b>3. Governance and financial management</b>",
+                "type": "literal"
               }
             ]
           },
@@ -384,9 +544,9 @@
             "type": "row",
             "items": [
               {
-                "type": "",
-                "source": "whsRevisedPlan",
-                "preLabel": "<i><b style=\"background-color:yellow\">Please submit the revised WHS Plan to the Customer Contract Manager.</b></i>"
+                "preLabel": "Q3(a). Please describe actions undertaken in this reporting period (if any) to ensure the development of employee and management competence in First Nations peoples’ culture (RCS 7.3). (1250 character, [approx. 250 word] limit)",
+                "source": "governanceFinancialManagementQ3a",
+                "type": "textarea"
               }
             ]
           },
@@ -394,21 +554,9 @@
             "type": "row",
             "items": [
               {
-                "css": "span7",
-                "type": "selectOne",
-                "source": "whsIncidentsOccured",
-                "preLabel": "Q3. During the reporting period, have any WHS matters that are required to be notified under clause 42.3 of the Deed occurred during the delivery of Regional Capacity Services?"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span6",
-                "type": "selectOne",
-                "source": "whsIncidentReported",
-                "preLabel": "Q3(a). Has the incident/event been reported to the Customer Contract Manager and the relevant documentation been provided?"
+                "preLabel": "Q3(b). Has your organisation complied with the probity and conflict of interest requirements of clause 45 of the Deed, including maintaining a register of all Conflicts (45.6(a)), notifying the Customer(s) of Conflicts (45.2), and ensuring Personnel do not engage in any activity or obtain any interest during the course of the Deed and any Contract (45.4)?",
+                "source": "governanceFinancialManagementQ3b",
+                "type": "selectOne"
               }
             ]
           },
@@ -417,8 +565,8 @@
             "items": [
               {
                 "type": "",
-                "source": "whsIncidentNotReported",
-                "preLabel": "<i><b style=\"background-color:yellow\">Please notify the Customer Contract Manager immediately, as outlined in the Deed of Standing Offer (clause 42.3 Notifying the Customer), to discuss.</b></i>"
+                "source": "noGovernanceFinancialManagementQ3b",
+                "preLabel": "<i><b style=\"background-color:yellow\">Please notify the Customer Contract Manager immediately to discuss.</b></i>"
               }
             ]
           },
@@ -426,8 +574,9 @@
             "type": "row",
             "items": [
               {
-                "type": "literal",
-                "source": "<h4>Indigenous Participation</h4>"
+                "preLabel": "Q3(c). Please list the types of application processes and financial arrangements your organisation has utilised to deliver Regional Capacity Services and Projects. (1250 character, [approx. 250 word] limit)",
+                "source": "governanceFinancialManagementQ3c",
+                "type": "textarea"
               }
             ]
           },
@@ -435,10 +584,9 @@
             "type": "row",
             "items": [
               {
-                "type": "textarea",
-                "rows": 4,
-                "source": "deedOfStandingOfferActions",
-                "preLabel": "Q4. Outline any actions your organisation has taken to address the requirements in Schedule 10 of the Deed of Standing Offer."
+                "preLabel": "Q3(d). Were probity and conflict of interest requirements addressed and documented in relation to the processes and arrangements listed above in Q3(c).",
+                "source": "governanceFinancialManagementQ3d",
+                "type": "selectOne"
               }
             ]
           },
@@ -446,10 +594,9 @@
             "type": "row",
             "items": [
               {
-                "rows": 4,
-                "type": "selectOne",
-                "source": "indigenousTargetMeasuresOnTrack",
-                "preLabel": "Q5. Is your organisation on track to deliver the target measures identified in the Indigenous Participation Plan?"
+                "preLabel": "Q3(e). Please confirm that your organisation has submitted the register of all Subcontractors to the Customer Contract Manager as per clause 20.7 of the Deed.",
+                "source": "governanceFinancialManagementQ3e",
+                "type": "selectOne"
               }
             ]
           },
@@ -457,10 +604,9 @@
             "type": "row",
             "items": [
               {
-                "type": "textarea",
-                "rows": 4,
-                "source": "indigenousTargetMeasuresNotOnTrack",
-                "preLabel": "Q5(a). Please outline what actions are planned to get back on track."
+                "type": "",
+                "source": "noGovernanceFinancialManagementQ3e",
+                "preLabel": "<i><b style=\"background-color:yellow\">Please submit your organisation’s Subcontractor register to the Customer Contract Manager.</b></i>"
               }
             ]
           },
@@ -468,10 +614,8 @@
             "type": "row",
             "items": [
               {
-                "css": "span7",
-                "preLabel": "Q5(b). Please confirm that your organisation has reported via the IPPRS this period (Clause 38 Indigenous Procurement Policy), and that this report has been uploaded to the documents tab in MERIT.",
-                "source": "reportedToIpprs",
-                "type": "boolean"
+                "source": "<b>4. Risk Management</b>",
+                "type": "literal"
               }
             ]
           },
@@ -479,9 +623,9 @@
             "type": "row",
             "items": [
               {
-                "type": "document",
-                "source": "ipprsReport",
-                "preLabel": "Please attach the document here."
+                "preLabel": "Q4. Have organisational risk management processes been documented and implemented (RCS 7.2)?",
+                "source": "riskManagementDocumentedImplemented",
+                "type": "selectOne"
               }
             ]
           },
@@ -489,8 +633,9 @@
             "type": "row",
             "items": [
               {
-                "type": "literal",
-                "source": "<h4>Monitoring, Evaluation, Reporting and Improvement (MERI)</h4>"
+                "type": "",
+                "source": "noRiskManagementDocumentedImplemented",
+                "preLabel": "<i><b style=\"background-color:yellow\">Please notify the Customer Contract Manager immediately to discuss.</b></i>"
               }
             ]
           },
@@ -498,10 +643,8 @@
             "type": "row",
             "items": [
               {
-                "type": "textarea",
-                "rows": 4,
-                "source": "staffDevelopmentOpportunities",
-                "preLabel": "Q6. What MERI professional development opportunities (if any) have staff participated in? (RCS 4)"
+                "source": "<b>5. Work Health and Safety</b>",
+                "type": "literal"
               }
             ]
           },
@@ -509,8 +652,9 @@
             "type": "row",
             "items": [
               {
-                "type": "literal",
-                "source": "<h4>Community Participation</h4>"
+                "preLabel": "Q5(a). In the past 12 months, have all notifiable Work Health and Safety matters (if any) been reported to the department as per clause 42.3 of the Deed?",
+                "source": "workHealthSafetyReportedQ5a",
+                "type": "selectOne"
               }
             ]
           },
@@ -518,10 +662,9 @@
             "type": "row",
             "items": [
               {
-                "css": "span7",
-                "type": "selectOne",
-                "source": "communityTargetMeasuresOnTrack",
-                "preLabel": "Q7. Is your organisation on track to deliver the target measures identified in the Community Participation Plan?"
+                "type": "",
+                "source": "noWorkHealthSafetyReportedQ5a",
+                "preLabel": "<i><b style=\"background-color:yellow\">Please notify the Customer Contract Manager immediately to discuss.</b></i>"
               }
             ]
           },
@@ -529,10 +672,9 @@
             "type": "row",
             "items": [
               {
-                "type": "textarea",
-                "rows": 4,
-                "source": "communityTargetMeasuresNotOnTrack",
-                "preLabel": "Q7(a). Please outline what actions are planned to get back on track."
+                "preLabel": "Q5(a)(i). Has the incident(s) been investigated and/or resolved? (1250 character, [approx. 250 word] limit)",
+                "source": "yesWorkHealthSafetyReportedQ5a",
+                "type": "textarea"
               }
             ]
           },
@@ -540,55 +682,9 @@
             "type": "row",
             "items": [
               {
-                "css": "span7",
-                "type": "selectOne",
-                "source": "communityConductWorkshops",
-                "preLabel": "Q8. Did your organisation conduct workshops (or equivalent activities) to engage researchers, industry and Community members to define innovative practices and approaches that would improve the condition of natural resources as they relate to the 5-year Outcomes? (RCS 2.3)"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "communityConductWorkshops == \"Yes\""
-              }
-            ],
-            "items": [
-              {
-                "disableTableUpload": true,
-                "fixedWidth": true,
-                "columns": [
-                  {
-                    "width": "25%",
-                    "source": "workshopEventType",
-                    "title": "Event type",
-                    "type": "text"
-                  },
-                  {
-                    "width": "25%",
-                    "source": "workshopTitle",
-                    "title": "Title",
-                    "type": "text"
-                  },
-                  {
-                    "width": "25%",
-                    "source": "workshopPurpose",
-                    "title": "Purpose",
-                    "type": "textarea"
-                  },
-                  {
-                    "width": "25%",
-                    "source": "workshopDate",
-                    "title": "Date",
-                    "type": "date"
-                  }
-                ],
-                "userAddedRows": true,
-                "source": "workshopList",
-                "title": "<b>Q8(a). Please provide details:<b style=\"color:red\">*</b></b>",
-                "type": "table"
+                "preLabel": "Q5(b). Has the WHS Plan been reviewed and/or updated in the past 12 months?",
+                "source": "workHealthSafetyReportedQ5b",
+                "type": "selectOne"
               }
             ]
           },
@@ -596,8 +692,9 @@
             "type": "row",
             "items": [
               {
-                "type": "literal",
-                "source": "<h4>Communications</h4>"
+                "preLabel": "Q5(b)(i). Please provide details of the review(s) and, where applicable, details of the changes made to the WHS Plan (RCS 9.2(d)). If your organisation has not already done so, please submit the revised WHS Plan to the Customer Contract Manager. (1250 character, [approx. 250 word] limit)",
+                "source": "yesWorkHealthSafetyReportedQ5b",
+                "type": "textarea"
               }
             ]
           },
@@ -605,10 +702,10 @@
             "type": "row",
             "items": [
               {
-                "css": "span7",
-                "type": "selectOne",
-                "source": "communicationsTargetMeasuresOnTrack",
-                "preLabel": "Q9. Is your organisation  on track to deliver the target measures identified in the Communications Plan?"
+                "css": "span5",
+                "preLabel": "Q5(b)(ii) Does the WHS Plan remain current and appropriate? (Clause 42.5(b) of the Deed; RCS 8.4; RCS 9.2(d)).",
+                "source": "noWorkHealthSafetyReportedQ5b",
+                "type": "selectOne"
               }
             ]
           },
@@ -616,10 +713,9 @@
             "type": "row",
             "items": [
               {
-                "type": "textarea",
-                "rows": 4,
-                "source": "communicationsTargetMeasuresNotOnTrack",
-                "preLabel": "Q9(a). Please outline what actions are planned to get back on track."
+                "type": "",
+                "source": "noWorkHealthSafetyReportedQ5bii",
+                "preLabel": "<i><b style=\"background-color:yellow\">Please notify the Customer Contract Manager immediately to discuss.</b></i>"
               }
             ]
           },
@@ -627,47 +723,71 @@
             "type": "row",
             "items": [
               {
-                "css": "span7",
-                "type": "selectOne",
-                "source": "communicationMaterialPublished",
-                "preLabel": "Q10. During this reporting period, was any communication material published promoting organisational and project progress and performance, First Nations leadership and engagement, and opportunities for the Community to participate in projects, including through websites and social media, as outlined in RCS 3?"
+                "source": "<b>6. Natural Resource Management (NRM) and other plans </b>",
+                "type": "literal"
               }
             ]
           },
           {
             "type": "row",
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "communicationMaterialPublished == \"Yes\""
-              }
-            ],
             "items": [
               {
-                "disableTableUpload": true,
-                "fixedWidth": true,
-                "columns": [
-                  {
-                    "source": "communicationMaterialLink",
-                    "title": "Material",
-                    "type": "text"
-                  }
-                ],
-                "userAddedRows": true,
-                "source": "communicationMaterialLinkList",
-                "title": "<b>Q10(a). Please provide a link to, or a copy of, the material (one row per item)<b style=\"color:red\">*</b></b>",
-                "type": "table"
-              },
+                "preLabel": "Q6(a). Please outline any activities completed during this reporting period towards meeting the requirements under RCS 1 – to maintain the currency of NRM planning and prioritisation of management actions. (2500 character, [approx. 500 word] limit)",
+                "source": "nrmQ6a",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
               {
+                "preLabel": "Q6(b). Has a new or revised NRM Plan for the Management Unit been submitted within 48 months of Deed Commencement (RCS 1.2.2)?",
+                "source": "nrmQ6b",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q6(c). Please complete the table below relating to the maintenance and implementation of plans required as part of Regional Capacity Services.",
+                "helpText": ""
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "coreServicesPlansTable",
                 "type": "table",
-                "source": "communicationsMaterialAttachments",
-                "userAddedRows": true,
                 "disableTableUpload": true,
                 "columns": [
                   {
-                    "title": "Attached communication material",
-                    "source": "communicationsMaterialAttachment",
-                    "type": "document"
+                    "title": "Plan:",
+                    "source": "coreServicesPlans",
+                    "type": "readonlyText",
+                    "width": "20%"
+                  },
+                  {
+                    "title": "Date last reviewed",
+                    "source": "coreServicesPlanLastReviewed",
+                    "type": "date",
+                    "width": "15%"
+                  },
+                  {
+                    "title": "Status of implementing actions in plan",
+                    "source": "coreServicesPlanStatus",
+                    "type": "selectOne",
+                    "width": "15%"
+                  },
+                  {
+                    "title": "Please provide details of the review of the plan and actions undertaken as part of implementing the plan. <br>If applicable, provide reasons why implementation is not on-track and corrective actions being undertaken.",
+                    "source": "coreServicesPlanStatusNotOnTrack",
+                    "type": "textarea",
+                    "width": "50%"
                   }
                 ]
               }
@@ -677,10 +797,8 @@
             "type": "row",
             "items": [
               {
-                "css": "span7",
-                "type": "number",
-                "source": "projectDesignRequested",
-                "preLabel": "Q11. How many Requests for Project Design did your organisation receive in the last quarter from Customers other than DCCEEW and DAFF (RCS 9.1(c)(i))?"
+                "source": "<b>7. Relationship Management Plan</b>",
+                "type": "literal"
               }
             ]
           },
@@ -688,22 +806,417 @@
             "type": "row",
             "items": [
               {
-                "css": "span7",
+                "preLabel": "Q7. Were there any changes to key contact details during this reporting period (RCS 5.1 and 5.2)?",
+                "source": "anyContactDetailsChanges",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span5",
+                "preLabel": "Q7(i). Please confirm that your organisation has notified the Customer Contract Manager of any changes to key contact details as per RCS 5.2.",
+                "source": "yesContactDetailsChanges",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>8. Community and Indigenous participation </b>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q8. Please describe how the Community and First Nations people have been encouraged to participate, and been engaged and supported in the prioritising, planning and the delivery of natural resource management activities as they relate to the 5-year Outcomes and any Investment Priorities across the Management Unit (Clause 38 of the Deed; RCS 2; RCS 9.2(c)). (2500 character, [approx. 500 word] limit)",
+                "source": "communityIndigenousParticipation",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>9. Indigenous employment and procurement investment</b>",
+                "type": "literal"
+              }
+            ]
+          },
+
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q9(a). Please describe how First Nations people have been engaged in employment / subcontracting in the delivery of the Regional Capacity Services (Clause 38 of the Deed). (2500 character [approx. 500 word] limit)",
+                "source": "indigenousEmploymentInvestmentQ9a",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q9(b). Does your organisation’s Deed include a Schedule 10?",
+                "source": "indigenousEmploymentInvestmentQ9b",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q9(b)(i). Please provide an update on the progress made towards meeting these requirements, or identify where you have previously provided information to the Department, to demonstrate your compliance with the obligations under the Schedule. (2500 character [approx. 500 word] limit)",
+                "source": "indigenousEmploymentInvestmentQ9bi",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>10. Maintain capability to conduct communication activities </b>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q10. Describe the key communication/promotional activities undertaken as part of Regional Capacity Services (Clause 37 of the Deed; RCS 3.1 to 3.3)? Explain the reasons and corrective actions for any activities not undertaken. (2500 character [approx. 500 word] limit)",
+                "source": "maintainCapability",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>11. Environmental sustainability </b>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q11. Please outline what initiatives your organisation has put in place to support environmental sustainability outcomes and to increase the use of Recycled Content during this reporting period, for the Deed and each Work Order, as per clause 15.8 of the Deed. (1250 character [approx. 250 word] limit)",
+                "source": "environmentalSustainability",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>12. Assurance/Audit </b>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q12. Does your organisation have any outstanding actions arising from assurance checks and/or audits conducted on Regional Capacity Services, Project Support and Overheads, and Project Services, by any Customer? (e.g. clauses 13(c), 17, 18, 42.4 and 54 of the Deed)",
+                "source": "hasOutstandingActions",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q12(i). Please provide details on the outstanding actions and when they will be completed. (1250 character [approx. 250 word] limit)",
+                "source": "yesHasOutstandingActions",
+                "type": "textarea"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>13. Insurance </b>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q13. Please confirm that your organisation holds the insurance required as per clause 33 of the Deed.",
+                "source": "hasInsurance",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "",
+                "source": "noInsurance",
+                "preLabel": "<i><b style=\"background-color:yellow\">Please notify the Customer Contract Manager immediately to discuss.</b></i>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>14. Annual reporting on Project Designs and Contracts </b>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<b>Note: this section of the report applies to requests for Project Designs and Contracts/Work Orders (other than RCS) entered into under the Deed in the last 12 months (or part thereof where applicable). </b>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q14(a). Your organisation has reported that it received below Total Requests for Project Design from Customers other than DCCEEW and DAFF (RCS 9.1(c)(i)).",
+                "source": "totalProjectDesignRequested",
                 "type": "number",
-                "source": "workOrderExecuted",
-                "preLabel": "Q12. How many Work Orders did your organisation execute in the last quarter with Customers other than DCCEEW and DAFF (RCS 9.1(c)(ii))?"
+                "readonly": true
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q14(a)(i). Is the total above correct?",
+                "source": "talliedProjectDesignRequestsQ12",
+                "type": "selectOne"
+              }
+            ]
+          },
+
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q14(a)(ii). Please enter the correct number of Requests for Project Design received from Customers other than DCCEEW and DAFF.",
+                "source": "correctProjectDesignRequestsQ12",
+                "type": "number"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q14(b). Your organisation has reported that it executed below Total Work Orders with Customers other than DCCEEW and DAFF (RCS 9.1(c)(ii)).",
+                "source": "totalWorkOrderExecuted",
+                "type": "number",
+                "readonly": true
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q14(b)(i). Is the total above correct?",
+                "source": "talliedProjectDesignRequestsQ13",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q14(b)(ii). Please enter the correct number of Requests for Project Design received from Customers other than DCCEEW and DAFF.",
+                "source": "correctProjectDesignRequestsQ13",
+                "type": "number"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q14(c). Please provide in the table below details of all projects for which Requests for Project Designs have been received over the last 12 months (or part thereof where applicable) and which may/may not have been subsequently contracted."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "projectContractsTable",
+                "type": "table",
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "title": "Project Title",
+                    "source": "projectTitle",
+                    "type": "text",
+                    "width": "15%"
+                  },
+                  {
+                    "title": "Customer/Govt Agency",
+                    "source": "customerGovtAgency",
+                    "type": "text",
+                    "width": "15%"
+                  },
+                  {
+                    "title": "Program",
+                    "source": "program",
+                    "type": "text",
+                    "width": "15%"
+                  },
+                  {
+                    "title": "Contracted?",
+                    "source": "contracted",
+                    "type": "selectOne",
+                    "width": "10%"
+                  },
+                  {
+                    "title": "Contract ID",
+                    "source": "contractId",
+                    "type": "text",
+                    "width": "15%"
+                  },
+                  {
+                    "title": "Total Value of Contract",
+                    "source": "totalDcceewContracts",
+                    "type": "number",
+                    "width": "10%"
+                  },
+                  {
+                    "title": "Total Value of Contract directed to supporting the Community (GST excl.) (RCS 9.2(c))",
+                    "source": "totalDaffContracts",
+                    "type": "number",
+                    "width": "10%"
+                  },
+                  {
+                    "title": "Total Value of Subcontracts with First Nations people / Indigenous Enterprises ($ GST excl.) (RCS 9.2(c))",
+                    "source": "totalDcceewSubContracts",
+                    "type": "number",
+                    "width": "10%"
+                  }
+                ]
               }
             ]
           }
+        ],
+        "pre-populate": [
+          {
+            "mapping": [
+              {
+                "source-path": "9ae784ec-c50e-4c45-a88e-d9317aaac2ed",
+                "target": "totalProjectDesignRequested"
+              },
+              {
+                "source-path": "2f771f77-a6c3-4b86-8a2a-929254f5c5f3",
+                "target": "totalWorkOrderExecuted"
+              }
+            ],
+            "merge": {
+              "totalProjectDesignRequested": {
+                "replaceExisting": true
+              },
+              "totalWorkOrderExecuted": {
+                "replaceExisting": true
+              }
+            },
+            "source": {
+              "params": [
+                {
+                  "expression": "owner.organisationId",
+                  "name": "id",
+                  "type": "computed"
+                },
+                {
+                  "expression": "reportId",
+                  "name": "reportId",
+                  "type": "computed"
+                },
+                {
+                  "name": "scoreIds",
+                  "value": [
+                    "9ae784ec-c50e-4c45-a88e-d9317aaac2ed",
+                    "2f771f77-a6c3-4b86-8a2a-929254f5c5f3"
+                  ]
+                }
+              ],
+              "url": "/organisation/scoresForOrgReport/"
+            }
+          },
+          {
+            "source": {
+              "type": "literal",
+              "literal": {
+                "coreServicesPlansTable": [
+                  {
+                    "coreServicesPlans": "Community Participation Plan"
+                  },
+                  {
+                    "coreServicesPlans": "Indigenous Participation Plan"
+                  },
+                  {
+                    "coreServicesPlans": "Communications Plan"
+                  }
+                ]
+              }
+            },
+            "mapping": [
+              {
+                "source-path": "coreServicesPlansTable",
+                "target": "coreServicesPlansTable",
+                "mapping": [
+                  {
+                    "source-path": "coreServicesPlans",
+                    "target": "coreServicesPlans"
+                  }
+                ]
+              }
+            ],
+            "merge": {
+              "coreServicesPlansTable": {
+                "keys": [
+                  "coreServicesPlans"
+                ],
+                "addUnmatchedNewRows": true,
+                "deleteUnmatchedExistingRows": true
+              }
+            }
+          }
         ]
-      }
+      },
+      "title": null
     }
   ],
-  "formVersion": 1,
-  "category": null,
   "status": "active",
-  "gmsId": null,
-  "supportsSites": false,
   "supportsPhotoPoints": false,
-  "minOptionalSectionsCompleted": 1
+  "supportsSites": false
 }
+
