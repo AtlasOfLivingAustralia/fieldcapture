@@ -7,7 +7,7 @@
       "optionalQuestionText": null,
       "optional": false,
       "collapsedByDefault": false,
-      "templateName": "regionalCapacityServicesReport",
+      "templateName": "regionalCapacityServicesAnnualReport",
       "template": {
         "modelName": "Regional capacity services - annual reporting",
         "dataModel": [
