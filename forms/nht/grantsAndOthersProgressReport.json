@@ -2238,15 +2238,6 @@
             ]
           },
           {
-            "dataType": "text",
-            "name": "invoicingThisActivity",
-            "constraints": [
-              "Yes",
-              "No"
-            ],
-            "validate": "required"
-          },
-          {
             "columns": [
               {
                 "dataType": "text",
@@ -2345,39 +2336,6 @@
             "computed": {
               "expression": "sum(events, \"eventType ? 1 : 0\")"
             }
-          },
-          {
-            "dataType": "number",
-            "name": "totalNumberEngagementHeldInvoiced",
-            "description": "Number of events invoiced for this reporting period.",
-            "defaultValue": "",
-            "validate": [
-              {
-                "rule": "required"
-              },
-              {
-                "rule": "min[0]"
-              },
-              {
-                "param": {
-                  "expression": "totalNumberEngagementHeld",
-                  "type": "computed"
-                },
-                "rule": "max"
-              }
-            ]
-          },
-          {
-            "dataType": "text",
-            "name": "totalNumberEngagementInvoicedMismatched",
-            "description": "Please explain why the Total invoiced field is different from the Totals tally field.",
-            "validate": "maxSize[400],required",
-            "behaviour": [
-              {
-                "condition": "+totalNumberEngagementHeldInvoiced < +totalNumberEngagementHeld",
-                "type": "enable"
-              }
-            ]
           },
           {
             "dataType": "text",
@@ -2512,34 +2470,6 @@
                     ]
                   }
                 ]
-              },
-              {
-                "type": "col",
-                "css": "span5 col-border-right",
-                "items": [
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(ii) Total number of events <u><i>invoiced</i></u> for this reporting period",
-                        "source": "totalNumberEngagementHeldInvoiced",
-                        "type": "number"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
-                "source": "totalNumberEngagementInvoicedMismatched",
-                "type": "textarea",
-                "rows": 4,
-                "placeholder": ""
               }
             ]
           },
@@ -2576,22 +2506,6 @@
                             "source": "investmentPriorities2",
                             "preLabel": "Which investment priority does this activity relate to?",
                             "type": "select2Many"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "css": "span3",
-                    "type": "col",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "invoicingThisActivity",
-                            "preLabel": "Are you invoicing for this activity in this reporting period?",
-                            "type": "selectOne"
                           }
                         ]
                       }
