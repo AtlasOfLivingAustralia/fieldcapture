@@ -24,7 +24,7 @@
           {
             "dataType": "text",
             "name": "governanceFinancialManagementQ3a",
-            "description": "If no actions were undertaken, insert ‘No actions have been undertaken.",
+            "description": "If no actions were undertaken, insert 'No actions have been undertaken'.",
             "validate": "required,maxSize[1250]"
           },
           {
@@ -134,7 +134,7 @@
           {
             "dataType": "text",
             "name": "workHealthSafetyReportedQ5b",
-            "description" : "the RDP must ensure its WHS Plan is up to date and regularly review its WHS plan to ensure its continuing suitability, adequacy, and effectiveness (Clause 42.5 of the Deed; RCS 8.4; RCS 9.2(d)). Triggers to warrant a review may include:<br><ul><li>In the event of a new contract or a significant change to the scope of an existing contract</li><li>On the third anniversary of the Deed Commencement Date</li><li>Change in Executive Staff</li><li>Changes in Legislation</li><li>As a result of an incident or event</li><li>As a result of an internal or external audit or assurance activity.</li></ul>",
+            "description" : "The RDP must ensure its WHS Plan is up to date and regularly review its WHS plan to ensure its continuing suitability, adequacy, and effectiveness (Clause 42.5 of the Deed; RCS 8.4; RCS 9.2(d)). Triggers to warrant a review may include:<br><ul><li>In the event of a new contract or a significant change to the scope of an existing contract</li><li>On the third anniversary of the Deed Commencement Date</li><li>Change in Executive Staff</li><li>Changes in Legislation</li><li>As a result of an incident or event</li><li>As a result of an internal or external audit or assurance activity.</li></ul>",
             "constraints": [
               "Yes (Reviewed only)",
               "Yes (Reviewed and Updated)",
@@ -201,7 +201,6 @@
           {
             "dataType": "list",
             "name": "coreServicesPlansTable",
-            "allowRowDelete": "false",
             "columns": [
               {
                 "name": "coreServicesPlans",
@@ -210,7 +209,7 @@
               {
                 "name": "coreServicesPlanLastReviewed",
                 "dataType": "date",
-                "validate": "required"
+                "validate": "required,past[now]"
               },
               {
                 "name": "coreServicesPlanStatus",
@@ -224,13 +223,7 @@
               {
                 "name": "coreServicesPlanStatusNotOnTrack",
                 "dataType": "text",
-                "validate": "required,maxSize[1250]",
-                "behaviour": [
-                  {
-                    "condition": "coreServicesPlanStatus == \"Not on track\"",
-                    "type": "enable"
-                  }
-                ]
+                "validate": "required,maxSize[2500]"
               }
             ]
           },
@@ -322,7 +315,7 @@
           {
             "dataType": "text",
             "name": "maintainCapability",
-            "description": "Regional Capacity Services quarterly reports, Project Support and Overheads or Project Services reports.",
+            "description": "Do not include communications materials already reported in Regional Capacity Services quarterly reports, Project Support and Overheads or Project Services reports.",
             "validate": "required,maxSize[2500]"
           },
           {
@@ -382,6 +375,7 @@
           {
             "dataType": "number",
             "name": "correctProjectDesignRequestsQ12",
+            "validate": "integer",
             "behaviour": [
               {
                 "condition": "talliedProjectDesignRequestsQ12 == \"No\"",
@@ -402,6 +396,7 @@
           {
             "dataType": "number",
             "name": "correctProjectDesignRequestsQ13",
+            "validate": "integer",
             "behaviour": [
               {
                 "condition": "talliedProjectDesignRequestsQ13 == \"No\"",
@@ -420,7 +415,7 @@
           {
             "dataType": "list",
             "name": "projectContractsTable",
-            "allowRowDelete": "false",
+            "allowRowDelete": "true",
             "columns": [
               {
                 "name": "projectTitle",
@@ -449,31 +444,55 @@
               {
                 "name": "contractId",
                 "dataType": "text",
-                "validate": "required,maxSize[50]"
+                "validate": "required,maxSize[50]",
+                "behaviour": [
+                  {
+                    "condition": "contracted == \"Yes\"",
+                    "type": "enable_and_clear"
+                  }
+                ]
               },
               {
                 "name": "totalDcceewContracts",
                 "dataType": "number",
                 "validate": "required",
-                "decimalPlaces": 2
+                "decimalPlaces": 2,
+                "behaviour": [
+                  {
+                    "condition": "contracted == \"Yes\"",
+                    "type": "enable_and_clear"
+                  }
+                ]
               },
               {
                 "name": "totalDaffContracts",
                 "dataType": "number",
                 "validate": "required",
-                "decimalPlaces": 2
+                "decimalPlaces": 2,
+                "behaviour": [
+                  {
+                    "condition": "contracted == \"Yes\"",
+                    "type": "enable_and_clear"
+                  }
+                ]
               },
               {
                 "name": "totalDcceewSubContracts",
                 "dataType": "number",
                 "validate": "required",
-                "decimalPlaces": 2
+                "decimalPlaces": 2,
+                "behaviour": [
+                  {
+                    "condition": "contracted == \"Yes\"",
+                    "type": "enable_and_clear"
+                  }
+                ]
               }
             ]
           }
         ],
         "name": "Regional Capacity Services Annual Report",
-        "title": "Regional Capacity Services Annual Report",
+        "title": "Annual Regional Capacity Services Report",
         "viewModel": [
           {
             "type": "row",
@@ -769,6 +788,7 @@
                     "title": "Plan:",
                     "source": "coreServicesPlans",
                     "type": "readonlyText",
+                    "helpText": "<ul><li>Community Participation Plan - <br><i>An annual review with update (where required) as per RCS 2.7(a).</i></li><li>Indigenous Participation Plan (Sch 9 & 10) - <br><i>An annual review with update (where required) as per RCS 2.7(b).</i></li><li>Communications Plan - <br><i>An annual review with update (where required) as per RCS 3.5.</i></li></ul>",
                     "width": "20%"
                   },
                   {
@@ -1000,7 +1020,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "Q14(a). Your organisation has reported that it received below Total Requests for Project Design from Customers other than DCCEEW and DAFF (RCS 9.1(c)(i)).",
+                "preLabel": "Q14(a). Your organisation has reported that it received the number displayed below for Requests for Project Design from Customers other than DCCEEW and DAFF (RCS 9.1(c)(i)).",
                 "source": "totalProjectDesignRequested",
                 "type": "number",
                 "readonly": true
@@ -1032,7 +1052,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "Q14(b). Your organisation has reported that it executed below Total Work Orders with Customers other than DCCEEW and DAFF (RCS 9.1(c)(ii)).",
+                "preLabel": "Q14(b). Your organisation has reported that it executed the number displayed below for Total Work Orders with Customers other than DCCEEW and DAFF (RCS 9.1(c)(ii)).",
                 "source": "totalWorkOrderExecuted",
                 "type": "number",
                 "readonly": true
@@ -1074,6 +1094,7 @@
                 "source": "projectContractsTable",
                 "type": "table",
                 "disableTableUpload": true,
+                "userAddedRows": true,
                 "columns": [
                   {
                     "title": "Project Title",
@@ -1082,13 +1103,13 @@
                     "width": "15%"
                   },
                   {
-                    "title": "Customer/Govt Agency",
+                    "title": "Customer/Govt Agency (e.g. DAFF, DCCEEW)",
                     "source": "customerGovtAgency",
                     "type": "text",
                     "width": "15%"
                   },
                   {
-                    "title": "Program",
+                    "title": "Program (e.g. NHT, Reef)",
                     "source": "program",
                     "type": "text",
                     "width": "15%"
@@ -1100,13 +1121,13 @@
                     "width": "10%"
                   },
                   {
-                    "title": "Contract ID",
+                    "title": "Contract ID (e.g. REFXXX)",
                     "source": "contractId",
                     "type": "text",
                     "width": "15%"
                   },
                   {
-                    "title": "Total Value of Contract",
+                    "title": "Total Value of Contract ($ GST excl.)",
                     "source": "totalDcceewContracts",
                     "type": "number",
                     "width": "10%"
@@ -1124,6 +1145,15 @@
                     "width": "10%"
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "Note: 'Community' refers to 'all local stakeholders related to natural resource management of a Management Unit, including any farmers, fishers or foresters, landcare or community groups, and First Nations people.'",
+                "type": "literal"
               }
             ]
           }
