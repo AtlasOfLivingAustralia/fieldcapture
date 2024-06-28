@@ -535,51 +535,33 @@ var protocols = {
     "90c0f4cc-a22a-4820-9a8b-a01564bc197a": {
         "name": "Fauna Aerial Survey",
         "usesPlotLayout": false,
-        "createSpeciesRecord":false,
+        "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "aerial-surveys",
         "overrides": {
             "dataModel": {
+                "aerial-observation.ferals_aerial_count_survey.available_species.deer": {
+                    "dataType": "species"
+                },
+                "aerial-observation.ferals_aerial_count_survey.available_species.wild_dog": {
+                    "dataType": "species"
+                },
                 "aerial-observation.ferals_aerial_count_survey.available_species.species": {
                     "dataType": "species"
                 },
                 "aerial-observation.ferals_aerial_count_survey.available_species.count": {
                     "dwcAttribute": "individualCount"
-                },
-                "aerial-survey.setup_ID.target_species_pest": {
-                    "dataType": "species"
-                },
-                "aerial-observation.survey.setup_ID.target_species_pest": {
-                    "dataType": "species"
-                },
-                "aerial-setup-desktop.target_species_pest": {
-                    "dataType": "species"
-                },
-                "aerial-setup-desktop.survey.setup_ID.target_species_pest": {
-                    "dataType": "species"
-                },
-                "aerial-observation.survey.setup_ID.wild_dog": {
-                    "dataType": "species"
                 }
             },
             "viewModel": {
+                "aerial-observation.ferals_aerial_count_survey.available_species.deer": {
+                    "dataType": "speciesSelect"
+                },
+                "aerial-observation.ferals_aerial_count_survey.available_species.wild_dog": {
+                    "dataType": "speciesSelect"
+                },
                 "aerial-observation.ferals_aerial_count_survey.available_species.species": {
-                    "type": "speciesSelect"
-                },
-                "aerial-observation.survey.setup_ID.target_species_pest": {
-                    "type": "speciesSelect"
-                },
-                "aerial-observation.survey.setup_ID.wild_dog": {
-                    "type": "speciesSelect"
-                },
-                "aerial-setup-desktop.target_species_pest": {
-                    "type": "speciesSelect"
-                },
-                "aerial-setup-desktop.survey.setup_ID.target_species_pest": {
-                    "type": "speciesSelect"
-                },
-                "aerial-survey.setup_ID.target_species_pest": {
-                    "type": "speciesSelect"
+                    "dataType": "speciesSelect"
                 }
             }
         }
