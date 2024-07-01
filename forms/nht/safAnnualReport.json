@@ -564,9 +564,41 @@
                 "addUnmatchedNewRows": true,
                 "deleteUnmatchedExistingRows": true
               },
-              "engagementDetails": {
+              "engagementsByType": {
                 "keys": [
-                  "engagementTitle"
+                  "engagementType"
+                ],
+                "addUnmatchedNewRows": true,
+                "deleteUnmatchedExistingRows": true,
+                "engagementDetails": {
+                  "keys": [
+                    "engagementTitle",
+                    "engagementPurpose",
+                    "engagementNoParticipants",
+                    "activityDateFrom",
+                    "activityDateTo"
+                  ],
+                  "addUnmatchedNewRows": true,
+                  "deleteUnmatchedExistingRows": true
+                },
+                "numberOfEngagements": {
+                  "replaceExisting": true
+                }
+              },
+              "planningMeetings": {
+                "keys": [
+                  "meetingName",
+                  "meetingDescription",
+                  "meetingDateTo",
+                  "meetingDateFrom"
+                ],
+                "addUnmatchedNewRows": true,
+                "deleteUnmatchedExistingRows": true
+              },
+              "projectPlans": {
+                "keys": [
+                  "planName",
+                  "planPurpose"
                 ],
                 "addUnmatchedNewRows": true,
                 "deleteUnmatchedExistingRows": true
