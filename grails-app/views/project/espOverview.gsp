@@ -253,7 +253,7 @@
                     <div class="control-group">
                         <label class="control-label">Reporting period start: </label>
                         <div class="controls">
-                            <fc:datePicker class="input input-small form-control form-control-sm" bs4="true" targetField="reportingPeriodStart"/>
+                            <fc:datePicker class="input input-small form-control form-control-sm" bs4="true" targetField="reportingPeriodStart" autocomplete="off"/>
                         </div>
                     </div>
                     <div class="control-group">

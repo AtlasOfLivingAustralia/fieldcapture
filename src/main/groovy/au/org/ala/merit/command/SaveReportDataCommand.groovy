@@ -19,6 +19,7 @@ class SaveReportDataCommand implements Validateable {
 
     String reportId
     String activityId
+    String organisationId
     Map activity
     Map photoPoints
     Map site
@@ -37,7 +38,7 @@ class SaveReportDataCommand implements Validateable {
         }
         photoPoints nullable: true
         site nullable: true
-
+        organisationId nullable: true
         savedActivity bindable: false
         report bindable: false
 
@@ -120,6 +121,10 @@ class SaveReportDataCommand implements Validateable {
             }
             // Setting the activityId in the payload is necessary for ecodata to update the activity as well as outputs.
             activity.activityId = activityId
+
+            if (report.organisationId) {
+                activity.organisationId = report.organisationId
+            }
 
             result = activityService.update(activityId, activity)
 

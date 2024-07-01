@@ -6,6 +6,8 @@ import au.org.ala.merit.util.ProjectGroupingHelper
 import grails.converters.JSON
 import org.apache.http.HttpStatus
 import org.grails.plugins.excelimport.ExcelImportService
+import org.grails.web.converters.marshaller.json.CollectionMarshaller
+import org.grails.web.converters.marshaller.json.MapMarshaller
 import org.springframework.mock.web.MockMultipartFile
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
@@ -44,6 +46,9 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         controller.projectService = projectService
         controller.reportService = reportService
         controller.settingService = settingService
+
+        grails.converters.JSON.registerObjectMarshaller(new MapMarshaller())
+        grails.converters.JSON.registerObjectMarshaller(new CollectionMarshaller())
     }
 
     def "only the about tab should be viewable anonymously"() {
@@ -591,10 +596,34 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         response.json == [success:true]
     }
 
-    private Map testOrganisation(String id="", boolean includeReports) {
+    def "should be able to delete links"() {
+        setup:
+        def testOrg = testOrganisation("id", true, true)
+        organisationService.get(_,_) >> testOrg
+        setupFcAdmin()
+        Map updatedOrg = new HashMap(testOrg)
+        updatedOrg.links = new ArrayList(updatedOrg.links)
+        Map linkRemoved = updatedOrg.links.pop()
+
+        when:
+        request.method = "POST"
+        request.JSON = (updatedOrg as JSON).toString()
+        controller.ajaxUpdate('id')
+
+        then:
+        1 * documentService.delete(linkRemoved.documentId) >> 200
+        1 * documentService.saveLink([name:'link2', url:'url2', documentId: 'd2', organisationId: "id"]) >> [resp: [documentId: 'd1'], statusCode: 200]
+        1 * organisationService.update(*_) >> [resp: [status:"ok"]]
+        response.json.status == "ok"
+    }
+
+    private Map testOrganisation(String id="", boolean includeReports, boolean addLinks = false) {
         Map org = [organisationId:id, name:'name', description:'description', config:[:], inheritedConfig:[:]]
         if (includeReports) {
             org.reports = [[type:'report1', reportId:'r1', activityId:'a1', organisationId:id], [type:'report1', reportId:'r2', activityId:'a2', organisationId:id]]
+        }
+        if (addLinks) {
+            org.links = [[name:'link1', url:'url1', documentId: 'd1'], [name:'link2', url:'url2', documentId: 'd2']]
         }
         organisationService.get(id) >> org
         userService.getMembersOfProgram() >> [

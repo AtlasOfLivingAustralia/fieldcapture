@@ -680,6 +680,19 @@ ko.bindingHandlers.sortIcon = {
   }
 };
 
+ko.bindingHandlers.arrayAsCommaSeparatedText = {
+  'init': function() {
+    return { 'controlsDescendantBindings': true };
+  },
+  'update': function (element, valueAccessor) {
+    var value = ko.utils.unwrapObservable(valueAccessor());
+    if (_.isArray(value)) {
+        value = value.join(", ");
+    }
+    ko.utils.setTextContent(element, value);
+  }
+}
+
 /**
  * A vetoableObservable is an observable that provides a mechanism to prevent changes to its value under certain
  * conditions.  When a change is notified, the vetoCheck function is executed - if it returns false the change is

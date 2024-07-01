@@ -535,51 +535,33 @@ var protocols = {
     "90c0f4cc-a22a-4820-9a8b-a01564bc197a": {
         "name": "Fauna Aerial Survey",
         "usesPlotLayout": false,
-        "createSpeciesRecord":false,
+        "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "aerial-surveys",
         "overrides": {
             "dataModel": {
+                "aerial-observation.ferals_aerial_count_survey.available_species.deer": {
+                    "dataType": "species"
+                },
+                "aerial-observation.ferals_aerial_count_survey.available_species.wild_dog": {
+                    "dataType": "species"
+                },
                 "aerial-observation.ferals_aerial_count_survey.available_species.species": {
                     "dataType": "species"
                 },
                 "aerial-observation.ferals_aerial_count_survey.available_species.count": {
                     "dwcAttribute": "individualCount"
-                },
-                "aerial-survey.setup_ID.target_species_pest": {
-                    "dataType": "species"
-                },
-                "aerial-observation.survey.setup_ID.target_species_pest": {
-                    "dataType": "species"
-                },
-                "aerial-setup-desktop.target_species_pest": {
-                    "dataType": "species"
-                },
-                "aerial-setup-desktop.survey.setup_ID.target_species_pest": {
-                    "dataType": "species"
-                },
-                "aerial-observation.survey.setup_ID.wild_dog": {
-                    "dataType": "species"
                 }
             },
             "viewModel": {
+                "aerial-observation.ferals_aerial_count_survey.available_species.deer": {
+                    "dataType": "speciesSelect"
+                },
+                "aerial-observation.ferals_aerial_count_survey.available_species.wild_dog": {
+                    "dataType": "speciesSelect"
+                },
                 "aerial-observation.ferals_aerial_count_survey.available_species.species": {
-                    "type": "speciesSelect"
-                },
-                "aerial-observation.survey.setup_ID.target_species_pest": {
-                    "type": "speciesSelect"
-                },
-                "aerial-observation.survey.setup_ID.wild_dog": {
-                    "type": "speciesSelect"
-                },
-                "aerial-setup-desktop.target_species_pest": {
-                    "type": "speciesSelect"
-                },
-                "aerial-setup-desktop.survey.setup_ID.target_species_pest": {
-                    "type": "speciesSelect"
-                },
-                "aerial-survey.setup_ID.target_species_pest": {
-                    "type": "speciesSelect"
+                    "dataType": "speciesSelect"
                 }
             }
         }
@@ -783,7 +765,7 @@ var protocols = {
     },
     "a76dac21-94f4-4851-af91-31f6dd00750f": {
         "name": "Fauna Ground Counts Transects",
-        "usesPlotLayout": true,
+        "usesPlotLayout": false,
         "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "fauna-ground-counts-surveys",
@@ -803,7 +785,10 @@ var protocols = {
                 },
                 "fauna-ground-counts-observation.other_target_species.other_species": {
                     "dataType": "text"
-                }
+                },
+                "fauna-ground-counts-conduct-survey.observation.count": {
+                    "dwcAttribute": "individualCount"
+                },
             },
             "viewModel": {
                 "fauna-ground-counts-observation.observation.pest_species": {
@@ -1007,28 +992,28 @@ var protocols = {
     },
     "d706fd34-2f05-4559-b738-a65615a3d756": {
         "name": "Fauna Ground Counts Vantage Point",
-        "usesPlotLayout": true,
+        "usesPlotLayout": false,
         "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "ground-counts-vantage-point-surveys",
         "overrides": {
             "dataModel": {
-                "ground-counts-vantage-point-setup.observations.count_of_individuals": {
+                "vantage-point-conduct-survey.observations.count_of_individuals": {
                     "dwcAttribute": "individualCount"
                 },
-                "ground-counts-vantage-point-setup.observations.species.attributable_fauna_species": {
+                "vantage-point-conduct-survey.observations.species.attributable_fauna_species": {
                     "dataType": "species"
                 },
-                "ground-counts-vantage-point-setup.observations.species.attributable_wild_dog": {
+                "vantage-point-conduct-survey.observations.species.attributable_wild_dog": {
                     "dataType": "species"
                 },
-                "ground-counts-vantage-point-setup.observations.species.attributable_deer": {
+                "vantage-point-conduct-survey.observations.species.attributable_deer": {
                     "dataType": "species"
                 },
-                "ground-counts-vantage-point-setup.observations.spotters_name": {
+                "vantage-point-conduct-survey.observations.spotters_name": {
                     "dataType": "recordedBy"
                 },
-                "ground-counts-vantage-point-setup.other_target_species.other_species": {
+                "vantage-point-conduct-survey.other_target_species.other_species": {
                     "dataType": "text"
                 }
             },

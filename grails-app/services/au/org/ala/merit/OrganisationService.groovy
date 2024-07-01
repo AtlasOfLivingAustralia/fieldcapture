@@ -3,6 +3,9 @@ package au.org.ala.merit
 import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportOwner
+import org.grails.web.json.JSONArray
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.joda.time.Period
 
 /**
@@ -32,6 +35,22 @@ class OrganisationService {
         if (view != 'flat') {
             organisation.reports = getReportsForOrganisation(organisation, getReportConfig(id))
         }
+
+        // If the user is an admin for a management unit or has the FC_READ_ONLY role, they are allowed
+        // to view the reports and all documents.
+        boolean hasExtendedAccess = userService.isUserAdminForOrganisation(userService.getCurrentUserId(), id) || userService.userHasReadOnlyAccess()
+
+        Map documentSearchParameters = [organisationId: id]
+        if (!hasExtendedAccess) {
+            documentSearchParameters['public'] = true
+        }
+
+        Map results = documentService.search(documentSearchParameters)
+        if (results && results.documents) {
+            List categorisedDocs = results.documents.split{it.type == DocumentService.TYPE_LINK}
+            organisation.documents = new JSONArray(categorisedDocs[1])
+        }
+
         organisation
     }
 
@@ -255,6 +274,14 @@ class OrganisationService {
         return reportService.cancelReport(reportId, reportData.reportActivities, reason, reportData.organisation, reportData.members)
     }
 
+    def unCancelReport(String organisationId, Map reportDetails) {
+        Map reportData = setupReportLifeCycleChange(organisationId, reportDetails.reportId)
+
+        Map result = reportService.unCancelReport(reportDetails.reportId, reportDetails.activityIds, reportDetails.reason, reportData.organisation, reportData.members)
+
+        result
+    }
+
     /**
      * Performs the common setup required for a report lifecycle state change (e.g. submit/approve/return)
      * @param organisationId the ID of the program that owns the report
@@ -280,6 +307,27 @@ class OrganisationService {
             result = [abn: result.abn, name: result.entityName]
         }
         return result
+    }
+
+    Map scoresForOrganisationReport(String organisationId, String reportId, List scoreIds) {
+        Map organisation = get(organisationId)
+        Map report = organisation.reports?.find{it.reportId == reportId}
+        Map result = [:]
+        if (report) {
+            String format = 'YYYY-MM'
+
+            List dateBuckets = [report.fromDate, report.toDate]
+            Map results = reportService.dateHistogramOrgsForScores(organisationId, dateBuckets, format, scoreIds)
+
+            // Match the algorithm used in ecodata to determine the algorithm so we can determine
+            DateTime start = DateUtils.parse(report.fromDate).withZone(DateTimeZone.getDefault())
+            DateTime end = DateUtils.parse(report.toDate).withZone(DateTimeZone.getDefault())
+
+            String matchingGroup = DateUtils.format(start, format) + ' - ' + DateUtils.format(end.minusDays(1), format)
+            result = results.resp?.find{ it.group == matchingGroup } ?: [:]
+
+        }
+        scoreIds.collectEntries{ String scoreId ->[(scoreId):result.results?.find{it.scoreId == scoreId}?.result?.result ?: 0]}
     }
 
 }

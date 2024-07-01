@@ -359,7 +359,7 @@ var PidLocation = function (l) {
 
     // These layers are treated specially.
     var USER_UPLOAD_FID = 'c11083';
-    var OLD_NRM_LAYER_FIDS = ['cl916', 'cl2111'];
+    var OLD_NRM_LAYER_FIDS = ['cl916', 'cl2111', 'cl2120'];
 
 
     var self = this;
@@ -386,6 +386,9 @@ var PidLocation = function (l) {
                     url: fcConfig.featuresService + '?layerId=' +self.chosenLayer(),
                     dataType:'json'
                 }).done(function(data) {
+                    data = _.sortBy(data, function(item) {
+                        return item && item.name;
+                    });
                     self.layerObjects(data);
                     // During initialisation of the object list, any existing value for the chosen layer will have
                     // been set to undefined because it can't match a value in the list.
@@ -404,7 +407,7 @@ var PidLocation = function (l) {
     };
     //TODO load this from config
     self.layers = ko.observable([
-        {id:'cl2120', name:'NRM'},
+        {id:'cl11160', name:'NRM (2023)'},
         {id:'cl1048', name:'IBRA 7 Regions'},
         {id:'cl1049', name:'IBRA 7 Subregions'},
         {id:'cl22',name:'Australian states'},
@@ -415,9 +418,10 @@ var PidLocation = function (l) {
     if (l.fid == USER_UPLOAD_FID) {
         self.layers().push({id:USER_UPLOAD_FID, name:'User Uploaded'});
     }
-    else if ($.inArray(l.fid,OLD_NRM_LAYER_FIDS)) {
-        self.layers().push({id: l.fid, name:'NRM Regions - pre 2015'});
+    else if (_.contains(OLD_NRM_LAYER_FIDS, l.fid)) {
+        self.layers().push({id: l.fid, name:'NRM Regions - pre 2023'});
     }
+
     self.chosenLayer = ko.observable(exists(l,'fid'));
     self.layerObjects = ko.observable([]);
     self.layerObject = ko.observable(exists(l,'pid'));

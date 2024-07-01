@@ -725,6 +725,17 @@ class ProjectService  {
         result
     }
 
+    def unCancelReport(String projectId, Map reportDetails) {
+        Map reportInformation = prepareReport(projectId, reportDetails)
+        if (reportInformation.error) {
+            return [success:false, error:reportInformation.error]
+        }
+
+        Map result = reportService.unCancelReport(reportDetails.reportId, reportDetails.activityIds, reportDetails.reason, reportInformation.project, reportInformation.roles)
+
+        result
+    }
+
     /**
      * Creates a report to offset the scores produced by the supplied report without having to unapprove the original report and edit the data.
      * @param projectId the project the report belongs to.
@@ -1607,7 +1618,7 @@ class ProjectService  {
                     name:service.name,
                     id: service.id,
                     scores: service.scores?.collect { score ->
-                        new Score([scoreId: score.scoreId, label: score.label, isOutputTarget:score.isOutputTarget])
+                        new Score([scoreId: score.scoreId, label: score.label, isOutputTarget:score.isOutputTarget, relatedScores:score.relatedScores])
                     }
             ]
         }
@@ -1850,7 +1861,16 @@ class ProjectService  {
     Map getServiceDashboardData(String projectId, boolean approvedDataOnly) {
 
         List<Score> projectServices = getProjectServicesWithTargets(projectId)
-        List scoreIds = projectServices.collect{it.scores?.collect{score -> score.scoreId}}.flatten()
+        List scoreIds = projectServices.collect{it.scores?.collect{ score ->
+
+            if (score.relatedScores) {
+                return score.relatedScores.collect{it.scoreId} + score.scoreId
+            }
+            else {
+                return score.scoreId
+            }
+
+        }}.flatten()
 
         Map scoreSummary = projectSummary(projectId, approvedDataOnly, scoreIds)
 
@@ -1865,6 +1885,21 @@ class ProjectService  {
                     if (scoreData?.result) {
                         score.result = scoreData.result ?: [result:0]
                         deliveredAgainstTargets += score.result?.result ?: 0
+                    }
+                    if (score.relatedScores) {
+                        score.relatedScores.each { Map relatedScore ->
+                            Score invoicedScore = new Score(
+                                    [scoreId:relatedScore.scoreId,
+                                     label:relatedScore.label,
+                                     target:score.target,
+                                     overDeliveryThreshold: 100])
+                            relatedScore.score = invoicedScore
+
+                            Score relatedScoreData = scoreSummary.resp?.find{it.scoreId == relatedScore.scoreId}
+                            if (relatedScoreData) {
+                                invoicedScore.result = relatedScoreData.result ?: [result:0]
+                            }
+                        }
                     }
                     scores << score
                 }

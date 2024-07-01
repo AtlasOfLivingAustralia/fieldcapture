@@ -35,7 +35,7 @@
                                     <label for="plannedStartDate" class="col-sm-6 col-form-label">New Project Start Date: </label>
                                     <div class="col-sm-6">
                                         <div class="input-group">
-                                            <fc:datePicker class="form-control form-control-sm" bs4="true" targetField="plannedStartDate.date" name="plannedStartDate" data-validation-engine="validate[funcCall[validateProjectStartDate]]"/>
+                                            <fc:datePicker class="form-control form-control-sm" bs4="true" targetField="plannedStartDate.date" name="plannedStartDate" data-validation-engine="validate[funcCall[validateProjectStartDate]]" autocomplete="off"/>
                                         </div>
                                     </div>
                                 </div>
@@ -43,7 +43,7 @@
                                     <label for="plannedEndDate" class="col-sm-6 col-form-label">New Project End Date</label>
                                     <div class="col-sm-6">
                                         <div class="input-group">
-                                            <fc:datePicker class="form-control form-control-sm" bs4="true" targetField="plannedEndDate.date" name="plannedEndDate" data-validation-engine="validate[future[plannedStartDate]]"/>
+                                            <fc:datePicker class="form-control form-control-sm" bs4="true" targetField="plannedEndDate.date" name="plannedEndDate" data-validation-engine="validate[future[plannedStartDate]]" autocomplete="off"/>
                                         </div>
                                     </div>
                                 </div>

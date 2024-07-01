@@ -340,7 +340,7 @@ class ProjectIndexSpec extends StubbedCasSpec {
         and:
         waitFor 30,{
             admin.projectSettings.projectState.value() == "terminated"
-            admin.projectSettings.terminationReason == "Termination Reason Test"
+            admin.projectSettings.terminationReason.value() == "Termination Reason Test"
         }
 
 

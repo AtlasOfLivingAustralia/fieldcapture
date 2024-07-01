@@ -262,4 +262,18 @@ class ManagementUnitService {
         String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}" + "managementunit/"+id+"/report"
         webService.getJson(url)
     }
+
+    def cancelReport(String managementUnitId, String reportId, String reason) {
+        Map reportData = setupReportLifeCycleChange(managementUnitId, reportId)
+
+        return reportService.cancelReport(reportId, reportData.reportActivities, reason, reportData.organisation, reportData.members)
+    }
+
+    def unCancelReport(String managementUnitId, Map reportDetails) {
+        Map reportData = setupReportLifeCycleChange(managementUnitId, reportDetails.reportId)
+
+        Map result = reportService.unCancelReport(reportDetails.reportId, reportDetails.activityIds, reportDetails.reason, reportData.organisation, reportData.members)
+
+        result
+    }
 }

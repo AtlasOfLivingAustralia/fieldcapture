@@ -82,7 +82,7 @@
 
 	<g:if test="${showMeriPlanComparison}">
 
-		<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanChanges">Compare with the latest approved MERI Plan</button>
+		<button type="button" class="btn btn-sm btn-info" data-bind="enable:canCompareWithLatestApprovedPlan(), click: meriPlanChanges">Compare with the latest approved MERI Plan</button>
 
 	</g:if>
 <g:if test="${showMeriPlanHistory}">

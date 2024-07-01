@@ -52,7 +52,14 @@ class ProjectConfigurationService {
                     // If the program configuration has specified a list of scores for the service, use those,
                     // otherwise use all possible scores that can be used by the service.
                     if (serviceConfig.serviceTargets) {
-                        scores = scores?.findAll { it.scoreId in serviceConfig.serviceTargets }
+                        List primaryScores = scores?.findAll { it.scoreId in serviceConfig.serviceTargets }
+                        primaryScores.each { Map score ->
+                            score.relatedScores?.each { Map relatedScore ->
+                                Map fullRelatedScore = scores.find { it.scoreId == relatedScore.scoreId }
+                                relatedScore.score = fullRelatedScore
+                            }
+                        }
+                        scores = primaryScores
                     }
 
                     // This allows programs to override the service name if required.  This is needed as the
