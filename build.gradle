@@ -165,7 +165,9 @@ dependencies {
     testImplementation "com.codeborne:phantomjsdriver:1.3.0"
     testImplementation "com.icegreen:greenmail:1.5.14"
     testImplementation "org.grails:grails-gorm-testing-support"
-    testImplementation "org.grails.plugins:geb"
+    testImplementation ("org.grails.plugins:geb") {
+        exclude module: "grails-core"
+    }
     testImplementation "org.grails:grails-web-testing-support"
     testImplementation(platform('org.junit:junit-bom:5.9.1'))
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
