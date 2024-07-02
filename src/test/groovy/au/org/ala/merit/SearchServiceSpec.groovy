@@ -2,7 +2,6 @@ package au.org.ala.merit
 
 import au.org.ala.merit.hub.HubSettings
 import grails.core.GrailsApplication
-import grails.test.mixin.TestFor
 import grails.testing.spring.AutowiredTest
 import org.apache.http.HttpStatus
 import spock.lang.Specification
