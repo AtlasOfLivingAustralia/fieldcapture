@@ -30,6 +30,24 @@ function addDescriptionToMUReports(category, description) {
     }
 }
 
+function addDescriptionToOrganisationReports(category, description, auditUserId) {
+    var orgs = db.organisation.find({status:{$ne:'deleted'}});
+    while (orgs.hasNext()) {
+        var org = orgs.next();
+
+        if (org.config && org.config.organisationReports) {
+            for (var i=0; i<org.config.organisationReports.length; i++) {
+                if (org.config.organisationReports[i].category == category) {
+                    org.config.organisationReports[i].description = description;
+                    print("Updating report description for organisation: "+org.name);
+                    db.organisation.replaceOne({organisationId:org.organisationId}, org);
+                    audit(org, org.organisationId, 'au.org.ala.ecodata.Organisation', auditUserId);
+                }
+            }
+        }
+    }
+}
+
 function addDescriptionToProgramReports(category, description, programs) {
     var criteria = {status:{$ne:'deleted'}};
     if (programs) {
