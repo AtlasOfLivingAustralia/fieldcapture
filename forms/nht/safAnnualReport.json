@@ -40,6 +40,160 @@
           },
           {
             "dataType": "text",
+            "name": "keyAchievements",
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "adaptiveManagementActions",
+            "validate": "maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "identifyAdaptiveManagementActions",
+            "description": "Clause 22.2 outlines changes that do not require a Change Order",
+            "validate": "maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "requireChangesAdaptiveManagementActions",
+            "validate": "maxSize[1250]"
+          },
+          {
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "serviceName"
+              },
+              {
+                "dataType": "text",
+                "name": "targetMeasure",
+                "description": "The target measure identified in the MERI plan"
+              },
+              {
+                "dataType": "text",
+                "name": "scoreId",
+                "description": "Identifier for the target measure"
+              },
+              {
+                "dataType": "text",
+                "name": "annualTarget",
+                "description": "The minimum annual target specified in the MERI plan for the target measure"
+              },
+              {
+                "dataType": "text",
+                "name": "result",
+                "description": "The actual progress towards the target this financial year"
+              },
+              {
+                "dataType": "text",
+                "name": "reasonTargetNotMet",
+                "behaviour": [
+                  {
+                    "condition": "result < annualTarget or result > annualTarget",
+                    "type": "enable_and_clear"
+                  }
+                ],
+                "validate": "required"
+              }
+            ],
+            "dataType": "list",
+            "name": "minimumAnnualTargetsNotMet"
+          },
+          {
+            "dataType": "text",
+            "name": "newRisksIdentified",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "yesNewRisksIdentified",
+            "behaviour": [
+              {
+                "condition": "newRisksIdentified == \"Yes\"",
+                "type": "visible"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "projectEncounteredChange",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "projectEncounteredChangeDetails",
+            "validate": "required,maxSize[1250]",
+            "behaviour": [
+              {
+                "condition": "projectEncounteredChange == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "hasWhsRegisterReview",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "yesWhsRegisterReview",
+            "behaviour": [
+              {
+                "condition": "hasWhsRegisterReview == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "noWhsRegisterReview",
+            "behaviour": [
+              {
+                "condition": "hasWhsRegisterReview == \"No\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[1250]"
+          },
+          {
+            "dataType": "text",
+            "name": "psoMoreDetails",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "yesPsoMoreDetails",
+            "behaviour": [
+              {
+                "condition": "psoMoreDetails == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required,maxSize[1250]"
+          },
+
+
+          {
+            "dataType": "text",
             "name": "psoMoreDetails",
             "constraints": [
               "Yes",
@@ -206,12 +360,12 @@
           {
             "dataType": "number",
             "name": "numberOfCommunityGroupsSupported",
-            "validate": "required,min[0]"
+            "validate": "integer"
           },
           {
             "dataType": "number",
             "name": "numberOfFarmsAdoptingSustainablePractices",
-            "validate": "required,min[0]"
+            "validate": "integer"
           }
         ],
         "viewModel": [
@@ -219,7 +373,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "Are there any activities from your Project Implementation Plan that will need to be carried forward?",
+                "preLabel": "1. Are there any activities from your Project Implementation Plan that will need to be carried forward?",
                 "source": "activitiesCarriedForward",
                 "type": "selectOne"
               }
@@ -229,7 +383,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "Please outline the Project Implementation Plan activities that need to be carried forward.",
+                "preLabel": "1.a Please outline the Project Implementation Plan activities that need to be carried forward.",
                 "source": "yesActivitiesCarriedForward",
                 "type": "textarea",
                 "rows": 4
@@ -240,8 +394,10 @@
             "type": "row",
             "items": [
               {
-                "type": "literal",
-                "source": "<h4>This section provides a summary of the reported Project Support & Overheads data during the previous financial year.</h4>"
+                "preLabel": "2. Please outline the key Project achievements over the past 12 months, including emerging trends from monitoring, and progress against your Project Implementation Plan and towards your Project MERI Plan Outcomes (PSP 4.1(b)(i) and (ii)).",
+                "source": "keyAchievements",
+                "type": "textarea",
+                "rows": 4
               }
             ]
           },
@@ -249,7 +405,170 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "This report aggregates data from the Project Support & Overheads fields reported in the last 12 months through quarterly reporting. Please review for accuracy.<br> Do you require any changes to these tables?",
+                "preLabel": "3. If applicable, please describe any adaptive management actions undertaken during the past 12 months to address/rectify key issues and challenges and to improve the effectiveness of Project coordination and delivery (PSP 4.1(b)(iii)).",
+                "source": "adaptiveManagementActions",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "3.a If applicable, please identify which of the adaptive management actions were applied to the Project in relation to Clause 22.2 of the Deed (i.e., changes not requiring a change order).",
+                "source": "identifyAdaptiveManagementActions",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "3.b If applicable, please identify which of the adaptive management actions require changes to the MERI Plan or Work Order, the nature of the changes, and why they are required.",
+                "source": "requireChangesAdaptiveManagementActions",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
+          },
+          {
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "readonly": true,
+                "width": "15%",
+                "source": "serviceName",
+                "type": "textarea",
+                "rows": 3,
+                "title": "Project Service"
+              },
+              {
+                "readonly": true,
+                "width": "20%",
+                "source": "targetMeasure",
+                "type": "textarea",
+                "rows": 3,
+                "title": "Target measure"
+              },
+              {
+                "readonly": true,
+                "width": "13%",
+                "source": "annualTarget",
+                "type": "text",
+                "title": "Minimum annual target (for this reporting period)"
+              },
+              {
+                "readonly": true,
+                "width": "12%",
+                "source": "result",
+                "type": "text",
+                "title": "Actual achievement"
+              },
+              {
+                "width": "40%",
+                "source": "reasonTargetNotMet",
+                "type": "textarea",
+                "rows": 3,
+                "title": "Explanation of target under or over delivery (500 character, [approx. 100 word] limit)"
+              }
+            ],
+            "userAddedRows": false,
+            "source": "minimumAnnualTargetsNotMet",
+            "title": "<b>4. Progress against Project Services forecasts</b><br/>",
+            "type": "table"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "5. In the past 12 months were any new risks identified and/or any risk mitigation strategies adjusted during the delivery of the Project? (PSP 4.1(b)(iv))",
+                "source": "newRisksIdentified",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "",
+                "source": "yesNewRisksIdentified",
+                "preLabel": "<i><b style=\"background-color:yellow\">Please ensure you update the Project risks & threats table in MERIT.</b></i>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "6. In the past 12 months, has this Project encountered any changes to the total planned Community and First Nations people participation and investment levels over the Project’s life? (PSP 4.1(b)(v))?",
+                "source": "projectEncounteredChange",
+                "type": "selectOne",
+                "rows": 4
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "6.a Please outline these changes.",
+                "source": "projectEncounteredChangeDetails",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "7. Was the Project WHS Risk Register reviewed in the past 12 months? (PSP 4.1(b)(iv))",
+                "css": "span6",
+                "source": "hasWhsRegisterReview",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "7.a Please provide details of the review and any changes made to the Project WHS Risk Register. Please submit the revised Project Risk Register to your Customer Contract Manager if you have not already done so.",
+                "source": "yesWhsRegisterReview",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "7.b Please provide an explanation of why the Project WHS Risk Register has not been reviewed.",
+                "source": "noWhsRegisterReview",
+                "type": "textarea",
+                "rows": 4
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<h4>8. Project Support and Overheads Summary Data Tables</h4>",
+                "type": "literal"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "8.a This report aggregates data from the Project Support & Overheads fields reported in the last 12 months through quarterly reporting. Please review for accuracy.<br> Do you require any changes to these tables?",
                 "source": "psoMoreDetails",
                 "type": "selectOne"
               }
@@ -259,13 +578,15 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "If yes, please outline the required changes below:",
+                "preLabel": "8.b If yes, please outline the required changes below:",
                 "source": "yesPsoMoreDetails",
                 "type": "textarea",
                 "rows": 4
               }
             ]
           },
+
+
           {
             "type": "row",
             "items": [
@@ -495,7 +816,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<h3>Sustainable agricultural practices</h3>"
+                "source": "<h3>9. Sustainable agricultural practices</h3>"
               }
             ]
           },
@@ -517,12 +838,12 @@
                   {
                     "type": "number",
                     "source": "numberOfCommunityGroupsSupported",
-                    "preLabel": "Number of community groups supported through the project"
+                    "preLabel": "9.a Number of community groups supported through the project"
                   },
                   {
                     "type": "number",
                     "source": "numberOfFarmsAdoptingSustainablePractices",
-                    "preLabel": "How many farms have adopted sustainable agriculture practices through the project?"
+                    "preLabel": "9.b How many farms have adopted sustainable agriculture practices through the project?"
                   }
                 ]
               }
