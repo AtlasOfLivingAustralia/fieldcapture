@@ -87,7 +87,7 @@
 </div>
 
 <g:render template="/shared/timeoutMessage"
-          model="${[url:fc.loginUrl(loginReturnToUrl:createLink(controller: 'project', action: 'editReport', absolute: true, id: activity.projectId, params: [reportId: report.reportId]))]}"/>
+          model="${[url:fc.loginUrl(loginReturnToUrl:createLink(controller: 'home', action: 'close', absolute: true)), newWindow:true]}"/>
 
 <g:render template="/shared/documentTemplate"></g:render>
 
@@ -98,7 +98,6 @@
 <asset:javascript src="enterActivityData.js"/>
 
 <script type="text/javascript">
-
     $(function () {
         var returnTo = "${returnTo}";
         var activity = <fc:modelAsJavascript model="${activity}" default="{}"/>
