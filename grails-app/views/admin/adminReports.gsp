@@ -63,7 +63,7 @@
         </div>
     </div>
     <a id="orgReportDownload" data-bind="click:entityReportDownload" class="btn btn-sm" href="#">Organisation - Activities</a>
-    <a id="orgReportDownloadSummary" data-bind="click:entityReportDownloadSummary" class="btn btn-sm" href="#">Core Reports - Status</a>
+    <a id="orgReportDownloadSummary" data-bind="click:entityReportDownloadSummary" class="btn btn-sm" href="#">RCS Reports - Status</a>
 </form>
 
 
