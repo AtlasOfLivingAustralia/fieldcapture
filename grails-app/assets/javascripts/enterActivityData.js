@@ -214,15 +214,14 @@ var Master = function (activityId, config) {
         var config = _.defaults(options, defaults);
         var viewModel = new config.constructorFunction(output, config.model.dataModel, context, config);
         context.lifecycleState.state = 'modelCreated';
-        viewModel.initialise(output.data).done(function () {
 
-            // Check for locally saved data for this output - this will happen in the event of a session timeout
-            // for example.
+        // Check for locally saved data for this output - this will happen in the event of a session timeout
+        // for example.
+        var savedOutput = self.findLocallySavedData(output, config);
+
+        viewModel.initialise(savedOutput || output.data).done(function () {
+
             viewModel.dirtyFlag = config.dirtyFlag(viewModel, false);
-            var savedOutput = self.findLocallySavedData(output, config);
-            if (savedOutput) {
-                viewModel.loadData(savedOutput);
-            }
 
             ko.applyBindings(viewModel, document.getElementById(config.viewRootElementId));
 

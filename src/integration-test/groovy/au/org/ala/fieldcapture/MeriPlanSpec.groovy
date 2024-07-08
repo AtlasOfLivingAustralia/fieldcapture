@@ -153,17 +153,8 @@ class MeriPlanSpec extends StubbedCasSpec {
         waitFor {timeoutModal.displayed}
 
         when: "Click the re-login link and log back in"
-        timeoutModal.loginLink.click()
-        // Our stubs are automatically logging us in here.
-
-        then: "The page is reloaded and the edits are still there"
-        waitFor { at RlpProjectPage }
-
-        and: "A dialog is displayed to say there are unsaved edits"
-        waitFor {unsavedEdits.displayed}
-
-        when:
-        okBootbox()
+        timeoutModal.loginLink.click()   // The stubs will auto log us in and the window will immediately close.
+        okBootbox() // close the popup that asks us to login again.
 
         meriPlan = openMeriPlanEditTab()
 

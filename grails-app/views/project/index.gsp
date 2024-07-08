@@ -198,7 +198,7 @@
         <fc:tabContent tabs="${projectContent}"/>
     </div>
     <g:render template="/shared/timeoutMessage"
-              model="${[url:fc.loginUrl(loginReturnToUrl:createLink(action: 'index', id: project.projectId, absolute: true))]}"/>
+              model="${[url:fc.loginUrl(loginReturnToUrl:createLink(controller: 'home', action: 'close', absolute: true)), newWindow:true]}"/>
     <g:render template="/shared/unsavedChanges" model="${[id: 'meriPlanUnsavedChanges', unsavedData: 'MERI Plan']}"/>
     <g:render template="/shared/unsavedChanges" model="${[id: 'risksUnsavedChanges', unsavedData: 'Risks & Threats']}"/>
 
