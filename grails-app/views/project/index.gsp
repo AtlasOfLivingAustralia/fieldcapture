@@ -331,7 +331,7 @@ var config = {
     config.programActivities = <fc:modelAsJavascript model="${config.program?.config?.activities?.collect { it.name } ?: []}"/>
     config.excludeFinancialYearData = ${config.program?.config?.excludeFinancialYearData ?: false};
     config.canModifyMeriPlan = ${projectContent.admin.canModifyMeriPlan};
-    config.nonAgricultureOutcomeStartIndex = ${projectContent.admin.nonAgricultureOutcomeStartIndex};
+    config.outcomeStartIndex = ${projectContent.admin.outcomeStartIndex};
     config.userHoldsMeriPlanLock = ${project.lock?.userId == user?.userId};
     config.viewReportUrl = fcConfig.viewReportUrl;
     config.bieUrl = fcConfig.bieUrl;

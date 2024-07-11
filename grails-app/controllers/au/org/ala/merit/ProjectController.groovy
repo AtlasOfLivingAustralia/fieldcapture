@@ -164,7 +164,7 @@ class ProjectController {
         boolean hasSubmittedOrApprovedFinalReportInCategory = projectService.hasSubmittedOrApprovedFinalReportInCategory(project)
         def meriPlanVisible = config.includesContent(ProgramConfig.ProjectContent.MERI_PLAN)
         boolean canModifyMeriPlan = config.requireMeritAdminToReturnMeriPlan ?  userService.userIsAlaOrFcAdmin() : user?.isCaseManager
-        int nonAgricultureOutcomeStartIndex = (config.nonAgricultureOutcomeStartIndex) ?: AGRICULTURE_OUTCOME_START_INDEX;
+        int outcomeStartIndex = (config.nonAgricultureoOutcomeStartIndex) ?: AGRICULTURE_OUTCOME_START_INDEX;
         def risksAndThreatsVisible = config.includesContent(ProgramConfig.ProjectContent.RISKS_AND_THREATS) && user?.hasViewAccess
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)
         def meriPlanEnabled = user?.hasViewAccess || ((project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding'))
@@ -206,7 +206,7 @@ class ProjectController {
                      site           : [label: 'Sites', visible: config.includesContent(ProgramConfig.ProjectContent.SITES), disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
                      dashboard      : [label: 'Dashboard', visible: config.includesContent(ProgramConfig.ProjectContent.DASHBOARD), disabled: !user?.hasViewAccess, type: 'tab'],
                      datasets       : [label: 'Data set summary', visible: datasetsVisible, template: '/project/dataset/dataSets', type:'tab'],
-                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage', canRegenerateReports: canRegenerateReports, hasSubmittedOrApprovedFinalReportInCategory: hasSubmittedOrApprovedFinalReportInCategory, canModifyMeriPlan: canModifyMeriPlan, showRequestLabels:config.supportsParatoo, nonAgricultureOutcomeStartIndex:nonAgricultureOutcomeStartIndex]]
+                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage', canRegenerateReports: canRegenerateReports, hasSubmittedOrApprovedFinalReportInCategory: hasSubmittedOrApprovedFinalReportInCategory, canModifyMeriPlan: canModifyMeriPlan, showRequestLabels:config.supportsParatoo, outcomeStartIndex:outcomeStartIndex]]
 
         if (template == MERI_ONLY_TEMPLATE) {
             model = [details:model.details]
