@@ -31453,7 +31453,7 @@
                   },
                   {
                     "name": "datasetSupports",
-                    "dataType": "text",
+                    "dataType": "stringList",
                     "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
                     "validate": "required",
                     "constraints": {
