@@ -7,9 +7,6 @@ import org.apache.http.HttpStatus
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
-import org.grails.web.json.JSONArray
-import org.grails.web.json.JSONObject
-
 
 class ActivityController {
 

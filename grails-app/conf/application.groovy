@@ -161,6 +161,9 @@ if(!app.http.header.userId){
 if (!app.enableALAHarvestSetting) {
     app.enableALAHarvestSetting = false
 }
+if(!app.domain.whiteList) {
+    app.domain.whiteList = "ala.org.au,localhost"
+}
 
 ecodata.baseUrl = "https://ecodata-test.ala.org.au/ws/"
 // This is for biocollect/ecodata-client-plugin compatibility
@@ -242,17 +245,17 @@ security {
         discoveryUri = "${auth.baseUrl}/cas/oidc/.well-known"
         clientId = "changeMe"
         secret = "changeMe"
-        scope = "openid,profile,email,roles,user_defined,ala"
+        scope = "openid profile email roles user_defined ala"
     }
     jwt {
-        enabled = false
+        enabled = true
         discoveryUrl = "${auth.baseUrl}/cas/oidc/.well-known"
         requiredClaims = ["sub", "iat", "exp", "jti", "client_id"]
     }
 }
 
-webservice.jwt = false
-webservice['jwt-scopes'] = "ala/internal users/read ala/attrs users/read ecodata/write_test ecodata/read_test"
+webservice.jwt = true
+webservice['jwt-scopes'] = "ala/internal users/read ala/attrs ecodata/read ecodata/write"
 webservice['client-id']='changeMe'
 webservice['client-secret'] = 'changeMe'
 
@@ -290,6 +293,10 @@ environments {
         wiremock.port = 8018
         security.oidc.discoveryUri = "http://localhost:${wiremock.port}/cas/oidc/.well-known"
         security.oidc.allowUnsignedIdTokens = true
+        security.oidc.clientId="oidcId"
+        security.oidc.secret="oidcSecret"
+        webservice['client-id']="jwtId"
+        webservice['client-secret'] = "jwtSecret"
         def casBaseUrl = "http://localhost:${wiremock.port}"
         ehcache.directory = './ehcache'
         security.cas.appServerName=serverName
