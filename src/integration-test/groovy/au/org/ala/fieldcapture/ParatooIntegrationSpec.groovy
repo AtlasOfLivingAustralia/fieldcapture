@@ -1,12 +1,14 @@
 package au.org.ala.fieldcapture
 
 import au.org.ala.ws.service.WebService
+import au.org.ala.ws.tokens.TokenService
 import groovy.json.JsonSlurper
-import org.apache.http.entity.ContentType
-import org.grails.testing.GrailsUnitTest
 import org.apache.http.HttpStatus
-import spock.lang.Stepwise
+import org.apache.http.entity.ContentType
+import org.grails.spring.beans.factory.InstanceFactoryBean
+import org.grails.testing.GrailsUnitTest
 import pages.RlpProjectPage
+import spock.lang.Stepwise
 
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
@@ -28,6 +30,9 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
     }
 
     def setup() {
+        defineBeans {
+            tokenService(InstanceFactoryBean, Stub(TokenService), TokenService)
+        }
         webService = new WebService(grailsApplication: getGrailsApplication())
     }
 
