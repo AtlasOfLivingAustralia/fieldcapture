@@ -14,7 +14,7 @@ function setupTimeoutWarning(options) {
     var $loginButton = $('#' + options.loginButtonId);
 
     // Set up a timer that will periodically poll the server to keep the session alive
-    var intervalSeconds = 5//; * 60;
+    var intervalSeconds = 5 * 60;
 
     function fireKeepAlive() {
         $.ajax(options.keepSessionAliveUrl).fail(function (xhr) {
@@ -58,9 +58,9 @@ function setupTimeoutWarning(options) {
         }
     });
     window.addEventListener('online', function() {
-        $networkWarningBanner.hide();
+        fireKeepAlive();
     });
     window.addEventListener('offline', function() {
-        $networkWarningBanner.show();
+        fireKeepAlive();
     });
 }
