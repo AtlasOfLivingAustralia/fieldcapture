@@ -109,7 +109,10 @@ enum SettingPageType {
     ORGANISATION_REPORT_RETURNED_EMAIL_SUBJECT('organisationReportReturnedEmailSubject', 'Organisation Report returned email subject line text', 'organisation_report.returned.emailSubject'),
     ORGANISATION_REPORT_RETURNED_EMAIL_BODY('organisationReportReturnedEmailBody', 'Organisation Report returned email body text', 'organisation_report.returned.emailBody'),
     ORGANISATION_REPORT_CONFIG('organisationReportConfig', 'Report configuration options for organisations', 'organisation.availableReportsConfig'),
-    PLANT_LABEL_INSTRUCTIONS('plantLabelInstructions', 'Instructions for printing plant labels', 'plantLabelInstructions')
+    PLANT_LABEL_INSTRUCTIONS('plantLabelInstructions', 'Instructions for printing plant labels', 'plantLabelInstructions'),
+    SESSION_TIMEOUT_WARNING('sessionTimeoutWarning', 'Banner message when a user session has timed out', 'sessionTimeoutWarning'),
+    NETWORK_LOST_WARNING('networkLostWarning', 'Banner message when MERIT detects the network connection to the server is unavailable', 'networkLostWarning')
+
     String name
     String title
     String key

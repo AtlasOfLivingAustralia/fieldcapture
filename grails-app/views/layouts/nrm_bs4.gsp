@@ -51,17 +51,18 @@
         <fc:announcementContent/>
     </div>
 </g:if>
+<auth:ifLoggedIn>
+    <div id="logout-warning" style="display:none">
+        <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.SESSION_TIMEOUT_WARNING}"/>
+        <a href="${fc.loginUrl(loginReturnToUrl:createLink(controller: 'home', action: 'close', absolute: true))}" target="loginWindow">Click here to login again (opens a new window)</a>
+    </div>
+    <div id="network-warning" style="display:none">
+        <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.NETWORK_LOST_WARNING}"/>
+    </div>
+
+</auth:ifLoggedIn>
 
 <div class="page-header page-header-bs4">
-    <g:if test="${fc.currentUserDisplayName()}">
-        <div id="logout-warning" class="d-none">
-            <div class="alert alert-error text-center">
-                <strong>You have logged out of MERIT from another tab.  Any changes you have made will not be saved to the server until you log back in.</strong>
-                <fc:loginInNewWindow>Click here to login again (opens a new window)</fc:loginInNewWindow>
-            </div>
-        </div>
-    </g:if>
-
     <div class="navbar navbar-static-top navbar-expand-md navbar-light" id="header">
         <div class="${containerType}">
             <g:if test="${hubConfig.logoUrl}">
@@ -204,13 +205,18 @@
                 }
             });
 
-            // Set up a timer that will periodically poll the server to keep the session alive
-            var intervalSeconds = 5 * 60;
-
-            setInterval(function () {
-                $.ajax("${createLink(controller: 'ajax', action:'keepSessionAlive')}").done(function (data) {
-                });
-            }, intervalSeconds * 1000);
+            var options = {
+                keepSessionAliveUrl: "${g.createLink(controller: 'ajax', action:'keepSessionAlive')}",
+                logoutWarningBannerId: 'logout-warning',
+                networkWarningBannerId: 'network-warning',
+                logoutButtonId: 'btnLogout',
+                loginButtonId: 'btnLogin'
+            };
+            var loggedIn = false;
+            <auth:ifLoggedIn>
+            loggedIn = true;
+            </auth:ifLoggedIn>
+            setupTimeoutWarning(options);
 
         }); // end document ready
 

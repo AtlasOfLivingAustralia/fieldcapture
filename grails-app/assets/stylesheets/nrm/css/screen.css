@@ -2444,6 +2444,21 @@ div#announcement p {
     margin: 0;
 }
 
+div#logout-warning, div#network-warning {
+    padding: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    background-color: red;
+    border-bottom: 0px solid red;
+}
+#logout-warning a:visited, #network-warning a:visited {
+    color:white;
+}
+
+
+
 .container-fluid form.search.merit {
     display: block;
     float: left;

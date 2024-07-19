@@ -934,20 +934,6 @@ function replaceContentSection(contentSelector, url) {
     });
 }
 
-$(function() {
-    $('#logout-btn').click(function() {
-        if (window.localStorage) {
-            window.localStorage.setItem('logout', new Date().getTime());
-        }
-    });
-    $('#logout-warning a').click(function(){ $('#logout-warning').hide(); });
-    window.addEventListener('storage', function(e) {
-        if (e.key == 'logout') {
-            $('#logout-warning').show();
-        }
-    });
-});
-
 function stageNumberFromStage(stage) {
     var stageRegexp = /.+ (\d+)/;
     var match = stageRegexp.exec(stage);
