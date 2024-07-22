@@ -223,16 +223,6 @@
         <button id="gotoEditBlog" class="btn btn-sm "><i class="fa fa-edit"></i> Edit</button>
     </g:if>
 
-    <g:if test="${publicImages}">
-        <div class="">
-            <h3>Project photos</h3>
-            <g:render template="thumbnails" model="${[publicImages: publicImages]}"/>
-        </div>
-        <hr/>
-
-    </g:if>
-
-
     <g:if test="${hasNewsAndEvents}">
         <h3>News & events</h3>
 
