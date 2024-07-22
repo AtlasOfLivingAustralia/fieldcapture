@@ -1,12 +1,23 @@
 package au.org.ala.fieldcapture
 
+import au.org.ala.web.Pac4jContextProvider
 import au.org.ala.ws.service.WebService
+import au.org.ala.ws.tokens.TokenClient
 import au.org.ala.ws.tokens.TokenService
+import com.nimbusds.oauth2.sdk.id.Issuer
+import com.nimbusds.openid.connect.sdk.SubjectType
+import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata
 import groovy.json.JsonSlurper
 import org.apache.http.HttpStatus
 import org.apache.http.entity.ContentType
-import org.grails.spring.beans.factory.InstanceFactoryBean
 import org.grails.testing.GrailsUnitTest
+import org.pac4j.core.config.Config
+import org.pac4j.core.context.WebContext
+import org.pac4j.jee.context.JEEContextFactory
+import org.pac4j.jee.context.session.JEESessionStore
+import org.pac4j.oidc.config.OidcConfiguration
+import org.springframework.mock.web.MockHttpServletRequest
+import org.springframework.mock.web.MockHttpServletResponse
 import pages.RlpProjectPage
 import spock.lang.Stepwise
 
@@ -18,7 +29,6 @@ import java.util.concurrent.Executors
 // We need GrailsUnitTest because the WebService class has a dependency on grailsApplication.config
 // It slows startup down quite a bit though
 class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
-
     WebService webService
 
     def setupSpec() {
@@ -30,10 +40,27 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
     }
 
     def setup() {
-        defineBeans {
-            tokenService(InstanceFactoryBean, Stub(TokenService), TokenService)
+        def config = Stub(Config)
+        def oidcConfiguration = Stub(OidcConfiguration)
+        oidcConfiguration.clientId >> testConfig.security.oidc.clientId
+        oidcConfiguration.secret >> testConfig.security.oidc.secret
+        def providerMetadata = new OIDCProviderMetadata(new Issuer(testConfig.issuerURI), [SubjectType.PUBLIC], testConfig.jwkURI.toURI())
+        providerMetadata.setTokenEndpointURI(testConfig.tokenURI.toURI())
+        oidcConfiguration.findProviderMetadata() >> providerMetadata
+        def request = new MockHttpServletRequest()
+        request.getSession(true)
+        def response = new MockHttpServletResponse()
+        def pac4jContextProvider = new Pac4jContextProvider() {
+            @Override
+            WebContext webContext() {
+                JEEContextFactory.INSTANCE.newContext(request, response)
+            }
         }
-        webService = new WebService(grailsApplication: getGrailsApplication())
+        def sessionStore = JEESessionStore.INSTANCE
+        def tokenClient = new TokenClient(oidcConfiguration)
+        def tokenService = new TokenService(config, oidcConfiguration, pac4jContextProvider, sessionStore, tokenClient, testConfig.webservice["client-id"], testConfig.webservice["client-secret"], testConfig.webservice["jwt-scopes"], false)
+
+        webService = new WebService(grailsApplication: getGrailsApplication(), tokenService: tokenService)
     }
 
     private Map buildMintCollectionIdPayload() {
@@ -180,8 +207,7 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
         executor.invokeAll(callables)
 
         String url = testConfig.ecodata.baseUrl + 'project/'+projectId
-        Map resp = webService.get(url)
-
+        Map resp = webService.get(url, [:], ContentType.APPLICATION_JSON, true, false)
 
         then:
         resp.resp?.custom?.dataSets?.size() == 101

@@ -297,6 +297,9 @@ environments {
         security.oidc.secret="oidcSecret"
         webservice['client-id']="jwtId"
         webservice['client-secret'] = "jwtSecret"
+        tokenURI = "http://localhost:${wiremock.port}/cas/oidc/oidcAccessToken"
+        jwkURI = "http://localhost:${wiremock.port}/cas/oidc/jwks"
+        issuerURI = "http://localhost:${wiremock.port}/cas/oidc"
         def casBaseUrl = "http://localhost:${wiremock.port}"
         ehcache.directory = './ehcache'
         security.cas.appServerName=serverName
