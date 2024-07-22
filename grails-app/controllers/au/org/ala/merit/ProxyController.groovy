@@ -74,7 +74,7 @@ class ProxyController {
     def excelOutputTemplate() {
         String url =  "${grailsApplication.config.getProperty('ecodata.baseUrl')}metadata/excelOutputTemplate?type=${params.type?.encodeAsURL()}&listName=${params.listName?.encodeAsURL()}"
 
-        webService.proxyGetRequest(response, url)
+        webService.proxyGetRequest(response, url, true, true)
         return null
     }
 
