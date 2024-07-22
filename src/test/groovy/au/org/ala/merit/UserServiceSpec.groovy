@@ -447,7 +447,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         Map result = service.addUserAsRoleToProject(userId, "p1", role)
 
         then:
-        result.error?.startsWith("User Merit User doesn't have the correct level of system access to be assigned an $role role.")
+        result.error?.startsWith("User Merit User doesn't have the correct level of system access to be assigned the $role role.")
 
         where:
         role | _
@@ -472,7 +472,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         Map result = service.addUserAsRoleToProject(toAddUserId, "p1", RoleService.GRANT_MANAGER_ROLE)
 
         then:
-        result.error?.startsWith("User Merit User doesn't have the correct level of system access to be assigned a grant manager role.")
+        result.error?.startsWith("User Merit User doesn't have the correct level of system access to be assigned the grant manager role.")
 
         where:
         role | _
