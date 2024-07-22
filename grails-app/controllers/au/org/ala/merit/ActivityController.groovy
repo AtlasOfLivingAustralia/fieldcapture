@@ -614,7 +614,7 @@ class ActivityController {
         }
         else {
             url += "?type=${params.type?.encodeAsURL()}&listName=${params.listName?.encodeAsURL()}"
-            webService.proxyGetRequest(response, url)
+            webService.proxyGetRequest(response, url, true, true)
         }
 
         return null

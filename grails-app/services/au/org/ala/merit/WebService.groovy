@@ -169,7 +169,11 @@ class WebService {
     }
 
     def proxyGetRequest(HttpServletResponse response, String url, boolean includeUserId = true, boolean includeApiKey = false, Integer timeout = null) {
-        String authHeaderType = includeApiKey ?  AUTHORIZATION_HEADER_TYPE_API_KEY : AUTHORIZATION_HEADER_TYPE_SYSTEM_BEAREN_TOKEN
+        String authHeaderType = AUTHORIZATION_HEADER_TYPE_NONE
+        if (includeApiKey) {
+            authHeaderType = useJWT() ? AUTHORIZATION_HEADER_TYPE_SYSTEM_BEAREN_TOKEN : AUTHORIZATION_HEADER_TYPE_API_KEY
+        }
+
         proxyGetRequest(response, url, authHeaderType, timeout)
     }
 
@@ -211,7 +215,7 @@ class WebService {
      * Proxies a request URL with post data but doesn't assume the response is text based. (Used for proxying requests to
      * ecodata for excel-based reports)
      */
-    def proxyPostRequest(HttpServletResponse response, String url, Map postBody, boolean includeUserId = true, boolean includeApiKey = false, Integer timeout = null, boolean requireUserToken = false) {
+    def proxyPostRequest(HttpServletResponse response, String url, Map postBody, boolean includeUserId = true, boolean includeApiKey = true, Integer timeout = null, boolean requireUserToken = false) {
 
         def charEncoding = 'utf-8'
 

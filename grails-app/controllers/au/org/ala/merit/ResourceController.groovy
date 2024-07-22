@@ -25,7 +25,7 @@ class ResourceController {
         String url = grailsApplication.config.getProperty('pdfgen.baseURL')+'api/pdf'+commonService.buildUrlParamsFromMap(docUrl:params.file, cacheable:false)
         Map result
         try {
-            result = webService.proxyGetRequest(response, url, false, false, 10*60*1000)
+            result = webService.proxyGetRequest(response, url, false, true, 10*60*1000)
         }
         catch (Exception e) {
             log.error("Error generating a PDF", e)
