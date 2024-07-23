@@ -2,7 +2,6 @@ package au.org.ala.fieldcapture
 
 import asset.pipeline.AssetPipelineConfigHolder
 import au.org.ala.ecodata.forms.TemplateFileAssetResolver
-import au.org.ala.merit.SessionLogger
 import grails.boot.GrailsApp
 import grails.boot.config.GrailsApplicationPostProcessor
 import grails.boot.config.GrailsAutoConfiguration
@@ -10,12 +9,12 @@ import grails.converters.JSON
 import grails.core.GrailsApplication
 import grails.util.BuildSettings
 import grails.util.Environment
+import grails.util.Metadata
 import groovy.util.logging.Slf4j
 import net.sf.json.JSONNull
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
-import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
 import org.springframework.context.annotation.Bean
 
 @Slf4j
@@ -73,9 +72,11 @@ class Application extends GrailsAutoConfiguration {
         return new GrailsApplicationPostProcessor( this, applicationContext, classes() as Class[]) {
             @Override
             protected void customizeGrailsApplication(GrailsApplication grailsApplication) {
+                String applicationName =  Metadata.current.getApplicationName()
+                String applicationVersion =  Metadata.current.getApplicationVersion()
+                System.setProperty('http.agent', 'au.org.ala.'+applicationName+'/'+applicationVersion)
                 System.setProperty(EHCACHE_DIRECTORY_CONFIG_ITEM, grailsApplication.config.getProperty(EHCACHE_DIRECTORY_CONFIG_ITEM, DEFAULT_EHCACHE_DIRECTORY))
             }
-
         }
     }
 }
