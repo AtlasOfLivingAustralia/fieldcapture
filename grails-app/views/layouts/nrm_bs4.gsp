@@ -209,8 +209,8 @@
                 keepSessionAliveUrl: "${g.createLink(controller: 'ajax', action:'keepSessionAlive')}",
                 logoutWarningBannerId: 'logout-warning',
                 networkWarningBannerId: 'network-warning',
-                logoutButtonId: 'btnLogout',
-                loginButtonId: 'btnLogin'
+                logoutButtonSelector: 'a.btnLogin', // Not a typo, same class as login button.
+                loginButtonSelector: 'a.btnLogin'
             };
             var loggedIn = false;
             <auth:ifLoggedIn>

@@ -10,8 +10,8 @@
 function setupTimeoutWarning(options) {
     var $logoutWarningBanner = $('#' + options.logoutWarningBannerId);
     var $networkWarningBanner = $('#' + options.networkWarningBannerId);
-    var $logoutButton = $('#' + options.logoutButtonId);
-    var $loginButton = $('#' + options.loginButtonId);
+    var $logoutButton = $(options.logoutButtonSelector);
+    var $loginButton = $(options.loginButtonSelector);
 
     // Set up a timer that will periodically poll the server to keep the session alive
     var intervalSeconds = 5 * 60;
@@ -51,10 +51,10 @@ function setupTimeoutWarning(options) {
     });
     window.addEventListener('storage', function (e) {
         if (e.key == LOGOUT_PRESSED_KEY) {
-            $logoutWarningBanner.show();
+            fireKeepAlive();
         }
         if (e.key == LOGIN_PRESSED_KEY) {
-            $logoutWarningBanner.hide();
+            fireKeepAlive();
         }
     });
     window.addEventListener('online', function() {
