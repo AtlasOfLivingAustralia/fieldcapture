@@ -9320,7 +9320,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 12 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 12 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -9634,18 +9634,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "dataType": "number",
@@ -10343,7 +10331,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 13 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 13 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -10648,18 +10636,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -12723,7 +12699,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 15 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 15 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -13037,18 +13013,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -14905,7 +14869,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 42 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 42 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -15188,18 +15152,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -20724,7 +20676,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 23 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 23 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -21029,18 +20981,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -26356,7 +26296,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 24 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and deepEquals(relatedOutcomes,dataSet.outcomesLabel) and 'Indicator' == baselineIndicatorMapping.lookupValue(dataSet.type)"
+                          "expression": "dataSet.serviceId == 24 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and deepEquals(relatedOutcomes,dataSet.outcomesLabel) and 'Indicator' == dataSet.type"
                         }
                       }
                     },
@@ -26508,7 +26448,7 @@
                     ],
                     "validate": "required",
                     "computed": {
-                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); baselineIndicatorMapping.lookupValue(x.type)"
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.type"
                     }
                   },
                   {
@@ -26723,18 +26663,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -28497,7 +28425,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 29 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 29 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -28749,18 +28677,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -29508,7 +29424,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 30 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 30 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -29771,18 +29687,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -33045,7 +32949,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 32 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 32 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -33318,18 +33222,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -34201,7 +34093,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 33 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 33 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -34512,18 +34404,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
