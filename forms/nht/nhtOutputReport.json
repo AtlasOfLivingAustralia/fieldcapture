@@ -2059,6 +2059,7 @@
                   "Booklets",
                   "Educational/Interpretive Signage",
                   "Fact Sheets/Brochures",
+                  "Podcasts",
                   "Videos"
                 ],
                 "validate": "required"
