@@ -185,7 +185,8 @@ class ProjectController {
         def showAnnouncementsTab = (user?.isAdmin || user?.isCaseManager) && projectService.isMeriPlanSubmittedOrApproved(project)
         List<Map> scores = metadataService.getOutputTargetScores()
 
-        def imagesModel = publicImages.collect {
+        List blogIds = blog.collect{it?.imageId}
+        def imagesModel = publicImages.findAll { it?.documentId !in blogIds }.collect{
             [name: it.name, projectName: project.name, url: it.url, thumbnailUrl: it.thumbnailUrl]
         }
         boolean canChangeProjectDates = userService.userIsAlaOrFcAdmin()
