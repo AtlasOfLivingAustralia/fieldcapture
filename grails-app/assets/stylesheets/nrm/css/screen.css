@@ -2445,6 +2445,9 @@ div#announcement p {
 }
 
 div#logout-warning, div#network-warning {
+    position: fixed;
+    width: 100%;
+    top: 0;
     padding: 15px;
     font-size: 20px;
     font-weight: bold;
@@ -2452,6 +2455,7 @@ div#logout-warning, div#network-warning {
     color: white;
     background-color: red;
     border-bottom: 0px solid red;
+    z-index: 1000;
 }
 #logout-warning a, #network-warning a {
     color:white;

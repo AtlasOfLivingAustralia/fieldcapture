@@ -10,8 +10,8 @@
 function setupTimeoutWarning(options) {
     var $logoutWarningBanner = $('#' + options.logoutWarningBannerId);
     var $networkWarningBanner = $('#' + options.networkWarningBannerId);
-    var $logoutButton = $('#' + options.logoutButtonId);
-    var $loginButton = $('#' + options.loginButtonId);
+    var $logoutButton = $(options.logoutButtonSelector);
+    var $loginButton = $(options.loginButtonSelector);
 
     // Set up a timer that will periodically poll the server to keep the session alive
     var intervalSeconds = 5 * 60;
@@ -20,16 +20,44 @@ function setupTimeoutWarning(options) {
         $.ajax(options.keepSessionAliveUrl).fail(function (xhr) {
             if (xhr.status == 0) {
                 // Network outage?
-                $networkWarningBanner.show();
+                showNetworkBanner();
             } else if (xhr.status == 401) {
-                $networkWarningBanner.hide();
+                hideNetworkBanner();
                 // Session timed out.
-                $logoutWarningBanner.show();
+                showTimeoutBanner();
             }
         }).done(function (xhr) {
-            $networkWarningBanner.hide();
-            $logoutWarningBanner.hide();
+            hideNetworkBanner();
+            hideTimeoutBanner();
         });
+    }
+
+    function showBanner(banner) {
+        banner.show();
+        var height = banner.height();
+        $(document).css("margin-top", height);
+    }
+
+    function hideBanner(banner) {
+        banner.hide();
+        $(document).css("margin-top", "0");
+    }
+
+    function showTimeoutBanner() {
+        showBanner($logoutWarningBanner);
+    }
+
+    function hideTimeoutBanner() {
+        hideBanner($logoutWarningBanner);
+    }
+
+    function showNetworkBanner() {
+        showBanner($networkWarningBanner);
+        hideBanner($logoutWarningBanner)
+    }
+
+    function hideNetworkBanner() {
+        hideBanner($networkWarningBanner);
     }
 
     setInterval(fireKeepAlive, intervalSeconds * 1000);
@@ -51,10 +79,10 @@ function setupTimeoutWarning(options) {
     });
     window.addEventListener('storage', function (e) {
         if (e.key == LOGOUT_PRESSED_KEY) {
-            $logoutWarningBanner.show();
+            fireKeepAlive();
         }
         if (e.key == LOGIN_PRESSED_KEY) {
-            $logoutWarningBanner.hide();
+            fireKeepAlive();
         }
     });
     window.addEventListener('online', function() {
@@ -63,4 +91,6 @@ function setupTimeoutWarning(options) {
     window.addEventListener('offline', function() {
         fireKeepAlive();
     });
+
+
 }

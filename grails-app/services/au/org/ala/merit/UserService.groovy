@@ -284,16 +284,21 @@ class UserService {
 
             if (userIsSiteAdmin(userId)) {
                 if (!(role in roleService.allowedGrantManagerRoles)) {
-                    return [error: 'User '+userDetails.displayName+' doesn\'t have the correct level of system access to be assigned an '+role+' role.  Please contact <a href="mailto:merit@environment.gov.au">merit@environment.gov.au</a> if this is an issue.']
+                    return [error: buildRoleErrorString(userDetails.displayName, role)]
                 }
             } else {
                 if (!(role in roleService.allowedUserRoles)) {
-                    return [error:  'User '+userDetails.displayName+' doesn\'t have the correct level of system access to be assigned a grant manager role.  Please contact <a href="mailto:merit@environment.gov.au">merit@environment.gov.au</a> if this is an issue.']
+                    return [error:  buildRoleErrorString(userDetails.displayName, 'grant manager')]
                 }
             }
         }
         return [success:true]
 
+    }
+
+    private String buildRoleErrorString(String name, String role) {
+        String supportEmail = grailsApplication.config.getProperty('merit.support.email')
+        return 'User '+name+' doesn\'t have the correct level of system access to be assigned the '+role+' role.  Please contact <a href="mailto:'+supportEmail+'">'+supportEmail+'</a> if this is an issue.'
     }
 
     def removeUserWithRole(projectId, userId, role) {
