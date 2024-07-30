@@ -232,7 +232,6 @@
 
     </g:if>
 
-
     <g:if test="${hasNewsAndEvents}">
         <h3>News & events</h3>
 
