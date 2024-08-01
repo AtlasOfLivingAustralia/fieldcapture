@@ -557,7 +557,7 @@ var outcomes = [
         "targeted": true,
         "shortDescription": "EPBC Species",
         "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
+        "outcome": "1. By 2028 Partnerships and Innovations grants will have increased the number and area of Australia’s agriculture sector entities and land managers that have trialled, developed and/or implemented innovative technologies, tools or practices to improve the uptake and use of sustainable agricultural practices leading to the protection and enhancement of our soil, water and vegetation resources"
     },
     {
         "priorities": [
@@ -568,7 +568,7 @@ var outcomes = [
         "targeted": true,
         "shortDescription": "New extinctions",
         "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Long term): Threatened Species (TS) - New extinctions of plants and animals are prevented"
+        "outcome": "1. By 2028 Partnerships and Innovations grants will have increased the number and area of Australia’s agriculture sector entities and land managers that have adopted practices which have or will build resilience to the impacts of climate change, increase carbon sequestration, and/or reduce emissions on farming systems"
     },
     {
         "priorities": [
@@ -579,97 +579,52 @@ var outcomes = [
         "targeted": true,
         "shortDescription": "Threatened Ecological Communities",
         "category": "Threatened Ecological Communities",
-        "outcome": "1.  Species and Landscapes (Long term): Threatened Ecological Communities (TECs) and priority places - The condition of targeted EPBC Act listed Threatened Ecological Communities and identified priority places under the Threatened Species Action Plan 2022-2032 is improved"
+        "outcome": "1. By 2028 Partnerships and Innovations grants will have supported the operationalisation and uptake of industry sustainability frameworks and credentials, and will have increased the number of sustainable agricultural practices that meet evolving market access requirements"
     },
     {
         "category": "Threatened Species",
         "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Targeted threatened species (TS) are on track for improved trajectory"
+        "outcome": "Farmers are trialling and/or adopting CSSA practices"
     },
     {
         "category": "Threatened Species",
         "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Species at high risk of imminent extinction are identified and supported to persist"
+        "outcome": "Farmers are adopting innovative tools, technologies or practices"
     },
     {
         "category": "Threatened Species",
         "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Priority species are being assisted to strengthen reliance and adaptive capacity for climate change"
+        "outcome": "Farmers are demonstrating sustainability credentials and traceability"
     },
     {
         "category": "Threatened Species",
         "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Increased leadership and/or participation of First Nations people in the management and recovery of threatened species"
-    },
-    {
-        "category": "Threatened Species",
-        "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - The implementation of priority actions is leading to an improvement in the condition of targeted TECs and priority places"
-    },
-    {
-        "category": "Threatened Species",
-        "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - Resilience to climate change and extreme events has been increased"
-    },
-    {
-        "category": "Threatened Species",
-        "type": "medium",
-        "outcome": "1.  Species and Landscapes (Medium term): Threatened Ecological Communities and priority places - Increased leadership and/or participation of First Nations people in the management and recovery of threatened ecological communities and priority places"
+        "outcome": "Farmers are implementing sustainability frameworks"
     },
     {
         "type": "short",
         "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Managing Threats - Pest predator an competitor species have been controlled or are under active, long-term control programs"
+        "outcome": "Farmers understand how and why to adopt CSSA practices (Knowledge)"
     },
     {
         "type": "short",
         "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Managing Threats - Threats from disease have been contained, reduced or excluded"
+        "outcome": "Farmers are aware of CSSA practices, and their value and opportunities"
     },
     {
         "type": "short",
         "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Land management practices have improved"
+        "outcome": "Farmers have the skills to adopt CSSA practices"
     },
     {
         "type": "short",
         "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Quality of (TS/TECs) habitat has improved"
+        "outcome": "Farmers accept and value CSSA practices"
     },
     {
         "type": "short",
         "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Area/Extent of (TS/TECs) habitat has increased"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Increased connectivity between patches"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Improving habitat - Quality of breeding and foraging habitat is improved   "
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Creating insurance populations - Existing populations have been protected"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Creating insurance populations - Re-introductions have enhanced wild populations"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "1.  Species and Landscapes (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in recovery activities"
+        "outcome": "New/innovative CSSA knowledge, tools, and practices are available (proof of concept, etc)"
     }
 ];
 
