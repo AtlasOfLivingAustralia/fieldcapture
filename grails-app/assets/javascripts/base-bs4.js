@@ -34,13 +34,13 @@ function setupTimeoutWarning(options) {
 
     function showBanner(banner) {
         banner.show();
-        var height = banner.height();
-        $(document).css("margin-top", height);
+        var height = banner.outerHeight();
+        $('body').css("margin-top", height);
     }
 
     function hideBanner(banner) {
         banner.hide();
-        $(document).css("margin-top", "0");
+        $('body').css("margin-top", "0");
     }
 
     function showTimeoutBanner() {
