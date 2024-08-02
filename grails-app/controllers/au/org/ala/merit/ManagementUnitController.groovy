@@ -153,7 +153,7 @@ class ManagementUnitController {
     /**
      * Responds with a download of a zipped shapefile containing all sites used by projects run
      * by an organisation.
-     * @param id the organisationId of the organisation.
+     * @param id the managementUnitId of the management unit
      */
     @PreAuthorise(accessLevel='admin')
     def downloadShapefile(String id) {
@@ -162,7 +162,7 @@ class ManagementUnitController {
 
         if (id && userId) {
 
-            def params = [fq: 'programId:' + id, query: "docType:project"]
+            def params = [fq: 'managementUnitId:' + id, query: "docType:project"]
 
             def url = grailsApplication.config.getProperty('ecodata.service.url') + '/search/downloadShapefile' + commonService.buildUrlParamsFromMap(params)
             def resp = webService.proxyGetRequest(response, url, true, true, 960000)
@@ -171,7 +171,7 @@ class ManagementUnitController {
             }
 
         } else {
-            render status: 400, text: 'Missing parameter organisationId'
+            render status: 400, text: 'Missing parameter id'
         }
     }
 
@@ -341,7 +341,7 @@ class ManagementUnitController {
                 render managementUnitService.removeUserWithRoleFromManagementUnit(userId, managementUnitId, role) as JSON
             }
         } else {
-            render status: 400, text: 'Required params not provided: userId, organisationId, role'
+            render status: 400, text: 'Required params not provided: userId, entityId, role'
         }
     }
 

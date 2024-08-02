@@ -73,7 +73,7 @@ function isValid(p, a) {
 	 return p;
 }
 
-function ProjectViewModel(project, isUserEditor, organisations) {
+function ProjectViewModel(project) {
     var self = this;
     // documents
     var docDefaults = newDocumentDefaults(project);
@@ -107,16 +107,6 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     }));
     self.externalIdTypes = PROJECT_EXTERNAL_ID_TYPES;
 
-    if (isUserEditor === undefined) {
-        isUserEditor = false;
-    }
-    if (!organisations) {
-        organisations = [];
-    }
-    var organisationsMap = {};
-    $.each(organisations, function(org) {
-        organisationsMap[org.organisationId] = org;
-    });
     self.transients = self.transients || {};
     self.transients.defaultTags = ["Fires", "Flood", "Cyclone", "Drought", "Storm", "Wind"];
 
@@ -157,30 +147,24 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     });
 
     self.organisationId = ko.observable(project.organisationId);
-    self.transients.organisation = ko.observable(organisationsMap[self.organisationId()]);
-    self.organisationName = ko.computed(function() {
-        var org = self.transients.organisation();
-        return org? org.name: project.organisationName;
-    });
-    self.transients.organisation.subscribe(function(org) {
-        if (org && org.organisationId) {
-            self.organisationId(org.organisationId);
-        }
-    });
-
-    self.orgIdSvcProvider = ko.observable(project.orgIdSvcProvider);
-    self.transients.serviceProviderOrganisation = ko.observable(organisationsMap[self.orgIdSvcProvider()]);
-    self.serviceProviderName = ko.computed(function() {
-        var org = self.transients.serviceProviderOrganisation();
-        return org? org.name: project.serviceProviderName;
-    });
-    self.collectoryInstitutionId = ko.computed(function() {
-        var org = self.transients.organisation();
-        return org? org.collectoryInstitutionId: "";
-    });
-
-    self.orgIdGrantee = ko.observable(project.orgIdGrantee);
-    self.orgIdSponsor = ko.observable(project.orgIdSponsor);
+    self.associatedOrgs = ko.observable(project.associatedOrgs);
+    // self.transients.organisation = ko.observable(organisationsMap[self.organisationId()]);
+    // self.organisationName = ko.computed(function() {
+    //     var org = self.transients.organisation();
+    //     return org? org.name: project.organisationName;
+    // });
+    // self.transients.organisation.subscribe(function(org) {
+    //     if (org && org.organisationId) {
+    //         self.organisationId(org.organisationId);
+    //     }
+    // });
+    //
+    // self.orgIdSvcProvider = ko.observable(project.orgIdSvcProvider);
+    // //self.transients.serviceProviderOrganisation = ko.observable(organisationsMap[self.orgIdSvcProvider()]);
+    // self.serviceProviderName = ko.computed(function() {
+    //     var org = self.transients.serviceProviderOrganisation();
+    //     return org? org.name: project.serviceProviderName;
+    // });
 
     self.associatedProgram = ko.observable(); // don't initialise yet - we want the change to trigger dependents
     self.associatedSubProgram = ko.observable(project.associatedSubProgram);
@@ -417,7 +401,6 @@ function ProjectViewModel(project, isUserEditor, organisations) {
             {lic:'CC BY-SA', name:'Creative Commons Attribution-ShareAlike'},
             {lic:'CC BY-NC-SA', name:'Creative Commons Attribution-NonCommercial-ShareAlike'}
         ];
-    self.transients.organisations = organisations;
 
     self.transients.difficultyLevels = [ "Easy", "Medium", "Hard" ];
 
@@ -809,12 +792,14 @@ function exclusive (field, rules, i, options) {
     }
 };
 
-function ProjectPageViewModel(project, sites, activities, organisations, userRoles, config) {
+function ProjectPageViewModel(project, sites, activities, userRoles, config) {
     var self = this;
 
     var projectService = new ProjectService(project, config);
     _.extend(this, projectService);
-    _.extend(this, new ProjectViewModel(project, userRoles.editor, organisations));
+    _.extend(this, new ProjectViewModel(project));
+
+    self.organisationSearchUrl = config.organisationSearchUrl;
 
     self.internalOrderId = ko.observable(project.internalOrderId);
     self.userIsCaseManager = ko.observable(userRoles.grantManager);
@@ -958,10 +943,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             plannedEndDate: self.plannedEndDate(),
             contractStartDate: self.contractStartDate(),
             contractEndDate: self.contractEndDate(),
-            organisationId: self.organisationId(),
-            organisationName: self.organisationName(),
-            orgIdSvcProvider: self.orgIdSvcProvider(),
-            serviceProviderName: self.serviceProviderName(),
+            associatedOrgs: self.associatedOrgs(),
             associatedProgram: self.associatedProgram(),
             associatedSubProgram: self.associatedSubProgram(),
             programId: self.programId(),

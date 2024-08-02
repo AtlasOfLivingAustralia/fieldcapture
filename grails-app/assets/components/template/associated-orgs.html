@@ -1,0 +1,62 @@
+
+<div class="row mb-2 associatedOrgs">
+    <div class="col-sm-12">
+        <div class="form-row">
+            <div>
+                Search
+            </div>
+            <div class="col">
+                Organisation
+            </div>
+            <div class="col">
+                Relationship
+            </div>
+            <div class="col">
+                Name as it appears on the contract
+            </div>
+            <div class="col">
+                From date
+            </div>
+            <div class="col">
+                To date
+            </div>
+
+        </div>
+        <ul class="idList unstyled list-group" data-bind="foreach:associatedOrgs">
+            <li class="form-row form-group">
+                <div class="col">
+                    <input type="text" name="organisation-search" autocomplete="off" class="form-control form-control-sm input-medium" placeholder="Search organisations..."
+                           data-bind="elasticSearchAutocomplete:{url:$parent.organisationSearchUrl, value:'name', label:'name', result:selectOrganisation}"/>
+                </div>
+                <div class="col">
+                    <select name="description" class="form-control form-control-sm" data-bind="options:$parent.relationshipTypes, value:description"></select>
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control form-control-sm" name="organisation-contract-name" data-bind="value:name" data-validation-engine="validate[required]">
+                </div>
+                <div class="col input-group">
+
+                    <input class="form-control-sm" data-bind="datepicker:fromDate.date" name="org-from-date" type="text">
+                        <div class="input-group-append">
+
+                            <span class="input-group-text open-datepicker"><i class="fa fa-th"></i></span>
+                        </div>
+
+                    </div>
+
+                <div class="col">
+                    <div class="input-group input-append">
+                        <input class="form-control-sm" data-bind="datepicker:toDate.date" name="org-to-date" type="text">
+                        <span class="input-group-append open-datepicker"><i class="fa fa-th"></i></span>
+                    </div>
+                </div>
+                <div class="col">
+                    <button class="btn btn-sm" data-bind="click:$parent.removeAssociatedOrg"><i class="fa fa-remove"></i></button>
+                </div>
+            </li>
+        </ul>
+        <button id="addAssociatedOrgButton" class="btn btn-sm" data-bind="click:addAssociatedOrg">Add Organisation</button>
+        <input type="text" class="invisibleValidationHolder" name="invisibleValidationHolder" data-bind="jqueryValidationEngine:{namespace:validationNamespace, validationFunction:associatedOrgValidation}">
+
+    </div>
+</div>

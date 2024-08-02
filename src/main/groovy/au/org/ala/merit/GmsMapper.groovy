@@ -64,6 +64,7 @@ class GmsMapper {
             MANAGEMENT_UNIT:[name:'managementUnitName', type:'string', mandatory: false, description: 'The management unit the project is being conducted in'],
             ABN:[name: 'abn', type: 'string', description:'The ABN of the organisation receiving the funding'],
             ORG_TRADING_NAME:[name:'organisationName', type:'string',description:'The trading name of the organisation receiving the funding (only used if the ABN is not supplied)'],
+            ORG_CONTRACT_NAME:[name:'organisationContractName', type: 'string', description: 'The name used in the project contract.  Appears as the organisation name on the project page.'],
             START_DT:[name:'plannedStartDate', type:'date', mandatory:true, description:'The planned start date of the project'],
             FINISH_DT:[name:'plannedEndDate', type:'date', mandatory:true, description:'The planned end date of the project'],
             CONTRACT_START_DT:[name:'contractStartDate', type:'date'],
@@ -291,25 +292,25 @@ class GmsMapper {
         if (project.organisationName || project.abn) {
             organisation = organisations.find{ (project.abn && (it.abn == project.abn)) || (project.organisationName && (it.name == project.organisationName)) }
             if (organisation) {
-                project.organisationId = organisation.organisationId
+                project.assocatedOrgs = [[organisationId:organisation.organisationId, name: project.remove('organisationContractName') ?: organisation.name, description:"Service provider"]] // Fix description
             } else {
                 String abn = project.abn
                 if (!abn) {
-                    if (!organisation && project.organisationName) {
+                    if (!organisation && project.organisationName || project.organisationContractName) {
                         errors << "No organisation exists with organisation name ${project.organisationName}"
+                        project.associatedOrgs = [[name:project.remove('organisationContractName') ?: project.remove('organisationName'), description:"Service provider"]]
                     }
                 } else {
                     abnLookup = abnLookupService.lookupOrganisationNameByABN(abn)
                     if (abnLookup && !abnLookup.error) {
                         organisation = organisations.find{ it.name == abnLookup.entityName }
                         if (organisation) {
-                            project.organisationId = organisation.organisationId
-                            project.organisationName = organisation.name
+                            project.assocatedOrgs = [[organisationId:organisation.organisationId, name: project.remove('organisationContractName') ?: organisation.name, description:"Service provider"]] // Fix description
                         } else {
                             if (abnLookup.entityName == "") {
                                 errors << "${project.abn} is invalid abn number. Please Enter the correct one"
                             } else {
-                                project.organisationName = abnLookup.entityName
+                                project.associatedOrgs = [[name:project.remove('organisationContractName') ?: organisation.name, description:"Service provider"]]
                             }
                         }
                     } else {

@@ -20,37 +20,10 @@
     </div>
 </div>
 </g:if>
-<div class="row mb-2">
-    <div class="col-sm-6">
-        <label class="control-label" for="organisation">Search for an organisation</label>
-        <input type="text" class="form-control form-control-sm input-medium" id="organisation" placeholder="Search organisations..."
-                data-bind="elasticSearchAutocomplete:{url:fcConfig.organisationSearchUrl, value:'name', label:'name', result:transients.selectOrganisation}"/>
-    </div>
-    <div class="col-sm-6">
-        <label class="control-label" for="organisationName">Organisation name</label>
-        <div class="control-label">
-            <input type="text"  disabled="disabled" class="form-control form-control-sm input-medium disabled" aria-readonly="true" readonly="readonly" data-bind="value:organisationName" id="organisationName"/>
-        </div>
 
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-6">
-        <label class="control-label" for="serviceProviderOrganisation">Search for a service provider organisation</label>
-        <div class="control">
-            <input type="text" class="form-control form-control-sm input-medium" id="serviceProviderOrganisation" placeholder="Search organisations..."
-                   data-bind="elasticSearchAutocomplete:{url:fcConfig.organisationSearchUrl, value:'name', label:'name', result:transients.selectServiceProviderOrganisation}"/>
-        </div>
 
-    </div>
-    <div class="col-sm-6">
-        <label class="control-label">Service provider organisation name</label>
-        <div class="control">
-            <input type="text" class="form-control form-control-sm input-medium disabled" disabled="disabled" readonly="readonly" data-bind="value:serviceProviderName" id="serviceProviderName"/>
-        </div>
+<associated-orgs params="associatedOrgs:associatedOrgs, validationNamespace:'projectSettingsAssociatedOrgs', organisationSearchUrl:organisationSearchUrl"></associated-orgs>
 
-    </div>
-</div>
 <div class="row mb-2">
     <div class="col-sm-12">
         <label for="comment">Comment (including organisation changes)</label>
