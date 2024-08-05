@@ -551,74 +551,74 @@ var outcomes = [
     {
         "priorities": [
             {
-                "category": "Threatened Species"
+                "category": "Farmer Sector"
             }
         ],
         "targeted": true,
-        "shortDescription": "EPBC Species",
-        "category": "Threatened Species",
-        "outcome": "1. Farmers and land holders have increased awareness, knowledge and skills of best practice climate-smart sustainable agriculture approaches"
+        "shortDescription": "Skills and Knowledge",
+        "category": "Farmer Sector",
+        "outcome": "1: Farmers and land holders have increased awareness, knowledge, and skills of best practice climate-smart sustainable agriculture approaches"
     },
     {
         "priorities": [
             {
-                "category": "Threatened Species"
+                "category": "Farmer Sector"
             }
         ],
         "targeted": true,
-        "shortDescription": "New extinctions",
-        "category": "Threatened Species",
-        "outcome": "1. Community, Landcare groups, First Nations peoples and industry have increased capacity and capability to assist farmers and land holders to adopt climate-smart and sustainable agriculture practices"
+        "shortDescription": "Capacity and Capability",
+        "category": "Farmer Sector",
+        "outcome": "2: Community, Landcare groups, First Nations peoples and industry have increased capacity and capability to assist farmers and land holders to adopt climate-smart and sustainable agriculture practices"
     },
     {
         "priorities": [
             {
-                "category": "Threatened Ecological Communities"
+                "category": "Farmer Sector"
             }
         ],
         "targeted": true,
-        "shortDescription": "Threatened Ecological Communities",
-        "category": "Threatened Ecological Communities",
-        "outcome": "1. The agriculture sector is utilising proven climate-smart and sustainable agriculture practices, initiatives and information sources to increase adoption at scale"
+        "shortDescription": "Agricultural Practices",
+        "category": "Farmer Sector",
+        "outcome": "3: The agriculture sector is utilising proven climate-smart and sustainable agriculture practices, initiatives, and information sources to increase adoption at scale"
     },
     {
-        "category": "Threatened Species",
+        "category": "Farmer Sector",
         "type": "medium",
-        "outcome": "Farmers are trialling and/or adopting CSSA practices"
+        "outcome": "Farmers are trialing and/or adopting CSSA practices"
     },
     {
-        "category": "Threatened Species",
+        "category": "Farmer Sector",
         "type": "medium",
         "outcome": "Farmers are adopting innovative tools, technologies or practices"
     },
     {
-        "category": "Threatened Species",
+        "category": "Farmer Sector",
         "type": "medium",
         "outcome": "Farmers are demonstrating sustainability credentials and traceability"
     },
     {
-        "category": "Threatened Species",
+        "category": "Farmer Sector",
         "type": "medium",
         "outcome": "Farmers are implementing sustainability frameworks"
     },
     {
         "type": "short",
-        "category": "Threatened Species",
+        "category": "Farmer Sector",
         "outcome": "Farmers understand how and why to adopt CSSA practices (Knowledge)"
     },
     {
         "type": "short",
-        "category": "Threatened Species",
+        "category": "Farmer Sector",
         "outcome": "Farmers are aware of CSSA practices, and their value and opportunities"
     },
     {
         "type": "short",
-        "category": "Threatened Species",
+        "category": "Farmer Sector",
         "outcome": "Farmers have the skills to adopt CSSA practices"
     },
     {
         "type": "short",
-        "category": "Threatened Species",
+        "category": "Farmer Sector",
         "outcome": "Farmers accept and value CSSA practices"
     }
 ];
