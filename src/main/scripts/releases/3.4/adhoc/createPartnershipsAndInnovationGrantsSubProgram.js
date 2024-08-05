@@ -551,80 +551,75 @@ var outcomes = [
     {
         "priorities": [
             {
-                "category": "Threatened Species"
+                "category": "Farmer Sector"
             }
         ],
         "targeted": true,
-        "shortDescription": "EPBC Species",
-        "category": "Threatened Species",
-        "outcome": "1. By 2028 Partnerships and Innovations grants will have increased the number and area of Australia’s agriculture sector entities and land managers that have trialled, developed and/or implemented innovative technologies, tools or practices to improve the uptake and use of sustainable agricultural practices leading to the protection and enhancement of our soil, water and vegetation resources"
+        "shortDescription": "Skills and Knowledge",
+        "category": "Farmer Sector",
+        "outcome": "1: Farmers and land holders have increased awareness, knowledge, and skills of best practice climate-smart sustainable agriculture approaches"
     },
     {
         "priorities": [
             {
-                "category": "Threatened Species"
+                "category": "Farmer Sector"
             }
         ],
         "targeted": true,
-        "shortDescription": "New extinctions",
-        "category": "Threatened Species",
-        "outcome": "1. By 2028 Partnerships and Innovations grants will have increased the number and area of Australia’s agriculture sector entities and land managers that have adopted practices which have or will build resilience to the impacts of climate change, increase carbon sequestration, and/or reduce emissions on farming systems"
+        "shortDescription": "Capacity and Capability",
+        "category": "Farmer Sector",
+        "outcome": "2: Community, Landcare groups, First Nations peoples and industry have increased capacity and capability to assist farmers and land holders to adopt climate-smart and sustainable agriculture practices"
     },
     {
         "priorities": [
             {
-                "category": "Threatened Ecological Communities"
+                "category": "Farmer Sector"
             }
         ],
         "targeted": true,
-        "shortDescription": "Threatened Ecological Communities",
-        "category": "Threatened Ecological Communities",
-        "outcome": "1. By 2028 Partnerships and Innovations grants will have supported the operationalisation and uptake of industry sustainability frameworks and credentials, and will have increased the number of sustainable agricultural practices that meet evolving market access requirements"
+        "shortDescription": "Agricultural Practices",
+        "category": "Farmer Sector",
+        "outcome": "3: The agriculture sector is utilising proven climate-smart and sustainable agriculture practices, initiatives, and information sources to increase adoption at scale"
     },
     {
-        "category": "Threatened Species",
+        "category": "Farmer Sector",
         "type": "medium",
-        "outcome": "Farmers are trialling and/or adopting CSSA practices"
+        "outcome": "Farmers are trialing and/or adopting CSSA practices"
     },
     {
-        "category": "Threatened Species",
+        "category": "Farmer Sector",
         "type": "medium",
         "outcome": "Farmers are adopting innovative tools, technologies or practices"
     },
     {
-        "category": "Threatened Species",
+        "category": "Farmer Sector",
         "type": "medium",
         "outcome": "Farmers are demonstrating sustainability credentials and traceability"
     },
     {
-        "category": "Threatened Species",
+        "category": "Farmer Sector",
         "type": "medium",
         "outcome": "Farmers are implementing sustainability frameworks"
     },
     {
         "type": "short",
-        "category": "Threatened Species",
+        "category": "Farmer Sector",
         "outcome": "Farmers understand how and why to adopt CSSA practices (Knowledge)"
     },
     {
         "type": "short",
-        "category": "Threatened Species",
+        "category": "Farmer Sector",
         "outcome": "Farmers are aware of CSSA practices, and their value and opportunities"
     },
     {
         "type": "short",
-        "category": "Threatened Species",
+        "category": "Farmer Sector",
         "outcome": "Farmers have the skills to adopt CSSA practices"
     },
     {
         "type": "short",
-        "category": "Threatened Species",
+        "category": "Farmer Sector",
         "outcome": "Farmers accept and value CSSA practices"
-    },
-    {
-        "type": "short",
-        "category": "Threatened Species",
-        "outcome": "New/innovative CSSA knowledge, tools, and practices are available (proof of concept, etc)"
     }
 ];
 
