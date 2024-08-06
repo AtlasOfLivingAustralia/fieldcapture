@@ -146,25 +146,7 @@ function ProjectViewModel(project) {
         }
     });
 
-    self.organisationId = ko.observable(project.organisationId);
     self.associatedOrgs = ko.observable(project.associatedOrgs);
-    // self.transients.organisation = ko.observable(organisationsMap[self.organisationId()]);
-    // self.organisationName = ko.computed(function() {
-    //     var org = self.transients.organisation();
-    //     return org? org.name: project.organisationName;
-    // });
-    // self.transients.organisation.subscribe(function(org) {
-    //     if (org && org.organisationId) {
-    //         self.organisationId(org.organisationId);
-    //     }
-    // });
-    //
-    // self.orgIdSvcProvider = ko.observable(project.orgIdSvcProvider);
-    // //self.transients.serviceProviderOrganisation = ko.observable(organisationsMap[self.orgIdSvcProvider()]);
-    // self.serviceProviderName = ko.computed(function() {
-    //     var org = self.transients.serviceProviderOrganisation();
-    //     return org? org.name: project.serviceProviderName;
-    // });
 
     self.associatedProgram = ko.observable(); // don't initialise yet - we want the change to trigger dependents
     self.associatedSubProgram = ko.observable(project.associatedSubProgram);

@@ -28,6 +28,8 @@ ko.components.register('associated-orgs', {
     viewModel: function (params) {
         var self = this;
 
+        var $modal = $('#add-or-edit-organisation');
+        $modal.find('form').validationEngine();
 
         function AssociatedOrg(associatedOrg) {
             var self = this;
@@ -37,16 +39,7 @@ ko.components.register('associated-orgs', {
             self.organisationId = ko.observable(associatedOrg.organisationId);
             self.fromDate = ko.observable(associatedOrg.fromDate).extend({simpleDate:false});
             self.toDate = ko.observable(associatedOrg.toDate).extend({simpleDate:false});
-            self.selectOrganisation = function(item) {
 
-                if (item && item.source) {
-                    self.organisationId(item.source.organisationId);
-                }
-                else {
-                    self.organisationId(null);
-                }
-
-            }
             self.toJSON = function() {
                 return ko.mapping.toJS(self);
             }
@@ -69,9 +62,50 @@ ko.components.register('associated-orgs', {
             self.associatedOrgs.remove(org);
         }
 
+        // Maintains the state of which organisation is being edited or added
+        var selectedOrganisation;
+
         self.addAssociatedOrg = function () {
-            self.associatedOrgs.push( new AssociatedOrg() );
+            self.selectedOrganisation = new AssociatedOrg();
+            openEditModal();
         }
+
+        self.editAssociatedOrg = function (organisation) {
+            self.selectedOrganisation = organisation;
+            openEditModal();
+        }
+
+        function openEditModal() {
+            copy(self.selectedOrganisation, self.editableOrganisation);
+            $modal.modal('show');
+        }
+
+        self.okPressed = function () {
+            var valid = $modal.find('form').validationEngine('validate');
+            if (!valid) {
+                return;
+            }
+            if (!_.contains(self.associatedOrgs(), self.selectedOrganisation)) {
+                self.associatedOrgs.push(self.editableOrganisation);
+            }
+            else {
+                copy(self.editableOrganisation, self.selectedOrganisation);
+            }
+            self.close();
+        }
+
+        self.close = function() {
+            $modal.modal('hide');
+        }
+
+        function copy(source, destination) {
+            destination.organisationId(source.organisationId());
+            destination.name(source.name());
+            destination.description(source.description());
+            destination.fromDate(source.fromDate());
+            destination.toDate(source.toDate());
+        }
+
 
         /**
          * This method is designed to be used by the jquery validation engine so a passed validation will
@@ -83,6 +117,28 @@ ko.components.register('associated-orgs', {
                 return params.validate();
             }
         }
+
+        self.selectOrganisation = function(item) {
+
+            if (item && item.source) {
+                self.editableOrganisation.organisationId(item.source.organisationId);
+                if (!self.editableOrganisation.name()) {
+                    self.editableOrganisation.name(item.source.name);
+                }
+            }
+            else {
+                self.editableOrganisation.organisationId(null);
+            }
+
+        }
+
+        self.clearSelectedOrganisation = function() {
+            self.editableOrganisation.organisationId(null);
+            self.editableOrganisation.name('');
+        }
+
+        self.editableOrganisation = new AssociatedOrg();
+
     },
     template: componentService.getTemplate('associated-orgs')
 });
