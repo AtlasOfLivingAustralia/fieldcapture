@@ -75,7 +75,7 @@ function setupTimeoutWarning(options) {
         window.localStorage.setItem(LOGIN_PRESSED_KEY, new Date().getTime());
     });
     $logoutWarningBanner.find('a').click(function () {
-        $logoutWarningBanner.hide();
+        hideTimeoutBanner();
     });
     window.addEventListener('storage', function (e) {
         if (e.key == LOGOUT_PRESSED_KEY) {
