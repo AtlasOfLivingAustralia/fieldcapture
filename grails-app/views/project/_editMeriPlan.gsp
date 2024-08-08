@@ -77,7 +77,9 @@
 		</div>
 	</div>
 	<div class="meri-buttons col-sm-9 ml-auto">
+		<g:if test="${projectContent.details.visible}">
 		<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Display Printable MERI Plan</button>
+		</g:if>
 
 
 	<g:if test="${showMeriPlanComparison}">
@@ -204,6 +206,13 @@
 	<g:render template="${meriPlanTemplate}" model="${[config:config, mode : au.org.ala.merit.ReportService.ReportMode.EDIT.name()]}"/>
 
 </g:if>
+<g:else> <%-- For projects that don't use a MERI plan, the MERI lifecycle is still used for the Activities tab to move between planning and reporting mode --%>
+	<!-- ko if:isPlanEditable() -->
+	<div class="form-actions">Admin actions:
+		<button type="button" data-bind="click: submitChanges" class="btn btn-sm btn-info saveAndSubmitChanges">Submit for approval</button><fc:iconHelp html="true">Once the Project Manager has approved the MERI plan reporting via the Activities tab will be enabled</fc:iconHelp>
+	</div>
+	<!-- /ko -->
+</g:else>
 
 <div class="save-details-result-placeholder"></div>
 
