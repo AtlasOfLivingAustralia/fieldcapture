@@ -9379,7 +9379,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 12 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 12 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -9695,18 +9695,6 @@
             ]
           },
           {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
-          },
-          {
             "dataType": "number",
             "name": "totalSurveyBaseline",
             "validate": "min[0]",
@@ -9881,7 +9869,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -10402,7 +10390,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 13 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 13 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -10709,18 +10697,6 @@
             ]
           },
           {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
-          },
-          {
             "allowRowDelete": "false",
             "columns": [
               {
@@ -11004,7 +10980,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -12782,7 +12758,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 15 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 15 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -13098,18 +13074,6 @@
             ]
           },
           {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
-          },
-          {
             "allowRowDelete": "false",
             "columns": [
               {
@@ -13393,7 +13357,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -14964,7 +14928,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 42 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 42 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -15247,18 +15211,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -15544,7 +15496,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -20783,7 +20735,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 23 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 23 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -21090,18 +21042,6 @@
             ]
           },
           {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
-          },
-          {
             "allowRowDelete": "false",
             "columns": [
               {
@@ -21385,7 +21325,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -26415,7 +26355,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 24 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and deepEquals(relatedOutcomes,dataSet.outcomesLabel) and 'Indicator' == baselineIndicatorMapping.lookupValue(dataSet.type)"
+                          "expression": "dataSet.serviceId == 24 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and deepEquals(relatedOutcomes,dataSet.outcomesLabel) and 'Indicator' == dataSet.type"
                         }
                       }
                     },
@@ -26567,7 +26507,7 @@
                     ],
                     "validate": "required",
                     "computed": {
-                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); baselineIndicatorMapping.lookupValue(x.type)"
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.type"
                     }
                   },
                   {
@@ -26782,18 +26722,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -27050,7 +26978,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -28556,7 +28484,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 29 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 29 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -28808,18 +28736,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -29111,7 +29027,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -29567,7 +29483,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 30 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 30 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -29830,18 +29746,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -30127,7 +30031,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -33104,7 +33008,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 32 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 32 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -33377,18 +33281,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -33674,7 +33566,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -34260,7 +34152,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 33 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 33 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -34573,18 +34465,6 @@
             ]
           },
           {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
-          },
-          {
             "allowRowDelete": "false",
             "columns": [
               {
@@ -34868,7 +34748,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },

@@ -73,7 +73,10 @@
     <div class="form-group row">
         <label class="col-sm-5 col-form-label required">8a. Is this (a) a baseline dataset associated with a project outcome i.e. against which, change will be measured, (b) a project progress dataset that is tracking change against an established project baseline dataset or (c) a standalone, foundational dataset to inform future management interventions?</label>
         <div class="col-sm-7">
-            <span data-bind="text:type"></span> - <span data-bind="text:otherDataSetType"></span>
+            <span data-bind="text:type"></span>
+            <!-- ko if:type() == 'Other' -->
+            - <span data-bind="text:otherDataSetType"></span>
+            <!-- /ko -->
         </div>
     </div>
     <div class="form-group row">
