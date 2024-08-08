@@ -132,7 +132,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         projectDetails.name == "Test project"
         projectDetails.description == "Test project description"
         projectDetails.externalId == "123"
-        projectDetails.organisationName == "Test organisation"
+        projectDetails.associatedOrgs == [name:"Test organisation"]
         !projectDetails.associatedProgram  // We didn't supply a program name in the test.
         !projectDetails.associatedSubProgram
         projectDetails.plannedStartDate == "2019-06-30T14:00:00+0000"

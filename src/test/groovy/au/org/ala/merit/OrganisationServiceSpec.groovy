@@ -133,7 +133,7 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 		Map abnDetails = service.getAbnDetails(abn)
 
 		then:
-		1 * abnLookupService.lookupOrganisationNameByABN(abn) >> expected
+		1 * abnLookupService.lookupOrganisationDetailsByABN(abn) >> expected
 
 		and:
 		abnDetails.abn == "11111111111"
@@ -149,7 +149,7 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 		Map abnDetails = service.getAbnDetails(abn)
 
 		then:
-		1 * abnLookupService.lookupOrganisationNameByABN(abn) >> expected
+		1 * abnLookupService.lookupOrganisationDetailsByABN(abn) >> expected
 
 		and:
 		abnDetails.error == "invalid"

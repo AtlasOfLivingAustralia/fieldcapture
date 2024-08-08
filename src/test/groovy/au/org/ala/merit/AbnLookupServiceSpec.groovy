@@ -1,9 +1,8 @@
 package au.org.ala.merit
 
-import grails.core.GrailsApplication
+
 import grails.testing.spring.AutowiredTest
 import org.apache.http.HttpStatus
-import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Specification
 
 /**
@@ -107,7 +106,7 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
         String abnLookupUrlString = url + abn + "&guid=" + abnLookupToken
 
         when:
-        Map actual = service.lookupOrganisationNameByABN(abn)
+        Map actual = service.lookupOrganisationDetailsByABN(abn)
 
         then:
         1 * webService.getString(abnLookupUrlString, false) >> wsResponse
@@ -127,7 +126,7 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
         Map wsResponse = [error:"Error", statusCode: HttpStatus.SC_BAD_REQUEST]
 
         when:
-        Map actual = service.lookupOrganisationNameByABN(abn)
+        Map actual = service.lookupOrganisationDetailsByABN(abn)
 
         then:
         0 * webService.getString(abnLookupUrlString, false) >> wsResponse

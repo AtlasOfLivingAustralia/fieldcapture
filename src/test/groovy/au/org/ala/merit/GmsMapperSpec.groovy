@@ -253,7 +253,7 @@ class GmsMapperSpec extends Specification{
         def result = gmsMapper.mapProject([projectData])
 
         then:
-        1 * abnLookupService.lookupOrganisationNameByABN(abn) >> abnValue
+        1 * abnLookupService.lookupOrganisationDetailsByABN(abn) >> abnValue
 
         and:
         result.project.organisationName == abnValue.entityName
@@ -284,7 +284,7 @@ class GmsMapperSpec extends Specification{
         def result = gmsMapper.mapProject([projectData])
 
         then:
-        1 * abnLookupService.lookupOrganisationNameByABN(abn) >> abnValue
+        1 * abnLookupService.lookupOrganisationDetailsByABN(abn) >> abnValue
 
         and:
         result.errors[1].toString() == "12345678900 is invalid. Please Enter the correct one"
@@ -300,7 +300,7 @@ class GmsMapperSpec extends Specification{
         def result = gmsMapper.mapProject([projectData])
 
         then:
-        1 * abnLookupService.lookupOrganisationNameByABN(abn) >> abnValue
+        1 * abnLookupService.lookupOrganisationDetailsByABN(abn) >> abnValue
 
         and:
         result.errors[1].toString() == "12345678900 is invalid abn number. Please Enter the correct one"

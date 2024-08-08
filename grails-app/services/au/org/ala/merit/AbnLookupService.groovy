@@ -12,14 +12,16 @@ class AbnLookupService {
 
     GrailsApplication grailsApplication
     WebService webService
+    volatile long lastRequestTime = 0
+    private static final int ABN_SERVICE_RATE_LIMIT = 500
 
-/**
- * This method will return abn details based abn number provided.
- * this method is used my GMSMapper
- * @param organisationABN
- * @return abnDetails
- */
-    Map lookupOrganisationNameByABN(String organisationABN){
+    /**
+     * This method will return abn details based abn number provided.
+     * this method is used my GMSMapper
+     * @param organisationABN
+     * @return abnDetails
+     */
+    Map lookupOrganisationDetailsByABN(String organisationABN){
         Map abnDetails
 
         String abn = getNonBlankNumericStringWithoutWhitespace(organisationABN);
@@ -30,6 +32,7 @@ class AbnLookupService {
             String url = grailsApplication.config.getProperty('abn.abnUrl')
             String abnLookupUrlString =  url + abn + "&guid=" + abnLookupToken
 
+            waitForRateLimit()
             Map resp  = webService.getString(abnLookupUrlString, false)
 
 
@@ -38,7 +41,7 @@ class AbnLookupService {
                 String results = removeCallback(responseText)
                 JsonSlurper slurper = new JsonSlurper()
                 Map map = slurper.parseText(results)
-                abnDetails = [abn: map.Abn, entityName: map.EntityName]
+                abnDetails = mapAbnResult(map)
             }
             else {
                 abnDetails = [error:resp.error]
@@ -46,6 +49,20 @@ class AbnLookupService {
         }
 
         return abnDetails
+    }
+
+    /** The ABN service has introduced rate limiting to 500ms between requests */
+    private void waitForRateLimit() {
+        long now = System.currentTimeMillis()
+        long timeSinceLastRequestMillis = now - lastRequestTime
+        if (timeSinceLastRequestMillis < ABN_SERVICE_RATE_LIMIT) {
+            try {
+                Thread.sleep(ABN_SERVICE_RATE_LIMIT - timeSinceLastRequestMillis)
+            } catch (InterruptedException e) {
+                // Doesn't really matter if we are interrupted
+            }
+        }
+        lastRequestTime = now
     }
 
     private static String removeCallback(String resp){
@@ -132,6 +149,19 @@ class AbnLookupService {
         }
 
         return theString;
+    }
+
+    private static Map mapAbnResult(Map result) {
+        [
+                abn: result.Abn,
+                entityName: result.EntityName,
+                abnStatus: result.AbnStatus,
+                businessNames: result.BusinessName,
+                state: result.AddressState,
+                postcode: result.AddressPostcode,
+                entityType: result.EntityTypeCode,
+                entityTypeName: result.EntityTypeName
+        ]
     }
 }
 

@@ -1,11 +1,49 @@
 <form class="validationEngineContainer">
     <h4 class="block-header"><g:message code="organisation.details.header"/></h4>
+
+    <section class="form-group row">
+        <label for="abnStatus" class="col-sm-3 form-check-label">ABN Status: <fc:iconHelp><g:message code="organisation.abnStatus.help"/></fc:iconHelp></label>
+
+        <div class="col-sm-7">
+            <select type="text" id="abnStatus" class="w-100 form-control form-control-sm" data-bind="value:abnStatus">
+                <option value="N/A">N/A</option>
+                <option value="Active">Active</option>
+                <option value="Cancelled">Cancelled</option>
+            </select>
+        </div>
+    </section>
+    <section class="form-group row">
+        <label for="abnSelector" class="col-sm-3 form-check-label">ABN: <fc:iconHelp><g:message code="organisation.abn.help"/></fc:iconHelp></label>
+
+            <div class="col-sm-7">
+                <input type="text" id="abnSelector" class="w-100 form-control form-control-sm" data-bind="value:abn, valueUpdate: 'input', event:{paste:onPasteAbn}, enable:abnStatus() != 'N/A'" data-validation-engine="validate[custom[number],minSize[11],maxSize[11]" data-validation-error-message="Please enter an 11 digit ABN"  maxlength="11" placeholder="Enter ABN Number"/>
+            </div>
+            <div class="col-sm-2 prePopBtn">
+                <button type="button" id="prepopulateFromABN" data-bind="click:prepopulateFromABN, disable: !(abn())" class="btn btn-sm btn-primary" disabled="disabled">Pre Populate From ABN</button>
+            </div>
+    </section>
+    <section class="form-group row">
+        <label for="entityName" class="col-sm-3 form-check-label">Entity name: <fc:iconHelp><g:message code="organisation.entityName.help"/></fc:iconHelp></label>
+
+        <div class="col-sm-9">
+            <input type="text" id="entityName" class="w-100 form-control form-control-sm" data-bind="value:entityName, enable:abn()" readonly="readonly"/>
+        </div>
+    </section>
+
+    <section class="form-group row">
+        <label for="businessNames" class="col-sm-3 form-check-label">Business name/s: <fc:iconHelp><g:message code="organisation.businessNames.help"/></fc:iconHelp></label>
+
+        <div class="col-sm-9">
+            <input type="text" id="businessNames" class="w-100 form-control form-control-sm" data-bind="value:businessNames, enable:abn()" readonly="readonly"/>
+        </div>
+    </section>
+
     <section class="form-group row required">
 
         <label for="name" class="col-sm-3 form-check-label">Name: <fc:iconHelp><g:message code="organisation.name.help"/></fc:iconHelp></label>
         <div class="col-sm-9">
             <g:if test="${organisation.organisationId}">
-                    <input type="text" id="name" class="form-control form-control-sm" data-bind="value:name" data-validation-engine="validate[required]" placeholder="Organisation name" ${!isNameEditable?'readonly="readonly"':''}>
+                <input type="text" id="name" class="form-control form-control-sm" data-bind="value:name" data-validation-engine="validate[required]" placeholder="Organisation name" ${!isNameEditable?'readonly="readonly"':''}>
             </g:if>
             <g:else>
                 <input type="text" id="name" class="form-control form-control-sm w-100" data-bind="value:name, disable: !(name())" data-validation-engine="validate[required]" placeholder="Organisation name" ${!isNameEditable?'readonly="readonly"':''}>
@@ -13,31 +51,13 @@
         </div>
     </section>
     <section class="form-group row">
-        <label for="abnSelector" class="col-sm-3 form-check-label">ABN: <fc:iconHelp><g:message code="organisation.abn.help"/></fc:iconHelp></label>
-        <g:if test="${organisation.organisationId}">
-            <div class="col-sm-7">
-                <input type="text" id="abnSelector" class="w-100 form-control form-control-sm" data-bind="value:abn" data-validation-engine="validate[custom[number],minSize[11],maxSize[11]" data-validation-error-message="Please enter an 11 digit ABN"  maxlength="11" placeholder="Enter ABN Number"/>
-            </div>
-            <div class="col-sm-2 prePopBtn">
-                <button type="button" id="prepopulateFromABN" data-bind="click:prepopulateFromABN" class="btn btn-sm btn-primary">Pre Populate From ABN</button>
-            </div>
-        </g:if>
-        <g:else>
-            <div class="col-sm-7">
-                <input type="text" id="abnSelector" class="w-100 form-control form-control-sm" data-bind="value:abn, valueUpdate: 'input'" data-validation-engine="validate[custom[number],minSize[11],maxSize[11]" data-validation-error-message="Please enter an 11 digit ABN"  maxlength="11" placeholder="Enter ABN Number"/>
-            </div>
-            <div class="col-sm-2 prePopBtn">
-                <button type="button" id="prepopulateFromABN" data-bind="click:prepopulateFromABN, disable: !(abn())" class="btn btn-sm btn-primary" disabled="disabled">Pre Populate From ABN</button>
-            </div>
-        </g:else>
-    </section>
-    <section class="form-group row">
 
         <label for="acronym" class="col-sm-3 form-check-label">Acronym: <fc:iconHelp><g:message code="organisation.acronym.help"/></fc:iconHelp></label>
-        <div class="col-sm-9">
+        <div class="col-sm-3">
             <input type="text" id="acronym" class="form-control form-control-sm w-100" data-bind="value:acronym"/>
         </div>
     </section>
+
     <section class="form-group row required">
         <label for="description" class="col-sm-3 form-check-label labelModification">Description: <fc:iconHelp><g:message code="organisation.description.help"/></fc:iconHelp></label>
         <div class="col-sm-9">
@@ -45,6 +65,29 @@
             <button class="btn btn-sm popup-edit" data-bind="click:editDescription"><i class="fa fa-edit"></i> Edit with Markdown Editor</button>
         </div>
     </section>
+    <section class="form-group row required">
+        <label for="state" class="col-sm-3 form-check-label labelModification">State: <fc:iconHelp><g:message code="organisation.state.help"/></fc:iconHelp></label>
+        <div class="col-sm-3">
+            <select id="state" class="form-control form-control-sm w-100" data-validation-engine="validate[required]" data-bind="value:state">
+                <option value=""></option>
+                <option value="ACT">ACT</option>
+                <option value="NSW">NSW</option>
+                <option value="NT">NT</option>
+                <option value="QLD">QLD</option>
+                <option value="SA">SA</option>
+                <option value="TAS">TAS</option>
+                <option value="VIC">VIC</option>
+                <option value="WA">WA</option>
+            </select>
+        </div>
+    </section>
+    <section class="form-group row required">
+        <label for="postcode" class="col-sm-3 form-check-label labelModification">Postcode: <fc:iconHelp><g:message code="organisation.postcode.help"/></fc:iconHelp></label>
+        <div class="col-sm-3">
+            <input type="text" id="postcode" placeholder="The postcode of organisation headquarters" class="form-control form-control-sm" data-validation-engine="validate[required, number,minSize[4],maxSize[4]" data-bind="value:postcode"></input>
+        </div>
+    </section>
+
     <section class="form-group row">
         <label for="url" class="col-sm-3 form-check-label labelModification">Web Site URL: <fc:iconHelp><g:message code="organisation.webUrl.help"/></fc:iconHelp></label>
         <div class="col-sm-9">

@@ -300,11 +300,9 @@ class OrganisationService {
 
     Map getAbnDetails(String abnNumber){
         Map result
-        result = abnLookupService.lookupOrganisationNameByABN(abnNumber)
+        result = abnLookupService.lookupOrganisationDetailsByABN(abnNumber)
         if (result.abn == ''){
             result.error = "invalid"
-        }else{
-            result = [abn: result.abn, name: result.entityName]
         }
         return result
     }

@@ -54,15 +54,35 @@ OrganisationViewModel = function (props, options) {
         return orgTypesMap[self.orgType()] || "Unspecified";
     });
     self.name = ko.observable(props.name);
+    self.entityName = ko.observable(props.entityName);
+    self.businessNames = ko.observableArray(props.businessNames);
     self.acronym = ko.observable(props.acronym);
     self.description = ko.observable(props.description).extend({markdown:true});
     self.abn = ko.observable(props.abn);
+    self.abnStatus = ko.observable(props.abnStatus);
+    self.postcode = ko.observable(props.postcode);
+    self.state = ko.observable(props.state);
     self.url = ko.observable(props.url);
     self.newsAndEvents = ko.observable(props.newsAndEvents).extend({markdown:true});;
     self.collectoryInstitutionId = props.collectoryInstitutionId;
     self.breadcrumbName = ko.computed(function() {
         return self.name()?self.name():'New Organisation';
     });
+
+    self.onPasteAbn = function(vm, event) {
+
+        if (event.originalEvent && event.originalEvent.clipboardData) {
+            text = event.originalEvent.clipboardData.getData("text/plain");
+
+            // remove any non digit characters from the data - this is because if you copy and paste an ABN it
+            // is normally formatted with spaces.
+            self.abn(text.replaceAll(/\D/g, ''));
+        }
+
+
+        // Indicate that text could be added into textbox
+        return false;
+    }
 
     self.projects = props.projects;
 
@@ -89,6 +109,7 @@ OrganisationViewModel = function (props, options) {
 
     self.modelAsJSON = function(includeDocuments) {
         var orgJs = self.toJS(includeDocuments);
+        orgJs.postcode = Number(orgJs.postcode);
         return JSON.stringify(orgJs);
     };
 
@@ -115,10 +136,24 @@ OrganisationViewModel = function (props, options) {
         if ($(config.abnSelector).validationEngine()) {
             var abn = self.abn;
             $.get(config.prepopulateAbnUrl, {abn:abn, contentType:'application/json'}).done(function (orgDetails) {
-                if (orgDetails.error === "invalid"){
+                if (orgDetails.error === "invalid") {
                     bootbox.alert("Abn Number is invalid");
-                }else{
-                    self.name(orgDetails.name);
+                } else {
+                    self.entityName(orgDetails.entityName);
+                    self.businessNames(orgDetails.businessNames);
+                    self.postcode(orgDetails.postcode);
+                    self.state(orgDetails.state);
+                    self.abnStatus(orgDetails.abnStatus);
+                    if (!self.name()) {
+                        var defaultName = '';
+                        if (self.businessNames().length > 0) {
+                            defaultName = self.businessNames()[0];
+                        }
+                        else if (self.entityName()) {
+                            defaultName = self.entityName();
+                        }
+                        self.name(defaultName);
+                    }
                 }
             }).fail(function () {
                 bootbox.alert("Abn Web Service is failed to lookup abn name. Please press ok to continue to create organisation");
@@ -127,6 +162,14 @@ OrganisationViewModel = function (props, options) {
 
         }
     };
+
+    self.abnStatus.subscribe(function(value) {
+        if (value == 'N/A') {
+            self.abn(null);
+            self.entityName(null);
+            self.businessNames(null);
+        }
+    });
 
     if (props.documents !== undefined && props.documents.length > 0) {
         $.each(['logo', 'banner', 'mainImage'], function(i, role){

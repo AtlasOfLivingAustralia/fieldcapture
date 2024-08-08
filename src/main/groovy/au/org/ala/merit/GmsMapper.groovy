@@ -301,7 +301,7 @@ class GmsMapper {
                         project.associatedOrgs = [[name:project.remove('organisationContractName') ?: project.remove('organisationName'), description:"Service provider"]]
                     }
                 } else {
-                    abnLookup = abnLookupService.lookupOrganisationNameByABN(abn)
+                    abnLookup = abnLookupService.lookupOrganisationDetailsByABN(abn)
                     if (abnLookup && !abnLookup.error) {
                         organisation = organisations.find{ it.name == abnLookup.entityName }
                         if (organisation) {
