@@ -206,6 +206,25 @@ class UserController {
         }
     }
 
+    def getMembersOfOrganisation(String id) {
+        String userId = userService.getCurrentUserId()
+
+        if (id && userId) {
+            if (userService.userIsSiteAdmin() || userService.isUserAdminForOrganisation(userId, id) || userService.userHasReadOnlyAccess()) {
+                List members = userService.getMembersOfOrganisation(id)
+                render members as JSON
+            } else {
+                render status: 403, text: 'Permission denied'
+            }
+        } else if (userId) {
+            render status: 400, text: 'Required params not provided: id'
+        } else if (id) {
+            render status: 403, text: 'User not logged-in or does not have permission'
+        } else {
+            render status: 500, text: 'Unexpected error'
+        }
+    }
+
     def getMembersOfHub() {
         def adminUserId = userService.getCurrentUserId()
         HubSettings hubSettings = SettingService.getHubConfig()
