@@ -958,26 +958,9 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaseline",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "name": "datasetSupports",
-                    "dataType": "text",
-                    "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
-                    "validate": "required",
-                    "constraints": {
-                      "textProperty": "name",
-                      "valueProperty": "dataSetId",
-                      "type": "pre-populated",
-                      "config": {
-                        "source": {
-                          "context-path": "owner.custom.dataSets"
                         }
                       }
                     }
@@ -7845,7 +7828,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "farmManagementSurveys.farmManagementDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -7967,7 +7949,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -8759,7 +8740,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "faunaSurveys.faunaDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -8872,7 +8852,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -10921,7 +10900,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "floraSurveys.floraDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -11043,7 +11021,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -12813,7 +12790,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "habitatConditionSurveys.habitatConditionDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -12861,7 +12837,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -17919,7 +17894,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "pestAnimalSurveys.pestAnimalDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -18032,7 +18006,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -22739,7 +22712,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "plantSurvivalSurveys.plantSurvivalDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -22914,7 +22886,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -24674,7 +24645,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "skillsAndKnowledgeSurveys.skillsAndKnowledgeDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -24722,7 +24692,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -25570,7 +25539,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "soilSurveys.soilDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -25618,7 +25586,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -27306,7 +27273,6 @@
                       "textProperty": "code",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "baselineDetailsControlled.baselineDetails.projectBaseline",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -28714,7 +28680,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "waterQualitySurveys.waterQualityDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -28762,7 +28727,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -29761,7 +29725,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "weedSurveys.weedDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -29880,7 +29843,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
