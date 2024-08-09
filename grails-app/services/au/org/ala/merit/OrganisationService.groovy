@@ -154,16 +154,6 @@ class OrganisationService {
     }
 
     /**
-     * Get the list of users (members) who have any level of permission for the requested organisationId
-     *
-     * @param organisationId the organisationId of interest.
-     */
-    def getMembersOfOrganisation(organisationId) {
-        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getMembersForOrganisation/${organisationId}"
-        webService.getJson(url)
-    }
-
-    /**
      * Adds a user with the supplied role to the identified organisation.
      *
      * @param userId the id of the user to add permissions for.
@@ -290,7 +280,7 @@ class OrganisationService {
      */
     private Map setupReportLifeCycleChange(String organisationId, String reportId) {
         Map organisation = get(organisationId)
-        List members = getMembersOfOrganisation(organisationId)
+        List members = userService.getMembersOfOrganisation(organisationId)
         Map report = reportService.get(reportId)
         // All MU reports are of type "Single Activity" at the moment.
         List reportActivities = [report.activityId]

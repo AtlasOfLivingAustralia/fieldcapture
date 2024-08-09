@@ -20,11 +20,20 @@ class OrganisationAdminTab extends Module{
         documentsTab { $('#edit-documents-tab') }
         documents { module AdminDocumentsTab }
 
+        adminColumn { $("#admin .flex-column a") }
+
+        permissionAccessTab {$('#mu-permissions-tab')}
+        permissionAccess { $('#managementUnit-permissions').module PermissionsAdminModule }
+
+    }
+
+    def viewDocumentsSection() {
+        documentsTab.click()
+        waitFor { documents.displayed }
     }
 
     def attachDocument() {
-        documentsTab.click()
-        waitFor { documents.displayed }
+       viewDocumentsSection()
         documents.attachDocumentButton.click()
         documents.attachDocumentDialog
     }

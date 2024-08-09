@@ -339,6 +339,16 @@ class UserService {
         webService.getJson(url)
     }
 
+    /**
+     * Get the list of users (members) who have any level of permission for the requested organisationId
+     *
+     * @param organisationId the organisationId of interest.
+     */
+    List getMembersOfOrganisation(String organisationId) {
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getMembersForOrganisation/${organisationId}"
+        webService.getJson(url)
+    }
+
     def removeUserWithRoleFromManagementUnit(String userId, String managementUnitId, String role) {
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/removeUserWithRoleFromManagementUnit?managementUnitId=${managementUnitId}&userId=${userId}&role=${role}"
         webService.getJson(url)

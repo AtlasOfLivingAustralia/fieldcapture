@@ -68,7 +68,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         model.content.admin.visible == false
     }
 
-    def "all tabs except the admin tabs are viewable by a user with read only access"() {
+    def "all tabs are viewable by a user with read only access"() {
         setup:
         setupReadOnlyUser()
         def testOrg = testOrganisation(true)
@@ -82,7 +82,9 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         model.content.projects.visible == true
         model.content.sites.visible == true
         model.content.dashboard.visible == true
-        model.content.admin.visible == false
+
+        and: "The read only user can see the admin tab to view documents and permissions"
+        model.content.admin.visible == true
     }
 
     def "all tabs are visible to fc admins"() {
@@ -638,7 +640,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         userService.userHasReadOnlyAccess() >> false
         userService.userIsSiteAdmin() >> false
         userService.userIsAlaOrFcAdmin() >> false
-        organisationService.getMembersOfOrganisation(_) >> [[userId:'1234', role:RoleService.PROJECT_ADMIN_ROLE]]
+        userService.getMembersOfOrganisation(_) >> [[userId:'1234', role:RoleService.PROJECT_ADMIN_ROLE]]
     }
 
     private void setupFcAdmin() {
@@ -646,7 +648,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         userService.userHasReadOnlyAccess() >> false
         userService.userIsSiteAdmin() >> true
         userService.userIsAlaOrFcAdmin() >> true
-        organisationService.getMembersOfOrganisation(_) >> []
+        userService.getMembersOfOrganisation(_) >> []
     }
 
     private void setupReadOnlyUser() {
@@ -654,7 +656,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         userService.userHasReadOnlyAccess() >> true
         userService.userIsSiteAdmin() >> false
         userService.userIsAlaOrFcAdmin() >> false
-        organisationService.getMembersOfOrganisation(_) >> []
+        userService.getMembersOfOrganisation(_) >> []
     }
 
     private void setupOrganisationAdmin() {
@@ -663,7 +665,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         userService.userHasReadOnlyAccess() >> false
         userService.userIsSiteAdmin() >> false
         userService.userIsAlaOrFcAdmin() >> false
-        organisationService.getMembersOfOrganisation(_) >> [[userId:userId, role:RoleService.PROJECT_ADMIN_ROLE]]
+        userService.getMembersOfOrganisation(_) >> [[userId:userId, role:RoleService.PROJECT_ADMIN_ROLE]]
         organisationService.isUserAdminForOrganisation(_) >> true
     }
 
@@ -673,7 +675,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         userService.userHasReadOnlyAccess() >> false
         userService.userIsSiteAdmin() >> false
         userService.userIsAlaOrFcAdmin() >> false
-        organisationService.getMembersOfOrganisation(_) >> [[userId:userId, role:RoleService.PROJECT_EDITOR_ROLE]]
+        userService.getMembersOfOrganisation(_) >> [[userId:userId, role:RoleService.PROJECT_EDITOR_ROLE]]
     }
 
     private List projectsWithAnnouncements(projectCount) {
