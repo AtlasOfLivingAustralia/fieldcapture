@@ -92,7 +92,7 @@
         </g:if>
 
 
-        <g:if test="${fc.userHasReadOnlyAccess()}">
+        <g:if test="${fc.userHasReadOnlyAccess() && !fc.userIsAlaAdmin()}">
         <!-- ko stopBinding:true -->
         <div id="edit-documents" class="tab-pane">
             <div class="attachDocumentModal">
@@ -112,7 +112,7 @@
                 <div class="span10">
 
                     <g:render template="/shared/editDocuments"
-                              model="[useExistingModel: true, documents: organisation.documents, editable:true, filterBy: 'all', ignore: '', imageUrl:assetPath(src:'filetypes'),containerId:'adminDocumentList']"/>
+                              model="[useExistingModel: true, documents: organisation.documents, editable:false, filterBy: 'all', ignore: '', imageUrl:assetPath(src:'filetypes'),containerId:'adminDocumentList']"/>
                     %{--The modal view containing the contents for a modal dialog used to attach a document--}%
                     <g:render template="/shared/attachDocument"/>
 
