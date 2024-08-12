@@ -18,7 +18,7 @@ class OrganisationDocumentsSpec extends StubbedCasSpec {
 
         setup:
         String organisationId = 'test_organisation'
-        loginAsMeritAdmin(browser)
+        loginAsUser('1', browser)
         when: "Display the admin tab, navigate to the documents section then press the attach button"
         to Organisation, organisationId
         openDocumentDialog()
@@ -58,6 +58,34 @@ class OrganisationDocumentsSpec extends StubbedCasSpec {
 
         and:
         document.name == "Test doc"
+    }
+
+    def "read only users see a read only version of the documents tab"() {
+        setup:
+        String organisationId = 'test_organisation'
+        loginAsReadOnlyUser(browser)
+
+        when: "Display the admin tab, navigate to the documents section"
+        to Organisation, organisationId
+
+        then: "The admin tab is visible and the user permissions and documents tab are read only"
+        adminTab.displayed == true
+
+        when:
+        openAdminTab()
+
+        then:
+        adminTabContent.adminColumn.size() == 2
+        adminTabContent.adminColumn[0].text() == "Permissions"
+        adminTabContent.adminColumn[1].text() == "Documents"
+
+
+        when:
+        adminTabContent.viewDocumentsSection()
+
+        then: "The attach button is not displayed"
+        adminTabContent.documents.attachDocumentButton.displayed == false
+
     }
 
 }
