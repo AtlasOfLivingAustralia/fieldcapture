@@ -377,7 +377,8 @@ function initSiteViewModel() {
         intersectService: "${createLink(controller: 'proxy', action: 'intersect')}",
         featuresService: "${createLink(controller: 'proxy', action: 'features')}",
         featureService: "${createLink(controller: 'proxy', action: 'feature')}",
-        spatialWms: '${grailsApplication.config.getProperty('spatial.geoserverUrl')}'
+        spatialWms: '${grailsApplication.config.getProperty('spatial.geoserverUrl')}',
+        knownShapeConfig: <fc:modelAsJavascript model="${knownShapeConfig}" default="[]"/>
     };
 
     var savedSiteData = {
@@ -403,7 +404,7 @@ function initSiteViewModel() {
     (function(){
 
         //retrieve serialised model
-        siteViewModel = new SiteViewModelWithMapIntegration(savedSiteData);
+        siteViewModel = new SiteViewModelWithMapIntegration(savedSiteData, null, SERVER_CONF);
         window.validateSiteExtent = siteViewModel.attachExtentValidation()
 
         ko.applyBindings(siteViewModel, document.getElementById("sitemap"));
