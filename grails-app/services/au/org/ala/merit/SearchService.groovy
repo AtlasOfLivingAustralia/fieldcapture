@@ -22,7 +22,7 @@ class SearchService {
     def elasticBaseUrl
     def userService
 
-    private static final int FACET_LIMIT = 1500
+    private static final int FACET_LIMIT = 3000
 
     @PostConstruct
     private void init() {
