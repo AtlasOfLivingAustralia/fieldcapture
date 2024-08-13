@@ -21,6 +21,8 @@ beans = {
 
     // The non-standard case is used because the name is derived from the activity type
     NHTOutputReport(NHTOutputReportLifecycleListener)
+    GrantsandOthersProgressReport(NHTOutputReportLifecycleListener)
+    ProcurementOutputReport(NHTOutputReportLifecycleListener)
 
     meritServletContextConfig(MeritServletContextConfig)
 }
