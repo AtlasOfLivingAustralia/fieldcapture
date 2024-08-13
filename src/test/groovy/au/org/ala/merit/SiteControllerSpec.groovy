@@ -12,11 +12,13 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
     SiteService siteService = Mock(SiteService)
     UserService userService = Mock(UserService)
     ProjectService projectService = Mock(ProjectService)
+    SettingService settingService = Mock(SettingService)
 
     def setup() {
         controller.siteService = siteService
         controller.userService = userService
         controller.projectService = projectService
+        controller.settingService = settingService
 
         // From Bootstrap.groovy
         JSON.createNamedConfig("nullSafe", { cfg ->

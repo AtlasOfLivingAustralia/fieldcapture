@@ -127,7 +127,7 @@ class SiteController {
         if (site.projects && site.projects.size() == 1) {
             project = projectService.get(site.projects[0], 'all')
         }
-        result += editSiteModelData(project, site)
+        result += editSiteModelData(site, project)
         result
     }
 
