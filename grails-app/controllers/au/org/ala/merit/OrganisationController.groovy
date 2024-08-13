@@ -175,7 +175,7 @@ class OrganisationController {
     }
 
     private void createOrUpdateOrganisation(String organisationId, Map organisationDetails) {
-        def originalOrganisation = organisationService.get(organisationId)
+        def originalOrganisation = organisationId ? organisationService.get(organisationId) : null
         def documents = organisationDetails.remove('documents')
         def links = organisationDetails.remove('links')
         def result = organisationService.update(organisationId, organisationDetails)
