@@ -42,12 +42,7 @@
 
         <label for="name" class="col-sm-3 form-check-label">Name: <fc:iconHelp><g:message code="organisation.name.help"/></fc:iconHelp></label>
         <div class="col-sm-9">
-            <g:if test="${organisation.organisationId}">
-                <input type="text" id="name" class="form-control form-control-sm" data-bind="value:name" data-validation-engine="validate[required]" placeholder="Organisation name" ${!isNameEditable?'readonly="readonly"':''}>
-            </g:if>
-            <g:else>
-                <input type="text" id="name" class="form-control form-control-sm w-100" data-bind="value:name, disable: !(name())" data-validation-engine="validate[required]" placeholder="Organisation name" ${!isNameEditable?'readonly="readonly"':''}>
-            </g:else>
+            <input type="text" id="name" class="form-control form-control-sm w-100" data-bind="value:name" data-validation-engine="validate[required]" placeholder="Organisation name">
         </div>
     </section>
     <section class="form-group row">

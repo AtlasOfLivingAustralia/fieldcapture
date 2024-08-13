@@ -137,7 +137,7 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 
 		and:
 		abnDetails.abn == "11111111111"
-		abnDetails.name == "Test abn"
+		abnDetails.entityName == "Test abn"
 	}
 
 	def "When user provide an invalid abn number return an error message"(){
