@@ -442,11 +442,11 @@ var config =
                 "reportDescriptionFormat": "Progress Report %1d",
                 "reportNameFormat": "Progress Report %1d",
                 "reportingPeriodInMonths": 6,
-                "description": "_Please note that the reporting fields for these reports are currently being developed_",
+                "description": "",
                 "minimumReportDurationInDays": 3,
                 "label": "Semester",
                 "category": "Progress Reports",
-                "activityType": "Progress Report",
+                "activityType": "Grants and Others Progress Report",
                 "reportsAlignedToCalendar": true,
                 "canSubmitDuringReportingPeriod": true
             },
@@ -456,7 +456,7 @@ var config =
                 "reportDescriptionFormat": "Annual Progress Report %2$tY - %3$tY for %4$s",
                 "reportNameFormat": "Annual Progress Report %2$tY - %3$tY",
                 "reportingPeriodInMonths": 12,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
+                "description": "",
                 "minimumReportDurationInDays": 1,
                 "label": "Annual",
                 "category": "Annual Progress Reporting",
@@ -585,6 +585,7 @@ var outcomes = [
         "targeted": true,
         "shortDescription": "Threatened Ecological Communities",
         "category": "Threatened Ecological Communities",
+        "type": "secondary",
         "outcome": "3. Species and Landscapes (Long term): Threatened Ecological Communities (TECs) and priority places - The condition of targeted EPBC Act listed Threatened Ecological Communities and identified priority places under the Threatened Species Action Plan 2022-2032 is improved"
     },
     {
