@@ -264,6 +264,15 @@ pdfbox.fontcache="/data/${appName}/cache/"
 // Markdown configuration to match behaviour of the JavaScript editor.
 markdown.hardwraps = true
 
+sites.known_shapes = [
+        [id:'cl11160', name:'NRM (2023)'],
+        [id:'cl1048', name:'IBRA 7 Regions'],
+        [id:'cl1049', name:'IBRA 7 Subregions'],
+        [id:'cl22',name:'Australian states'],
+        [id:'cl959', name:'Local Gov. Areas'],
+        [id:'cl11194', name:'Australian Marine Parks (2024)']
+]
+
 environments {
     development {
         grails.logging.jul.usebridge = true
