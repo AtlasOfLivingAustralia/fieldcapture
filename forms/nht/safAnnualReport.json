@@ -213,25 +213,55 @@
             "validate": "required,maxSize[1250]"
           },
           {
-            "name": "communicationsDuringPeriod",
+            "name": "communicationMaterialByType",
             "dataType": "list",
-            "allowRowDelete": false,
-            "defaultRows": [],
             "columns": [
               {
+                "name": "communicationDetails",
+                "dataType": "list",
+                "columns": [
+                  {
+                    "dataType": "stringList",
+                    "name": "communicationMaterialType",
+                    "constraints": [
+                      "Advertising",
+                      "Extension materials",
+                      "Flyers and brochures",
+                      "Media release",
+                      "Newsletters",
+                      "Newspaper articles",
+                      "Publishing reports",
+                      "Social media",
+                      "Other"
+                    ]
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "communicationTitle"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "communicationPurpose"
+                  },
+                  {
+                    "dataType": "date",
+                    "name": "publishedDate"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "link"
+                  }
+                ]
+              },
+              {
                 "dataType": "text",
-                "name": "yesCommunicationsMaterial",
-                "readonly": true
+                "name": "communicationMaterialType"
+              },
+              {
+                "dataType": "number",
+                "name": "numberCommunicationMaterialsType"
               }
             ]
-          },
-          {
-            "name": "numberOfCommunicationsMaterialsPublished",
-            "dataType": "number",
-            "decimalPlaces": 0,
-            "computed": {
-              "expression": "count(communicationsDuringPeriod, \"yesCommunicationsMaterial\")"
-            }
           },
           {
             "name": "engagementsByType",
@@ -585,8 +615,6 @@
               }
             ]
           },
-
-
           {
             "type": "row",
             "items": [
@@ -597,34 +625,70 @@
             ]
           },
           {
-            "type": "row",
+            "type": "repeat",
+            "source": "communicationMaterialByType",
             "items": [
               {
-                "type": "col",
+                "type": "row",
                 "items": [
                   {
+                    "type": "text",
+                    "source": "communicationMaterialType",
+                    "preLabel": "Type of Communications Material",
+                    "readonly": true
+                  },
+                  {
                     "type": "number",
-                    "source": "numberOfCommunicationsMaterialsPublished",
-                    "preLabel": "Total number of communications materials published during the year"
+                    "source": "numberCommunicationMaterialsType",
+                    "preLabel": "Number of Communication Materials of this type",
+                    "readonly": true
                   }
                 ]
-              }
-            ]
-          },
-          {
-            "type": "table",
-            "title": "<b>Communications material published during the year</b>",
-            "source": "communicationsDuringPeriod",
-            "userAddedRows": false,
-            "disableTableDownload": true,
-            "disableTableUpload": true,
-            "columns": [
+              },
               {
-                "type": "text",
-                "source": "yesCommunicationsMaterial",
-                "title": "Communications material",
-                "readonly": true,
-                "width": "50%"
+                "type": "table",
+                "source": "communicationDetails",
+                "title": "<b>Communications material published during the year</b>",
+                "userAddedRows": false,
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "source": "communicationMaterialType",
+                    "type": "selectOne",
+                    "width": "15%",
+                    "title": "Type of Communications Material",
+                    "readonly": true
+                  },
+                  {
+                    "source": "communicationTitle",
+                    "type": "text",
+                    "width": "25%",
+                    "title": "Title",
+                    "readonly": true
+                  },
+                  {
+                    "type": "textarea",
+                    "source": "communicationPurpose",
+                    "width": "35%",
+                    "title": "Purpose",
+                    "rows": 4,
+                    "readonly": true
+                  },
+                  {
+                    "title": "Date published",
+                    "source": "publishedDate",
+                    "type": "date",
+                    "width": "15%",
+                    "readonly": true
+                  },
+                  {
+                    "source": "link",
+                    "type": "text",
+                    "width": "20%",
+                    "title": "URL/link",
+                    "readonly": true
+                  }
+                ]
               }
             ]
           },
@@ -951,12 +1015,25 @@
               ]
             },
             "merge": {
-              "communicationsDuringPeriod": {
+              "communicationMaterialByType": {
                 "keys": [
-                  "yesCommunicationsMaterial"
+                  "communicationMaterialType"
                 ],
                 "addUnmatchedNewRows": true,
-                "deleteUnmatchedExistingRows": true
+                "deleteUnmatchedExistingRows": true,
+                "communicationDetails": {
+                  "keys": [
+                    "communicationTitle",
+                    "communicationPurpose",
+                    "publishedDate",
+                    "link"
+                  ],
+                  "addUnmatchedNewRows": true,
+                  "deleteUnmatchedExistingRows": true
+                },
+                "numberCommunicationMaterialsType": {
+                  "replaceExisting": true
+                }
               },
               "engagementsByType": {
                 "keys": [
@@ -1001,7 +1078,21 @@
             "mapping": [
               {
                 "source-path": "e7701823-e534-414e-80f5-86f9eecef50c",
-                "target": "communicationsDuringPeriod"
+                "target": "communicationMaterialByType",
+                "mapping": [
+                  {
+                    "source-path": "group",
+                    "target": "communicationMaterialType"
+                  },
+                  {
+                    "source-path": "count",
+                    "target": "numberCommunicationMaterialsType"
+                  },
+                  {
+                    "source-path": "result",
+                    "target": "communicationDetails"
+                  }
+                ]
               },
               {
                 "source-path": "3117521e-a801-45ef-838f-519c31ca59a2",
