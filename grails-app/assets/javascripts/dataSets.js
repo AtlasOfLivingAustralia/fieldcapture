@@ -51,6 +51,8 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         this.dateCreated = ko.observable(dataSet.dateCreated).extend({simpleDate: false});
         this.lastUpdated = ko.observable(dataSet.lastUpdated).extend({simpleDate: false});
         this.service = dataSet.serviceId ? (serviceName(dataSet.serviceId) || 'Unsupported service') : '';
+        this.projectOutcomes = dataSet.projectOutcomes;
+        this.type = dataSet.type;
         this.report = dataSet.reportId ? reportName(dataSet.reportId) : '';
         this.reportUrl = config.viewReportUrl + '?reportId=' + dataSet.reportId;
         this.publicationStatus = dataSet.publicationStatus;

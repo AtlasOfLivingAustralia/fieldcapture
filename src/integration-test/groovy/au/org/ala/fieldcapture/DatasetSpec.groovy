@@ -35,7 +35,7 @@ class DatasetSpec extends StubbedCasSpec{
         dataSet.title = "Title"
         dataSet.programOutcome = "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
         dataSet.investmentPriorities = ["Soil acidification"]
-        dataSet.type = "Baseline dataset associated with a project outcome"
+        dataSet.type = "Baseline"
         dataSet.protocol = "other"
 
         then:
@@ -97,7 +97,7 @@ class DatasetSpec extends StubbedCasSpec{
         set.programOutcome == "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
         set.investmentPriorities == ["Soil acidification"]
         set.protocol == "other"
-        set.type == "Baseline dataset associated with a project outcome"
+        set.type == "Baseline"
         set.measurementTypes == ["Soil erosion"]
         set.methods == ["Area sampling", "Genetic sampling"]
         set.methodDescription == "Method description"
@@ -185,7 +185,7 @@ class DatasetSpec extends StubbedCasSpec{
         set.title = "Title"
         set.programOutcome = "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
         set.investmentPriorities = ["Soil acidification"]
-        set.type = "Baseline dataset associated with a project outcome"
+        set.type = "Baseline"
         set.baselines = ['b1']
         set.protocol = 'guid-1'
         set.collectionApp = "Collection App"
