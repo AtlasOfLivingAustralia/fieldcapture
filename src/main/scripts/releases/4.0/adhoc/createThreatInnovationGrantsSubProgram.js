@@ -411,7 +411,7 @@ var config =
                 }
             ]
         },
-        "visibility": "public",
+        "visibility": "private",
         "declarationPageType": "rdpReportDeclaration",
         "requiresActivityLocking": true,
         "supportsMeriPlanComparison": true,
@@ -442,7 +442,7 @@ var config =
                 "reportDescriptionFormat": "Progress Report %1d",
                 "reportNameFormat": "Progress Report %1d",
                 "reportingPeriodInMonths": 6,
-                "description": "",
+                "description": "_Please note that the reporting fields for these reports are currently being developed_",
                 "minimumReportDurationInDays": 3,
                 "label": "Semester",
                 "category": "Progress Reports",
@@ -456,7 +456,7 @@ var config =
                 "reportDescriptionFormat": "Annual Progress Report %2$tY - %3$tY for %4$s",
                 "reportNameFormat": "Annual Progress Report %2$tY - %3$tY",
                 "reportingPeriodInMonths": 12,
-                "description": "",
+                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
                 "minimumReportDurationInDays": 1,
                 "label": "Annual",
                 "category": "Annual Progress Reporting",
@@ -563,6 +563,18 @@ var outcomes = [
         "targeted": true,
         "shortDescription": "EPBC Species",
         "category": "Threatened Species",
+        "outcome": "Conserve, protect and sustainably manage Australia’s biodiversity, ecosystems, environment and heritage through research, management, supporting natural resource management, establishing and managing Commonwealth protected areas, and reducing and regulating the use of pollutants and hazardous substances"
+    },
+    {
+        "priorities": [
+            {
+                "category": "Priority Threatened Species Primary"
+            }
+        ],
+        "targeted": true,
+        "shortDescription": "EPBC Species",
+        "category": "Threatened Species",
+        "type": "secondary",
         "outcome": "1.  Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
     },
     {
@@ -601,27 +613,12 @@ var outcomes = [
     {
         "type": "short",
         "category": "Priority species related outcome",
+        "outcome": "At least 5 new tools are developed to mitigate the impact of broad-scale threats on threatened species"
+    },
+    {
+        "type": "short",
+        "category": "Priority species related outcome",
         "outcome": "Species at high risk of imminent extinction are identified and supported to persist"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "All priority places are on track to have improved condition"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "Implementation of priority actions for priority places is tracked and published"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "The area managed for conservation is increased by 50 million hectares"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "Impacts of climate change on priority species and places are identified and actions are underway to strengthen resilience and adaptive capacity"
     },
     {
         "type": "short",
@@ -631,32 +628,7 @@ var outcomes = [
     {
         "type": "short",
         "category": "Priority species related outcome",
-        "outcome": "Feral cats and foxes are managed in all priority places where they are a key threat to condition, using best practice methods for the location"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "Gamba Grass is reduced to an area less than its 2022 range"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "Introduction and establishment of new exotic environmental pests, weeds and diseases is reduced"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "Five new populations of appropriate species are added across the national safe haven network to improve representation of invasive predator-susceptible threatened species"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "At least 80 per cent of nationally listed threatened plant species are secured in insurance collections"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "All nationally listed threatened plant species affected by Myrtle Rust are secured in insurance collections and populations"
+        "outcome": "Impacts of climate change on priority species and places are identified and actions are underway to strengthen resilience and adaptive capacity"
     },
     {
         "type": "short",
@@ -666,12 +638,7 @@ var outcomes = [
     {
         "type": "short",
         "category": "Priority species related outcome",
-        "outcome": "Emergency response management and planning for critical biodiversity assets improves across jurisdictions"
-    },
-    {
-        "type": "short",
-        "category": "Priority species related outcome",
-        "outcome": "At least 5 new tools are developed to mitigate the impact of broad-scale threats on threatened species"
+        "outcome": "First Nations’ knowledges are integrated in conservation assessments, processes and planning for threatened species and ecological communities"
     },
     {
         "type": "short",
@@ -2008,7 +1975,7 @@ var priorities = [
 //Create the parent program
 let programName = "Saving Native Species";
 var parent = createOrFindProgram(programName);
-var subprograms = ["Koala Health - Grants"]
+var subprograms = ["Threat Innovation Grants"]
 
 subprograms.forEach(function (subProgram){
     createOrFindProgram(subProgram, parent._id);

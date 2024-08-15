@@ -1,18 +1,20 @@
 <div class="row">
     <div class="nav flex-column nav-pills col-3">
+        <g:if test="${!fc.userHasReadOnlyAccess()}">
         <a class="nav-link active" data-toggle="pill" href="#edit-program-details" id="edit-program-details-tab" role="tab">Edit</a>
+        </g:if>
         <a class="nav-link" data-toggle="pill" href="#organisation-permissions" id="organisation-permissions-tab" role="tab">Permissions</a>
+        <a id="edit-documents-tab" class="nav-link" data-toggle="pill" href="#edit-documents" role="tab">Documents</a>
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
             <a class="nav-link" data-toggle="pill" href="#reporting-config" id="reporting-config-tab" role="tab">Reporting</a>
             <a class="nav-link" data-toggle="pill" href="#config" id="config-tab" role="tab">Configuration</a>
-            <a id="edit-documents-tab" class="nav-link" data-toggle="pill" href="#edit-documents" role="tab">Documents</a>
         </g:if>
-        <g:elseif test="${fc.userHasReadOnlyAccess()}">
-            <a id="edit-documents-tab" class="nav-link" data-toggle="pill" href="#edit-documents" role="tab">Documents</a>
-        </g:elseif>
+
+
     </div>
 
     <div class="tab-content col-9">
+<g:if test="${!fc.userHasReadOnlyAccess()}">
         <div class="tab-pane active" id="edit-program-details">
             <h4>Administrator actions</h4>
             <div class="row">
@@ -29,6 +31,7 @@
                 </div>
             </g:if>
         </div>
+</g:if>
 
         <div class="tab-pane" id="organisation-permissions">
             <h4>Add Permissions</h4>
@@ -86,38 +89,10 @@
 
                 </textarea>
             </div>
-        <!-- ko stopBinding:true -->
-        <div id="edit-documents" class="tab-pane">
-            <div class="attachDocumentModal">
-                <div class="row">
-                    <h3 class="col-3 d-inline-block">Documents</h3>
-                    <form class="col-9 form-inline justify-content-end">
-
-                        <label class="col-auto col-form-label">Filter documents:
-                            <select class="form-control form-control-sm" data-bind="optionsCaption:'No filter', options:documentRoles, optionsText:'name', optionsValue:'id', value:documentFilter"></select>
-                        </label>
-                        <button class="btn btn-info btn-sm form-control" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
-
-                    </form>
-                </div>
-            </div>
-            <div class="clearfix"></div>
-            <hr/>
-            <div class="row-fluid">
-                <div class="span10">
-
-                    <g:render template="/shared/editDocuments"
-                              model="[useExistingModel: true, documents: organisation.documents, editable:true, filterBy: 'all', ignore: '', imageUrl:assetPath(src:'filetypes'),containerId:'adminDocumentList']"/>
-
-                </div>
-            </div>
-            %{--The modal view containing the contents for a modal dialog used to attach a document--}%
-            <g:render template="/shared/attachDocument"/>
-
-        </div>
-        <!-- /ko -->
         </g:if>
-        <g:elseif test="${fc.userHasReadOnlyAccess()}">
+
+
+        <g:if test="${fc.userHasReadOnlyAccess() && !fc.userIsAlaAdmin()}">
         <!-- ko stopBinding:true -->
         <div id="edit-documents" class="tab-pane">
             <div class="attachDocumentModal">
@@ -137,7 +112,7 @@
                 <div class="span10">
 
                     <g:render template="/shared/editDocuments"
-                              model="[useExistingModel: true, documents: organisation.documents, editable:true, filterBy: 'all', ignore: '', imageUrl:assetPath(src:'filetypes'),containerId:'adminDocumentList']"/>
+                              model="[useExistingModel: true, documents: organisation.documents, editable:false, filterBy: 'all', ignore: '', imageUrl:assetPath(src:'filetypes'),containerId:'adminDocumentList']"/>
                     %{--The modal view containing the contents for a modal dialog used to attach a document--}%
                     <g:render template="/shared/attachDocument"/>
 
@@ -145,6 +120,38 @@
             </div>
         </div>
         <!-- /ko -->
-        </g:elseif>
+        </g:if>
+        <g:else>
+            <!-- ko stopBinding:true -->
+            <div id="edit-documents" class="tab-pane">
+                <div class="attachDocumentModal">
+                    <div class="row">
+                        <h3 class="col-3 d-inline-block">Documents</h3>
+                        <form class="col-9 form-inline justify-content-end">
+
+                            <label class="col-auto col-form-label">Filter documents:
+                                <select class="form-control form-control-sm" data-bind="optionsCaption:'No filter', options:documentRoles, optionsText:'name', optionsValue:'id', value:documentFilter"></select>
+                            </label>
+                            <button class="btn btn-info btn-sm form-control" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
+
+                        </form>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <hr/>
+                <div class="row-fluid">
+                    <div class="span10">
+
+                        <g:render template="/shared/editDocuments"
+                                  model="[useExistingModel: true, documents: organisation.documents, editable:true, filterBy: 'all', ignore: '', imageUrl:assetPath(src:'filetypes'),containerId:'adminDocumentList']"/>
+
+                    </div>
+                </div>
+                %{--The modal view containing the contents for a modal dialog used to attach a document--}%
+                <g:render template="/shared/attachDocument"/>
+
+            </div>
+            <!-- /ko -->
+        </g:else>
     </div>
 </div>
