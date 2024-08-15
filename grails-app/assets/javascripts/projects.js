@@ -1143,17 +1143,21 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
                 },
                 {
                     target: 2,
-                    visible: true
+                    sortable: true
                 },
                 {
+                    target: 3,
+                    sortable: true
+                },
+
+                {
                     target: 4,
-                    sortable: true,
-                    orderData: 5
+                    visible: true,
+                    sortable:true
                 },
                 {
                     target: 5,
-                    visible: false,
-                    searchable: false
+                    sortable: true,
                 },
                 {
                     target: 6,
@@ -1165,15 +1169,33 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
                     visible: false,
                     searchable: false
                 },
+                {
+                    target: 8,
+                    sortable:true,
+                    orderData: 9
+                },
+                {
+                    target: 9,
+                    visible: false,
+                    searchable: false
+                },
+                {
+                    target: 10,
+                    visible:true,
+                    sortable:false
+                }
 
             ],
-            order: [4, 'desc']
+            order: [6, 'desc']
         };
         if (!viewModel.supportsDateColumn) {
             dataTableConfig.columnDefs[2].visible = false;
             dataTableConfig.columnDefs[3].visible = false;
+            dataTableConfig.columnDefs[4].visible = false;
             dataTableConfig.columnDefs[5].visible = false;
-            dataTableConfig.columnDefs[6].visible = false;
+
+            dataTableConfig.columnDefs[7].visible = false;
+            dataTableConfig.columnDefs[8].visible = false;
             dataTableConfig.order = [1, 'asc'];
         }
 
