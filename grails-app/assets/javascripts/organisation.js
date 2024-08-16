@@ -1,6 +1,7 @@
 //= require tab-init.js
 //= require attach-document-no-ui
 //= require reportService
+//= require components.js
 /**
  * Knockout view model for organisation pages.
  * @param props JSON/javascript representation of the organisation.
@@ -18,41 +19,155 @@ OrganisationViewModel = function (props, options) {
 
     var config = _.extend({}, defaults, options);
 
-    var orgTypesMap = {
-        aquarium:'Aquarium',
-        archive:'Archive',
-        botanicGarden:'Botanic Garden',
-        conservation:'Conservation',
-        fieldStation:'Field Station',
-        government:'Government',
-        governmentDepartment:'Government Department',
-        herbarium:'Herbarium',
-        historicalSociety:'Historical Society',
-        horticulturalInstitution:'Horticultural Institution',
-        independentExpert:'Independent Expert',
-        industry:'Industry',
-        laboratory:'Laboratory',
-        library:'Library',
-        management:'Management',
-        museum:'Museum',
-        natureEducationCenter:'Nature Education Center',
-        nonUniversityCollege:'Non-University College',
-        park:'Park',
-        repository:'Repository',
-        researchInstitute:'Research Institute',
-        school:'School',
-        scienceCenter:'Science Center',
-        society:'Society',
-        university:'University',
-        voluntaryObserver:'Voluntary Observer',
-        zoo:'Zoo'
-    };
+    // Organisation entity types from the ABN lookup service
+    self.entityTypes = [
+
+    {code:"ADF", label:"Approved Deposit Fund"},
+    {code:"ARF", label:"APRA Regulated Fund (Fund Type Unknown)"},
+    {code:"CCB", label:"Commonwealth Government Public Company"},
+    {code:"CCC",label:"Commonwealth Government Co-operative"},
+    {code:"CCL", label:"Commonwealth Government Limited Partnership"},
+    {code:"CCN", label:"Commonwealth Government Other Unincorporated Entity"},
+    {code:"CCO", label:"Commonwealth Government Other Incorporated Entity"},
+    {code:"CCP", label:"Commonwealth Government Pooled Development Fund"},
+    {code:"CCR", label:"Commonwealth Government Private Company"},
+    {code:"CCS", label:"Commonwealth Government Strata Title"},
+    {code:"CCT", label:"Commonwealth Government Public Trading Trust"},
+    {code:"CCU", label:"Commonwealth Government Corporate Unit Trust"},
+    {code:"CGA", label:"Commonwealth Government Statutory Authority"},
+    {code:"CGC", label:"Commonwealth Government Company"},
+    {code:"CGE", label:"Commonwealth Government Entity"},
+    {code:"CGP", label:"Commonwealth Government Partnership"},
+    {code:"CGS", label:"Commonwealth Government Super Fund"},
+    {code:"CGT", label:"Commonwealth Government Trust"},
+    {code:"CMT", label:"Cash Management Trust"},
+    {code:"COP", label:"Co-operative"},
+    {code:"CSA", label:"Commonwealth Government APRA Regulated Public Sector Fund"},
+    {code:"CSP", label:"Commonwealth Government APRA Regulated Public Sector Scheme"},
+    {code:"CSS", label:"Commonwealth Government Non-Regulated Super Fund"},
+    {code:"CTC", label:"Commonwealth Government Cash Management Trust"},
+    {code:"CTD", label:"Commonwealth Government Discretionary Services Management Trust"},
+    {code:"CTF", label:"Commonwealth Government Fixed Trust"},
+    {code:"CTH", label:"Commonwealth Government Hybrid Trust"},
+    {code:"CTI", label:"Commonwealth Government Discretionary Investment Trust"},
+    {code:"CTL", label:"Commonwealth Government Listed Public Unit Trust"},
+    {code:"CTQ", label:"Commonwealth Government Unlisted Public Unit Trust"},
+    {code:"CTT", label:"Commonwealth Government Discretionary Trading Trust"},
+    {code:"CTU", label:"Commonwealth Government Fixed Unit Trust"},
+    {code:"CUT", label:"Corporate Unit Trust"},
+    {code:"DES", label:"Deceased Estate"},
+    {code:"DIP", label:"Diplomatic/Consulate Body or High Commissioner"},
+    {code:"DIT", label:"Discretionary Investment Trust"},
+    {code:"DST", label:"Discretionary Services Management Trust"},
+    {code:"DTT", label:"Discretionary Trading Trust"},
+    {code:"FHS", label:"First Home Saver Accounts Trust"},
+    {code:"FPT", label:"Family Partnership"},
+    {code:"FUT", label:"Fixed Unit Trust"},
+    {code:"FXT", label:"Fixed Trust"},
+    {code:"HYT", label:"Hybrid Trust"},
+    {code:"IND", label:"Individual/Sole Trader"},
+    {code:"LCB", label:"Local Government Public Company"},
+    {code:"LCC", label:"Local Government Co-operative"},
+    {code:"LCL", label:"Local Government Limited Partnership"},
+    {code:"LCN", label:"Local Government Other Unincorporated Entity"},
+    {code:"LCO", label:"Local Government Other Incorporated Entity"},
+    {code:"LCP", label:"Local Government Pooled Development Fund"},
+    {code:"LCR", label:"Local Government Private Company"},
+    {code:"LCS", label:"Local Government Strata Title"},
+    {code:"LCT", label:"Local Government Public Trading Trust"},
+    {code:"LCU", label:"Local Government Corporate Unit Trust"},
+    {code:"LGA", label:"Local Government Statutory Authority"},
+    {code:"LGC", label:"Local Government Company"},
+    {code:"LGE", label:"Local Government Entity"},
+    {code:"LGP", label:"Local Government Partnership"},
+    {code:"LGT", label:"Local Government Trust"},
+    {code:"LPT", label:"Limited Partnership"},
+    {code:"LSA", label:"Local Government APRA Regulated Public Sector Fund"},
+    {code:"LSP", label:"Local Government APRA Regulated Public Sector Scheme"},
+    {code:"LSS", label:"Local Government Non-Regulated Super Fund"},
+    {code:"LTC", label:"Local Government Cash Management Trust"},
+    {code:"LTD", label:"Local Government Discretionary Services Management Trust"},
+    {code:"LTF", label:"Local Government Fixed Trust"},
+    {code:"LTH", label:"Local Government Hybrid Trust"},
+    {code:"LTI", label:"Local Government Discretionary Investment Trust"},
+    {code:"LTL", label:"Local Government Listed Public Unit Trust"},
+    {code:"LTQ", label:"Local Government Unlisted Public Unit Trust"},
+    {code:"LTT", label:"Local Government Discretionary Trading Trust"},
+    {code:"LTU", label:"Local Government Fixed Unit Trust"},
+    {code:"NPF", label:"APRA Regulated Non-Public Offer Fund"},
+    {code:"NRF", label:"Non-Regulated Superannuation Fund"},
+    {code:"OIE", label:"Other Incorporated Entity"},
+    {code:"PDF", label:"Pooled Development Fund"},
+    {code:"POF", label:"APRA Regulated Public Offer Fund"},
+    {code:"PQT", label:"Unlisted Public Unit Trust"},
+    {code:"PRV", label:"Australian Private Company"},
+    {code:"PST", label:"Pooled Superannuation Trust"},
+    {code:"PTR", label:"Other Partnership"},
+    {code:"PTT", label:"Public Trading trust"},
+    {code:"PUB", label:"Australian Public Company"},
+    {code:"PUT", label:"Listed Public Unit Trust"},
+    {code:"SAF", label:"Small APRA Regulated Fund"},
+    {code:"SCB", label:"State Government Public Company"},
+    {code:"SCC", label:"State Government Co-operative"},
+    {code:"SCL", label:"State Government Limited Partnership"},
+    {code:"SCN", label:"State Government Other Unincorporated Entity"},
+    {code:"SCO", label:"State Government Other Incorporated Entity"},
+    {code:"SCP", label:"State Government Pooled Development Fund"},
+    {code:"SCR", label:"State Government Private Company"},
+    {code:"SCS", label:"State Government Strata Title"},
+    {code:"SCT", label:"State Government Public Trading Trust"},
+    {code:"SCU", label:"State Government Corporate Unit Trust"},
+    {code:"SGA", label:"State Government Statutory Authority"},
+    {code:"SGC", label:"State Government Company"},
+    {code:"SGE", label:"State Government Entity"},
+    {code:"SGP", label:"State Government Partnership"},
+    {code:"SGT", label:"State Government Trust"},
+    {code:"SMF", label:"ATO Regulated Self-Managed Superannuation Fund"},
+    {code:"SSA", label:"State Government APRA Regulated Public Sector Fund"},
+    {code:"SSP", label:"State Government APRA Regulated Public Sector Scheme"},
+    {code:"SSS", label:"State Government Non-Regulated Super Fund"},
+    {code:"STC", label:"State Government Cash Management Trust"},
+    {code:"STD", label:"State Government Discretionary Services Management Trust"},
+    {code:"STF", label:"State Government Fixed Trust"},
+    {code:"STH", label:"State Government Hybrid Trust"},
+    {code:"STI", label:"State Government Discretionary Investment Trust"},
+    {code:"STL", label:"State Government Listed Public Unit Trust"},
+    {code:"STQ", label:"State Government Unlisted Public Unit Trust"},
+    {code:"STR", label:"Strata-title"},
+    {code:"STT", label:"State Government Discretionary Trading Trust"},
+    {code:"STU", label:"State Government Fixed Unit Trust"},
+    {code:"SUP", label:"Super Fund"},
+    {code:"TCB", label:"Territory Government Public Company"},
+    {code:"TCC", label:"Territory Government Co-operative"},
+    {code:"TCL", label:"Territory Government Limited Partnership"},
+    {code:"TCN", label:"Territory Government Other Unincorporated Entity"},
+    {code:"TCO", label:"Territory Government Other Incorporated Entity"},
+    {code:"TCP", label:"Territory Government Pooled Development Fund"},
+    {code:"TCR", label:"Territory Government Private Company"},
+    {code:"TCS", label:"Territory Government Strata Title"},
+    {code:"TCT", label:"Territory Government Public Trading Trust"},
+    {code:"TCU", label:"Territory Government Corporate Unit Trust"},
+    {code:"TGA", label:"Territory Government Statutory Authority"},
+    {code:"TGE", label:"Territory Government Entity"},
+    {code:"TGP", label:"Territory Government Partnership"},
+    {code:"TGT", label:"Territory Government Trust"},
+    {code:"TRT", label:"Other trust"},
+    {code:"TSA", label:"Territory Government APRA Regulated Public Sector Fund"},
+    {code:"TSP", label:"Territory Government APRA Regulated Public Sector Scheme"},
+    {code:"TSS", label:"Territory Government Non-Regulated Super Fund"},
+    {code:"TTC", label:"Territory Government Cash Management Trust"},
+    {code:"TTD", label:"Territory Government Discretionary Services Management Trust"},
+    {code:"TTF", label:"Territory Government Fixed Trust"},
+    {code:"TTH", label:"Territory Government Hybrid Trust"},
+    {code:"TTI", label:"Territory Government Discretionary Investment Trust"},
+    {code:"TTL", label:"Territory Government Listed Public Unit Trust"},
+    {code:"TTQ", label:"Territory Government Unlisted Public Unit Trust"},
+    {code:"TTT", label:"Territory Government Discretionary Trading Trust"},
+    {code:"TTU", label:"Territory Government Fixed Unit Trust"},
+    {code:"UIE", label:"Other Unincorporated Entity"}];
 
     self.organisationId = props.organisationId;
-    self.orgType = ko.observable(props.orgType);
-    self.orgTypeDisplayOnly = ko.computed(function() {
-        return orgTypesMap[self.orgType()] || "Unspecified";
-    });
+    self.entityType = ko.observable(props.entityType);
     self.name = ko.observable(props.name);
     self.entityName = ko.observable(props.entityName);
     self.businessNames = ko.observableArray(props.businessNames);
@@ -68,6 +183,12 @@ OrganisationViewModel = function (props, options) {
     self.breadcrumbName = ko.computed(function() {
         return self.name()?self.name():'New Organisation';
     });
+    self.associatedOrgs = ko.observableArray(props.associatedOrgs);
+    self.externalIds = ko.observableArray(props.externalIds);
+    self.externalIdTypes = PROJECT_EXTERNAL_ID_TYPES =  [
+        'TECH_ONE_CODE', 'TECH_ONE_CONTRACT_NUMBER'
+    ];
+    self.organisationSearchUrl = options.organisationSearchUrl;
 
     self.onPasteAbn = function(vm, event) {
 
@@ -84,6 +205,14 @@ OrganisationViewModel = function (props, options) {
         return false;
     }
 
+    self.clearAbnDetails = function() {
+        self.abn(null);
+        self.entityName(null);
+        self.businessNames(null);
+        self.entityType(null);
+        self.name(null);
+    };
+
     self.projects = props.projects;
 
     self.editDescription = function() {
@@ -91,14 +220,9 @@ OrganisationViewModel = function (props, options) {
     };
 
     self.transients = self.transients || {};
-    self.transients.orgTypes = [];
-    for (var ot in orgTypesMap) {
-        if (orgTypesMap.hasOwnProperty(ot))
-            self.transients.orgTypes.push({orgType:ot, name:orgTypesMap[ot]});
-    }
 
     self.toJS = function(includeDocuments) {
-        var ignore = self.ignore.concat(['breadcrumbName', 'orgTypeDisplayOnly', 'collectoryInstitutionId', 'projects', 'reports']);
+        var ignore = self.ignore.concat(['breadcrumbName', 'entityTypes', 'externalIdTypes', 'organisationSearchUrl', 'collectoryInstitutionId', 'projects', 'reports']);
         var js = ko.mapping.toJS(self, {include:['documents'], ignore:ignore} );
         if (includeDocuments) {
             js.documents = ko.toJS(self.documents);
@@ -144,6 +268,7 @@ OrganisationViewModel = function (props, options) {
                     self.postcode(orgDetails.postcode);
                     self.state(orgDetails.state);
                     self.abnStatus(orgDetails.abnStatus);
+                    self.orgType(orgDetails.entityType);
                     if (!self.name()) {
                         var defaultName = '';
                         if (self.businessNames().length > 0) {
@@ -165,9 +290,7 @@ OrganisationViewModel = function (props, options) {
 
     self.abnStatus.subscribe(function(value) {
         if (value == 'N/A') {
-            self.abn(null);
-            self.entityName(null);
-            self.businessNames(null);
+            self.clearAbnDetails();
         }
     });
 

@@ -15,11 +15,13 @@
     <section class="form-group row">
         <label for="abnSelector" class="col-sm-3 form-check-label">ABN: <fc:iconHelp><g:message code="organisation.abn.help"/></fc:iconHelp></label>
 
-            <div class="col-sm-7">
-                <input type="text" id="abnSelector" class="w-100 form-control form-control-sm" data-bind="value:abn, valueUpdate: 'input', event:{paste:onPasteAbn}, enable:abnStatus() != 'N/A'" data-validation-engine="validate[custom[number],minSize[11],maxSize[11]" data-validation-error-message="Please enter an 11 digit ABN"  maxlength="11" placeholder="Enter ABN Number"/>
+            <div class="col-sm-5">
+                <input type="text" id="abnSelector" class="w-100 form-control form-control-sm" data-bind="value:abn, valueUpdate: 'input', event:{paste:onPasteAbn}, enable:abnStatus() != 'N/A' && !entityName()" data-validation-engine="validate[custom[number],minSize[11],maxSize[11]" data-validation-error-message="Please enter an 11 digit ABN"  maxlength="11" placeholder="Enter 11 digit ABN"/>
             </div>
-            <div class="col-sm-2 prePopBtn">
+            <div class="col-sm-4 prePopBtn">
                 <button type="button" id="prepopulateFromABN" data-bind="click:prepopulateFromABN, disable: !(abn())" class="btn btn-sm btn-primary" disabled="disabled">Pre Populate From ABN</button>
+
+                <button type="button" class="btn btn-sm btn-warning" id="clearABN" data-bind="click:clearAbnDetails, enable:entityName()">Clear ABN Details</button>
             </div>
     </section>
     <section class="form-group row">
@@ -35,6 +37,14 @@
 
         <div class="col-sm-9">
             <input type="text" id="businessNames" class="w-100 form-control form-control-sm" data-bind="value:businessNames, enable:abn()" readonly="readonly"/>
+        </div>
+    </section>
+
+    <section class="form-group row">
+        <label for="organisationType" class="col-sm-3 form-check-label">Type of organisation: <fc:iconHelp><g:message code="organisation.type.help"/></fc:iconHelp></label>
+
+        <div class="col-sm-9">
+            <select id="organisationType" class="form-control form-control-sm" data-bind="options:entityTypes, optionsCaption:'Please select...', optionsText:'label', optionsValue:'code', value:entityType, enable:abnStatus() == 'N/A'"></select>
         </div>
     </section>
 
@@ -80,6 +90,23 @@
         <label for="postcode" class="col-sm-3 form-check-label labelModification">Postcode: <fc:iconHelp><g:message code="organisation.postcode.help"/></fc:iconHelp></label>
         <div class="col-sm-3">
             <input type="text" id="postcode" placeholder="The postcode of organisation headquarters" class="form-control form-control-sm" data-validation-engine="validate[required, number,minSize[4],maxSize[4]" data-bind="value:postcode"></input>
+        </div>
+    </section>
+
+    <section class="form-group row">
+            <label class="col-form-label col-sm-3" for="url">External ids: <fc:iconHelp><g:message
+                    code="organisation.externalIds.help"/></fc:iconHelp></label>
+            <div class="controls col-sm-9">
+                <external-ids params="externalIds:externalIds, externalIdTypes:externalIdTypes"></external-ids>
+            </div>
+    </section>
+
+    <section class="form-group row">
+        <label class="col-form-label col-sm-3" for="url">Associated organisations: <fc:iconHelp><g:message
+                code="organisation.associatedOrgs.help"/></fc:iconHelp></label>
+        <div class="controls col-sm-9">
+            <associated-orgs params="associatedOrgs:associatedOrgs, organisationSearchUrl:organisationSearchUrl"></associated-orgs>
+
         </div>
     </section>
 

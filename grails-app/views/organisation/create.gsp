@@ -11,6 +11,7 @@
             organisationSaveUrl: "${createLink(action:'ajaxCreate')}",
             prepopulateAbnUrl:"${createLink(action:'prepopulateAbn')}",
             organisationViewUrl: "${createLink(action:'index')}",
+            organisationSearchUrl: '${g.createLink(action:'search')}',
             documentUpdateUrl: "${createLink(controller:"document", action:"documentUpdate")}",
             returnTo: "${params.returnTo}"
             };
@@ -45,7 +46,14 @@
     $(function () {
         var organisation = <fc:modelAsJavascript model="${organisation}"/>;
         abn = ko.observable('');
-        var options = {prepopulateAbnUrl: fcConfig.prepopulateAbnUrl, abnSelector: '#abnSelector', organisationSaveUrl:fcConfig.organisationSaveUrl, serverUrl: fcConfig.serverUrl, organisationViewUrl: fcConfig.organisationViewUrl, returnTo: fcConfig.returnTo}
+        var options = {
+        prepopulateAbnUrl: fcConfig.prepopulateAbnUrl,
+        abnSelector: '#abnSelector',
+        organisationSaveUrl:fcConfig.organisationSaveUrl,
+        serverUrl: fcConfig.serverUrl,
+        organisationViewUrl: fcConfig.organisationViewUrl,
+        organisationSearchUrl: fcConfig.organisationSearchUrl,
+        returnTo: fcConfig.returnTo}
 
         var organisationViewModel = new OrganisationViewModel(organisation, options);
         autoSaveModel(organisationViewModel, fcConfig.organisationSaveUrl,

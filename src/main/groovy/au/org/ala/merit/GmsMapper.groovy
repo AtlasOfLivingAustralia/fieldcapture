@@ -63,7 +63,7 @@ class GmsMapper {
             ROUND_NM:[name:'associatedSubProgram', type:'string'],
             MANAGEMENT_UNIT:[name:'managementUnitName', type:'string', mandatory: false, description: 'The management unit the project is being conducted in'],
             ABN:[name: 'abn', type: 'string', description:'The ABN of the organisation receiving the funding'],
-            ORG_TRADING_NAME:[name:'organisationName', type:'string',description:'The trading name of the organisation receiving the funding (only used if the ABN is not supplied)'],
+            ORG_ID:[name:'organisationId', type:'string',description:'The organisationId of the organisation in MERIT (only used if the ABN is not supplied)'],
             ORG_CONTRACT_NAME:[name:'organisationContractName', type: 'string', description: 'The name used in the project contract.  Appears as the organisation name on the project page.'],
             START_DT:[name:'plannedStartDate', type:'date', mandatory:true, description:'The planned start date of the project'],
             FINISH_DT:[name:'plannedEndDate', type:'date', mandatory:true, description:'The planned end date of the project'],
@@ -77,7 +77,6 @@ class GmsMapper {
             AUTHORISEDP_EMAIL:[name:'adminEmail', type:'email', description:'This user will be added as an admin to the project'],
             GRANT_MGR_EMAIL:[name:'grantManagerEmail', type:'email', description:'This user will be added as a project grant manager to the project'],
             GRANT_MGR_EMAIL_2:[name:'grantManagerEmail2', type:'email', description:'This user will be added as a project grant manager to the project'],
-            SERVICE_PROVIDER:[name:'serviceProviderName', type:'string'],
             APPLICANT_EMAIL:[name:'applicantEmail', type:'email',description:'This user will be added as a project admin'],
             ADMIN_EMAIL:[name:'adminEmail2', type:'email', description:'This user will be added as a project admin'],
             EDITOR_EMAIL:[name:'editorEmail', type:'email', description:'This user will be added as a project editor'],
@@ -225,6 +224,7 @@ class GmsMapper {
     def mapProject(projectRows) {
 
         List errors = []
+        List messages = []
         Map result = gmsToMerit(projectRows[0], projectMapping) // All project rows have the project details.
         def project = result.mappedData
         project.projectType = 'works'
@@ -255,18 +255,7 @@ class GmsMapper {
             }
         }
 
-        lookupOrganisation(project, errors)
-
-
-        if (project.serviceProviderName) {
-            def serviceProviderOrganisation = organisations.find{it.name == project.serviceProviderName}
-            if (serviceProviderOrganisation) {
-                project.orgIdSvcProvider = serviceProviderOrganisation.organisationId
-            }
-            else {
-                errors << "No (service provider) organisation exists with name ${project.serviceProviderName}"
-            }
-        }
+        Map organisation = mapOrganisation(project, errors, messages)
 
         errors.addAll(result.errors)
         project.planStatus = project.planStatus ?: 'not approved'
@@ -282,45 +271,67 @@ class GmsMapper {
             project.custom = [details:meriPlan]
         }
 
-        [project:project, sites:sites, activities:activities, errors:errors]
+        [project:project, sites:sites, activities:activities, errors:errors, messages:messages, organisation:organisation]
 
     }
 
-    private void lookupOrganisation(Map project, List errors) {
-        def organisation
+    private Map findExistingOrganisation(String organisationId, String abn) {
+        organisations.find{
+            (abn && (it.abn == abn)) ||
+                    (organisationId && (it.organisationId == organisationId)) }
+
+    }
+
+    private Map mapOrganisation(Map project, List errors, List messages) {
+        Map organisation
         Map abnLookup
-        if (project.organisationName || project.abn) {
-            organisation = organisations.find{ (project.abn && (it.abn == project.abn)) || (project.organisationName && (it.name == project.organisationName)) }
-            if (organisation) {
-                project.assocatedOrgs = [[organisationId:organisation.organisationId, name: project.remove('organisationContractName') ?: organisation.name, description:"Service provider"]] // Fix description
-            } else {
-                String abn = project.abn
-                if (!abn) {
-                    if (!organisation && project.organisationName || project.organisationContractName) {
-                        errors << "No organisation exists with organisation name ${project.organisationName}"
-                        project.associatedOrgs = [[name:project.remove('organisationContractName') ?: project.remove('organisationName'), description:"Service provider"]]
-                    }
-                } else {
-                    abnLookup = abnLookupService.lookupOrganisationDetailsByABN(abn)
-                    if (abnLookup && !abnLookup.error) {
-                        organisation = organisations.find{ it.name == abnLookup.entityName }
-                        if (organisation) {
-                            project.assocatedOrgs = [[organisationId:organisation.organisationId, name: project.remove('organisationContractName') ?: organisation.name, description:"Service provider"]] // Fix description
-                        } else {
-                            if (abnLookup.entityName == "") {
-                                errors << "${project.abn} is invalid abn number. Please Enter the correct one"
-                            } else {
-                                project.associatedOrgs = [[name:project.remove('organisationContractName') ?: organisation.name, description:"Service provider"]]
-                            }
-                        }
+        String error = null
+
+        boolean createOrganisation = false
+        String organisationId = project.remove('organisationId')
+        String abn = project.remove('abn')?.replaceAll(' ', '')
+        String contractName = project.remove('organisationContractName')
+        if (organisationId || abn) {
+            organisation = findExistingOrganisation(organisationId, abn)
+            if (!organisation && abn) {
+                abnLookup = abnLookupService.lookupOrganisationDetailsByABN(abn)
+                if (abnLookup && !abnLookup.error) {
+                    List names = [abnLookup.entityName] + abnLookup.businessNames
+                    organisation = organisations.find{ it.name in names }
+                    if (organisation) {
+                        error = "Error: An existing organisation name was matched via the entity/business name ${organisation.name} but the ABN doesn't match the abn of the MERIT organisation (${organisation.abn})."
                     } else {
-                        errors << "${project.abn} is invalid. Please Enter the correct one"
+                        createOrganisation = true
+
+                        String name = abnLookup.businessNames ? abnLookup.businessNames[0] : abnLookup.entityName
+                        organisation = abnLookup + [name:name]
+                        messages << "An organisation will be created with ABN: ${abn} and name: ${name}"
                     }
                 }
+                else {
+                    error = "Error: An error was encountered looking up the ABN ${abn}: ${abnLookup?.error}"
+                }
+            }
+
+            // Validate we can use the contract name
+            if (organisation && contractName) {
+                List names = [organisation.name] + organisation.businessNames
+                if (contractName && !contractName in names) {
+                    error = "The organisation name in the contract ${contractName} doesn't match a known organisation name"
+                }
+            }
+            if (!error) {
+                    project.assocatedOrgs =
+                            [[organisationId:organisation.organisationId, name: contractName ?: organisation.name, organisationName:organisation.name, description:"Service provider"]] // Fix description
             }
         } else {
-            errors << "No organisation exists with abn  ${project.abn} number and organisation name ${project.organisationName}"
+            error = "No organisation exists with abn: '${abn}' and/or organisationId: '${organisationId}'"
         }
+        if (error) {
+            errors << error
+        }
+        createOrganisation ? organisation : null
+
     }
 
 

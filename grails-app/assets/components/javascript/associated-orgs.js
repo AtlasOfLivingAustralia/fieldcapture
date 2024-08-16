@@ -35,6 +35,7 @@ ko.components.register('associated-orgs', {
             var self = this;
             associatedOrg = associatedOrg || {};
             self.name = ko.observable(associatedOrg.name);
+            self.organisationName = ko.observable(associatedOrg.organisationName);
             self.description = ko.observable(associatedOrg.description);
             self.organisationId = ko.observable(associatedOrg.organisationId);
             self.fromDate = ko.observable(associatedOrg.fromDate).extend({simpleDate:false});
@@ -101,6 +102,7 @@ ko.components.register('associated-orgs', {
         function copy(source, destination) {
             destination.organisationId(source.organisationId());
             destination.name(source.name());
+            destination.organisationName(source.organisationName());
             destination.description(source.description());
             destination.fromDate(source.fromDate());
             destination.toDate(source.toDate());
@@ -122,6 +124,7 @@ ko.components.register('associated-orgs', {
 
             if (item && item.source) {
                 self.editableOrganisation.organisationId(item.source.organisationId);
+                self.editableOrganisation.organisationName(item.source.name);
                 if (!self.editableOrganisation.name()) {
                     self.editableOrganisation.name(item.source.name);
                 }

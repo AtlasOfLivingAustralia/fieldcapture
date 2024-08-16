@@ -158,7 +158,7 @@ class AbnLookupService {
                 abnStatus: result.AbnStatus,
                 businessNames: result.BusinessName,
                 state: result.AddressState,
-                postcode: result.AddressPostcode,
+                postcode: Integer.parseInt(result.AddressPostcode),
                 entityType: result.EntityTypeCode,
                 entityTypeName: result.EntityTypeName
         ]

@@ -14,6 +14,7 @@
             organisationDeleteUrl: '${g.createLink(action:"ajaxDelete", id:organisation.organisationId)}',
             organisationEditUrl: '${g.createLink(action:"edit", id:organisation.organisationId)}',
             organisationViewUrl: '${g.createLink(action:"index", id:organisation.organisationId)}',
+            organisationSearchUrl: '${g.createLink(action:'search')}',
             prepopulateAbnUrl:"${createLink(action:'prepopulateAbn', id:organisation.organisationId)}",
             organisationListUrl: '${g.createLink(action:"list")}',
             organisationSaveUrl: "${createLink(action:'ajaxUpdate', id:organisation.organisationId)}",
@@ -67,6 +68,7 @@
                        organisationEditUrl: fcConfig.organisationEditUrl,
                        organisationListUrl: fcConfig.organisationListUrl,
                        organisationDeleteUrl: fcConfig.organisationDeleteUrl,
+                       organisationSearchUrl: fcConfig.organisationSearchUrl,
                        imageUploadUrl: fcConfig.imageUploadUrl, returnTo: fcConfig.returnTo }
 
         var organisationViewModel = new OrganisationViewModel(organisation, options);
