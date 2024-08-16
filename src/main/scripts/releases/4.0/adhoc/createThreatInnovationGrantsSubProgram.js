@@ -540,7 +540,7 @@ var config =
             "Kangaroo Island – SA",
             "MacDonnell Ranges – NT",
             "Mallee Birds Ecological Community – VIC/SA/NSW",
-            "Midlands region of central Tasmanian – TAS",
+            "Midlands region of central Tasmania – TAS",
             "Norfolk Island – External Territory",
             "Raine Island – Queensland",
             "Remnant WA Wheatbelt Woodlands – WA",
