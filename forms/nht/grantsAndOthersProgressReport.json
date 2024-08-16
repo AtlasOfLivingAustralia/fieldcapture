@@ -4,7 +4,7 @@
   "minOptionalSectionsCompleted": 1,
   "supportsSites": true,
   "tags": [],
-  "lastUpdated": "2024-06-19T05:43:08Z",
+  "lastUpdated": "2024-08-15T11:54:01Z",
   "createdUserId": "56575",
   "external": false,
   "activationDate": null,
@@ -1493,7 +1493,6 @@
                       }
                     ],
                     "userAddedRows": true,
-                    "disableTableUpload": true,
                     "source": "speciesInBreedingProgram",
                     "type": "table"
                   }
@@ -1978,7 +1977,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "communicationMaterials",
                 "type": "table"
               },
@@ -2555,7 +2553,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "events",
                 "title": "<b>Please report each Community/Stakeholder engagement event as a separate row</b>",
                 "type": "table"
@@ -3406,7 +3403,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "accessControlDetails",
                 "type": "table"
               }
@@ -4234,7 +4230,6 @@
                       }
                     ],
                     "userAddedRows": true,
-                    "disableTableUpload": true,
                     "source": "pestAnimalsControlled",
                     "type": "table"
                   }
@@ -5044,7 +5039,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "debrisRemovalDetails",
                 "type": "table"
               }
@@ -5964,7 +5958,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "erosionManagementDetails",
                 "type": "table"
               }
@@ -6748,7 +6741,6 @@
                       }
                     ],
                     "userAddedRows": true,
-                    "disableTableUpload": true,
                     "source": "speciesProtected",
                     "type": "table"
                   }
@@ -7579,7 +7571,6 @@
                       }
                     ],
                     "userAddedRows": true,
-                    "disableTableUpload": true,
                     "source": "agreementsTable",
                     "type": "table"
                   }
@@ -9617,7 +9608,6 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": true,
                         "source": "faunaSurveySpeciesTable",
                         "type": "table"
                       }
@@ -10736,7 +10726,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "firstNationsDetails",
                 "type": "table"
               }
@@ -11780,7 +11769,6 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": true,
                         "source": "floraSurveySpeciesTable",
                         "type": "table"
                       }
@@ -12614,7 +12602,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "habitatAugmentationDetails",
                 "type": "table"
               }
@@ -13615,7 +13602,6 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": true,
                         "source": "habitatConditionSurveySpeciesTable",
                         "type": "table"
                       }
@@ -16894,7 +16880,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "landManagementDetails",
                 "type": "table"
               }
@@ -17700,7 +17685,6 @@
                 ],
                 "userAddedRows": true,
                 "addRowText": "Add a new disease being managed in this area",
-                "disableTableUpload": true,
                 "source": "diseaseManagementDetails",
                 "type": "table"
               }
@@ -18735,7 +18719,6 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": true,
                         "source": "pestAnimalSurveySpeciesTable",
                         "type": "table"
                       }
@@ -20693,7 +20676,6 @@
                     ],
                     "userAddedRows": true,
                     "addRowText": "Add a new weed species",
-                    "disableTableUpload": true,
                     "source": "weedSpeciesTreated",
                     "type": "table"
                   }
@@ -21559,7 +21541,6 @@
                 ],
                 "userAddedRows": true,
                 "addRowText": "Add a new plant species to this area",
-                "disableTableUpload": true,
                 "source": "revegetationDetails",
                 "type": "table"
               }
@@ -22517,7 +22498,6 @@
                 ],
                 "userAddedRows": true,
                 "addRowText": "Add a new propagation/storage/collecting activity",
-                "disableTableUpload": true,
                 "source": "seedCollectionDetails",
                 "type": "table"
               }
@@ -23598,7 +23578,6 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": true,
                         "source": "plantSurvivalSurveySpeciesTable",
                         "type": "table"
                       }
@@ -24426,7 +24405,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "addRowText": "Add a new activity at this site",
                 "source": "sitePreparationDetails",
                 "type": "table"
@@ -26960,8 +26938,7 @@
                 ],
                 "source": "sustainableAgricultureFacilitators",
                 "type": "table",
-                "userAddedRows": true,
-                "disableTableUpload": true
+                "userAddedRows": true
               }
             ]
           },
@@ -27455,7 +27432,6 @@
                 "type": "table",
                 "source": "baselineDetails",
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "columns": [
                   {
                     "source": "datasetName",
@@ -28428,7 +28404,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "addRowText": "Add a new species",
                 "source": "interventionSpecies",
                 "type": "table"
@@ -30518,7 +30493,6 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": true,
                         "source": "weedSurveySpeciesTable",
                         "type": "table"
                       }

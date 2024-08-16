@@ -4,7 +4,7 @@
   "minOptionalSectionsCompleted": 1,
   "supportsSites": true,
   "tags": [],
-  "lastUpdated": "2024-06-19T04:55:19Z",
+  "lastUpdated": "2024-08-15T11:37:38Z",
   "createdUserId": "56575",
   "external": false,
   "activationDate": null,
@@ -1602,7 +1602,6 @@
                       }
                     ],
                     "userAddedRows": true,
-                    "disableTableUpload": true,
                     "source": "speciesInBreedingProgram",
                     "type": "table"
                   }
@@ -2173,7 +2172,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "communicationMaterials",
                 "type": "table"
               },
@@ -2836,7 +2834,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "events",
                 "title": "<b>Please report each Community/Stakeholder engagement event as a separate row</b>",
                 "type": "table"
@@ -3838,7 +3835,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "accessControlDetails",
                 "type": "table"
               }
@@ -4859,7 +4855,6 @@
                       }
                     ],
                     "userAddedRows": true,
-                    "disableTableUpload": true,
                     "source": "pestAnimalsControlled",
                     "type": "table"
                   }
@@ -5862,7 +5857,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "debrisRemovalDetails",
                 "type": "table"
               }
@@ -6984,7 +6978,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "erosionManagementDetails",
                 "type": "table"
               }
@@ -7951,7 +7944,6 @@
                       }
                     ],
                     "userAddedRows": true,
-                    "disableTableUpload": true,
                     "source": "speciesProtected",
                     "type": "table"
                   }
@@ -8878,7 +8870,6 @@
                       }
                     ],
                     "userAddedRows": true,
-                    "disableTableUpload": true,
                     "source": "agreementsTable",
                     "type": "table"
                   }
@@ -11134,7 +11125,6 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": true,
                         "source": "faunaSurveySpeciesTable",
                         "type": "table"
                       }
@@ -12338,7 +12328,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "firstNationsDetails",
                 "type": "table"
               }
@@ -13491,7 +13480,6 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": true,
                         "source": "floraSurveySpeciesTable",
                         "type": "table"
                       }
@@ -14506,7 +14494,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "habitatAugmentationDetails",
                 "type": "table"
               }
@@ -14653,7 +14640,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 42 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 42 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -14935,6 +14922,18 @@
                 "minSize": 1
               }
             ]
+          },
+          {
+            "dataType": "lookupTable",
+            "name": "baselineIndicatorMapping",
+            "config": {
+              "source": {
+                "literal": {
+                  "Baseline dataset associated with a project outcome": "Baseline",
+                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
+                }
+              }
+            }
           },
           {
             "allowRowDelete": "false",
@@ -15220,7 +15219,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -15616,7 +15615,6 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": true,
                         "source": "habitatConditionSurveySpeciesTable",
                         "type": "table"
                       }
@@ -19306,7 +19304,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "landManagementDetails",
                 "type": "table"
               }
@@ -20305,7 +20302,6 @@
                 ],
                 "userAddedRows": true,
                 "addRowText": "Add a new disease being managed in this area",
-                "disableTableUpload": true,
                 "source": "diseaseManagementDetails",
                 "type": "table"
               }
@@ -21449,7 +21445,6 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": true,
                         "source": "pestAnimalSurveySpeciesTable",
                         "type": "table"
                       }
@@ -23820,7 +23815,6 @@
                     ],
                     "userAddedRows": true,
                     "addRowText": "Add a new weed species",
-                    "disableTableUpload": true,
                     "source": "weedSpeciesTreated",
                     "type": "table"
                   }
@@ -24807,7 +24801,6 @@
                 ],
                 "userAddedRows": true,
                 "addRowText": "Add a new plant species to this area",
-                "disableTableUpload": true,
                 "source": "revegetationDetails",
                 "type": "table"
               }
@@ -25934,7 +25927,6 @@
                 ],
                 "userAddedRows": true,
                 "addRowText": "Add a new propagation/storage/collecting activity",
-                "disableTableUpload": true,
                 "source": "seedCollectionDetails",
                 "type": "table"
               }
@@ -27100,7 +27092,6 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": true,
                         "source": "plantSurvivalSurveySpeciesTable",
                         "type": "table"
                       }
@@ -28049,7 +28040,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "addRowText": "Add a new activity at this site",
                 "source": "sitePreparationDetails",
                 "type": "table"
@@ -30897,8 +30887,7 @@
                 ],
                 "source": "sustainableAgricultureFacilitators",
                 "type": "table",
-                "userAddedRows": true,
-                "disableTableUpload": true
+                "userAddedRows": true
               }
             ]
           },
@@ -31477,7 +31466,6 @@
                 "type": "table",
                 "source": "baselineDetails",
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "columns": [
                   {
                     "source": "datasetName",
@@ -32559,7 +32547,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "addRowText": "Add a new species",
                 "source": "interventionSpecies",
                 "type": "table"
@@ -34867,7 +34854,6 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": true,
                         "source": "weedSurveySpeciesTable",
                         "type": "table"
                       }
