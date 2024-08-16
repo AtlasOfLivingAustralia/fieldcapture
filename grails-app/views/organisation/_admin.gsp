@@ -1,6 +1,6 @@
 <div class="row">
     <div class="nav flex-column nav-pills col-3">
-        <g:if test="${!fc.userHasReadOnlyAccess()}">
+        <g:if test="${fc.userIsAlaAdmin() || !fc.userHasReadOnlyAccess()}">
         <a class="nav-link active" data-toggle="pill" href="#edit-program-details" id="edit-program-details-tab" role="tab">Edit</a>
         </g:if>
         <a class="nav-link" data-toggle="pill" href="#organisation-permissions" id="organisation-permissions-tab" role="tab">Permissions</a>
@@ -14,7 +14,7 @@
     </div>
 
     <div class="tab-content col-9">
-<g:if test="${!fc.userHasReadOnlyAccess()}">
+<g:if test="${fc.userIsAlaAdmin() || !fc.userHasReadOnlyAccess()}">
         <div class="tab-pane active" id="edit-program-details">
             <h4>Administrator actions</h4>
             <div class="row">
