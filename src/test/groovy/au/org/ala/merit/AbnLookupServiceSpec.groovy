@@ -98,7 +98,7 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
                 "             \"EntityTypeName\":\"Commonwealth Government Entity\",\n" +
                 "             \"Gst\":\"2000-07-01\",\"Message\":\"\"})"
 
-        Map expected = [abn:"41687119230", entityName:"COMMONWEALTH SCIENTIFIC AND INDUSTRIAL RESEARCH ORGANISATION", abnStatus:"Active", businessNames:["DEEP SPACE CAFE", "CSIRO", "CENTRE FOR LIVEABILITY REAL ESTATE", "DATA61"], state:"ACT", postcode:"2601", entityType:"CGE", entityTypeName:"Commonwealth Government Entity"]
+        Map expected = [abn:"41687119230", entityName:"COMMONWEALTH SCIENTIFIC AND INDUSTRIAL RESEARCH ORGANISATION", abnStatus:"Active", businessNames:["DEEP SPACE CAFE", "CSIRO", "CENTRE FOR LIVEABILITY REAL ESTATE", "DATA61"], state:"ACT", postcode:2601, entityType:"CGE", entityTypeName:"Commonwealth Government Entity"]
         Map wsResponse = [resp:abnValue, statusCode: HttpStatus.SC_OK]
 
         String abnLookupToken = grailsApplication.config.getProperty('abn.abnLookupToken')

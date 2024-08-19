@@ -188,7 +188,7 @@ OrganisationViewModel = function (props, options) {
     self.externalIdTypes = PROJECT_EXTERNAL_ID_TYPES =  [
         'TECH_ONE_CODE', 'TECH_ONE_CONTRACT_NUMBER'
     ];
-    self.organisationSearchUrl = options.organisationSearchUrl;
+    self.organisationSearchUrl = options && options.organisationSearchUrl;
 
     self.onPasteAbn = function(vm, event) {
 
@@ -268,7 +268,7 @@ OrganisationViewModel = function (props, options) {
                     self.postcode(orgDetails.postcode);
                     self.state(orgDetails.state);
                     self.abnStatus(orgDetails.abnStatus);
-                    self.orgType(orgDetails.entityType);
+                    self.entityType(orgDetails.entityType);
                     if (!self.name()) {
                         var defaultName = '';
                         if (self.businessNames().length > 0) {

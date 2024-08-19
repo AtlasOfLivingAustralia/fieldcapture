@@ -293,23 +293,27 @@ class GmsMapper {
         String contractName = project.remove('organisationContractName')
         if (organisationId || abn) {
             organisation = findExistingOrganisation(organisationId, abn)
-            if (!organisation && abn) {
-                abnLookup = abnLookupService.lookupOrganisationDetailsByABN(abn)
-                if (abnLookup && !abnLookup.error) {
-                    List names = [abnLookup.entityName] + abnLookup.businessNames
-                    organisation = organisations.find{ it.name in names }
-                    if (organisation) {
-                        error = "Error: An existing organisation name was matched via the entity/business name ${organisation.name} but the ABN doesn't match the abn of the MERIT organisation (${organisation.abn})."
-                    } else {
-                        createOrganisation = true
+            if (!organisation) {
+                if (abn) {
+                    abnLookup = abnLookupService.lookupOrganisationDetailsByABN(abn)
+                    if (abnLookup && !abnLookup.error) {
+                        List names = [abnLookup.entityName] + abnLookup.businessNames
+                        organisation = organisations.find { it.name in names }
+                        if (organisation) {
+                            error = "An existing organisation name was matched via the entity/business name ${organisation.name} but the ABN doesn't match the abn of the MERIT organisation (${organisation.abn})"
+                        } else {
+                            createOrganisation = true
 
-                        String name = abnLookup.businessNames ? abnLookup.businessNames[0] : abnLookup.entityName
-                        organisation = abnLookup + [name:name]
-                        messages << "An organisation will be created with ABN: ${abn} and name: ${name}"
+                            String name = abnLookup.businessNames ? abnLookup.businessNames[0] : abnLookup.entityName
+                            organisation = abnLookup + [name: name]
+                            messages << "An organisation will be created with ABN: ${abn} and name: ${name}"
+                        }
+                    } else {
+                        error = "An error was encountered looking up the ABN ${abn}${abnLookup?.error ? ': '+abnLookup.error : ''}"
                     }
                 }
                 else {
-                    error = "Error: An error was encountered looking up the ABN ${abn}: ${abnLookup?.error}"
+                    error = "No organisation exists with abn: '${abn}' and/or organisationId: '${organisationId}'"
                 }
             }
 
@@ -321,11 +325,11 @@ class GmsMapper {
                 }
             }
             if (!error) {
-                    project.assocatedOrgs =
+                    project.associatedOrgs =
                             [[organisationId:organisation.organisationId, name: contractName ?: organisation.name, organisationName:organisation.name, description:"Service provider"]] // Fix description
             }
         } else {
-            error = "No organisation exists with abn: '${abn}' and/or organisationId: '${organisationId}'"
+            error = "Please supply an organisationId (ORG_ID) or ABN (ABN) for the project"
         }
         if (error) {
             errors << error

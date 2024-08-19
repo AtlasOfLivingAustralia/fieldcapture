@@ -22,8 +22,17 @@ describe("OrganisationViewModel Spec", function () {
             {label:'Quarterly (First period ends 30 September 2023)', firstReportingPeriodEnd:'2023-09-30T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly'}
         ];
 
-        var organisation = { organisationId:'1', description:'Org 1 description', collectoryInstitutionId:'dr123', newsAndEvents:'this is the latest news',
-            documents:[], links:[]
+        var organisation = {
+            organisationId:'1',
+            description:'Org 1 description',
+            collectoryInstitutionId:'dr123',
+            newsAndEvents:'this is the latest news',
+            entityType:'Non-governmental organisation',
+            postcode:1234,
+            externalIds:[],
+            associatedOrgs:[],
+            documents:[], links:[],
+            businessNames:[]
         };
 
         var model = new OrganisationViewModel(organisation);
@@ -47,7 +56,7 @@ describe("OrganisationViewModel Spec", function () {
     it('should get name based on the abn provided', function () {
         let options = {prepopulateAbnUrl: "test/url"};
 
-        let abnDetails = {abn: "11111111111", name: "test org"}
+        let abnDetails = {abn: "11111111111", entityName: "test org", businessNames:['test org 1']}
         let organisation = {organisationId: "1234", name: "OrgName"}
 
         spyOn($, 'get').and.returnValue(
@@ -58,7 +67,7 @@ describe("OrganisationViewModel Spec", function () {
         model.abn = "11111111111";
         model.prepopulateFromABN();
 
-        expect(model.name()).toEqual(abnDetails.name);
+        expect(model.name()).toEqual(organisation.name); //Org name is not overwritten unless empty
     });  // end it
 
 
