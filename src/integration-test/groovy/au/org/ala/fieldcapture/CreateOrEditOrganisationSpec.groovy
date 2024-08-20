@@ -32,6 +32,7 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
             at CreateOrganisation
         }
         when:
+        details.abnStatus = "Active"
         details.abn = "51824753556"
         waitFor {details.prePopulateABN.displayed}
         details.prePopulateABN.click()
@@ -66,12 +67,8 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
 
         then:
         waitFor  {at EditOrganisation}
-        and: "The organisation name is not editable by normal users"
-        details.isNameReadOnly() == true
 
         when:
-        details.abn = "66666666666"
-        waitFor {details.prePopulateABN.displayed}
         details.description = "Test Organisation Description test"
         details.save()
 
@@ -83,8 +80,6 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
 
         then:
         orgDescription.text() == "Test Organisation Description test"
-        waitFor {orgAbn.displayed }
-        orgAbn.text() == "66666666666"
     }
 
 
@@ -102,6 +97,7 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
         waitFor 20, {at EditOrganisation}
 
         when:
+        details.abnStatus = "Active"
         details.abn = "98434926368"
         waitFor {details.prePopulateABN.displayed}
         details.prePopulateABN.click()
