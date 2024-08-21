@@ -1,6 +1,7 @@
 package au.org.ala.fieldcapture
 
 import groovy.util.logging.Slf4j
+import pages.AdminClearCachePage
 import pages.AdminTools
 import pages.Organisation
 import pages.ProgramPage
@@ -15,6 +16,9 @@ class ImportProjectsSpec extends StubbedCasSpec {
         loginAsAlaAdmin(browser)
         to AdminTools
         clearMetadata()
+        to AdminClearCachePage
+        clearProgramListCache()
+        clearServiceListCache()
     }
 
     //Once a project is imported, the status of the project should be Application
