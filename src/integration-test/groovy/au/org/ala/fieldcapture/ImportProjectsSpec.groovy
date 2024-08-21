@@ -1,6 +1,7 @@
 package au.org.ala.fieldcapture
 
 import groovy.util.logging.Slf4j
+import pages.AdminTools
 import pages.Organisation
 import pages.ProgramPage
 import pages.ProjectImport
@@ -11,6 +12,9 @@ class ImportProjectsSpec extends StubbedCasSpec {
 
     def setup() {
         useDataSet('dataset2')
+        loginAsAlaAdmin(browser)
+        to AdminTools
+        clearMetadata()
     }
 
     //Once a project is imported, the status of the project should be Application
