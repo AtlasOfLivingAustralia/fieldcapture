@@ -8,7 +8,7 @@ class OrganisationReports extends Module {
 
     static content = {
         projects {
-            $('.projects-wrapper tbody tr').moduleList(ReportingProjectListRow)
+            $('#projects .projects-wrapper tbody tr').moduleList(ReportingProjectListRow)
         }
         reports {
             try {
@@ -18,7 +18,7 @@ class OrganisationReports extends Module {
                 return []
             }
         }
-        programLabels(required: false) { $('.well-title').text() }
+        programLabels(required: false) { $('#projects .well-title').text() }
         reasonModal(required:false) { $('#reason-modal') }
         notRequiredReason(required:false) { $('#reason-modal [id="reason"]') }
     }
