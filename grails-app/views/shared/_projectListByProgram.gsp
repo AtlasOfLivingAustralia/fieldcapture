@@ -1,7 +1,7 @@
 <g:if test="${reportsFirst}">
     <g:render template="/shared/categorizedReportsAndDeclaration"/>
 </g:if>
-<div class="projects-wrapper d-none d-md-block">
+<div class="projects-wrapper">
     <g:if test="${displayedPrograms}">
         <g:each var="programDetails" status="i" in="${displayedPrograms}">
             <g:set var="program" value="${programDetails.program}"/>
