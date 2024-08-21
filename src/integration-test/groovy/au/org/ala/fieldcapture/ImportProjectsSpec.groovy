@@ -47,7 +47,9 @@ class ImportProjectsSpec extends StubbedCasSpec {
 
         then:
         waitFor {
-            projectContent[6].text() == 'APPLICATION'
+            reportsTabPane.projects.size() == 1
+            reportsTabPane.projects[0].name() == 'project 1'
+            reportsTabPane.projects[0].status() == "APPLICATION"
         }
 
     }

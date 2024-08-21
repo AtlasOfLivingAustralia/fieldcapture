@@ -20,7 +20,7 @@ class Organisation extends ReloadablePage {
         projectContent {$("#projects .projects-wrapper tbody tr td")}
         reportingTab(required: false) { $('#projects-tab') }
         sitesTab {$("#sites-tab")}
-        reportsTabPane(required:false) { module(OrganisationReports)}
+        reportsTabPane(required:false) { $("#projects").module(OrganisationReports)}
         reportDeclaration { $('#declaration') }
     }
 

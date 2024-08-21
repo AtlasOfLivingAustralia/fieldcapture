@@ -8,7 +8,7 @@ class OrganisationReports extends Module {
 
     static content = {
         projects {
-
+            $('.projects-wrapper tbody tr').moduleList(ReportingProjectListRow)
         }
         reports {
             try {
