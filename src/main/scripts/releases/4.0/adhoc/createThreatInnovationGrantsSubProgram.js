@@ -1963,11 +1963,431 @@ var priorities = [
     },
     {
         "category": "Threatened Ecological Communities",
-        "priority": "Arnhem Plateau sandstone shrubland complex"
+        "priority": "Alpine Sphagnum Bogs and Associated Fens"
     },
     {
         "category": "Threatened Ecological Communities",
-        "priority": "Kakadu and West Arnhem"
+        "priority": "Aquatic Root Mat Community 1 in Caves of the Leeuwin Naturaliste Ridge"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Aquatic Root Mat Community 2 in Caves of the Leeuwin Naturaliste Ridge"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Aquatic Root Mat Community 3 in Caves of the Leeuwin Naturaliste Ridge"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Aquatic Root Mat Community 4 in Caves of the Leeuwin Naturaliste Ridge"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Aquatic Root Mat Community in Caves of the Swan Coastal Plain"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Araluen Scarp Grassy Forest"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Arnhem Plateau Sandstone Shrubland Complex"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Assemblages of plants and invertebrate animals of tumulus (organic mound) springs of the Swan Coastal Plain"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Assemblages of species associated with open-coast salt-wedge estuaries of western and central Victoria ecological community"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Banksia Woodlands of the Swan Coastal Plain ecological community"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Ben Halls Gap Sphagnum Moss Cool Temperate Rainforest"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Blue Gum High Forest of the Sydney Basin Bioregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Brigalow (Acacia harpophylla dominant and co-dominant)"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Broad leaf tea-tree (Melaleuca viridiflora) woodlands in high rainfall coastal north Queensland"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Brogo Vine Forest of the South East Corner Bioregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Buloke Woodlands of the Riverina and Murray-Darling Depression Bioregions"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Castlereagh Scribbly Gum and Agnes Banks Woodlands of the Sydney Basin Bioregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Central Hunter Valley eucalypt forest and woodland"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Clay Pans of the Swan Coastal Plain"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Coastal Swamp Oak (Casuarina glauca) Forest of New South Wales and South East Queensland ecological community"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Coastal Swamp Sclerophyll Forest of New South Wales and South East Queensland"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Coastal Upland Swamps in the Sydney Basin Bioregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Cooks River/Castlereagh Ironbark Forest of the Sydney Basin Bioregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Coolibah - Black Box Woodlands of the Darling Riverine Plains and the Brigalow Belt South Bioregions"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Corymbia calophylla - Kingia australis woodlands on heavy soils of the Swan Coastal Plain"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Corymbia calophylla - Xanthorrhoea preissii woodlands and shrublands of the Swan Coastal Plain"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Cumberland Plain Shale Woodlands and Shale-Gravel Transition Forest"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Drooping sheoak grassy woodland on calcrete of the Eyre Yorke Block Bioregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Dunn's white gum (Eucalyptus dunnii) moist forest in north-east New South Wales and south-east Queensland"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Eastern Stirling Range Montane Heath and Thicket"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Eastern Suburbs Banksia Scrub of the Sydney Region"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Elderslie Banksia Scrub Forest in the Sydney Basin Bioregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Empodisma peatlands of southwestern Australia"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Eucalypt Woodlands of the Western Australian Wheatbelt"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Eucalypt Woodlands of the Western Australian Wheatbelt"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Eucalyptus ovata - Callitris oblonga Forest"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Eyre Peninsula Blue Gum (Eucalyptus petiolaris) Woodland"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Giant Kelp Marine Forests of South East Australia"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Gippsland Red Gum (Eucalyptus tereticornis subsp. mediana) Grassy Woodland and Associated Native Grassland"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Grassy Eucalypt Woodland of the Victorian Volcanic Plain"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Grey Box (Eucalyptus microcarpa) Grassy Woodlands and Derived Native Grasslands of South-eastern Australia"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Grey box-grey gum wet forest of subtropical eastern Australia"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Honeymyrtle shrubland on limestone ridges of the Swan Coastal Plain Bioregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Hunter Valley Weeping Myall (Acacia pendula) Woodland"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Illawarra and south coast lowland forest and woodland ecological community"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Illawarra-Shoalhaven Subtropical Rainforest of the Sydney Basin Bioregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Iron-grass Natural Temperate Grassland of South Australia"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Kangaroo Island Narrow-leaved Mallee (Eucalyptus cneorifolia) Woodland"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Karst springs and associated alkaline fens of the Naracoorte Coastal Plain Bioregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Kurri sand swamp woodland of the Sydney Basin bioregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Littoral Rainforest and Coastal Vine Thickets of Eastern Australia"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Long lowland rivers of south eastern Queensland and northern New South Wales"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Lowland Grassy Woodland in the South East Corner Bioregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Lowland Native Grasslands of Tasmania"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Lowland Rainforest of Subtropical Australia"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Lowland tropical rainforest of the Wet Tropics"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Mabi Forest (Complex Notophyll Vine Forest 5b)"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Mallee Bird Community of the Murray Darling Depression Bioregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Monsoon vine thickets on the coastal sand dunes of Dampier Peninsula"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Mount Kaputar land snail and slug community"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Natural Damp Grassland of the Victorian Coastal Plains"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Natural Grasslands of the Murray Valley Plains"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Natural Grasslands of the Queensland Central Highlands and northern Fitzroy Basin"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Natural Temperate Grassland of the South Eastern Highlands"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Natural Temperate Grassland of the Victorian Volcanic Plain"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Natural grasslands on basalt and fine-textured alluvial plains of northern New South Wales and southern Queensland"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "New England Peppermint (Eucalyptus nova-anglica) Grassy Woodlands"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Peppermint Box (Eucalyptus odorata) Grassy Woodland of South Australia"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Perched Wetlands of the Wheatbelt region with extensive stands of living sheoak and paperbark across the lake floor (Toolibin Lake)"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Plains mallee box woodlands of the Murray Darling Depression, Riverina and Naracoorte Coastal Plain Bioregions"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Poplar Box Grassy Woodland on Alluvial Plains"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Posidonia australis seagrass meadows of the Manning-Hawkesbury ecoregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Proteaceae Dominated Kwongkan Shrublands of the Southeast Coastal Floristic Province of Western Australia"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "River Murray and associated wetlands, floodplains and groundwater systems, from the junction with the Darling River to the sea"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "River-flat eucalypt forest on coastal floodplains of southern New South Wales and eastern Victoria"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Robertson Rainforest in the Sydney Basin Bioregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Scott River Ironstone Association"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Seasonal Herbaceous Wetlands (Freshwater) of the Temperate Lowland Plains"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Sedgelands in Holocene dune swales of the southern Swan Coastal Plain"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Semi-evergreen vine thickets of the Brigalow Belt (North and South) and Nandewar Bioregions"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Shale Sandstone Transition Forest of the Sydney Basin Bioregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Shrublands and Woodlands of the eastern Swan Coastal Plain"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Shrublands and Woodlands on Muchea Limestone of the Swan Coastal Plain"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Shrublands and Woodlands on Perth to Gingin ironstone (Perth to Gingin ironstone association) of the Swan Coastal Plain"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Shrublands on southern Swan Coastal Plain ironstones"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Silurian Limestone Pomaderris Shrubland of the South East Corner and Australian Alps Bioregions"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Southern Highlands Shale Forest and Woodland in the Sydney Basin Bioregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Subtropical and Temperate Coastal Saltmarsh"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Subtropical eucalypt floodplain forest and woodland of the New South Wales North Coast and South East Queensland bioregions"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Swamp Tea-tree (Melaleuca irbyana) Forest of South-east Queensland"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Swamps of the Fleurieu Peninsula"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Tasmanian Forests and Woodlands dominated by black gum or Brookers gum (Eucalyptus ovata / E. brookeriana)"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Tasmanian white gum (Eucalyptus viminalis) wet forest"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Temperate Highland Peat Swamps on Sandstone"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "The community of native species dependent on natural discharge of groundwater from the Great Artesian Basin"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Thrombolite (microbial) community of coastal freshwater lakes of the Swan Coastal Plain (Lake Richmond)"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Thrombolite (microbialite) Community of a Coastal Brackish Lake (Lake Clifton)"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Tuart (Eucalyptus gomphocephala) Woodlands and Forests of the Swan Coastal Plain ecological community"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Turpentine-Ironbark Forest of the Sydney Basin Bioregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Upland Basalt Eucalypt Forests of the Sydney Basin Bioregion"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Upland Wetlands of the New England Tablelands (New England Tableland Bioregion) and the Monaro Plateau (South Eastern Highlands Bioregion)"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Warkworth Sands Woodland of the Hunter Valley"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Weeping Myall Woodlands"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Western Sydney Dry Rainforest and Moist Woodland on Shale"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Wetlands and inner floodplains of the Macquarie Marshes"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "White Box-Yellow Box-Blakely's Red Gum Grassy Woodland and Derived Native Grassland"
     }
 ];
 
