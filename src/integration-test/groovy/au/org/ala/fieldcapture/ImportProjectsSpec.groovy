@@ -50,11 +50,11 @@ class ImportProjectsSpec extends StubbedCasSpec {
         displayReportsTab()
 
         then:
-        waitFor {
-            reportsTabPane.projects.size() == 1
-            reportsTabPane.projects[0].name() == 'project 1'
-            reportsTabPane.projects[0].status() == "APPLICATION"
-        }
+        reportsTabPane.programLabels == "Project reporting in program: Test program"
+        reportsTabPane.projects.size() == 1
+        reportsTabPane.projects[0].name() == 'project 1'
+        reportsTabPane.projects[0].status() == "APPLICATION"
+
 
     }
 

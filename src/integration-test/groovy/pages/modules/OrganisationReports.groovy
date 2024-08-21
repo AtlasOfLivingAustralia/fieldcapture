@@ -18,6 +18,7 @@ class OrganisationReports extends Module {
                 return []
             }
         }
+        programLabels(required: false) { $('.well-title').text() }
         reasonModal(required:false) { $('#reason-modal') }
         notRequiredReason(required:false) { $('#reason-modal [id="reason"]') }
     }
