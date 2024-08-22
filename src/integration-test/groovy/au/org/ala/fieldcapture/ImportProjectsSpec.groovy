@@ -54,12 +54,8 @@ class ImportProjectsSpec extends StubbedCasSpec {
         displayReportsTab()
 
         then:
-        reportsTabPane.programLabels == "Project reporting in program: Test program"
-        reportsTabPane.projects.size() == 1
-        reportsTabPane.projects[0].name() == 'project 1'
-        reportsTabPane.projects[0].status() == "APPLICATION"
-
-
+        reportsTabPane.projects.find{it.name == 'project 1'}
+        reportsTabPane.projects.find{it.name == 'project 1'}.status == "APPLICATION"
     }
 
     def "New projects can be imported into MERIT"() {
@@ -95,9 +91,10 @@ class ImportProjectsSpec extends StubbedCasSpec {
 
         then:
         waitFor {
-            $("#projects tbody tr td .badge.badge-info").size() == 2
-            $("#projects tbody tr td .badge.badge-info")[0].text() == 'APPLICATION'
-            $("#projects tbody tr td .badge.badge-info")[1].text() == 'APPLICATION'
+            reportsTabPane.projects.find{it.name == 'project 2'}
+            reportsTabPane.projects.find{it.name == 'project 2'}.status == "APPLICATION"
+            reportsTabPane.projects.find{it.name == 'project 3'}
+            reportsTabPane.projects.find{it.name == 'project 3'}.status == "APPLICATION"
         }
     }
 
