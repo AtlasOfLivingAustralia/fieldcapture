@@ -22,7 +22,7 @@
 </g:if>
 
 
-<associated-orgs params="associatedOrgs:associatedOrgs, validationNamespace:'projectSettingsAssociatedOrgs', organisationSearchUrl:organisationSearchUrl"></associated-orgs>
+<associated-orgs params="associatedOrgs:associatedOrgs, validationNamespace:'projectSettingsAssociatedOrgs', organisationSearchUrl:organisationSearchUrl, organisationViewUrl:organisationViewUrl"></associated-orgs>
 
 <div class="row mb-2">
     <div class="col-sm-12">

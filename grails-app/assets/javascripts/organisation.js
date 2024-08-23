@@ -2,6 +2,7 @@
 //= require attach-document-no-ui
 //= require reportService
 //= require components.js
+//= require ecodata-components.js
 /**
  * Knockout view model for organisation pages.
  * @param props JSON/javascript representation of the organisation.
@@ -171,6 +172,7 @@ OrganisationViewModel = function (props, options) {
     self.name = ko.observable(props.name);
     self.entityName = ko.observable(props.entityName);
     self.businessNames = ko.observableArray(props.businessNames);
+    self.contractNames = ko.observableArray(props.contractNames);
     self.acronym = ko.observable(props.acronym);
     self.description = ko.observable(props.description).extend({markdown:true});
     self.abn = ko.observable(props.abn);

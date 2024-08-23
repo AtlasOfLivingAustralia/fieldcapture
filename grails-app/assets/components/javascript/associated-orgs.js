@@ -27,25 +27,25 @@ ko.components.register('associated-orgs', {
      */
     viewModel: function (params) {
         var self = this;
+        self.organisationSearchUrl = params.organisationSearchUrl;
+        self.organisationViewUrl = params.organisationViewUrl;
 
         var $modal = $('#add-or-edit-organisation');
         $modal.find('form').validationEngine();
 
         function AssociatedOrg(associatedOrg) {
-            var self = this;
+
             associatedOrg = associatedOrg || {};
-            self.name = ko.observable(associatedOrg.name);
-            self.organisationName = ko.observable(associatedOrg.organisationName);
-            self.description = ko.observable(associatedOrg.description);
-            self.organisationId = ko.observable(associatedOrg.organisationId);
-            self.fromDate = ko.observable(associatedOrg.fromDate).extend({simpleDate:false});
-            self.toDate = ko.observable(associatedOrg.toDate).extend({simpleDate:false});
+            this.name = ko.observable(associatedOrg.name);
+            this.organisationName = ko.observable(associatedOrg.organisationName);
+            this.description = ko.observable(associatedOrg.description);
+            this.organisationId = ko.observable(associatedOrg.organisationId);
+            this.fromDate = ko.observable(associatedOrg.fromDate).extend({simpleDate:false});
+            this.toDate = ko.observable(associatedOrg.toDate).extend({simpleDate:false});
 
-            self.toJSON = function() {
-                return ko.mapping.toJS(self);
+            this.toJSON = function() {
+                return ko.mapping.toJS(this);
             }
-
-
         }
 
         self.associatedOrgs = ko.observableArray(_.map(params.associatedOrgs(), function(org) {
@@ -58,6 +58,7 @@ ko.components.register('associated-orgs', {
         self.validationNamespace = params.validationNamespace;
         self.relationshipTypes = ['Service provider', 'Grantee', 'Sponsor'];
         self.organisationSearchUrl = params.organisationSearchUrl;
+        self.allowedNames = ko.observableArray([]);
 
         self.removeAssociatedOrg = function (org) {
             self.associatedOrgs.remove(org);
@@ -77,8 +78,38 @@ ko.components.register('associated-orgs', {
         }
 
         function openEditModal() {
-            copy(self.selectedOrganisation, self.editableOrganisation);
-            $modal.modal('show');
+
+            var orgId = self.selectedOrganisation.organisationId();
+            if (orgId) {
+                findMatchingOrganisation(orgId, function(matchingOrg) {
+                    if (matchingOrg) {
+                        self.allowedNames(self.allowedNamesForOrganisation(matchingOrg._source));
+
+                        copy(self.selectedOrganisation, self.editableOrganisation);
+                        $modal.modal('show');
+                    }
+                    else {
+                        bootbox.alert("Unable to edit organisation")
+                    }
+                });
+            }
+            else {
+                copy(self.selectedOrganisation, self.editableOrganisation);
+                $modal.modal('show');
+            }
+
+        }
+
+        function findMatchingOrganisation(organisationId, callback) {
+            $.get(self.organisationSearchUrl+'?searchTerm='+orgId).done(function(results) {
+                if (results && results.hits && results.hits.hits) {
+                    var matchingOrg = _.find(results.hits.hits, function (hit) {
+                        return hit._id == orgId;
+                    });
+
+                    callback(matchingOrg);
+                }
+            });
         }
 
         self.okPressed = function () {
@@ -87,11 +118,9 @@ ko.components.register('associated-orgs', {
                 return;
             }
             if (!_.contains(self.associatedOrgs(), self.selectedOrganisation)) {
-                self.associatedOrgs.push(self.editableOrganisation);
+                self.associatedOrgs.push(self.selectedOrganisation);
             }
-            else {
-                copy(self.editableOrganisation, self.selectedOrganisation);
-            }
+            copy(self.editableOrganisation, self.selectedOrganisation);
             self.close();
         }
 
@@ -102,12 +131,25 @@ ko.components.register('associated-orgs', {
         function copy(source, destination) {
             destination.organisationId(source.organisationId());
             destination.name(source.name());
-            destination.organisationName(source.organisationName());
             destination.description(source.description());
             destination.fromDate(source.fromDate());
             destination.toDate(source.toDate());
         }
 
+        self.allowedNamesForOrganisation = function(organisation) {
+            var allowedNames = [];
+            allowedNames.push(organisation.name);
+            if (organisation.entityName) {
+                allowedNames.push(organisation.entityName);
+            }
+            if (organisation.businessNames) {
+                allowedNames = allowedNames.concat(organisation.businessNames);
+            }
+            if (organisation.contractNames) {
+                allowedNames = allowedNames.concat(organisation.contractNames);
+            }
+            return allowedNames;
+        }
 
         /**
          * This method is designed to be used by the jquery validation engine so a passed validation will
@@ -120,6 +162,8 @@ ko.components.register('associated-orgs', {
             }
         }
 
+        self.organisationNames = ko.observableArray();
+
         self.selectOrganisation = function(item) {
 
             if (item && item.source) {
@@ -128,6 +172,7 @@ ko.components.register('associated-orgs', {
                 if (!self.editableOrganisation.name()) {
                     self.editableOrganisation.name(item.source.name);
                 }
+                self.allowedNames(self.allowedNamesForOrganisation(item.source));
             }
             else {
                 self.editableOrganisation.organisationId(null);

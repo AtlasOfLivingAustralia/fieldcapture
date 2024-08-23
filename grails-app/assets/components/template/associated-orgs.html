@@ -10,7 +10,7 @@
                 </div>
                 <div>
                 <!-- ko if: $data.organisationId() -->
-                    <a href="" data-bind="href:$parent.viewOrganisationUrl + $data.organisationId()">
+                    <a href="" data-bind="attr:{href:$parent.organisationViewUrl + '/' + $data.organisationId()}">
                         <span data-bind="text:name"></span>
                     </a>
                 <!-- /ko -->
@@ -38,7 +38,7 @@
 
 </div>
 
-<!-- ko with:editableOrganisation -->
+<!-- ko using:editableOrganisation -->
 <div id="add-or-edit-organisation" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -58,24 +58,25 @@
                     </div>
                 <div class="form-group">
                     <label for="name-to-use" class="required">Organisation name as it appears on the project page (e.g. name used in contract)</label>
-                    <input type="text" class="form-control" id="name-to-use" data-bind="value:name"
-                           data-validation-engine="validate[required]" data-prompt-position="topLeft">
+
+                    <select class="form-control" id="name-to-use"  data-bind="enable:organisationId(), value:name, options:$parent.allowedNames"
+                            data-validation-engine="validate[required]" data-prompt-position="topLeft"></select>
                 </div>
                 <div class="form-group">
                     <label class="required" for="relationship-description">Relationship to the project</label>
-                    <select id="relationship-description" name="description" class="form-control form-control-sm" data-bind="options:$parent.relationshipTypes, value:description"></select>
+                    <select id="relationship-description" name="description" class="form-control form-control-sm" data-bind="enable:organisationId(), options:$parent.relationshipTypes, value:description"></select>
                 </div>
                 <div class="form-group">
                     <label for="relationship-from-date">From date</label>
                     <div class="input-group input-append">
-                        <input id="relationship-from-date" name="relationship-from-date" autocomplete="off" class="form-control" data-bind="datepicker:fromDate.date" type="text">
+                        <input id="relationship-from-date" name="relationship-from-date" autocomplete="off" class="form-control" data-bind="enable:organisationId(), datepicker:fromDate.date" type="text">
                         <span class="input-group-text open-datepicker"><i class="fa fa-th"></i></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="relationship-to-date">To date</label>
                     <div class="input-group input-append">
-                        <input id="relationship-to-date" class="form-control" autocomplete="off" data-bind="datepicker:toDate.date" name="to-date" type="text"
+                        <input id="relationship-to-date" class="form-control" autocomplete="off" data-bind="enable:organisationId(), datepicker:toDate.date" name="to-date" type="text"
                                data-validation-engine="validate[future[#relationship-from-date]]" data-prompt-position="topLeft">
                         <span class="input-group-text open-datepicker"><i class="fa fa-th"></i></span>
                     </div>
@@ -84,7 +85,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-success" name="save-org-changes"
-                        data-bind="click:$parent.okPressed">OK</button>
+                        data-bind="enable:organisationId(), click:$parent.okPressed">OK</button>
                 <button class="btn btn-sm btn-danger" data-bind="click:$parent.close">Cancel</button>
             </div>
         </div>

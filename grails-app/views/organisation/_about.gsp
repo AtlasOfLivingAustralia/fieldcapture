@@ -21,7 +21,15 @@
 
         <span id="orgDescription" data-bind="html:description.markdownToHtml()"></span>
 
+        <g:if test="${organisation.abn}">
         <p>ABN: <span id="orgAbn">${organisation.abn}</span></p>
+        </g:if>
+        <g:if test="${organisation.state}">
+            <p>State: ${organisation.state}</p>
+        </g:if>
+        <g:if test="${organisation.postcode}">
+            <p>Postcode: ${organisation.postcode}</p>
+        </g:if>
     </div>
 </div>
 

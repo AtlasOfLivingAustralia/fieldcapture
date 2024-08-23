@@ -782,6 +782,7 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
     _.extend(this, new ProjectViewModel(project));
 
     self.organisationSearchUrl = config.organisationSearchUrl;
+    self.organisationViewUrl = config.organisationViewUrl;
 
     self.internalOrderId = ko.observable(project.internalOrderId);
     self.userIsCaseManager = ko.observable(userRoles.grantManager);

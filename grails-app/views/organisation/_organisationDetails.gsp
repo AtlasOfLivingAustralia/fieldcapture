@@ -56,6 +56,15 @@
         </div>
     </section>
     <section class="form-group row">
+        <label class="col-sm-3 form-check-label">Contract name/s: <fc:iconHelp><g:message code="organisation.contractNames.help"/></fc:iconHelp></label>
+        <div class="col-sm-9">
+            <multi-input params="values: contractNames">
+                <input type="text" data-validation-engine="validate[required]" data-bind="value:val" class="form-control form-control-sm input-group-append">
+            </multi-input>
+        </div>
+    </section>
+
+    <section class="form-group row">
 
         <label for="acronym" class="col-sm-3 form-check-label">Acronym: <fc:iconHelp><g:message code="organisation.acronym.help"/></fc:iconHelp></label>
         <div class="col-sm-3">

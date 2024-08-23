@@ -339,6 +339,7 @@ var config = {
     config.speciesImageUrl = fcConfig.speciesImageUrl;
     config.speciesProfileUrl = fcConfig.speciesProfileUrl;
     config.organisationSearchUrl = fcConfig.organisationSearchUrl;
+    config.organisationViewUrl = fcConfig.organisationLinkBaseUrl;
     project.mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
     var viewModel = new ProjectPageViewModel(project, project.sites, project.activities || [], userRoles, config);
     viewModel.loadPrograms(programs);
