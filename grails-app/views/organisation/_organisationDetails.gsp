@@ -114,7 +114,7 @@
         <label class="col-form-label col-sm-3" for="url">Associated organisations: <fc:iconHelp><g:message
                 code="organisation.associatedOrgs.help"/></fc:iconHelp></label>
         <div class="controls col-sm-9">
-            <associated-orgs params="associatedOrgs:associatedOrgs, organisationSearchUrl:organisationSearchUrl"></associated-orgs>
+            <associated-orgs params="associatedOrgs:associatedOrgs, organisationSearchUrl:organisationSearchUrl, displayName:false"></associated-orgs>
 
         </div>
     </section>

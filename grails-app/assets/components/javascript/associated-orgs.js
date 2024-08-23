@@ -29,6 +29,8 @@ ko.components.register('associated-orgs', {
         var self = this;
         self.organisationSearchUrl = params.organisationSearchUrl;
         self.organisationViewUrl = params.organisationViewUrl;
+        self.displayName = params.displayName;
+        self.relationshipTypes = params.relationshipTypes;
 
         var $modal = $('#add-or-edit-organisation');
         $modal.find('form').validationEngine();
@@ -56,7 +58,7 @@ ko.components.register('associated-orgs', {
         params.associatedOrgs(self.associatedOrgs());
 
         self.validationNamespace = params.validationNamespace;
-        self.relationshipTypes = ['Service provider', 'Grantee', 'Sponsor'];
+
         self.organisationSearchUrl = params.organisationSearchUrl;
         self.allowedNames = ko.observableArray([]);
 
@@ -82,10 +84,10 @@ ko.components.register('associated-orgs', {
             var orgId = self.selectedOrganisation.organisationId();
             if (orgId) {
                 findMatchingOrganisation(orgId, function(matchingOrg) {
-                    if (matchingOrg) {
+                    if (matchingOrg && matchingOrg._source) {
                         self.allowedNames(self.allowedNamesForOrganisation(matchingOrg._source));
-
                         copy(self.selectedOrganisation, self.editableOrganisation);
+                        $('#searchOrganisation').val(matchingOrg._source.name);
                         $modal.modal('show');
                     }
                     else {
@@ -94,17 +96,17 @@ ko.components.register('associated-orgs', {
                 });
             }
             else {
-                copy(self.selectedOrganisation, self.editableOrganisation);
+                self.clearSelectedOrganisation();
                 $modal.modal('show');
             }
 
         }
 
         function findMatchingOrganisation(organisationId, callback) {
-            $.get(self.organisationSearchUrl+'?searchTerm='+orgId).done(function(results) {
+            $.get(self.organisationSearchUrl+'?searchTerm='+organisationId).done(function(results) {
                 if (results && results.hits && results.hits.hits) {
                     var matchingOrg = _.find(results.hits.hits, function (hit) {
-                        return hit._id == orgId;
+                        return hit._id == organisationId;
                     });
 
                     callback(matchingOrg);
@@ -181,8 +183,13 @@ ko.components.register('associated-orgs', {
         }
 
         self.clearSelectedOrganisation = function() {
+            $('#searchOrganisation').val('');
+            self.allowedNames([]);
             self.editableOrganisation.organisationId(null);
             self.editableOrganisation.name('');
+            self.editableOrganisation.description('');
+            self.editableOrganisation.fromDate('');
+            self.editableOrganisation.toDate('');
         }
 
         self.editableOrganisation = new AssociatedOrg();

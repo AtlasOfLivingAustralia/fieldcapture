@@ -14,6 +14,7 @@
 *= require dataSets
 *= require activity.css
 *= require prettytextdiff/pretty_text_diff_basic.css
+*= require associated-orgs.css
 *= require_self
 */
 
@@ -356,20 +357,6 @@ li.select2-search input {
 .meri-buttons .btn {
 	float: right;
 	margin-left: 5px;
-}
-
-.associatedOrgs .associated-org-list  {
-	display: grid;
-	grid-template-columns: 3em max-content auto;
-}
-.associatedOrgs .associated-org-list div {
-	padding: 5px;
-	padding-top: 3px;
-	padding-bottom: 3px;
-}
-.associatedOrgs .associated-org-list div.controls {
-	padding: 5px;
-	margin-right: 5px;
 }
 
 .ui-autocomplete {

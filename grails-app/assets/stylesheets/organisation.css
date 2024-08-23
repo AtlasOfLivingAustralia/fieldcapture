@@ -1,6 +1,8 @@
 /*
 *= require slider-pro/css/slider-pro.css
 *= require projects-by-program
+*= require jquery-ui/themes/base/all.css
+*= require associated-orgs.css
 *= require_self
 */
 
@@ -96,4 +98,8 @@
 
 input.dateControl {
     max-width: 300px !important;
+}
+/** So autocomplete dropdown appears when used in a modal */
+.ui-autocomplete {
+    z-index:10000;
 }
