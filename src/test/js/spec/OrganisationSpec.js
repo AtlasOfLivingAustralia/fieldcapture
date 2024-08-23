@@ -32,7 +32,8 @@ describe("OrganisationViewModel Spec", function () {
             externalIds:[],
             associatedOrgs:[],
             documents:[], links:[],
-            businessNames:[]
+            businessNames:[],
+            contractNames:[]
         };
 
         var model = new OrganisationViewModel(organisation);
