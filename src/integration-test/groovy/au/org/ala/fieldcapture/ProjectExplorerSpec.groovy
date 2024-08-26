@@ -1,10 +1,11 @@
 package au.org.ala.fieldcapture
 
-import pages.AdminTools
+import groovy.util.logging.Slf4j
 import pages.Facet
 import pages.ProjectExplorer
 import spock.lang.Stepwise
 
+@Slf4j
 @Stepwise
 class ProjectExplorerSpec extends StubbedCasSpec {
 
@@ -59,6 +60,68 @@ class ProjectExplorerSpec extends StubbedCasSpec {
         }
 
         new HashSet(projects.collect{it.name}) == expectedProjects
+
+        when: "We filter project by dates"
+        dateFacet.click()
+
+        then:
+        waitFor 10, {
+            clearDatesBtn.displayed
+        }
+
+        when:
+        at ProjectExplorer // reset timer
+        setFromDate("01/06/2015")
+
+        then:
+        waitFor {hasBeenReloaded()}
+        waitFor 10, {
+            clearDatesBtn.displayed
+        }
+        waitFor 20, {
+            projects.size() == 15
+        }
+
+        when: "We filter project by dates"
+        at ProjectExplorer // reset timer
+        setToDate("02/07/2018")
+
+        then:
+        waitFor {hasBeenReloaded()}
+        waitFor 10, {
+            clearDatesBtn.displayed
+        }
+        waitFor 20, {
+            projects.size() == 14
+        }
+
+        when: "We filter project by dates"
+        at ProjectExplorer
+        dateOption.click()
+
+        then:
+        waitFor {hasBeenReloaded()}
+        waitFor 20, {
+            clearDatesBtn.displayed
+        }
+        waitFor 20, {
+            projects.size() == 1
+        }
+
+        when: "We clear dates"
+        at ProjectExplorer
+        clearDatesBtn.click()
+
+        then:
+        waitFor {hasBeenReloaded()}
+        waitFor 10, {
+            clearDatesBtn.displayed
+        }
+        waitFor 20, {
+            projects.size() == 15
+            facets.size() == 12
+            chooseMoreFacetTerms.size() == 0
+        }
 
         when:
         Facet projectStatus = findFacetByName("Project Status")

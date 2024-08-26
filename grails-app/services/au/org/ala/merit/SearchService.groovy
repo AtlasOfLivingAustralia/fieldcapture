@@ -5,12 +5,10 @@ import grails.core.GrailsApplication
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 import org.apache.commons.lang.StringUtils
-import org.apache.http.HttpStatus
 import org.springframework.beans.factory.annotation.Autowired
 
 import javax.annotation.PostConstruct
 import java.math.RoundingMode
-
 /**
  * Service for ElasticSearch running on ecodata
  */
@@ -159,16 +157,30 @@ class SearchService {
     }
 
     private void handleDateFilters(params) {
-        if (params.fromDate || params.toDate) {
-            List fq = params.getList('fq')
-            if (!params.fromDate) {
-                fq += "_query:(plannedStartDate:[* TO ${params.toDate}])"
-            } else if (!params.toDate) {
-                fq += "_query:(plannedEndDate:[${params.fromDate} TO *])"
-            } else {
-                fq += "_query:(plannedEndDate:[${params.fromDate} TO *] AND plannedStartDate:[* TO ${params.toDate}])"
+        if (params.getBoolean('isFilterByCompletedProjects', false)) {
+            if (params.fromDate || params.toDate) {
+                List fq = params.getList('fq')
+                if (!params.fromDate) {
+                    fq += "_query:(plannedStartDate:[* TO ${params.toDate}) AND plannedEndDate:[* TO ${params.toDate}))"
+                } else if (!params.toDate) {
+                    fq += "_query:(plannedStartDate:[${params.fromDate} TO *] AND plannedEndDate:[${params.fromDate} TO *])"
+                } else {
+                    fq += "_query:(plannedStartDate:[${params.fromDate} TO ${params.toDate}] AND plannedEndDate:[${params.fromDate} TO ${params.toDate}])"
+                }
+                params.fq = fq
             }
-            params.fq = fq
+        } else {
+            if (params.fromDate || params.toDate) {
+                List fq = params.getList('fq')
+                if (!params.fromDate) {
+                    fq += "_query:(plannedStartDate:[* TO ${params.toDate}])"
+                } else if (!params.toDate) {
+                    fq += "_query:(plannedEndDate:[${params.fromDate} TO *])"
+                } else {
+                    fq += "_query:(plannedEndDate:[${params.fromDate} TO *] AND plannedStartDate:[* TO ${params.toDate}])"
+                }
+                params.fq = fq
+            }
         }
     }
 
