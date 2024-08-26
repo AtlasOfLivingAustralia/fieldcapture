@@ -230,7 +230,7 @@ OrganisationViewModel = function (props, options) {
     self.transients = self.transients || {};
 
     self.toJS = function(includeDocuments) {
-        var ignore = self.ignore.concat(['breadcrumbName', 'entityTypes', 'externalIdTypes', 'organisationSearchUrl', 'collectoryInstitutionId', 'projects', 'reports']);
+        var ignore = self.ignore.concat(['breadcrumbName', 'entityTypes', 'externalIdTypes', 'organisationSearchUrl', 'collectoryInstitutionId', 'projects', 'reports', 'indigenousOrganisationTypes']);
         var js = ko.mapping.toJS(self, {include:['documents'], ignore:ignore} );
         if (includeDocuments) {
             js.documents = ko.toJS(self.documents);
