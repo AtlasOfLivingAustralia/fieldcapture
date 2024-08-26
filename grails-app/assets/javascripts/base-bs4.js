@@ -91,6 +91,11 @@ function setupTimeoutWarning(options) {
     window.addEventListener('offline', function() {
         fireKeepAlive();
     });
+    window.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            fireKeepAlive();
+        }
+    });
 
 
 }
