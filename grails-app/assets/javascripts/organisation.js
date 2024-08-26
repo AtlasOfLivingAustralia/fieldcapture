@@ -190,6 +190,12 @@ OrganisationViewModel = function (props, options) {
     self.externalIdTypes = PROJECT_EXTERNAL_ID_TYPES =  [
         'TECH_ONE_CODE', 'TECH_ONE_CONTRACT_NUMBER'
     ];
+    self.indigenousOrganisationTypes = [
+        'Office of the Registrar of Indigenous Corporations (ORIC)',
+        'Under the Corporations (Aboriginal and Torres Strait Islander) Act 2006 (CATSI Act)',
+        'Australian Securities and Investments Commission (ASIC)'
+    ];
+    self.indigenousOrganisationRegistration = ko.observableArray(props.indigenousOrganisationRegistration);
     self.organisationSearchUrl = options && options.organisationSearchUrl;
 
     self.onPasteAbn = function(vm, event) {

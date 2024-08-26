@@ -25,7 +25,7 @@
             </div>
     </section>
     <section class="form-group row">
-        <label for="entityName" class="col-sm-3 form-check-label">Entity name: <fc:iconHelp><g:message code="organisation.entityName.help"/></fc:iconHelp></label>
+        <label for="entityName" class="col-sm-3">Entity name: <fc:iconHelp><g:message code="organisation.entityName.help"/></fc:iconHelp></label>
 
         <div class="col-sm-9">
             <input type="text" id="entityName" class="w-100 form-control form-control-sm" data-bind="value:entityName, enable:abn()" readonly="readonly"/>
@@ -33,7 +33,7 @@
     </section>
 
     <section class="form-group row">
-        <label for="businessNames" class="col-sm-3 form-check-label">Business name/s: <fc:iconHelp><g:message code="organisation.businessNames.help"/></fc:iconHelp></label>
+        <label for="businessNames" class="col-sm-3">Business name/s: <fc:iconHelp><g:message code="organisation.businessNames.help"/></fc:iconHelp></label>
 
         <div class="col-sm-9">
             <input type="text" id="businessNames" class="w-100 form-control form-control-sm" data-bind="value:businessNames, enable:abn()" readonly="readonly"/>
@@ -41,10 +41,24 @@
     </section>
 
     <section class="form-group row">
-        <label for="organisationType" class="col-sm-3 form-check-label">Type of organisation: <fc:iconHelp><g:message code="organisation.type.help"/></fc:iconHelp></label>
+        <label for="organisationType" class="col-sm-3">Type of organisation: <fc:iconHelp><g:message code="organisation.type.help"/></fc:iconHelp></label>
 
         <div class="col-sm-9">
             <select id="organisationType" class="form-control form-control-sm" data-bind="options:entityTypes, optionsCaption:'Please select...', optionsText:'label', optionsValue:'code', value:entityType, enable:abnStatus() == 'N/A'"></select>
+        </div>
+    </section>
+
+    <section class="form-group row">
+        <label class="col-sm-3 form-check-label">Indigenous organisation registration: <fc:iconHelp><g:message code="organisation.indigenous.help"/></fc:iconHelp></label>
+
+        <div class="col-sm-9">
+            <!-- ko foreach: indigenousOrganisationTypes -->
+            <div class="form-check">
+            <input type="checkbox" class="form-check-input" data-bind="checked:$parent.indigenousOrganisationRegistration, checkedValue:$data">
+            <label class="form-check-label" data-bind="text:$data"></label>
+
+        </div>
+            <!-- /ko -->
         </div>
     </section>
 
