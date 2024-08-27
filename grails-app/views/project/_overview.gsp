@@ -25,18 +25,6 @@
                                                                              id="${project.managementUnitId}">${project.managementUnitName?.encodeAsHTML()}</g:link></div>
                         </div>
                     </g:if>
-%{--                    <!-- ko if:organisationId && organisationId() -->--}%
-%{--                    <div class="row mb-2">--}%
-%{--                        <div class="col-sm-4 header-label">${config.program?.config?.organisationRelationship ?: "Service Provider"}</div>--}%
-
-%{--                        <div class="col-sm-8 organisationName">--}%
-%{--                            <a data-bind="visible:organisationId(),attr:{href:fcConfig.organisationLinkBaseUrl+'/'+organisationId()}">--}%
-%{--                                <span data-bind="text:organisationName"></span>--}%
-%{--                            </a>--}%
-%{--                            <span data-bind="visible:!organisationId(),text:organisationName"></span>--}%
-%{--                        </div>--}%
-%{--                    </div>--}%
-%{--                    <!-- /ko -->--}%
                     <!-- ko foreach:associatedOrgs() -->
                     <div class="row mb-2">
                         <div class="col-sm-4 header-label" data-bind="text:$data.description"></div>

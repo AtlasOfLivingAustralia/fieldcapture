@@ -169,6 +169,7 @@ OrganisationViewModel = function (props, options) {
 
     self.organisationId = props.organisationId;
     self.entityType = ko.observable(props.entityType);
+    self.orgType = ko.observable(props.orgType);
     self.name = ko.observable(props.name);
     self.entityName = ko.observable(props.entityName);
     self.businessNames = ko.observableArray(props.businessNames);
@@ -212,7 +213,12 @@ OrganisationViewModel = function (props, options) {
         // Indicate that text could be added into textbox
         return false;
     }
-
+    self.orgType = ko.pureComputed(function() {
+       var entityType = _.find(self.entityTypes, function(entityType) {
+           return entityType.code == self.entityType();
+       });
+       return entityType ? entityType.label : "Dfalkdfjalfdkjasdfakjh";
+    });
     self.clearAbnDetails = function() {
         self.abn(null);
         self.entityName(null);
