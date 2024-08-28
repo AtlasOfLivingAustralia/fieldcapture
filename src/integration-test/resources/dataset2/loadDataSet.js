@@ -84,7 +84,7 @@ for (var i = 1; i < 10; i++) {
     }
 }
 
-createProject({projectId: "meri1", name: "Configurable MERI plan project", programId: "configurable_meri_plan"});
+createProject({projectId: "meri1", name: "Configurable MERI plan project", programId: "configurable_meri_plan", plannedStartDate: ISODate("2015-06-30T14:00:00Z"), plannedEndDate: ISODate("2016-06-30T14:00:00Z")});
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
     entityId: "meri1",
@@ -115,7 +115,7 @@ createOrganisation({
     acronym:'TSTORG', description:'THE TRUSTEE FOR PSS FUND Test'
 })
 
-createProject({name:'project active', projectId:"project_active", status:"active", planStatus:'submitted', externalIds:[{idType:'INTERNAL_ORDER_NUMBER', externalId:'12345'}], programId:'default_outcome' })
+createProject({name:'project active', projectId:"project_active", status:"active", planStatus:'submitted', externalIds:[{idType:'INTERNAL_ORDER_NUMBER', externalId:'12345'}], programId:'default_outcome', plannedStartDate: ISODate("2023-12-01T14:00:00Z"), plannedEndDate: ISODate("2024-08-01T14:00:00Z") })
 createProject({name:'project application', projectId:"project_application", status:"application", planStatus:'submitted', programId:'default_outcome', externalIds:[]})
 createProject({name:'project completed', projectId:"project_completed", status:"completed", planStatus:'submitted', externalIds:[{idType:'INTERNAL_ORDER_NUMBER', externalId:'12345'}], programId:'default_outcome'})
 
