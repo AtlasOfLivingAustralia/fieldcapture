@@ -157,7 +157,7 @@ class SearchService {
     }
 
     private void handleDateFilters(params) {
-        if (params.getBoolean('isFilterByCompletedProjects', false)) {
+        if ((params.isFilterByCompletedProjects ?: 'false').toBoolean()) {
             if (params.fromDate || params.toDate) {
                 List fq = params.getList('fq')
                 if (!params.fromDate) {
