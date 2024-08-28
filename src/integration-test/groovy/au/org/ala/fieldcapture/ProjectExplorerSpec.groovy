@@ -4,6 +4,7 @@ import groovy.util.logging.Slf4j
 import pages.Facet
 import pages.ProjectExplorer
 import spock.lang.Stepwise
+import pages.AdminTools
 
 @Slf4j
 @Stepwise
