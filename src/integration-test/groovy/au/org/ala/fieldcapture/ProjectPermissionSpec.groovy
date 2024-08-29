@@ -40,6 +40,12 @@ class ProjectPermissionSpec extends StubbedCasSpec {
 
         and: "Confirm we want to change the role"
         okBootbox()
+        and:
+        // Sometimes .text() returns an empty string if the element is not in the viewport.
+        // Trying this as a workaround.
+        interact {
+            moveToElement(adminContent.projectAccess.searchButton)
+        }
 
         then:
         waitFor {
