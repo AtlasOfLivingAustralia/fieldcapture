@@ -8,6 +8,9 @@ import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
 
+import java.sql.Date
+import java.time.LocalDate
+
 class ActivityController {
 
     def activityService, siteService, projectService, metadataService, userService, excelImportService, webService, speciesService, documentService, reportService, programService, projectConfigurationService
@@ -526,6 +529,15 @@ class ActivityController {
                 Workbook workbook = WorkbookFactory.create(file.inputStream)
 
                 def data = excelImportService.convertColumnMapConfigManyRows(workbook, config)
+                data.each { row ->
+                    for (entry in row) {
+                        if (entry.value instanceof org.joda.time.LocalDate) {
+                            //update the type for the datepicker
+                            entry.value = entry.value.toDate()
+
+                        }
+                    }
+                }
 
                 // Do species lookup
                 def species = model.find {it.dataType == 'species'}
