@@ -21,7 +21,7 @@ class PermissionsTableRow extends Module {
     }
 
     String getRoleText() {
-        role.text()
+        role.find('span').text()
     }
 
     void updateRole(String newRole) {
