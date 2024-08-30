@@ -212,12 +212,45 @@ OrganisationViewModel = function (props, options) {
 
         // Indicate that text could be added into textbox
         return false;
-    }
+    };
+
+    var previousContractNames = _.map(props.contractNames, function(name) {
+        return {
+            originalName: name,
+            currentName: name,
+            projects: []
+        }
+    });
+    var contactNameChangeList = [];
+
+    self.contractNames.subscribe(function(value) {
+        // Compare current names to previous, update previous.
+        var namesBeforeEdit = _.map(previousContractNames, function(previous) {return previous.currentName} )
+        var namesAfterEdit = self.contractNames();
+        var added = _.difference(namesAfterEdit, namesBeforeEdit);
+        var removed = _.difference(namesBeforeEdit, namesAfterEdit);
+
+        if (added.length == 1 && removed.length == 0) {
+            contactNameChangeList.push({action: 'add', originalName: null, currentName: added[0]});
+        }
+
+        if (removed.length == 1 && added.length == 0) {
+            var name = _.find(previousContractNames, function(previous) {return previous.currentName == removed[0]});
+            contactNameChangeList.push({action: 'delete', originalName: name.originalName, currentName: null});
+        }
+
+        if (removed.length == 1 && added.length == 1) {
+            var name = _.find(previousContractNames, function(previous) {return previous.currentName == removed[0]});
+            contactNameChangeList.push({action: 'update', originalName: name.originalName, currentName: added[0]});
+        }
+
+        console.log(contactNameChangeList);
+    });
     self.orgType = ko.pureComputed(function() {
        var entityType = _.find(self.entityTypes, function(entityType) {
            return entityType.code == self.entityType();
        });
-       return entityType ? entityType.label : "Dfalkdfjalfdkjasdfakjh";
+       return entityType ? entityType.label : null;
     });
     self.clearAbnDetails = function() {
         self.abn(null);
