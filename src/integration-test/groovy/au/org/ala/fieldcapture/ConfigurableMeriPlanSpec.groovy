@@ -172,6 +172,8 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
             meriPlan.serviceOutcomeTargets.serviceAndTargets[1].service == "Weed distribution survey"
             meriPlan.serviceOutcomeTargets.serviceAndTargets[1].targetMeasure == "Area (ha) surveyed for weeds"
 
+            //meriPlan.serviceOutcomeTargets.outcomeTargets[0].outcomes == ["ST1", "MT1"]
+            // CI environment is only expecting ST1 here - need to investigate why
             meriPlan.serviceOutcomeTargets.outcomeTargets[0].outcomes == ["ST1"]
             meriPlan.serviceOutcomeTargets.outcomeTargets[1].outcomes == ["MT1"]
         }
@@ -326,6 +328,8 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlanView.nationalAndRegionalPlans[0].documentUrl.text() == "http://www.test.org"
         meriPlanView.serviceOutcomeTargets.serviceAndTargets[0].service.text() == "Collecting, or synthesising baseline data"
         meriPlanView.serviceOutcomeTargets.serviceAndTargets[0].targetMeasure.text() == "Number of baseline data sets collected and/or synthesised"
+        //meriPlanView.serviceOutcomeTargets.outcomeTargets[0].outcomes.text() == "ST1,MT1"
+        // CI environment is only expecting ST1 here - need to investigate.
         meriPlanView.serviceOutcomeTargets.outcomeTargets[0].outcomes.text() == "ST1"
         meriPlanView.serviceOutcomeTargets.outcomeTargets[0].target.text() == "2"
         meriPlanView.serviceOutcomeTargets.serviceAndTargets[1].service.text() == "Weed distribution survey"
@@ -407,6 +411,8 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
             page.meriPlan.nationalAndRegionalPlans[0].documentUrl.text() == "http://www.test.org"
             page.meriPlan.serviceOutcomeTargets.serviceAndTargets[0].service.text() == "Collecting, or synthesising baseline data"
             page.meriPlan.serviceOutcomeTargets.serviceAndTargets[0].targetMeasure.text() == "Number of baseline data sets collected and/or synthesised"
+            //page.meriPlan.serviceOutcomeTargets.outcomeTargets[0].outcomes.text() == "ST1,MT1"
+            // CI environment is only expecting ST1 here - need to investigate.
             page.meriPlan.serviceOutcomeTargets.outcomeTargets[0].outcomes.text() == "ST1"
             page.meriPlan.serviceOutcomeTargets.outcomeTargets[0].target.text() == "2"
             page.meriPlan.serviceOutcomeTargets.serviceAndTargets[1].service.text() == "Weed distribution survey"
@@ -643,7 +649,6 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         meriPlan2.shortTermOutcomes[0].outcome.text() == "outcome 1"
         meriPlan2.projectDescription.text() == 'Project description'
-        meriPlan2.projectMethodology.text() == 'Project Methodology'
 
         when:
         // Sometimes .text() returns an empty string if the element is not in the viewport.
@@ -653,6 +658,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         }
 
         then:
+        meriPlan2.projectMethodology.text() == 'Project Methodology'
         meriPlan2.monitoringIndicators[0].indicator.text() == "Indicator 1"
         meriPlan2.monitoringIndicators[0].approach.text() == 'Approach 1'
         meriPlan2.adaptiveManagement.text() == 'Adaptive management'
