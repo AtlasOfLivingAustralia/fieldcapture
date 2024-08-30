@@ -35,8 +35,7 @@ class ProjectPermissionSpec extends StubbedCasSpec {
         }
         adminContent.projectAccess.findPermissionForDisplayName('test2 user2').roleText == "Admin"
 
-        //Temporarily disabled due to a difficult to reproduce issue in CI
-       /* when: "We change user 2 to an editor"
+        when: "We change user 2 to an editor"
         adminContent.projectAccess.findPermissionForDisplayName('test2 user2').updateRole('editor')
 
         and: "Confirm we want to change the role"
@@ -46,7 +45,7 @@ class ProjectPermissionSpec extends StubbedCasSpec {
         waitFor {
             adminContent.projectAccess.findPermissionForDisplayName('test2 user2').roleText == "Editor"
         }
-        */
+
         when: "We delete the new permission"
         adminContent.projectAccess.findPermissionForDisplayName('test2 user2').remove()
 
