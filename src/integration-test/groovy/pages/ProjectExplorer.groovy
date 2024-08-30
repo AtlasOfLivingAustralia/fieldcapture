@@ -3,6 +3,7 @@ package pages
 import geb.Module
 import geb.module.Checkbox
 import pages.modules.ViewReef2050PlanReport
+import org.openqa.selenium.Keys
 
 class FacetItem extends Module {
     static content = {
@@ -59,7 +60,9 @@ class ProjectExplorer extends ReloadablePage {
         chooseMoreFacetTerms(required: false) { $('#facetsContent .moreFacets') }
         facetTerms(required: false) { $("#facetsContent .accordion .card-header a") }
         facetAccordion(required: false) { $("#facetsContent .accordion") }
-
+        dateOption(required: false, wait: true) { $("#isFilterByCompletedProjectsOption", dynamic: true) }
+        dateFacet(required: false) { $("#projectDates", dynamic: true) }
+        clearDatesBtn(required: false) { $("#facet-dates .clearDates", dynamic: true) }
         inputText{ $("#keywords")}
 
         dashboardContent (required: false) {$("div#dashboard-content")}
@@ -110,7 +113,13 @@ class ProjectExplorer extends ReloadablePage {
         waitFor { dashboardContent.displayed }
     }
 
+    void setFromDate (String date) {
+        $("input#fromDate", dynamic: true) << date << Keys.TAB
+    }
 
+    void setToDate (String date) {
+        $("input#toDate", dynamic: true) << date << Keys.TAB
+    }
 }
 
 class ProjectsList extends Module {

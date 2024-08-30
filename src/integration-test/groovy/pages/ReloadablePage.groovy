@@ -1,7 +1,9 @@
 package pages
 
 import geb.Page
+import groovy.util.logging.Slf4j
 
+@Slf4j
 class ReloadablePage extends Page {
 
     private long atCheckTime = 0l
@@ -48,5 +50,7 @@ class ReloadablePage extends Page {
         if (result) {
             saveAtCheckTime()
         }
+
+        result
     }
 }

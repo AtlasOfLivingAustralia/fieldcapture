@@ -68,6 +68,12 @@
                                 <select style="margin-bottom: 10px" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select>
                                 <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">From:</label><fc:datePicker targetField="fromDate.date" bs4="bs4" class="dateControl form-control form-control-sm" name="fromDate" data-validation-engine="validate[date]" autocomplete="off"/></div>
                                 <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">To:</label><fc:datePicker targetField="toDate.date" bs4="bs4" class="dateControl form-control form-control-sm" name="toDate" data-validation-engine="validate[date,future[fromDate]]" autocomplete="off"/></div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="isFilterByCompletedProjectsOption" data-bind="checked: isFilterByCompletedProjects" value="true">
+                                    <label class="form-check-label" for="isFilterByCompletedProjectsOption">
+                                        Project start and end dates are within the selected range.
+                                    </label>
+                                </div>
                                 <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn btn-sm clearDates"><i class="fa fa-remove"></i> Clear dates</button></div>
 
             </div>
@@ -472,6 +478,9 @@
         <g:if test="${params.toDate}">
             params += '&toDate='+'${params.toDate.encodeAsURL()}';
         </g:if>
+        <g:if test="${params.isFilterByCompletedProjects}">
+            params += '&isFilterByCompletedProjects=' + ${params.isFilterByCompletedProjects.encodeAsJavaScript()};
+        </g:if>
 
         $.post(url, params).done(function(data1) {
             //console.log("getJSON data", data);
@@ -545,11 +554,12 @@
         var urlWithoutDates = '<fc:formatParams params="${params}" requiredParams="query,sort,order,max,fq"/>';
         var fromDate = '${params.fromDate?.encodeAsJavaScript()?:''}';
         var toDate = '${params.toDate?.encodeAsJavaScript()?:''}';
+        var isFilterByCompletedProjects = ${params.isFilterByCompletedProjects?.encodeAsJavaScript() ?: false };
 
         var error = "${error?.encodeAsJavaScript()}";
 
         if(!error){
-            ko.applyBindings(new DatePickerModel(fromDate, toDate, urlWithoutDates, window.location), document.getElementById('facet-dates'));
+            ko.applyBindings(new DatePickerModel(fromDate, toDate, isFilterByCompletedProjects, urlWithoutDates, window.location), document.getElementById('facet-dates'));
         }
 
         function FacetFilterViewModel (params) {
