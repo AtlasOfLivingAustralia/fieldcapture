@@ -120,6 +120,9 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
 
             try {
                 if (ok.displayed) {
+                    interact {
+                        moveToElement(ok)
+                    }
                     ok.click()
                 }
             }
