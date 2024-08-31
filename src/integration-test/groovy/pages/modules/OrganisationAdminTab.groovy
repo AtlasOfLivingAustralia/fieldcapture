@@ -37,13 +37,17 @@ class OrganisationAdminTab extends Module{
         documents.attachDocumentButton.click()
         Thread.sleep(1000) // Wait for the dialog to animate into view
         int count = 0
-        while (!documents.attachDocumentDialog.title.displayed && count < 10)  {
+        while (!(documents.attachDocumentDialog.title.displayed || documents.attachDocumentDialog.displayed) && count < 10) {
             count++
-            documents.attachDocumentButton.click()
+            try {
+                documents.attachDocumentButton.click()
+            }
+            catch (Exception e) {
+                e.printStackTrace()
+            }
             Thread.sleep(1000) // Wait for the dialog to animate into view
 
             println documents.attachDocumentDialog.title.attr('parentNode')
-            documents.attachDocumentDialog.title.displayed
         }
 
         documents.attachDocumentDialog
