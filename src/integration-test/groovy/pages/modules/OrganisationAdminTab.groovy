@@ -33,8 +33,10 @@ class OrganisationAdminTab extends Module{
     }
 
     def attachDocument() {
-       viewDocumentsSection()
+        viewDocumentsSection()
         documents.attachDocumentButton.click()
+        waitFor {documents.attachDocumentDialog.title.displayed}
+
         documents.attachDocumentDialog
     }
 
