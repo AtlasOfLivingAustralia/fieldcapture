@@ -35,9 +35,13 @@ class OrganisationAdminTab extends Module{
     def attachDocument() {
         viewDocumentsSection()
         documents.attachDocumentButton.click()
-
-        waitFor {
+        Thread.sleep(1000) // Wait for the dialog to animate into view
+        int count = 0
+        while (!documents.attachDocumentDialog.title.displayed && count < 10)  {
+            count++
+            documents.attachDocumentButton.click()
             Thread.sleep(1000) // Wait for the dialog to animate into view
+
             println documents.attachDocumentDialog.title.attr('parentNode')
             documents.attachDocumentDialog.title.displayed
         }
