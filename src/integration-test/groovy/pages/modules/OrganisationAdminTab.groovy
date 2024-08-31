@@ -18,7 +18,7 @@ class OrganisationAdminTab extends Module{
         reportingSection(required:false) { $('#reporting-config').module OrganisationAdminReportSection }
 
         documentsTab { $('#edit-documents-tab') }
-        documents { module AdminDocumentsTab }
+        documents { $('#edit-documents').module AdminDocumentsTab }
 
         adminColumn { $("#admin .flex-column a") }
 
@@ -29,7 +29,7 @@ class OrganisationAdminTab extends Module{
 
     def viewDocumentsSection() {
         documentsTab.click()
-        waitFor { documents.displayed }
+        waitFor { documents.header.displayed }
     }
 
     def attachDocument() {
