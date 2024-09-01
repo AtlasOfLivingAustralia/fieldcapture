@@ -42,8 +42,12 @@ class OrganisationDocumentsSpec extends StubbedCasSpec {
         }
         def logEntries = driver.manage().logs().get("browser").getAll()
         logEntries.each {
-            println it
-            log.error(it.toJson().toString())
+
+            String message = it.toJson().toString()
+            if (!message.contains("Google Maps")) {
+                log.error(message)
+                println(message)
+            }
         }
 
         dialog.save()
