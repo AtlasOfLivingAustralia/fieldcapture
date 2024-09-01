@@ -19,12 +19,10 @@ class OrganisationDocumentsSpec extends StubbedCasSpec {
         setup:
         String organisationId = 'test_organisation'
         loginAsUser('1', browser)
+
         when: "Display the admin tab, navigate to the documents section then press the attach button"
         to Organisation, organisationId
         openDocumentDialog()
-
-        Thread.sleep(1500) // Wait for the animation to finish
-        waitFor { adminTabContent.documents.attachDocumentDialog.title.displayed }
 
         def dialog = adminTabContent.documents.attachDocumentDialog
 

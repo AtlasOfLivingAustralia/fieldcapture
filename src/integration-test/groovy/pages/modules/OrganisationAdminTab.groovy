@@ -18,7 +18,8 @@ class OrganisationAdminTab extends Module{
         reportingSection(required:false) { $('#reporting-config').module OrganisationAdminReportSection }
 
         documentsTab { $('#edit-documents-tab') }
-        documents { $('#edit-documents').module AdminDocumentsTab }
+        // Not bound to a selector because the dialog is attached to the document body and is referenced in the module
+        documents { module AdminDocumentsTab }
 
         adminColumn { $("#admin .flex-column a") }
 
@@ -47,10 +48,8 @@ class OrganisationAdminTab extends Module{
             }
             Thread.sleep(1000) // Wait for the dialog to animate into view
 
-            println documents.attachDocumentDialog.title.attr('parentNode')
-        }
 
-        documents.attachDocumentDialog
+        }
     }
 
     def viewEditSection() {
