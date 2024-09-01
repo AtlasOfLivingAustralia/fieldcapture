@@ -1,9 +1,11 @@
 package au.org.ala.fieldcapture
 
+import groovy.util.logging.Slf4j
 import pages.Organisation
 import spock.lang.Stepwise
 
 @Stepwise
+@Slf4j
 class OrganisationDocumentsSpec extends StubbedCasSpec {
     def setup() {
         useDataSet('dataset_crossSite')
@@ -37,6 +39,11 @@ class OrganisationDocumentsSpec extends StubbedCasSpec {
         waitFor 20, {
             //dialog.saveButton.displayed
             dialog.saveEnabled()
+        }
+        def logEntries = driver.manage().logs().get("browser").getAll()
+        logEntries.each {
+            println it
+            log.error(it.toJson().toString())
         }
 
         dialog.save()
