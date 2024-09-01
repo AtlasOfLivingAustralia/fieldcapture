@@ -7,7 +7,7 @@ import pages.modules.OrganisationAdminTab
 class Organisation extends ReloadablePage {
     static url = 'organisation/index'
 
-    static at = { true } //$('#organisationDetails').displayed }
+    static at = { $('#organisationDetails').displayed }
 
     static content = {
         name {$('h2')}
