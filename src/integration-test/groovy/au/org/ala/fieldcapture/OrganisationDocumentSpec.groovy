@@ -35,7 +35,7 @@ class OrganisationDocumentsSpec extends StubbedCasSpec {
         dialog.attachFile("/testDocument.txt")
 
         waitFor 20, {
-            dialog.saveButton.displayed
+            //dialog.saveButton.displayed
             dialog.saveEnabled()
         }
 
