@@ -1,6 +1,7 @@
 package au.org.ala.fieldcapture
 
 import groovy.util.logging.Slf4j
+import pages.AdminClearCachePage
 import pages.Organisation
 import spock.lang.Stepwise
 
@@ -9,6 +10,10 @@ import spock.lang.Stepwise
 class OrganisationDocumentsSpec extends StubbedCasSpec {
     def setup() {
         useDataSet('dataset_crossSite')
+        loginAsAlaAdmin(browser)
+        to AdminClearCachePage
+        clearProgramListCache()
+        clearServiceListCache()
     }
 
     def cleanup() {
@@ -51,6 +56,9 @@ class OrganisationDocumentsSpec extends StubbedCasSpec {
             //dialog.saveButton.displayed
             dialog.saveEnabled()
         }
+
+
+        dialog.save()
         logEntries = driver.manage().logs().get("browser").getAll()
         logEntries.each {
 
@@ -60,8 +68,6 @@ class OrganisationDocumentsSpec extends StubbedCasSpec {
                 println(message)
             }
         }
-
-        dialog.save()
         waitFor 30, {
             hasBeenReloaded()
         }
