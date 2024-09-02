@@ -187,7 +187,12 @@ OrganisationViewModel = function (props, options) {
         return self.name()?self.name():'New Organisation';
     });
     self.associatedOrgs = ko.observableArray(props.associatedOrgs);
-    self.externalIds = ko.observableArray(props.externalIds);
+    self.externalIds = ko.observableArray(_.map(props.externalIds, function (externalId) {
+        return {
+            idType: ko.observable(externalId.idType),
+            externalId: ko.observable(externalId.externalId)
+        };
+    }));
     self.externalIdTypes = PROJECT_EXTERNAL_ID_TYPES =  [
         'TECH_ONE_CODE', 'TECH_ONE_CONTRACT_NUMBER'
     ];
@@ -271,6 +276,9 @@ OrganisationViewModel = function (props, options) {
     self.toJS = function(includeDocuments) {
         var ignore = self.ignore.concat(['breadcrumbName', 'entityTypes', 'externalIdTypes', 'organisationSearchUrl', 'collectoryInstitutionId', 'projects', 'reports', 'indigenousOrganisationTypes']);
         var js = ko.mapping.toJS(self, {include:['documents'], ignore:ignore} );
+        if (self.externalIds().length > 0) {
+            js.externalIds = ko.mapping.toJS(self.externalIds);
+        }
         if (includeDocuments) {
             js.documents = ko.toJS(self.documents);
             js.links = ko.mapping.toJS(self.links());
