@@ -24,9 +24,20 @@ class OrganisationDocumentsSpec extends StubbedCasSpec {
 
         when: "Display the admin tab, navigate to the documents section then press the attach button"
         to Organisation, organisationId
+        def logEntries = driver.manage().logs().get("browser").getAll()
+        logEntries.each {
+
+            String message = it.toJson().toString()
+            if (!message.contains("Google Maps")) {
+                log.error(message)
+                println(message)
+            }
+        }
+        log.error("*****************************At organisation page************************")
         openDocumentDialog()
 
         def dialog = adminTabContent.documents.attachDocumentDialog
+        log.error("*****************************Dialog opened************************")
 
         then: "The default document type is contract assurance"
         dialog.type == "contractAssurance"
@@ -40,7 +51,7 @@ class OrganisationDocumentsSpec extends StubbedCasSpec {
             //dialog.saveButton.displayed
             dialog.saveEnabled()
         }
-        def logEntries = driver.manage().logs().get("browser").getAll()
+        logEntries = driver.manage().logs().get("browser").getAll()
         logEntries.each {
 
             String message = it.toJson().toString()

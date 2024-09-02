@@ -47,7 +47,16 @@ class OrganisationAdminTab extends Module{
                 e.printStackTrace()
             }
             Thread.sleep(1000) // Wait for the dialog to animate into view
+            def logEntries = driver.manage().logs().get("browser").getAll()
+            logEntries.each {
 
+                String message = it.toJson().toString()
+                if (!message.contains("Google Maps")) {
+                    log.error(message)
+                    println(message)
+                }
+            }
+            log.error("*****************************In retry loop************************")
 
         }
     }
