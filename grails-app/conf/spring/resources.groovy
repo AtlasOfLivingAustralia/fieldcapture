@@ -1,7 +1,9 @@
+import au.org.ala.merit.CheckRisksAndThreatsTask
+import au.org.ala.merit.MeritServletContextConfig
 import au.org.ala.merit.config.BdrTokenConfig
 import au.org.ala.merit.hub.HubAwareLinkGenerator
 import au.org.ala.merit.StatisticsFactory
-import au.org.ala.merit.CheckRisksAndThreatsTask
+import au.org.ala.merit.hub.HubAwareLinkGenerator
 import au.org.ala.merit.reports.NHTOutputReportLifecycleListener
 import au.org.ala.merit.util.ProjectGroupingHelper
 
@@ -21,6 +23,9 @@ beans = {
 
     // The non-standard case is used because the name is derived from the activity type
     NHTOutputReport(NHTOutputReportLifecycleListener)
+    GrantsandOthersProgressReport(NHTOutputReportLifecycleListener)
+    ProcurementOutputReport(NHTOutputReportLifecycleListener)
 
+    meritServletContextConfig(MeritServletContextConfig)
     bdrTokenConfig(BdrTokenConfig)
 }

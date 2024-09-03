@@ -17,6 +17,7 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 	def reportService = Mock(ReportService)
 	def userService = Mock(UserService)
 	def metadataService = Mock(MetadataService)
+	def documentService = Mock(DocumentService)
 	AbnLookupService abnLookupService = Mock(AbnLookupService)
 
 	def setup() {
@@ -28,6 +29,7 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 		service.metadataService = metadataService
 		service.abnLookupService = abnLookupService
 		service.grailsApplication = grailsApplication
+		service.documentService = documentService
 	}
 
 
@@ -216,7 +218,8 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 		1 * webService.getJson({it.endsWith('organisation/o1?view=')}) >> [organisationId:"o1"]
 		1 * reportService.get("r1") >> [reportId:"r1", organisationId:"o1", activityId:'a1']
 		1 * reportService.cancelReport("r1", ['a1'], "Testing", [organisationId:"o1", reports:null], [])
-		1 * webService.getJson({it.endsWith('permissions/getMembersForOrganisation/o1')}) >> []
+		1 * userService.getMembersOfOrganisation("o1") >> []
+		1 * documentService.search(_) >> [documents:[]]
 	}
 
 	static int activityId = 0

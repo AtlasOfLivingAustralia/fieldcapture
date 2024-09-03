@@ -29,6 +29,7 @@ description "Fieldcapture"
 apply plugin:"eclipse"
 apply plugin:"idea"
 apply plugin:"war"
+apply plugin: "groovy"
 apply plugin:"org.grails.grails-web"
 apply plugin:"com.github.erdi.webdriver-binaries"
 apply plugin:"asset-pipeline"
@@ -160,16 +161,17 @@ dependencies {
 
     runtimeOnly "net.java.dev.jna:jna:4.5.1"
     runtimeOnly("org.springframework.boot:spring-boot-properties-migrator")
-
+    testImplementation("io.micronaut:micronaut-inject-groovy")
     testImplementation "com.codeborne:phantomjsdriver:1.3.0"
     testImplementation "com.icegreen:greenmail:1.5.14"
     testImplementation "org.grails:grails-gorm-testing-support"
-    testImplementation "org.grails.plugins:geb"
+    testImplementation ("org.grails.plugins:geb") {
+        exclude module: "grails-core"
+    }
     testImplementation "org.grails:grails-web-testing-support"
     testImplementation(platform('org.junit:junit-bom:5.9.1'))
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
     testImplementation "org.pac4j:pac4j-jwt:5.4.3"
-    testImplementation "org.grails:grails-test-mixins:3.3.0"
     testImplementation "com.github.tomakehurst:wiremock-jre8-standalone:2.28.0"
     implementation "org.hibernate:hibernate-validator:6.2.0.Final"
     testImplementation "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
@@ -181,12 +183,12 @@ dependencies {
     testRuntimeOnly "org.seleniumhq.selenium:selenium-safari-driver:$seleniumSafariDriverVersion"
     testRuntimeOnly "net.sourceforge.htmlunit:htmlunit:2.18"
 
-    assets 'com.bertramlabs.plugins:less-asset-pipeline:3.3.1'
+    assets "com.bertramlabs.plugins:less-asset-pipeline:$assetPipelineVersion"
 
     providedCompile "io.methvin:directory-watcher:0.4.0"
 
     if (!Boolean.valueOf(inplace)) {
-        implementation "org.grails.plugins:ecodata-client-plugin:6.3"
+        implementation "org.grails.plugins:ecodata-client-plugin:7.0-SNAPSHOT"
     }
 }
 

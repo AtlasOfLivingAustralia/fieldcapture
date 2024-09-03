@@ -401,7 +401,7 @@ var config =
                 }
             ]
         },
-        "visibility": "public",
+        "visibility": "private",
         "declarationPageType": "rdpReportDeclaration",
         "requiresActivityLocking": true,
         "supportsMeriPlanComparison": true,
@@ -449,49 +449,6 @@ var config =
                 "label": "Annual",
                 "category": "Annual Progress Reporting",
                 "activityType": "NHT Annual Report"
-            },
-            {
-                "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
-                "reportingPeriodInMonths": 36,
-                "multiple": false,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
-                "maximumOwnerDurationInMonths": 35,
-                "label": "Outcomes Report 1",
-                "alignToOwnerStart": true,
-                "reportType": "Single",
-                "minimumOwnerDurationInMonths": null,
-                "reportNameFormat": "Outcomes Report 1",
-                "alignToOwnerEnd": true,
-                "category": "Outcomes Report 1",
-                "reportsAlignedToCalendar": false,
-                "activityType": "NHT Outcomes 1 Report"
-            },
-            {
-                "reportType": "Single",
-                "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
-                "minimumOwnerDurationInMonths": 36,
-                "reportNameFormat": "Outcomes Report 1",
-                "reportingPeriodInMonths": 24,
-                "multiple": false,
-                "maximumOwnerDurationInMonths": 47,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
-                "label": "Outcomes Report 1",
-                "category": "Outcomes Report 1",
-                "activityType": "NHT Outcomes 1 Report"
-            },
-            {
-                "reportType": "Single",
-                "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
-                "minimumOwnerDurationInMonths": 48,
-                "reportNameFormat": "Outcomes Report 1",
-                "reportingPeriodInMonths": 36,
-                "multiple": false,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
-                "calendarAlignmentMonth": 7,
-                "label": "Outcomes Report 1",
-                "category": "Outcomes Report",
-                "reportsAlignedToCalendar": true,
-                "activityType": "NHT Outcomes 1 Report"
             },
             {
                 "reportType": "Single",

@@ -20,7 +20,7 @@
     <tr class="baseline-row">
         <td class="code"><span data-bind="text:code"></span></td>
         <td class="outcome">
-            <span data-bind="text:relatedOutcomes"></span>
+            <span data-bind="arrayAsCommaSeparatedText:relatedOutcomes"></span>
         </td>
         <td class="monitoring-data">
             <span data-bind="text:monitoringDataStatus"></span>

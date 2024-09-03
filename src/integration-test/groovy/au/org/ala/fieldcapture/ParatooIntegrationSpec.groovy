@@ -1,18 +1,34 @@
 package au.org.ala.fieldcapture
 
+import au.org.ala.web.Pac4jContextProvider
 import au.org.ala.ws.service.WebService
+import au.org.ala.ws.tokens.TokenClient
+import au.org.ala.ws.tokens.TokenService
+import com.nimbusds.oauth2.sdk.id.Issuer
+import com.nimbusds.openid.connect.sdk.SubjectType
+import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata
 import groovy.json.JsonSlurper
+import org.apache.http.HttpStatus
 import org.apache.http.entity.ContentType
 import org.grails.testing.GrailsUnitTest
-import org.apache.http.HttpStatus
-import spock.lang.Stepwise
+import org.pac4j.core.config.Config
+import org.pac4j.core.context.WebContext
+import org.pac4j.jee.context.JEEContextFactory
+import org.pac4j.jee.context.session.JEESessionStore
+import org.pac4j.oidc.config.OidcConfiguration
+import org.springframework.mock.web.MockHttpServletRequest
+import org.springframework.mock.web.MockHttpServletResponse
 import pages.RlpProjectPage
+import spock.lang.Stepwise
+
+import java.util.concurrent.Callable
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 @Stepwise
 // We need GrailsUnitTest because the WebService class has a dependency on grailsApplication.config
 // It slows startup down quite a bit though
 class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
-
     WebService webService
 
     def setupSpec() {
@@ -24,9 +40,59 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
     }
 
     def setup() {
-        webService = new WebService(grailsApplication: getGrailsApplication())
+        def config = Stub(Config)
+        def oidcConfiguration = Stub(OidcConfiguration)
+        oidcConfiguration.clientId >> testConfig.security.oidc.clientId
+        oidcConfiguration.secret >> testConfig.security.oidc.secret
+        def providerMetadata = new OIDCProviderMetadata(new Issuer(testConfig.issuerURI), [SubjectType.PUBLIC], testConfig.jwkURI.toURI())
+        providerMetadata.setTokenEndpointURI(testConfig.tokenURI.toURI())
+        oidcConfiguration.findProviderMetadata() >> providerMetadata
+        def request = new MockHttpServletRequest()
+        request.getSession(true)
+        def response = new MockHttpServletResponse()
+        def pac4jContextProvider = new Pac4jContextProvider() {
+            @Override
+            WebContext webContext() {
+                JEEContextFactory.INSTANCE.newContext(request, response)
+            }
+        }
+        def sessionStore = JEESessionStore.INSTANCE
+        def tokenClient = new TokenClient(oidcConfiguration)
+        def tokenService = new TokenService(config, oidcConfiguration, pac4jContextProvider, sessionStore, tokenClient, testConfig.webservice["client-id"], testConfig.webservice["client-secret"], testConfig.webservice["jwt-scopes"], false)
+
+        webService = new WebService(grailsApplication: getGrailsApplication(), tokenService: tokenService)
     }
 
+    private Map buildMintCollectionIdPayload() {
+         [
+                "survey_metadata": [
+                        "survey_details": [
+                                "survey_model": "soil-pit-characterisation-full",
+                                "time": "2023-08-28T00:34:13.100Z",
+                                "uuid": "123-123-123-123-123",
+                                "project_id": "monitorProject",
+                                "protocol_id": "guid-1",
+                                "protocol_version": "1"
+                        ],
+                        "provenance":[
+                                "version_app": "0.0.1-xxxxx",
+                                "version_core": "0.1.0-1fb53f81",
+                                "version_core_documentation": "0.0.1-xxxxx",
+                                "version_org": "4.4-SNAPSHOT",
+                                "system_app": "monitor",
+                                "system_core": "Monitor-dummy-data-production",
+                                "system_org": "MERIT"
+                        ]
+                ]
+        ]
+    }
+
+    private Map mintCollectionId(Map payload, String token) {
+        String url = testConfig.ecodata.baseUrl + 'paratoo/mintCollectionId'
+        Map headers = ["Authorization": "Bearer ${token}"]
+        Map resp = webService.post(url, payload, null, ContentType.APPLICATION_JSON, false, false, headers)
+        resp
+    }
 
     def "Add new data set in to project"() {
 
@@ -54,28 +120,7 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
                 ]
 
         ]
-        Map mintCollectionIdPayload = [
-                "survey_metadata": [
-                    "survey_details": [
-                        "survey_model": "soil-pit-characterisation-full",
-                        "time": "2023-08-28T00:34:13.100Z",
-                        "uuid": "123-123-123-123-123",
-                        "project_id": "monitorProject",
-                        "protocol_id": "guid-1",
-                        "protocol_version": "1"
-                    ],
-                    "provenance":[
-                        "version_app": "0.0.1-xxxxx",
-                        "version_core": "0.1.0-1fb53f81",
-                        "version_core_documentation": "0.0.1-xxxxx",
-                        "version_org": "4.4-SNAPSHOT",
-                        "system_app": "monitor",
-                        "system_core": "Monitor-dummy-data-production",
-                        "system_org": "MERIT"
-                    ]
-                ]
-            ]
-                        
+        Map mintCollectionIdPayload = buildMintCollectionIdPayload()
 
         Map collectionPayload = [
                 "coreProvenance": [
@@ -93,9 +138,7 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
         resp.statusCode == HttpStatus.SC_OK
 
         when:
-        url = testConfig.ecodata.baseUrl + 'paratoo/mintCollectionId'
-        headers = ["Authorization": "Bearer ${token}"]
-        resp = webService.post(url, mintCollectionIdPayload, null, ContentType.APPLICATION_JSON, false, false, headers)
+        resp = mintCollectionId(mintCollectionIdPayload, token)
 
         String orgMintedIdentifier = resp.resp.orgMintedIdentifier
         byte[] jsonBytes = orgMintedIdentifier.decodeBase64()
@@ -139,4 +182,40 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
         then: "The data set is displayed"
         datasetDetails.dataSetSummaryCount() == 1
     }
+
+    def "Paratoo data sets can be submitted concurrently without data errors"() {
+        setup:
+        ExecutorService executor = Executors.newFixedThreadPool(20)
+        String token = tokenForUser('1')
+        String projectId = 'monitorProject'
+
+        when:
+        List callables = []
+        for (int i = 0; i < 100; i++) {
+            Callable callable = new Callable() {
+                @Override
+                Object call() throws Exception {
+                    Map payload = buildMintCollectionIdPayload()
+                    payload.survey_metadata.protocol_id = "guid-${i}"
+                    Map result = mintCollectionId(payload, token)
+
+                    return result
+                }
+            }
+            callables.add(callable)
+        }
+        executor.invokeAll(callables)
+
+        String url = testConfig.ecodata.baseUrl + 'project/'+projectId
+        Map resp = webService.get(url, [:], ContentType.APPLICATION_JSON, true, false)
+
+        then:
+        resp.resp?.custom?.dataSets?.size() == 101
+        for (int i = 0; i < 100; i++) {
+            resp.resp.custom.dataSets.find { it.surveyId.survey_metadata.protocol_id == 'guid-' + i } != null
+        }
+
+    }
+
+
 }

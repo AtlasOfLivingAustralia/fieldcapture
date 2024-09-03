@@ -45,6 +45,12 @@
     var dataSet = <fc:modelAsJavascript model="${dataSet}"/>;
     var projectService = new ProjectService(project, fcConfig);
     var config = _.extend(fcConfig, {endDateSelector:"#endDate"});
+    config.projectOutcomes = <fc:modelAsJavascript model="${projectOutcomes}" default="[]"/>;
+    config.projectBaselines = <fc:modelAsJavascript model="${projectBaselines}" default="[]"/>;
+    config.projectProtocols = <fc:modelAsJavascript model="${projectProtocols}" default="[]"/>;
+    config.invalidNames = <fc:modelAsJavascript model="${dataSetNames}" default="[]"/>;
+    config.serviceBaselineIndicatorOptions = <fc:modelAsJavascript model="${serviceBaselineIndicatorOptions}" default="{}"/>;
+
     var viewModel = new DataSetViewModel(dataSet, projectService, fcConfig);
     ko.applyBindings(viewModel);
 </script>

@@ -7,7 +7,7 @@ import pages.modules.OrganisationAdminTab
 class Organisation extends ReloadablePage {
     static url = 'organisation/index'
 
-    static at = { true } //$('#organisationDetails').displayed }
+    static at = { $('#organisationDetails').displayed }
 
     static content = {
         name {$('h2')}
@@ -41,6 +41,12 @@ class Organisation extends ReloadablePage {
         waitFor {adminTab.displayed}
         adminTab.click()
         waitFor 10, { adminTabContent.displayed }
+    }
+
+    void openDocumentDialog() {
+        adminTab.click()
+        waitFor { adminTabContent.displayed }
+        adminTabContent.attachDocument()
     }
 
     void displayReportsTab() {

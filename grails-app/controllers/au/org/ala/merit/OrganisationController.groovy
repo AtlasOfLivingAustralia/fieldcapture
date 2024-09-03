@@ -36,7 +36,7 @@ class OrganisationController {
             def roles = roleService.getRoles()
             // Get dashboard information for the response.
             def dashboard = searchService.dashboardReport([fq: 'organisationFacet:' + organisation.name])
-            def members = organisationService.getMembersOfOrganisation(id)
+            def members = userService.getMembersOfOrganisation(id)
             def user = userService.getUser()
             def userId = user?.userId
 
@@ -63,17 +63,17 @@ class OrganisationController {
     protected Map content(organisation) {
 
         def user = userService.getUser()
-        def members = organisationService.getMembersOfOrganisation(organisation.organisationId)
+        def members = userService.getMembersOfOrganisation(organisation.organisationId)
         def orgRole = members.find { it.userId == user?.userId } ?: [:]
-        def hasAdminAccess = userService.userIsSiteAdmin() || orgRole.role == RoleService.PROJECT_ADMIN_ROLE
-        def hasEditorAccess =  hasAdminAccess || orgRole.role == RoleService.PROJECT_EDITOR_ROLE
+        def adminVisible = userService.userIsSiteAdmin() || orgRole.role == RoleService.PROJECT_ADMIN_ROLE || userService.userHasReadOnlyAccess()
+        def hasEditorAccess =  adminVisible || orgRole.role == RoleService.PROJECT_EDITOR_ROLE
 
         def reportingVisible = hasEditorAccess || userService.userHasReadOnlyAccess()
 
         def dashboardReports = [[name:'dashboard', label:'Activity Outputs']]
 
         Map availableReportCategories = null
-        if (hasAdminAccess) {
+        if (adminVisible) {
             dashboardReports += [name:'announcements', label:'Announcements']
             availableReportCategories = settingService.getJson(SettingPageType.ORGANISATION_REPORT_CONFIG)
         }
@@ -105,9 +105,9 @@ class OrganisationController {
 
         [about     : [label: 'About', visible: true, stopBinding: false, type:'tab', default:!reportingVisible, displayedPrograms:projectGroups.displayedPrograms, servicesDashboard:[visible:true]],
          projects : [label: 'Reporting', template:"/shared/projectListByProgram", visible: reportingVisible, stopBinding:true, default:reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes, reportOrder:reportOrder, hideDueDate:true, displayedPrograms:projectGroups.displayedPrograms, reportsFirst:true, declarationType:SettingPageType.RDP_REPORT_DECLARATION],
-         sites     : [label: 'Sites', visible: reportingVisible, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:hasAdminAccess],
+         sites     : [label: 'Sites', visible: reportingVisible, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:adminVisible],
          dashboard : [label: 'Dashboard', visible: reportingVisible, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
-         admin     : [label: 'Admin', visible: hasAdminAccess, type: 'tab', template:'admin', showEditAnnoucements:showEditAnnoucements, availableReportCategories:availableReportCategories]]
+         admin     : [label: 'Admin', visible: adminVisible, type: 'tab', template:'admin', showEditAnnoucements:showEditAnnoucements, availableReportCategories:availableReportCategories]]
 
     }
 
@@ -175,6 +175,7 @@ class OrganisationController {
     }
 
     private void createOrUpdateOrganisation(String organisationId, Map organisationDetails) {
+        def originalOrganisation = organisationService.get(organisationId)
         def documents = organisationDetails.remove('documents')
         def links = organisationDetails.remove('links')
         def result = organisationService.update(organisationId, organisationDetails)
@@ -190,6 +191,17 @@ class OrganisationController {
             links.each { link ->
                 link.organisationId = organisationId
                 documentService.saveLink(link)
+            }
+        }
+
+        List existingLinks = links?.findResults { it.documentId }
+        List toDeleteLinks = originalOrganisation?.links?.findAll { !existingLinks.contains(it.documentId) }
+        // delete any links that were removed.
+        if (toDeleteLinks && !result.error) {
+            toDeleteLinks.each { link ->
+                if (link.documentId) {
+                    documentService.delete(link.documentId)
+                }
             }
         }
 
@@ -228,25 +240,6 @@ class OrganisationController {
         }
         else {
             render status: 400, text: 'Missing parameter organisationId'
-        }
-    }
-
-    @PreAuthorise(accessLevel = 'admin')
-    def getMembersForOrganisation(String id) {
-        def adminUserId = userService.getCurrentUserId()
-
-        if (id && adminUserId) {
-            if (organisationService.isUserAdminForOrganisation(id) || organisationService.isUserGrantManagerForOrganisation(id)) {
-                render organisationService.getMembersOfOrganisation(id) as JSON
-            } else {
-                render status:403, text: 'Permission denied'
-            }
-        } else if (adminUserId) {
-            render status:400, text: 'Required params not provided: id'
-        } else if (id) {
-            render status:403, text: 'User not logged-in or does not have permission'
-        } else {
-            render status:500, text: 'Unexpected error'
         }
     }
 
@@ -529,7 +522,7 @@ class OrganisationController {
         }
 
         if (cmd.report.type ==  ReportService.PERFORMANCE_MANAGEMENT_REPORT) {
-            viewOrEditOrganisationReport(cmd.report, true)
+            viewOrEditOrganisationReport(cmd.model, true)
         }
         else {
             cmd.processEdit(this)
@@ -650,6 +643,17 @@ class OrganisationController {
         render result as JSON
     }
 
+    @PreAuthorise(accessLevel = 'siteAdmin')
+    def ajaxUnCancelReport(String id) {
+
+        def reportDetails = request.JSON
+
+        def result = organisationService.unCancelReport(id, reportDetails)
+
+        render result as JSON
+
+    }
+
     @PreAuthorise(accessLevel = 'caseManager')
     def regenerateOrganisationReports(String id) {
         Map resp
@@ -673,5 +677,15 @@ class OrganisationController {
             redirect(controller:'home', action:'publicHome')
         }
 
+    }
+
+    @PreAuthorise
+    def scoresForOrgReport(String id) {
+        List scoreIds = params.getList('scoreIds')
+        String reportId = params.get('reportId')
+
+        Map result = organisationService.scoresForOrganisationReport(id, reportId, scoreIds)
+
+        render result as JSON
     }
 }

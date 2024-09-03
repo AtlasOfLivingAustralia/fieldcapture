@@ -31,13 +31,13 @@
         <div class="col-sm-2 pl-0 pr-1">
             <label for="fromDate">Start date</label>
             <div class="input-group input-append">
-                <fc:datePicker targetField="fromDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="muFromDate"  data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl"/>
+                <fc:datePicker targetField="fromDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="muFromDate"  data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl" autocomplete="off"/>
             </div>
         </div>
         <div class="col-sm-2 pl-0 pr-1">
             <label for="toDate">End date</label>
             <div class="input-group input-append">
-                <fc:datePicker targetField="toDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="muToDate" data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl"/>
+                <fc:datePicker targetField="toDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="muToDate" data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl" autocomplete="off"/>
             </div>
         </div>
     </div>
@@ -52,18 +52,18 @@
         <div class="col-sm-2 pl-0 pr-1">
             <label for="orgFromDate">Start date</label>
             <div class="input-group input-append">
-                <fc:datePicker targetField="fromDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="orgFromDate"  data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl"/>
+                <fc:datePicker targetField="fromDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="orgFromDate"  data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl" autocomplete="off"/>
             </div>
         </div>
         <div class="col-sm-2 pl-0 pr-1">
             <label for="orgToDate">End date</label>
             <div class="input-group input-append">
-                <fc:datePicker targetField="toDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="orgToDate" data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl"/>
+                <fc:datePicker targetField="toDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="orgToDate" data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl" autocomplete="off"/>
             </div>
         </div>
     </div>
     <a id="orgReportDownload" data-bind="click:entityReportDownload" class="btn btn-sm" href="#">Organisation - Activities</a>
-    <a id="orgReportDownloadSummary" data-bind="click:entityReportDownloadSummary" class="btn btn-sm" href="#">Core Reports - Status</a>
+    <a id="orgReportDownloadSummary" data-bind="click:entityReportDownloadSummary" class="btn btn-sm" href="#">RCS Reports - Status</a>
 </form>
 
 

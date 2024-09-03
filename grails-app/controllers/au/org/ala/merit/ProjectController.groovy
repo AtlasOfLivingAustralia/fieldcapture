@@ -31,6 +31,7 @@ class ProjectController {
     static String MERI_ONLY_TEMPLATE = "meri"
     static String RLP_MERI_PLAN_TEMPLATE = "rlpMeriPlan"
     static String MERI_PLAN_TEMPLATE = "meriPlan"
+    static int AGRICULTURE_OUTCOME_START_INDEX = 4;
 
     def projectService, metadataService, commonService, activityService, userService, webService, roleService
     def siteService, documentService, reportService, blogService
@@ -163,6 +164,7 @@ class ProjectController {
         boolean hasSubmittedOrApprovedFinalReportInCategory = projectService.hasSubmittedOrApprovedFinalReportInCategory(project)
         def meriPlanVisible = config.includesContent(ProgramConfig.ProjectContent.MERI_PLAN)
         boolean canModifyMeriPlan = config.requireMeritAdminToReturnMeriPlan ?  userService.userIsAlaOrFcAdmin() : user?.isCaseManager
+        int outcomeStartIndex = (config.nonAgricultureoOutcomeStartIndex) ?: AGRICULTURE_OUTCOME_START_INDEX;
         def risksAndThreatsVisible = config.includesContent(ProgramConfig.ProjectContent.RISKS_AND_THREATS) && user?.hasViewAccess
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)
         def meriPlanEnabled = user?.hasViewAccess || ((project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding'))
@@ -183,7 +185,8 @@ class ProjectController {
         def showAnnouncementsTab = (user?.isAdmin || user?.isCaseManager) && projectService.isMeriPlanSubmittedOrApproved(project)
         List<Map> scores = metadataService.getOutputTargetScores()
 
-        def imagesModel = publicImages.collect {
+        List blogIds = blog.collect{it?.imageId}
+        def imagesModel = publicImages.findAll { it?.documentId !in blogIds }.collect{
             [name: it.name, projectName: project.name, url: it.url, thumbnailUrl: it.thumbnailUrl]
         }
         boolean canChangeProjectDates = userService.userIsAlaOrFcAdmin()
@@ -205,7 +208,7 @@ class ProjectController {
                      site           : [label: 'Sites', visible: config.includesContent(ProgramConfig.ProjectContent.SITES), disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
                      dashboard      : [label: 'Dashboard', visible: config.includesContent(ProgramConfig.ProjectContent.DASHBOARD), disabled: !user?.hasViewAccess, type: 'tab'],
                      datasets       : [label: 'Data set summary', visible: datasetsVisible, template: '/project/dataset/dataSets', downloadableProtocols: downloadableProtocols, type:'tab'],
-                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage', canRegenerateReports: canRegenerateReports, hasSubmittedOrApprovedFinalReportInCategory: hasSubmittedOrApprovedFinalReportInCategory, canModifyMeriPlan: canModifyMeriPlan, showRequestLabels:config.supportsParatoo]]
+                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage', canRegenerateReports: canRegenerateReports, hasSubmittedOrApprovedFinalReportInCategory: hasSubmittedOrApprovedFinalReportInCategory, canModifyMeriPlan: canModifyMeriPlan, showRequestLabels:config.supportsParatoo, outcomeStartIndex:outcomeStartIndex]]
 
         if (template == MERI_ONLY_TEMPLATE) {
             model = [details:model.details]
@@ -223,7 +226,7 @@ class ProjectController {
             model.details.meriPlanTemplate = config.meriPlanTemplate ? config.meriPlanTemplate+"View" : RLP_MERI_PLAN_TEMPLATE+'View'
 
             boolean serviceDeliveryVisible = model.dashboard.visible && userHasViewAccess
-            model.serviceDelivery = [label: 'Dashboard', visible: serviceDeliveryVisible, type: 'tab', template: 'rlpServiceDashboard']
+            model.serviceDelivery = [label: 'Dashboard', visible: serviceDeliveryVisible, type: 'tab', template: 'rlpServiceDashboard', includeInvoiced:config.supportsOutcomeTargets()]
             if (model.serviceDelivery.visible) {
                 // This can be a slow call so don't make it if the data won't be displayed
                 model.serviceDelivery.servicesDashboard = projectService.getServiceDashboardData(project.projectId, false)
@@ -249,11 +252,11 @@ class ProjectController {
             Map rlpModel = [overview:model.overview, serviceDelivery: model.serviceDelivery, documents:model.documents, details:model.details, site:model.site, reporting:reportingTab, datasets: model.datasets]
             rlpModel.admin = model.admin
             rlpModel.admin.meriPlanTemplate =  config.meriPlanTemplate ?: RLP_MERI_PLAN_TEMPLATE
+            rlpModel.admin.meriPlanTemplate =  config.meriPlanTemplate ?: RLP_MERI_PLAN_TEMPLATE
             rlpModel.admin.projectServices = config.services
             rlpModel.admin.showMERIActivityWarning = false
             rlpModel.admin.allowMeriPlanUpload = false
             rlpModel.admin.showSpecies = false
-            rlpModel.admin.hidePrograms = true
             rlpModel.admin.showAnnouncementsTab = false
             rlpModel.admin.risksAndThreatsVisible = risksAndThreatsVisible
             rlpModel.admin.showMeriPlanComparison = showMeriPlanComparison
@@ -574,6 +577,17 @@ class ProjectController {
         def reportDetails = request.JSON
 
         def result = projectService.cancelReport(id, reportDetails)
+
+        render result as JSON
+
+    }
+
+    @PreAuthorise(accessLevel = 'siteAdmin')
+    def ajaxUnCancelReport(String id) {
+
+        def reportDetails = request.JSON
+
+        def result = projectService.unCancelReport(id, reportDetails)
 
         render result as JSON
 
@@ -1194,13 +1208,13 @@ class ProjectController {
             Map scoreResult = financialYearData.find{it.scoreId == scoreId}
             def data = scoreResult?.result
 
-            if (data?.result) {
+            if (data?.result != null) {
                 data = data.result
                 if (data instanceof List) {
                     data = data.flatten() // Collate a List of tables from each report into a flat List for display
                 }
             }
-            else if (data?.groups) {
+            else if (data?.groups != null) {
                 data = data.groups
                 data.each { Map group ->
                     group.result = group.results?[0]?.result

@@ -881,4 +881,63 @@ describe("Loading the MERI plan is handled correctly", function () {
         expect(readOnlyMeriPlan.meriPlanStatus().text).toEqual("This project is completed")
     });
 
+    it("should clear fields that are hidden by the MERI plan template before saving", function() {
+        let project = {
+            plannedStartDate:'2018-07-01T00:00:00Z',
+            plannedEndDate:'2023-06-30T00:00:00Z',
+            custom:{details:meriPlanData},
+            outputTargets: outputTargets
+        };
+
+        let projectService = new ProjectService(project, {})
+        let viewModel = new MERIPlan(project, projectService, _.extend({targetMeasureUpdateLimit:0, useServiceOutcomesModel:true}, config));
+        let meriPlan = viewModel.meriPlan();
+
+        meriPlan.indigenousInvolved("Yes");
+        meriPlan.indigenousInvolvementType("Leading");
+        meriPlan.indigenousInvolvementComment("Comment");
+
+        let json = meriPlan.modelAsJSON();
+        let js = JSON.parse(json).custom.details;
+
+        expect(js.indigenousInvolved).toEqual("Yes");
+        expect(js.indigenousInvolvementType).toEqual("Leading");
+        expect(js.indigenousInvolvementComment).toBeNull();
+        expect(js.supportsPriorityPlace).toBeFalsy()
+        expect(js.supportedPriorityPlaces).toBeFalsy();
+
+
+        meriPlan.indigenousInvolved("No");
+        js = JSON.parse(meriPlan.modelAsJSON()).custom.details;
+        expect(js.indigenousInvolvementType).toBeNull();
+        expect(js.indigenousInvolvementComment).toEqual("Comment");
+
+        meriPlan.indigenousInvolved(null);
+        js = JSON.parse(meriPlan.modelAsJSON()).custom.details;
+        expect(js.indigenousInvolvementType).toBeNull();
+        expect(js.indigenousInvolvementComment).toBeNull();
+
+        meriPlan.supportsPriorityPlace("Yes");
+        meriPlan.supportedPriorityPlaces(["Place 1", "Place 2"]);
+        js = JSON.parse(meriPlan.modelAsJSON()).custom.details;
+        expect(js.supportsPriorityPlace).toEqual("Yes")
+        expect(js.supportedPriorityPlaces).toEqual(["Place 1", "Place 2"]);
+
+        meriPlan.supportsPriorityPlace("No");
+        js = JSON.parse(meriPlan.modelAsJSON()).custom.details;
+        expect(js.supportsPriorityPlace).toEqual("No")
+        expect(js.supportedPriorityPlaces).toBeNull();
+
+        meriPlan.supportsPriorityPlace("Yes");
+        js = JSON.parse(meriPlan.modelAsJSON()).custom.details;
+        expect(js.supportsPriorityPlace).toEqual("Yes")
+        expect(js.supportedPriorityPlaces).toEqual(["Place 1", "Place 2"]);
+
+        meriPlan.supportsPriorityPlace(undefined);
+        js = JSON.parse(meriPlan.modelAsJSON()).custom.details;
+        expect(js.supportsPriorityPlace).toBeFalsy();
+        expect(js.supportedPriorityPlaces).toBeNull();
+
+    });
+
 });

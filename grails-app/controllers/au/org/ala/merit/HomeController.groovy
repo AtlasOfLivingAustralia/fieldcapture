@@ -4,7 +4,6 @@ import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import grails.core.GrailsApplication
 import org.apache.commons.lang.StringUtils
-import org.joda.time.DateTime
 
 import javax.servlet.http.Cookie
 import java.text.SimpleDateFormat
@@ -21,6 +20,7 @@ class HomeController {
     def statisticsFactory
     def blogService
     def commonService
+    ActivityService activityService
     GrailsApplication grailsApplication
 
     /** Cookie issued by the ALA authentication system that indicates an SSO session may be available*/
@@ -134,6 +134,11 @@ class HomeController {
         if (activityTypesFacet) {
             filteredActivityTypes = []
             List selectableActivityTypes = activityTypesFacet?.terms?.collect{it.term}
+            List emsaFormNames = activityService.monitoringProtocolForms()?.collect{it.name}
+            if (emsaFormNames) {
+                selectableActivityTypes.removeAll(emsaFormNames)
+            }
+
             allActivityTypes.each {
                 List matchingTypes = it.list?.findAll{it.name in selectableActivityTypes}
                 if (matchingTypes) {
@@ -243,9 +248,16 @@ class HomeController {
         renderStaticPage(SettingPageType.CONTACTS, false)
     }
 
+    /**
+     * Returns a small amount of javascript to let other tabs know the user has been logged back in
+     * and closes the tab.
+     */
     def close() {
         response.setContentType("text/html")
-        render """<html><head><script type="text/javascript">window.close();</script></head><body/></html>"""
+        render """<html><head><script type="text/javascript">
+                            localStorage.setItem('login', new Date()); 
+                            window.close();
+                            </script></head><body/></html>"""
     }
 
     def staticPage(String id) {

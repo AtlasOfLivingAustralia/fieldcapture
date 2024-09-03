@@ -215,6 +215,14 @@ function MERIPlan(project, projectService, config) {
         window.open(url,'meri-plan-report');
     };
 
+    /** If a project is active (as opposed to completed or terminated) it means the MERI plan has been
+     * approved at least once.  If the plan is currently approved there is no point comparing to itself.
+     * @returns {*|boolean}
+     */
+    self.canCompareWithLatestApprovedPlan = function() {
+        return projectService.isActive() && !projectService.isApproved();
+    }
+
     self.meriPlanChanges = function() {
         var url = config.meriPlanChangesUrl;
         window.open(url,'meri-planchanges-report');
@@ -838,9 +846,9 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
     }
 
     self.detailsLastUpdated = ko.observable(project.custom.details.lastUpdated).extend({simpleDate: true});
-
+    self.outcomeStartIndex = config.outcomeStartIndex;
     self.isAgricultureProject = ko.computed(function () {
-        var agricultureOutcomeStartIndex = 4;
+        var agricultureOutcomeStartIndex = self.outcomeStartIndex;
         var selectedPrimaryOutcome = self.meriPlan().outcomes.primaryOutcome.description();
         var selectedOutcomeIndex = _.findIndex(project.outcomes, function (outcome) {
             return outcome.outcome == selectedPrimaryOutcome;
@@ -1005,6 +1013,22 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
         return new AssetViewModel(asset);
     }));
 
+    function clearHiddenFields(jsData) {
+        // Several questions have "Yes"/"No" answers
+        var YES = 'Yes';
+        var NO = 'No';
+        // Some fields are only relevant if certain answers are selected for other fields and are otherwise hidden.
+        // We clear any data for hidden fields here so they aren't saved in the database (and come out in downloads)
+        if (jsData.custom.details.indigenousInvolved != YES) {
+            jsData.custom.details.indigenousInvolvementType = null;
+        }
+        if (jsData.custom.details.indigenousInvolved != NO) {
+            jsData.custom.details.indigenousInvolvementComment = null;
+        }
+        if (jsData.custom.details.supportsPriorityPlace != YES) {
+            jsData.custom.details.supportedPriorityPlaces = null;
+        }
+    };
     self.modelAsJSON = function () {
         var tmp = {};
         tmp.details = ko.mapping.toJS(self);
@@ -1018,6 +1042,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
         }
 
         var jsData = {"custom": tmp};
+        clearHiddenFields(jsData);
 
         // For compatibility with other projects, move the targets to the top level of the data structure, if they
         // are in the MERI plan.

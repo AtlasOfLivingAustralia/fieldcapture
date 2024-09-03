@@ -161,6 +161,9 @@ if(!app.http.header.userId){
 if (!app.enableALAHarvestSetting) {
     app.enableALAHarvestSetting = false
 }
+if(!app.domain.whiteList) {
+    app.domain.whiteList = "ala.org.au,localhost"
+}
 
 ecodata.baseUrl = "https://ecodata-test.ala.org.au/ws/"
 // This is for biocollect/ecodata-client-plugin compatibility
@@ -242,10 +245,10 @@ security {
         discoveryUri = "${auth.baseUrl}/cas/oidc/.well-known"
         clientId = "changeMe"
         secret = "changeMe"
-        scope = "openid,profile,email,roles,user_defined,ala"
+        scope = "openid profile email roles user_defined ala"
     }
     jwt {
-        enabled = false
+        enabled = true
         discoveryUrl = "${auth.baseUrl}/cas/oidc/.well-known"
         requiredClaims = ["sub", "iat", "exp", "jti", "client_id"]
     }
@@ -256,8 +259,8 @@ bdr.clientSecret="changeMe"
 bdr.discoveryUri="https://changeMe.org.au/.well-known"
 bdr.jwtScopes="read"
 
-webservice.jwt = false
-webservice['jwt-scopes'] = "ala/internal users/read ala/attrs users/read ecodata/write_test ecodata/read_test"
+webservice.jwt = true
+webservice['jwt-scopes'] = "ala/internal users/read ala/attrs ecodata/read_test ecodata/write_test"
 webservice['client-id']='changeMe'
 webservice['client-secret'] = 'changeMe'
 
@@ -265,6 +268,15 @@ pdfbox.fontcache="/data/${appName}/cache/"
 
 // Markdown configuration to match behaviour of the JavaScript editor.
 markdown.hardwraps = true
+
+sites.known_shapes = [
+        [id:'cl11160', name:'NRM (2023)'],
+        [id:'cl1048', name:'IBRA 7 Regions'],
+        [id:'cl1049', name:'IBRA 7 Subregions'],
+        [id:'cl22',name:'Australian states'],
+        [id:'cl959', name:'Local Gov. Areas'],
+        [id:'cl11194', name:'Australian Marine Parks (2024)']
+]
 
 environments {
     development {
@@ -278,7 +290,7 @@ environments {
         security.cas.contextPath =
         ecodata.baseUrl = 'http://localhost:8080/ws/'
         upload.images.url = grails.serverURL+'/image/'
-        upload.images.path = "~/data/${appName}/images/"
+        upload.images.path = "${System.getProperty('user.home')}/data/${appName}/images/"
         emailFilter = /[A-z0-9._%-]+@csiro\.au|chris\.godwin\.ala@gmail.com|[A-z0-9._%-]+@dcceew\.gov\.au/
         logging.dir = '.'
         ecodata.service.url = 'http://localhost:8080/ws'
@@ -295,6 +307,13 @@ environments {
         wiremock.port = 8018
         security.oidc.discoveryUri = "http://localhost:${wiremock.port}/cas/oidc/.well-known"
         security.oidc.allowUnsignedIdTokens = true
+        security.oidc.clientId="oidcId"
+        security.oidc.secret="oidcSecret"
+        webservice['client-id']="jwtId"
+        webservice['client-secret'] = "jwtSecret"
+        tokenURI = "http://localhost:${wiremock.port}/cas/oidc/oidcAccessToken"
+        jwkURI = "http://localhost:${wiremock.port}/cas/oidc/jwks"
+        issuerURI = "http://localhost:${wiremock.port}/cas/oidc"
         def casBaseUrl = "http://localhost:${wiremock.port}"
         ehcache.directory = './ehcache'
         security.cas.appServerName=serverName

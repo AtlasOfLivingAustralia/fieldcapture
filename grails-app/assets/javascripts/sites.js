@@ -1,5 +1,5 @@
 
-var SiteViewModel = function (site, feature) {
+var SiteViewModel = function (site, feature, options) {
     var self = $.extend(this, new Documents());
 
     self.siteId = site.siteId;
@@ -89,7 +89,7 @@ var SiteViewModel = function (site, feature) {
             var extent = site.extent;
             switch (extent.source) {
                 case 'point':   self.extent(new PointLocation(extent.geometry)); break;
-                case 'pid':     self.extent(new PidLocation(extent.geometry)); break;
+                case 'pid':     self.extent(new PidLocation(extent.geometry, options)); break;
                 case 'upload':
                 case 'drawn':   self.extent(new DrawnLocation(extent.geometry)); break;
             }
@@ -110,9 +110,9 @@ var SiteViewModel = function (site, feature) {
                 break;
             case 'pid':
                 if(site && site.extent) {
-                    self.extent(new PidLocation(site.extent.geometry));
+                    self.extent(new PidLocation(site.extent.geometry, options));
                 } else {
-                    self.extent(new PidLocation({}));
+                    self.extent(new PidLocation({}, options));
                 }
                 break;
             case 'upload':
@@ -355,11 +355,11 @@ var DrawnLocation = function (l) {
     };
 };
 
-var PidLocation = function (l) {
+var PidLocation = function (l, options) {
 
     // These layers are treated specially.
     var USER_UPLOAD_FID = 'c11083';
-    var OLD_NRM_LAYER_FIDS = ['cl916', 'cl2111'];
+    var OLD_NRM_LAYER_FIDS = ['cl916', 'cl2111', 'cl2120'];
 
 
     var self = this;
@@ -386,6 +386,9 @@ var PidLocation = function (l) {
                     url: fcConfig.featuresService + '?layerId=' +self.chosenLayer(),
                     dataType:'json'
                 }).done(function(data) {
+                    data = _.sortBy(data, function(item) {
+                        return item && item.name;
+                    });
                     self.layerObjects(data);
                     // During initialisation of the object list, any existing value for the chosen layer will have
                     // been set to undefined because it can't match a value in the list.
@@ -402,22 +405,17 @@ var PidLocation = function (l) {
             }
         }
     };
-    //TODO load this from config
-    self.layers = ko.observable([
-        {id:'cl2120', name:'NRM'},
-        {id:'cl1048', name:'IBRA 7 Regions'},
-        {id:'cl1049', name:'IBRA 7 Subregions'},
-        {id:'cl22',name:'Australian states'},
-        {id:'cl959', name:'Local Gov. Areas'}
-    ]);
+    self.layers = ko.observableArray(options.knownShapeConfig);
+
     // These layers aren't selectable unless the site is already using them.  This is to support user uploaded
     // shapes and the previous version of the NRM layer.
     if (l.fid == USER_UPLOAD_FID) {
         self.layers().push({id:USER_UPLOAD_FID, name:'User Uploaded'});
     }
-    else if ($.inArray(l.fid,OLD_NRM_LAYER_FIDS)) {
-        self.layers().push({id: l.fid, name:'NRM Regions - pre 2015'});
+    else if (_.contains(OLD_NRM_LAYER_FIDS, l.fid)) {
+        self.layers().push({id: l.fid, name:'NRM Regions - pre 2023'});
     }
+
     self.chosenLayer = ko.observable(exists(l,'fid'));
     self.layerObjects = ko.observable([]);
     self.layerObject = ko.observable(exists(l,'pid'));
@@ -474,9 +472,9 @@ var PidLocation = function (l) {
     }
 };
 
-function SiteViewModelWithMapIntegration (siteData, projectId) {
+function SiteViewModelWithMapIntegration (siteData, projectId, options) {
     var self = this;
-    SiteViewModel.apply(self, [siteData]);
+    SiteViewModel.apply(self, [siteData], options);
 
     self.renderPOIs = function(){
         removeMarkers();
@@ -556,9 +554,9 @@ function SiteViewModelWithMapIntegration (siteData, projectId) {
                 break;
             case 'pid':
                 if(siteData && siteData.extent && siteData.extent.source == source) {
-                    self.extent(new PidLocation(siteData.extent.geometry));
+                    self.extent(new PidLocation(siteData.extent.geometry, options));
                 } else {
-                    self.extent(new PidLocation({}));
+                    self.extent(new PidLocation({}, options));
                 }
                 break;
             case 'upload': self.extent(new UploadLocation({})); break;
@@ -996,13 +994,14 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
         }
         site.filterType = 'P';
         site.filterTypeLabel = 'Planning site';
-        if (site.type === 'compound') {
-            site.filterType = 'R';
-            site.filterTypeLabel = 'Reporting site';
-        }
-        else if (site.externalIds && site.externalIds[0] && site.externalIds[0].idType == 'MONITOR_PLOT_GUID') {
+
+        if (site.externalIds && site.externalIds[0] && site.externalIds[0].idType && site.externalIds[0].idType.indexOf('MONITOR') >= 0) {
             site.filterType = 'E';
             site.filterTypeLabel = 'Site created via EMSA protocol using the Monitor App';
+        }
+        else if (site.type === 'compound') {
+            site.filterType = 'R';
+            site.filterTypeLabel = 'Reporting site';
         }
 
         site.readOnly = site.type == 'compound' || PublicationStatus.isReadOnly(site.publicationStatus);

@@ -11,7 +11,7 @@ function audit(entity, entityId, type, userId, projectId, eventType) {
     if (entity.projectId || projectId) {
         auditMessage.projectId = (entity.projectId || projectId);
     }
-    db.auditMessage.insert(auditMessage);
+    db.auditMessage.insertOne(auditMessage);
 }
 
 /** Updates the name and dates for a supplied report */

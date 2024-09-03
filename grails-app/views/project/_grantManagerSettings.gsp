@@ -13,7 +13,7 @@
 				        <fc:iconHelp title="End date">Date the project is intended to finish.</fc:iconHelp>
 				        </label>
 				        <div class="input-group input-append">
-				            <fc:datePicker targetField="plannedEndDate.date" bs4="true" name="endDate" data-validation-engine="validate[future[now],required]" printable="${printView}" size="form-control form-control-sm dateControl input-small"/>
+				            <fc:datePicker targetField="plannedEndDate.date" bs4="true" name="endDate" data-validation-engine="validate[future[now],required]" printable="${printView}" size="form-control form-control-sm dateControl input-small" autocomplete="off"/>
 				        </div>
 				    </div>
 				    

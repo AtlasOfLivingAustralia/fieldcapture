@@ -72,6 +72,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
 
         // Configure the client
         configureFor("localhost", testConfig.wiremock.port)
+        setupTokenForSystem()
     }
 
     private void startWireMock() {
@@ -119,6 +120,9 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
 
             try {
                 if (ok.displayed) {
+                    interact {
+                        moveToElement(ok)
+                    }
                     ok.click()
                 }
             }
@@ -149,11 +153,14 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
             }
         }
         catch (StaleElementReferenceException e) { // Do nothing, backdrop was already detached
+            e.printStackTrace()
         }
         catch (NullPointerException e) {
+            e.printStackTrace()
             // Do nothing, backdrop was already detached and destroyed before we selected it
         }
         catch (WebDriverException e) {
+            e.printStackTrace()
             // We are now seeing WebDriverException instead of StateElementReferenceException in some cases
         }
     }
@@ -205,16 +212,19 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
         setupOidcAuthForUser(userDetails)
         browser.go "${browser.getConfig().baseUrl}login"
     }
-
-    /**
-     * Sets up stubs with wiremock to authenticate a user via OIDC.  Also returns an idToken which can be used
-     * if an interactive login is not required.
-     * @param userDetails the details of the user to setup
-     * @return an idToken for the user.
-     */
+/**
+ * Sets up stubs with wiremock to authenticate a user via OIDC.  Also returns an idToken which can be used
+ * if an interactive login is not required.
+ * @param userDetails the details of the user to setup
+ * @return an idToken for the user.
+ */
     String setupOidcAuthForUser(Map userDetails) {
+        Map testConfig = getTestConfig()
         // The test config isn't a normal grails config object (probably need to to into why) so getProperty doesn't work.
-        String clientId = getTestConfig().security.oidc.clientId
+        String clientId = testConfig.security.oidc.clientId
+        String clientSecret = testConfig.security.oidc.secret
+        String base64EncodedAuth = "Basic " + "${clientId}:${clientSecret}".bytes.encodeBase64().toString()
+
         List roles = ["ROLE_USER"]
         if (userDetails.role) {
             roles << userDetails.role
@@ -233,6 +243,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
                 client_id         : clientId,
                 sid               : "test_sid",
                 aud               : clientId,
+                audience          : clientId,
                 userid            : userDetails.userId,
                 name              : userDetails.firstName + " " + userDetails.lastName,
                 state             : "maybe_this_matters",
@@ -242,7 +253,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
                 iat               : DateUtils.toSecondsSinceEpoch(new Date()),
                 jti               : "id",
                 email             : userDetails.email,
-                scope             : "openid profile ala roles email"
+                scope             : testConfig.security.oidc.scope
         ]
         String idToken = new JwtGenerator(new RSASignatureConfiguration(pair)).generate(idTokenClaims)
         Map token = [:]
@@ -251,9 +262,10 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
         token.refresh_token = null
         token.token_type = "bearer"
         token.expires_in = 86400
-        token.scope = "openid profile ala roles email"
+        token.scope = testConfig.security.oidc.scope
 
         stubFor(post(urlPathEqualTo("/cas/oidc/oidcAccessToken"))
+                .withHeader("Authorization", equalTo(base64EncodedAuth))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
@@ -274,6 +286,53 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
                         .withHeader("Content-Type", "application/json")
                         .withBody((profile as JSON).toString())
                 ))
+        idToken
+    }
+
+    /**
+     * Sets up stubs with wiremock to authenticate the system. Used to authenticate calls from feildcapture to ecodata.
+     * @return an idToken for the system.
+     */
+    String setupTokenForSystem() {
+        // The test config isn't a normal grails config object (probably need to to into why) so getProperty doesn't work.
+        Map testConfig = getTestConfig()
+        String clientId = testConfig.webservice["client-id"]
+        String clientSecret = testConfig.webservice["client-secret"]
+        String base64EncodedAuth = "Basic " + "${clientId}:${clientSecret}".bytes.encodeBase64().toString()
+
+        Map idTokenClaims = [
+                at_hash           : "KX-L2Fj6Z9ow-gOpYfehRA",
+                sub               : clientId,
+                amr               : "DelegatedClientAuthenticationHandler",
+                iss               : "http://localhost:8018/cas/oidc",
+                client_id         : clientId,
+                aud               : clientId,
+                audience          : clientId,
+                state             : "maybe_this_matters",
+                auth_time         : -1,
+                nbf               : DateUtils.toSecondsSinceEpoch(new Date().minus(365)),
+                exp               : DateUtils.toSecondsSinceEpoch(new Date().plus(365)),
+                iat               : DateUtils.toSecondsSinceEpoch(new Date()),
+                jti               : "id-system",
+                scope             : testConfig.webservice["jwt-scopes"]
+        ]
+        String idToken = new JwtGenerator(new RSASignatureConfiguration(pair)).generate(idTokenClaims)
+        Map token = [:]
+        token.access_token = idToken
+        token.id_token = idToken
+        token.refresh_token = null
+        token.token_type = "bearer"
+        token.expires_in = 86400
+        token.scope = testConfig.webservice["jwt-scopes"]
+
+        stubFor(post(urlPathEqualTo("/cas/oidc/oidcAccessToken"))
+                .withHeader("Authorization", equalTo(base64EncodedAuth))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody((token as JSON).toString())
+                        .withTransformers("response-template")))
+
         idToken
     }
 

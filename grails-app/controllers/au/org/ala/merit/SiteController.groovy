@@ -11,7 +11,7 @@ import static grails.async.Promises.task
 class SiteController {
 
     def siteService, projectService, activityService, metadataService, userService, searchService, importService, webService, projectConfigurationService
-
+    SettingService settingService
     static defaultAction = "index"
 
     static ignore = ['action','controller','id']
@@ -22,10 +22,6 @@ class SiteController {
         render results as JSON
     }
 
-    def create(){
-        render view: 'edit', model: [create:true, documents:[]]
-    }
-
     def createForProject(){
         def project = projectService.get(params.projectId, 'all')
         // permissions check
@@ -33,8 +29,8 @@ class SiteController {
             flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${params.projectId}"
             redirect(controller:'project', action:'index', id: params.projectId)
         }
-
-        render view: 'edit', model: [create:true, project:project, documents:[], siteTypes:siteTypes(null, project)]
+        Map model = [create:true, project:project, documents:[]] + editSiteModelData(null, project)
+        render view: 'edit', model: model
     }
 
     def index(String id) {
@@ -131,8 +127,21 @@ class SiteController {
         if (site.projects && site.projects.size() == 1) {
             project = projectService.get(site.projects[0], 'all')
         }
-        result.siteTypes = siteTypes(site, project)
+        result += editSiteModelData(site, project)
         result
+    }
+
+    private Map editSiteModelData(Map site, Map project) {
+
+        def knownShapeConfig = settingService.getJson(SettingPageType.LAYERS_FOR_KNOWN_SHAPES)
+        if (!knownShapeConfig) {
+            knownShapeConfig = grailsApplication.config.getProperty('sites.known_shapes', List.class)
+        }
+
+        [
+            siteTypes : siteTypes(site, project),
+            knownShapeConfig : knownShapeConfig
+        ]
     }
 
     /**

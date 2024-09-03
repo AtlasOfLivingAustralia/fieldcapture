@@ -71,13 +71,28 @@
     <!-- /ko -->
 
     <div class="form-group row">
-        <label class="col-sm-5 col-form-label required">8. Is this (a) a baseline dataset associated with a project outcome i.e. against which, change will be measured, (b) a project progress dataset that is tracking change against an established project baseline dataset or (c) a standalone, foundational dataset to inform future management interventions?</label>
+        <label class="col-sm-5 col-form-label required">8a. Is this (a) a baseline dataset associated with a project outcome i.e. against which, change will be measured, (b) a project progress dataset that is tracking change against an established project baseline dataset or (c) a standalone, foundational dataset to inform future management interventions?</label>
         <div class="col-sm-7">
             <span data-bind="text:type"></span>
+            <!-- ko if:type() == 'Other' -->
+            - <span data-bind="text:otherDataSetType"></span>
+            <!-- /ko -->
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-5 col-form-label required">9. What types of measurements or observations does the dataset include? <br/>To select more than one answer, hold down the ‘CTRL’ button whilst selecting an option from the drop-down list</label>
+        <label class="col-sm-5 col-form-label required">8b. Which project baseline does this data set relate to or describe?</label>
+        <div class="col-sm-7">
+            <span data-bind="text:baselines"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-5 col-form-label required">9a. What EMSA protocol was used when collecting the data?</label>
+        <div class="col-sm-7">
+            <span data-bind="text:protocolLabel"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-5 col-form-label required">9b. What types of measurements or observations does the dataset include?</label>
         <div class="col-sm-7">
             <span data-bind="text:measurementTypes"></span>
         </div>
@@ -89,7 +104,7 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-5 col-form-label required">10. Identify the method(s) used to collect the data. <br/>To select more than one answer, hold down the ‘CTRL’ button whilst selecting an option from the drop-down list</label>
+        <label class="col-sm-5 col-form-label required">10. Identify the method(s) used to collect the data.</label>
         <div class="col-sm-7">
             <span data-bind="text:methods"></span>
         </div>

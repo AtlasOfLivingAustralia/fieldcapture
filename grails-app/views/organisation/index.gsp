@@ -6,7 +6,7 @@
     <title>${organisation.name.encodeAsHTML()} | MERIT</title>
     <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}&libraries=visualization"></script>
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
-    <g:set var="loadPermissionsUrl" value="${createLink(controller: 'organisation', action: 'getMembersForOrganisation', id:organisation.organisationId)}"/>
+    <g:set var="loadPermissionsUrl" value="${createLink(controller: 'user', action: 'getMembersOfOrganisation', id:organisation.organisationId)}"/>
 
     <script>
         var fcConfig = {
@@ -39,6 +39,7 @@
             approveReportUrl: '${g.createLink( action:'ajaxApproveReport', id:"${organisation.organisationId}")}',
             rejectReportUrl: '${g.createLink( action:'ajaxRejectReport', id:"${organisation.organisationId}")}',
             cancelReportUrl: "${createLink(action:'ajaxCancelReport', id:organisation.organisationId)}/",
+            unCancelReportUrl: "${createLink(action:'ajaxUnCancelReport', id:organisation.organisationId)}/",
             reportsHistoryUrl:"${createLink(controller: 'report', action:'reportingHistory')}",
             returnTo: '${g.createLink(action:'index', id:"${organisation.organisationId}")}',
             dashboardCategoryUrl: "${g.createLink(controller: 'report', action: 'activityOutputs', params: [fq:'organisationFacet:'+organisation.name])}",

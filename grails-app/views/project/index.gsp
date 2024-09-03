@@ -63,6 +63,7 @@
                 approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport', id:project.projectId)}/",
                 rejectReportUrl: "${createLink(controller: 'project', action: 'ajaxRejectReport', id:project.projectId)}/",
                 cancelReportUrl: "${createLink(controller: 'project', action: 'ajaxCancelReport', id:project.projectId)}/",
+                unCancelReportUrl: "${createLink(controller: 'project', action: 'ajaxUnCancelReport', id:project.projectId)}/",
                 resetReportUrl: "${createLink(controller:'project', action:'resetReport', id:project.projectId)}",
                 adjustReportUrl: "${createLink(controller:'project', action:'adjustReport', id:project.projectId)}",
                 reportOwner: {projectId: '${project.projectId}', endDate: '${project.plannedEndDate}', startDate: '${project.plannedStartDate}'},
@@ -198,7 +199,7 @@
         <fc:tabContent tabs="${projectContent}"/>
     </div>
     <g:render template="/shared/timeoutMessage"
-              model="${[url:fc.loginUrl(loginReturnToUrl:createLink(action: 'index', id: project.projectId, absolute: true))]}"/>
+              model="${[url:fc.loginUrl(loginReturnToUrl:createLink(controller: 'home', action: 'close', absolute: true)), newWindow:true]}"/>
     <g:render template="/shared/unsavedChanges" model="${[id: 'meriPlanUnsavedChanges', unsavedData: 'MERI Plan']}"/>
     <g:render template="/shared/unsavedChanges" model="${[id: 'risksUnsavedChanges', unsavedData: 'Risks & Threats']}"/>
 
@@ -333,6 +334,7 @@ var config = {
     config.programActivities = <fc:modelAsJavascript model="${config.program?.config?.activities?.collect { it.name } ?: []}"/>
     config.excludeFinancialYearData = ${config.program?.config?.excludeFinancialYearData ?: false};
     config.canModifyMeriPlan = ${projectContent.admin.canModifyMeriPlan};
+    config.outcomeStartIndex = ${projectContent.admin.outcomeStartIndex};
     config.userHoldsMeriPlanLock = ${project.lock?.userId == user?.userId};
     config.viewReportUrl = fcConfig.viewReportUrl;
     config.bieUrl = fcConfig.bieUrl;
@@ -400,6 +402,8 @@ var config = {
             initialiser: function() {
                 $.event.trigger({type:'dashboardShown'});
             }
+        },
+        'serviceDelivery': {
         },
         'documents': {
             initialiser: function() {

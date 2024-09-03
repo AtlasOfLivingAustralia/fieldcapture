@@ -16,79 +16,122 @@
     {
       "collapsedByDefault": false,
       "template": {
-        "name": "NHT - Communications",
         "title": "Communications",
+        "modelName": "NHT - Communications",
         "dataModel": [
           {
-            "name": "nhtCommunications",
-            "dataType": "text",
-            "description": "This <u>does not</u> include communication activities undertaken under the 'Communication Materials' Project Service or regional capacity service. Refer to the Project Services  and Overheads (PS&O) service summary to clarify what type of communications activity is paid under the PS&O service. All Communication Materials must correctly acknowledge Australian Government funding.",
-            "validate": "required",
-            "constraints": [
-              "Yes",
-              "No"
-            ]
-          },
-          {
-            "name": "yesCommunicationsMaterial",
-            "dataType": "text",
-            "validate": "required,maxSize[300]",
-            "description": "Upload documents by clicking onto the 'Attach Document' button or provide a link in the free text field.",
-            "behaviour": [
+            "dataType": "list",
+            "name": "communicationDetails",
+            "columns": [
               {
-                "condition": "nhtCommunications == \"Yes\"",
-                "type": "enable"
+                "dataType": "stringList",
+                "name": "communicationMaterialType",
+                "constraints": [
+                  "Advertising",
+                  "Extension materials",
+                  "Flyers and brochures",
+                  "Media release",
+                  "Newsletters",
+                  "Newspaper articles",
+                  "Publishing reports",
+                  "Social media",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "communicationTitle",
+                "validate": "required,maxSize[100]"
+              },
+              {
+                "dataType": "text",
+                "name": "communicationPurpose",
+                "validate": "required,maxSize[4000]"
+              },
+              {
+                "dataType": "date",
+                "name": "publishedDate",
+                "validate": "required,past[now]"
+              },
+              {
+                "dataType": "text",
+                "name": "link"
               }
             ]
           },
           {
-            "dataType": "document",
-            "name": "attachments",
-            "description": "Please attach any Evidence of Service Delivery here."
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[1500]"
+          },
+          {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": ""
+          },
+          {
+            "name": "projectAssuranceDetails",
+            "dataType": "text",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "list",
+            "name": "assuranceDocuments",
+            "columns": [
+              {
+                "dataType": "document",
+                "name": "attachments",
+                "description": "Please attach any Evidence of Service Delivery here."
+              }
+            ]
           }
         ],
         "viewModel": [
           {
-            "type": "row",
             "items": [
               {
-                "css": "span6",
-                "type": "selectOne",
-                "source": "nhtCommunications",
-                "preLabel": "During this reporting period was any communication material developed and published?"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "textarea",
-                "source": "yesCommunicationsMaterial",
-                "preLabel": "If yes, please provide link or copy of the material."
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "nhtCommunications == \"Yes\""
-              }
-            ],
-            "items": [
-              {
-                "type": "col",
-                "items": [
+                "type": "table",
+                "source": "communicationDetails",
+                "title": "<b>Each activity must be reported in a separate row.</b>",
+                "preLabel": "If yes, please provide link or copy of the material.",
+                "userAddedRows": true,
+                "columns": [
                   {
-                    "title": "Attached documents",
-                    "source": "attachments",
-                    "type": "document"
+                    "source": "communicationMaterialType",
+                    "type": "selectOne",
+                    "width": "15%",
+                    "title": "Type of Communications Material"
+                  },
+                  {
+                    "source": "communicationTitle",
+                    "type": "text",
+                    "width": "25%",
+                    "title": "Title"
+                  },
+                  {
+                    "type": "textarea",
+                    "source": "communicationPurpose",
+                    "width": "35%",
+                    "title": "Purpose",
+                    "rows": 4
+                  },
+                  {
+                    "title": "Date published",
+                    "source": "publishedDate",
+                    "type": "date",
+                    "width": "15%"
+                  },
+                  {
+                    "source": "link",
+                    "type": "text",
+                    "width": "20%",
+                    "title": "URL/link"
                   }
                 ]
               }
-            ]
+            ],
+            "type": "section"
           }
         ]
       },
@@ -305,27 +348,34 @@
             ]
           },
           {
-            "name": "planName",
-            "dataType": "text",
-            "validate": "required,maxSize[100]",
-            "behaviour": [
+            "dataType": "list",
+            "name": "planDetails",
+            "columns": [
               {
-                "condition": "plansDeveloped == \"Yes\"",
-                "type": "enable"
+                "dataType": "text",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "plansDeveloped == \"Yes\""
+                  }
+                ],
+                "name": "planName",
+                "validate": "required,maxSize[100]"
+              },
+              {
+                "dataType": "text",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "plansDeveloped == \"Yes\""
+                  }
+                ],
+                "name": "planPurpose",
+                "validate": "required,maxSize[300]"
               }
             ]
           },
-          {
-            "name": "planPurpose",
-            "dataType": "text",
-            "validate": "required,maxSize[300]",
-            "behaviour": [
-              {
-                "condition": "plansDeveloped == \"Yes\"",
-                "type": "enable"
-              }
-            ]
-          },
+
           {
             "name": "facilitatedPlanningMeetings",
             "dataType": "text",
@@ -469,21 +519,29 @@
             ]
           },
           {
-            "type": "row",
             "items": [
               {
-                "css": "span3",
-                "type": "text",
-                "source": "planName",
-                "preLabel": "Name of plan"
-              },
-              {
-                "css": "span6",
-                "type": "textarea",
-                "source": "planPurpose",
-                "preLabel": "Purpose of plan"
+                "type": "table",
+                "source": "planDetails",
+                "userAddedRows": true,
+                "columns": [
+                  {
+                    "source": "planName",
+                    "type": "text",
+                    "width": "35%",
+                    "title": "Name of plan"
+                  },
+                  {
+                    "source": "planPurpose",
+                    "type": "textarea",
+                    "width": "65%",
+                    "title": "Purpose of plan",
+                    "rows": 3
+                  }
+                ]
               }
-            ]
+            ],
+            "type": "section"
           },
           {
             "type": "row",
@@ -1153,26 +1211,9 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaseline",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "name": "datasetSupports",
-                    "dataType": "text",
-                    "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
-                    "validate": "required",
-                    "constraints": {
-                      "textProperty": "name",
-                      "valueProperty": "dataSetId",
-                      "type": "pre-populated",
-                      "config": {
-                        "source": {
-                          "context-path": "owner.custom.dataSets"
                         }
                       }
                     }
@@ -1805,7 +1846,6 @@
                       }
                     ],
                     "userAddedRows": true,
-                    "disableTableUpload": true,
                     "source": "speciesInBreedingProgram",
                     "type": "table"
                   }
@@ -2059,6 +2099,7 @@
                   "Booklets",
                   "Educational/Interpretive Signage",
                   "Fact Sheets/Brochures",
+                  "Podcasts",
                   "Videos"
                 ],
                 "validate": "required"
@@ -2364,7 +2405,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "communicationMaterials",
                 "type": "table"
               },
@@ -2707,7 +2747,7 @@
             "decimalPlaces": 0,
             "defaultValue": 1,
             "computed": {
-              "expression": "sum(events, \"numberOfEvents\")"
+              "expression": "sum(events, \"eventType ? 1 : 0\")"
             }
           },
           {
@@ -2984,13 +3024,7 @@
                     "type": "selectOne"
                   },
                   {
-                    "width": "10%",
-                    "source": "numberOfEvents",
-                    "title": "Number of engagement events",
-                    "type": "number"
-                  },
-                  {
-                    "width": "10%",
+                    "width": "20%",
                     "source": "eventPurpose",
                     "title": "Purpose of engagement",
                     "type": "textarea"
@@ -3027,8 +3061,8 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "events",
+                "title": "<b>Please report each Community/Stakeholder engagement event as a separate row</b>",
                 "type": "table"
               },
               {
@@ -4028,7 +4062,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "accessControlDetails",
                 "type": "table"
               }
@@ -5049,7 +5082,6 @@
                       }
                     ],
                     "userAddedRows": true,
-                    "disableTableUpload": true,
                     "source": "pestAnimalsControlled",
                     "type": "table"
                   }
@@ -6052,7 +6084,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "debrisRemovalDetails",
                 "type": "table"
               }
@@ -7174,7 +7205,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "erosionManagementDetails",
                 "type": "table"
               }
@@ -8141,7 +8171,6 @@
                       }
                     ],
                     "userAddedRows": true,
-                    "disableTableUpload": true,
                     "source": "speciesProtected",
                     "type": "table"
                   }
@@ -9068,7 +9097,6 @@
                       }
                     ],
                     "userAddedRows": true,
-                    "disableTableUpload": true,
                     "source": "agreementsTable",
                     "type": "table"
                   }
@@ -9317,7 +9345,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "farmManagementSurveys.farmManagementDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -9325,7 +9352,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 12 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 12 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -9439,7 +9466,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -9641,18 +9667,6 @@
             ]
           },
           {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
-          },
-          {
             "dataType": "number",
             "name": "totalSurveyBaseline",
             "validate": "min[0]",
@@ -9827,7 +9841,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -10340,7 +10354,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "faunaSurveys.faunaDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -10348,7 +10361,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 13 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 13 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -10453,7 +10466,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -10653,18 +10665,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -10950,7 +10950,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -11352,7 +11352,6 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": true,
                         "source": "faunaSurveySpeciesTable",
                         "type": "table"
                       }
@@ -12580,7 +12579,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "firstNationsDetails",
                 "type": "table"
               }
@@ -12720,7 +12718,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "floraSurveys.floraDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -12728,7 +12725,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 15 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 15 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -12842,7 +12839,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -13042,18 +13038,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -13339,7 +13323,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -13747,7 +13731,6 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": true,
                         "source": "floraSurveySpeciesTable",
                         "type": "table"
                       }
@@ -14762,7 +14745,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "habitatAugmentationDetails",
                 "type": "table"
               }
@@ -14902,7 +14884,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "habitatConditionSurveys.habitatConditionDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -14910,7 +14891,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 42 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 42 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -14950,7 +14931,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -15193,18 +15173,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -15490,7 +15458,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -15886,7 +15854,6 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": true,
                         "source": "habitatConditionSurveySpeciesTable",
                         "type": "table"
                       }
@@ -19576,7 +19543,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "source": "landManagementDetails",
                 "type": "table"
               }
@@ -20575,7 +20541,6 @@
                 ],
                 "userAddedRows": true,
                 "addRowText": "Add a new disease being managed in this area",
-                "disableTableUpload": true,
                 "source": "diseaseManagementDetails",
                 "type": "table"
               }
@@ -20721,7 +20686,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "pestAnimalSurveys.pestAnimalDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -20729,7 +20693,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 23 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 23 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -20781,11 +20745,11 @@
                               "target": "species"
                             },
                             {
-                              "source-path": "individualCount",
+                              "source-path": "individualsOrGroups",
                               "target": "individualsOrGroups"
                             },
                             {
-                              "source-path": "numberOfIndividualsOrGroups",
+                              "source-path": "individualCount",
                               "target": "numberOfIndividualsOrGroups"
                             }
                           ],
@@ -20834,7 +20798,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -21034,18 +20997,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -21331,7 +21282,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -21733,7 +21684,6 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": true,
                         "source": "pestAnimalSurveySpeciesTable",
                         "type": "table"
                       }
@@ -24104,7 +24054,6 @@
                     ],
                     "userAddedRows": true,
                     "addRowText": "Add a new weed species",
-                    "disableTableUpload": true,
                     "source": "weedSpeciesTreated",
                     "type": "table"
                   }
@@ -25091,7 +25040,6 @@
                 ],
                 "userAddedRows": true,
                 "addRowText": "Add a new plant species to this area",
-                "disableTableUpload": true,
                 "source": "revegetationDetails",
                 "type": "table"
               }
@@ -26218,7 +26166,6 @@
                 ],
                 "userAddedRows": true,
                 "addRowText": "Add a new propagation/storage/collecting activity",
-                "disableTableUpload": true,
                 "source": "seedCollectionDetails",
                 "type": "table"
               }
@@ -26353,7 +26300,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "plantSurvivalSurveys.plantSurvivalDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -26361,7 +26307,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 24 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and deepEquals(relatedOutcomes,dataSet.outcomesLabel) and 'Indicator' == baselineIndicatorMapping.lookupValue(dataSet.type)"
+                          "expression": "dataSet.serviceId == 24 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and deepEquals(relatedOutcomes,dataSet.outcomesLabel) and 'Indicator' == dataSet.type"
                         }
                       }
                     },
@@ -26433,7 +26379,7 @@
                               "target": "individualsOrGroups"
                             },
                             {
-                              "source-path": "numberOfIndividualsGroupsSurvived",
+                              "source-path": "individualCount",
                               "target": "numberOfIndividualsGroupsSurvived"
                             },
                             {
@@ -26513,7 +26459,7 @@
                     ],
                     "validate": "required",
                     "computed": {
-                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); baselineIndicatorMapping.lookupValue(x.type)"
+                      "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.type"
                     }
                   },
                   {
@@ -26528,7 +26474,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -26728,18 +26673,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -26996,7 +26929,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -27398,7 +27331,6 @@
                           }
                         ],
                         "userAddedRows": true,
-                        "disableTableUpload": true,
                         "source": "plantSurvivalSurveySpeciesTable",
                         "type": "table"
                       }
@@ -28347,7 +28279,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "addRowText": "Add a new activity at this site",
                 "source": "sitePreparationDetails",
                 "type": "table"
@@ -28494,7 +28425,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "skillsAndKnowledgeSurveys.skillsAndKnowledgeDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -28502,7 +28432,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 29 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 29 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -28542,7 +28472,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -28754,18 +28683,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -29057,7 +28974,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -29505,7 +29422,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "soilSurveys.soilDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -29513,7 +29429,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 30 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 30 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -29553,7 +29469,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -29776,18 +29691,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -30073,7 +29976,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -31223,8 +31126,7 @@
                 ],
                 "source": "sustainableAgricultureFacilitators",
                 "type": "table",
-                "userAddedRows": true,
-                "disableTableUpload": true
+                "userAddedRows": true
               }
             ]
           },
@@ -31437,10 +31339,9 @@
                     "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
                     "validate": "required",
                     "constraints": {
-                      "textProperty": "baseline",
+                      "textProperty": "code",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "baselineDetailsControlled.baselineDetails.projectBaseline",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -31458,7 +31359,7 @@
                   },
                   {
                     "name": "datasetSupports",
-                    "dataType": "text",
+                    "dataType": "stringList",
                     "description": "This section will require the Data Set Name so the Metadata fields in the Data Set Summary tab should be filled out before the Outcome Report is due. More than one dataset if relevant for this Project Baseline could be selected.",
                     "validate": "required",
                     "constraints": {
@@ -31804,7 +31705,6 @@
                 "type": "table",
                 "source": "baselineDetails",
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "columns": [
                   {
                     "source": "datasetName",
@@ -32886,7 +32786,6 @@
                   }
                 ],
                 "userAddedRows": true,
-                "disableTableUpload": true,
                 "addRowText": "Add a new species",
                 "source": "interventionSpecies",
                 "type": "table"
@@ -33042,7 +32941,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "waterQualitySurveys.waterQualityDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -33050,7 +32948,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 32 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 32 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -33090,7 +32988,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -33323,18 +33220,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -33620,7 +33505,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },
@@ -34198,7 +34083,6 @@
                     "constraints": {
                       "textProperty": "name",
                       "valueProperty": "dataSetId",
-                      "excludePath": "weedSurveys.weedDataSets.dataSetId",
                       "type": "pre-populated",
                       "config": {
                         "source": {
@@ -34206,7 +34090,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 33 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 33 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
@@ -34317,7 +34201,6 @@
                       "textProperty": "baseline",
                       "valueProperty": "code",
                       "type": "pre-populated",
-                      "excludePath": "projectBaselines",
                       "config": {
                         "source": {
                           "context-path": "owner.custom.details.baseline.rows"
@@ -34517,18 +34400,6 @@
                 "minSize": 1
               }
             ]
-          },
-          {
-            "dataType": "lookupTable",
-            "name": "baselineIndicatorMapping",
-            "config": {
-              "source": {
-                "literal": {
-                  "Baseline dataset associated with a project outcome": "Baseline",
-                  "Project progress dataset that is tracking change against an established project baseline dataset": "Indicator"
-                }
-              }
-            }
           },
           {
             "allowRowDelete": "false",
@@ -34814,7 +34685,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
+                    "source": "<h3>Survey information</h3><p><b>Before completing this section, please ensure you have created a Data Set Summary information for every data set produced by the surveys you intend to report</b></p><ul><li>Each survey reported must relate to a combination of outcomes as described in your MERI plan</li><li>Each Data Set Summary recorded for a survey must be addressing the same outcomes as selected for the survey</li><li>Each Data Set Summary recorded for a baseline survey must be a baseline data set.  Similarly, each Data Set Summary recorded for an indicator survey must be a indicator data set.</li><li>If a survey produced more than one data set, use the New Data Set button to add each Data Set Summary under your survey</li><li>A single survey can be made up of multiple dataset</li></ul>"
                   }
                 ]
               },

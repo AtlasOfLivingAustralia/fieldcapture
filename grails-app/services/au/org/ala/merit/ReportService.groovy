@@ -335,7 +335,7 @@ class ReportService {
         if (!resp.error) {
             ReportLifecycleListener listener = reportLifeCycleListener(report)
             listener.reportRejected(report, reportActivityIds, reportOwner)
-            activityService.rejectActivitiesForPublication(reportActivityIds)
+            activityService.rejectOrUncancelActivitiesForPublication(reportActivityIds)
             emailService.sendEmail(emailTemplate, [reportOwner:reportOwner, report:report, categories: reasonCategories, reason:reason], ownerUsersAndRoles, RoleService.GRANT_MANAGER_ROLE)
         }
         else {
@@ -353,6 +353,22 @@ class ReportService {
             ReportLifecycleListener listener = reportLifeCycleListener(report)
             listener.reportCancelled(report, reportActivityIds, reportOwner)
             activityService.cancelActivitiesForPublication(reportActivityIds)
+        }
+        else {
+            return [success:false, error:resp.error]
+        }
+        return [success:true]
+    }
+
+    Map unCancelReport(String reportId, List reportActivityIds, String reason, Map reportOwner, List ownerUsersAndRoles) {
+
+        Map resp = unCancel(reportId, "", reason)
+        Map report = get(reportId)
+
+        if (!resp.error) {
+            ReportLifecycleListener listener = reportLifeCycleListener(report)
+            listener.reportUnCancelled(report, reportActivityIds, reportOwner)
+            activityService.rejectOrUncancelActivitiesForPublication(reportActivityIds)
         }
         else {
             return [success:false, error:resp.error]
@@ -448,6 +464,10 @@ class ReportService {
 
     def cancel(String reportId, String category, String reason) {
         webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/cancel/${reportId}", [comment:reason, category:category])
+    }
+
+    def unCancel(String reportId, String category, String reason) {
+        webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/returnForRework/${reportId}", [comment:reason, category:category])
     }
 
     def create(report) {
@@ -1045,4 +1065,18 @@ class ReportService {
         }
         reportData
     }
+
+    Map dateHistogramOrgsForScores(String organisationId, List dateBuckets, String format, List scoreIds) {
+
+        Map dateGrouping = [type:'date', buckets:dateBuckets, format:format, property:'activity.plannedEndDate']
+
+        String url =  grailsApplication.config.getProperty('ecodata.baseUrl')+"organisation/organisationMetrics/"+organisationId
+
+        Map params = [aggregationConfig: dateGrouping, approvedOnly:false, scoreIds: scoreIds]
+
+        Map report = webService.doPost(url, params)
+
+        return report
+    }
+
 }

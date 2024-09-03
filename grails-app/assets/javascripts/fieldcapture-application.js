@@ -636,10 +636,11 @@ function Documents(options) {
         }
         return null;
     };
-    self.addLink = function(role, url) {
+    self.addLink = function(role, url, documentId) {
         self.links.push(new DocumentViewModel({
             role: role,
-            url: url
+            url: url,
+            documentId: documentId
         }));
     };
     self.fixLinkDocumentIds = function(existingLinks) {
@@ -932,20 +933,6 @@ function replaceContentSection(contentSelector, url) {
         newStats.hide().appendTo($parent).slideDown();
     });
 }
-
-$(function() {
-    $('#logout-btn').click(function() {
-        if (window.localStorage) {
-            window.localStorage.setItem('logout', new Date().getTime());
-        }
-    });
-    $('#logout-warning a').click(function(){ $('#logout-warning').hide(); });
-    window.addEventListener('storage', function(e) {
-        if (e.key == 'logout') {
-            $('#logout-warning').show();
-        }
-    });
-});
 
 function stageNumberFromStage(stage) {
     var stageRegexp = /.+ (\d+)/;

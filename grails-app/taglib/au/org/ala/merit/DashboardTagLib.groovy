@@ -116,14 +116,32 @@ class DashboardTagLib {
      * @param target the target value for the score
      */
     private void renderTarget(score, double target, attrs) {
+
+        if (attrs.includeInvoiced && score.invoicedScore) {
+            out << "<div class=\"border px-2 \">"
+            out << "<h4>${score.label}</h4>"
+            renderProgressBar(score, target, "Delivered", "Target overdelivered", "overdelivered", "info", attrs)
+            renderProgressBar(score.invoicedScore, target, "Invoiced", "Amount invoiced exceed MERI plan target", "danger", "success", attrs)
+
+        }
+        else {
+            out << "<div class=\"border px-2 pt-2\">"
+            renderProgressBar(score, target, score.label, "Target overdelivered", "overdelivered", "info", attrs)
+        }
+        out << "</div>"
+    }
+
+    private void renderProgressBar(score, double target, String label, String overDeliveredLabel, String overDeliveredClass, String progressClass, attrs) {
+
+        out << "<strong class='helpText'>${label}${helpText(score, attrs)}</strong>"
         def result = score.result?.result ?: 0
         def percentComplete = result / target * 100
 
-        String progressBarClass = (score.overDelivered) ? "bar progress-bar bg-overdelivered" : "bar progress-bar"
+        String progressBarClass = (score.overDelivered) ? "bar progress-bar bg-$overDeliveredClass" : "bar progress-bar bg-$progressClass"
 
-        out << "<strong class='helpText'>${score.label}${helpText(score, attrs)}</strong>"
+
         if (score.overDelivered) {
-            out << " <span class='badge badge-overdelivered'> Target overdelivered</span>"
+            out << " <span class='badge badge-$overDeliveredClass'> ${overDeliveredLabel}</span>"
         }
 
         percentComplete = Math.min(100, percentComplete)
