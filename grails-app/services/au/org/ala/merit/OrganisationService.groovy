@@ -4,6 +4,7 @@ import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportOwner
 import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Period
@@ -30,8 +31,8 @@ class OrganisationService {
     def get(String id, view = '') {
 
         String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}organisation/$id?view=$view"
-        Map organisation = webService.getJson(url)
-
+        Map resp = webService.getJson2(url)
+        Map organisation = resp?.resp
         if (view != 'flat') {
             organisation.reports = getReportsForOrganisation(organisation, getReportConfig(id))
         }
@@ -50,6 +51,18 @@ class OrganisationService {
             List categorisedDocs = results.documents.split{it.type == DocumentService.TYPE_LINK}
             organisation.documents = new JSONArray(categorisedDocs[1])
         }
+
+        Map orgContractNames = [:].withDefault{[]}
+        organisation.projects?.each { Map project ->
+            project.associatedOrgs?.each { Map associatedOrg ->
+                if (associatedOrg.organisationId == id) {
+                    orgContractNames[associatedOrg.name] << [projectId: project.projectId, projectName: project.name]
+                }
+            }
+
+        }
+        organisation.contractNamesAndProjects = orgContractNames
+
 
         organisation
     }

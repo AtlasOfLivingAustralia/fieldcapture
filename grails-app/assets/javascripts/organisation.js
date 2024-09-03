@@ -204,53 +204,7 @@ OrganisationViewModel = function (props, options) {
     self.indigenousOrganisationRegistration = ko.observableArray(props.indigenousOrganisationRegistration);
     self.organisationSearchUrl = options && options.organisationSearchUrl;
 
-    self.onPasteAbn = function(vm, event) {
 
-        if (event.originalEvent && event.originalEvent.clipboardData) {
-            text = event.originalEvent.clipboardData.getData("text/plain");
-
-            // remove any non digit characters from the data - this is because if you copy and paste an ABN it
-            // is normally formatted with spaces.
-            self.abn(text.replaceAll(/\D/g, ''));
-        }
-
-
-        // Indicate that text could be added into textbox
-        return false;
-    };
-
-    var previousContractNames = _.map(props.contractNames, function(name) {
-        return {
-            originalName: name,
-            currentName: name,
-            projects: []
-        }
-    });
-    var contactNameChangeList = [];
-
-    self.contractNames.subscribe(function(value) {
-        // Compare current names to previous, update previous.
-        var namesBeforeEdit = _.map(previousContractNames, function(previous) {return previous.currentName} )
-        var namesAfterEdit = self.contractNames();
-        var added = _.difference(namesAfterEdit, namesBeforeEdit);
-        var removed = _.difference(namesBeforeEdit, namesAfterEdit);
-
-        if (added.length == 1 && removed.length == 0) {
-            contactNameChangeList.push({action: 'add', originalName: null, currentName: added[0]});
-        }
-
-        if (removed.length == 1 && added.length == 0) {
-            var name = _.find(previousContractNames, function(previous) {return previous.currentName == removed[0]});
-            contactNameChangeList.push({action: 'delete', originalName: name.originalName, currentName: null});
-        }
-
-        if (removed.length == 1 && added.length == 1) {
-            var name = _.find(previousContractNames, function(previous) {return previous.currentName == removed[0]});
-            contactNameChangeList.push({action: 'update', originalName: name.originalName, currentName: added[0]});
-        }
-
-        console.log(contactNameChangeList);
-    });
     self.orgType = ko.pureComputed(function() {
        var entityType = _.find(self.entityTypes, function(entityType) {
            return entityType.code == self.entityType();
@@ -290,25 +244,6 @@ OrganisationViewModel = function (props, options) {
         var orgJs = self.toJS(includeDocuments);
         orgJs.postcode = Number(orgJs.postcode);
         return JSON.stringify(orgJs);
-    };
-
-    self.save = function() {
-        if ($('.validationEngineContainer').validationEngine('validate')) {
-
-            var orgData = self.modelAsJSON(true);
-            $.ajax(config.organisationSaveUrl, {type:'POST', data:orgData, contentType:'application/json'}).done( function(data) {
-                if (data.errors) {
-
-                }
-                else {
-                    var orgId = self.organisationId?self.organisationId:data.organisationId;
-                    window.location = config.organisationViewUrl+'/'+orgId;
-                }
-
-            }).fail( function() {
-
-            });
-        }
     };
 
     self.prepopulateFromABN = function() {
@@ -368,6 +303,159 @@ OrganisationViewModel = function (props, options) {
     return self;
 
 };
+
+EditOrganisationViewModel = function(props, options) {
+    var self = this;
+    _.extend(self, new OrganisationViewModel(props, options));
+
+    self.onPasteAbn = function(vm, event) {
+
+        if (event.originalEvent && event.originalEvent.clipboardData) {
+            text = event.originalEvent.clipboardData.getData("text/plain");
+
+            // remove any non digit characters from the data - this is because if you copy and paste an ABN it
+            // is normally formatted with spaces.
+            self.abn(text.replaceAll(/\D/g, ''));
+        }
+
+
+        // Indicate that text could be added into textbox
+        return false;
+    };
+
+    /** We need to track changes to contract names so we can update the contract names in projects. */
+    var contractNameChangeTracking = _.map(props.contractNames, function(name) {
+        return {
+            originalName: name,
+            currentName: name,
+            projects: props.contractNamesAndProjects[name],
+            projectCount: function() {
+                return props.contractNamesAndProjects[name] ? props.contractNamesAndProjects[name].length : 0;
+            }
+        }
+    });
+
+    self.getProjectCountForName = function(name) {
+        var nameAndProjects = _.find(contractNameChangeTracking, function(nameAndProjects) {
+            return nameAndProjects.currentName == name;
+        });
+        return nameAndProjects.projectCount();
+    }
+
+    self.getHelpText = function(name) {
+        var projectCount = self.getProjectCountForName(name);
+        if (projectCount > 0) {
+            helpText = "This name is used by "+projectCount+" projects";
+        }
+        else {
+            helpText = "This name is not used by any projects";
+        }
+        return helpText;
+    };
+
+    self.nameUsed = function(name) {
+        return self.getProjectCountForName(name) > 0;
+    }
+
+
+    self.contractNames.subscribe(function(value) {
+
+        var namesBeforeEdit = _.filter(_.map(contractNameChangeTracking, function(previous) {return previous.currentName} ), function(name) { return name != null});
+        var namesAfterEdit = self.contractNames();
+        var added = _.difference(namesAfterEdit, namesBeforeEdit);
+        var removed = _.difference(namesBeforeEdit, namesAfterEdit);
+
+        // New name added.  No project renaming action required here except to exclude it from appearing in the next edit
+        if (added.length == 1 && removed.length == 0) {
+            contractNameChangeTracking.push({originalName: null, currentName: added[0], projects:[], projectCount: function() { return 0; }});
+        }
+
+        // Name removed.  We will update project contract names to the organsiation name.
+        if (removed.length == 1 && added.length == 0) {
+            var name = _.find(contractNameChangeTracking, function(previous) {return previous.currentName == removed[0]});
+            name.currentName = null;
+        }
+
+        // Name changed.  We will update project contract names to the new name.
+        if (removed.length == 1 && added.length == 1) {
+            var name = _.find(contractNameChangeTracking, function(previous) {return previous.currentName == removed[0]});
+            name.currentName = added[0];
+        }
+    });
+
+    self.getModifiedNames = function() {
+
+        for (var i=0; i<contractNameChangeTracking.length; i++) {
+            var nameAndProjects = contractNameChangeTracking[i];
+
+            if (nameAndProjects.projectCount()) { // Don't need action for new names or unused names
+                var message = '';
+                if (nameAndProjects.currentName == null) {
+                    // need to update any contract names with the original name to the organisation name.
+                    message += "Renaming "+nameAndProjects.originalName+" to "+self.name()+" in "+nameAndProjects.projectCount()+" projects\n";
+                }
+                else if (nameAndProjects.currentName != nameAndProjects.originalName) {
+
+                    // need to update any contract names with the original name to the new name.
+                    message += "Renaming "+nameAndProjects.originalName+" to "+nameAndProjects.currentName+" in "+nameAndProjects.projectCount()+" projects\n";
+                }
+            }
+
+        }
+        if (message) {
+            bootbox.alert(message);
+        }
+
+    };
+
+
+    autoSaveModel(self, options.organisationSaveUrl,
+        {
+            blockUIOnSave:true,
+            blockUISaveMessage:'Saving organisation....',
+            serializeModel:function() {return self.modelAsJSON(true);}
+        });
+
+
+
+    self.save = function() {
+        if ($(options.validationContainerSelector).validationEngine('validate')) {
+
+            self.getModifiedNames();
+            self.saveWithErrorDetection(
+                function(data) {
+                    var orgId = self.organisationId?self.organisationId:data.organisationId;
+
+                    var url;
+                    if (fcConfig.returnTo) {
+                        if (fcConfig.returnTo.indexOf('?') > 0) {
+                            url = fcConfig.returnTo+'&organisationId='+orgId;
+                        }
+                        else {
+                            url = fcConfig.returnTo+'?organisationId='+orgId;
+                        }
+                    }
+                    else {
+                        url = fcConfig.organisationViewUrl+'/'+orgId;
+                    }
+                    window.location.href = url;
+                },
+                function(data) {
+                    bootbox.alert('<span class="label label-important">Error</span><p>'+data.detail+'</p>');
+                }
+            );
+        }
+    };
+
+    self.cancel = function() {
+        window.location = options.returnTo;
+    }
+
+    self.attachValidation = function() {
+        $(options.validationContainerSelector).validationEngine();
+    };
+
+}
 
 
 OrganisationPageViewModel = function (props, options) {
@@ -648,103 +736,6 @@ OrganisationPageViewModel = function (props, options) {
     };
 
     return self;
-
-};
-
-/**
- * Provides the ability to search a user's organisations and other organisations at the same time.  The results
- * are maintained as separate lists for ease of display (so a users existing organisations can be prioritised).
- * @param organisations the organisations not belonging to the user.
- * @param userOrganisations the organisations that belong to the user.
- * @param (optional) if present, this value should contain the organisationId of an organisation to pre-select.
- */
-OrganisationSelectionViewModel = function(organisations, userOrganisations, inititialSelection) {
-
-    var self = this;
-    var userOrgList = new SearchableList(userOrganisations, ['name']);
-    var otherOrgList = new SearchableList(organisations, ['name']);
-
-    self.term = ko.observable('');
-    self.term.subscribe(function() {
-        userOrgList.term(self.term());
-        otherOrgList.term(self.term());
-    });
-
-    self.selection = ko.computed(function() {
-        return userOrgList.selection() || otherOrgList.selection();
-    });
-
-    self.userOrganisationResults = userOrgList.results;
-    self.otherResults = otherOrgList.results;
-
-    self.clearSelection = function() {
-
-        userOrgList.clearSelection();
-        otherOrgList.clearSelection();
-        self.term('');
-    };
-    self.isSelected = function(value) {
-        return userOrgList.isSelected(value) || otherOrgList.isSelected(value);
-    };
-    self.select = function(value) {
-        self.term(value['name']);
-
-        userOrgList.select(value);
-        otherOrgList.select(value);
-    };
-
-    self.allViewed = ko.observable(false);
-
-    self.scrolled = function(blah, event) {
-        var elem = event.target;
-        var scrollPos = elem.scrollTop;
-        var maxScroll = elem.scrollHeight - elem.clientHeight;
-
-        if ((maxScroll - scrollPos) < 9) {
-            self.allViewed(true);
-        }
-    };
-
-    self.visibleRows = ko.computed(function() {
-        var count = 0;
-        if (self.userOrganisationResults().length) {
-            count += self.userOrganisationResults().length+1; // +1 for the "user orgs" label.
-        }
-        if (self.otherResults().length) {
-            count += self.otherResults().length;
-            if (self.userOrganisationResults().length) {
-                count ++; // +1 for the "other orgs" label (it will only show if the my organisations label is also showing.
-            }
-        }
-        return count;
-    });
-
-    self.visibleRows.subscribe(function() {
-        if (self.visibleRows() <= 4 && !self.selection()) {
-            self.allViewed(true);
-        }
-    });
-    self.visibleRows.notifySubscribers();
-
-
-    self.organisationNotPresent = ko.observable();
-
-    var findByOrganisationId = function(list, organisationId) {
-        for (var i=0; i<list.length; i++) {
-            if (list[i].organisationId === organisationId) {
-                return list[i];
-            }
-        }
-        return null;
-    };
-
-    if (inititialSelection) {
-        var userOrg = findByOrganisationId(userOrganisations, inititialSelection);
-        var orgToSelect = userOrg ? userOrg : findByOrganisationId(organisations, inititialSelection);
-        if (orgToSelect) {
-            self.select(orgToSelect);
-        }
-    }
 
 };
 

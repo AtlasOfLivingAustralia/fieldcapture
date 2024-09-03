@@ -103,3 +103,8 @@ input.dateControl {
 ul.ui-autocomplete {
     z-index:10000;
 }
+
+.contract-name-info.nameInUse {
+    background: red;
+    color: white;
+}
