@@ -300,8 +300,7 @@ class ImportService {
     Map gmsImport(InputStream csv, List status, Boolean preview, Boolean update, String charEncoding = 'Cp1252') {
 
         Map programs = [:].withDefault{name ->
-            Map program = programService.getByName(name)
-            program?.programId
+            programService.getByName(name)
         }
         Map managementUnits = [:].withDefault{name ->
             Map mu = managementUnitService.getByName(name)

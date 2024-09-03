@@ -210,17 +210,6 @@ class GmsMapper {
         return errors
     }
 
-    private Map findProgram(String name) {
-        Map program = programModel.programs.find {it.name == name}
-        if (!program) {
-            programModel.programs.find {
-                program = it.subprograms.find{ it.name == name}
-                program
-            }
-        }
-        program
-    }
-
     def mapProject(projectRows) {
 
         List errors = []
@@ -234,17 +223,15 @@ class GmsMapper {
 
 
         String programName = project.associatedSubProgram ?: project.associatedProgram
-        String programId = programs[programName]
+        Map program = programs[programName]
+        String programId = program?.programId
         if (programId) {
             project.remove('associatedProgram')
             project.remove('associatedSubProgram')
             project.programId = programId
         }
         else {
-            String program = findProgram(programName)
-            if (!program) {
-                errors << "Programme ${project.associatedProgram} doesn't match an existing MERIT programme"
-            }
+            errors << "Program ${programName} doesn't match an existing MERIT programme"
         }
 
         if (project.managementUnitName) {
@@ -255,7 +242,7 @@ class GmsMapper {
             }
         }
 
-        Map organisation = mapOrganisation(project, errors, messages)
+        Map organisation = mapOrganisation(project, program, errors, messages)
 
         errors.addAll(result.errors)
         project.planStatus = project.planStatus ?: 'not approved'
@@ -282,7 +269,7 @@ class GmsMapper {
 
     }
 
-    private Map mapOrganisation(Map project, List errors, List messages) {
+    private Map mapOrganisation(Map project, Map program, List errors, List messages) {
         Map organisation
         Map abnLookup
         String error = null
@@ -325,8 +312,25 @@ class GmsMapper {
                 }
             }
             if (!error) {
-                    project.associatedOrgs =
-                            [[organisationId:organisation.organisationId, name: contractName ?: organisation.name, organisationName:organisation.name, description:"Service provider"]] // Fix description
+                // Find the organisation relationship to use based on the program
+                String description = 'Service provider'
+                if (program?.fundingType) {
+                    switch (program.fundingType) {
+                        case 'SPP':
+                            description = 'Recipient'
+                            break
+                        case 'Grant':
+                            description = 'Grantee'
+                            break
+                        case 'Procurement':
+                            description = 'Service provider'
+
+                    }
+                } else if (program?.config && program.config.organisationRelationship) {
+                    description = program.config.organisationRelationship
+                }
+                project.associatedOrgs = [
+                        [organisationId:organisation.organisationId, name: contractName ?: organisation.name, organisationName:organisation.name, description:description]] // Fix description
             }
         } else {
             error = "Please supply an organisationId (ORG_ID) or ABN (ABN) for the project"

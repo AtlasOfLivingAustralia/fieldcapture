@@ -114,7 +114,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
 
     def "The import service can create projects that have been loaded and mapped via CSV"() {
         setup:
-        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [[organisationId:"123", name:"Test organisation"]],abnLookupService, scores, ["Test program":"p1"], ["Test MU":"m1"])
+        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [[organisationId:"123", name:"Test organisation"]],abnLookupService, scores, ["Test program":["programId":"p1"]], ["Test MU":"m1"])
         List projectRows = projectRowData()
         List status = []
         String projectId = 'p1'
@@ -171,7 +171,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         1 * metadataService.organisationList() >> [list:[[name:"Test Organisation 2", organisationId:'org2Id', abn:'12345678901']]]
         1 * metadataService.programsModel() >> [programs:[[name:'Green Army', subprograms:[[name:"Green Army Round 1"]]]]]
         1 * managementUnitService.getByName("ACT") >> [managementUnitId:"actId", name:"ACT"]
-        1 * programService.getByName("Green Army Round 1") >> null
+        1 * programService.getByName("Green Army Round 1") >> [programId:"gar1", name:"Green Army Round 1"]
 
         and: "The project was processed without errors"
         !result.error
@@ -196,7 +196,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         1 * metadataService.organisationList() >> [list:[[name:"Test Organisation 2", organisationId:'org2Id', abn:'12345678901']]]
         1 * metadataService.programsModel() >> [programs:[[name:'Green Army', subprograms:[[name:"Green Army Round 1"]]]]]
         1 * managementUnitService.getByName("ACT") >> [managementUnitId:"actId", name:"ACT"]
-        1 * programService.getByName("Green Army Round 1") >> null
+        1 * programService.getByName("Green Army Round 1") >> [programId:"gar1"]
         1 * projectService.update('', _) >> [resp:[projectId:'p1']]
         1 * userService.checkEmailExists('editor@test.com') >> "u3"
         1 * userService.checkEmailExists('editor2@test.com') >> "u4"
@@ -230,7 +230,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
 
     def "A project won't be imported if update=false and MERIT already has a project with the same grantId/externalId"() {
         setup:
-        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [[organisationId:"123", name:"Test organisation"]],abnLookupService, scores, ["Test program":"p1"], ["Test MU":"m1"])
+        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [[organisationId:"123", name:"Test organisation"]],abnLookupService, scores, ["Test program":[programId:"p1"]], ["Test MU":"m1"])
         List projectRows = projectRowData()
         List status = []
         String projectId = 'p1'
@@ -251,7 +251,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
 
     def "A project won't be updated if update=true and MERIT does not have a project with the same grantId/externalId"() {
         setup:
-        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [[organisationId:"123", name:"Test organisation"]],abnLookupService, scores, ["Test program":"p1"], ["Test MU":"m1"])
+        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [[organisationId:"123", name:"Test organisation"]],abnLookupService, scores, ["Test program":[programId:"p1"]], ["Test MU":"m1"])
         List projectRows = projectRowData()
         List status = []
         String projectId = 'p1'
