@@ -200,7 +200,7 @@ class ProjectController {
         if (datasetsVisible && project.custom?.dataSets) {
             projectService.filterDataSetSummaries(project.custom?.dataSets)
         }
-        List downloadableProtocols = ['068d17e8-e042-ae42-1e42-cff4006e64b0']
+        List downloadableProtocols = downloadableProtocols()
         def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates, outcomes:project.outcomes, objectives:config.program?.config?.objectives],
                      documents      : [label: 'Documents', visible: config.includesContent(ProgramConfig.ProjectContent.DOCUMENTS), type: 'tab', user:user, template:'docs', activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
                      details        : [label: 'MERI Plan', default: false, disabled: !meriPlanEnabled, visible: meriPlanVisible, meriPlanVisibleToUser: meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: true, project:project, type: 'tab', template:'viewMeriPlan', meriPlanTemplate:MERI_PLAN_TEMPLATE+'View', config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
@@ -275,6 +275,13 @@ class ProjectController {
             model.dashboard.metrics = metrics
         }
         return [view: 'index', model: model]
+    }
+
+    private List<String> downloadableProtocols() {
+        String BDR_DOWNLOAD_SUPPORTED_TAG = 'bdr_download_supported'
+        List<Map> forms = activityService.monitoringProtocolForms()
+        forms = forms.findAll{BDR_DOWNLOAD_SUPPORTED_TAG in it.tags}
+        forms.collect{it.externalId }
     }
 
     private Map buildRLPTargetsModel(Map model, project){

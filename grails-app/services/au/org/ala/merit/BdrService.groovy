@@ -18,20 +18,15 @@ class BdrService {
 
     GrailsApplication grailsApplication
     WebService webService
-    @Autowired
+
     TokenService bdrTokenService
 
     void downloadDataSet(String dataSetId, HttpServletResponse response) {
         String url = bdrBaseUrl+'/'+dataSetId
 
         String token = bdrTokenService.getAuthToken(false)
-        println token
+
         webService.proxyGetRequest(response, url, false)
     }
-
-
-
-
-
 }
 
