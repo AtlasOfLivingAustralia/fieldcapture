@@ -52,10 +52,13 @@ class OrganisationService {
             organisation.documents = new JSONArray(categorisedDocs[1])
         }
 
-        Map orgContractNames = [:].withDefault{[]}
+        Map orgContractNames = [:]
         organisation.projects?.each { Map project ->
             project.associatedOrgs?.each { Map associatedOrg ->
                 if (associatedOrg.organisationId == id) {
+                    if (!orgContractNames[associatedOrg.name]) {
+                        orgContractNames[associatedOrg.name] = []
+                    }
                     orgContractNames[associatedOrg.name] << [projectId: project.projectId, projectName: project.name]
                 }
             }
