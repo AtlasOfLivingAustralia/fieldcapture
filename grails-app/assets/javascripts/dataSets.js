@@ -277,7 +277,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
                     'grantId', 'projectName', 'programName', 'validate', 'save', 'cancel',
                         'investmentOtherSelected', 'siteUrl', 'isAutoCreated', 'serviceAndOutcomes',
                         'projectOutcomeList', 'projectBaselines', 'projectProtocols', 'disableBaseline',
-                        'disableIndicator']});
+                        'disableIndicator', 'protocolLabel']});
             projectService.saveDataSet(dataSet).done(function() {
                 // return to project
                 window.location.href = config.returnToUrl;
