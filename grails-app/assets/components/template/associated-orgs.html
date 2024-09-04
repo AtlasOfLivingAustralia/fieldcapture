@@ -67,7 +67,7 @@
                 <div class="form-group">
                     <label class="required" for="relationship-description">Relationship</label>
                     <!-- ko if:$parent.relationshipTypes -->
-                    <select id="relationship-description" name="description" class="form-control form-control-sm" data-bind="enable:organisationId(), options:$parent.relationshipTypes, value:description"></select>
+                    <select id="relationship-description" name="description" class="form-control form-control-sm" data-bind="enable:organisationId(), optionsCaption:'Please select...', options:$parent.relationshipTypes, value:description"></select>
                     <!-- /ko -->
                     <!-- ko if:!$parent.relationshipTypes -->
                     <input type="text" id="relationship-description" name="description" class="form-control form-control-sm" data-bind="enable:organisationId(), value:description"></input>
