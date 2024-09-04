@@ -9,13 +9,12 @@
         var fcConfig = {
             documentUpdateUrl: '${g.createLink(controller:"document", action:"documentUpdate")}',
             documentDeleteUrl: '${g.createLink(controller:"document", action:"deleteDocument")}',
-            organisationDeleteUrl: '${g.createLink(action:"ajaxDelete", id:organisation.organisationId)}',
-            organisationEditUrl: '${g.createLink(action:"edit", id:organisation.organisationId)}',
-            organisationViewUrl: '${g.createLink(action:"index", id:organisation.organisationId)}',
+            organisationEditUrl: '${g.createLink(action:"edit")}',
+            organisationViewUrl: '${g.createLink(action:"index")}',
             organisationSearchUrl: '${g.createLink(action:'search')}',
-            prepopulateAbnUrl:"${createLink(action:'prepopulateAbn', id:organisation.organisationId)}",
+            prepopulateAbnUrl:"${createLink(action:'prepopulateAbn')}",
             organisationListUrl: '${g.createLink(action:"list")}',
-            organisationSaveUrl: "${createLink(action:'ajaxUpdate', id:organisation.organisationId)}",
+            organisationSaveUrl: "${createLink(action:'ajaxUpdate')}",
             returnTo: "${createLink(action:'list')}"
             };
     </script>

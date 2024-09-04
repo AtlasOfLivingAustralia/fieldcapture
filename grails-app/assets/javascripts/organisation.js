@@ -424,19 +424,10 @@ EditOrganisationViewModel = function(props, options) {
             self.getModifiedNames();
             self.saveWithErrorDetection(
                 function(data) {
-                    var orgId = self.organisationId?self.organisationId:data.organisationId;
-
-                    var url;
-                    if (fcConfig.returnTo) {
-                        if (fcConfig.returnTo.indexOf('?') > 0) {
-                            url = fcConfig.returnTo+'&organisationId='+orgId;
-                        }
-                        else {
-                            url = fcConfig.returnTo+'?organisationId='+orgId;
-                        }
-                    }
-                    else {
-                        url = fcConfig.organisationViewUrl+'/'+orgId;
+                    var url = options.organisationViewUrl;
+                    // When creating a new organisation we need the organisationId.
+                    if (!self.organisationId && data.organisationId) {
+                        url += '/' + data.organisationId;
                     }
                     window.location.href = url;
                 },
