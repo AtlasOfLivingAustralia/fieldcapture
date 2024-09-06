@@ -8,9 +8,6 @@ import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
 
-import java.sql.Date
-import java.time.LocalDate
-
 class ActivityController {
 
     def activityService, siteService, projectService, metadataService, userService, excelImportService, webService, speciesService, documentService, reportService, programService, projectConfigurationService
