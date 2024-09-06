@@ -11,7 +11,7 @@ class ProjectPermissionSpec extends StubbedCasSpec {
     def cleanup() {
         logout(browser)
     }
-/*
+
     def "a grant manager can add and modify user roles for a project"() {
 
         setup:
@@ -89,7 +89,7 @@ class ProjectPermissionSpec extends StubbedCasSpec {
             adminContent.projectAccess.findPermissionForDisplayName('test10 user10').roleText == "Admin"
         }
 
-    }*/
+    }
 
     def "a read only users can view the user roles for a project"() {
 

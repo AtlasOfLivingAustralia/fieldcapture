@@ -153,11 +153,14 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
             }
         }
         catch (StaleElementReferenceException e) { // Do nothing, backdrop was already detached
+            e.printStackTrace()
         }
         catch (NullPointerException e) {
+            e.printStackTrace()
             // Do nothing, backdrop was already detached and destroyed before we selected it
         }
         catch (WebDriverException e) {
+            e.printStackTrace()
             // We are now seeing WebDriverException instead of StateElementReferenceException in some cases
         }
     }

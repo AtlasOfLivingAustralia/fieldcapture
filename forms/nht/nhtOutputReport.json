@@ -2040,90 +2040,104 @@
             "name": "participationInformationTableCom"
           },
           {
-            "name": "relatedOutcomes",
-            "dataType": "text",
-            "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
-            "validate": "required",
-            "constraints": {
-              "textProperty": "label",
-              "valueProperty": "value",
-              "type": "pre-populated",
-              "config": {
-                "source": {
-                  "context-path": "outcomes"
-                }
-              }
-            }
-          },
-          {
-            "name": "investmentPriorities2",
-            "dataType": "text",
-            "description": "",
-            "validate": "required",
-            "constraints": {
-              "textProperty": "label",
-              "valueProperty": "value",
-              "type": "pre-populated",
-              "config": {
-                "source": {
-                  "context-path": "owner.investmentPriorities"
-                }
-              }
-            }
-          },
-          {
-            "dataType": "text",
-            "name": "otherInvestmentPriority",
-            "behaviour": [
-              {
-                "type": "enable",
-                "condition": "\"Other\" in investmentPriorities2"
-              }
-            ]
-          },
-          {
-            "dataType": "text",
-            "name": "invoicingThisActivity",
-            "constraints": [
-              "Yes",
-              "No"
-            ],
-            "validate": "required"
-          },
-          {
+            "dataType": "list",
+            "name": "communicationMaterialsByOutcome",
             "columns": [
               {
-                "dataType": "text",
-                "name": "communicationMaterialType",
-                "constraints": [
-                  "Booklets",
-                  "Educational/Interpretive Signage",
-                  "Fact Sheets/Brochures",
-                  "Podcasts",
-                  "Videos"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "date",
-                "name": "communicationDate",
-                "validate": "required"
-              },
+              "name": "relatedOutcomes",
+              "dataType": "text",
+              "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
+              "validate": "required",
+              "constraints": {
+                "textProperty": "label",
+                "valueProperty": "value",
+                "type": "pre-populated",
+                "config": {
+                  "source": {
+                    "context-path": "outcomes"
+                  }
+                }
+              }
+            },
+            {
+              "name": "investmentPriorities2",
+              "dataType": "text",
+              "description": "",
+              "validate": "required",
+              "constraints": {
+                "textProperty": "label",
+                "valueProperty": "value",
+                "type": "pre-populated",
+                "config": {
+                  "source": {
+                    "context-path": "owner.investmentPriorities"
+                  }
+                }
+              }
+            },
+            {
+              "dataType": "text",
+              "name": "otherInvestmentPriority",
+              "behaviour": [
+                {
+                  "type": "enable",
+                  "condition": "\"Other\" in investmentPriorities2"
+                }
+              ]
+            },
+            {
+              "dataType": "text",
+              "name": "invoicingThisActivity",
+              "constraints": [
+                "Yes",
+                "No"
+              ],
+              "validate": "required"
+            },
+            {
+              "columns": [
+                {
+                  "dataType": "text",
+                  "name": "communicationMaterialType",
+                  "constraints": [
+                    "Booklets",
+                    "Educational/Interpretive Signage",
+                    "Fact Sheets/Brochures",
+                    "Podcasts",
+                    "Videos"
+                  ],
+                  "validate": "required"
+                },
+                {
+                  "dataType": "date",
+                  "name": "communicationDate",
+                  "validate": "required"
+                },
+                {
+                  "dataType": "number",
+                  "name": "numberOfCommunicationMaterialsPublished",
+                  "description": "Refers to unique publications not number printed.",
+                  "validate": "required,min[0]"
+                },
+                {
+                  "dataType": "text",
+                  "name": "communicationMaterialPurpose",
+                  "validate": "required,maxSize[300]",
+                  "description": "e.g. public awareness, warnings, advertisements"
+                }
+              ],
+              "dataType": "list",
+              "name": "communicationMaterials"
+            },
               {
                 "dataType": "number",
-                "name": "numberOfCommunicationMaterialsPublished",
-                "description": "Refers to unique publications not number printed.",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "text",
-                "name": "communicationMaterialPurpose",
-                "validate": "required,maxSize[300]",
-                "description": "e.g. public awareness, warnings, advertisements"
+                "name": "rowCount",
+                "decimalPlaces": 0,
+                "computed": {
+                  "expression": "sum(communicationMaterials, \"numberOfCommunicationMaterialsPublished\")"
+                }
               }
-            ],
-            "dataType": "list",
-            "name": "communicationMaterials"
+            ]
           },
           {
             "dataType": "number",
@@ -2132,7 +2146,7 @@
             "decimalPlaces": 0,
             "defaultValue": 1,
             "computed": {
-              "expression": "sum(communicationMaterials, \"numberOfCommunicationMaterialsPublished\")"
+              "expression": "sum(communicationMaterialsByOutcome, \"rowCount\")"
             }
           },
           {
@@ -2167,6 +2181,7 @@
               }
             ]
           },
+
           {
             "dataType": "text",
             "name": "comments",
@@ -2322,6 +2337,12 @@
             ]
           },
           {
+            "type": "repeat",
+            "source": "communicationMaterialsByOutcome",
+            "userAddedRows": true,
+            "addRowText": "Add communication materials for a new outcome",
+            "items": [
+          {
             "type": "row",
             "items": [
               {
@@ -2374,9 +2395,7 @@
               }
             ]
           },
-          {
-            "type": "section",
-            "items": [
+
               {
                 "columns": [
                   {
@@ -2407,7 +2426,8 @@
                 "userAddedRows": true,
                 "source": "communicationMaterials",
                 "type": "table"
-              },
+              }  ]
+          },
               {
                 "type": "row",
                 "items": [
@@ -2479,8 +2499,7 @@
                   }
                 ]
               }
-            ]
-          }
+
         ]
       },
       "modelName": null,
@@ -2606,139 +2625,153 @@
             "name": "participationInformationTableCse"
           },
           {
-            "name": "relatedOutcomes",
-            "dataType": "text",
-            "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
-            "validate": "required",
-            "constraints": {
-              "textProperty": "label",
-              "valueProperty": "value",
-              "type": "pre-populated",
-              "config": {
-                "source": {
-                  "context-path": "outcomes"
+            "dataType": "list",
+            "name": "communityEngagementByOutcome",
+            "columns": [
+            {
+              "name": "relatedOutcomes",
+              "dataType": "text",
+              "description": "Select the outcome/s as defined in your MERI plan that this service was delivered to achieve.",
+              "validate": "required",
+              "constraints": {
+                "textProperty": "label",
+                "valueProperty": "value",
+                "type": "pre-populated",
+                "config": {
+                  "source": {
+                    "context-path": "outcomes"
+                  }
                 }
               }
-            }
-          },
-          {
-            "name": "investmentPriorities2",
-            "dataType": "text",
-            "description": "",
-            "validate": "required",
-            "constraints": {
-              "textProperty": "label",
-              "valueProperty": "value",
-              "type": "pre-populated",
-              "config": {
-                "source": {
-                  "context-path": "owner.investmentPriorities"
+            },
+            {
+              "name": "investmentPriorities2",
+              "dataType": "text",
+              "description": "",
+              "validate": "required",
+              "constraints": {
+                "textProperty": "label",
+                "valueProperty": "value",
+                "type": "pre-populated",
+                "config": {
+                  "source": {
+                    "context-path": "owner.investmentPriorities"
+                  }
                 }
               }
-            }
-          },
-          {
-            "dataType": "text",
-            "name": "otherInvestmentPriority",
-            "behaviour": [
+            },
+            {
+              "dataType": "text",
+              "name": "otherInvestmentPriority",
+              "behaviour": [
+                {
+                  "type": "enable",
+                  "condition": "\"Other\" in investmentPriorities2"
+                }
+              ]
+            },
+            {
+              "dataType": "text",
+              "name": "invoicingThisActivity",
+              "constraints": [
+                "Yes",
+                "No"
+              ],
+              "validate": "required"
+            },
+            {
+              "columns": [
+                {
+                  "dataType": "text",
+                  "name": "eventType",
+                  "description": "Type of engagement events are training/workshops, on-ground trials/demonstrations and field days. Note field days should be reported as an event e.g, 3 field days is considered 1 event NOT 3 days",
+                  "constraints": [
+                    "Field days",
+                    "On-ground trials / demonstrations facilitated or hosted",
+                    "Training workshops hosted"
+                  ],
+                  "validate": "required"
+                },
+                {
+                  "dataType": "number",
+                  "name": "numberOfEvents",
+                  "validate": "required",
+                  "description": "This field can contribute to Number of the engagement event types: <li>training/workshops,</li> <li>on-ground trials/demonstrations and</li> <li>field days</li>"
+                },
+                {
+                  "dataType": "number",
+                  "name": "numberOfParticipants",
+                  "validate": "required,min[0]"
+                },
+                {
+                  "dataType": "number",
+                  "name": "numberOfIndigenousParticipants",
+                  "validate": "required,min[0]"
+                },
+                {
+                  "dataType": "number",
+                  "name": "numberOfFarmers",
+                  "validate": "required,min[0]"
+                },
+                {
+                  "dataType": "number",
+                  "name": "numberOfGroups",
+                  "validate": "required,min[0]"
+                },
+                {
+                  "dataType": "stringList",
+                  "name": "industryType",
+                  "constraints": [
+                    "Cropping",
+                    "Dairy",
+                    "Dryland agriculture",
+                    "Horticulture",
+                    "Grazing",
+                    "Fisheries",
+                    "Aquaculture",
+                    "Environmental"
+                  ],
+                  "validate": "required"
+                },
+                {
+                  "dataType": "text",
+                  "name": "eventPurpose",
+                  "validate": "required,maxSize[300]"
+                },
+                {
+                  "dataType": "date",
+                  "name": "dateFrom",
+                  "validate": "required"
+                },
+                {
+                  "dataType": "date",
+                  "name": "dateTo",
+                  "validate": [
+                    {
+                      "rule": "required"
+                    },
+                    {
+                      "rule": "future",
+                      "param": {
+                        "expression": "formatDateForValidation(dateFrom)",
+                        "type": "computed"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "dataType": "list",
+              "name": "events"
+            },
               {
-                "type": "enable",
-                "condition": "\"Other\" in investmentPriorities2"
+                "dataType": "number",
+                "name": "engagementsForOutcome",
+                "decimalPlaces": 0,
+                "computed": {
+                  "expression": "sum(events, \"eventType ? 1 : 0\")"
+                }
               }
             ]
-          },
-          {
-            "dataType": "text",
-            "name": "invoicingThisActivity",
-            "constraints": [
-              "Yes",
-              "No"
-            ],
-            "validate": "required"
-          },
-          {
-            "columns": [
-              {
-                "dataType": "text",
-                "name": "eventType",
-                "description": "Type of engagement events are training/workshops, on-ground trials/demonstrations and field days. Note field days should be reported as an event e.g, 3 field days is considered 1 event NOT 3 days",
-                "constraints": [
-                  "Field days",
-                  "On-ground trials / demonstrations facilitated or hosted",
-                  "Training workshops hosted"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfEvents",
-                "validate": "required",
-                "description": "This field can contribute to Number of the engagement event types: <li>training/workshops,</li> <li>on-ground trials/demonstrations and</li> <li>field days</li>"
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfParticipants",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfIndigenousParticipants",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfFarmers",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfGroups",
-                "validate": "required,min[0]"
-              },
-              {
-                "dataType": "stringList",
-                "name": "industryType",
-                "constraints": [
-                  "Cropping",
-                  "Dairy",
-                  "Dryland agriculture",
-                  "Horticulture",
-                  "Grazing",
-                  "Fisheries",
-                  "Aquaculture",
-                  "Environmental"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "eventPurpose",
-                "validate": "required,maxSize[300]"
-              },
-              {
-                "dataType": "date",
-                "name": "dateFrom",
-                "validate": "required"
-              },
-              {
-                "dataType": "date",
-                "name": "dateTo",
-                "validate": [
-                  {
-                    "rule": "required"
-                  },
-                  {
-                    "rule": "future",
-                    "param": {
-                      "expression": "formatDateForValidation(dateFrom)",
-                      "type": "computed"
-                    }
-                  }
-                ]
-              }
-            ],
-            "dataType": "list",
-            "name": "events"
           },
           {
             "dataType": "number",
@@ -2747,7 +2780,7 @@
             "decimalPlaces": 0,
             "defaultValue": 1,
             "computed": {
-              "expression": "sum(events, \"eventType ? 1 : 0\")"
+              "expression": "sum(communityEngagementByOutcome, \"engagementsForOutcome\")"
             }
           },
           {
@@ -2948,7 +2981,10 @@
             ]
           },
           {
-            "type": "section",
+            "type": "repeat",
+            "source": "communityEngagementByOutcome",
+            "userAddedRows": true,
+            "addRowText": "Add community engagement events for a new outcome",
             "items": [
               {
                 "type": "row",
@@ -3064,71 +3100,73 @@
                 "source": "events",
                 "title": "<b>Please report each Community/Stakeholder engagement event as a separate row</b>",
                 "type": "table"
+              }
+            ]
+          },
+
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Optionally attach photos",
+                "source": "photographicEvidence",
+                "type": "image"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Clarification, if needed",
+                "type": "textarea",
+                "rows": 4,
+                "css": "span8",
+                "source": "comments",
+                "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
               },
               {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "Optionally attach photos",
-                    "source": "photographicEvidence",
-                    "type": "image"
-                  }
-                ]
-              },
+                "preLabel": "Data have been uploaded",
+                "source": "dataUploaded",
+                "type": "boolean"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
               {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "Clarification, if needed",
-                    "type": "textarea",
-                    "rows": 4,
-                    "css": "span8",
-                    "source": "comments",
-                    "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
-                  }
-                ]
-              },
+                "preLabel": "",
+                "source": "projectAssuranceDetails",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
+              }
+            ]
+          },
+          {
+            "type": "table",
+            "source": "assuranceDocuments",
+            "userAddedRows": true,
+            "disableTableUpload": true,
+            "columns": [
               {
-                "type": "row",
-                "items": [
-                  {
-                    "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
-                  },
-                  {
-                    "preLabel": "Data have been uploaded",
-                    "source": "dataUploaded",
-                    "type": "boolean"
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "items": [
-                  {
-                    "preLabel": "",
-                    "source": "projectAssuranceDetails",
-                    "type": "textarea",
-                    "rows": 4,
-                    "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
-                  }
-                ]
-              },
-              {
-                "type": "table",
-                "source": "assuranceDocuments",
-                "userAddedRows": true,
-                "disableTableUpload": true,
-                "columns": [
-                  {
-                    "title": "Attached documents",
-                    "source": "attachments",
-                    "type": "document"
-                  }
-                ]
+                "title": "Attached documents",
+                "source": "attachments",
+                "type": "document"
               }
             ]
           }
+
         ]
       },
       "modelName": null,
@@ -19017,7 +19055,6 @@
                     "description": "",
                     "constraints": [
                       "Fencing",
-                      "Erosion management",
                       "Stocking rates",
                       "Watering arrangements",
                       "Paddock design",
