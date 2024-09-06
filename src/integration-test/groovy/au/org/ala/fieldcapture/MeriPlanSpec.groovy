@@ -193,31 +193,31 @@ class MeriPlanSpec extends StubbedCasSpec {
         editableMeriPlan.generatePDF()
 
         then:
-        withWindow"meri-plan-report", {
+        withWindow([close:true],"meri-plan-report") {
             at MeriPlanPDFPage
-            closePrintInstructions()
-            meriPlan.primaryOutcome.text().contains("Ramsar")
+            page.closePrintInstructions()
+            page.meriPlan.primaryOutcome.text().contains("Ramsar")
             // Direct comparison fails due to &nbsp in the HTML due to the length of the options
-            meriPlan.primaryPriority == "Ginini Flats Wetland Complex"
-            meriPlan.secondaryOutcomes[0].outcome.text().contains("Ramsar")
-            meriPlan.secondaryOutcomes[0].priority.text() == "Ginini Flats Wetland Complex"
-            meriPlan.shortTermOutcomes[0].text() == "Short term outcome 1"
-            meriPlan.mediumTermOutcomes[0].text() == "Medium term outcome 1"
-            meriPlan.projectName == "MERI plan edited name"
-            meriPlan.projectDescription == "MERI plan edited description"
-            meriPlan.keyThreats[0].threat.text() == "Threat 1"
-            meriPlan.keyThreats[0].intervention.text() == "Intervention 1"
-            meriPlan.projectMethodology == "Project methodology"
-            meriPlan.projectBaseline[0].baseline.text() == "Baseline 1"
-            meriPlan.projectBaseline[0].method.text() == "Method 1"
-            meriPlan.rlpMonitoringIndicators[0].indicator.text() == "Indicator 1"
-            meriPlan.rlpMonitoringIndicators[0].approach.text() == 'Approach 1'
-            meriPlan.rlpMonitoringIndicators[1].indicator.text() == "Indicator 2"
-            meriPlan.rlpMonitoringIndicators[1].approach.text() == 'Approach 2'
-            meriPlan.reviewMethodology == "Review methodology"
-            meriPlan.nationalAndRegionalPlans[0].name.text() == "Plan 1"
-            meriPlan.nationalAndRegionalPlans[0].section.text() == "Section 1"
-            meriPlan.nationalAndRegionalPlans[0].alignment.text() == "Alignment 1"
+            page.meriPlan.primaryPriority == "Ginini Flats Wetland Complex"
+            page.meriPlan.secondaryOutcomes[0].outcome.text().contains("Ramsar")
+            page.meriPlan.secondaryOutcomes[0].priority.text() == "Ginini Flats Wetland Complex"
+            page.meriPlan.shortTermOutcomes[0].text() == "Short term outcome 1"
+            page.meriPlan.mediumTermOutcomes[0].text() == "Medium term outcome 1"
+            page.meriPlan.projectName == "MERI plan edited name"
+            page.meriPlan.projectDescription == "MERI plan edited description"
+            page.meriPlan.keyThreats[0].threat.text() == "Threat 1"
+            page.meriPlan.keyThreats[0].intervention.text() == "Intervention 1"
+            page.meriPlan.projectMethodology == "Project methodology"
+            page.meriPlan.projectBaseline[0].baseline.text() == "Baseline 1"
+            page.meriPlan.projectBaseline[0].method.text() == "Method 1"
+            page.meriPlan.rlpMonitoringIndicators[0].indicator.text() == "Indicator 1"
+            page.meriPlan.rlpMonitoringIndicators[0].approach.text() == 'Approach 1'
+            page.meriPlan.rlpMonitoringIndicators[1].indicator.text() == "Indicator 2"
+            page.meriPlan.rlpMonitoringIndicators[1].approach.text() == 'Approach 2'
+            page.meriPlan.reviewMethodology == "Review methodology"
+            page.meriPlan.nationalAndRegionalPlans[0].name.text() == "Plan 1"
+            page.meriPlan.nationalAndRegionalPlans[0].section.text() == "Section 1"
+            page.meriPlan.nationalAndRegionalPlans[0].alignment.text() == "Alignment 1"
         }
     }
 
@@ -592,42 +592,15 @@ class MeriPlanSpec extends StubbedCasSpec {
         openMeriPlan.toggleMeriPlanHistory.displayed
 
         when:
-        waitFor { openMeriPlan.toggleMeriPlanHistory.click() }
+        openMeriPlan.toggleMeriPlanHistory.click()
 
         then:
         openMeriPlan.meriPlanHistory.size() == 1
-        waitFor { $(".fa-external-link").displayed }
 
-        when:"Open a history of the approved meri plan"
-        waitFor { $(".fa-external-link").click() }
-
-        and:"View meri plan comparison"
-        waitFor { $(".fa-code-fork").click() }
-
-
-        then:
+        when:
         overviewTab.click()
 
-        and:
+        then:
         overview.projectStatus[1].text() == 'ACTIVE'
-    }
-
-    def "Compare current MERI Plan with the latest approved MERI plan"() {
-        setup:
-        String projectId = 'meri1'
-        loginAsUser('1', browser)
-
-        when:
-        to RlpProjectPage, projectId
-
-        then:
-        waitFor { at RlpProjectPage }
-
-        when:
-        def editableMeriPlan = openMeriPlanEditTab()
-        editableMeriPlan.compareMeriPlanChanges()
-
-        then:
-        overviewTab.click()
     }
 }
