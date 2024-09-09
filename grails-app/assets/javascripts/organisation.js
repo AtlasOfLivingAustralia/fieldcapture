@@ -227,25 +227,6 @@ OrganisationViewModel = function (props, options) {
 
     self.transients = self.transients || {};
 
-    self.toJS = function(includeDocuments) {
-        var ignore = self.ignore.concat(['breadcrumbName', 'entityTypes', 'externalIdTypes', 'organisationSearchUrl', 'collectoryInstitutionId', 'projects', 'reports', 'indigenousOrganisationTypes']);
-        var js = ko.mapping.toJS(self, {include:['documents'], ignore:ignore} );
-        if (self.externalIds().length > 0) {
-            js.externalIds = ko.mapping.toJS(self.externalIds);
-        }
-        if (includeDocuments) {
-            js.documents = ko.toJS(self.documents);
-            js.links = ko.mapping.toJS(self.links());
-        }
-        return js;
-    };
-
-    self.modelAsJSON = function(includeDocuments) {
-        var orgJs = self.toJS(includeDocuments);
-        orgJs.postcode = Number(orgJs.postcode);
-        return JSON.stringify(orgJs);
-    };
-
     self.prepopulateFromABN = function() {
         if ($(config.abnSelector).validationEngine()) {
             var abn = self.abn;
@@ -385,27 +366,24 @@ EditOrganisationViewModel = function(props, options) {
 
     self.getModifiedNames = function() {
 
+        var modifiedNames = [];
         for (var i=0; i<contractNameChangeTracking.length; i++) {
             var nameAndProjects = contractNameChangeTracking[i];
 
             if (nameAndProjects.projectCount()) { // Don't need action for new names or unused names
-                var message = '';
                 if (nameAndProjects.currentName == null) {
                     // need to update any contract names with the original name to the organisation name.
-                    message += "Renaming "+nameAndProjects.originalName+" to "+self.name()+" in "+nameAndProjects.projectCount()+" projects\n";
+                    modifiedNames.push({oldName:nameAndProjects.originalName, newName:nameAndProjects.currentName});
                 }
                 else if (nameAndProjects.currentName != nameAndProjects.originalName) {
-
                     // need to update any contract names with the original name to the new name.
-                    message += "Renaming "+nameAndProjects.originalName+" to "+nameAndProjects.currentName+" in "+nameAndProjects.projectCount()+" projects\n";
+                    modifiedNames.push({oldName:nameAndProjects.originalName, newName:nameAndProjects.currentName});
                 }
             }
 
         }
-        if (message) {
-            bootbox.alert(message);
-        }
 
+        return modifiedNames;
     };
 
 
@@ -413,15 +391,13 @@ EditOrganisationViewModel = function(props, options) {
         {
             blockUIOnSave:true,
             blockUISaveMessage:'Saving organisation....',
+            healthCheckUrl: options.healthCheckUrl,
             serializeModel:function() {return self.modelAsJSON(true);}
         });
-
-
 
     self.save = function() {
         if ($(options.validationContainerSelector).validationEngine('validate')) {
 
-            self.getModifiedNames();
             self.saveWithErrorDetection(
                 function(data) {
                     var url = options.organisationViewUrl;
@@ -444,6 +420,30 @@ EditOrganisationViewModel = function(props, options) {
 
     self.attachValidation = function() {
         $(options.validationContainerSelector).validationEngine();
+    };
+
+    self.toJS = function(includeDocuments) {
+        var ignore = self.ignore.concat(['breadcrumbName', 'entityTypes', 'externalIdTypes', 'organisationSearchUrl', 'collectoryInstitutionId', 'projects', 'reports', 'indigenousOrganisationTypes', 'dirtyFlag']);
+        var js = ko.mapping.toJS(self, {include:['documents'], ignore:ignore} );
+        if (self.externalIds().length > 0) {
+            js.externalIds = ko.mapping.toJS(self.externalIds);
+        }
+        if (includeDocuments) {
+            js.documents = ko.toJS(self.documents);
+            js.links = ko.mapping.toJS(self.links());
+        }
+        var contractNameChanges = self.getModifiedNames();
+        if (contractNameChanges.length > 0) {
+            js.contractNameChanges = contractNameChanges;
+        }
+
+        return js;
+    };
+
+    self.modelAsJSON = function(includeDocuments) {
+        var orgJs = self.toJS(includeDocuments);
+        orgJs.postcode = Number(orgJs.postcode);
+        return JSON.stringify(orgJs);
     };
 
 }

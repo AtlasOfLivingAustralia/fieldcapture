@@ -38,7 +38,7 @@ describe("OrganisationViewModel Spec", function () {
             indigenousOrganisationRegistration: []
         };
 
-        var model = new OrganisationViewModel(organisation);
+        var model = new EditOrganisationViewModel(organisation, {healthCheckUrl:'/'});
 
         var json = model.modelAsJSON(true);
 
