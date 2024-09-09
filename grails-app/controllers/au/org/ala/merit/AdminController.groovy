@@ -92,8 +92,8 @@ class AdminController {
         String emailAddress = params.emailAddress
         def result = authService.getUserForEmailAddress(emailAddress)
         Map userDetails
-        if (result != null && result.userName == emailAddress){
-            userDetails = [userId: result.userId, emailAddress: result.userName, firstName: result.firstName, lastName: result.lastName]
+        if (result != null && result.email == emailAddress){
+            userDetails = [userId: result.userId, emailAddress: result.email, firstName: result.firstName, lastName: result.lastName]
         }else{
             userDetails = [error: "error", emailAddress: emailAddress]
         }
