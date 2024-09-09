@@ -12,7 +12,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
 
     SearchService searchService = Mock(SearchService)
     UserService userService = Mock(UserService)
-    HubSettings hubSettings = new HubSettings(availableFacets:['nameFacet', 'descriptionFacet', 'admin'], availableMapFacets:['adminMap'], adminFacets:['admin', 'adminMap'])
+    HubSettings hubSettings = new HubSettings(availableFacets:['nameFacet', 'descriptionFacet', 'admin', 'elect'], availableMapFacets:['adminMap'], adminFacets:['admin', 'adminMap'], officerFacets:['elect'])
     SettingService settingService = Mock(SettingService)
     MetadataService metadataService = Mock(MetadataService)
     ActivityService activityService = Mock(ActivityService)
@@ -190,17 +190,19 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         then:
         if (admin) {
             1 * userService.userIsAlaOrFcAdmin() >> true
+            1 * userService.userIsSiteAdmin() >> true
         }
         else if (readOnly) {
             1 * userService.userIsAlaOrFcAdmin() >> false
-            1 * userService.userHasReadOnlyAccess() >> true
+            1 * userService.userIsSiteAdmin() >> false
+            2 * userService.userHasReadOnlyAccess() >> true
         }
         1 * searchService.HomePageFacets(params) >> resp
         1 * settingService.getSettingText(_) >> "Project explorer description"
         1 * metadataService.activityTypesList() >> activityTypes
 
         and:
-        model.facetsList == ['nameFacet', 'descriptionFacet', 'admin']
+        model.facetsList == ['nameFacet', 'descriptionFacet', 'admin', 'elect']
         model.mapFacets == ['adminMap']
         model.geographicFacets == []
         model.description == "Project explorer description"
@@ -215,7 +217,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         false | true
     }
 
-    def "Users without MERIT admin or read only cannot view admin facets or downloads"() {
+    def "Users without MERIT admin or read only but with the hub officer role cannot view admin facets but can view officer facets"() {
         setup:
         Map resp = [:]
 
@@ -226,7 +228,36 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         then:
         1 * userService.userIsAlaOrFcAdmin() >> false
         1 * userService.userHasReadOnlyAccess() >> false
+        1 * userService.userIsSiteAdmin() >> true
 
+        1 * searchService.HomePageFacets(params) >> resp
+        1 * settingService.getSettingText(_) >> "Project explorer description"
+        0 * metadataService.activityTypesList()
+
+        and:
+        model.facetsList == ['nameFacet', 'descriptionFacet', 'elect']
+        model.mapFacets == []
+        model.geographicFacets == []
+        model.description == "Project explorer description"
+        model.results == resp
+        model.projectCount == 0
+        model.includeDownloads == false
+        model.activityTypes == null
+
+    }
+
+    def "Users without MERIT admin or read only cannot view admin facets or downloads"() {
+        setup:
+        Map resp = [:]
+
+        when:
+        params.fq="status:active"
+        controller.projectExplorer()
+
+        then:
+        1 * userService.userIsAlaOrFcAdmin() >> false
+        2 * userService.userHasReadOnlyAccess() >> false
+        1 * userService.userIsSiteAdmin() >> false
         1 * searchService.HomePageFacets(params) >> resp
         1 * settingService.getSettingText(_) >> "Project explorer description"
         0 * metadataService.activityTypesList()
