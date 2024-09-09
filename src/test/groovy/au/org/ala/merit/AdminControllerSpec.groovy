@@ -29,7 +29,7 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
         setup:
         String email = "test@test.com"
         params.emailAddress = email
-        Map userDetails = [userId: "12345", userName: email, firstName: "Test", lastName: "Testing"]
+        Map userDetails = [userId: "12345", userName: "userTest", firstName: "Test", lastName: "Testing", email:email]
 
         when:
         controller.searchUserDetails()
