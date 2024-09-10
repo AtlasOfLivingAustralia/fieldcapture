@@ -18,6 +18,7 @@ class OrganisationAdminTab extends Module{
         reportingSection(required:false) { $('#reporting-config').module OrganisationAdminReportSection }
 
         documentsTab { $('#edit-documents-tab') }
+        // Not bound to a selector because the dialog is attached to the document body and is referenced in the module
         documents { module AdminDocumentsTab }
 
         adminColumn { $("#admin .flex-column a") }
@@ -29,13 +30,35 @@ class OrganisationAdminTab extends Module{
 
     def viewDocumentsSection() {
         documentsTab.click()
-        waitFor { documents.displayed }
+        waitFor { documents.header.displayed }
     }
 
     def attachDocument() {
-       viewDocumentsSection()
+        viewDocumentsSection()
         documents.attachDocumentButton.click()
-        documents.attachDocumentDialog
+        Thread.sleep(1000) // Wait for the dialog to animate into view
+        int count = 0
+        while (!(documents.attachDocumentDialog.title.displayed || documents.attachDocumentDialog.displayed) && count < 10) {
+            count++
+            try {
+                documents.attachDocumentButton.click()
+            }
+            catch (Exception e) {
+                e.printStackTrace()
+            }
+            Thread.sleep(1000) // Wait for the dialog to animate into view
+            def logEntries = driver.manage().logs().get("browser").getAll()
+            logEntries.each {
+
+                String message = it.toJson().toString()
+                if (!message.contains("Google Maps")) {
+                    log.error(message)
+                    println(message)
+                }
+            }
+            log.error("*****************************In retry loop************************")
+
+        }
     }
 
     def viewEditSection() {

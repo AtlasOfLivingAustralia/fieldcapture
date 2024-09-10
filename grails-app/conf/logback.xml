@@ -15,7 +15,17 @@
     <appender-ref ref="STDOUT" />
   </logger>
 
-  <root level="error">
+  <logger name="org.pac4j" level="WARN">
+    <appender-ref ref="STDOUT" />
+  </logger>
+
+  <logger name="o.p.jee" level="WARN">
+    <appender-ref ref="STDOUT" />
+  </logger>
+
+
+
+  <root level="debug">
     <appender-ref ref="STDOUT" />
   </root>
 </configuration>

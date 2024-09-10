@@ -248,9 +248,16 @@ class HomeController {
         renderStaticPage(SettingPageType.CONTACTS, false)
     }
 
+    /**
+     * Returns a small amount of javascript to let other tabs know the user has been logged back in
+     * and closes the tab.
+     */
     def close() {
         response.setContentType("text/html")
-        render """<html><head><script type="text/javascript">window.close();</script></head><body/></html>"""
+        render """<html><head><script type="text/javascript">
+                            localStorage.setItem('login', new Date()); 
+                            window.close();
+                            </script></head><body/></html>"""
     }
 
     def staticPage(String id) {
