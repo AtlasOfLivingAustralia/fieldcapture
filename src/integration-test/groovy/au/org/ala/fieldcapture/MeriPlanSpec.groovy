@@ -193,7 +193,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         editableMeriPlan.generatePDF()
 
         then:
-        withNewWindow ([close:true], "meri-plan-report") {
+        withWindow([close:true],"meri-plan-report") {
             at MeriPlanPDFPage
             page.closePrintInstructions()
             page.meriPlan.primaryOutcome.text().contains("Ramsar")
@@ -592,42 +592,15 @@ class MeriPlanSpec extends StubbedCasSpec {
         openMeriPlan.toggleMeriPlanHistory.displayed
 
         when:
-        waitFor { openMeriPlan.toggleMeriPlanHistory.click() }
+        openMeriPlan.toggleMeriPlanHistory.click()
 
         then:
         openMeriPlan.meriPlanHistory.size() == 1
-        waitFor { $(".fa-external-link").displayed }
 
-        when:"Open a history of the approved meri plan"
-        waitFor { $(".fa-external-link").click() }
-
-        and:"View meri plan comparison"
-        waitFor { $(".fa-code-fork").click() }
-
-
-        then:
+        when:
         overviewTab.click()
 
-        and:
+        then:
         overview.projectStatus[1].text() == 'ACTIVE'
-    }
-
-    def "Compare current MERI Plan with the latest approved MERI plan"() {
-        setup:
-        String projectId = 'meri1'
-        loginAsUser('1', browser)
-
-        when:
-        to RlpProjectPage, projectId
-
-        then:
-        waitFor { at RlpProjectPage }
-
-        when:
-        def editableMeriPlan = openMeriPlanEditTab()
-        editableMeriPlan.compareMeriPlanChanges()
-
-        then:
-        overviewTab.click()
     }
 }

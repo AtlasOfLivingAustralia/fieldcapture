@@ -111,7 +111,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.keyThreats[0].threat = "Threat 1"
         meriPlan.keyThreats[0].intervention = "Intervention 1"
 
-        meriPlan.keyThreats[0].targetMeasures = ['score_42']
+        meriPlan.keyThreats[0].targetMeasures = ['score_43']
         meriPlan.keyThreats[0].evidence = "Evidence 1"
         meriPlan.projectMethodology = "Project assumptions 1"
 
@@ -166,28 +166,32 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         then: "Wait for the listener to update the available target measures and ensure they are correct"
         waitFor {
-            meriPlan.serviceOutcomeTargets.serviceAndTargets.size() == 2
-            meriPlan.serviceOutcomeTargets.serviceAndTargets[0].service == "Collecting, or synthesising baseline data"
-            meriPlan.serviceOutcomeTargets.serviceAndTargets[0].targetMeasure == "Number of baseline data sets collected and/or synthesised"
+            meriPlan.serviceOutcomeTargets.serviceAndTargets.size() == 3
+            meriPlan.serviceOutcomeTargets.serviceAndTargets[0].service == "Communication materials"
+            meriPlan.serviceOutcomeTargets.serviceAndTargets[0].targetMeasure == "Number of communication materials published"
             meriPlan.serviceOutcomeTargets.serviceAndTargets[1].service == "Weed distribution survey"
             meriPlan.serviceOutcomeTargets.serviceAndTargets[1].targetMeasure == "Area (ha) surveyed for weeds"
+            meriPlan.serviceOutcomeTargets.serviceAndTargets[2].service == "Collecting, or synthesising baseline data"
+            meriPlan.serviceOutcomeTargets.serviceAndTargets[2].targetMeasure == "Number of baseline data sets collected and/or synthesised"
 
-            //meriPlan.serviceOutcomeTargets.outcomeTargets[0].outcomes == ["ST1", "MT1"]
-            // CI environment is only expecting ST1 here - need to investigate why
             meriPlan.serviceOutcomeTargets.outcomeTargets[0].outcomes == ["ST1"]
             meriPlan.serviceOutcomeTargets.outcomeTargets[1].outcomes == ["MT1"]
+            meriPlan.serviceOutcomeTargets.outcomeTargets[2].outcomes == ["MT1"]
         }
 
-        meriPlan.serviceForecasts.forecasts.size() == 2
-        meriPlan.serviceForecasts.forecasts[0].service == "Collecting, or synthesising baseline data"
-        meriPlan.serviceForecasts.forecasts[0].score == "Number of baseline data sets collected and/or synthesised"
+        meriPlan.serviceForecasts.forecasts.size() == 3
+        meriPlan.serviceForecasts.forecasts[0].service == "Communication materials"
+        meriPlan.serviceForecasts.forecasts[0].score == "Number of communication materials published"
         meriPlan.serviceForecasts.forecasts[1].service == "Weed distribution survey"
         meriPlan.serviceForecasts.forecasts[1].score == "Area (ha) surveyed for weeds"
-
+        meriPlan.serviceForecasts.forecasts[2].service == "Collecting, or synthesising baseline data"
+        meriPlan.serviceForecasts.forecasts[2].score == "Number of baseline data sets collected and/or synthesised"
 
         when:
         meriPlan.serviceOutcomeTargets.outcomeTargets[0].target = "2"
         meriPlan.serviceOutcomeTargets.outcomeTargets[1].target = "1"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[2].target = "3"
+
         meriPlan.serviceForecasts.forecasts[0].targets[0].value("1")
         meriPlan.serviceForecasts.forecasts[0].targets[1].value("2")
         meriPlan.serviceForecasts.forecasts[0].targets[2].value("3")
@@ -198,6 +202,11 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.serviceForecasts.forecasts[1].targets[2].value("3")
         meriPlan.serviceForecasts.forecasts[1].targets[3].value("2")
         meriPlan.serviceForecasts.forecasts[1].targets[4].value("1")
+        meriPlan.serviceForecasts.forecasts[2].targets[0].value("6")
+        meriPlan.serviceForecasts.forecasts[2].targets[1].value("7")
+        meriPlan.serviceForecasts.forecasts[2].targets[2].value("8")
+        meriPlan.serviceForecasts.forecasts[2].targets[3].value("9")
+        meriPlan.serviceForecasts.forecasts[2].targets[4].value("0")
 
         meriPlan.save()
 
@@ -239,7 +248,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.keyThreats[0].threatCode == "Key threat 2"
         meriPlan.keyThreats[0].threat == "Threat 1"
         meriPlan.keyThreats[0].intervention == "Intervention 1"
-        meriPlan.keyThreats[0].targetMeasures == ['score_42']
+        meriPlan.keyThreats[0].targetMeasures == ['score_43']
         meriPlan.keyThreats[0].evidence == "Evidence 1"
         meriPlan.keyThreats[0].relatedOutcomes == ['ST1']
         meriPlan.projectMethodology == "Project assumptions 1"
@@ -263,6 +272,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.nationalAndRegionalPlans[0].documentUrl == "http://www.test.org"
         meriPlan.serviceOutcomeTargets.outcomeTargets[0].target == "2"
         meriPlan.serviceOutcomeTargets.outcomeTargets[1].target == "1"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[2].target == "3"
         meriPlan.serviceForecasts.forecasts[0].targets[0].value() == "1"
         meriPlan.serviceForecasts.forecasts[0].targets[1].value() == "2"
         meriPlan.serviceForecasts.forecasts[0].targets[2].value() == "3"
@@ -273,6 +283,11 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.serviceForecasts.forecasts[1].targets[2].value() == "3"
         meriPlan.serviceForecasts.forecasts[1].targets[3].value() == "2"
         meriPlan.serviceForecasts.forecasts[1].targets[4].value() == "1"
+        meriPlan.serviceForecasts.forecasts[2].targets[0].value() == "6"
+        meriPlan.serviceForecasts.forecasts[2].targets[1].value() == "7"
+        meriPlan.serviceForecasts.forecasts[2].targets[2].value() == "8"
+        meriPlan.serviceForecasts.forecasts[2].targets[3].value() == "9"
+        meriPlan.serviceForecasts.forecasts[2].targets[4].value() == "0"
 
         when: "We navigate to the read only version of the MERI plan"
         def meriPlanView = openMERIPlanTab()
@@ -304,7 +319,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlanView.keyThreats[0].threatCode.text() == "Key threat 2"
         meriPlanView.keyThreats[0].threat.text() == "Threat 1"
         meriPlanView.keyThreats[0].intervention.text() == "Intervention 1"
-        meriPlanView.keyThreats[0].targetMeasures.text() == 'Collecting, or synthesising baseline data - Number of baseline data sets collected and/or synthesised'
+        meriPlanView.keyThreats[0].targetMeasures.text() == 'Communication materials - Number of communication materials published'
         meriPlanView.keyThreats[0].evidence.text() == "Evidence 1"
         meriPlanView.keyThreats[0].relatedOutcomes.text() == 'ST1'
         meriPlanView.projectMethodology.text() == "Project assumptions 1"
@@ -326,21 +341,27 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlanView.nationalAndRegionalPlans[0].section.text() == "Section 1"
         meriPlanView.nationalAndRegionalPlans[0].alignment.text() == "Alignment 1"
         meriPlanView.nationalAndRegionalPlans[0].documentUrl.text() == "http://www.test.org"
-        meriPlanView.serviceOutcomeTargets.serviceAndTargets[0].service.text() == "Collecting, or synthesising baseline data"
-        meriPlanView.serviceOutcomeTargets.serviceAndTargets[0].targetMeasure.text() == "Number of baseline data sets collected and/or synthesised"
-        //meriPlanView.serviceOutcomeTargets.outcomeTargets[0].outcomes.text() == "ST1,MT1"
-        // CI environment is only expecting ST1 here - need to investigate.
+
+
+        meriPlanView.serviceOutcomeTargets.serviceAndTargets[0].service.text() == "Communication materials"
+        meriPlanView.serviceOutcomeTargets.serviceAndTargets[0].targetMeasure.text() == "Number of communication materials published"
         meriPlanView.serviceOutcomeTargets.outcomeTargets[0].outcomes.text() == "ST1"
         meriPlanView.serviceOutcomeTargets.outcomeTargets[0].target.text() == "2"
         meriPlanView.serviceOutcomeTargets.serviceAndTargets[1].service.text() == "Weed distribution survey"
         meriPlanView.serviceOutcomeTargets.serviceAndTargets[1].targetMeasure.text() == "Area (ha) surveyed for weeds"
         meriPlanView.serviceOutcomeTargets.outcomeTargets[1].outcomes.text() == "MT1"
         meriPlanView.serviceOutcomeTargets.outcomeTargets[1].target.text() == "1"
+        meriPlanView.serviceOutcomeTargets.serviceAndTargets[2].service.text() == "Collecting, or synthesising baseline data"
+        meriPlanView.serviceOutcomeTargets.serviceAndTargets[2].targetMeasure.text() == "Number of baseline data sets collected and/or synthesised"
+        meriPlanView.serviceOutcomeTargets.outcomeTargets[2].outcomes.text() == "MT1"
+        meriPlanView.serviceOutcomeTargets.outcomeTargets[2].target.text() == "3"
 
-        meriPlanView.serviceForecasts.forecasts[0].service.text() == "Collecting, or synthesising baseline data"
-        meriPlanView.serviceForecasts.forecasts[0].score.text() == "Number of baseline data sets collected and/or synthesised"
+        meriPlanView.serviceForecasts.forecasts[0].service.text() == "Communication materials"
+        meriPlanView.serviceForecasts.forecasts[0].score.text() == "Number of communication materials published"
         meriPlanView.serviceForecasts.forecasts[1].service.text() == "Weed distribution survey"
         meriPlanView.serviceForecasts.forecasts[1].score.text() == "Area (ha) surveyed for weeds"
+        meriPlanView.serviceForecasts.forecasts[2].service.text() == "Collecting, or synthesising baseline data"
+        meriPlanView.serviceForecasts.forecasts[2].score.text() == "Number of baseline data sets collected and/or synthesised"
 
         meriPlanView.serviceForecasts.forecasts[0].targets[0].text() == "1"
         meriPlanView.serviceForecasts.forecasts[0].targets[1].text() == "2"
@@ -352,13 +373,18 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlanView.serviceForecasts.forecasts[1].targets[2].text() == "3"
         meriPlanView.serviceForecasts.forecasts[1].targets[3].text() == "2"
         meriPlanView.serviceForecasts.forecasts[1].targets[4].text() == "1"
+        meriPlanView.serviceForecasts.forecasts[2].targets[0].text() == "6"
+        meriPlanView.serviceForecasts.forecasts[2].targets[1].text() == "7"
+        meriPlanView.serviceForecasts.forecasts[2].targets[2].text() == "8"
+        meriPlanView.serviceForecasts.forecasts[2].targets[3].text() == "9"
+        meriPlanView.serviceForecasts.forecasts[2].targets[4].text() == "0"
 
         when: "We open a printable version of the MERI plan"
         meriPlan = openMeriPlanEditTab()
         meriPlan.generatePDF()
         
         then:
-        withWindow"meri-plan-report", {
+        withWindow([close:true], "meri-plan-report") {
             at MeriPlanPDFPage
             closePrintInstructions()
             page.meriPlan.projectName.text() == "MERI plan edited name"
@@ -387,7 +413,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
             page.meriPlan.keyThreats[0].threatCode.text() == "Key threat 2"
             page.meriPlan.keyThreats[0].threat.text() == "Threat 1"
             page.meriPlan.keyThreats[0].intervention.text() == "Intervention 1"
-            page.meriPlan.keyThreats[0].targetMeasures.text() == 'Collecting, or synthesising baseline data - Number of baseline data sets collected and/or synthesised'
+            page.meriPlan.keyThreats[0].targetMeasures.text() == 'Communication materials - Number of communication materials published'
             page.meriPlan.keyThreats[0].evidence.text() == "Evidence 1"
             page.meriPlan.keyThreats[0].relatedOutcomes.text() == 'ST1'
             page.meriPlan.projectMethodology.text() == "Project assumptions 1"
@@ -636,36 +662,33 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         editableMeriPlan.generatePDF()
 
         then:
-        driver.switchTo().window("meri-plan-report")
-        waitFor { at MeriPlanPDFPage }
+        withWindow([close:true], "meri-plan-report") {
 
-        when:
+            at MeriPlanPDFPage
         closePrintInstructions()
 
-        then:
-        def meriPlan2 = meriPlan
-        meriPlan2.assets[0].description.text() == "asset 1"
-        waitFor { meriPlan2.objectives() == ["objective 2", "Other objective"] }
 
-        meriPlan2.shortTermOutcomes[0].outcome.text() == "outcome 1"
-        meriPlan2.projectDescription.text() == 'Project description'
+        page.meriPlan.assets[0].description.text() == "asset 1"
+        waitFor { page.meriPlan.objectives() == ["objective 2", "Other objective"] }
 
-        when:
+            page.meriPlan.shortTermOutcomes[0].outcome.text() == "outcome 1"
+            page.meriPlan.projectDescription.text() == 'Project description'
+
         // Sometimes .text() returns an empty string if the element is not in the viewport.
         // Trying this as a workaround.
         interact {
-            moveToElement(meriPlan2.adaptiveManagement)
+                moveToElement(page.meriPlan.activities)
         }
 
-        then:
-        meriPlan2.projectMethodology.text() == 'Project Methodology'
-        meriPlan2.monitoringIndicators[0].indicator.text() == "Indicator 1"
-        meriPlan2.monitoringIndicators[0].approach.text() == 'Approach 1'
-        meriPlan2.adaptiveManagement.text() == 'Adaptive management'
-        meriPlan2.projectPartnerships[0].name == 'partner name'
-        meriPlan2.projectPartnerships[0].partnership == 'partnership'
-        meriPlan2.projectPartnerships[0].orgType == 'Trust'
-        meriPlan2.activities() == ["activity 1", 'Other activity']
+            page.meriPlan.projectMethodology.text() == 'Project Methodology'
+            page.meriPlan.monitoringIndicators[0].indicator.text() == "Indicator 1"
+            page.meriPlan.monitoringIndicators[0].approach.text() == 'Approach 1'
+            page.meriPlan.adaptiveManagement.text() == 'Adaptive management'
+            page.meriPlan.projectPartnerships[0].name == 'partner name'
+            page.meriPlan.projectPartnerships[0].partnership == 'partnership'
+            page.meriPlan.projectPartnerships[0].orgType == 'Trust'
+            page.meriPlan.activities() == ["activity 1", 'Other activity']
+            }
 
     }
 
