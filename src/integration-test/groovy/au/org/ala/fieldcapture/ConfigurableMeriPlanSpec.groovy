@@ -674,11 +674,11 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
             page.meriPlan.shortTermOutcomes[0].outcome.text() == "outcome 1"
             page.meriPlan.projectDescription.text() == 'Project description'
 
-            // Sometimes .text() returns an empty string if the element is not in the viewport.
-            // Trying this as a workaround.
-            interact {
+        // Sometimes .text() returns an empty string if the element is not in the viewport.
+        // Trying this as a workaround.
+        interact {
                 moveToElement(page.meriPlan.activities)
-            }
+        }
 
             page.meriPlan.projectMethodology.text() == 'Project Methodology'
             page.meriPlan.monitoringIndicators[0].indicator.text() == "Indicator 1"
