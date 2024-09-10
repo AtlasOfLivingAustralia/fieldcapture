@@ -12,6 +12,8 @@ describe("The documents contains view models for working with documents", functi
         expect($location.href).toBeUndefined();
 
         model.fromDate('2022-02-01');
-        expect($location.href).toEqual('?query=Test&fromDate=2022-02-01&toDate=2022-06-30&isFilterByCompletedProjects=true');
+        var location = $location.href;
+        location = location.replace(/&?clientTimeZone=[^&]*/, '');
+        expect(location).toEqual('?query=Test&fromDate=2022-02-01&toDate=2022-06-30&isFilterByCompletedProjects=true');
     });
 });
