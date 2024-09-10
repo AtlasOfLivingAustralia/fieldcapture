@@ -94,10 +94,11 @@ class RlpProjectPage extends ReloadablePage {
         waitFor{overview.displayed}
     }
 
-    def displayReportingTab() {
+    def displayReportingTab(int reportCount = 0) {
         reportingTab.click()
         waitFor 10, {
-            projectReports.displayed
+            // The report count allows for the client of this method to wait for the javascript initialisation
+            projectReports.contentSection.displayed && projectReports.reports.size() >= reportCount
         }
     }
 }
