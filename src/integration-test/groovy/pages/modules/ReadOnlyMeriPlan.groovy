@@ -207,7 +207,7 @@ class ReadOnlyMeriPlan extends Module {
         projectPartnerships(required: false) { $('#project-partnership-view tbody tr').moduleList(ReadOnlyPartnershipRow) }
         keq(required:false) { $('#keq tbody tr').moduleList(ReadOnlyKeqRow) }
         budget(required:false) { $('.meri-budget-view tbody tr').moduleList(ReadOnlyBudgetRow) }
-        activities(required:false) { $('#activity-list') }
+        activities(required:false) { $('#activity-list-view') }
         assets(required:false) { $('table.assets-view tbody tr').moduleList(ReadOnlyAssetRow) }
         adaptiveManagement(required:false) { $('#adaptive-management-view span') }
         priorityAction(required:false) { $("#activity-list-view .activity") }

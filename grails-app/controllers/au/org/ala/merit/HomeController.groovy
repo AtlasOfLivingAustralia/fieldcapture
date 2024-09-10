@@ -93,9 +93,15 @@ class HomeController {
 
         boolean canViewAdminFacetsAndDownloads = userService.userIsAlaOrFcAdmin() || userService.userHasReadOnlyAccess()
         if (!canViewAdminFacetsAndDownloads) {
-            def adminFacetList = SettingService.getHubConfig().adminFacets ?: []
+            List adminFacetList = SettingService.getHubConfig().adminFacets ?: []
             facetsList?.removeAll(adminFacetList)
             mapFacets?.removeAll(adminFacetList)
+        }
+        boolean canViewOfficerFacets = userService.userIsSiteAdmin() || userService.userHasReadOnlyAccess()
+        if (!canViewOfficerFacets) {
+            List officerFacetList = SettingService.getHubConfig().officerFacets ?: []
+            facetsList?.removeAll(officerFacetList)
+            mapFacets?.removeAll(officerFacetList)
         }
 
         def fqList = params.getList('fq')
