@@ -7,6 +7,7 @@ import org.openqa.selenium.StaleElementReferenceException
 class ProjectReports extends Module {
 
     static content = {
+        contentSection { $('#reporting-content') }
         reports {
             try {
                 $('#reporting-content tbody tr').moduleList(ReportSummaryLine)
