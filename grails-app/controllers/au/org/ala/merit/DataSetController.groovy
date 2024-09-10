@@ -159,7 +159,7 @@ class DataSetController {
     }
 
     @PreAuthorise(accessLevel = 'admin')
-    def download(String id, String dataSetId) {
+    def download(String id, String dataSetId, String format) {
         Map projectData = projectData(id)
         Map dataSet = projectData.project?.custom?.dataSets?.find{it.dataSetId == dataSetId}
         if (!dataSet) {
@@ -169,7 +169,7 @@ class DataSetController {
         else {
             if (isMonitorDataSet(dataSet)) {
                 if (isProtocolSupportedForDownload(dataSet)) {
-                    bdrService.downloadDataSet(dataSet.dataSetId, response)
+                    bdrService.downloadDataSet(dataSet.dataSetId, format, response)
                 }
             }
             else if (dataSet.url) {

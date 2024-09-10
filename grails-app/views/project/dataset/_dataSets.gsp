@@ -58,9 +58,15 @@
                 <a class="btn btn-container btn-sm" href="#" data-bind="visible:!readOnly,click:deleteDataSet">
                     <i class="fa fa-remove" title="Delete this dataset"></i>
                 </a>
-                <a class="btn btn-container btn-sm" href="#" data-bind="if:downloadUrl,attr:{href:downloadUrl}">
-                    <i class="fa fa-download" title="Download data for this dataset from the BDR"></i>
-                </a>
+                <div class="dropdown" data-bind="if:downloadUrl" style="display:inline-block">
+                    <a class="btn btn-container btn-sm dropdown-toggle" href="#" data-toggle="dropdown">
+                        <i class="fa fa-download" title="Download data for this dataset from the BDR"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#" target="_blank" data-bind="attr:{href:downloadUrl+'?format=csv'}">CSV</a>
+                        <a class="dropdown-item" href="#" target="_blank" data-bind="attr:{href:downloadUrl+'?format=geojson'}">geojson</a>
+                    </div>
+                </div>
 
             </td>
             <td class="dataset-name" data-bind="text:name"></td>
