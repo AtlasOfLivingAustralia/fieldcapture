@@ -16,6 +16,12 @@
     <g:if test="${params.query}">
         <input type="hidden" name="query" value="${params.query.encodeAsHTML()}">
     </g:if>
+    <g:if test="${params.isFilterByCompletedProjects}">
+        <input type="hidden" name="isFilterByCompletedProjects" value="${params.isFilterByCompletedProjects.encodeAsHTML()}"/>
+    </g:if>
+    <g:if test="${params.clientTimeZone}">
+        <input type="hidden" name="clientTimeZone" value="${params.clientTimeZone.encodeAsHTML()}"/>
+    </g:if>
     <br/></p><strong>Project Information</strong>
     <ul class="unstyled">
         <g:each in="${['Projects', 'Output Targets', 'Sites', 'Reports', 'Report Summary', 'Documents', 'Blog']}" var="name">
