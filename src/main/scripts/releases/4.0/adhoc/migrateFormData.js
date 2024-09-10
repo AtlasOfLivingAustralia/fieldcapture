@@ -1,5 +1,5 @@
 load('../../../utils/audit.js');
-let adminUserId = '1493';
+let adminUserId = '<tba>';
 let commsMaterials = db.output.find({name:'NHT - Communication materials', status:{$ne:'deleted'}});
 while (commsMaterials.hasNext()) {
     let commsMaterial = commsMaterials.next();
@@ -42,7 +42,7 @@ while (commsMaterials.hasNext()) {
         let commEngagement = communityEngagement.next();
         let activity = db.activity.findOne({activityId: commEngagement.activityId});
 
-        if (commEngagement.data && commEngagement.data.communicationMaterials) {
+        if (commEngagement.data && commEngagement.data.events) {
             if (activity.type == 'NHT Output Report' && activity.formVersion == 1) {
                 print("Not updating v1 of the NHT Output Report for project "+activity.projectId+", "+activity.description);
                 continue;
@@ -69,8 +69,8 @@ while (commsMaterials.hasNext()) {
 
             commEngagement.data.communityEngagementByOutcome = [toMove];
 
-            db.output.replaceOne({_id:commsMaterial._id}, commsMaterial);
-            audit(commsMaterial, commsMaterial.outputId, 'au.org.ala.ecodata.Output', adminUserId);
+            db.output.replaceOne({_id:commEngagement._id}, commEngagement);
+            audit(commEngagement, commEngagement.outputId, 'au.org.ala.ecodata.Output', adminUserId);
             printjson(commEngagement.data);
         }
     }
