@@ -35,6 +35,15 @@
                 </div>
             </div>
 
+            <g:if test="${fc.userIsAlaAdmin()}">
+            <div class="row mt-3">
+                <div class="col-sm-3">
+                    <a class="btn btn-info btn-sm admin-action reindexButton" href="${g.createLink(action: 'reindexProjects',   id:  program.programId)}"><i
+                            class="fa fa-plus"></i> Re-index projects in this program</a>
+                </div>
+            </div>
+            </g:if>
+
         </div>
 
 

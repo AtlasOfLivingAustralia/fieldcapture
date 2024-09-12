@@ -279,4 +279,12 @@ class ProgramService {
         return webService.getJson("${grailsApplication.config.getProperty('ecodata.baseUrl')}program/listOfAllPrograms")
     }
 
+     Map reindexProjects(String programId) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl')+"admin/reindexProjects"
+        Map params = [programId:programId]
+
+        Map resp = webService.doPost(url, params)
+         resp
+    }
+
 }
