@@ -1,34 +1,4 @@
-<style type="text/css">
-    #report th, #report td {
-        white-space: normal;
-    }
-    .early {
-        color:green;
-    }
-    .late {
-        color:red;
-    }
 
-    td .layout-container {
-        width:100%;
-        height:100%;
-        position: relative;
-    }
-
-    td .layout-container em {
-        margin-right:1.5em;
-        display: block;
-    }
-
-    td .see-more {
-        position: absolute;
-        top:3px;
-        right:0;
-    }
-
-
-
-</style>
 <table id="report" class="table">
     <thead>
         <tr>
@@ -87,14 +57,14 @@
 
 <asset:script>
 $(function() {
-
-
-    var projects = <fc:modelAsJavascript model="${memberProjects}"/>;
-    var viewModel = new ProjectReportingViewModel(projects);
-
+    var options = {
+        userProjectsUrl: fcConfig.userProjectsUrl,
+        tableSelector: '#report'
+    };
+    var projects = <fc:modelAsJavascript model="${memberProjects}" default="[]"/>;
+    var viewModel = new ProjectReportingViewModel(projects, options);
     ko.applyBindings(viewModel, document.getElementById('report'));
 
-    var table = $('#report').DataTable({displayLength:50, order:[[6,'desc']]});
 
 });
 </asset:script>
