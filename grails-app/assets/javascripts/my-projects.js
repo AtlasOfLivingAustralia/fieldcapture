@@ -172,11 +172,28 @@ var ProjectReportsViewModel = function (project) {
 
 };
 
-var ProjectReportingViewModel = function (projects) {
-
+var ProjectReportingViewModel = function (projects, options) {
     var self = this;
-    self.projects = [];
-    for (var i = 0; i < projects.length; i++) {
-        self.projects.push(new ProjectReportsViewModel(projects[i].project));
+    self.projects = ko.observableArray([]);
+
+
+    function mapProjectsAndAttachDataTables(projectsToMap) {
+        var mappedProjects = _.map(projectsToMap, function(prj) {
+            return new ProjectReportsViewModel(prj.project);
+        });
+        self.projects(mappedProjects);
+        $(options.tableSelector).DataTable({displayLength:50, order:[[6,'desc']]});
     }
+    if (projects.length == 0) {
+        $.get(options.userProjectsUrl).done(function (projects) {
+            mapProjectsAndAttachDataTables(projects);
+        }).fail(function () {
+            bootbox.alert("There was an error retrieving your projects.  Please try again later.");
+        });
+    }
+    else {
+        mapProjectsAndAttachDataTables(projects);
+    }
+
+
 };
