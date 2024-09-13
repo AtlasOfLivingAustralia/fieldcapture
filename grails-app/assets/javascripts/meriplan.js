@@ -2496,13 +2496,13 @@ var Report = function (report) {
     };
 
     self.isDue = function () {
-        return report.activityCount > 0 && report.publicationStatus != 'pendingApproval' &&
+        return report.publicationStatus != 'pendingApproval' &&
             report.publicationStatus != 'published' &&
             toDate < now && (!dueDate || dueDate >= now); // Due date is temporarily optional.
     };
 
     self.isOverdue = function () {
-        return report.activityCount > 0 && report.publicationStatus != 'pendingApproval' &&
+        return report.publicationStatus != 'pendingApproval' &&
             report.publicationStatus != 'published' &&
             dueDate && dueDate < now;
     };
@@ -2524,9 +2524,6 @@ var Report = function (report) {
 
         if (self.isCurrent()) {
             return name + ' in progress';
-        }
-        if (report.activityCount == 0) {
-            return name + ' has no activities to report';
         }
 
         return '';

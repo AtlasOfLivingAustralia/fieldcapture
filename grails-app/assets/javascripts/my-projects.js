@@ -22,42 +22,38 @@ var ProjectReportsViewModel = function (project) {
 
     var currentReport = null;
 
+    _.sortBy(project.reports, function(report) { return report.toDate });
+
     if (project.reports) {
         for (var i = 0; i < project.reports.length; i++) {
 
             var report = new Report(project.reports[i]);
             self.reports.push(report);
-            if (!currentReport) {
-                currentReport = report;
-            }
-
-            // Rule for "current" report is:
-            // 1) Any report awaiting action. (Overdue > Submitted).
-            // 2) Current stage.
-
-            if (report.isOverdue()) {
-                currentReport = report;
-            } else if (report.isSubmitted() && !currentReport.isOverdue()) {
-                currentReport = report;
-            } else if (report.isDue() && !currentReport.isOverdue() && !currentReport.isSubmitted()) {
-                currentReport = report;
-            } else if (report.isCurrent() && !currentReport.isDue() && !currentReport.isOverdue() && !currentReport.isSubmitted()) {
-                currentReport = report;
-            }
-
-            if (report.isSubmitted() || report.isApproved()) {
-                self.submittedReportCount++;
-                reportingTimeSum += report.submissionDelta();
-            }
-
-
         }
 
         for (var i = 0; i < self.reports.length; i++) {
             var report = self.reports[i];
             if (report.isOverdue() || report.isSubmitted() || report.isDue()) {
-                if (report !== currentReport) {
+                if (!currentReport) {
+                    currentReport = report;
+                }
+                else {
                     self.extendedStatus.push(report.status());
+                }
+            }
+        }
+
+        if (!currentReport) {
+            var reports = _.filter(self.reports, function(report) {
+                return report.isCurrent();
+            });
+            if (reports.length > 0) {
+                currentReport = reports[0];
+
+                if (reports.length > 1) {
+                    for (var i= 0; i<reports.length; i++) {
+                        self.extendedStatus.push(reports[i].status());
+                    }
                 }
             }
         }
@@ -90,6 +86,7 @@ var ProjectReportsViewModel = function (project) {
     self.historyVisible = ko.observable(false);
 
     self.currentStatus = function () {
+
         if (currentReport) {
             return currentReport.status();
         }
