@@ -2,7 +2,7 @@
 <table id="report" class="table">
     <thead>
         <tr>
-            <th class="sorting">Grant ID</th>
+            <th class="sorting">MERIT Project ID</th>
             <th class="sorting">Programme</th>
             <th class="sorting">Sub-programme</th>
             <th class="sorting" width="30%">Project name</th>

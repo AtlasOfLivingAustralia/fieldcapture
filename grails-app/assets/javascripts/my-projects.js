@@ -179,7 +179,11 @@ var ProjectReportingViewModel = function (projects, options) {
             return new ProjectReportsViewModel(prj.project);
         });
         self.projects(mappedProjects);
-        $(options.tableSelector).DataTable({displayLength:50, order:[[6,'desc']]});
+        // We need the projects to be rendered in the table before attaching the DataTable to it
+        setTimeout(function() {
+            $(options.tableSelector).DataTable({displayLength:50, order:[[6,'desc']]});
+        }, 0);
+
     }
     if (projects.length == 0) {
         $.get(options.userProjectsUrl).done(function (projects) {
