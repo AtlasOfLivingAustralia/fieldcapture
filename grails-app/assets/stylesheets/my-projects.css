@@ -11,3 +11,29 @@
 *= require dataSets
 *= require_self
 */
+#report th, #report td {
+    white-space: normal;
+}
+.early {
+    color:green;
+}
+.late {
+    color:red;
+}
+
+td .layout-container {
+    width:100%;
+    height:100%;
+    position: relative;
+}
+
+td .layout-container em {
+    margin-right:1.5em;
+    display: block;
+}
+
+td .see-more {
+    position: absolute;
+    top:3px;
+    right:0;
+}

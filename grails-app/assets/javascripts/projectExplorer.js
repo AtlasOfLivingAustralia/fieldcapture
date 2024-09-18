@@ -54,6 +54,7 @@ var DatePickerModel = function(fromDate, toDate, isFilterByCompletedProjects, ur
     var reloadWithDatesAndOption = function(newFromDate, newToDate, isFilterByCompletedProjects) {
         var parsedNewFromDate = moment(newFromDate);
         var parsedNewToDate = moment(newToDate);
+        var clientTimeZone = moment.tz.guess();
         if (newFromDate && parsedNewFromDate.isValid()) {
             urlWithoutDates += urlWithoutDates?'&':'?';
             urlWithoutDates += 'fromDate='+moment(newFromDate).format(formatString);
@@ -65,6 +66,10 @@ var DatePickerModel = function(fromDate, toDate, isFilterByCompletedProjects, ur
         if (isFilterByCompletedProjects != undefined) {
             urlWithoutDates += urlWithoutDates?'&':'?';
             urlWithoutDates += 'isFilterByCompletedProjects='+isFilterByCompletedProjects;
+        }
+        if (clientTimeZone) {
+            urlWithoutDates += urlWithoutDates?'&':'?';
+            urlWithoutDates += 'clientTimeZone='+  encodeURIComponent(clientTimeZone);
         }
         $location.href = urlWithoutDates;
     }
