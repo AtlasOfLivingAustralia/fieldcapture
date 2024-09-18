@@ -376,59 +376,13 @@ function ProjectViewModel(project) {
     });
 
     self.transients.projectId = project.projectId;
+    self.transients.currentAssociatedOrgs = ko.pureComputed(function() {
+        return _.filter(self.associatedOrgs(), function(org) {
+            var toDate = ko.utils.unwrapObservable(org.toDate);
+            var fromDate = ko.utils.unwrapObservable(org.fromDate);
+            return (!toDate || toDate >= new Date().toISOStringNoMillis()) && (!fromDate || fromDate <= new Date().toISOStringNoMillis());
 
-    self.transients.dataSharingLicenses = [
-            {lic:'CC BY', name:'Creative Commons Attribution'},
-            {lic:'CC BY-NC', name:'Creative Commons Attribution-NonCommercial'},
-            {lic:'CC BY-SA', name:'Creative Commons Attribution-ShareAlike'},
-            {lic:'CC BY-NC-SA', name:'Creative Commons Attribution-NonCommercial-ShareAlike'}
-        ];
-
-    self.transients.difficultyLevels = [ "Easy", "Medium", "Hard" ];
-
-    var scienceTypesList = [
-        {name:'Biodiversity', value:'biodiversity'},
-        {name:'Ecology', value:'ecology'},
-        {name:'Natural resource management', value:'nrm'}
-    ];
-    self.transients.availableScienceTypes = scienceTypesList;
-    self.transients.scienceTypeDisplay = ko.pureComputed(function () {
-        for (var st = self.scienceType(), i = 0; i < scienceTypesList.length; i++)
-            if (st === scienceTypesList[i].value)
-                return scienceTypesList[i].name;
-    });
-
-    var availableProjectTypes = [
-        {name:'Citizen Science Project', display:'Citizen\nScience', value:'citizenScience'},
-        {name:'Ecological or biological survey / assessment (not citizen science)', display:'Biological\nScience', value:'survey'},
-        {name:'Natural resource management works project', display:'Works\nProject', value:'works'}
-    ];
-    self.transients.availableProjectTypes = availableProjectTypes;
-    self.transients.kindOfProjectDisplay = ko.pureComputed(function () {
-        for (var pt = self.transients.kindOfProject(), i = 0; i < availableProjectTypes.length; i++)
-            if (pt === availableProjectTypes[i].value)
-                return availableProjectTypes[i].display;
-    });
-    /** Map between the available selection of project types and how the data is stored */
-    self.transients.kindOfProject = ko.pureComputed({
-        read: function() {
-            if (self.isCitizenScience()) {
-                return 'citizenScience';
-            }
-            if (self.projectType()) {
-                return self.projectType() == 'survey' ? 'survey' : 'works';
-            }
-        },
-        write: function(value) {
-            if (value === 'citizenScience') {
-                self.isCitizenScience(true);
-                self.projectType('survey');
-            }
-            else {
-                self.isCitizenScience(false);
-                self.projectType(value);
-            }
-        }
+        });
     });
 
     self.loadPrograms = function (programsModel) {

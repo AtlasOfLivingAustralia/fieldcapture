@@ -25,7 +25,7 @@
                                                                              id="${project.managementUnitId}">${project.managementUnitName?.encodeAsHTML()}</g:link></div>
                         </div>
                     </g:if>
-                    <!-- ko foreach:associatedOrgs() -->
+                    <!-- ko foreach:transients.currentAssociatedOrgs() -->
                     <div class="row mb-2">
                         <div class="col-sm-4 header-label" data-bind="text:$data.description"></div>
 
