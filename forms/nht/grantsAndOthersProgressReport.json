@@ -549,6 +549,8 @@
       "name": "Overview Output Report",
       "description": null
     },
+
+
     {
       "collapsedByDefault": false,
       "template": {
@@ -2668,6 +2670,490 @@
       "collapsibleHeading": null,
       "name": "NHT - Community engagement",
       "description": null
+    },
+    {
+      "templateName": "greenAndBlueSpaces",
+      "optional": false,
+      "title": "Creation and improvement of green and blue spaces",
+      "name":  "Creation and improvement of green and blue spaces",
+      "template": {
+        "dataModel": [
+          {
+            "name": "projectContributedToGreenAndBlueSpaceThisPeriod",
+            "dataType": "text",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required",
+            "description": "Urban green and blue spaces provide multiple benefits to urban liveability including health benefits, environmental functions e.g. cooling, air purification, water filtration and habitat for native species. Urban green space includes parks, woodlands, nature conservation areas, gardens, and sports fields, and blue space includes creeks, rivers, lakes, ponds, wetlands, estuaries, and coastal waters"
+          },
+          {
+            "name": "numberOfGreenAndBlueSpacesCreatedOrImproved",
+            "dataType": "number",
+            "validate": "required",
+            "description": "Only include new spaces in this field, follow-up visits of previously created or improved spaces should not be reported.",
+            "behaviour": [
+              {
+                "condition": "projectContributedToGreenAndBlueSpaceThisPeriod == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "shadeTreesPlanted",
+            "dataType": "text",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "behaviour": [
+              {
+                "condition": "projectContributedToGreenAndBlueSpaceThisPeriod == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required",
+            "description": "Shade casting trees are those which will grow over 2 metres in height. If yes, provide a brief description of what planting activities involved. If no, continue to the next question"
+          },
+          {
+            "name": "shadeTreesPlantedDescription",
+            "dataType": "text",
+            "validate": "required,maxSize[300]",
+            "behaviour": [
+              {
+                "condition": "shadeTreesPlanted == \"Yes\" and projectContributedToGreenAndBlueSpaceThisPeriod == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "numberOfShadeTreesPlanted",
+            "dataType": "number",
+            "validate": "required,integer,min[0]",
+            "description": "Enter the number of shade casting trees planted as part of the project, if the exact number is not known please estimate to the nearest interval of 10. Do not use decimal points",
+            "behaviour": [
+              {
+                "condition": "shadeTreesPlanted == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "waterbodySizeIncreased",
+            "dataType": "text",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "behaviour": [
+              {
+                "condition": "projectContributedToGreenAndBlueSpaceThisPeriod == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required",
+            "description": "If yes, state whether it created or increased the size of an existing waterbody, and how the increase was achieved. If no, continue to the next question"
+          },
+          {
+            "name": "waterbodyDescription",
+            "dataType": "text",
+            "validate": "required,maxSize[300]",
+            "behaviour": [
+              {
+                "condition": "waterbodySizeIncreased == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "sizeOfWaterbodyIncreaseInSquareMeters",
+            "dataType": "number",
+            "validate": "required,integer,min[0]",
+            "description": "Enter the size of the increase or creation in square metres, please use whole integers with no decimal places",
+            "behaviour": [
+              {
+                "condition": "waterbodySizeIncreased == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "greenSpaceSizeIncreased",
+            "dataType": "text",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "behaviour": [
+              {
+                "condition": "projectContributedToGreenAndBlueSpaceThisPeriod == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required",
+            "description": "If yes, state whether it created or increased the size of an existing space, and how the increase was achieved. If no, continue to the next question."
+          },
+          {
+            "name": "greenSpaceDescription",
+            "dataType": "text",
+            "validate": "required,maxSize[300]",
+            "behaviour": [
+              {
+                "condition": "greenSpaceSizeIncreased == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "sizeOfGreenSpaceIncreaseInSquareMeters",
+            "dataType": "number",
+            "validate": "required,integer,min[0]",
+            "description": "Enter the size of the increase or creation in square metres, please use whole integers with no decimal places",
+            "behaviour": [
+              {
+                "condition": "greenSpaceSizeIncreased == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "imperviousSurfacesRemoved",
+            "dataType": "text",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "behaviour": [
+              {
+                "condition": "projectContributedToGreenAndBlueSpaceThisPeriod == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required",
+            "description": "If yes, state how the project achieved this. If no, continue to the next question."
+          },
+          {
+            "name": "imperviousSurfacesDescription",
+            "dataType": "text",
+            "validate": "required,maxSize[300]",
+            "behaviour": [
+              {
+                "condition": "imperviousSurfacesRemoved == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "sizeOfImperviousSurfaceRemovedInSquareMeters",
+            "dataType": "number",
+            "validate": "required,integer,min[0]",
+            "description": "Enter the size of the impervious surface removed in square metres, please use whole integers with no decimal places",
+            "behaviour": [
+              {
+                "condition": "imperviousSurfacesRemoved == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "increasedAccessibilityToGreenOrBlueSpace",
+            "dataType": "text",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "behaviour": [
+              {
+                "condition": "projectContributedToGreenAndBlueSpaceThisPeriod == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required",
+            "description": "If yes, state how. If no, continue to the next question."
+          },
+          {
+            "name": "increasedAccessibilityDescription",
+            "dataType": "text",
+            "validate": "required,maxSize[500]",
+            "behaviour": [
+              {
+                "condition": "increasedAccessibilityToGreenOrBlueSpace == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "improvedQualityOfGreenOrBlueSpace",
+            "dataType": "text",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "behaviour": [
+              {
+                "condition": "projectContributedToGreenAndBlueSpaceThisPeriod == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required",
+            "description": "If yes, state how. If no, continue to the next question."
+          },
+          {
+            "name": "improvedQualityDescription",
+            "dataType": "text",
+            "validate": "required,maxSize[500]",
+            "behaviour": [
+              {
+                "condition": "improvedQualityOfGreenOrBlueSpace == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "otherContributionToOutcome",
+            "dataType": "text",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "behaviour": [
+              {
+                "condition": "projectContributedToGreenAndBlueSpaceThisPeriod == \"Yes\"",
+                "type": "enable"
+              }
+            ],
+            "validate": "required",
+            "description": "If yes, please outline. If no, continue to the next question."
+          },
+          {
+            "name": "otherContributionDescription",
+            "dataType": "text",
+            "validate": "required,maxSize[1000]",
+            "behaviour": [
+              {
+                "condition": "otherContributionToOutcome == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          }
+        ],
+        "viewModel": [
+          {
+            "items": [
+              {
+                "source": "<h4>6. Green and Blue Space</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "projectContributedToGreenAndBlueSpaceThisPeriod",
+                "preLabel": "6.1 Within the reporting period, has the project contributed measurably to the secondary outcome of the program?</h4> (Secondary outcome: By June 2028 there is a measurable improvement to the condition and quality of urban green and blue space to benefit local communities in urban, peri-urban and regional centres (for example, through planting shade casting trees, creating waterbodies, removing impervious surfaces, increasing access))."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "number",
+                "source": "numberOfGreenAndBlueSpacesCreatedOrImproved",
+                "preLabel": "6.1.1 How many green and/or blue spaces were created or improved this reporting period?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "shadeTreesPlanted",
+                "preLabel": "6.2 Did the project plant shade-casting trees?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "shadeTreesPlantedDescription",
+                "preLabel": ""
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "number",
+                "source": "numberOfShadeTreesPlanted",
+                "preLabel": "6.2.1 How many shade-casting trees were planted?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "waterbodySizeIncreased",
+                "preLabel": "6.3 Did the project create, or increase the size of, a waterbody?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "waterbodyDescription",
+                "preLabel": ""
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "number",
+                "source": "sizeOfWaterbodyIncreaseInSquareMeters",
+                "preLabel": "6.3.1 What was the size of the new or increased waterbody (in square metres)?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "greenSpaceSizeIncreased",
+                "preLabel": "6.4 Did the project create, or increase the extent (i.e. area) of green space compared to pre-project?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "greenSpaceDescription",
+                "preLabel": ""
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "number",
+                "source": "sizeOfGreenSpaceIncreaseInSquareMeters",
+                "preLabel": "6.4.1 What was the size of the area of the green space increased or created (in square metres)?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "imperviousSurfacesRemoved",
+                "preLabel": "6.5 Did the project remove impervious surfaces i.e. concrete, asphalt?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "imperviousSurfacesDescription",
+                "preLabel": ""
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "number",
+                "source": "sizeOfImperviousSurfaceRemovedInSquareMeters",
+                "preLabel": "6.5.1 What was the size of the impervious surfaces removed (in square metres)?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "increasedAccessibilityToGreenOrBlueSpace",
+                "preLabel": "6.6 Did the project increase or improve accessibility to urban green and/or blue space compared to pre-project?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "increasedAccessibilityDescription",
+                "rows": 4,
+                "preLabel": ""
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "improvedQualityOfGreenOrBlueSpace",
+                "preLabel": "6.7 Did the project improve the quality of urban green and/or blue space for the benefit of the local community compared to pre-project?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "improvedQualityDescription",
+                "rows": 4,
+                "preLabel": ""
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "otherContributionToOutcome",
+                "preLabel": "6.8 Did you contribute to the outcome in any other way not mentioned above?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "otherContributionDescription",
+                "rows": 8,
+                "preLabel": ""
+              }
+            ]
+          }
+        ]
+      },
+      "collapsedByDefault": false
     },
     {
       "collapsedByDefault": false,
