@@ -95,17 +95,35 @@
               {
                 "dataType": "text",
                 "name": "nature",
-                "validate": "required,maxSize[1000]"
+                "validate": "required,maxSize[1000]",
+                "behaviour": [
+                  {
+                    "condition": "issuesEncountered == \"Yes\"",
+                    "type": "enable"
+                  }
+                ]
               },
               {
                 "dataType": "text",
                 "name": "how",
-                "validate": "required,maxSize[1000]"
+                "validate": "required,maxSize[1000]",
+                "behaviour": [
+                  {
+                    "condition": "issuesEncountered == \"Yes\"",
+                    "type": "enable"
+                  }
+                ]
               },
               {
                 "dataType": "text",
                 "name": "implication",
-                "validate": "required,maxSize[1000]"
+                "validate": "required,maxSize[1000]",
+                "behaviour": [
+                  {
+                    "condition": "issuesEncountered == \"Yes\"",
+                    "type": "enable"
+                  }
+                ]
               }
             ]
           },
@@ -233,6 +251,11 @@
           {
             "dataType": "image",
             "name": "goodNewsEvidence"
+          },
+          {
+            "dataType": "text",
+            "name": "additionalInformation",
+            "validate": "maxSize[1000]"
           }
         ],
         "modelName": "Progress Report",
@@ -530,9 +553,20 @@
             ]
           },
           {
+            "type": "row",
             "items": [
               {
-                "source": "<h4>6. Activity Reporting</h4></br><b>Only selected services in the MERI Plan is auto-populated and viewed in the Progress Report/s.<br>Reported data from each of the Progress Report/s is aggregated into the Final Report.</b>",
+                "type": "textarea",
+                "source": "additionalInformation",
+                "preLabel": "6. If there is any other program specific information that needs to be provided, please do so here (check with your contract manager if you are unsure)",
+                "rows": 5
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>7. Activity Reporting</h4></br><b>Only selected services in the MERI Plan is auto-populated and viewed in the Progress Report/s.<br>Reported data from each of the Progress Report/s is aggregated into the Final Report.</b>",
                 "type": "literal"
               }
             ],
