@@ -2673,7 +2673,7 @@
     },
     {
       "templateName": "greenAndBlueSpaces",
-      "optional": false,
+      "optional": true,
       "title": "Creation and improvement of green and blue spaces",
       "name":  "Creation and improvement of green and blue spaces",
       "template": {
