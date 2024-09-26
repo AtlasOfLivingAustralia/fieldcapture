@@ -24,7 +24,7 @@
             "name": "communicationDetails",
             "columns": [
               {
-                "dataType": "stringList",
+                "dataType": "text",
                 "name": "communicationMaterialType",
                 "constraints": [
                   "Advertising",
@@ -155,7 +155,7 @@
             "name": "engagementDetails",
             "columns": [
               {
-                "dataType": "stringList",
+                "dataType": "text",
                 "name": "engagementType",
                 "constraints": [
                   "One-on-one technical advice",
@@ -2719,7 +2719,7 @@
                   "validate": "required,min[0]"
                 },
                 {
-                  "dataType": "stringList",
+                  "dataType": "text",
                   "name": "industryType",
                   "constraints": [
                     "Cropping",
