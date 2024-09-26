@@ -14926,11 +14926,6 @@
                   {
                     "columns": [
                       {
-                        "dataType": "species",
-                        "name": "species",
-                        "validate": "required"
-                      },
-                      {
                         "dataType": "text",
                         "name": "typesOfHabitat",
                         "description": "",
