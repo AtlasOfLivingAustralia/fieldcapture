@@ -474,7 +474,7 @@ var PidLocation = function (l, options) {
 
 function SiteViewModelWithMapIntegration (siteData, projectId, options) {
     var self = this;
-    SiteViewModel.apply(self, [siteData], options);
+    SiteViewModel.apply(self, [siteData, null, options]);
 
     self.renderPOIs = function(){
         removeMarkers();
