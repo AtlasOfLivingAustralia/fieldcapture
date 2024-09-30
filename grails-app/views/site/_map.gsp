@@ -52,7 +52,7 @@
                               class="form-control"
                               name='context'
                               from="['choose site context','Pastoral','Industrial','Urban','Coastal', 'Reserve', 'Private land']"
-                              keys="['none','Pastoral','Industrial','Urban','Coastal','Reserve', 'Private land']"/>
+                              keys="['none','Pastoral','Industrial','Urban','Coastal','Reserve', 'Private land', 'Marine']"/>
                     </div>
                 </div>
 
