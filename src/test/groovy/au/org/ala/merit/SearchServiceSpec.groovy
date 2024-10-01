@@ -1,10 +1,9 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.hub.HubSettings
-import grails.core.GrailsApplication
-import grails.test.mixin.TestFor
 import grails.testing.spring.AutowiredTest
 import org.apache.http.HttpStatus
+import org.joda.time.DateTimeZone
 import spock.lang.Specification
 
 class SearchServiceSpec extends Specification implements AutowiredTest{
@@ -79,6 +78,29 @@ class SearchServiceSpec extends Specification implements AutowiredTest{
         then:
         1 * webService.get({it.contains('search/downloadShapefile')}) >> true
         result == true
+    }
+
+    def "getIsoDateFromClientDate with various timezones"() {
+        expect: "The correct ISO date is returned for each date and time zone"
+        service.getIsoDateFromClientDate(clientDate, timeZone) == expectedIsoDate
+
+        where:
+        clientDate                | timeZone                               | expectedIsoDate
+        "2024-09-10"     | DateTimeZone.forID("Australia/Sydney") | "2024-09-09T14:00:00Z"
+        "2024-09-10"     | DateTimeZone.forID("Australia/Perth") | "2024-09-09T16:00:00Z"
+        "2024-09-10"     | DateTimeZone.forID("Australia/Darwin")    | "2024-09-09T14:30:00Z"
+    }
+
+    def "getIsoDateFromClientDate throws exception for invalid input"() {
+        when: "Invalid input is passed to the method"
+        service.getIsoDateFromClientDate(clientDate, timeZone)
+
+        then: "An IllegalArgumentException is thrown"
+        thrown(IllegalArgumentException)
+
+        where: "Different invalid inputs are provided"
+        clientDate                | timeZone
+        "invalid-date-format"     | DateTimeZone.forID("Australia/Sydney")
     }
 
     private List stubGeoReponseFromCoordinateList(List coords) {

@@ -51,8 +51,8 @@
                               data-bind="value: context"
                               class="form-control"
                               name='context'
-                              from="['choose site context','Pastoral','Industrial','Urban','Coastal', 'Reserve', 'Private land']"
-                              keys="['none','Pastoral','Industrial','Urban','Coastal','Reserve', 'Private land']"/>
+                              from="['choose site context','Pastoral','Industrial','Urban','Coastal', 'Reserve', 'Private land', 'Marine']"
+                              keys="['none','Pastoral','Industrial','Urban','Coastal','Reserve', 'Private land', 'Marine']"/>
                     </div>
                 </div>
 
@@ -377,7 +377,8 @@ function initSiteViewModel() {
         intersectService: "${createLink(controller: 'proxy', action: 'intersect')}",
         featuresService: "${createLink(controller: 'proxy', action: 'features')}",
         featureService: "${createLink(controller: 'proxy', action: 'feature')}",
-        spatialWms: '${grailsApplication.config.getProperty('spatial.geoserverUrl')}'
+        spatialWms: '${grailsApplication.config.getProperty('spatial.geoserverUrl')}',
+        knownShapeConfig: <fc:modelAsJavascript model="${knownShapeConfig}" default="[]"/>
     };
 
     var savedSiteData = {
@@ -403,7 +404,7 @@ function initSiteViewModel() {
     (function(){
 
         //retrieve serialised model
-        siteViewModel = new SiteViewModelWithMapIntegration(savedSiteData);
+        siteViewModel = new SiteViewModelWithMapIntegration(savedSiteData, null, SERVER_CONF);
         window.validateSiteExtent = siteViewModel.attachExtentValidation()
 
         ko.applyBindings(siteViewModel, document.getElementById("sitemap"));

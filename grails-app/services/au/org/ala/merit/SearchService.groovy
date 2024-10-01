@@ -5,12 +5,12 @@ import grails.core.GrailsApplication
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 import org.apache.commons.lang.StringUtils
-import org.apache.http.HttpStatus
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.springframework.beans.factory.annotation.Autowired
 
 import javax.annotation.PostConstruct
 import java.math.RoundingMode
-
 /**
  * Service for ElasticSearch running on ecodata
  */
@@ -23,6 +23,7 @@ class SearchService {
     def userService
 
     private static final int FACET_LIMIT = 1500
+    static final String PLANNED_DATE_FORMAT = "yyyy-MM-dd"
 
     @PostConstruct
     private void init() {
@@ -159,17 +160,42 @@ class SearchService {
     }
 
     private void handleDateFilters(params) {
-        if (params.fromDate || params.toDate) {
-            List fq = params.getList('fq')
-            if (!params.fromDate) {
-                fq += "_query:(plannedStartDate:[* TO ${params.toDate}])"
-            } else if (!params.toDate) {
-                fq += "_query:(plannedEndDate:[${params.fromDate} TO *])"
-            } else {
-                fq += "_query:(plannedEndDate:[${params.fromDate} TO *] AND plannedStartDate:[* TO ${params.toDate}])"
+        String fromDate = params.fromDate, toDate = params.toDate, clientTimeZone = params.clientTimeZone ?: grailsApplication.config.getProperty('clientTimeZone.defaultZone', 'Australia/Sydney')
+        DateTimeZone timeZone = DateTimeZone.forTimeZone(TimeZone.getTimeZone(clientTimeZone))
+        if ((params.isFilterByCompletedProjects ?: 'false').toBoolean()) {
+            if (params.fromDate || params.toDate) {
+                List fq = params.getList('fq')
+                if (!params.fromDate) {
+                    String toDateUTC = getIsoDateFromClientDate(toDate, timeZone)
+                    fq += "_query:(plannedStartDate:[* TO ${toDateUTC}) AND plannedEndDate:[* TO ${toDateUTC}))"
+                } else if (!params.toDate) {
+                    String fromDateUTC = getIsoDateFromClientDate(fromDate, timeZone)
+                    fq += "_query:(plannedStartDate:[${fromDateUTC} TO *] AND plannedEndDate:[${fromDateUTC} TO *])"
+                } else {
+                    String fromDateUTC = getIsoDateFromClientDate(fromDate, timeZone)
+                    String toDateUTC = getIsoDateFromClientDate(toDate, timeZone)
+                    fq += "_query:(plannedStartDate:[${fromDateUTC} TO ${toDateUTC}] AND plannedEndDate:[${fromDateUTC} TO ${toDateUTC}])"
+                }
+                params.fq = fq
             }
-            params.fq = fq
+        } else {
+            if (params.fromDate || params.toDate) {
+                List fq = params.getList('fq')
+                if (!params.fromDate) {
+                    fq += "_query:(plannedStartDate:[* TO ${params.toDate}])"
+                } else if (!params.toDate) {
+                    fq += "_query:(plannedEndDate:[${params.fromDate} TO *])"
+                } else {
+                    fq += "_query:(plannedEndDate:[${params.fromDate} TO *] AND plannedStartDate:[* TO ${params.toDate}])"
+                }
+                params.fq = fq
+            }
         }
+    }
+
+    String getIsoDateFromClientDate(String clientDate, DateTimeZone timeZone) {
+        DateTime clientDateDateTime = DateUtils.parseDisplayDate(clientDate, PLANNED_DATE_FORMAT , timeZone)
+        DateUtils.formatAsISOStringNoMillis(clientDateDateTime.toDate())
     }
 
     private handleActivityDateFilters(params) {

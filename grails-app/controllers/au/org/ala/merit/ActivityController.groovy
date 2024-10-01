@@ -7,9 +7,6 @@ import org.apache.http.HttpStatus
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
-import org.grails.web.json.JSONArray
-import org.grails.web.json.JSONObject
-
 
 class ActivityController {
 
@@ -529,6 +526,15 @@ class ActivityController {
                 Workbook workbook = WorkbookFactory.create(file.inputStream)
 
                 def data = excelImportService.convertColumnMapConfigManyRows(workbook, config)
+                data.each { row ->
+                    for (entry in row) {
+                        if (entry.value instanceof org.joda.time.LocalDate) {
+                            //update the type for the datepicker
+                            entry.value = entry.value.toDate()
+
+                        }
+                    }
+                }
 
                 // Do species lookup
                 def species = model.find {it.dataType == 'species'}
@@ -617,7 +623,7 @@ class ActivityController {
         }
         else {
             url += "?type=${params.type?.encodeAsURL()}&listName=${params.listName?.encodeAsURL()}"
-            webService.proxyGetRequest(response, url)
+            webService.proxyGetRequest(response, url, true, true)
         }
 
         return null

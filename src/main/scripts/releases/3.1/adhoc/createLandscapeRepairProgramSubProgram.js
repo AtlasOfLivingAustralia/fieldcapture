@@ -10,40 +10,64 @@ var outcomes = [
                 "category": "Ecological health"
             }
         ],
-        "category": "Threatened Species",
-        "type": "medium",
-        "outcome": "1.  Improve water quality in the Great Barrier Reef by reducing fine sediment."
+        "targeted": true,
+        "category": "Ecological health",
+        "outcome": "1. Priority landscapes in the Great Barrier Reef catchments are remediated and maintained using approaches demonstrated to improve water quality, build resilience and enhanced ecological function."
     },
     {
-        "priorities": [
-            {
-                "category": "Ecological health"
-            }
-        ],
-        "category": "Threatened Species",
+        "category": "Ecological health",
         "type": "medium",
-        "outcome": "1.  Improve water quality in the Great Barrier Reef by reducing dissolved inorganic nitrogen from agricultural sources."
+        "outcome": "1. Landscape remediation of priority locations resulting in the cost-effective reduction of fine sediment from reaching the Great Barrier Reef Lagoon."
     },
     {
-        "priorities": [
-            {
-                "category": "Ecological health"
-            }
-        ],
-
-        "category": "Threatened Species",
+        "category": "Ecological health",
         "type": "medium",
-        "outcome": "1.  Improve water quality in the Great Barrier Reef by reducing particulate phosphorus from agricultural sources."
+        "outcome": "2. Capacity, capability and willingness to adopt and maintain appropriate land management practices has increased across the Great Barrier Reef regions."
     },
     {
-        "priorities": [
-            {
-                "category": "Ecological health"
-            }
-        ],
-        "category": "Threatened Species",
+        "category": "Ecological health",
         "type": "medium",
-        "outcome": "1.  Improve water quality in the Great Barrier Reef by reducing particulate nitrogen from agricultural sources."
+        "outcome": "3. Participation of First Nations people in in project design, delivery, maintenance and monitoring of Reef water quality projects has increased across the Great Barrier Reef regions."
+    },
+    {
+        "category": "Ecological health",
+        "type": "medium",
+        "outcome": "4. Reef Trust water quality investment landscape remediation sites are maintained to support longevity of water quality outcomes."
+    },
+    {
+        "type": "short",
+        "category": "Ecological health",
+        "outcome": "1. Whole-of-system Reef water quality strategies are guiding landscape repair in priority Great Barrier Reef regions and catchments"
+    },
+    {
+        "type": "short",
+        "category": "Ecological health",
+        "outcome": "2. Technical advice, data assurance, and evidence-based decision support has enabled site selection, design and commencement of landscape remediation activities to support the cost-effective reduction of sediment reaching the Great Barrier Reef."
+    },
+    {
+        "type": "short",
+        "category": "Ecological health",
+        "outcome": "3. Landscape remediation of priority locations resulting in the cost-effective reduction of fine sediment from reaching the Great Barrier Reef Lagoon."
+    },
+    {
+        "type": "short",
+        "category": "Farmer Sector",
+        "outcome": "4. Region-led consortiums of landscape repair practitioners, industries, and communities are supporting ongoing collaboration in design and delivery of landscape repair programs to improve Reef water quality."
+    },
+    {
+        "type": "short",
+        "category": "Ecological health",
+        "outcome": "5. Initiatives to build regional capacity and capability to design, deliver, and maintain the legacy of Reef Trust investments are in place and supporting outcome delivery."
+    },
+    {
+        "type": "short",
+        "category": "Ecological health",
+        "outcome": "6. First Nations people are actively participating in project design, delivery, maintenance and monitoring."
+    },
+    {
+        "type": "short",
+        "category": "Ecological health",
+        "outcome": "7. Technical advice and input has been obtained to identify, design and ensure maintenance and monitoring occurs for Landscape Repair Sites."
     }
 ];
 

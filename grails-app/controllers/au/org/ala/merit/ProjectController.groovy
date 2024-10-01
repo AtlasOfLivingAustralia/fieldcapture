@@ -31,6 +31,7 @@ class ProjectController {
     static String MERI_ONLY_TEMPLATE = "meri"
     static String RLP_MERI_PLAN_TEMPLATE = "rlpMeriPlan"
     static String MERI_PLAN_TEMPLATE = "meriPlan"
+    static int AGRICULTURE_OUTCOME_START_INDEX = 4;
 
     def projectService, metadataService, commonService, activityService, userService, webService, roleService
     def siteService, documentService, reportService, blogService
@@ -163,6 +164,7 @@ class ProjectController {
         boolean hasSubmittedOrApprovedFinalReportInCategory = projectService.hasSubmittedOrApprovedFinalReportInCategory(project)
         def meriPlanVisible = config.includesContent(ProgramConfig.ProjectContent.MERI_PLAN)
         boolean canModifyMeriPlan = config.requireMeritAdminToReturnMeriPlan ?  userService.userIsAlaOrFcAdmin() : user?.isCaseManager
+        int outcomeStartIndex = (config.nonAgricultureoOutcomeStartIndex) ?: AGRICULTURE_OUTCOME_START_INDEX;
         def risksAndThreatsVisible = config.includesContent(ProgramConfig.ProjectContent.RISKS_AND_THREATS) && user?.hasViewAccess
         def canViewRisks = risksAndThreatsVisible && (user?.hasViewAccess || user?.isEditor)
         def meriPlanEnabled = user?.hasViewAccess || ((project.associatedProgram == 'National Landcare Programme' && project.associatedSubProgram == 'Regional Funding'))
@@ -183,7 +185,8 @@ class ProjectController {
         def showAnnouncementsTab = (user?.isAdmin || user?.isCaseManager) && projectService.isMeriPlanSubmittedOrApproved(project)
         List<Map> scores = metadataService.getOutputTargetScores()
 
-        def imagesModel = publicImages.collect {
+        List blogIds = blog.collect{it?.imageId}
+        def imagesModel = publicImages.findAll { it?.documentId !in blogIds }.collect{
             [name: it.name, projectName: project.name, url: it.url, thumbnailUrl: it.thumbnailUrl]
         }
         boolean canChangeProjectDates = userService.userIsAlaOrFcAdmin()
@@ -204,7 +207,7 @@ class ProjectController {
                      site           : [label: 'Sites', visible: config.includesContent(ProgramConfig.ProjectContent.SITES), disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
                      dashboard      : [label: 'Dashboard', visible: config.includesContent(ProgramConfig.ProjectContent.DASHBOARD), disabled: !user?.hasViewAccess, type: 'tab'],
                      datasets       : [label: 'Data set summary', visible: datasetsVisible, template: '/project/dataset/dataSets', type:'tab'],
-                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage', canRegenerateReports: canRegenerateReports, hasSubmittedOrApprovedFinalReportInCategory: hasSubmittedOrApprovedFinalReportInCategory, canModifyMeriPlan: canModifyMeriPlan, showRequestLabels:config.supportsParatoo]]
+                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage', canRegenerateReports: canRegenerateReports, hasSubmittedOrApprovedFinalReportInCategory: hasSubmittedOrApprovedFinalReportInCategory, canModifyMeriPlan: canModifyMeriPlan, showRequestLabels:config.supportsParatoo, outcomeStartIndex:outcomeStartIndex]]
 
         if (template == MERI_ONLY_TEMPLATE) {
             model = [details:model.details]
@@ -253,7 +256,6 @@ class ProjectController {
             rlpModel.admin.showMERIActivityWarning = false
             rlpModel.admin.allowMeriPlanUpload = false
             rlpModel.admin.showSpecies = false
-            rlpModel.admin.hidePrograms = true
             rlpModel.admin.showAnnouncementsTab = false
             rlpModel.admin.risksAndThreatsVisible = risksAndThreatsVisible
             rlpModel.admin.showMeriPlanComparison = showMeriPlanComparison

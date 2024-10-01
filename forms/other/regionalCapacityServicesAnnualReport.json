@@ -106,7 +106,8 @@
             "description" : "Refer to Deed of Standing Offer clause 42.3(b) ‘Notifying the Customer’ for the list of WHS notification requirements.",
             "constraints": [
               "Yes",
-              "No"
+              "No",
+              "Not Applicable"
             ],
             "validate": "required"
           },
@@ -201,6 +202,7 @@
           {
             "dataType": "list",
             "name": "coreServicesPlansTable",
+            "allowRowDelete": "false",
             "columns": [
               {
                 "name": "coreServicesPlans",
@@ -789,7 +791,7 @@
                     "source": "coreServicesPlans",
                     "type": "readonlyText",
                     "helpText": "<ul><li>Community Participation Plan - <br><i>An annual review with update (where required) as per RCS 2.7(a).</i></li><li>Indigenous Participation Plan (Sch 9 & 10) - <br><i>An annual review with update (where required) as per RCS 2.7(b).</i></li><li>Communications Plan - <br><i>An annual review with update (where required) as per RCS 3.5.</i></li></ul>",
-                    "width": "20%"
+                    "width": "25%"
                   },
                   {
                     "title": "Date last reviewed",
@@ -807,7 +809,7 @@
                     "title": "Please provide details of the review of the plan and actions undertaken as part of implementing the plan. <br>If applicable, provide reasons why implementation is not on-track and corrective actions being undertaken.",
                     "source": "coreServicesPlanStatusNotOnTrack",
                     "type": "textarea",
-                    "width": "50%"
+                    "width": "45%"
                   }
                 ]
               }
@@ -1133,7 +1135,7 @@
                     "width": "10%"
                   },
                   {
-                    "title": "Total Value of Contract directed to supporting the Community (GST excl.) (RCS 9.2(c))",
+                    "title": "Total Value of Contract directed to supporting the Community** (GST excl.) (RCS 9.2(c))",
                     "source": "totalDaffContracts",
                     "type": "number",
                     "width": "10%"
@@ -1152,7 +1154,7 @@
             "type": "row",
             "items": [
               {
-                "source": "Note: 'Community' refers to 'all local stakeholders related to natural resource management of a Management Unit, including any farmers, fishers or foresters, landcare or community groups, and First Nations people.'",
+                "source": "**Note: 'Community' refers to all local stakeholders related to natural resource management of a Management Unit, including any farmers, fishers or foresters, landcare or community groups, and First Nations people.",
                 "type": "literal"
               }
             ]
@@ -1210,7 +1212,7 @@
                     "coreServicesPlans": "Community Participation Plan"
                   },
                   {
-                    "coreServicesPlans": "Indigenous Participation Plan"
+                    "coreServicesPlans": "Indigenous Participation Plan (Sch 9 & 10)"
                   },
                   {
                     "coreServicesPlans": "Communications Plan"

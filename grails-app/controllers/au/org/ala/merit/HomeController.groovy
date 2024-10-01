@@ -93,9 +93,15 @@ class HomeController {
 
         boolean canViewAdminFacetsAndDownloads = userService.userIsAlaOrFcAdmin() || userService.userHasReadOnlyAccess()
         if (!canViewAdminFacetsAndDownloads) {
-            def adminFacetList = SettingService.getHubConfig().adminFacets ?: []
+            List adminFacetList = SettingService.getHubConfig().adminFacets ?: []
             facetsList?.removeAll(adminFacetList)
             mapFacets?.removeAll(adminFacetList)
+        }
+        boolean canViewOfficerFacets = userService.userIsSiteAdmin() || userService.userHasReadOnlyAccess()
+        if (!canViewOfficerFacets) {
+            List officerFacetList = SettingService.getHubConfig().officerFacets ?: []
+            facetsList?.removeAll(officerFacetList)
+            mapFacets?.removeAll(officerFacetList)
         }
 
         def fqList = params.getList('fq')
@@ -248,9 +254,16 @@ class HomeController {
         renderStaticPage(SettingPageType.CONTACTS, false)
     }
 
+    /**
+     * Returns a small amount of javascript to let other tabs know the user has been logged back in
+     * and closes the tab.
+     */
     def close() {
         response.setContentType("text/html")
-        render """<html><head><script type="text/javascript">window.close();</script></head><body/></html>"""
+        render """<html><head><script type="text/javascript">
+                            localStorage.setItem('login', new Date()); 
+                            window.close();
+                            </script></head><body/></html>"""
     }
 
     def staticPage(String id) {

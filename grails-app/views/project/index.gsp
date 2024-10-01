@@ -198,7 +198,7 @@
         <fc:tabContent tabs="${projectContent}"/>
     </div>
     <g:render template="/shared/timeoutMessage"
-              model="${[url:fc.loginUrl(loginReturnToUrl:createLink(action: 'index', id: project.projectId, absolute: true))]}"/>
+              model="${[url:fc.loginUrl(loginReturnToUrl:createLink(controller: 'home', action: 'close', absolute: true)), newWindow:true]}"/>
     <g:render template="/shared/unsavedChanges" model="${[id: 'meriPlanUnsavedChanges', unsavedData: 'MERI Plan']}"/>
     <g:render template="/shared/unsavedChanges" model="${[id: 'risksUnsavedChanges', unsavedData: 'Risks & Threats']}"/>
 
@@ -331,6 +331,7 @@ var config = {
     config.programActivities = <fc:modelAsJavascript model="${config.program?.config?.activities?.collect { it.name } ?: []}"/>
     config.excludeFinancialYearData = ${config.program?.config?.excludeFinancialYearData ?: false};
     config.canModifyMeriPlan = ${projectContent.admin.canModifyMeriPlan};
+    config.outcomeStartIndex = ${projectContent.admin.outcomeStartIndex};
     config.userHoldsMeriPlanLock = ${project.lock?.userId == user?.userId};
     config.viewReportUrl = fcConfig.viewReportUrl;
     config.bieUrl = fcConfig.bieUrl;

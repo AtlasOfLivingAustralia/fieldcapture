@@ -14,7 +14,9 @@
         <tr>
             <th class="actions">Actions</th>
             <th class="dataset-name">Title</th>
-            <th class="service">Service <fc:iconHelp>This data set can only be reported against the service specified</fc:iconHelp></th>
+            <th class="service">Service (Q7) <fc:iconHelp>This data set can only be reported against the service specified</fc:iconHelp></th>
+            <th class="outcomes">Outcomes (Q7) <fc:iconHelp>This data set can only be reported against a survey which is these outcomes</fc:iconHelp></th>
+            <th class="type">Baseline / <br/>Indicator (Q8a) <fc:iconHelp>Only Baseline data sets can be reported against baseline surveys.  Similarly, only Indicator data sets can be reported against indicator surveys.  Other types cannot be used in Outputs Reports</fc:iconHelp></th>
             <th class="report">Report <fc:iconHelp>If this data set has been used in a report, it is displayed here</fc:iconHelp></th>
             <th class="date-created">Date created</th>
             <th class="date-created-hidden">Date created (ISO format)</th>
@@ -59,7 +61,9 @@
             </td>
             <td class="dataset-name" data-bind="text:name"></td>
             <td class="service" data-bind="text:service"></td>
-            <th class="report"><a data-bind="text:report, attr:{href:reportUrl}"></a></th>
+            <td class="outcomes" data-bind="text:projectOutcomes"></td>
+            <td class="type" data-bind="text:type"></td>
+            <td class="report"><a data-bind="text:report, attr:{href:reportUrl}"></a></td>
             <td class="date-created" data-bind="text:dateCreated.formattedDate"></td>
             <td class="date-created-hidden" data-bind="text:dateCreated"></td>
             <td class="last-updated" data-bind="text:lastUpdated.formattedDate"></td>

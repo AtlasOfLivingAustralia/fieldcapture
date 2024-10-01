@@ -5,8 +5,8 @@ import org.openqa.selenium.StaleElementReferenceException
 
 class AdminDocumentsTab extends Module {
     static content = {
-
-        attachDocumentButton { $('#doAttach') }
+        header{ $('h3') }
+        attachDocumentButton(required:false) { $('#doAttach') }
         documentTypeFilter { $('[data-bind*=documentFilter]') }
         documents {
             $('#adminDocumentList [data-bind*=documentEditTemplate]').moduleList(AdminDocumentSummary)

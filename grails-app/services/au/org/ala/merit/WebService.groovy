@@ -32,6 +32,7 @@ import org.grails.web.converters.exceptions.ConverterException
 import org.springframework.http.MediaType
 import org.springframework.web.multipart.MultipartFile
 
+import javax.annotation.PostConstruct
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletResponse
 
@@ -54,9 +55,15 @@ class WebService {
     static String AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN = 'externalToken'
 
     static String AUTHORIZATION_HEADER_TYPE_NONE = 'none'
+    List WHITE_LISTED_DOMAINS = []
 
 
     TokenService tokenService
+    @PostConstruct
+    void init() {
+        String whiteListed = grailsApplication.config.getProperty('app.domain.whiteList', "")
+        WHITE_LISTED_DOMAINS = Arrays.asList(whiteListed.split(','))
+    }
 
     // Used to avoid a circular dependency during initialisation
     def getUserService() {
@@ -118,27 +125,32 @@ class WebService {
     }
 
     private URLConnection configureConnection(String url, boolean includeUserId, Integer timeout = null, boolean useToken = false) {
+        useToken = useToken || useJWT()
         String authHeaderType = useToken ? AUTHORIZATION_HEADER_TYPE_SYSTEM_BEAREN_TOKEN : AUTHORIZATION_HEADER_TYPE_API_KEY
         configureConnection(url, authHeaderType, timeout)
     }
 
     private URLConnection configureConnection(String url, String authorizationHeaderType, Integer timeout = null) {
         URLConnection conn = createAndConfigureConnection(url, timeout)
-        if (authorizationHeaderType == AUTHORIZATION_HEADER_TYPE_API_KEY) {
-            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, grailsApplication.config.getProperty('api_key'))
-            def user = getUserService().getUser()
-            if (user) {
-                conn.setRequestProperty(grailsApplication.config.getProperty('app.http.header.userId'), user.userId)
+        boolean addUserId = false
+        if(canAddSecret(url)) {
+            if (authorizationHeaderType == AUTHORIZATION_HEADER_TYPE_API_KEY) {
+                conn.setRequestProperty(HttpHeaders.AUTHORIZATION, grailsApplication.config.getProperty('api_key'))
+                addUserId = true
+            } else if (authorizationHeaderType == AUTHORIZATION_HEADER_TYPE_USER_BEARER_TOKEN) {
+                conn.setRequestProperty(HttpHeaders.AUTHORIZATION, getToken(true))
+            } else if (authorizationHeaderType == AUTHORIZATION_HEADER_TYPE_SYSTEM_BEAREN_TOKEN) {
+                conn.setRequestProperty(HttpHeaders.AUTHORIZATION, getToken(false))
+                addUserId = true
             }
 
+            if (addUserId) {
+                def user = getUserService().getUser()
+                if (user) {
+                    conn.setRequestProperty(grailsApplication.config.getProperty('app.http.header.userId'), user.userId)
+                }
+            }
         }
-        else if (authorizationHeaderType == AUTHORIZATION_HEADER_TYPE_USER_BEARER_TOKEN) {
-            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, getToken(true))
-        }
-        else if (authorizationHeaderType == AUTHORIZATION_HEADER_TYPE_SYSTEM_BEAREN_TOKEN) {
-            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, getToken(false))
-        }
-
         conn
     }
 
@@ -157,7 +169,11 @@ class WebService {
     }
 
     def proxyGetRequest(HttpServletResponse response, String url, boolean includeUserId = true, boolean includeApiKey = false, Integer timeout = null) {
-        String authHeaderType = includeApiKey ?  AUTHORIZATION_HEADER_TYPE_API_KEY : AUTHORIZATION_HEADER_TYPE_NONE
+        String authHeaderType = AUTHORIZATION_HEADER_TYPE_NONE
+        if (includeApiKey) {
+            authHeaderType = useJWT() ? AUTHORIZATION_HEADER_TYPE_SYSTEM_BEAREN_TOKEN : AUTHORIZATION_HEADER_TYPE_API_KEY
+        }
+
         proxyGetRequest(response, url, authHeaderType, timeout)
     }
 
@@ -199,7 +215,7 @@ class WebService {
      * Proxies a request URL with post data but doesn't assume the response is text based. (Used for proxying requests to
      * ecodata for excel-based reports)
      */
-    def proxyPostRequest(HttpServletResponse response, String url, Map postBody, boolean includeUserId = true, boolean includeApiKey = false, Integer timeout = null) {
+    def proxyPostRequest(HttpServletResponse response, String url, Map postBody, boolean includeUserId = true, boolean includeApiKey = true, Integer timeout = null, boolean requireUserToken = false) {
 
         def charEncoding = 'utf-8'
 
@@ -212,8 +228,13 @@ class WebService {
         conn.setReadTimeout(readTimeout)
         conn.setDoOutput ( true );
 
-        if (includeApiKey) {
-            conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'))
+        if (canAddSecret(url)) {
+            if (useJWT()) {
+                addTokenHeader(conn, requireUserToken)
+            }
+            else if (includeApiKey) {
+                conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'))
+            }
         }
 
         OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), charEncoding)
@@ -357,7 +378,12 @@ class WebService {
             conn.setRequestMethod("POST")
             conn.setDoOutput(true)
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
-            conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'))
+            if(canAddSecret(url)) {
+                if (useJWT())
+                    addTokenHeader(conn)
+                else
+                    conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'))
+            }
 
             def user = getUserService().getUser()
             if (user) {
@@ -389,17 +415,19 @@ class WebService {
     }
 
     def doPost(String url, Map postBody, boolean useToken = false) {
+        useToken = useToken || useJWT()
         def conn = null
         def charEncoding = 'utf-8'
         try {
             conn = new URL(url).openConnection()
             conn.setDoOutput(true)
             conn.setRequestProperty("Content-Type", "application/json;charset=${charEncoding}");
-            if (useToken) {
-                addTokenHeader(conn)
-            }
-            else {
-                conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'));
+            if (canAddSecret(url)) {
+                if (useToken) {
+                    addTokenHeader(conn)
+                } else {
+                    conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'));
+                }
             }
             def user = getUserService().getUser()
             if (user) {
@@ -432,6 +460,7 @@ class WebService {
     }
 
     def doDelete(String url, boolean useToken = false) {
+        useToken = useToken || useJWT()
         if (!useToken) {
             url += (url.indexOf('?') == -1 ? '?' : '&') + "api_key=${grailsApplication.config.getProperty('api_key')}"
         }
@@ -440,11 +469,12 @@ class WebService {
         try {
             conn = new URL(url).openConnection()
             conn.setRequestMethod("DELETE")
-            if (useToken) {
-                addTokenHeader(conn)
-            }
-            else {
-                conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'))
+            if (canAddSecret(url)) {
+                if (useToken) {
+                    addTokenHeader(conn)
+                } else {
+                    conn.setRequestProperty("Authorization", grailsApplication.config.getProperty('api_key'))
+                }
             }
             def user = getUserService().getUser()
             if (user) {
@@ -486,7 +516,7 @@ class WebService {
      * @return [status:<request status>, content:<The response content from the server, assumed to be JSON>
      */
     def postMultipart(url, Map params, InputStream contentIn, contentType, originalFilename, fileParamName = 'files', Closure successHandler = null, boolean useToken = false) {
-
+        useToken = useToken || useJWT()
         def result = [:]
         def user = userService.getUser()
 
@@ -500,16 +530,18 @@ class WebService {
                     content.addPart(key, new StringBody(value.toString()))
                 }
             }
-            if (useToken) {
-                if (grailsApplication.config.getProperty('spatial.supports_jwt', Boolean.class, true)) {
-                    headers.'Authorization' = getToken()
+            if (canAddSecret(url)) {
+                if (useToken) {
+                    if (useJWT()) {
+                        headers.'Authorization' = getToken()
+                    }
+                    else {
+                        headers.'apiKey' = grailsApplication.config.getProperty('api_key')
+                    }
                 }
                 else {
-                    headers.'apiKey' = grailsApplication.config.getProperty('api_key')
+                    headers.'Authorization' = grailsApplication.config.getProperty('api_key')
                 }
-            }
-            else {
-                headers.'Authorization' = grailsApplication.config.getProperty('api_key')
             }
             if (user) {
                 headers[grailsApplication.config.getProperty('app.http.header.userId')] = user.userId
@@ -551,13 +583,34 @@ class WebService {
         result
     }
 
-    private void addTokenHeader(conn) {
-        if (grailsApplication.config.getProperty('spatial.supports_jwt', Boolean.class, true)) {
-            conn.setRequestProperty("Authorization", getToken())
+    private void addTokenHeader(conn, boolean requireUser = false) {
+        if (useJWT()) {
+            conn.setRequestProperty("Authorization", getToken(requireUser))
         }
         else {
             conn.setRequestProperty("apiKey", grailsApplication.config.getProperty('api_key'));
         }
+    }
+
+    /**
+     * Check if url is in the configured domain
+     * @param url
+     * @return
+     */
+    boolean canAddSecret(String url) {
+        try {
+            URL urlObj = new URL(url)
+            String host = urlObj.getHost()
+            return WHITE_LISTED_DOMAINS.find { host.endsWith(it) } != null
+        } catch (Exception e) {
+            log.error("Error parsing URL: ${url}")
+        }
+
+        return false
+    }
+
+    boolean useJWT() {
+        grailsApplication.config.getProperty('ala.supports_jwt', Boolean.class, true)
     }
 }
 

@@ -1,14 +1,7 @@
 package au.org.ala.merit
 
-import com.drew.imaging.ImageMetadataReader
-import com.drew.lang.GeoLocation
-import com.drew.metadata.Directory
-import com.drew.metadata.Metadata
-import com.drew.metadata.exif.ExifSubIFDDirectory
-import com.drew.metadata.exif.GpsDirectory
 
 import java.text.SimpleDateFormat
-
 /**
  * A delegate to the ecodata admin services.
  */
@@ -32,7 +25,7 @@ class AdminService {
         def url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}admin/syncCollectoryOrgs"
         webService.doPost(url, [
                 api_key: grailsApplication.config.getProperty('api_key')
-        ])
+        ], true)
     }
 
     /**

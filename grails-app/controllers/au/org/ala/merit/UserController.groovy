@@ -16,6 +16,8 @@ import static org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR
 @Slf4j
 class UserController {
 
+    static responseFormats = ['json', 'xml']
+    static final int REQUIRES_AYNC_PROJECT_LOAD_THRESHOLD = 100
     ReportService reportService
     def userService, authService, projectService, organisationService
 
@@ -36,35 +38,58 @@ class UserController {
         }
     }
 
+    /**
+     * Retrieves and attaches projects and reports for a user.  If the stopIfThresholdExceeded
+     * parameter is true, if the initial project count is above this threshold this method will
+     * return an empty array.  This is a workaround to prevent string overflow when rendering
+     * large numbers of projects for a user to the page.  The page will retrieve the projects
+     * via the /user/userProjects service instead.
+     * @param userId the user to get the projects for.
+     */
+    private List loadUserProjects(String userId, boolean stopIfThresholdExceeded) {
+        List projects = userService.getProjectsForUserId(userId)
+        projects = projects.findAll{it.project.isMERIT == true}
+        if (stopIfThresholdExceeded && projects.size() > REQUIRES_AYNC_PROJECT_LOAD_THRESHOLD) {
+            return []
+        }
+        def reportsByProject = reportService.findReportsForUser(userId)
+
+        projects.each { project ->
+            project.project.reports = reportsByProject[project.project.projectId]? new JSONArray(reportsByProject[project.project.projectId]):new JSONArray()
+        }
+        projects
+    }
+
     protected Map assembleUserData(user) {
         def memberOrganisations = userService.getOrganisationsForUserId(user.userId)
-        def memberProjects = userService.getProjectsForUserId(user.userId)
         def starredProjects = userService.getStarredProjectsForUserId(user.userId)
         def programs = userService.getProgramsForUserId(user.userId)?.sort({it.name})
         def managementUnits = userService.getManagementUnitsForUserId(user.userId)?.sort({it.name})
 
         Map userData = [
                 user: user,
-                memberProjects: memberProjects,
                 memberOrganisations:memberOrganisations,
                 memberPrograms:programs,
                 memberManagementUnits:managementUnits,
                 starredProjects: starredProjects]
-
-        def reportsByProject = reportService.findReportsForUser(user.userId)
-
-        userData.memberProjects = userData.memberProjects.findAll{it.project.isMERIT == true}
-        def projects = userData.memberProjects
-        projects.each { project ->
-            project.project.reports = reportsByProject[project.project.projectId]? new JSONArray(reportsByProject[project.project.projectId]):new JSONArray()
-        }
-
+        userData.memberProjects = loadUserProjects(user.userId, true)
         userData.allowProjectRecommendation = userService.userIsSiteAdmin()
         userData
     }
 
-    // webservices
 
+
+    /** Returns the projects and associated reports the logged in user has access to */
+    def userProjects() {
+        def user = userService.getUser()
+        if (user) {
+            List projects = loadUserProjects(user.userId, false)
+            respond projects
+        }
+        else {
+            respond null
+        }
+    }
     /**
      * Add userId with role to requested projectId
      *
@@ -193,6 +218,25 @@ class UserController {
                     userService.userHasReadOnlyAccess()) {
                 Map result = userService.getMembersOfManagementUnit(id)
                 List members = result?.members ?: []
+                render members as JSON
+            } else {
+                render status: 403, text: 'Permission denied'
+            }
+        } else if (userId) {
+            render status: 400, text: 'Required params not provided: id'
+        } else if (id) {
+            render status: 403, text: 'User not logged-in or does not have permission'
+        } else {
+            render status: 500, text: 'Unexpected error'
+        }
+    }
+
+    def getMembersOfOrganisation(String id) {
+        String userId = userService.getCurrentUserId()
+
+        if (id && userId) {
+            if (userService.userIsSiteAdmin() || userService.isUserAdminForOrganisation(userId, id) || userService.userHasReadOnlyAccess()) {
+                List members = userService.getMembersOfOrganisation(id)
                 render members as JSON
             } else {
                 render status: 403, text: 'Permission denied'

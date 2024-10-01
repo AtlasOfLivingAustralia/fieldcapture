@@ -178,7 +178,7 @@ class EmailService {
     }
 
     def getOrganisationEmailAddresses(organisationId) {
-        def members = organisationService.getMembersOfOrganisation(organisationId)
+        def members = userService.getMembersOfOrganisation(organisationId)
         def emailAddresses = sortEmailAddressesByRole(members)
 
         if (!emailAddresses.grantManagerEmails) {

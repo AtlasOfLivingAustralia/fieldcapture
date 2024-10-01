@@ -442,5 +442,11 @@ class ProgramController {
         }
     }
 
+    @PreAuthorise(accessLevel = 'alaAdmin')
+    def reindexProjects(String id) {
+        Map resp  = programService.reindexProjects(id)
+        render resp as JSON
+    }
+
 
 }
