@@ -64,6 +64,7 @@
           {
             "dataType": "list",
             "name": "projectOutcomes",
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
