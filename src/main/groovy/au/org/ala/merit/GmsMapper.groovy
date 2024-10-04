@@ -312,25 +312,10 @@ class GmsMapper {
                 }
             }
             if (!error) {
-                // Find the organisation relationship to use based on the program
-                String description = 'Service provider'
-                if (program?.fundingType) {
-                    switch (program.fundingType) {
-                        case 'SPP':
-                            description = 'Recipient'
-                            break
-                        case 'Grant':
-                            description = 'Grantee'
-                            break
-                        case 'Procurement':
-                            description = 'Service provider'
-
-                    }
-                } else if (program?.config && program.config.organisationRelationship) {
-                    description = program.config.organisationRelationship
-                }
+                // We are standardising on "Recipient" as the default organisation relationship
+                String description = 'Recipient'
                 project.associatedOrgs = [
-                        [organisationId:organisation.organisationId, name: contractName ?: organisation.name, organisationName:organisation.name, description:description]] // Fix description
+                        [organisationId:organisation.organisationId, name: contractName ?: organisation.name, organisationName:organisation.name, description:description]]
             }
         } else {
             error = "Please supply an organisationId (ORG_ID) or ABN (ABN) for the project"
