@@ -304,6 +304,7 @@
                 "type": "textarea",
                 "source": "outcomeStatement",
                 "title": "Outcome",
+                "readonly": true,
                 "rows": 5,
                 "width": "45%"
               },
