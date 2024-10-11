@@ -27,7 +27,7 @@
                 "deleteUnmatchedExistingRows": true,
                 "addUnmatchedNewRows": true,
                 "keys": [
-                  "outcomeStatement"
+                  "code"
                 ]
               }
             },
@@ -35,6 +35,10 @@
               {
                 "target": "projectOutcomes",
                 "mapping": [
+                  {
+                    "target": "code",
+                    "source-path": "code"
+                  },
                   {
                     "target": "outcomeStatement",
                     "source-path": "description"
@@ -66,6 +70,10 @@
             "name": "projectOutcomes",
             "allowRowDelete": "false",
             "columns": [
+              {
+                "dataType": "text",
+                "name": "code"
+              },
               {
                 "dataType": "text",
                 "name": "outcomeStatement",
@@ -292,18 +300,14 @@
             "userAddedRows": true,
             "columns": [
               {
-                "source": "",
-                "type": "literal",
-                "width": "5%",
-                "preLabel": {
-                  "computed": "\\'No. \\' || (index + 1)"
-                },
+                "source": "code",
+                "type": "readonlyText",
                 "title": "Outcome No."
               },
               {
                 "type": "textarea",
                 "source": "outcomeStatement",
-                "title": "Outcome",
+                "title": "Short Term Outcome",
                 "readonly": true,
                 "rows": 5,
                 "width": "45%"
