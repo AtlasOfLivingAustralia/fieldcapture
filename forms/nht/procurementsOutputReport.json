@@ -27,7 +27,7 @@
                 "deleteUnmatchedExistingRows": true,
                 "addUnmatchedNewRows": true,
                 "keys": [
-                  "outcomeStatement"
+                  "code"
                 ]
               }
             },
@@ -35,6 +35,10 @@
               {
                 "target": "projectOutcomes",
                 "mapping": [
+                  {
+                    "target": "code",
+                    "source-path": "code"
+                  },
                   {
                     "target": "outcomeStatement",
                     "source-path": "description"
@@ -65,6 +69,10 @@
             "dataType": "list",
             "name": "projectOutcomes",
             "columns": [
+              {
+                "dataType": "text",
+                "name": "code"
+              },
               {
                 "dataType": "text",
                 "name": "outcomeStatement",
@@ -288,21 +296,18 @@
           {
             "source": "projectOutcomes",
             "type": "table",
-            "userAddedRows": true,
+            "userAddedRows": false,
+            "disableTableUpload": true,
             "columns": [
               {
-                "source": "",
-                "type": "literal",
-                "width": "5%",
-                "preLabel": {
-                  "computed": "\\'No. \\' || (index + 1)"
-                },
+                "source": "code",
+                "type": "readonlyText",
                 "title": "Outcome No."
               },
               {
                 "type": "textarea",
                 "source": "outcomeStatement",
-                "title": "Outcome",
+                "title": "Short Term Outcome",
                 "rows": 5,
                 "width": "45%"
               },
@@ -2503,7 +2508,19 @@
                   "Grazing",
                   "Fisheries",
                   "Aquaculture",
-                  "Environmental"
+                  "Environmental",
+                  "First Nations Organisation",
+                  "First Nations Rangers",
+                  "Individual",
+                  "Community",
+                  "School",
+                  "Academic/Research Institution",
+                  "Not for profit",
+                  "Commercial entity",
+                  "Australian Government Department",
+                  "Local Government",
+                  "State and Territory Government",
+                  "Other"
                 ],
                 "validate": "required"
               },
