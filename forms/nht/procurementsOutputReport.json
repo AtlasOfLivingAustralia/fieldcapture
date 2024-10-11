@@ -308,6 +308,7 @@
                 "type": "textarea",
                 "source": "outcomeStatement",
                 "title": "Short Term Outcome",
+                "readonly": true,
                 "rows": 5,
                 "width": "45%"
               },
