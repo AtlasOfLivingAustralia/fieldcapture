@@ -296,7 +296,8 @@
           {
             "source": "projectOutcomes",
             "type": "table",
-            "userAddedRows": true,
+            "userAddedRows": false,
+            "disableTableUpload": true,
             "columns": [
               {
                 "source": "code",
@@ -2507,7 +2508,19 @@
                   "Grazing",
                   "Fisheries",
                   "Aquaculture",
-                  "Environmental"
+                  "Environmental",
+                  "First Nations Organisation",
+                  "First Nations Rangers",
+                  "Individual",
+                  "Community",
+                  "School",
+                  "Academic/Research Institution",
+                  "Not for profit",
+                  "Commercial entity",
+                  "Australian Government Department",
+                  "Local Government",
+                  "State and Territory Government",
+                  "Other"
                 ],
                 "validate": "required"
               },
