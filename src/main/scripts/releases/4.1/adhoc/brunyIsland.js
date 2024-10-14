@@ -1,11 +1,12 @@
 load('../../../utils/audit.js');
+load('../../../utils/uuid.js');
 let site = {
   projects: [
-    'f4bd0fb8-1d5c-4953-8826-63fbb7b75528'
+    '01ecdf67-4355-4367-a088-187781de1647'
   ],
-  dateCreated: ISODate('2024-10-14T02:35:47.507Z'),
-  lastUpdated: ISODate('2024-10-14T02:35:47.541Z'),
-  siteId: 'f3752897-dd01-4eea-bfe9-d0796d982982',
+  dateCreated: ISODate(),
+  lastUpdated: ISODate(),
+  siteId: UUID.generate(),
   status: 'active',
   isSciStarter: false,
   description: 'No description supplied',
