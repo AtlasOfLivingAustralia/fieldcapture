@@ -70,7 +70,7 @@
         </div>
     </section>
     <section class="form-group row">
-        <label class="col-sm-3 form-check-label">Contract name/s: <fc:iconHelp><g:message code="organisation.contractNames.help"/></fc:iconHelp></label>
+        <label class="col-sm-3 form-check-label">Contracted recipient name/s: <fc:iconHelp><g:message code="organisation.contractNames.help"/></fc:iconHelp></label>
         <div class="col-sm-9">
             <multi-input params="values: contractNames">
                 <div class="input-group-prepend"><span class="input-group-text contract-name-info" data-bind="popover:{content:$root.getHelpText(val())}, css:{nameInUse:$root.nameUsed(val())}"><i class="fa fa-info-circle" data-bind="css:{'fa-info-circle':!$root.nameUsed(val()), 'fa-warning':$root.nameUsed(val())}"></i></span></div>
