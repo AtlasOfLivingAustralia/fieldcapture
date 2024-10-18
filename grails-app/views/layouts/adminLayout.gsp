@@ -34,7 +34,7 @@
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'editSiteBlog')}" class="siteBlog" title="Site Blog"/>
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'selectHomePageImages')}" class="homePageImage" title="Home Page Images"/>
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'adminReports')}" class="adminReport" title="Administrator Reports"/>
-                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'gmsProjectImport')}" class="loadProject" title="Load new projects into MERIT"/>
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'importMeritProjects')}" class="loadProject" title="Load new projects into MERIT"/>
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'removeUserPermission')}" class="removeUser" title="Remove User from MERIT"/>
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'createUserHubPermission')}" class="userPermission" title="User Permissions for MERIT"/>
                 </g:if>

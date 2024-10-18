@@ -5,6 +5,7 @@ import geb.module.FormElement
 
 class AddOrEditOrganisation extends Module {
     static content = {
+        abnStatus { $('#abnStatus') }
         name { $('#name') }
         acronym{$('#acronym')}
         abn{$('#abnSelector')}

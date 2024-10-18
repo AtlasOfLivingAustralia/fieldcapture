@@ -8,6 +8,7 @@ import com.vividsolutions.jts.geom.Point
 import grails.converters.JSON
 import grails.plugins.csv.CSVMapReader
 import groovy.util.logging.Slf4j
+import org.apache.http.HttpStatus
 import org.geotools.geojson.geom.GeometryJSON
 import org.joda.time.DateTime
 import org.springframework.web.multipart.MultipartFile
@@ -33,6 +34,8 @@ class ImportService {
     def programService
     def managementUnitService
     AbnLookupService abnLookupService
+    OrganisationService organisationService
+    List organisations
 
     /**
      * Looks for columns "Grant ID","Sub-project ID","Recipient email 1","Recipient email 2","Grant manager email" and
@@ -281,17 +284,30 @@ class ImportService {
         return project.sites?.find{it.name?.equalsIgnoreCase(name)}
     }
 
+    private void refreshOrganisationList() {
+        if (!organisations) {
+            organisations = []
+        }
+        else {
+            organisations.clear()
+        }
+        // We update the existing list rather than update the reference because during an import
+        // the GmsMapper uses this as a cache and we want it to see any updates.
+        // It would be better to replace the cache with an on demand search, as this list is getting long.
+        organisations += metadataService.organisationList()?.list
+    }
+
     Map gmsImport(InputStream csv, List status, Boolean preview, Boolean update, String charEncoding = 'Cp1252') {
 
         Map programs = [:].withDefault{name ->
-            Map program = programService.getByName(name)
-            program?.programId
+            programService.getByName(name)
         }
         Map managementUnits = [:].withDefault{name ->
             Map mu = managementUnitService.getByName(name)
             mu?.managementUnitId
         }
-        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), metadataService.organisationList()?.list, abnLookupService, metadataService.getOutputTargetScores(), programs, managementUnits)
+        refreshOrganisationList()
+        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), organisations, abnLookupService, metadataService.getOutputTargetScores(), programs, managementUnits)
 
         def action = preview?{rows -> mapProjectRows(rows, status, mapper, update)}:{rows -> importAll(rows, status, mapper, update)}
 
@@ -323,7 +339,7 @@ class ImportService {
                 prevExternalId = currentExternalId
                 if (first) {
                     def errors = mapper.validateHeaders(projectRows)
-                    status << [grantId:'Column Headers', externalId:'', success:errors.size() == 0, errors:errors]
+                    status << [grantId:'Column Headers', externalId:'', success:errors.size() == 0, errors:errors, messages:[]]
                     first = false
                 }
 
@@ -359,7 +375,7 @@ class ImportService {
         grantId = grantId ?:'<not mapped>'
         externalId = externalId  ?:'<not mapped>'
 
-        status << [grantId:grantId, externalId:externalId, success:mappingResults.errors.size() == 0, errors:mappingResults.errors]
+        status << [grantId:grantId, externalId:externalId, success:mappingResults.errors.size() == 0, errors:mappingResults.errors, messages:mappingResults.messages]
     }
 
     void importAll(projectRows, List status, GmsMapper mapper, Boolean update) {
@@ -368,7 +384,7 @@ class ImportService {
 
         def grantId = projectDetails.project.grantId?:'<not mapped>'
         def externalId = projectDetails.project.externalId?:'<not mapped>'
-        if (!projectDetails.error) {
+        if (!projectDetails.errors) {
 
             def adminEmail = projectDetails.project.remove('adminEmail')
             def grantManagerEmail = projectDetails.project.remove('grantManagerEmail')            
@@ -380,6 +396,18 @@ class ImportService {
 
             //When projects are loaded into MERIT via CSV upload, they are given a status of "Application".
             projectDetails.project.status ?: 'application'
+
+            // Create the organisation first so we can link it to the project.
+            if (projectDetails.organisation) {
+                Map orgCreationResult = organisationService.update(null, projectDetails.organisation)
+                if (orgCreationResult.statusCode != HttpStatus.SC_OK || !orgCreationResult.resp?.organisationId) {
+                    projectDetails.errors << "Error creating organisation: ${orgCreationResult.error}"
+                }
+                else {
+                    refreshOrganisationList()
+                    projectDetails.associatedOrgs[0].organisationId = orgCreationResult.resp.organisationId
+                }
+            }
 
             def result = importProject(projectDetails.project, update) // Do not overwrite existing projects because of the impacts to sites / activities etc.
 
@@ -431,11 +459,11 @@ class ImportService {
                 activityService.update('', activity)
             }
 
-            status << [projectId:projectDetails.project.projectId, grantId:grantId, externalId:externalId, success:projectDetails.errors.size() == 0, errors:projectDetails.errors]
+            status << [projectId:projectDetails.project.projectId, grantId:grantId, externalId:externalId, success:projectDetails.errors.size() == 0, errors:projectDetails.errors, messages:projectDetails.messages]
 
         }
         else {
-            status << [grantId:grantId, externalId:externalId, success:false, errors:projectDetails.errors]
+            status << [grantId:grantId, externalId:externalId, success:false, errors:projectDetails.errors, messages:projectDetails.messages]
 
         }
     }

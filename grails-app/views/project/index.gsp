@@ -230,7 +230,6 @@
     </asset:script>
 </g:if>
 <asset:script>
-    var organisations = <fc:modelAsJavascript model="${organisations}"/>;
     $(function () {
         var PROJECT_DETAILS_KEY = 'project.custom.details.${project.projectId}';
         var PROJECT_RISKS_KEY = 'project.risks.${project.projectId}';
@@ -339,8 +338,10 @@ var config = {
     config.speciesListUrl = fcConfig.speciesListUrl;
     config.speciesImageUrl = fcConfig.speciesImageUrl;
     config.speciesProfileUrl = fcConfig.speciesProfileUrl;
+    config.organisationSearchUrl = fcConfig.organisationSearchUrl;
+    config.organisationViewUrl = fcConfig.organisationLinkBaseUrl;
     project.mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
-    var viewModel = new ProjectPageViewModel(project, project.sites, project.activities || [], organisations, userRoles, config);
+    var viewModel = new ProjectPageViewModel(project, project.sites, project.activities || [], userRoles, config);
     viewModel.loadPrograms(programs);
     ko.applyBindings(viewModel);
     window.validateProjectEndDate = viewModel.validateProjectEndDate;

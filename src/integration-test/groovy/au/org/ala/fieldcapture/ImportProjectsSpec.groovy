@@ -1,6 +1,8 @@
 package au.org.ala.fieldcapture
 
 import groovy.util.logging.Slf4j
+import pages.AdminClearCachePage
+import pages.AdminTools
 import pages.Organisation
 import pages.ProgramPage
 import pages.ProjectImport
@@ -11,6 +13,12 @@ class ImportProjectsSpec extends StubbedCasSpec {
 
     def setup() {
         useDataSet('dataset2')
+        loginAsAlaAdmin(browser)
+        to AdminTools
+        clearMetadata()
+        to AdminClearCachePage
+        clearProgramListCache()
+        clearServiceListCache()
     }
 
     //Once a project is imported, the status of the project should be Application
@@ -46,10 +54,8 @@ class ImportProjectsSpec extends StubbedCasSpec {
         displayReportsTab()
 
         then:
-        waitFor {
-            projectContent[6].text() == 'APPLICATION'
-        }
-
+        reportsTabPane.projects.find{it.name == 'project 1'}
+        reportsTabPane.projects.find{it.name == 'project 1'}.status == "APPLICATION"
     }
 
     def "New projects can be imported into MERIT"() {
@@ -85,9 +91,10 @@ class ImportProjectsSpec extends StubbedCasSpec {
 
         then:
         waitFor {
-            $("#projects tbody tr td .badge.badge-info").size() == 2
-            $("#projects tbody tr td .badge.badge-info")[0].text() == 'APPLICATION'
-            $("#projects tbody tr td .badge.badge-info")[1].text() == 'APPLICATION'
+            reportsTabPane.projects.find{it.name == 'project 2'}
+            reportsTabPane.projects.find{it.name == 'project 2'}.status == "APPLICATION"
+            reportsTabPane.projects.find{it.name == 'project 3'}
+            reportsTabPane.projects.find{it.name == 'project 3'}.status == "APPLICATION"
         }
     }
 
