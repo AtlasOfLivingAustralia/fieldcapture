@@ -49,18 +49,8 @@ var config =
                     "helpTextHeading": "If the project is not delivering additional benefits, delete the row using the 'x' in the right-most column.",
                     "title": "Additional benefits",
                     "priority": "Additional investment priorities",
+                    "maxAdditonalOutcomes": "7",
                     "priorityHelpText": "Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
-                }
-            },
-            {
-                "template": "outcomeStatements",
-                "model": {
-                    "outcomeType": "mid",
-                    "helpText": "Projects more than 3 years in duration must set medium-term Project outcomes achievable at project completion. Ensure proposed outcomes are measurable with consideration to the baseline and proposed monitoring regime",
-                    "minimumNumberOfOutcomes": 0,
-                    "subtitle": "Medium-term outcome statement/s",
-                    "title": "Project Outcomes",
-                    "extendedOutcomes": true
                 }
             },
             {
@@ -146,7 +136,7 @@ var config =
         ],
         "excludes": [],
         "programServiceConfig": {
-            "serviceFormName": "NHT Output Report",
+            "serviceFormName": "Grants and Others Progress Report",
             "programServices": [
                 {
                     "serviceTargets": [
@@ -162,15 +152,17 @@ var config =
                 },
                 {
                     "serviceTargets": [
-                        "f9c85612-602e-465c-89e0-e155b34b1f31"
+                        "1f8161bc-908b-4ec8-ab7f-edac973a657d",
+                        "88908921-1248-4a7c-b185-51c625c737e3",
+                        "fe9f1a6c-e614-489a-80fa-4d6d76f1cf95"
                     ],
                     "serviceId": 3
                 },
                 {
                     "serviceTargets": [
+                        "aa0c6b29-285e-4344-987e-dfeaf1d95648",
                         "a9d98baa-b2ab-4428-82cf-d96185e63aa6",
-                        "c4ea5ce3-4a70-4df8-aff7-ffa929e7df61",
-                        "dcf917dc-eaf7-49e2-ae7b-abf65edeedae"
+                        "c4ea5ce3-4a70-4df8-aff7-ffa929e7df61"
                     ],
                     "serviceId": 4
                 },
@@ -306,8 +298,7 @@ var config =
                         "b9e710e4-7dd3-4acc-ac2c-c69f4bcb9787",
                         "00934509-f102-4d39-a043-7547a8ab9ac8",
                         "1021bec7-3836-4b33-90b4-76701efd4fe3",
-                        "4dad393e-cbf7-43dd-87bb-62ea8f8afcdd",
-                        "7186117e-ac17-4ed9-8c9c-8ee1c3bf473b"
+                        "4dad393e-cbf7-43dd-87bb-62ea8f8afcdd"
                     ],
                     "serviceId": 26
                 },
@@ -398,6 +389,25 @@ var config =
                         "b8304577-afd8-45e0-8ef4-b71ae10998f5"
                     ],
                     "serviceId": 44
+                },
+                {
+                    "serviceTargets": [
+                        "9ed0ab84-6d04-4926-ae36-c75a8763e09b"
+                    ],
+                    "serviceId": 45
+                },
+                {
+                    "serviceTargets": [
+                        "8113ab8a-17e6-43c9-be32-9ca72dd01454",
+                        "9f6f06ac-b055-48c1-9d80-b305acdeae79"
+                    ],
+                    "serviceId": 6
+                },
+                {
+                    "serviceTargets": [
+                        "0e887410-a3c5-49ca-a6f5-0f2f6fae30db"
+                    ],
+                    "serviceId": 46
                 }
             ]
         },
@@ -419,26 +429,13 @@ var config =
         "meriPlanTemplate": "configurableMeriPlan",
         "riskAndThreatTypes": [
             "Performance",
+            "Work Health and Safety",
             "People resources",
             "Financial",
             "External stakeholders",
             "Natural Environment"
         ],
         "projectReports": [
-            {
-                "reportType": "Activity",
-                "firstReportingPeriodEnd": "",
-                "reportDescriptionFormat": "Progress Report %1d",
-                "reportNameFormat": "Progress Report %1d",
-                "reportingPeriodInMonths": 6,
-                "description": "Priority Places Grants Progress Report",
-                "minimumReportDurationInDays": 3,
-                "label": "Semester",
-                "category": "Progress Reports",
-                "activityType": "Progress Report",
-                "reportsAlignedToCalendar": true,
-                "canSubmitDuringReportingPeriod": true
-            },
             {
                 "firstReportingPeriodEnd": "2025-06-30T14:00:00Z",
                 "reportType": "Administrative",
@@ -453,17 +450,15 @@ var config =
             },
             {
                 "reportType": "Single",
-                "reportDescriptionFormat": "Final Report",
-                "reportNameFormat": "Final Report",
-                "reportingPeriodInMonths": 0,
+                "firstReportingPeriodEnd": "2021-06-30T14:00:00Z",
+                "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
+                "reportNameFormat": "Outcomes Report 1",
+                "reportingPeriodInMonths": 36,
                 "multiple": false,
-                "description": "",
-                "alignToOwnerEnd": true,
-                "label": "Final Report",
-                "category": "Final Report",
+                "description": "Before beginning Outcomes Report 1, please go to the Data set summary tab and complete a form for each data set collected for this project. Help with completing this form can be found in Section 10 of the [RLP MERIT User Guide](http://www.nrm.gov.au/my-project/monitoring-and-reporting-plan/merit)",
+                "category": "Outcomes Report 1",
                 "reportsAlignedToCalendar": false,
-                "activityType": "Priority Places Final Report",
-                "alignToOwnerStart": true
+                "activityType": "RLP Short term project outcomes"
             }
         ],
         "keyThreatCodes": [
@@ -471,11 +466,6 @@ var config =
             "Climate Change - Changed rainfall patterns",
             "Climate Change - Sea level rises",
             "Climate Change - Unexpected seasonal/temperature extremes",
-            "Disconnection from Country - Altered/disrupted connection with land and sea country",
-            "Disconnection from Country - Altered or disrupted First Nations engagement/leadership in caring for land and sea country",
-            "Disconnection from Country - Altered or disrupted transfer of First Nations knowledge systems",
-            "Disconnection from Country - Inadequate recognition of Traditional knowledge and practices",
-            "Disengagement of community - Community are not informed and are not engaged in managing the environment",
             "Disease/pathogens - Areas that are infected",
             "Disease/pathogens - Possible infection of disease free areas",
             "Fire - Inappropriate fire regime",
@@ -551,165 +541,74 @@ var outcomes = [
     {
         "priorities": [
             {
-                "category": "Farmer Sector"
+                "category": "Water quality"
             }
         ],
         "targeted": true,
-        "shortDescription": "Skills and Knowledge",
-        "category": "Farmer Sector",
-        "outcome": "1: Farmers and land holders have increased awareness, knowledge, and skills of best practice climate-smart sustainable agriculture approaches"
+        "shortDescription": "Water quality",
+        "category": "Waterways",
+        "outcome": "Track progress towards the Reef 2050 Water Quality Improvement Plan targets and objectives and evaluate the effectiveness of activities to feed into the adaptive management of responding to the challenge."
     },
     {
-        "priorities": [
-            {
-                "category": "Farmer Sector"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "Capacity and Capability",
-        "category": "Farmer Sector",
-        "outcome": "2: Community, Landcare groups, First Nations peoples and industry have increased capacity and capability to assist farmers and land holders to adopt climate-smart and sustainable agriculture practices"
-    },
-    {
-        "priorities": [
-            {
-                "category": "Farmer Sector"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "Agricultural Practices",
-        "category": "Farmer Sector",
-        "outcome": "3: The agriculture sector is utilising proven climate-smart and sustainable agriculture practices, initiatives, and information sources to increase adoption at scale"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "1. Farmers are trialing and/or adopting CSSA practices"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "2. Farmers are adopting innovative tools, technologies or practices"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "3. Farmers are demonstrating sustainability credentials and traceability"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "4. Farmers are implementing sustainability frameworks"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "5. Farmers understand how and why to adopt CSSA practices (knowledge)"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "6. Farmers are aware of CSSA practices, and their value and opportunities"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "7. Farmers have the skills to adopt CSSA practices"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "8. Farmers accept and value CSSA practices"
-    },
-    {
+        "category": "Water quality",
         "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "1. Farmers understand how and why to adopt CSSA practices (Knowledge)"
+        "outcome": "Improved water quality in GBR catchments resulting from improved targeting of funding and improved planning of on-ground actions."
     },
     {
+        "category": "Water quality",
         "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "2. Farmers are aware of CSSA practices, and their value and opportunities"
+        "outcome": "Improved confidence and transparency around impacts of public investment toward improved farming practices."
     },
     {
+        "category": "Water quality",
         "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "3. Farmers have the skills to adopt CSSA practices"
+        "outcome": "Compliance with UNESCO World Heritage Committee commitments to report against Reef Water Quality Targets."
     },
     {
+        "category": "Water quality",
         "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "4. Farmers accept and value CSSA practices (attitude/culture)"
+        "outcome": "Reporting of sediment (total suspended solids), nutrients (nitrogen and phosphorus analytes) and pesticides in key catchments of the Great Barrier Reef."
     },
     {
+        "category": "Water quality",
         "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "5. Farmers are accessing demonstrations of innovative and effective practices"
+        "outcome": "Reporting of wetland condition for the Great Barrier Reef."
     },
     {
+        "category": "Water quality",
         "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "6. Farmers are accessing relevant information resources and products"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "7. Farmers are accessing advice and support"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "8. Farmers are connecting to peer networks"
+        "outcome": "DCCEEW/Stakeholder ongoing access to the Interactive Reef Water Quality Report Card, P2R Projector, Reefonomics and the Paddock to Reef data portal."
     }
 ];
 
 var priorities = [
     {
-        "category": "Farmer Sector",
-        "priority": "Native vegetation and biodiversity on-farm"
+        "category": "Water quality",
+        "priority": "Management Practice Adoption"
     },
     {
-        "category": "Farmer Sector",
-        "priority": "On-farm emissions reduction practices"
+        "category": "Water quality",
+        "priority": "Paddock to Reef 5-year review"
     },
     {
-        "category": "Farmer Sector",
-        "priority": "Soil carbon"
+        "category": "Water quality",
+        "priority": "Great Barrier Reef Catchment Loads Monitoring"
     },
     {
-        "category": "Farmer Sector",
-        "priority": "Soil erosion"
+        "category": "Water quality",
+        "priority": "Wetland Condition"
     },
     {
-        "category": "Farmer Sector",
-        "priority": "Soil acidification"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Sustainable agriculture practices, including natural resource management"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Climate change adaptation"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Carbon and biodiversity market information"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Sustainability framework engagement"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Market access and traceability"
+        "category": "Water quality",
+        "priority": "Reef Monitoring and Evaluation Tools"
     }
 ];
 
+
 //Create the parent program
-let programName = "Natural Heritage Trust";
+let programName = "Reef 2050 Plan";
 var parent = createOrFindProgram(programName);
-var subprograms = ["Climate-Smart Agriculture Program - Capacity Building Grants - Round 2"]
+var subprograms = ["Paddock to Reef Integrated Monitoring, Modelling and Reporting Program 2023-2026 - Reef Trust Agreement"]
 
 subprograms.forEach(function (subProgram){
     createOrFindProgram(subProgram, parent._id);
@@ -724,4 +623,5 @@ subprograms.forEach(function (subprogram){
         useNhtServiceLabels(p.name);
     }
 });
+
 

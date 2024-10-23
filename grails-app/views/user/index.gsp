@@ -9,6 +9,7 @@
         projectViewUrl: "${createLink(controller:'project', action:'index')}",
         projectUpdateUrl: "${createLink(controller:'project', action:'ajaxUpdate')}",
         projectReportsUrl:"${createLink(controller: 'project', action:'reportingHistory')}",
+        userProjectsUrl:"${createLink(action:'userProjects')}",
         organisationViewUrl: "${createLink(controller:'organisation', action:'index')}",
         imageLocation:"${assetPath(src:'/')}"
         },

@@ -61,6 +61,11 @@
         <g:if test="${params.query}">
             url += "&query=${params.query.encodeAsURL()}"
         </g:if>
+        <g:if test="${params.isFilterByCompletedProjects}">
+            url += "&isFilterByCompletedProjects=${params.isFilterByCompletedProjects.encodeAsURL()}"
+        </g:if>
+        url += "&clientTimeZone=" + encodeURIComponent(moment.tz.guess() || '');
+
         $("#legend-table").hide();
         $("#map-colorby-status").show();
         $.getJSON(url, function(data) {

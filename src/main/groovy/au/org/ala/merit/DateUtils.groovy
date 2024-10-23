@@ -101,8 +101,8 @@ class DateUtils {
         return DISPLAY_DATE_FORMATTER.parseDateTime(displayDateString)
     }
 
-    static DateTime parseDisplayDate(String dateString, String format) {
-        DateTimeFormat.forPattern(format).withZone(DateTimeZone.default).parseDateTime(dateString)
+    static DateTime parseDisplayDate(String dateString, String format, DateTimeZone zone = DateTimeZone.default) {
+        DateTimeFormat.forPattern(format).withZone(zone).parseDateTime(dateString)
     }
 
     static DateTime now() {
