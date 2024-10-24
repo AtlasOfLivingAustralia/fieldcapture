@@ -153,8 +153,27 @@ var ProjectImportViewModel = function (config) {
     self.importing = ko.observable(false);
     self.update = ko.observable(false);
 
+    self.success = ko.computed(function() {
+        var success = !self.preview();
+        if (success) {
+            for (var i = 0; i < self.progressDetail().length; i++) {
+                success = success && self.progressDetail()[i].success;
+            }
+        }
+
+        return success;
+
+    });
+
     self.uploadOptions = {
         url: config.importUrl,
+        change: function() {
+          self.preview(true);
+          self.finishedPreview(false);
+          self.finished(false);
+          self.progressDetail([]);
+          self.progressSummary('');
+        },
         done: function (e, data) {
 
             if (data.result) {

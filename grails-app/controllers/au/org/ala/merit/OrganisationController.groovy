@@ -7,6 +7,7 @@ import au.org.ala.merit.command.ViewOrganisationReportCommand
 import au.org.ala.merit.util.ProjectGroupingHelper
 import grails.converters.JSON
 import org.apache.http.HttpStatus
+import org.grails.web.json.JSONObject
 
 /**
  * Extends the plugin OrganisationController to support Green Army project reporting.
@@ -136,14 +137,15 @@ class OrganisationController {
     @PreAuthorise(accessLevel = 'editor')
     def edit(String id) {
 
-        def organisation = organisationService.get(id)
+        def organisation = organisationService.get(id, 'all')
 
         if (!organisation || organisation.error) {
             organisationNotFound(id, organisation)
         }
         else {
             if (organisationService.isUserAdminForOrganisation(id)) {
-
+                organisation.remove('projects')
+                organisation.remove('reports')
                 [organisation: organisation,
                  isNameEditable   : userService.userIsAlaOrFcAdmin()]
             }
@@ -175,7 +177,7 @@ class OrganisationController {
     }
 
     private void createOrUpdateOrganisation(String organisationId, Map organisationDetails) {
-        def originalOrganisation = organisationService.get(organisationId)
+        def originalOrganisation = organisationId ? organisationService.get(organisationId) : null
         def documents = organisationDetails.remove('documents')
         def links = organisationDetails.remove('links')
         def result = organisationService.update(organisationId, organisationDetails)

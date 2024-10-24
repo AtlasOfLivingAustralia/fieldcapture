@@ -49,7 +49,7 @@ class RlpProjectSpec extends StubbedCasSpec {
         }
         overview.program.text() == 'Test program'
         overview.managementUnitName.text() == 'Test management unit'
-        overview.serviceProviderName.text() == 'Test Org'
+        overview.serviceProviderName.text() == 'Test Organisation'
         overview.projectId.text() == 'RLP-Test-Program-Project-1'
         overview.status.text() == 'ACTIVE'
         overview.startDate.text() == '01-07-2018'

@@ -9,7 +9,7 @@ fi
 
 BRANCH=$3
 if [ -z $BRANCH ]; then
-    BRANCH=feature/issue3265
+    BRANCH=feature/issue994
 fi
 
 ECODATA_LOCAL_DIR=$2

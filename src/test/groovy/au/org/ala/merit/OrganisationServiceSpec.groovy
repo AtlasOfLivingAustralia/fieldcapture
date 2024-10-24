@@ -133,11 +133,11 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 		Map abnDetails = service.getAbnDetails(abn)
 
 		then:
-		1 * abnLookupService.lookupOrganisationNameByABN(abn) >> expected
+		1 * abnLookupService.lookupOrganisationDetailsByABN(abn) >> expected
 
 		and:
 		abnDetails.abn == "11111111111"
-		abnDetails.name == "Test abn"
+		abnDetails.entityName == "Test abn"
 	}
 
 	def "When user provide an invalid abn number return an error message"(){
@@ -149,7 +149,7 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 		Map abnDetails = service.getAbnDetails(abn)
 
 		then:
-		1 * abnLookupService.lookupOrganisationNameByABN(abn) >> expected
+		1 * abnLookupService.lookupOrganisationDetailsByABN(abn) >> expected
 
 		and:
 		abnDetails.error == "invalid"
@@ -215,9 +215,9 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 		service.cancelReport("o1", "r1", "Testing")
 
 		then:
-		1 * webService.getJson({it.endsWith('organisation/o1?view=')}) >> [organisationId:"o1"]
+		1 * webService.getJson2({it.endsWith('organisation/o1?view=')}) >> [resp:[organisationId:"o1"], statusCode:200]
 		1 * reportService.get("r1") >> [reportId:"r1", organisationId:"o1", activityId:'a1']
-		1 * reportService.cancelReport("r1", ['a1'], "Testing", [organisationId:"o1", reports:null], [])
+		1 * reportService.cancelReport("r1", ['a1'], "Testing", [organisationId:"o1", reports:null, contractNamesAndProjects:[:]], [])
 		1 * userService.getMembersOfOrganisation("o1") >> []
 		1 * documentService.search(_) >> [documents:[]]
 	}

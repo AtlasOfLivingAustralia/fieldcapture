@@ -264,7 +264,6 @@ ko.bindingHandlers.elasticSearchAutocomplete = {
     };
     options.select = function(event, ui) {
       result(ui.item);
-      $(this).val(""); // Clear the search field
     };
 
     $(element).autocomplete(options);

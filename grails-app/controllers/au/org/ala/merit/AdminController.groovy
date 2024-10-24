@@ -382,11 +382,11 @@ class AdminController {
         [message: results?.message, compare: compare?.message, userDetails: userDetails.user]
     }
 
-    def gmsProjectImport() {
+    def importMeritProjects() {
         render(view:'import', model:[:])
     }
 
-    def gmsImport() {
+    def loadMeritProjects() {
 
         Boolean preview = params.getBoolean('preview')
         Boolean update = params.getBoolean('update')
