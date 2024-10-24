@@ -529,7 +529,7 @@ class ImportService {
                     sites << name
                 }
                 else {
-                    def resp = siteService.createSiteFromUploadedShapefile(shapeFileId, shape.id, siteExternalId, name, description, project.projectId, false)
+                    def resp = siteService.createSiteFromUploadedShapefile(shapeFileId, shape.id, siteExternalId, name, description, project.projectId)
                     if (resp?.siteId) {
                         projectDetails.sites << [siteId:resp.siteId, name:name, description:description]
                         sites << name

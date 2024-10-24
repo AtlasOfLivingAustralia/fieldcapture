@@ -231,27 +231,16 @@ class SiteService {
      * @param description the description for the site
      * @param projectId the project the site should be associated with.
      */
-    Map createSiteFromUploadedShapefile(String shapeFileId, String featureId, String externalId, String name, String description, String projectId, boolean persistInSpatialPortal = true) {
+    Map createSiteFromUploadedShapefile(String shapeFileId, String featureId, String externalId, String name, String description, String projectId) {
 
         Map returnValue
-        Map result = spatialService.createObjectFromShapefileFeature(shapeFileId, featureId, name, description)
+        Map result = spatialService.createObjectFromShapefileFeature(shapeFileId, featureId)
 
         if (!result.error && !result.resp.error) {
-            String pid = result.resp.id
-            String source = SITE_SOURCE_SPATIAL_PORTAL
-
-            Map geomResult = spatialService.objectGeometry(pid)
-            if (geomResult.statusCode == HttpStatus.SC_OK) {
-                // We use the spatial portal for it's shapefile handling and re-projection to WGS84 but don't want the
-                // site to remain.
-                if (!persistInSpatialPortal && pid) {
-                    Integer resp = spatialService.deleteFromSpatialPortal(pid)
-                    if (resp == HttpStatus.SC_OK) {
-                        pid = null
-                        source = SITE_SOURCE_DRAWN
-                    }
-                }
-                result = createSite(projectId, name, description, externalId, source, geomResult.resp, pid)
+            String source = SITE_SOURCE_DRAWN
+            Map geoJson = result.resp.geoJson
+            if (geoJson) {
+                result = createSite(projectId, name, description, externalId, source, geoJson)
                 if (result.statusCode == HttpStatus.SC_OK && result.resp?.siteId) {
                     returnValue = [success:true, siteId:result.resp.siteId]
                 }
@@ -261,9 +250,6 @@ class SiteService {
             }
             else {
                 returnValue = [success:false, error:"Failed to retrieve geometry for feature $featureId of shapefile $shapeFileId"]
-            }
-            if (returnValue.success == false && pid) {
-                spatialService.deleteFromSpatialPortal(pid)
             }
         }
         else {

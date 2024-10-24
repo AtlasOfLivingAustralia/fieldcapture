@@ -1,9 +1,8 @@
 package au.org.ala.merit
 
-import grails.config.Config
+
 import grails.testing.spring.AutowiredTest
 import org.apache.http.HttpStatus
-import grails.core.GrailsApplication
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.web.multipart.MultipartFile
 import spock.lang.Specification
@@ -25,6 +24,7 @@ class SpatialServiceSpec extends Specification implements AutowiredTest{
         service.userService = userService
         service.grailsApplication = grailsApplication
         grailsApplication.config.spatial.layersUrl= ''
+        grailsApplication.config.ecodata.baseUrl= ''
     }
 
     def cleanup() {
@@ -53,7 +53,7 @@ class SpatialServiceSpec extends Specification implements AutowiredTest{
         Map result = service.uploadShapefile(file)
 
         then:
-        1 * webService.postMultipart("/shape/upload/shp", [:], file, 'files', true) >> [statusCode:HttpStatus.SC_OK, resp:resp]
+        1 * webService.postMultipart("/shapefile", [:], file, 'files', true) >> [statusCode:HttpStatus.SC_OK, resp:resp]
         result.statusCode == HttpStatus.SC_OK
         result.resp == resp
 
@@ -66,14 +66,14 @@ class SpatialServiceSpec extends Specification implements AutowiredTest{
         String shapefileId = "s1"
         String name = "site 1"
         String description = "site description"
-        Map resp = [id:1325]
+        Map resp = [geoJson:[type:"Point", coordinates:[-35, 100]]]
         userService.getCurrentUserId() >> "1234"
 
         when:
-        Map result = service.createObjectFromShapefileFeature(shapefileId, featureId, name, description)
+        Map result = service.createObjectFromShapefileFeature(shapefileId, featureId)
 
         then:
-        1 * webService.doPost("/shape/upload/shp/$shapefileId/$featureId", [user_id:userId, name:name, description:description], true) >> [statusCode:HttpStatus.SC_OK, resp:resp]
+        1 * webService.getJson2("/shapefile/geojson/$shapefileId/$featureId") >> [statusCode:HttpStatus.SC_OK, resp:resp]
         result.statusCode == HttpStatus.SC_OK
         result.resp == resp
 
