@@ -67,7 +67,7 @@ ko.components.register('associated-orgs', {
         }
 
         // Maintains the state of which organisation is being edited or added
-        var selectedOrganisation;
+        self.selectedOrganisation = null;
 
         self.addAssociatedOrg = function () {
             self.selectedOrganisation = new AssociatedOrg();
