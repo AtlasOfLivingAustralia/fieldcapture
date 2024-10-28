@@ -423,7 +423,7 @@ EditOrganisationViewModel = function(props, options) {
     };
 
     self.toJS = function(includeDocuments) {
-        var ignore = self.ignore.concat(['breadcrumbName', 'entityTypes', 'externalIdTypes', 'organisationSearchUrl', 'collectoryInstitutionId', 'projects', 'reports', 'indigenousOrganisationTypes', 'dirtyFlag']);
+        var ignore = self.ignore.concat(['breadcrumbName', 'entityTypes', 'externalIdTypes', 'organisationSearchUrl', 'collectoryInstitutionId', 'projects', 'reports', 'indigenousOrganisationTypes', 'dirtyFlag', 'selectedOrganisation']);
         var js = ko.mapping.toJS(self, {include:['documents'], ignore:ignore} );
         if (self.externalIds().length > 0) {
             js.externalIds = ko.mapping.toJS(self.externalIds);
