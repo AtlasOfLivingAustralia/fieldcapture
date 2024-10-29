@@ -1,4 +1,5 @@
 describe("OrganisationViewModel Spec", function () {
+    var hasSimpleDirtyFlag = true;
     beforeAll(function() {
         window.fcConfig = {
             imageLocation:'/'
@@ -11,9 +12,20 @@ describe("OrganisationViewModel Spec", function () {
         if (!$.unblockUI) {
             $.unblockUI = function() {};
         }
+        if (!ko.simpleDirtyFlag) {
+            hasSimpleDirtyFlag = false;
+            ko.simpleDirtyFlag  = function() {
+                this.isDirty = ko.observable(false);
+                return this;
+            };
+        }
+
     });
     afterAll(function() {
         delete window.fcConfig;
+        if (!hasSimpleDirtyFlag) {
+            delete ko.simpleDirtyFlag;
+        }
     });
 
     it("should serialize into JSON which does not contain any fields that are only useful to the view", function() {
