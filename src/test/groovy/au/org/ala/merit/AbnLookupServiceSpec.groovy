@@ -1,9 +1,8 @@
 package au.org.ala.merit
 
-import grails.core.GrailsApplication
+
 import grails.testing.spring.AutowiredTest
 import org.apache.http.HttpStatus
-import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Specification
 
 /**
@@ -99,7 +98,7 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
                 "             \"EntityTypeName\":\"Commonwealth Government Entity\",\n" +
                 "             \"Gst\":\"2000-07-01\",\"Message\":\"\"})"
 
-        Map expected = [abn:"41687119230", entityName: "COMMONWEALTH SCIENTIFIC AND INDUSTRIAL RESEARCH ORGANISATION"]
+        Map expected = [abn:"41687119230", entityName:"COMMONWEALTH SCIENTIFIC AND INDUSTRIAL RESEARCH ORGANISATION", abnStatus:"Active", businessNames:["DEEP SPACE CAFE", "CSIRO", "CENTRE FOR LIVEABILITY REAL ESTATE", "DATA61"], state:"ACT", postcode:2601, entityType:"CGE", entityTypeName:"Commonwealth Government Entity"]
         Map wsResponse = [resp:abnValue, statusCode: HttpStatus.SC_OK]
 
         String abnLookupToken = grailsApplication.config.getProperty('abn.abnLookupToken')
@@ -107,7 +106,7 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
         String abnLookupUrlString = url + abn + "&guid=" + abnLookupToken
 
         when:
-        Map actual = service.lookupOrganisationNameByABN(abn)
+        Map actual = service.lookupOrganisationDetailsByABN(abn)
 
         then:
         1 * webService.getString(abnLookupUrlString, false) >> wsResponse
@@ -127,7 +126,7 @@ class AbnLookupServiceSpec extends Specification implements AutowiredTest{
         Map wsResponse = [error:"Error", statusCode: HttpStatus.SC_BAD_REQUEST]
 
         when:
-        Map actual = service.lookupOrganisationNameByABN(abn)
+        Map actual = service.lookupOrganisationDetailsByABN(abn)
 
         then:
         0 * webService.getString(abnLookupUrlString, false) >> wsResponse

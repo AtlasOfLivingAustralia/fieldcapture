@@ -19,9 +19,8 @@ describe("ProjectViewModel Spec", function () {
             name:'Name',
             description:'Description'
         };
-        var organisations = [];
-        var isEditor = true;
-        var project = new ProjectViewModel(projectData, isEditor, organisations);
+
+        var project = new ProjectViewModel(projectData);
 
         expect(project.name()).toEqual(projectData.name);
         expect(project.description()).toEqual(projectData.description);
@@ -71,9 +70,7 @@ describe("ProjectViewModel Spec", function () {
             status: 'terminated',
             terminationReason: "Termination Reason"
         }
-        var org = [];
-        var isEditor = true
-        let project = new ProjectViewModel(projectData, isEditor, org)
+        let project = new ProjectViewModel(projectData)
         expect(project.status()).toEqual(projectData.status)
         expect(project.terminationReason()).toEqual(projectData.terminationReason)
     });

@@ -665,7 +665,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         withWindow([close:true], "meri-plan-report") {
 
             at MeriPlanPDFPage
-        closePrintInstructions()
+            closePrintInstructions()
 
 
         page.meriPlan.assets[0].description.text() == "asset 1"

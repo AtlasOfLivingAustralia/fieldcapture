@@ -9,7 +9,11 @@ import grails.util.Environment
 import grails.util.GrailsNameUtils
 import grails.web.http.HttpHeaders
 import groovy.util.logging.Slf4j
+import org.apache.poi.ss.usermodel.Workbook
+import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.apache.poi.ss.util.CellReference
 import org.grails.plugin.cache.GrailsCacheManager
+import org.grails.plugins.excelimport.ExcelImportService
 import org.joda.time.Period
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.web.multipart.MultipartHttpServletRequest
@@ -37,6 +41,7 @@ class AdminController {
     def roleService
     def userService
     RisksService risksService
+    ExcelImportService excelImportService
 
     def index() {}
 
@@ -382,11 +387,11 @@ class AdminController {
         [message: results?.message, compare: compare?.message, userDetails: userDetails.user]
     }
 
-    def gmsProjectImport() {
+    def importMeritProjects() {
         render(view:'import', model:[:])
     }
 
-    def gmsImport() {
+    def loadMeritProjects() {
 
         Boolean preview = params.getBoolean('preview')
         Boolean update = params.getBoolean('update')
@@ -712,4 +717,52 @@ class AdminController {
         render 'ok'
     }
 
+
+    def organisationModifications() {
+        if (request.respondsTo('getFile')) {
+            def file = request.getFile('data')
+            Map results = [:]
+            if (file) {
+
+                def columnMap = [
+                        'Project ID': 'projectId',
+                        2: 'organisationId',
+                        3: 'organisationName',
+                        4: 'abn'
+                ]
+                def config = [
+                        sheet    : "Projects",
+                        startRow : 1,
+                        columnMap: columnMap
+                ]
+                Workbook workbook = WorkbookFactory.create(file.inputStream)
+
+                List data = excelImportService.convertColumnMapConfigManyRows(workbook, config)
+                data.each { Map row ->
+                    Map project = projectService.get(row.projectId)
+
+                    Map associatedOrg = project.associatedOrgs?.find{it.organisationId == row.organisationId || it.name == row.organisationName}
+
+                    if (associatedOrg) {
+                        if (associatedOrg && associatedOrg.organisationId) {
+                            results[row.projectId] = "Organisation already exists.  No action taken."
+                        }
+                        else {
+                            if (row.organisationId) {
+                                associatedOrg.organisation = row.organisationId
+
+                                Map organisation = organisationService.get(row.organisationId)
+                                if (organisation.name != row.organisationName && !(row.organisationName in organisation.contractNames)) {
+                                    organisation.contractNames << row.organisationName
+
+
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
 }

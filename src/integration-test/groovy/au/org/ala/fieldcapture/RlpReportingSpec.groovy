@@ -258,7 +258,7 @@ class RlpReportingSpec extends StubbedCasSpec {
         projectReports.reports[0].downloadReport()
 
         then:
-        withWindow("print-report", {
+        withWindow([close:true], "print-report") {
             at ProjectDownloadReport
             waitFor {
                 printInstructions.displayed
@@ -267,7 +267,7 @@ class RlpReportingSpec extends StubbedCasSpec {
             waitFor {
                 !printInstructions.displayed
             }
-        })
+        }
 
     }
 
@@ -769,7 +769,7 @@ class RlpReportingSpec extends StubbedCasSpec {
         logout(browser)
         loginAsGrantManager(browser)
         to RlpProjectPage, projectId
-        displayReportingTab()
+        displayReportingTab(5)
         projectReports.reports[3].approve()
 
         then: "An over delivery warning will be displayed"
