@@ -1,0 +1,14 @@
+
+.associatedOrgs .associated-org-list  {
+    display: grid;
+    grid-template-columns: 3em max-content auto;
+}
+.associatedOrgs .associated-org-list div {
+    padding: 5px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+.associatedOrgs .associated-org-list div.controls {
+    padding: 5px;
+    margin-right: 5px;
+}

@@ -67,10 +67,13 @@ createProgram({name:'Regional Land Partnerships', parent: null, programId:'test_
 
 createOrganisation({
     name:'Test Organisation',
+    abnStatus:'Active',
     organisationId:'test_organisation',
     status:'active', abn:'12345678901',
     url:'http://www.ala.org.au',
-    acronym:'TSTORG'
+    acronym:'TSTORG',
+    state: "ACT",
+    postcode: 2600
 })
 
 createMu({name:'test mu', managementUnitId:"test_mu",managementUnitSiteId:'test_site_1'});

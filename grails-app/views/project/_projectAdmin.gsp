@@ -42,6 +42,7 @@
             <a class="nav-link" href="#edit-documents" id="edit-documents-tab" data-toggle="pill" role="tab" >Documents</a>
         </g:elseif>
         <g:if test="${fc.userIsSiteAdmin() || fc.userHasReadOnlyAccess()}">
+            <a class="nav-link" href="#organisation-history" id="organisation-history-tab" data-toggle="pill" role="tab" >Organisation history</a>
             <a class="nav-link" href="#project-audit" id="project-audit-tab" data-toggle="pill" role="tab" >Audit</a>
         </g:if>
     </div> <!-- end of side nav -->
@@ -149,6 +150,10 @@
                 <g:render template="/admin/editDocuments"/>
             </g:elseif>
             <g:if test="${fc.userIsSiteAdmin() || fc.userHasReadOnlyAccess()}">
+                <div id="organisation-history" class="pill-pane tab-pane">
+                    <g:render template="associatedOrgsReadOnly"/>
+                </div>
+
                 <!-- Audit -->
                 <div id="project-audit" class="pill-pane tab-pane">
                     <g:render template="/project/audit"/>

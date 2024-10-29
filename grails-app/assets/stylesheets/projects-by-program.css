@@ -32,6 +32,38 @@
     margin-top: 10px;
 }
 
+.projects-wrapper th.projectId, .projects-wrapper td.projectId {
+    width: 10%;
+}
+
+.projects-wrapper th.internalOrderId, .projects-wrapper td.internalOrderId {
+    width: 12%;
+    white-space: normal;
+}
+
+.projects-wrapper th.organisation, .projects-wrapper td.organisation {
+    width: 18%;
+}
+
+.projects-wrapper th.name, .projects-wrapper td.name {
+    width: 30%;
+}
+
+.projects-wrapper th.startDate, .projects-wrapper td.startDate {
+    width: 8%;
+}
+
+.projects-wrapper th.endDate, .projects-wrapper td.endDate {
+    width: 8%;
+}
+
+.projects-wrapper th.statusCol, .projects-wrapper td.statusCol {
+    width: 8%;
+}
+
+
+
+
 
 /** Get rid of extra padding inside tabs when dataTables is applied */
 .dataTables_wrapper.container-fluid {
