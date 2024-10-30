@@ -1,6 +1,8 @@
 package au.org.ala.merit
 
 import au.org.ala.ws.tokens.TokenService
+import com.azure.core.credential.AccessToken
+import com.azure.core.credential.TokenRequestContext
 import com.azure.identity.ClientAssertionCredentialBuilder
 import com.azure.storage.blob.BlobContainerClient
 import com.azure.storage.blob.BlobServiceClient
@@ -32,39 +34,43 @@ class BdrService {
 
     void downloadDataSet(String dataSetId, String format, HttpServletResponse response) {
         String bdrBaseUrl = grailsApplication.config.getProperty('bdr.api.url')
+
         format = format ?: 'json'
-        String url = bdrBaseUrl+'/'+dataSetId+'/items'
+        String url = bdrBaseUrl+'/ns3:'+dataSetId+'/items?_mediatype=application%2Fgeo%2Bjson'
 
         String token = bdrTokenService.getAuthToken(false)
 
-        String userToken = tokenService.getAuthToken(true)
-        String cognitoToken = getTokenFromCognitoIdentityPool(userToken)
-        azureTest(cognitoToken)
+        String azureToken = getAzureAccessToken(token)
+
         log.info("Downloading data set from BDR: $url")
 
-        webService.proxyGetRequest(response, url, false)
+        webService.proxyGetRequest(response, url, WebService.AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN, null, azureToken)
     }
 
-    private void azureTest(String token) {
+    /**
+     * The way MERIT authenticates with the BDR is via an Azure federated identity.
+     * MERIT exchanges a token with known subject and audience claims for an Azure token.
+     * @param alaToken the ALA token to exchange for a BDR token
+     * @return the Azure token
+     */
+    private String getAzureAccessToken(String alaToken) {
+
         String azureTenantId = grailsApplication.config.getProperty('bdr.azure.tenantId')
         String azureClientId = grailsApplication.config.getProperty('bdr.azure.clientId')
+        // Scope to request when authenticating with Azure
+        String azureApiAccessScope = grailsApplication.config.getProperty('bdr.azure.apiScope')
 
         ClientAssertionCredential credentials = new ClientAssertionCredentialBuilder()
                 .tenantId(azureTenantId)
                 .clientId(azureClientId)
-                .clientAssertion { token }
+                .clientAssertion { alaToken }
                 .build()
 
-        String blobEndpoint = grailsApplication.config.getProperty('bdr.azure.blobEndpoint')
-        BlobServiceClient blobServiceClient = new BlobServiceClientBuilder()
-                .credential(credentials)
-                .endpoint(blobEndpoint)
-                .buildClient()
+        TokenRequestContext tokenRequestContext = new TokenRequestContext()
+        tokenRequestContext.addScopes(azureApiAccessScope)
 
-        BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient("csvcontainer")
-        println containerClient.listBlobs().forEach { blobItem ->
-            println blobItem.getName()
-        }
+        AccessToken azureToken = credentials.getTokenSync(tokenRequestContext)
+        azureToken.getToken()
     }
 
 
