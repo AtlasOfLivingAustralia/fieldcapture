@@ -6347,7 +6347,7 @@
           },
           {
             "dataType": "number",
-            "name": "totalNumberOfManagementPlans",
+            "name": "numberOfPlansDeveloped",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "defaultValue": 1,
@@ -6358,7 +6358,7 @@
           {
             "dataType": "number",
             "decimalPlaces": 3,
-            "name": "totalNumberOfManagementPlansInvoiced",
+            "name": "numberOfPlansDevelopedInvoiced",
             "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
@@ -6369,7 +6369,7 @@
               },
               {
                 "param": {
-                  "expression": "totalNumberOfManagementPlans",
+                  "expression": "numberOfPlansDeveloped",
                   "type": "computed",
                   "decimalPlaces": 3
                 },
@@ -6417,7 +6417,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "+totalNumberOfManagementPlansInvoiced < +totalNumberOfManagementPlans or +totalAreaDiseaseManagementInvoicedFollowup < +totalAreaDiseaseManagementFollowup",
+                "condition": "+numberOfPlansDevelopedInvoiced < +numberOfPlansDeveloped",
                 "type": "enable"
               }
             ]
@@ -6539,7 +6539,7 @@
                     "items": [
                       {
                         "preLabel": "(i) Total number of management plans developed for this reporting period",
-                        "source": "totalNumberOfManagementPlans",
+                        "source": "numberOfPlansDeveloped",
                         "type": "number"
                       }
                     ]
@@ -6549,7 +6549,7 @@
                     "items": [
                       {
                         "preLabel": "(ii) Total number of management plans developed <u><i>invoiced</i></u> for this reporting period",
-                        "source": "totalNumberOfManagementPlansInvoiced",
+                        "source": "numberOfPlansDevelopedInvoiced",
                         "type": "number"
                       }
                     ]
@@ -6670,7 +6670,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Site/s covered by plan/s",
+                            "preLabel": "Site/s covered by management plan/s",
                             "source": "sitesDevelopingManagementPlans",
                             "type": "feature"
                           }
@@ -6709,7 +6709,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Actual area (ha) covered by plan/s",
+                            "preLabel": "Actual area (ha) covered by management plan/s",
                             "source": "areaTreatedHa",
                             "type": "number",
                             "displayOptions": {
@@ -21611,7 +21611,7 @@
           },
           {
             "dataType": "number",
-            "name": "totalApprovalsObtained",
+            "name": "numberApprovalsObtained",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "defaultValue": 1,
@@ -21621,7 +21621,7 @@
           },
           {
             "dataType": "number",
-            "name": "totalApprovalsObtainedInvoiced",
+            "name": "numberApprovalsObtainedInvoiced",
             "defaultValue": "",
             "validate": [
               {
@@ -21632,7 +21632,7 @@
               },
               {
                 "param": {
-                  "expression": "totalApprovalsObtained",
+                  "expression": "numberApprovalsObtained",
                   "type": "computed"
                 },
                 "rule": "max"
@@ -21646,7 +21646,7 @@
             "validate": "maxSize[400],required,min[0]",
             "behaviour": [
               {
-                "condition": "+totalApprovalsObtainedInvoiced < +totalApprovalsObtained",
+                "condition": "+numberApprovalsObtainedInvoiced < +numberApprovalsObtained",
                 "type": "enable"
               }
             ]
@@ -21768,7 +21768,7 @@
                     "items": [
                       {
                         "preLabel": "(i) Total number of relevant approvals obtained",
-                        "source": "totalApprovalsObtained",
+                        "source": "numberApprovalsObtained",
                         "type": "number"
                       }
                     ]
@@ -21784,7 +21784,7 @@
                     "items": [
                       {
                         "preLabel": "(ii) Total number of relevant approvals <u><i>invoiced</i></u> for this reporting period",
-                        "source": "totalApprovalsObtainedInvoiced",
+                        "source": "numberApprovalsObtainedInvoiced",
                         "type": "number"
                       }
                     ]
@@ -24783,10 +24783,12 @@
                 "dataType": "text",
                 "name": "newOrContinuingResearch",
                 "constraints": [
-                  "New",
-                  "Continuing research ",
-                  "Development",
-                  "Continuing Research and/or Development"
+                  "New research",
+                  "New development",
+                  "New research and development",
+                  "Continuing research",
+                  "Continuing development",
+                  "Continuing research and development"
                 ],
                 "validate": "required"
               },
@@ -24846,8 +24848,8 @@
                     "dataType": "text",
                     "name": "willProjectContinue",
                     "constraints": [
-                      "New",
-                      "Revised"
+                      "Yes",
+                      "No"
                     ],
                     "validate": "required"
                   },
@@ -25136,7 +25138,7 @@
                           {
                             "source": "researchOrDevelopment",
                             "type": "selectOne",
-                            "preLabel": "Research/Development/Both"
+                            "preLabel": "Research and/or Development"
                           }
                         ]
                       }
@@ -25343,7 +25345,7 @@
                   }
                 ],
                 "userAddedRows": true,
-                "addRowText": "Add a new disease being managed in this area",
+                "addRowText": "Add a row",
                 "source": "researchAndDevelopmentDetails",
                 "type": "table"
               },
