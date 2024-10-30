@@ -6161,7 +6161,8 @@
               {
                 "dataType": "feature",
                 "name": "sitesDevelopingManagementPlans",
-                "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.",
+                "validate": "required"
               },
               {
                 "computed": {
@@ -6171,25 +6172,6 @@
                 "name": "calculatedAreaTreatedHa",
                 "units": "ha",
                 "decimalPlaces": 3
-              },
-              {
-                "computed": {
-                  "expression": "$geom.lengthKm(sitesDevelopingManagementPlans)"
-                },
-                "dataType": "number",
-                "name": "calculatedLengthTreatedKm",
-                "units": "km",
-                "decimalPlaces": 3,
-                "behaviour": [
-                  {
-                    "condition": "lengthTreatedKm > 0",
-                    "type": "conditional_validation",
-                    "value": {
-                      "message": "The managed length must be mapped",
-                      "validate": "required,min[0.0001]"
-                    }
-                  }
-                ]
               },
               {
                 "defaultValue": {
@@ -6213,7 +6195,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -6236,21 +6218,60 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1))",
                     "type": "if"
                   }
                 ]
               },
+
               {
-                "defaultValue": {
-                  "type": "computed",
-                  "expression": "calculatedLengthTreatedKm"
-                },
                 "dataType": "number",
-                "name": "lengthTreatedKm",
-                "units": "km",
-                "decimalPlaces": 3
+                "name": "areaInvoicedHa",
+                "units": "ha",
+                "decimalPlaces": 3,
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "areaTreatedHa",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
               },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualReason",
+                "behaviour": [
+                  {
+                    "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedHa, 2)",
+                    "type": "visible"
+                  }
+                ],
+                "constraints": [
+                  "Work was undertaken over a greater area than will be invoiced for",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "invoicedNotActualComments",
+                "behaviour": [
+                  {
+                    "condition": "\"Other\" == invoicedNotActualReason",
+                    "type": "visible"
+                  }
+                ],
+                "validate": "required,maxSize[300]"
+              },
+
               {
                 "columns": [
                   {
@@ -6305,7 +6326,7 @@
                   {
                     "dataType": "text",
                     "name": "speciesSiteCovered",
-                    "description": "",
+                    "description": "This free text field allows multiple species and/or TECs to be entered. For Species: Use Scientific names with (common name in brackets), TECs should be written as listed in EPBC. Species or TECs should be separated by commas.",
                     "validate": "required,maxSize[300]"
                   }
                 ],
@@ -6672,19 +6693,6 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "calculatedLengthTreatedKm",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            },
-                            "readonly": "readonly"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
                             "preLabel": "Please attach mapping details",
                             "source": "extraMappingDetails",
                             "type": "document"
@@ -6714,18 +6722,6 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "lengthTreatedKm",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
                             "preLabel": "Reason for actual being different to mapped amount",
                             "source": "mappingNotAlignedReason",
                             "type": "selectOne"
@@ -6738,6 +6734,46 @@
                           {
                             "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
                             "source": "mappingNotAlignedComments",
+                            "type": "textarea",
+                            "rows": 5
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Invoiced area (ha) covered by the plan/s",
+                            "source": "areaInvoicedHa",
+                            "type": "number",
+                            "displayOptions": {
+                              "displayUnits": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "Reason for invoiced amount being different to actual amount",
+                            "source": "invoicedNotActualReason",
+                            "type": "selectOne"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
+                            "source": "invoicedNotActualComments",
                             "type": "textarea",
                             "rows": 5
                           }
@@ -6763,7 +6799,7 @@
                   },
                   {
                     "width": "25%",
-                    "title": "Type of management plan",
+                    "title": "Type of management plan<b style=\"color:red\">*</b>",
                     "type": "col",
                     "items": [
                       {
@@ -6801,7 +6837,7 @@
                   }
                 ],
                 "userAddedRows": true,
-                "addRowText": "Add a new disease being managed in this area",
+                "addRowText": "Add a new management plan",
                 "source": "managementPlansDetails",
                 "type": "table"
               }
@@ -21533,6 +21569,12 @@
                     "validate": "required,maxSize[100]"
                   },
                   {
+                    "dataType": "text",
+                    "name": "approvalPurpose",
+                    "validate": "required,maxSize[200]",
+                    "description": ""
+                  },
+                  {
                     "dataType": "date",
                     "name": "approvalValidateDateFrom",
                     "validate": "required"
@@ -21540,7 +21582,18 @@
                   {
                     "dataType": "date",
                     "name": "approvalValidateDateTo",
-                    "validate": "required"
+                    "validate": [
+                      {
+                        "rule": "required"
+                      },
+                      {
+                        "rule": "future",
+                        "param": {
+                          "expression": "formatDateForValidation(approvalValidateDateFrom)",
+                          "type": "computed"
+                        }
+                      }
+                    ]
                   }
                 ],
                 "dataType": "list",
@@ -21817,13 +21870,13 @@
                   {
                     "columns": [
                       {
-                        "width": "15%",
+                        "width": "10%",
                         "source": "approvalGivenDate",
                         "title": "Date approval given",
                         "type": "date"
                       },
                       {
-                        "width": "15%",
+                        "width": "10%",
                         "source": "approvalId",
                         "title": "Approval ID reference",
                         "type": "text"
@@ -21836,7 +21889,7 @@
                       },
                       {
                         "width": "20%",
-                        "title": "Type of approval",
+                        "title": "Type of approval<b style=\"color:red\">*</b>",
                         "type": "col",
                         "items": [
                           {
@@ -21861,13 +21914,19 @@
                         ]
                       },
                       {
-                        "width": "15%",
+                        "width": "20%",
+                        "source": "approvalPurpose",
+                        "title": "Purpose of approval",
+                        "type": "textarea"
+                      },
+                      {
+                        "width": "10%",
                         "source": "approvalValidateDateFrom",
                         "title": "Date approval validate from",
                         "type": "date"
                       },
                       {
-                        "width": "15%",
+                        "width": "10%",
                         "source": "approvalValidateDateTo",
                         "title": "Date approval validate to",
                         "type": "date"
@@ -24813,7 +24872,7 @@
           },
           {
             "dataType": "number",
-            "name": "totalNumberOfResearchAndDevelopment",
+            "name": "noDaysConductingResearchAndDevelopment",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "defaultValue": 1,
@@ -24824,7 +24883,7 @@
           {
             "dataType": "number",
             "decimalPlaces": 3,
-            "name": "totalNumberOfResearchAndDevelopmentInvoiced",
+            "name": "noDaysConductingResearchAndDevelopmentInvoiced",
             "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
             "validate": [
               {
@@ -24835,7 +24894,7 @@
               },
               {
                 "param": {
-                  "expression": "totalNumberOfResearchAndDevelopment",
+                  "expression": "noDaysConductingResearchAndDevelopment",
                   "type": "computed",
                   "decimalPlaces": 3
                 },
@@ -24851,7 +24910,7 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "+totalNumberOfResearchAndDevelopmentInvoiced < +totalNumberOfResearchAndDevelopment",
+                "condition": "+noDaysConductingResearchAndDevelopmentInvoiced < +noDaysConductingResearchAndDevelopment",
                 "type": "enable"
               }
             ]
@@ -24973,7 +25032,7 @@
                     "items": [
                       {
                         "preLabel": "(i) Total number of days conducting research and development for this reporting period",
-                        "source": "totalNumberOfResearchAndDevelopment",
+                        "source": "noDaysConductingResearchAndDevelopment",
                         "type": "number"
                       }
                     ]
@@ -24983,7 +25042,7 @@
                     "items": [
                       {
                         "preLabel": "(ii) Total number of days conducting research and development <u><i>invoiced</i></u> for this reporting period",
-                        "source": "totalNumberOfResearchAndDevelopmentInvoiced",
+                        "source": "noDaysConductingResearchAndDevelopmentInvoiced",
                         "type": "number"
                       }
                     ]
