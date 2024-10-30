@@ -63,8 +63,9 @@
                         <i class="fa fa-download" title="Download data for this dataset from the BDR"></i>
                     </a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#" target="_blank" data-bind="attr:{href:downloadUrl+'?format=csv'}">CSV</a>
-                        <a class="dropdown-item" href="#" target="_blank" data-bind="attr:{href:downloadUrl+'?format=geojson'}">geojson</a>
+                        <g:each in="${supportedFormats}" var="format">
+                            <a class="dropdown-item" href="#" target="_blank" data-bind="attr:{href:downloadUrl+'?format=${format}'}"><g:message code="bdr.dataSet.format.${format}" default="${format}"/></a>
+                        </g:each>
                     </div>
                 </div>
 

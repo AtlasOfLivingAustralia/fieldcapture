@@ -201,6 +201,7 @@ class ProjectController {
             projectService.filterDataSetSummaries(project.custom?.dataSets)
         }
         List downloadableProtocols = downloadableProtocols()
+
         boolean showExternalIds = userService.userHasReadOnlyAccess() || userService.userIsSiteAdmin()
         def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates, outcomes:project.outcomes, objectives:config.program?.config?.objectives, showExternalIds:showExternalIds],
                      documents      : [label: 'Documents', visible: config.includesContent(ProgramConfig.ProjectContent.DOCUMENTS), type: 'tab', user:user, template:'docs', activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
@@ -208,7 +209,7 @@ class ProjectController {
                      plan           : [label: 'Activities', visible: true, disabled: !user?.hasViewAccess, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:user?.isCaseManager, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: risksAndThreatsVisible],
                      site           : [label: 'Sites', visible: config.includesContent(ProgramConfig.ProjectContent.SITES), disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
                      dashboard      : [label: 'Dashboard', visible: config.includesContent(ProgramConfig.ProjectContent.DASHBOARD), disabled: !user?.hasViewAccess, type: 'tab'],
-                     datasets       : [label: 'Data set summary', visible: datasetsVisible, template: '/project/dataset/dataSets', downloadableProtocols: downloadableProtocols, type:'tab'],
+                     datasets       : [label: 'Data set summary', visible: datasetsVisible, template: '/project/dataset/dataSets', downloadableProtocols: downloadableProtocols, supportedFormats:bdrDataSetSupportedFormats(), type:'tab'],
                      admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage', canRegenerateReports: canRegenerateReports, hasSubmittedOrApprovedFinalReportInCategory: hasSubmittedOrApprovedFinalReportInCategory, canModifyMeriPlan: canModifyMeriPlan, showRequestLabels:config.supportsParatoo, outcomeStartIndex:outcomeStartIndex]]
 
         if (template == MERI_ONLY_TEMPLATE) {
@@ -279,6 +280,10 @@ class ProjectController {
         List<Map> forms = activityService.monitoringProtocolForms()
         forms = forms.findAll{BDR_DOWNLOAD_SUPPORTED_TAG in it.tags}
         forms.collect{it.externalId }
+    }
+
+    private List bdrDataSetSupportedFormats() {
+        grailsApplication.config.getProperty("bdr.dataSet.formats", List.class)
     }
 
     private Map buildRLPTargetsModel(Map model, project){

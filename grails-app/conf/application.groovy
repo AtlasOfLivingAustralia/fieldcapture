@@ -258,6 +258,7 @@ bdr.clientId="changeMe"
 bdr.clientSecret="changeMe"
 bdr.discoveryUri="https://changeMe.org.au/.well-known"
 bdr.jwtScopes="read"
+bdr.dataSet.formats=["application/geo+json","text/turtle","application/rdf+xml","application/ld+json", "application/n-triples"]
 
 webservice.jwt = true
 webservice['jwt-scopes'] = "ala/internal users/read ala/attrs ecodata/read_test ecodata/write_test"
