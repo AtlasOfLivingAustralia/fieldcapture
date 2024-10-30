@@ -1,5 +1,5 @@
 load( "../../../utils/audit.js");
-function removeDataSetSite(projectId, dataSetId, adminUserId) {
+function removeDataSetSite(projectId, dataSetId, adminUserId, deleteSite) {
     let project = db.project.findOne({projectId: projectId});
     let dataSet = null;
     for (let i=0; i<project.custom.dataSets.length; i++) {
@@ -15,11 +15,14 @@ function removeDataSetSite(projectId, dataSetId, adminUserId) {
     let siteId = dataSet.siteId;
     dataSet.siteId = null;
 
-    let site = db.site.findOne({siteId: siteId});
-    site.status = 'deleted';
-    site.lastUpdated = ISODate();
-    db.site.replaceOne({siteId: siteId}, site);
-    audit(site, site.siteId, 'au.org.ala.ecodata.Site', adminUserId);
+    if (deleteSite) {
+        let site = db.site.findOne({siteId: siteId});
+        site.status = 'deleted';
+        site.lastUpdated = ISODate();
+        db.site.replaceOne({siteId: siteId}, site);
+        audit(site, site.siteId, 'au.org.ala.ecodata.Site', adminUserId);
+
+    }
 
     project.lastUpdated = ISODate();
     db.project.replaceOne({projectId: projectId}, project);
