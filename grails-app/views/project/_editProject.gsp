@@ -264,6 +264,73 @@
 
 <div class="row mb-2">
     <div class="col-sm-12">
+        <label for="projectGeoInfo">Geographic information
+        <fc:iconHelp title="Project geographic information">Geographic location of project i.e. States and electorates</fc:iconHelp>
+        </label>
+        <div class="control">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Geographic information</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <label for="primaryState">Primary state</label>
+                        </td>
+                        <td>
+                            <select id="primaryState" data-bind="options:transients.states, value:geographicInfo.primaryState, optionsCaption: 'Select a state'" class="select form-control"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="otherStates">Other states</label>
+                        </td>
+                        <td>
+                            <select id="otherStates" multiple="multiple" data-bind="options:transients.states.filteredStates, multiSelect2:{value:geographicInfo.otherStates, placeholder:''}" class="select form-control"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="primaryElectorate">Primary electorate</label>
+                        </td>
+                        <td>
+                            <select id="primaryElectorate" data-bind="options:transients.electorates, value:geographicInfo.primaryElectorate, optionsCaption: 'Select an electorate'" class="select form-control"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="otherElectorates">Other electorates</label>
+                        </td>
+                        <td>
+                            <select id="otherElectorates" multiple="multiple" data-bind="options:transients.electorates.filteredElectorates, multiSelect2:{value:geographicInfo.otherElectorates, placeholder:''}" class="select form-control"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="otherElectorates">Settings</label>
+                        </td>
+                        <td>
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="nationwide" data-bind="checked: geographicInfo.nationwide">
+                                <label class="form-check-label" for="nationwide">Is project nationwide?</label>
+                            </div>
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="geographicInfoBehaviour" data-bind="checked: geographicInfo.isDefault">
+                                <label class="form-check-label" for="nationwide">Override state and electorate values with above manual selections. Ignores calculated values for project.</label>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-2">
+    <div class="col-sm-12">
         <button data-bind="click:regenerateStageReports" class="btn btn-sm btn-warning" <g:if test="${!canRegenerateReports}">disabled="disabled"</g:if>>Re-create project reports</button>
         <fc:iconHelp title="Re-create project">Re-create project reports will be disabled when the Project status is not Active, or if the last report in any category has been submitted, cancelled or approved</fc:iconHelp>
     </div>
