@@ -29,14 +29,15 @@ class BdrService {
     GrailsApplication grailsApplication
     WebService webService
     TokenService tokenService
+    CommonService commonService
 
     TokenService bdrTokenService
 
     void downloadDataSet(String dataSetId, String format, HttpServletResponse response) {
         String bdrBaseUrl = grailsApplication.config.getProperty('bdr.api.url')
 
-        format = format ?: 'json'
-        String url = bdrBaseUrl+'/ns3:'+dataSetId+'/items?_mediatype=application%2Fgeo%2Bjson'
+        format = URLEncoder.encode(format, 'UTF-8')
+        String url = bdrBaseUrl+'/collections/ns3:'+dataSetId+'/items?_mediatype='+format
 
         String token = bdrTokenService.getAuthToken(false)
 

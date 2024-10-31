@@ -161,7 +161,18 @@ class DataSetController {
     @PreAuthorise(accessLevel = 'admin')
     def download(String id, String dataSetId, String format) {
         Map projectData = projectData(id)
+
+        List supportedFormats = grailsApplication.config.getProperty('bdr.dataSet.formats', List)
+        if (!format) {
+            format = supportedFormats[0]
+        }
+        if (!supportedFormats.contains(format)) {
+            render status: HttpStatus.BAD_REQUEST
+            return
+        }
+
         Map dataSet = projectData.project?.custom?.dataSets?.find{it.dataSetId == dataSetId}
+
         if (!dataSet) {
             render status: HttpStatus.NOT_FOUND
             return
