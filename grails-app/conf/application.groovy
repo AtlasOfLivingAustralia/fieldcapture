@@ -282,6 +282,9 @@ sites.known_shapes = [
         [id:'cl11194', name:'Australian Marine Parks (2024)']
 ]
 
+layers.elect = 'cl11163'
+layers.states = 'cl927'
+
 environments {
     development {
         grails.logging.jul.usebridge = true
