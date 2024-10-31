@@ -64,7 +64,7 @@
                     </a>
                     <div class="dropdown-menu">
                         <g:each in="${supportedFormats}" var="format">
-                            <a class="dropdown-item" href="#" target="_blank" data-bind="attr:{href:downloadUrl+'?format=${format}'}"><g:message code="bdr.dataSet.format.${format}" default="${format}"/></a>
+                            <a class="dropdown-item" href="#" target="_blank" data-bind="attr:{href:downloadUrl+'?format=${URLEncoder.encode(format, 'UTF-8')}'}"><g:message code="bdr.dataSet.format.${format}" default="${format}"/></a>
                         </g:each>
                     </div>
                 </div>

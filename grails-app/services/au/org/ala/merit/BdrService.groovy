@@ -3,6 +3,7 @@ package au.org.ala.merit
 import au.org.ala.ws.tokens.TokenService
 import com.azure.core.credential.AccessToken
 import com.azure.core.credential.TokenRequestContext
+import com.azure.core.implementation.AccessTokenCache
 import com.azure.identity.ClientAssertionCredentialBuilder
 import com.azure.storage.blob.BlobContainerClient
 import com.azure.storage.blob.BlobServiceClient
@@ -18,6 +19,8 @@ import software.amazon.awssdk.services.cognitoidentity.model.GetIdResponse
 import software.amazon.awssdk.services.cognitoidentity.model.GetOpenIdTokenRequest
 import software.amazon.awssdk.services.cognitoidentity.model.GetOpenIdTokenResponse
 
+import javax.annotation.PostConstruct
+import javax.persistence.Access
 import javax.servlet.http.HttpServletResponse
 
 /**
@@ -30,8 +33,9 @@ class BdrService {
     WebService webService
     TokenService tokenService
     CommonService commonService
-
     TokenService bdrTokenService
+
+    AccessTokenCache accessTokenCache
 
     void downloadDataSet(String dataSetId, String format, HttpServletResponse response) {
         String bdrBaseUrl = grailsApplication.config.getProperty('bdr.api.url')
@@ -39,9 +43,7 @@ class BdrService {
         format = URLEncoder.encode(format, 'UTF-8')
         String url = bdrBaseUrl+'/collections/ns3:'+dataSetId+'/items?_mediatype='+format
 
-        String token = bdrTokenService.getAuthToken(false)
-
-        String azureToken = getAzureAccessToken(token)
+        String azureToken = getAzureAccessToken()
 
         log.info("Downloading data set from BDR: $url")
 
@@ -54,24 +56,31 @@ class BdrService {
      * @param alaToken the ALA token to exchange for a BDR token
      * @return the Azure token
      */
-    private String getAzureAccessToken(String alaToken) {
+    @PostConstruct
+    private void buildAzureAccessTokenCache() {
 
         String azureTenantId = grailsApplication.config.getProperty('bdr.azure.tenantId')
         String azureClientId = grailsApplication.config.getProperty('bdr.azure.clientId')
-        // Scope to request when authenticating with Azure
-        String azureApiAccessScope = grailsApplication.config.getProperty('bdr.azure.apiScope')
 
         ClientAssertionCredential credentials = new ClientAssertionCredentialBuilder()
                 .tenantId(azureTenantId)
                 .clientId(azureClientId)
-                .clientAssertion { alaToken }
+                .clientAssertion {  bdrTokenService.getAuthToken(false)?.getValue() }
                 .build()
+
+        accessTokenCache = new AccessTokenCache(credentials)
+
+    }
+
+    private String getAzureAccessToken() {
+        // Scope to request when authenticating with Azure
+        String azureApiAccessScope = grailsApplication.config.getProperty('bdr.azure.apiScope')
 
         TokenRequestContext tokenRequestContext = new TokenRequestContext()
         tokenRequestContext.addScopes(azureApiAccessScope)
 
-        AccessToken azureToken = credentials.getTokenSync(tokenRequestContext)
-        azureToken.getToken()
+        AccessToken accessToken = accessTokenCache.getTokenSync(tokenRequestContext, false)
+        accessToken.getToken()
     }
 
 

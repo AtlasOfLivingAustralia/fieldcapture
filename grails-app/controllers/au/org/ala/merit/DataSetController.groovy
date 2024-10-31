@@ -166,7 +166,7 @@ class DataSetController {
         if (!format) {
             format = supportedFormats[0]
         }
-        if (!supportedFormats.contains(format)) {
+        if (!format in supportedFormats) {
             render status: HttpStatus.BAD_REQUEST
             return
         }
