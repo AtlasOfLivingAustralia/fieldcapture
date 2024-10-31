@@ -74,6 +74,7 @@ function isValid(p, a) {
 }
 
 function ProjectViewModel(project) {
+    project.geographicInfo = project.geographicInfo || {};
     var self = this;
     // documents
     var docDefaults = newDocumentDefaults(project);
@@ -175,6 +176,14 @@ function ProjectViewModel(project) {
     self.urlWeb = ko.observable(project.urlWeb).extend({url:true});
     self.contractStartDate = ko.observable(project.contractStartDate).extend({simpleDate: false});
     self.contractEndDate = ko.observable(project.contractEndDate).extend({simpleDate: false});
+    self.geographicInfo = {
+        nationwide: ko.observable(project.geographicInfo.nationwide || false),
+        isDefault: ko.observable(project.geographicInfo.isDefault || false),
+        primaryState: ko.observable(project.geographicInfo.primaryState),
+        primaryElectorate: ko.observable(project.geographicInfo.primaryElectorate),
+        otherStates: ko.observableArray(project.geographicInfo.otherStates || []),
+        otherElectorates: ko.observableArray(project.geographicInfo.otherElectorates || [])
+    };
     self.transients.programs = [];
     self.transients.subprograms = {};
     self.transients.subprogramsToDisplay = ko.computed(function () {
@@ -396,6 +405,62 @@ function ProjectViewModel(project) {
         });
         self.associatedProgram(project.associatedProgram); // to trigger the computation of sub-programs
     };
+
+    self.transients.states = ko.observableArray([]);
+    self.transients.states.filteredStates = ko.computed(function() {
+        var primaryState = self.geographicInfo.primaryState(), states = self.transients.states().concat([]);
+        if (primaryState) {
+            var index = states.indexOf(primaryState);
+            if (index > -1) {
+                states.splice(index, 1);
+            }
+        }
+
+        return states;
+    });
+    self.transients.electorates = ko.observableArray([]);
+    self.transients.electorates.filteredElectorates = ko.computed(function() {
+        var primaryElectorate = self.geographicInfo.primaryElectorate(), electorates = self.transients.electorates().concat([]);
+        if (primaryElectorate) {
+            var index = electorates.indexOf(primaryElectorate);
+            if (index > -1) {
+                electorates.splice(index, 1);
+            }
+        }
+
+        return electorates;
+    });
+
+    self.loadStatesAndElectorates = function() {
+        var promise1 = $.getJSON(fcConfig.listOfStatesUrl, function(data) {
+            var states = [];
+            $.each(data, function(i, state) {
+                states.push(state.name);
+            });
+
+            self.transients.states(states);
+        });
+
+        var promse2 = $.getJSON(fcConfig.listOfElectoratesUrl, function(data) {
+            var electorates = [];
+            $.each(data, function(i, electorate) {
+                electorates.push(electorate.name);
+            });
+
+            self.transients.electorates(electorates);
+        });
+
+        $.when(promise1, promse2).done(self.loadGeographicInfo);
+    }
+
+    self.loadGeographicInfo = function () {
+        self.geographicInfo.nationwide(project.geographicInfo.nationwide);
+        self.geographicInfo.isDefault(project.geographicInfo.isDefault);
+        self.geographicInfo.primaryState(project.geographicInfo.primaryState);
+        self.geographicInfo.primaryElectorate(project.geographicInfo.primaryElectorate);
+        self.geographicInfo.otherStates(project.geographicInfo.otherStates);
+        self.geographicInfo.otherElectorates(project.geographicInfo.otherElectorates);
+    }
 
     self.toJS = function() {
         var toIgnore = self.ignore; // document properties to ignore.
@@ -891,6 +956,7 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             tags: self.tags(),
             promoteOnHomepage: self.promoteOnHomepage(),
             externalIds: ko.mapping.toJS(self.externalIds),
+            geographicInfo: ko.mapping.toJS(self.geographicInfo),
             options: {
                 changeActivityDates: self.changeActivityDates(),
                 includeSubmittedReports: self.includeSubmittedReports(),

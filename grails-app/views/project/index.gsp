@@ -1,4 +1,5 @@
 <%@ page import="au.org.ala.merit.config.ProgramConfig; au.org.ala.merit.ProjectController" contentType="text/html;charset=UTF-8" expressionCodec="none"%>
+<g:set var="settingService" bean="settingService"></g:set>
 <!DOCTYPE html>
 <html>
 <head>
@@ -82,6 +83,8 @@
                 projectScoresUrl: "${createLink(action:'serviceScores', id:project.projectId)}",
                 healthCheckUrl: "${createLink(controller:'ajax', action:'keepSessionAlive')}",
                 projectDatesValidationUrl: "${createLink(controller:'project', action:'ajaxValidateProjectDates', id:project.projectId)}",
+                listOfStatesUrl: "${createLink(controller:'project', action:'spatialFeatures', params: [layerId: "${grailsApplication.config.getProperty('layers.states')}"])}",
+                listOfElectoratesUrl: "${createLink(controller:'project', action:'spatialFeatures', params: [layerId: "${grailsApplication.config.getProperty('layers.elect')}"])}",
                 spinnerUrl: "${asset.assetPath(src:'loading.gif')}",
                 projectSitesUrl: "${createLink(action:'ajaxProjectSites', id:project.projectId)}",
                 useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
@@ -343,6 +346,7 @@ var config = {
     project.mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
     var viewModel = new ProjectPageViewModel(project, project.sites, project.activities || [], userRoles, config);
     viewModel.loadPrograms(programs);
+    viewModel.loadStatesAndElectorates();
     ko.applyBindings(viewModel);
     window.validateProjectEndDate = viewModel.validateProjectEndDate;
 

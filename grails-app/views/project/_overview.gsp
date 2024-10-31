@@ -196,6 +196,7 @@
         </div>
     </div>
 
+    <g:render template="geographicInfo" model="${[project:project]}"/>
 </div>
 <hr/>
 

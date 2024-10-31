@@ -66,6 +66,15 @@ class ProjectService  {
 
     }
 
+    Map findStateAndElectorateForProject(String projectId) {
+        Map result = webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/findStateAndElectorateForProject?projectId=' + projectId) as Map
+        if (result.error) {
+            result = [:]
+        }
+
+        result
+    }
+
     void filterDataSetSummaries(List dataSetSummaries) {
         List<Map> forms = activityService.monitoringProtocolForms()
 
