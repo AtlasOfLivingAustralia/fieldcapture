@@ -254,10 +254,13 @@ security {
     }
 }
 bdr.api.url="https://changeMe.org.au/api"
-bdr.clientId="changeMe"
-bdr.clientSecret="changeMe"
+bdr['client-id']="changeMe"
+bdr['client-secret']="changeMe"
 bdr.discoveryUri="https://changeMe.org.au/.well-known"
 bdr.jwtScopes="read"
+bdr.azure.clientId='changeMe'
+bdr.azure.tenantId='changeMe'
+bdr.azure.apiScope='api://changeme/.default'
 bdr.dataSet.formats=["application/geo+json","text/turtle","application/rdf+xml","application/ld+json", "application/n-triples"]
 
 webservice.jwt = true
