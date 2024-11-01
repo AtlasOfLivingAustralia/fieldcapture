@@ -1,5 +1,13 @@
 <g:if test="${fc.userIsSiteAdmin()}">
-    <g:if test="${project.primarystate || project.primaryelect}">
+    <g:if test="${project?.geographicInfo.nationwide}">
+        <h4>Geographic range</h4>
+        <div class="row">
+            <div class="col-sm-10">
+                This is a national project.
+            </div>
+        </div>
+    </g:if>
+    <g:elseif test="${project.primarystate || project.primaryelect}">
         <h4>Geographic range</h4>
         <div class="row">
             <div class="col-sm-10">
@@ -29,5 +37,5 @@
                 </table>
             </div>
         </div>
-    </g:if>
+    </g:elseif>
 </g:if>
