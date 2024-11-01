@@ -16883,7 +16883,7 @@
                     ],
                     "addRowText": "Add a new assessed site to this outcome",
                     "userAddedRows": true,
-                    "disableTableUpload": true,
+                    "disableTableUpload": false,
                     "source": "potentialSitesSurveyBaselineTable",
                     "type": "table"
                   }
