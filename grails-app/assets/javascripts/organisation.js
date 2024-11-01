@@ -193,8 +193,8 @@ OrganisationViewModel = function (props, options) {
             externalId: ko.observable(externalId.externalId)
         };
     }));
-    self.externalIdTypes = PROJECT_EXTERNAL_ID_TYPES =  [
-        'TECH_ONE_CODE', 'TECH_ONE_CONTRACT_NUMBER'
+    self.externalIdTypes = [
+        'TECH_ONE_PARTY_ID'
     ];
     self.indigenousOrganisationTypes = [
         'Office of the Registrar of Indigenous Corporations (ORIC)',
