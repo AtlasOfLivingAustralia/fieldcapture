@@ -1227,8 +1227,8 @@ class ProjectController {
         render reportData as JSON
     }
 
-    def spatialFeatures (String layerId) {
-        webService.proxyGetRequest(response, grailsApplication.config.getProperty('ecodata.baseUrl') + "spatial/features?layerId=${layerId}", false, true, 120000)
+    def spatialFeatures (String layerId, String intersectWith) {
+        webService.proxyGetRequest(response, grailsApplication.config.getProperty('ecodata.baseUrl') + "spatial/features?layerId=${layerId}&intersectWith=${intersectWith?:''}", false, true, 120000)
         return null
     }
 

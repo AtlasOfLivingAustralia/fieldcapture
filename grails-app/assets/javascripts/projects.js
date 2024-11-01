@@ -178,18 +178,74 @@ function ProjectViewModel(project) {
     self.contractEndDate = ko.observable(project.contractEndDate).extend({simpleDate: false});
     self.geographicInfo = {
         nationwide: ko.observable(project.geographicInfo.nationwide || false),
+        statewide: ko.observable(project.geographicInfo.statewide || false),
         isDefault: ko.observable(project.geographicInfo.isDefault || false),
         primaryState: ko.observable(project.geographicInfo.primaryState),
         primaryElectorate: ko.observable(project.geographicInfo.primaryElectorate),
         otherStates: ko.observableArray(project.geographicInfo.otherStates || []),
         otherElectorates: ko.observableArray(project.geographicInfo.otherElectorates || [])
     };
+    self.geographicInfo.nationwide.subscribe(function(newValue) {
+        if (newValue) {
+            self.geographicInfo.statewide(false);
+            self.geographicInfo.primaryState("");
+            self.geographicInfo.primaryElectorate("");
+            self.geographicInfo.otherStates([]);
+            self.geographicInfo.otherElectorates([]);
+        }
+    });
+
+    self.geographicInfo.statewide.subscribe(function(newValue) {
+        if (newValue) {
+            self.geographicInfo.nationwide(false);
+            self.geographicInfo.primaryElectorate("");
+            self.geographicInfo.otherStates([]);
+            self.geographicInfo.otherElectorates([]);
+        }
+    });
+
+    self.geographicInfo.primaryElectorate.subscribe(function(newValue) {
+        if (newValue) {
+            var electorate = findElectorate(newValue);
+            if (electorate && electorate.state && electorate.state.length > 0) {
+                self.geographicInfo.primaryState(electorate.state[0]);
+                // if state is set to primary state, remove it from other states
+                if (self.geographicInfo.otherStates.indexOf(electorate.state[0]) > -1) {
+                    self.geographicInfo.otherStates.remove(electorate.state[0]);
+                }
+            }
+        }
+    });
+
+    // automatically add states of selected electorates to other states field
+    self.geographicInfo.otherElectorates.subscribe(function(newValue) {
+        if (newValue) {
+            var otherElectorates = self.geographicInfo.otherElectorates();
+            otherElectorates && _.each(otherElectorates, function(name) {
+                var electorate = findElectorate(name);
+                var states = electorate && electorate.state;
+                _.each(states, function(state) {
+                    if (state && self.geographicInfo.otherStates.indexOf(state) === -1 && self.geographicInfo.primaryState() !== state) {
+                        self.geographicInfo.otherStates.push(state);
+                    }
+                })
+            });
+        }
+    });
     self.transients.programs = [];
     self.transients.subprograms = {};
     self.transients.subprogramsToDisplay = ko.computed(function () {
         return self.transients.subprograms[self.associatedProgram()];
     });
     self.transients.fixedProjectDuration = ko.observable(false);
+
+
+    function findElectorate(electorateName) {
+        var electorates = self.transients.electorates.originalElectorateList;
+        return electorates && _.find(electorates, function(electorate) {
+            return electorate.name === electorateName;
+        });
+    };
 
     var isBeforeToday = function(date) {
         return moment(date) < moment().startOf('day');
@@ -448,6 +504,7 @@ function ProjectViewModel(project) {
             });
 
             self.transients.electorates(electorates);
+            self.transients.electorates.originalElectorateList = data;
         });
 
         $.when(promise1, promse2).done(self.loadGeographicInfo);
@@ -455,6 +512,7 @@ function ProjectViewModel(project) {
 
     self.loadGeographicInfo = function () {
         self.geographicInfo.nationwide(project.geographicInfo.nationwide);
+        self.geographicInfo.statewide(project.geographicInfo.statewide);
         self.geographicInfo.isDefault(project.geographicInfo.isDefault);
         self.geographicInfo.primaryState(project.geographicInfo.primaryState);
         self.geographicInfo.primaryElectorate(project.geographicInfo.primaryElectorate);
