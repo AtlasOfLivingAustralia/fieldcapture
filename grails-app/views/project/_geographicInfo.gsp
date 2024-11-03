@@ -1,5 +1,5 @@
 <g:if test="${fc.userIsSiteAdmin()}">
-    <g:if test="${project?.geographicInfo.nationwide}">
+    <g:if test="${project?.geographicInfo?.nationwide}">
         <h4>Geographic range</h4>
         <div class="row">
             <div class="col-sm-10">
