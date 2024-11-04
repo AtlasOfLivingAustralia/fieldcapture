@@ -264,24 +264,66 @@
 
 <div class="row mb-2">
     <div class="col-sm-12">
-        <label for="projectGeoInfo">Geographic information
-        <fc:iconHelp title="Project geographic information">Geographic location of project i.e. States and electorates</fc:iconHelp>
+        <label>Override Sites
+        <fc:iconHelp title="Project geographic information">Override sites based geographic location calculation of a project to find geographic extent</fc:iconHelp>
         </label>
+        <div class="alert alert-info">
+            The following information only needs to be filled out if:
+            <ul>
+                <li>Downloaded information contradicts the actual electorate/state names that should be displayed.</li>
+                <li>There is no information available in the Sites tab.</li>
+            </ul>
+        </div>
         <div class="control">
             <table class="table">
-                <thead>
-                    <tr>
-                        <th>Geographic information</th>
-                        <th></th>
-                    </tr>
-                </thead>
                 <tbody>
+                <tr>
+                    <td>
+                        Settings
+                    </td>
+                    <td>
+                        The sites for this project should be:
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="national" data-bind="checked: geographicInfo.nationwide">
+                            <label class="form-check-label" for="national">National</label>
+                        </div>
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="statewide" data-bind="checked: geographicInfo.statewide">
+                            <label class="form-check-label" for="statewide">Statewide</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="geographicInfoBehaviour" data-bind="checked: geographicInfo.isDefault">
+                            <label class="form-check-label" for="geographicInfoBehaviour">Override calculated primary state and electorate with selections below.</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="primaryElectorate">Primary electorate</label>
+                    </td>
+                    <td>
+                        <select id="primaryElectorate" data-bind="options:transients.electorates, value:geographicInfo.primaryElectorate, optionsCaption: 'Select an electorate', disable: geographicInfo.nationwide() || geographicInfo.statewide()" class="select form-control"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="otherElectorates">Other electorates</label>
+                    </td>
+                    <td>
+                        <select id="otherElectorates" multiple="multiple" data-bind="options:transients.electorates.filteredElectorates, multiSelect2:{value:geographicInfo.otherElectorates, placeholder:''}, disable: geographicInfo.nationwide() || geographicInfo.statewide()" class="select form-control"></select>
+                    </td>
+                </tr>
                     <tr>
                         <td>
                             <label for="primaryState">Primary state</label>
                         </td>
                         <td>
-                            <select id="primaryState" data-bind="options:transients.states, value:geographicInfo.primaryState, optionsCaption: 'Select a state'" class="select form-control"></select>
+                            <select id="primaryState" data-bind="options:transients.states, value:geographicInfo.primaryState, optionsCaption: 'Select a state', disable: geographicInfo.nationwide()" class="select form-control"></select>
                         </td>
                     </tr>
                     <tr>
@@ -289,38 +331,7 @@
                             <label for="otherStates">Other states</label>
                         </td>
                         <td>
-                            <select id="otherStates" multiple="multiple" data-bind="options:transients.states.filteredStates, multiSelect2:{value:geographicInfo.otherStates, placeholder:''}" class="select form-control"></select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="primaryElectorate">Primary electorate</label>
-                        </td>
-                        <td>
-                            <select id="primaryElectorate" data-bind="options:transients.electorates, value:geographicInfo.primaryElectorate, optionsCaption: 'Select an electorate'" class="select form-control"></select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="otherElectorates">Other electorates</label>
-                        </td>
-                        <td>
-                            <select id="otherElectorates" multiple="multiple" data-bind="options:transients.electorates.filteredElectorates, multiSelect2:{value:geographicInfo.otherElectorates, placeholder:''}" class="select form-control"></select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="otherElectorates">Settings</label>
-                        </td>
-                        <td>
-                            <div class="form-group form-check">
-                                <input type="checkbox" class="form-check-input" id="nationwide" data-bind="checked: geographicInfo.nationwide">
-                                <label class="form-check-label" for="nationwide">Is project nationwide?</label>
-                            </div>
-                            <div class="form-group form-check">
-                                <input type="checkbox" class="form-check-input" id="geographicInfoBehaviour" data-bind="checked: geographicInfo.isDefault">
-                                <label class="form-check-label" for="nationwide">Override state and electorate values with above manual selections. Ignores calculated values for project.</label>
-                            </div>
+                            <select id="otherStates" multiple="multiple" data-bind="options:transients.states.filteredStates, multiSelect2:{value:geographicInfo.otherStates, placeholder:''}, disable: geographicInfo.nationwide()" class="select form-control"></select>
                         </td>
                     </tr>
                 </tbody>
