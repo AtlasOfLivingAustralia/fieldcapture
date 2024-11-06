@@ -49,7 +49,9 @@ var config =
                     "helpTextHeading": "If the project is not delivering additional benefits, delete the row using the 'x' in the right-most column.",
                     "title": "Additional benefits",
                     "priority": "Additional Investment Priorities",
-                    "priorityHelpText": "Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
+                    "priorityHelpText": "Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes.",
+                    "maximumPriorities": 1000,
+                    "maxAdditionalOutcomes": 15
                 }
             },
             {
@@ -85,7 +87,7 @@ var config =
             {
                 "template": "projectMethodology",
                 "model": {
-                    "helpText": "Include all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not impacted by adverse weather conditions. Ensure what’s documented here aligns to those assumptions documented within the Project Logic.",
+                    "helpText": "In addition to listing your project assumptions, please list any nominated project services that will not be charged for.\nInclude all those conditions or factors that are sufficient to guarantee the success of the project, for example, on ground activities were not impacted by adverse weather conditions. Ensure what’s documented here aligns to those assumptions documented within the Project Logic.",
                     "maxSize": "4000",
                     "tableHeading": "Project delivery assumptions (4000 character limit [approx. 650 words])"
                 }
@@ -153,7 +155,7 @@ var config =
         ],
         "excludes": [],
         "programServiceConfig": {
-            "serviceFormName": "Priority Threatened Species Progress Report",
+            "serviceFormName": "Grants and Others Progress Report",
             "programServices": [
                 {
                     "serviceTargets": [
@@ -406,6 +408,25 @@ var config =
                         "b8304577-afd8-45e0-8ef4-b71ae10998f5"
                     ],
                     "serviceId": 44
+                },
+                {
+                    "serviceTargets": [
+                        "9ed0ab84-6d04-4926-ae36-c75a8763e09b"
+                    ],
+                    "serviceId": 45
+                },
+                {
+                    "serviceTargets": [
+                        "8113ab8a-17e6-43c9-be32-9ca72dd01454",
+                        "9f6f06ac-b055-48c1-9d80-b305acdeae79"
+                    ],
+                    "serviceId": 6
+                },
+                {
+                    "serviceTargets": [
+                        "0e887410-a3c5-49ca-a6f5-0f2f6fae30db"
+                    ],
+                    "serviceId": 46
                 }
             ]
         },
@@ -440,7 +461,7 @@ var config =
                 "minimumReportDurationInDays": 3,
                 "label": "Semester",
                 "category": "12 Monthly Progress Reports",
-                "activityType": "Priority Threatened Species Progress Report",
+                "activityType": "Grants and Others Progress Report",
                 "reportsAlignedToCalendar": true,
                 "canSubmitDuringReportingPeriod": true
             },
@@ -464,13 +485,13 @@ var config =
             "Climate Change - Changed rainfall patterns",
             "Climate Change - Sea level rises",
             "Climate Change - Unexpected seasonal/temperature extremes",
-            "Disconnection from Country - Altered/disrupted connection with land and sea country",
             "Disconnection from Country - Altered or disrupted First Nations engagement/leadership in caring for land and sea country",
             "Disconnection from Country - Altered or disrupted transfer of First Nations knowledge systems",
+            "Disconnection from Country - Altered/disrupted connection with land and sea country",
             "Disconnection from Country - Inadequate recognition of Traditional knowledge and practices",
-            "Disengagement of community - Community are not informed and are not engaged in managing the environment",
             "Disease/pathogens - Areas that are infected",
             "Disease/pathogens - Possible infection of disease free areas",
+            "Disengagement of community - Community are not informed and are not engaged in managing the environment",
             "Fire - Inappropriate fire regime",
             "Fire - Lack of protection for ecological assets during fire control activities",
             "Genetics - Bottleneck/inbreeding",
@@ -488,6 +509,8 @@ var config =
             "Human interference - Recreational fishing",
             "Human interference - Recreational pressures",
             "Human interference - Road/vehicle strike",
+            "Knowledge/Capacity - Inadequate scientific and/or technological capacity",
+            "Knowledge/Capacity - Insufficient knowledge to inform appropriate management or intervention actions",
             "Land management practices - Changes to hydrology and aquatic systems",
             "Land management practices - Domestic grazing/stock impacts",
             "Land management practices - Excess recharge of groundwater",
@@ -527,7 +550,7 @@ var config =
             "Kangaroo Island – SA",
             "MacDonnell Ranges – NT",
             "Mallee Birds Ecological Community – VIC/SA/NSW",
-            "Midlands region of central Tasmania – TAS",
+            "Midlands region of central Tasmanian – TAS",
             "Norfolk Island – External Territory",
             "Raine Island – Queensland",
             "Remnant WA Wheatbelt Woodlands – WA",
@@ -552,8 +575,51 @@ var outcomes = [
         ],
         "targeted": true,
         "shortDescription": "Ecological health",
+        "type": "primary",
         "category": "Waterways",
         "outcome": "The ecological health and condition of waterways is improved and/or repaired to benefit native plants and animals (including threatened species), threatened ecological communities, and the ecological character of Ramsar sites, in urban, outer urban /peri-urban and regional centres"
+    },
+    {
+        "priorities": [
+            {
+                "category": "Threatened Species"
+            }
+        ],
+        "targeted": true,
+        "shortDescription": "Threatened Species Strategy",
+        "category": "environment",
+        "type": "secondary",
+        "supportsMultiplePrioritiesAsPrimary": false,
+        "supportsMultiplePrioritiesAsSecondary": true,
+        "outcome": "By 30 June 2028, there is measurable repair of waterway habitats (in-stream and terrestrial) to benefit native plants and animals (including Threated Species) in urban, peri-urban and regional centres."
+    },
+    {
+        "priorities": [
+            {
+                "category": "Threatened Ecological Communities"
+            }
+        ],
+        "targeted": true,
+        "shortDescription": "Threatened Ecological Communities",
+        "category": "Threatened Ecological Communities",
+        "type": "secondary",
+        "supportsMultiplePrioritiesAsPrimary": false,
+        "supportsMultiplePrioritiesAsSecondary": true,
+        "outcome": "By 30 June 2028, there is measurable repair of waterway habitats (in-stream and terrestrial) to benefit native plants and animals and threated ecological communities in urban, peri-urban and regional centres."
+    },
+    {
+        "priorities": [
+            {
+                "category": "Ramsar"
+            }
+        ],
+        "targeted": true,
+        "shortDescription": "Ramsar Sites",
+        "category": "environment",
+        "type": "secondary",
+        "supportsMultiplePrioritiesAsPrimary": false,
+        "supportsMultiplePrioritiesAsSecondary": true,
+        "outcome": "By 30 June 2028, there is measurable repair of waterway habitats (in-stream and terrestrial) to benefit the ecological character of Ramsar sites in urban, outer urban /peri-urban and regional centres"
     },
     {
         "priorities": [
@@ -562,9 +628,12 @@ var outcomes = [
             }
         ],
         "targeted": true,
-        "shortDescription": "River health",
-        "category": "River health",
-        "outcome": "The health and qualities of waterways is improved and/or repaired to benefit local communities in urban, outer urban /peri-urban and regional centres."
+        "shortDescription": "Waterways",
+        "category": "Waterways",
+        "type": "secondary",
+        "supportsMultiplePrioritiesAsPrimary": false,
+        "supportsMultiplePrioritiesAsSecondary": true,
+        "outcome": "By 30 June 2028, there is measurable repair of water quality, hydrology and in stream connectivity to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
     },
     {
         "category": "Threatened Species",
@@ -577,22 +646,17 @@ var outcomes = [
         "outcome": "By 30 June 2028, there is measurable repair of water quality, hydrology and in stream connectivity to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
     },
     {
-        "category": "Threatened Species",
-        "type": "medium",
-        "outcome": "By June 2028 there is a measurable improvement to the services provided by urban green and blue space to benefit local communities in urban, outer urban /peri-urban and regional centres."
-    },
-    {
         "category": "River health",
         "type": "short",
         "outcome": "By 30 June 2025, there is measurable repair of waterway habitats (in-stream and terrestrial) to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
     },
     {
-        "category":"River health",
+        "category": "River health",
         "type": "short",
         "outcome": " By 30 June 2025, there is measurable repair of water quality, hydrology and in stream connectivity to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
     },
     {
-        "category":"River health",
+        "category": "River health",
         "type": "short",
         "outcome": "By June 2025 there is a measurable improvement to the services provided by urban green and blue space to benefit local communities in urban, outer urban /peri-urban and regional centres."
     }
@@ -601,7 +665,11 @@ var outcomes = [
 var priorities = [
     {
         "category": "Waterways",
-        "priority": "Saltwater Creek, Cairns"
+        "priority": "Bremer River"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Brownhill Creek"
     },
     {
         "category": "Waterways",
@@ -609,19 +677,31 @@ var priorities = [
     },
     {
         "category": "Waterways",
+        "priority": "Canberra Waterways"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Cooks River"
+    },
+    {
+        "category": "Waterways",
         "priority": "Cubberla Creek"
     },
     {
         "category": "Waterways",
-        "priority": "Bremer River"
+        "priority": "Darebin Creek"
     },
     {
         "category": "Waterways",
-        "priority": "Saltwater Creek, Gold Coast"
+        "priority": "Darwin creeks (Rapid Creek, Mitchell Creek, Ludmilla Creek and Sandy Creek)"
     },
     {
         "category": "Waterways",
-        "priority": "Fig Tree Creek, Yeppoon"
+        "priority": "Derwent River"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Diamond Creek"
     },
     {
         "category": "Waterways",
@@ -633,43 +713,19 @@ var priorities = [
     },
     {
         "category": "Waterways",
-        "priority": "McCready's Creek, Mackay"
+        "priority": "Elster Creek"
     },
     {
         "category": "Waterways",
-        "priority": "Slacks Creek"
+        "priority": "Fig Tree Creek, Yeppoon"
     },
     {
         "category": "Waterways",
-        "priority": "Lake Macquarie"
+        "priority": "Gardiners Creek"
     },
     {
         "category": "Waterways",
         "priority": "Hawkesbury River"
-    },
-    {
-        "category": "Waterways",
-        "priority": "Tuggerah Lakes"
-    },
-    {
-        "category": "Waterways",
-        "priority": "Shoalhaven and Crookshaven Rivers"
-    },
-    {
-        "category": "Waterways",
-        "priority": "Cooks River"
-    },
-    {
-        "category": "Waterways",
-        "priority": "Canberra Waterways"
-    },
-    {
-        "category": "Waterways",
-        "priority": "Peter Hopper Lake"
-    },
-    {
-        "category": "Waterways",
-        "priority": "Moonee Ponds Creek"
     },
     {
         "category": "Waterways",
@@ -681,27 +737,11 @@ var priorities = [
     },
     {
         "category": "Waterways",
-        "priority": "Diamond Creek"
+        "priority": "Lake Macquarie"
     },
     {
         "category": "Waterways",
-        "priority": "Yarra Flats"
-    },
-    {
-        "category": "Waterways",
-        "priority": "Elster Creek"
-    },
-    {
-        "category": "Waterways",
-        "priority": "Redan Wetlands and Yarrowee River"
-    },
-    {
-        "category": "Waterways",
-        "priority": "Werribee River"
-    },
-    {
-        "category": "Waterways",
-        "priority": "Darebin Creek"
+        "priority": "McCready's Creek, Mackay"
     },
     {
         "category": "Waterways",
@@ -709,15 +749,7 @@ var priorities = [
     },
     {
         "category": "Waterways",
-        "priority": "Gardiners Creek"
-    },
-    {
-        "category": "Waterways",
-        "priority": "Derwent River"
-    },
-    {
-        "category": "Waterways",
-        "priority": "Tamar Estuary"
+        "priority": "Moonee Ponds Creek"
     },
     {
         "category": "Waterways",
@@ -729,11 +761,31 @@ var priorities = [
     },
     {
         "category": "Waterways",
-        "priority": "Brownhill Creek"
+        "priority": "Peter Hopper Lake"
     },
     {
         "category": "Waterways",
         "priority": "Port River"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Redan Wetlands and Yarrowee River"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Saltwater Creek, Cairns"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Saltwater Creek, Gold Coast"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Shoalhaven and Crookshaven Rivers"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Slacks Creek"
     },
     {
         "category": "Waterways",
@@ -745,7 +797,227 @@ var priorities = [
     },
     {
         "category": "Waterways",
-        "priority": "Darwin creeks (Rapid Creek, Mitchell Creek, Ludmilla Creek and Sandy Creek)"
+        "priority": "Tamar Estuary"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Tuggerah Lakes"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Werribee River"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Yarra Flats"
+    },
+    {
+        "category": "Ramsar",
+        "priority": "Hunter Estuary Wetlands Ramsar site"
+    },
+    {
+        "category": "Ramsar",
+        "priority": "Moreton Bay Ramsar site"
+    },
+    {
+        "category": "Ramsar",
+        "priority": "Pitt Water-Orielton Lagoon Ramsar site"
+    },
+    {
+        "category": "Ramsar",
+        "priority": "Port Phillip Bay & Bellerine Peninsula"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Banksia Woodlands of the Swan Coastal Plain"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Clay Pans of the Swan Coastal Plain"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Coastal Swamp Oak (Casuarina glauca) Forest of New South Wales and South East Queensland"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Coastal Swamp Sclerophyll Forest of New South Wales and South East Queensland"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Grey Box (Eucalyptus microcarpa) Grassy Woodlands and Derived Native Grasslands of South-eastern Australia"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Grey Box-Grey Gum Wet Forest of subtropical eastern Australia"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Lowland Rainforest of Subtropical Australia"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Natural Temperate Grassland of the Victorian Volcanic Plain"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "River-flat eucalypt forest on coastal floodplains of southern New South Wales and eastern Victoria"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Subtropical and Temperate Coastal Saltmarsh"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Subtropical eucalypt floodplain forest and woodland of the New South Wales North Coast and South East Queensland bioregions"
+    },
+    {
+        "category": "Threatened Ecological Communities",
+        "priority": "Tuart (Eucalyptus gomphocephala) woodlands and forests of the Swan Coastal Plain ecological community"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Angle-stemmed Myrtle Gossia gonoclada"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Australasian Bittern Botaurus poiciloptilus"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Australian Grayling Prototroctes maraena"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Black swan Cygnus atratus"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Burnie Burrowing Crayfish Engaeus yabbimunna"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Carnaby’s Black Cockatoo Zanda latirostris"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Carter's Freshwater Mussel Westralunio carteri"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Cumberland Plain Land Snail Meridolum corneovirens"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Cunningham's Skink Egernia cunninghami"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Curlew Sandpiper Calidris ferruginea"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Eastern Curlew Numenius madagascariensis"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Eltham Copper Butterfly Paralucia pyrodiscus lucida"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Forest Red-tailed Black-Cockatoo Calyptorhynchus banksii naso"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Gang Gang Cockatoo Callocephalon fimbriatum"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Glossy Black Cockatoo Calyptorhynchus lathami lathami"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Grey-headed Flying-fox Pteropus poliocephalus"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Growling Grass Frog Litoria raniformis"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Koala Phascolarctos cinereus"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Latham’s Snipe Gallinago hardwickii"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Mary River Turtle Elusor macrurus"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Matted Flax-lily Dianella amoena"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Murray Cod Maccullochella peelii"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Narrow-leaf Wilsonia Wilsonia backhousei"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Native Guava Rhodomyrtus psidioides"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Ormeau Bottle Tree Brachychiton sp. Ormeau"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Paddys River Box Eucalyptus macarthurii"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Perameles gunnii gunnii"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Platypus Ornithorhynchus anatinus"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Rakali Hydromys chrysogaster"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Rock Logania Logania saxitilis"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Southern Brown Bandicoot Isoodon obesulus"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Scarlet Robin Petroica boodang boodang"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Southern Pink Underwing Moth Phyllodes imperialis"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Southern Pygmy Perch Nannoperca australis"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Western Ringtail Possum Pseudocheirus occidentalis"
+    },
+    {
+        "category": "Threatened Species",
+        "priority": "Yarra Pygmy Perch Nannoperca obscura"
     }
 ];
 
