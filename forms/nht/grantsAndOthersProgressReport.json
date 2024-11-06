@@ -77,7 +77,7 @@
               {
                 "dataType": "text",
                 "name": "outcomeStatement",
-                "validate": "required,maxSize[500]"
+                "validate": "required"
               },
               {
                 "dataType": "text",
