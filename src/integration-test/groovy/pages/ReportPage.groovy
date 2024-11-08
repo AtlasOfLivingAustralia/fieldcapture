@@ -81,7 +81,7 @@ class ReportPage extends Page {
         notApplicableCheckbox(sectionId).value(true)
     }
 
-    def notApplicableCheckbox(String sectionId) {
+    Navigator notApplicableCheckbox(String sectionId) {
         String sectionSelector = '#'+sectionId + " input[data-bind*=outputNotComplete]"
         $(sectionSelector)
     }
