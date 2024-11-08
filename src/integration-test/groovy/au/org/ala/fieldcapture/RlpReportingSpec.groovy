@@ -726,6 +726,8 @@ class RlpReportingSpec extends StubbedCasSpec {
                     markAsNotApplicable(it)
                 }
                 catch (ElementClickInterceptedException e) {
+                    println "ElementClickInterceptedException: $it"
+                    e.printStackTrace()
                     // This can happen if the section is not visible, so we need to scroll it into view
                     interact {
                         moveToElement(notApplicableCheckbox(it))
