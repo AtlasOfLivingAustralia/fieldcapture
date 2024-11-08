@@ -78,8 +78,12 @@ class ReportPage extends Page {
     }
 
     def markAsNotApplicable(String sectionId) {
+        notApplicableCheckbox(sectionId).value(true)
+    }
+
+    def notApplicableCheckbox(String sectionId) {
         String sectionSelector = '#'+sectionId + " input[data-bind*=outputNotComplete]"
-        $(sectionSelector).value(true)
+        $(sectionSelector)
     }
 
     List getFormSections() {
