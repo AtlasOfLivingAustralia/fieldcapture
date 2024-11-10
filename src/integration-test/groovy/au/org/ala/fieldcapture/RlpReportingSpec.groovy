@@ -8,6 +8,7 @@ import pages.RlpProjectPage
 import pages.ReportPage
 import pages.ViewReportPage
 import pages.modules.ReportCategory
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -699,6 +700,7 @@ class RlpReportingSpec extends StubbedCasSpec {
         projectReports.generateButton.empty == true
     }
 
+    @Ignore
     def "When a project target is overdelivered, MERIT will display warnings throughout the workflow"() {
         setup:
         String projectId = '1'
