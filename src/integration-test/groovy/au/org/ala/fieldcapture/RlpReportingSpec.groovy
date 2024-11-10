@@ -722,7 +722,9 @@ class RlpReportingSpec extends StubbedCasSpec {
             // Mark all sections except the Weed Distribution Survey as not applicable
             if (isOptional(it) && it != 'koRLP_-_Weed_distribution_survey') {
                 try {
-                    waitFor{notApplicableCheckbox(it).css('display') != 'none'}
+                    interact {
+                        moveToElement(notApplicableCheckbox(it))
+                    }
                     markAsNotApplicable(it)
                 }
                 catch (ElementClickInterceptedException e) {
