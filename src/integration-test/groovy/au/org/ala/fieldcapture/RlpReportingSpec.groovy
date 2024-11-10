@@ -729,8 +729,11 @@ class RlpReportingSpec extends StubbedCasSpec {
                     println "ElementClickInterceptedException: $it"
                     e.printStackTrace()
                     println $('ul')
+                    println $('ul').parent().attr('innerHtml')
                     $('ul').each {
                         println it.text()
+                        println it.attr('innerHtml')
+
                     }
                     if (overDeliveryModal.displayed) {
                         okBootbox()
