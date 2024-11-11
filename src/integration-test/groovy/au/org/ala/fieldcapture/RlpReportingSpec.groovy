@@ -730,17 +730,6 @@ class RlpReportingSpec extends StubbedCasSpec {
                     interact {
                         moveToElement(notApplicableCheckbox(section))
                     }
-                    e.printStackTrace()
-                    println $('ul')
-                    $('ul').parent().each { a -> println a.attr('innerHtml') }
-                    $('ul').each {
-                        println it.text()
-                        println it.attr('innerHtml')
-
-                    }
-                    if (overDeliveryModal.displayed) {
-                        okBootbox()
-                    }
                     markAsNotApplicable(it)
                 }
 
