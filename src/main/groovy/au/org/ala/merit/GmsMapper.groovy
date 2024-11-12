@@ -291,8 +291,13 @@ class GmsMapper {
                         } else {
                             createOrganisation = true
 
-                            String name = abnLookup.businessNames ? abnLookup.businessNames[0] : abnLookup.entityName
-                            organisation = abnLookup + [name: name]
+                            if (contractName) {
+                                organisation = abnLookup + [name:contractName, contractNames: [contractName]]
+                            }
+                            else {
+                                String name = abnLookup.businessNames ? abnLookup.businessNames[0] : abnLookup.entityName
+                                organisation = abnLookup + [name: name]
+                            }
                             messages << "An organisation will be created with ABN: ${abn} and name: ${name}"
                         }
                     } else {
@@ -306,7 +311,7 @@ class GmsMapper {
 
             // Validate we can use the contract name
             if (organisation && contractName) {
-                List names = [organisation.name] + organisation.businessNames
+                List names = [organisation.name] + organisation.contractNames
                 if (contractName && !contractName in names) {
                     error = "The organisation name in the contract ${contractName} doesn't match a known organisation name"
                 }

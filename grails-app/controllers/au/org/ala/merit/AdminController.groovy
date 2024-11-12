@@ -9,6 +9,8 @@ import grails.util.Environment
 import grails.util.GrailsNameUtils
 import grails.web.http.HttpHeaders
 import groovy.util.logging.Slf4j
+import org.apache.poi.ss.usermodel.Cell
+import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
@@ -482,136 +484,6 @@ class AdminController {
         }
     }
 
-    def allScores() {
-        def scores = []
-        def activityModel = metadataService.activitiesModel()
-        activityModel.outputs.each { output ->
-            def outputScores = output.scores.findAll{it.isOutputTarget}
-            outputScores.each {
-                scores << [output:output.name] + it
-            }
-        }
-
-        render scores as JSON
-
-
-    }
-
-
-    def createMissingOrganisations() {
-
-        def results = [errors:[], messages:[]]
-        if (request instanceof MultipartHttpServletRequest) {
-            def file = request.getFile('orgData')
-            if (file) {
-                CSVReader reader = new CSVReader(new InputStreamReader(file.inputStream, 'UTF-8'))
-                String[] line = reader.readNext()
-                line = reader.readNext() // Discard header line
-                while (line) {
-                    def currentOrgName = line[0]
-                    def correctOrgName = line[3]
-
-                    def orgResults = createOrg(currentOrgName, correctOrgName)
-                    results.errors += orgResults.errors
-                    results.messages += orgResults.messages
-
-                    line = reader.readNext()
-                }
-            }
-
-        }
-        def jsonResults = results as JSON
-        new File('/tmp/organisation_creation_results.json').withPrintWriter { pw ->
-            pw.print jsonResults.toString(true)
-        }
-
-        render results as JSON
-    }
-    def createOrg(String existingOrgName, String correctOrgName) {
-
-        def errors = []
-        def messages = []
-        def existingOrganisations = metadataService.organisationList()
-
-        def orgName = correctOrgName ?: existingOrgName
-
-        def organisationId
-        def organisation = existingOrganisations.list.find{it.name == orgName}
-        if (!organisation) {
-            def resp = organisationService.update('', [name:orgName, sourceSystem:'merit'])
-
-            organisationId = resp?.resp?.organisationId
-            if (!organisationId) {
-                errors << "Error creating organisation ${orgName} - ${resp?.error}"
-                return [errors:errors]
-            }
-            else {
-                messages << "Created organisation with name: ${orgName}"
-            }
-
-        }
-        else {
-            organisationId = organisation.organisationId
-            messages << "Organisation with name: ${orgName} already exists"
-        }
-
-
-        def projectsResp = projectService.search([organisationName:existingOrgName])
-        if (projectsResp?.resp.projects) {
-            def projects = projectsResp.resp.projects
-            messages << "Found ${projects.size()} projects with name ${existingOrgName}"
-            projects.each { project ->
-                if (project.organisationId != organisationId || project.organisationName != orgName) {
-                    def resp = projectService.update(project.projectId, [organisationName:orgName, organisationId:organisationId])
-                    if (!resp || resp.error) {
-                        errors << "Error updating project ${project.projectId}"
-                    }
-                    else {
-                        messages << "Updated project ${project.projectId} organisation to ${orgName}"
-                    }
-                }
-                else {
-                    messages << "Project ${project.projectId} already had correct organisation details"
-                }
-
-            }
-        }
-        else {
-            if (projectsResp?.resp?.projects?.size() == 0) {
-                messages << "Organisation ${existingOrgName} has no projects"
-            }
-            else {
-                errors << "Error retreiving projects for organisation ${existingOrgName} - ${projectsResp.error}"
-            }
-        }
-        return [errors:errors, messages:messages]
-
-    }
-
-    def createReports() {
-        def offset = 0
-        def max = 100
-
-        def projects = searchService.allProjects([max:max, offset:offset])
-
-        while (offset < projects.hits.total) {
-
-            offset+=max
-            projects = searchService.allProjects([max:max, offset:offset])
-
-            projects.hits?.hits?.each { hit ->
-                def project = hit._source
-                if (!project.timeline) {
-                    projectService.generateProjectStageReports(project.projectId, new ReportGenerationOptions())
-                    println "Generated reports for project ${project.projectId}"
-                }
-            }
-            println offset
-
-        }
-
-    }
-
     def editSiteBlog() {
         List<Map> blog = blogService.getSiteBlog()
         [blog:blog]
@@ -720,22 +592,32 @@ class AdminController {
 
     def organisationModifications() {
         if (request.respondsTo('getFile')) {
-            def file = request.getFile('data')
+            def file = request.getFile('orgData')
             Map results = [:]
             if (file) {
 
                 def columnMap = [
                         'Project ID': 'projectId',
-                        2: 'organisationId',
-                        3: 'organisationName',
-                        4: 'abn'
+                        'Organisation ID': 'organisationId',
+                        'Contract name': 'organisationContractName',
+                        'ABN': 'abn',
+                        'New contract name': 'newContractName'
                 ]
+
                 def config = [
-                        sheet    : "Projects",
+                        sheet    : "Organisation Details",
                         startRow : 1,
-                        columnMap: columnMap
+                        columnMap: [:]
                 ]
                 Workbook workbook = WorkbookFactory.create(file.inputStream)
+                Row headerRow = workbook.getSheet(config.sheet).getRow(0)
+                for (Cell c : headerRow) {
+                    String headerValue = c.getStringCellValue()
+                    if (columnMap.containsKey(headerValue)) {
+                        String excelColumnHeader = CellReference.convertNumToColString(c.getColumnIndex())
+                        config.columnMap[excelColumnHeader] = columnMap[headerValue]
+                    }
+                }
 
                 List data = excelImportService.convertColumnMapConfigManyRows(workbook, config)
                 data.each { Map row ->
