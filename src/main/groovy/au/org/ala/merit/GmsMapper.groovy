@@ -290,12 +290,13 @@ class GmsMapper {
                             error = "An existing organisation name was matched via the entity/business name ${organisation.name} but the ABN doesn't match the abn of the MERIT organisation (${organisation.abn})"
                         } else {
                             createOrganisation = true
-
+                            String name
                             if (contractName) {
+                                name = contractName
                                 organisation = abnLookup + [name:contractName, contractNames: [contractName]]
                             }
                             else {
-                                String name = abnLookup.businessNames ? abnLookup.businessNames[0] : abnLookup.entityName
+                                name = abnLookup.businessNames ? abnLookup.businessNames[0] : abnLookup.entityName
                                 organisation = abnLookup + [name: name]
                             }
                             messages << "An organisation will be created with ABN: ${abn} and name: ${name}"
