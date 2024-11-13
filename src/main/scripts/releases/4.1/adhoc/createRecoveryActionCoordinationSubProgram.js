@@ -43,17 +43,6 @@ var config =
                 }
             },
             {
-                "template": "additionalOutcomes",
-                "model": {
-                    "outcomePriority": "Additional outcome/s",
-                    "helpTextHeading": "If the project is not delivering additional benefits, delete the row using the 'x' in the right-most column.",
-                    "title": "Additional benefits",
-                    "priority": "Additional investment priorities",
-                    "maxAdditonalOutcomes": "7",
-                    "priorityHelpText": "Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
-                }
-            },
-            {
                 "template": "outcomeStatements",
                 "model": {
                     "outcomeType": "short",
@@ -489,6 +478,8 @@ var config =
             "Human interference - Recreational fishing",
             "Human interference - Recreational pressures",
             "Human interference - Road/vehicle strike",
+            "Knowledge/capacity - Inadequate scientific and/or technological capacity",
+            "Knowledge/capacity – Insufficient knowledge to inform appropriate management or intervention actions",
             "Land management practices - Changes to hydrology and aquatic systems",
             "Land management practices - Domestic grazing/stock impacts",
             "Land management practices - Excess recharge of groundwater",
@@ -545,13 +536,13 @@ var outcomes = [
     {
         "priorities": [
             {
-                "category": "Water quality improvements"
+                "category": "Priority Threatened Species Primary"
             }
         ],
         "targeted": true,
-        "shortDescription": "Water quality improvements",
-        "category": "Waterways",
-        "outcome": "Track progress towards the Reef 2050 Water Quality Improvement Plan targets and objectives and evaluate the effectiveness of activities to feed into the adaptive management of responding to the challenge."
+        "shortDescription": "EPBC Species",
+        "category": "Threatened Species",
+        "outcome": "1.  Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
     },
     {
         "category": "Water quality improvements",
@@ -581,80 +572,137 @@ var outcomes = [
 ];
 
 var priorities = [
+
     {
-        "category": "Water quality improvements",
-        "priority": "Ammonite Snail (Ammoniropa vigens) - Davies Waxflower (Phebalium daviesii)"
+        "category": "Priority Threatened Species Primary",
+        "priority": "Ammonite Snail (Ammoniropa vigens)"
     },
     {
-        "category": "Water quality improvements",
-        "priority": "Angle-stemmed Myrtle (Gossia gonoclada) - Native Guava (Rhodomyrtus psidoides)"
+        "category": "Priority Threatened Species Primary",
+        "priority": "Angle-stemmed Myrtle (Gossia gonociada)"
     },
     {
-        "category": "Water quality improvements",
-        "priority": "Central Rock Rat (Zyzomys pedunculatus)"
+        "category": "Priority Threatened Species Primary",
+        "priority": "Australian Bittern (Botaurus poiciloptilus)"
     },
     {
-        "category": "Water quality improvements",
-        "priority": "Eastern Curlew (Numenius madagascariensis) - Night Parrot (Pezoporus occidentalis)"
+        "category": "Priority Threatened Species Primary",
+        "priority": "Baudin’s Cockatoo (Calyptorhynchus latirostris)"
     },
     {
-        "category": "Water quality improvements",
-        "priority": "Eastern Quoll (Dasyurus viverrinus) - Swan Galaxias (Galaxias fontanus)"
+        "category": "Priority Threatened Species Primary",
+        "priority": "Broad-toothed Rat (Mastacomys fuscus mordicus)"
     },
     {
-        "category": "Water quality improvements",
-        "priority": "Forest Red-tailed Black-cockatoo ( Calyptorhynchus banksia)"
+        "category": "Priority Threatened Species Primary",
+        "priority": "Bush-tailed Rock Wallaby (Petrogale penicillate)"
     },
     {
-        "category": "Water quality improvements",
-        "priority": "Graveside Leek-orchid (Prasophyllum taphanyx) - Red Handfish (Thymichthys politus)"
+        "category": "Priority Threatened Species Primary",
+        "priority": "Carnaby’s Cockatoo (Calyptorhynchus latirostris)"
     },
     {
-        "category": "Water quality improvements",
-        "priority": "Growling Grass Frog (Litoria raniformis) - Bush-tailed Rock Wallaby (Petrogale penicillate)"
+        "category": "Priority Threatened Species Primary",
+        "priority": "Central Rock Rat (Zyzomys pedunculatas)"
     },
     {
-        "category": "Water quality improvements",
-        "priority": "Malleefowl (Leipoa ocellata) - Carnaby’s Cockatoo (Calyptorhynchus latirostris)"
+        "category": "Priority Threatened Species Primary",
+        "priority": "Davies Waxflower (Phebalium daviesii)"
     },
     {
-        "category": "Water quality improvements",
-        "priority": "Noisy Scrub-bird (Atrichornis clamosus) - Baudin’s Cockatoo (Calyptorhynchus baudinii)"
+        "category": "Priority Threatened Species Primary",
+        "priority": "Eastern Curlew (Numenius madagascariensis)"
     },
     {
-        "category": "Water quality improvements",
-        "priority": "Pookuka (Pseudomys novaehollandiae) - Orange-bellied Parrot (Neophema chrysogaster)"
+        "category": "Priority Threatened Species Primary",
+        "priority": "Eastern Quoll (Dasyurus viverrinus)"
     },
     {
-        "category": "Water quality improvements",
-        "priority": "Red Goshawk (Erythrotriorchis radiatus) - Plains Wanderer (Pedionomus torquatus)"
+        "category": "Priority Threatened Species Primary",
+        "priority": "Forest Red-tailed Black-cockatoo (Calyptorhynchus banksia)"
     },
     {
-        "category": "Water quality improvements",
-        "priority": "Regent Honey eater (Anthochaera Phrygia) - Australasian Bittern (Botaurus poiciloptilus)"
+        "category": "Priority Threatened Species Primary",
+        "priority": "Graveside Leek-orchid (Prasophyllum taphanyx)"
     },
     {
-        "category": "Water quality improvements",
-        "priority": "Rhodamnia rubescens - Rhodamnia maideniana"
+        "category": "Priority Threatened Species Primary",
+        "priority": "Growling Grass Frog (Litoria raniformis)"
     },
     {
-        "category": "Water quality improvements",
-        "priority": "Smoky Mouse (Pseudomys fumeus) - Broad-toothed Rat (Mastacomys fuscus mordicus)"
+        "category": "Priority Threatened Species Primary",
+        "priority": "Hooded Plover (Thinornis rubricollis)"
     },
     {
-        "category": "Water quality improvements",
+        "category": "Priority Threatened Species Primary",
+        "priority": "Malleefowl (Leipoa ocellata)"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Native Guava (Rhodomyrtus psidoides)"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Night Parrot (Pezoporus occidentalis)"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Noisy Scrub-bird (Atrichornis clamosus)"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Orangie-bellied Parrot (Neophema chrysogaster)"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Plains Wanderer (Pedionomus torquatus)"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Pookila (Pseudomys novaehollandiae)"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Red Goshawk (Erythrotriorchis radiatus)"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Red Handfish (Thymichthys politus)"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Regent Honey eater (Anthochaera Phryia)"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Scrub Turpentine, Brown Malletwood (Rhodamnia rubescens)"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Smooth Scrib Turpentine (Rhodamnia maideniana)"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
+        "priority": "Smokey Mouse (Pseudomys fumeus)"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
         "priority": "South East Red-tailed Black Cockatoo (Calyptorhynchus banksia graptogyne)"
     },
     {
-        "category": "Water quality improvements",
-        "priority": "Swift Parrot (Lathamus discolor) - Hooded Plover (Thinornis rubricollis)"
+        "category": "Priority Threatened Species Primary",
+        "priority": "Swan Galaxias (Galaxias fontanus)"
     },
     {
-        "category": "Water quality improvements",
+        "category": "Priority Threatened Species Primary",
+        "priority": "Swift Parrot (Lathamus discolor)"
+    },
+    {
+        "category": "Priority Threatened Species Primary",
         "priority": "Tasmanian Giant Freshwater Crayfish (Astacopsis gouldi)"
     },
     {
-        "category": "Water quality improvements",
+        "category": "Priority Threatened Species Primary",
         "priority": "Western Ground-parrot (Pezoporus wallicus flaviventris)"
     }
 ];
