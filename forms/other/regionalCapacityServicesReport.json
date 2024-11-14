@@ -149,24 +149,6 @@
           },
           {
             "dataType": "number",
-            "name": "agreedWorkforceTarget",
-            "description": "Enter the workforce target % agreed for Indigenous employment of the full time equivalent Australian-based workforce deployed on the Services for the Deed and all Contracts (including non-DCCEEW Contracts), in accordance with clause 38.1(b) of the Deed of Standing Offer.",
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "number",
-            "name": "agreedSupplyChainTarget",
-            "description": "Enter the supply chain target % agreed for the value of the goods and services provided under the Deed and any Contract awarded to First Nations People/Indigenous Enterprises, in accordance with clause 38.1(b) of the Deed of Standing Offer.",
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "number",
-            "name": "organisationPanelProjectValue",
-            "description": "Enter the total dollar value (GST inclusive) for the Deed and all Contracts (including non-DCCEEW Contracts).",
-            "validate": "required,min[0]"
-          },
-          {
-            "dataType": "number",
             "name": "organisationFteWorkforce",
             "description": "Enter total RDP staff (full time equivalent) deployed on Services for the Deed and all Contracts (including non-DCCEEW Contracts) during this reporting period.",
             "validate": [
@@ -217,14 +199,6 @@
               },
               {
                 "rule": "min[0]"
-              },
-              {
-                "param": {
-                  "expression": "organisationPanelProjectValue",
-                  "type": "computed"
-                },
-                "rule": "max",
-                "message": "The sum of the value of Services contracted to First Nations people/Indigenous enterprises for all reporting periods can not exceed the total $ value (GST inclusive) of the Deed and all Contracts (including non-DCCEEW Contracts)"
               }
             ]
           },
@@ -579,39 +553,6 @@
             "items": [
               {
                 "css": "span7",
-                "preLabel": "What is your agreed workforce target %?",
-                "source": "agreedWorkforceTarget",
-                "type": "number"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span7",
-                "preLabel": "What is your agreed supply chain target %?",
-                "source": "agreedSupplyChainTarget",
-                "type": "number"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span7",
-                "preLabel": "What is your total organisation panel/project $ value?",
-                "source": "organisationPanelProjectValue",
-                "type": "currency"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span7",
                 "preLabel": "What was your organisation’s full time equivalent workforce deployed on the Services this reporting period?",
                 "source": "organisationFteWorkforce",
                 "type": "number"
@@ -854,7 +795,7 @@
       }
     }
   ],
-  "formVersion": 1,
+  "formVersion": 3,
   "category": null,
   "status": "active",
   "gmsId": null,
