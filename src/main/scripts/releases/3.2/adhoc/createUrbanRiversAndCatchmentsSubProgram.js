@@ -45,13 +45,14 @@ var config =
             {
                 "template": "additionalOutcomes",
                 "model": {
+                    "maximumPriorities": 1000,
                     "outcomePriority": "Additional outcome/s",
+                    "maxAdditionalOutcomes": 15,
                     "helpTextHeading": "If the project is not delivering additional benefits, delete the row using the 'x' in the right-most column.",
                     "title": "Additional benefits",
                     "priority": "Additional Investment Priorities",
-                    "priorityHelpText": "Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes.",
-                    "maximumPriorities": 1000,
-                    "maxAdditionalOutcomes": 15
+                    "renderPrioritiesWithSelect2": true,
+                    "priorityHelpText": "Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
                 }
             },
             {
@@ -62,7 +63,8 @@ var config =
                     "minimumNumberOfOutcomes": 0,
                     "subtitle": "Medium-term outcome statement/s",
                     "title": "Project Outcomes",
-                    "extendedOutcomes": true
+                    "extendedOutcomes": true,
+                    "multiplePriorities": true
                 }
             },
             {
@@ -71,7 +73,8 @@ var config =
                     "outcomeType": "short",
                     "helpText": "Outline the degree of impact having undertaken the services for up to three years. Ensure the outcomes are measurable with consideration to the baseline and proposed monitoring regime",
                     "subtitle": "Short-term outcome statement/s",
-                    "extendedOutcomes": true
+                    "extendedOutcomes": true,
+                    "multiplePriorities": true
                 }
             },
             {
@@ -476,7 +479,7 @@ var config =
                 "label": "Final Report",
                 "category": "Final Report",
                 "reportsAlignedToCalendar": false,
-                "activityType": "Priority Threatened Species Final Report",
+                "activityType": "Grants and Others Final Report",
                 "alignToOwnerStart": true
             }
         ],
@@ -568,9 +571,6 @@ var outcomes = [
         "priorities": [
             {
                 "category": "Waterways"
-            },
-            {
-                "category": "Threatened Species"
             }
         ],
         "targeted": true,
@@ -582,56 +582,21 @@ var outcomes = [
     {
         "priorities": [
             {
+                "category": "Waterways"
+            },
+            {
                 "category": "Threatened Species"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "Threatened Species Strategy",
-        "category": "environment",
-        "type": "secondary",
-        "supportsMultiplePrioritiesAsPrimary": false,
-        "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome": "By 30 June 2028, there is measurable repair of waterway habitats (in-stream and terrestrial) to benefit native plants and animals (including Threated Species) in urban, peri-urban and regional centres."
-    },
-    {
-        "priorities": [
+            },
             {
                 "category": "Threatened Ecological Communities"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "Threatened Ecological Communities",
-        "category": "Threatened Ecological Communities",
-        "type": "secondary",
-        "supportsMultiplePrioritiesAsPrimary": false,
-        "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome": "By 30 June 2028, there is measurable repair of waterway habitats (in-stream and terrestrial) to benefit native plants and animals and threated ecological communities in urban, peri-urban and regional centres."
-    },
-    {
-        "priorities": [
+            },
             {
                 "category": "Ramsar"
             }
         ],
-        "targeted": true,
-        "shortDescription": "Ramsar Sites",
-        "category": "environment",
-        "type": "secondary",
-        "supportsMultiplePrioritiesAsPrimary": false,
-        "supportsMultiplePrioritiesAsSecondary": true,
-        "outcome": "By 30 June 2028, there is measurable repair of waterway habitats (in-stream and terrestrial) to benefit the ecological character of Ramsar sites in urban, outer urban /peri-urban and regional centres"
-    },
-    {
-        "priorities": [
-            {
-                "category": "Waterways"
-            }
-        ],
-        "targeted": true,
         "shortDescription": "Waterways",
         "category": "Waterways",
         "type": "secondary",
-        "supportsMultiplePrioritiesAsPrimary": false,
         "supportsMultiplePrioritiesAsSecondary": true,
         "outcome": "By 30 June 2028, there is measurable repair of water quality, hydrology and in stream connectivity to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
     },
@@ -665,151 +630,227 @@ var outcomes = [
 var priorities = [
     {
         "category": "Waterways",
-        "priority": "Bremer River"
+        "priority": "Alstonville Creek, Alstonville NSW"
     },
     {
         "category": "Waterways",
-        "priority": "Brownhill Creek"
+        "priority": "Archerfield Wetlands, Brisbane QLD"
     },
     {
         "category": "Waterways",
-        "priority": "Bulimba Creek"
+        "priority": "Ashfield Flats, Perth WA"
     },
     {
         "category": "Waterways",
-        "priority": "Canberra Waterways"
+        "priority": "Black Hill Wetland, Newcastle NSW"
     },
     {
         "category": "Waterways",
-        "priority": "Cooks River"
+        "priority": "Brook and Grogan Swamp, Perth WA"
     },
     {
         "category": "Waterways",
-        "priority": "Cubberla Creek"
+        "priority": "Bullockhead Creek, Brisbane QLD"
     },
     {
         "category": "Waterways",
-        "priority": "Darebin Creek"
+        "priority": "Bunurong Wetland, Melbourne VIC"
     },
     {
         "category": "Waterways",
-        "priority": "Darwin creeks (Rapid Creek, Mitchell Creek, Ludmilla Creek and Sandy Creek)"
+        "priority": "Byron Creek, Bangalow NSW"
     },
     {
         "category": "Waterways",
-        "priority": "Derwent River"
+        "priority": "Cleland National Park, Adelaide SA"
     },
     {
         "category": "Waterways",
-        "priority": "Diamond Creek"
+        "priority": "Cox Creek, Adelaide SA"
     },
     {
         "category": "Waterways",
-        "priority": "Downfall Creek"
+        "priority": "Crendon Street channel, Burpengary QLD"
     },
     {
         "category": "Waterways",
-        "priority": "Dowse Lagoon"
+        "priority": "Curly Sedge Creek, Melbourne VIC"
     },
     {
         "category": "Waterways",
-        "priority": "Elster Creek"
+        "priority": "Currumbin Creek, QLD"
     },
     {
         "category": "Waterways",
-        "priority": "Fig Tree Creek, Yeppoon"
+        "priority": "Eumemmerring Creek, Melbourne VIC"
     },
     {
         "category": "Waterways",
-        "priority": "Gardiners Creek"
+        "priority": "Field River, Adelaide SA"
     },
     {
         "category": "Waterways",
-        "priority": "Hawkesbury River"
+        "priority": "Fifth Creek, Adelaide SA"
     },
     {
         "category": "Waterways",
-        "priority": "Karaaf Wetlands"
+        "priority": "Forest Creek, Castlemaine VIC"
     },
     {
         "category": "Waterways",
-        "priority": "KooyongKoot (Tooronga Park wetland)"
+        "priority": "Gardiners Creek, Melbourne VIC"
     },
     {
         "category": "Waterways",
-        "priority": "Lake Macquarie"
+        "priority": "Georges River, Sydney NSW"
     },
     {
         "category": "Waterways",
-        "priority": "McCready's Creek, Mackay"
+        "priority": "Horsehose Bay tributaries and Laratinga Wetland, SA"
     },
     {
         "category": "Waterways",
-        "priority": "Merri Creek"
+        "priority": "Hunter River, Newcastle NSW"
     },
     {
         "category": "Waterways",
-        "priority": "Moonee Ponds Creek"
+        "priority": "Jacksons Creek & catchment, Gisborne VIC"
     },
     {
         "category": "Waterways",
-        "priority": "Onkaparinga River"
+        "priority": "Jerrys Creek, Wallacia NSW"
     },
     {
         "category": "Waterways",
-        "priority": "Pedler Creek"
+        "priority": "King River, WA"
     },
     {
         "category": "Waterways",
-        "priority": "Peter Hopper Lake"
+        "priority": "Lane Cove River, Sydney NSW"
     },
     {
         "category": "Waterways",
-        "priority": "Port River"
+        "priority": "Lismore catchments, NSW"
     },
     {
         "category": "Waterways",
-        "priority": "Redan Wetlands and Yarrowee River"
+        "priority": "Mary River, Gympie QLD"
     },
     {
         "category": "Waterways",
-        "priority": "Saltwater Creek, Cairns"
+        "priority": "Mason Park Wetlands, Sydney NSW"
     },
     {
         "category": "Waterways",
-        "priority": "Saltwater Creek, Gold Coast"
+        "priority": "Mersey River, TAS"
     },
     {
         "category": "Waterways",
-        "priority": "Shoalhaven and Crookshaven Rivers"
+        "priority": "Moorabool and Barwon Rivers, VIC"
     },
     {
         "category": "Waterways",
-        "priority": "Slacks Creek"
+        "priority": "Murray River, Albury Wodonga VIC"
     },
     {
         "category": "Waterways",
-        "priority": "Sturt River"
+        "priority": "Oxley Creek, Brisbane QLD"
     },
     {
         "category": "Waterways",
-        "priority": "Swan and Canning Rivers"
+        "priority": "Petrie Creek, Nambour QLD"
     },
     {
         "category": "Waterways",
-        "priority": "Tamar Estuary"
+        "priority": "Pimpama River, QLD"
     },
     {
         "category": "Waterways",
-        "priority": "Tuggerah Lakes"
+        "priority": "Pitt Water, TAS"
     },
     {
         "category": "Waterways",
-        "priority": "Werribee River"
+        "priority": "Queanbeyan River, Queanbeyan NSW"
     },
     {
         "category": "Waterways",
-        "priority": "Yarra Flats"
+        "priority": "Romaine and Shorewell Creeks, TAS"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Sauerbier and Homestead Creeks, Adelaide SA"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Sixth Creek, SA"
+    },
+    {
+        "category": "Waterways",
+        "priority": "South Creek, Sydney NSW"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Spring Street Creek, Sydney NSW"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Stony Creek, Sydney NSW"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Swan River, South Perth WA"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Tarralla Creek, Melbourne VIC"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Tributaries of Brisbane River, QLD"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Upper Georges River, Sydney NSW"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Upper Serpentine River, Perth WA"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Upper Tucki Creek, Goonellabah NSW"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Urban wetlands, Perth WA"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Washpool Creek, Bundaberg QLD"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Watiparinga Creek, Adelaide SA"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Wingecarribee River, Moss Vale NSW"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Wollundry and Flowerdale Lagoons, Wagga Wagga NSW"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Wylies Creek, Melbourne VIC"
+    },
+    {
+        "category": "Waterways",
+        "priority": "Yakamia Creek, Albany WA"
+    },
+    {
+        "category": "Waterways",
+        "priority": "12 strategic platypus catchments, VIC"
     },
     {
         "category": "Ramsar",
