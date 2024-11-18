@@ -28,7 +28,7 @@
               {
                 "dataType": "text",
                 "name": "achievement",
-                "validate": "required,maxSize[1250]"
+                "validate": "required,maxSize[500]"
               },
               {
                 "dataType": "text",
@@ -49,7 +49,7 @@
           {
             "dataType": "text",
             "name": "achievedOutcomesSummary",
-            "validate": "required,maxSize[1250]"
+            "validate": "required,maxSize[500]"
           },
           {
             "dataType": "text",
@@ -208,6 +208,11 @@
             "dataType": "list",
             "allowRowDelete": true,
             "name": "projectLearningsSummary"
+          },
+          {
+            "dataType": "text",
+            "name": "documentAdditionalInformation",
+            "validate": "required,maxSize[1250]"
           }
         ],
         "viewModel": [
@@ -215,7 +220,7 @@
             "items": [
               {
                 "source": "achievementLevel",
-                "preLabel": "To what extent did you achieve your project outcomes and project services? <br>Please select the one of the levels of achievement you have reached  e.g. Achieved (100%), Partially achieved (26-50%)",
+                "preLabel": "1. To what extent did you achieve your project outcomes and project services? <br>Please select the one of the levels of achievement you have reached  e.g. Achieved (100%), Partially achieved (26-50%)",
                 "type": "selectOne"
               }
             ],
@@ -224,7 +229,7 @@
           {
             "items": [
               {
-                "source": "<h4>1. Project Outputs</h4>",
+                "source": "<h4>2. Project Outputs</h4>",
                 "type": "literal"
               }
             ],
@@ -234,7 +239,7 @@
             "items": [
               {
                 "source": "isTargetAchieved",
-                "preLabel": "1.1 Did you achieve the target for each activity listed in the MERI Plan?",
+                "preLabel": "2.1 Did you achieve the target for each activity listed in the MERI Plan?",
                 "type": "selectOne"
               }
             ],
@@ -293,13 +298,13 @@
             ],
             "userAddedRows": false,
             "source": "projectTargets",
-            "title": "<b>1.2 Report on and explain any activities that have been under or significantly over delivered (50% above target)</b>",
+            "title": "<b>2.2 Report on and explain any activities that have been under or significantly over delivered (50% above target)</b>",
             "type": "table"
           },
           {
             "items": [
               {
-                "source": "<h4>2. Project Outcomes</h4>",
+                "source": "<h4>3. Project Outcomes</h4>",
                 "type": "literal"
               }
             ],
@@ -308,7 +313,7 @@
           {
             "items": [
               {
-                "source": "<b>2.1 Briefly describe the achievements that have been made against each outcome statement in the MERI Plan including details of any enablers and/or barriers throughout the life of the project.</b><p>Please provide supporting information (e.g. report, photos), where this has not been previously supplied, as attachments to this report via the Admin tab > Documents sub-tab of MERIT. Where supporting evidence contains sensitive or confidential information, please send to the department Project Manager (DCCEW) by email.",
+                "source": "<b>3.1 Briefly describe the achievements that have been made against each outcome statement in the MERI Plan including details of any enablers and/or barriers throughout the life of the project.</b><p>Please provide supporting information (e.g. report, photos), where this has not been previously supplied, as attachments to this report via the Admin tab > Documents sub-tab of MERIT. Where supporting evidence contains sensitive or confidential information, please send to the department Project Manager (DCCEW) by email.",
                 "type": "literal"
               }
             ],
@@ -352,7 +357,7 @@
             "items": [
               {
                 "source": "projectEngagement",
-                "preLabel": "2.2 Did your project engage with traditional owners, landholders and local community?",
+                "preLabel": "3.2 Did your project engage with traditional owners, landholders and local community?",
                 "type": "selectOne"
               }
             ],
@@ -365,7 +370,7 @@
                 "source": "yesProjectEngagement",
                 "type": "textarea",
                 "rows": 5,
-                "preLabel": "2.2.1 If yes, which group/s and how?"
+                "preLabel": "3.2.1 If yes, which group/s and how?"
               }
             ]
           },
@@ -373,7 +378,7 @@
             "items": [
               {
                 "source": "unexpectedChanges",
-                "preLabel": "2.3 Were there any unexpected or unintended (positive or negative) changes or other outcomes delivered by this project?",
+                "preLabel": "3.3 Were there any unexpected or unintended (positive or negative) changes or other outcomes delivered by this project?",
                 "type": "selectOne"
               }
             ],
@@ -386,7 +391,7 @@
                 "source": "yesUnexpectedChanges",
                 "type": "textarea",
                 "rows": 5,
-                "preLabel": "2.3.1 If yes, what were they?"
+                "preLabel": "3.3.1 If yes, what were they?"
               }
             ]
           },
@@ -394,7 +399,7 @@
             "items": [
               {
                 "source": "outcomesMaintenance",
-                "preLabel": "2.4 To what extent will the outcomes achieved by this project be maintained after the project has been completed?",
+                "preLabel": "3.4 To what extent will the outcomes achieved by this project be maintained after the project has been completed?",
                 "type": "selectOne"
               }
             ],
@@ -407,14 +412,14 @@
                 "source": "howOutcomesMaintain",
                 "type": "textarea",
                 "rows": 5,
-                "preLabel": "<b>2.5 If they will be maintained, how and who will do this?</b>"
+                "preLabel": "<b>3.5 If they will be maintained, how and who will do this?</b>"
               }
             ]
           },
           {
             "items": [
               {
-                "source": "<h4>3. Monitoring, Evaluation and Project Learnings</h4>",
+                "source": "<h4>4. Monitoring, Evaluation and Project Learnings</h4>",
                 "type": "literal"
               }
             ],
@@ -423,7 +428,7 @@
           {
             "items": [
               {
-                "source": "<b>3.1 Summarise how the project progressed in the areas of Monitoring, Evaluation, Activity changes, Risk management and lessons learnt in project delivery towards the investment priority.</b>",
+                "source": "<b>4.1 Summarise how the project progressed in the areas of Monitoring, Evaluation, Activity changes, Risk management and lessons learnt in project delivery towards the investment priority.</b>",
                 "type": "literal"
               }
             ],
@@ -450,6 +455,17 @@
             "source": "projectLearningsSummary",
             "title": "<b>Monitoring/Evaluation/Activity changes/Risk management/Lesson/s learnt</b>",
             "type": "table"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "documentAdditionalInformation",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "<b>5. Please document any additional information relating to the project.</b>"
+              }
+            ]
           }
         ],
         "pre-populate": [
