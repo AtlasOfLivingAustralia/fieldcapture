@@ -624,6 +624,8 @@ var outcomes = [
         "targeted": true,
         "shortDescription": "EPBC Species",
         "category": "Threatened Species",
+        "supportsMultiplePrioritiesAsPrimary": true,
+        "supportsMultiplePrioritiesAsSecondary": true,
         "outcome": "1.  Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
     },
     {
@@ -640,12 +642,12 @@ var outcomes = [
 
 var priorities = [
     {
-        "category": "Ramsar",
-        "priority": "Ginini Flats Wetland Complex"
+        "category": "Threatened Species",
+        "priority": "Malleefowl (Leipoa occellata)"
     },
     {
         "category": "Threatened Species",
-        "priority": "Malleefowl (Leipoa occellata)"
+        "priority": "Sandhill Dunnart (Sminthospsis psammophila)"
     }
 ];
 
