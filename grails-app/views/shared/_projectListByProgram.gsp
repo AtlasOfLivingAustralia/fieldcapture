@@ -10,7 +10,7 @@
                 <thead class="thead-light">
                 <th class="projectId">${g.message(code:'label.merit.projectID')}</th>
                 <th class="internalOrderId"><g:message code="label.externalId.INTERNAL_ORDER_NUMBER"/> / <g:message code="label.externalId.TECH_ONE_CODE"/></th>
-                <th class="organisation">Contract name/s</th>
+                <th class="organisation">Contracted recipient name/s</th>
                 <th class="name">Name</th>
                 <th class="startDate">Start Date</th>
                 <th class="endDate">End Date</th>

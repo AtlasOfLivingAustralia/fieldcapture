@@ -321,7 +321,7 @@ class GmsMapper {
                 // We are standardising on "Recipient" as the default organisation relationship
                 String description = 'Recipient'
                 project.associatedOrgs = [
-                        [organisationId:organisation.organisationId, name: contractName ?: organisation.name, organisationName:organisation.name, description:description]]
+                        [organisationId:organisation.organisationId, name: contractName ?: organisation.name, description:description]]
             }
         } else {
             error = "Please supply an organisationId (ORG_ID) or ABN (ABN) for the project"
