@@ -141,12 +141,7 @@ ko.components.register('associated-orgs', {
         self.allowedNamesForOrganisation = function(organisation) {
             var allowedNames = [];
             allowedNames.push(organisation.name);
-            if (organisation.entityName) {
-                allowedNames.push(organisation.entityName);
-            }
-            if (organisation.businessNames) {
-                allowedNames = allowedNames.concat(organisation.businessNames);
-            }
+
             if (organisation.contractNames) {
                 allowedNames = allowedNames.concat(organisation.contractNames);
             }

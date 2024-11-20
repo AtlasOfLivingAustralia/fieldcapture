@@ -1,14 +1,15 @@
 package au.org.ala.merit
 
-import au.com.bytecode.opencsv.CSVReader
+
 import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
 import au.org.ala.merit.hub.HubSettings
-import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import grails.util.Environment
 import grails.util.GrailsNameUtils
 import grails.web.http.HttpHeaders
 import groovy.util.logging.Slf4j
+import org.apache.poi.ss.usermodel.Cell
+import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
@@ -42,6 +43,7 @@ class AdminController {
     def userService
     RisksService risksService
     ExcelImportService excelImportService
+    AbnLookupService abnLookupService
 
     def index() {}
 
@@ -482,136 +484,6 @@ class AdminController {
         }
     }
 
-    def allScores() {
-        def scores = []
-        def activityModel = metadataService.activitiesModel()
-        activityModel.outputs.each { output ->
-            def outputScores = output.scores.findAll{it.isOutputTarget}
-            outputScores.each {
-                scores << [output:output.name] + it
-            }
-        }
-
-        render scores as JSON
-
-
-    }
-
-
-    def createMissingOrganisations() {
-
-        def results = [errors:[], messages:[]]
-        if (request instanceof MultipartHttpServletRequest) {
-            def file = request.getFile('orgData')
-            if (file) {
-                CSVReader reader = new CSVReader(new InputStreamReader(file.inputStream, 'UTF-8'))
-                String[] line = reader.readNext()
-                line = reader.readNext() // Discard header line
-                while (line) {
-                    def currentOrgName = line[0]
-                    def correctOrgName = line[3]
-
-                    def orgResults = createOrg(currentOrgName, correctOrgName)
-                    results.errors += orgResults.errors
-                    results.messages += orgResults.messages
-
-                    line = reader.readNext()
-                }
-            }
-
-        }
-        def jsonResults = results as JSON
-        new File('/tmp/organisation_creation_results.json').withPrintWriter { pw ->
-            pw.print jsonResults.toString(true)
-        }
-
-        render results as JSON
-    }
-    def createOrg(String existingOrgName, String correctOrgName) {
-
-        def errors = []
-        def messages = []
-        def existingOrganisations = metadataService.organisationList()
-
-        def orgName = correctOrgName ?: existingOrgName
-
-        def organisationId
-        def organisation = existingOrganisations.list.find{it.name == orgName}
-        if (!organisation) {
-            def resp = organisationService.update('', [name:orgName, sourceSystem:'merit'])
-
-            organisationId = resp?.resp?.organisationId
-            if (!organisationId) {
-                errors << "Error creating organisation ${orgName} - ${resp?.error}"
-                return [errors:errors]
-            }
-            else {
-                messages << "Created organisation with name: ${orgName}"
-            }
-
-        }
-        else {
-            organisationId = organisation.organisationId
-            messages << "Organisation with name: ${orgName} already exists"
-        }
-
-
-        def projectsResp = projectService.search([organisationName:existingOrgName])
-        if (projectsResp?.resp.projects) {
-            def projects = projectsResp.resp.projects
-            messages << "Found ${projects.size()} projects with name ${existingOrgName}"
-            projects.each { project ->
-                if (project.organisationId != organisationId || project.organisationName != orgName) {
-                    def resp = projectService.update(project.projectId, [organisationName:orgName, organisationId:organisationId])
-                    if (!resp || resp.error) {
-                        errors << "Error updating project ${project.projectId}"
-                    }
-                    else {
-                        messages << "Updated project ${project.projectId} organisation to ${orgName}"
-                    }
-                }
-                else {
-                    messages << "Project ${project.projectId} already had correct organisation details"
-                }
-
-            }
-        }
-        else {
-            if (projectsResp?.resp?.projects?.size() == 0) {
-                messages << "Organisation ${existingOrgName} has no projects"
-            }
-            else {
-                errors << "Error retreiving projects for organisation ${existingOrgName} - ${projectsResp.error}"
-            }
-        }
-        return [errors:errors, messages:messages]
-
-    }
-
-    def createReports() {
-        def offset = 0
-        def max = 100
-
-        def projects = searchService.allProjects([max:max, offset:offset])
-
-        while (offset < projects.hits.total) {
-
-            offset+=max
-            projects = searchService.allProjects([max:max, offset:offset])
-
-            projects.hits?.hits?.each { hit ->
-                def project = hit._source
-                if (!project.timeline) {
-                    projectService.generateProjectStageReports(project.projectId, new ReportGenerationOptions())
-                    println "Generated reports for project ${project.projectId}"
-                }
-            }
-            println offset
-
-        }
-
-    }
-
     def editSiteBlog() {
         List<Map> blog = blogService.getSiteBlog()
         [blog:blog]
@@ -717,52 +589,153 @@ class AdminController {
         render 'ok'
     }
 
-
     def organisationModifications() {
+
+        Map results = [:]
         if (request.respondsTo('getFile')) {
-            def file = request.getFile('data')
-            Map results = [:]
+            boolean validateOnly = params.validateOnly != null // checkbox passes "on" if ticked, nothing if not.
+            def file = request.getFile('orgData')
+
             if (file) {
 
                 def columnMap = [
                         'Project ID': 'projectId',
-                        2: 'organisationId',
-                        3: 'organisationName',
-                        4: 'abn'
+                        'Organisation ID': 'organisationId',
+                        'Contracted recipient name': 'organisationContractName',
+                        'ABN': 'abn',
+                        'New contracted recipient name': 'newContractName',
+                        "New organisation ID": 'newOrganisationId',
+                        "New ABN": 'newABN'
                 ]
+
                 def config = [
-                        sheet    : "Projects",
+                        sheet    : "Organisation Details",
                         startRow : 1,
-                        columnMap: columnMap
+                        columnMap: [:]
                 ]
                 Workbook workbook = WorkbookFactory.create(file.inputStream)
+                Row headerRow = workbook.getSheet(config.sheet).getRow(0)
+                for (Cell c : headerRow) {
+                    String headerValue = c.getStringCellValue()
+                    if (columnMap.containsKey(headerValue)) {
+                        String excelColumnHeader = CellReference.convertNumToColString(c.getColumnIndex())
+                        config.columnMap[excelColumnHeader] = columnMap[headerValue]
+                    }
+                }
+                if (config.columnMap.size() != columnMap.size()) {
+                    Map errorResult = ["Error": "The uploaded file does not contain the required columns.   Please ensure the spreadsheet includes columns with names: ${columnMap.keySet().join(', ')}"]
+                    render view:"organisationModifications", model:[results:errorResult]
+                    return
+                }
 
                 List data = excelImportService.convertColumnMapConfigManyRows(workbook, config)
                 data.each { Map row ->
                     Map project = projectService.get(row.projectId)
-
-                    Map associatedOrg = project.associatedOrgs?.find{it.organisationId == row.organisationId || it.name == row.organisationName}
-
-                    if (associatedOrg) {
-                        if (associatedOrg && associatedOrg.organisationId) {
-                            results[row.projectId] = "Organisation already exists.  No action taken."
-                        }
-                        else {
-                            if (row.organisationId) {
-                                associatedOrg.organisation = row.organisationId
-
-                                Map organisation = organisationService.get(row.organisationId)
-                                if (organisation.name != row.organisationName && !(row.organisationName in organisation.contractNames)) {
-                                    organisation.contractNames << row.organisationName
-
-
-                                }
-                            }
-                        }
+                    if (!project) {
+                        results[row.projectId] << "Could not find project with ID ${row.projectId}"
                     }
-
+                    else {
+                        results[project.grantId] = processProjectOrganisationAssociation(project, row, validateOnly)
+                    }
                 }
             }
+            render view:"organisationModifications", model:[results:results]
+        }
+        else {
+            render view:"organisationModifications"
+        }
+
+    }
+
+    private String processProjectOrganisationAssociation(Map project, Map row, boolean validateOnly) {
+        // Find the associatedOrg that matches the upload.
+        String result = ''
+
+        Map associatedOrg = project.associatedOrgs?.find{it.organisationId == row.organisationId || it.name == row.organisationContractName}
+        if (!associatedOrg) {
+            return "Could not find an associated organisation for project ${project.projectId} / ${project.grantId} with organisationId ${row.organisationId} or name ${row.organisationContractName}"
+        }
+
+        // Check if anything needs to change
+        String newContractName = row.newContractName?.trim()
+        String newOrganisationId = row.newOrganisationId?.trim()
+        if (!newContractName && !newOrganisationId && !row.newABN ||
+                !row.newContractName && associatedOrg.organisationId ||
+                associatedOrg.name == row.newContractName && associatedOrg.organisationId == row.newOrganisationId) {
+            return "No action required."
+        }
+
+        Map newOrganisation = null
+        if (newOrganisationId) {
+            newOrganisation = organisationService.get(newOrganisationId)
+            if (!newOrganisation) {
+                return "No organisation found with ID ${newOrganisationId}"
+            }
+            result = "The organisation with ABN ${row.abn} and organisationId ${newOrganisation.organisationId} will be linked to the project."
+        }
+        else if (row.newABN) {
+            String abn = row.newABN.replaceAll('\\s', '')
+            newOrganisation = organisationService.findOrgByAbn(abn)
+            if (!newOrganisation) {
+                Map orgLookupResult = lookupOrganisationByABN(abn)
+                if (orgLookupResult.error) {
+                    return orgLookupResult.error
+                }
+                newOrganisation = orgLookupResult.result
+                result = "An organisation will be created from the ABN ${abn}"
+            }
+            else {
+                result = "The organisation with ABN ${abn} and organisationId ${newOrganisation.organisationId} will be linked to the project."
+            }
+        }
+
+        if (!newOrganisation.organisationId && !validateOnly) {
+            // Create the organisation
+            Map orgCreationResult = organisationService.update(null, newOrganisation)
+            if (!orgCreationResult.organisationId) {
+                return orgCreationResult.error ?: "Failed to create organisation with ABN ${row.abn}"
+            }
+            newOrganisation.organisationId = orgCreationResult.organisationId
+        }
+
+        if (!validateOnly) {
+            updateAssociatedOrgAndContractName(project, associatedOrg, newOrganisation, newContractName)
+        }
+
+        result
+    }
+
+    private Map lookupOrganisationByABN(String abn) {
+        Map organisation = null
+        String error = null
+        Map abnLookupResults = abnLookupService.lookupOrganisationDetailsByABN(abn)
+        if (abnLookupResults && !abnLookupResults.error) {
+            List names = [abnLookupResults.entityName] + abnLookupResults.businessNames
+            organisation = organisationService.list().list.find { it.name in names }
+            if (organisation) {
+                error = "An existing organisation name was matched via the entity/business name ${organisation.name} but the ABN doesn't match the abn of the MERIT organisation (${organisation.abn})"
+            } else {
+                String name = abnLookupResults.businessNames ? abnLookupResults.businessNames[0] : abnLookupResults.entityName
+                organisation = abnLookupResults + [name:name]
+            }
+        }
+        [result:organisation, error:error]
+    }
+
+    private void updateAssociatedOrgAndContractName(Map project, Map associatedOrg, Map organisation, String newContractName) {
+        associatedOrg.organisationId = organisation.organisationId
+        associatedOrg.name = newContractName ?: associatedOrg.name
+        // The associatedOrg is a reference to the associatedOrg in the list so we can update the List
+        // which now contains the above changes.
+        projectService.update(project.projectId, [associatedOrgs:project.associatedOrgs])
+
+        if (organisation.name != associatedOrg.name && !(associatedOrg.name in organisation.contractNames)) {
+            if (organisation.contractNames == null) {
+                organisation.contractNames = []
+            }
+            organisation.contractNames << associatedOrg.name
+            organisationService.update(organisation.organisationId, [contractNames: organisation.contractNames])
+
         }
     }
 }

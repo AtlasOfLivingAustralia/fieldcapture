@@ -290,9 +290,15 @@ class GmsMapper {
                             error = "An existing organisation name was matched via the entity/business name ${organisation.name} but the ABN doesn't match the abn of the MERIT organisation (${organisation.abn})"
                         } else {
                             createOrganisation = true
-
-                            String name = abnLookup.businessNames ? abnLookup.businessNames[0] : abnLookup.entityName
-                            organisation = abnLookup + [name: name]
+                            String name
+                            if (contractName) {
+                                name = contractName
+                                organisation = abnLookup + [name:contractName, contractNames: [contractName]]
+                            }
+                            else {
+                                name = abnLookup.businessNames ? abnLookup.businessNames[0] : abnLookup.entityName
+                                organisation = abnLookup + [name: name]
+                            }
                             messages << "An organisation will be created with ABN: ${abn} and name: ${name}"
                         }
                     } else {
@@ -306,7 +312,7 @@ class GmsMapper {
 
             // Validate we can use the contract name
             if (organisation && contractName) {
-                List names = [organisation.name] + organisation.businessNames
+                List names = [organisation.name] + organisation.contractNames
                 if (contractName && !contractName in names) {
                     error = "The organisation name in the contract ${contractName} doesn't match a known organisation name"
                 }
@@ -315,7 +321,7 @@ class GmsMapper {
                 // We are standardising on "Recipient" as the default organisation relationship
                 String description = 'Recipient'
                 project.associatedOrgs = [
-                        [organisationId:organisation.organisationId, name: contractName ?: organisation.name, organisationName:organisation.name, description:description]]
+                        [organisationId:organisation.organisationId, name: contractName ?: organisation.name, description:description]]
             }
         } else {
             error = "Please supply an organisationId (ORG_ID) or ABN (ABN) for the project"

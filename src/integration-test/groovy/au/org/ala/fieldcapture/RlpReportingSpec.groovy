@@ -9,6 +9,7 @@ import pages.RlpProjectPage
 import pages.ReportPage
 import pages.ViewReportPage
 import pages.modules.ReportCategory
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Stepwise
 
