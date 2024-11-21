@@ -43,6 +43,19 @@ var config =
                 }
             },
             {
+                "template": "additionalOutcomes",
+                "model": {
+                    "maximumPriorities": 1000,
+                    "outcomePriority": "Additional outcome/s",
+                    "maxAdditionalOutcomes": 15,
+                    "helpTextHeading": "If the project is not delivering additional benefits, delete the row using the 'x' in the right-most column.",
+                    "title": "Additional benefits",
+                    "priority": "Additional Investment Priorities",
+                    "renderPrioritiesWithSelect2": true,
+                    "priorityHelpText": "Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
+                }
+            },
+            {
                 "template": "outcomeStatements",
                 "model": {
                     "outcomeType": "short",
@@ -123,7 +136,10 @@ var config =
                 ]
             }
         ],
-        "excludes": [],
+        "excludes": [
+            "DATA_SETS",
+            "DASHBOARD"
+        ],
         "programServiceConfig": {
             "serviceFormName": "Grants and Others Progress Report",
             "programServices": [
@@ -540,62 +556,38 @@ var outcomes = [
         ],
         "targeted": true,
         "category": "Ecological health",
-        "outcome": "1. Priority landscapes in the Great Barrier Reef catchments are remediated and maintained using approaches demonstrated to improve water quality, build resilience and enhanced ecological function."
+        "type": "primary",
+        "outcome": "1. Improve and protect marine biodiversity, including the reduction of Crown-of-Thorns Starfish (Acanthaster cf. solaris) and protection of listed threatened and migratory species such as Dugongs and marine turtles."
+    },
+    {
+        "priorities": [
+            {
+                "category": "Ecological health"
+            }
+        ],
+        "category": "Ecological health",
+        "type": "secondary",
+        "outcome": "Gathering biological, ecological, genetic and environmental data sets to further develop interventions and guide reef managers in their use in the Great Barrier Reef."
     },
     {
         "category": "Ecological health",
         "type": "medium",
-        "outcome": "1. Landscape remediation of priority locations resulting in the cost-effective reduction of fine sediment from reaching the Great Barrier Reef Lagoon."
+        "outcome": "1. Improve the health and resilience of coastal habitats."
     },
     {
         "category": "Ecological health",
         "type": "medium",
-        "outcome": "2. Capacity, capability and willingness to adopt and maintain appropriate land management practices has increased across the Great Barrier Reef regions."
-    },
-    {
-        "category": "Ecological health",
-        "type": "medium",
-        "outcome": "3. Participation of First Nations people in in project design, delivery, maintenance and monitoring of Reef water quality projects has increased across the Great Barrier Reef regions."
-    },
-    {
-        "category": "Ecological health",
-        "type": "medium",
-        "outcome": "4. Reef Trust water quality investment landscape remediation sites are maintained to support longevity of water quality outcomes."
+        "outcome": "2. Improve and protect marine biodiversity, including the reduction of Crown-of-Thorns Starfish (Acanthaster cf. solaris) and protection of listed threatened and migratory species such as Dugongs and marine turtles."
     },
     {
         "type": "short",
         "category": "Ecological health",
-        "outcome": "1. Whole-of-system Reef water quality strategies are guiding landscape repair in priority Great Barrier Reef regions and catchments"
+        "outcome": "1. Improve the health and resilience of coastal habitats."
     },
     {
         "type": "short",
         "category": "Ecological health",
-        "outcome": "2. Technical advice, data assurance, and evidence-based decision support has enabled site selection, design and commencement of landscape remediation activities to support the cost-effective reduction of sediment reaching the Great Barrier Reef."
-    },
-    {
-        "type": "short",
-        "category": "Ecological health",
-        "outcome": "3. Landscape remediation of priority locations resulting in the cost-effective reduction of fine sediment from reaching the Great Barrier Reef Lagoon."
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "4. Region-led consortiums of landscape repair practitioners, industries, and communities are supporting ongoing collaboration in design and delivery of landscape repair programs to improve Reef water quality."
-    },
-    {
-        "type": "short",
-        "category": "Ecological health",
-        "outcome": "5. Initiatives to build regional capacity and capability to design, deliver, and maintain the legacy of Reef Trust investments are in place and supporting outcome delivery."
-    },
-    {
-        "type": "short",
-        "category": "Ecological health",
-        "outcome": "6. First Nations people are actively participating in project design, delivery, maintenance and monitoring."
-    },
-    {
-        "type": "short",
-        "category": "Ecological health",
-        "outcome": "7. Technical advice and input has been obtained to identify, design and ensure maintenance and monitoring occurs for Landscape Repair Sites."
+        "outcome": "2. Improve and protect marine biodiversity, including the reduction of Crown-of-Thorns Starfish (Acanthaster cf. solaris) and protection of listed threatened and migratory species such as Dugongs and marine turtles."
     }
 ];
 
