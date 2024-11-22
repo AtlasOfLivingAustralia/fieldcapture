@@ -44,7 +44,8 @@
             returnTo: '${g.createLink(action:'index', id:"${organisation.organisationId}")}',
             dashboardCategoryUrl: "${g.createLink(controller: 'report', action: 'activityOutputs', params: [fq:'organisationFacet:'+organisation.name])}",
             reportOwner: {organisationId:'${organisation.organisationId}'},
-            projects : <fc:modelAsJavascript model="${organisation.projects}"/>
+            projects : <fc:modelAsJavascript model="${organisation.projects}"/>,
+            services: <fc:modelAsJavascript model="${services}"/>
 
         };
     </script>
@@ -88,6 +89,7 @@
 
         ko.applyBindings(organisationViewModel);
         organisationViewModel.initialise();
+        organisationViewModel.attachValidation();
         $('#loading').hide();
         $('#organisationDetails').show();
     });

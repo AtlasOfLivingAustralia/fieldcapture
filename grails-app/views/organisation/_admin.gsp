@@ -9,7 +9,7 @@
             <a class="nav-link" data-toggle="pill" href="#reporting-config" id="reporting-config-tab" role="tab">Reporting</a>
             <a class="nav-link" data-toggle="pill" href="#config" id="config-tab" role="tab">Configuration</a>
         </g:if>
-
+        <a class="nav-link" data-toggle="pill" href="#organisation-targets" id="organisation-targets-tab" role="tab">Targets</a>
 
     </div>
 
@@ -153,5 +153,9 @@
             </div>
             <!-- /ko -->
         </g:else>
+        <div id="organisation-targets" class="tab-pane">
+            <h3>Service Targets</h3>
+            <g:render template="/organisation/serviceTargets" model="[services:organisation.services, periods:organisation.periods, showTargetDate:organisation.showTargetDate]"/>
+        </div>
     </div>
 </div>

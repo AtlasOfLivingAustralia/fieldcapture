@@ -4,11 +4,9 @@ import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportOwner
 import org.grails.web.json.JSONArray
-import org.grails.web.json.JSONObject
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Period
-
 /**
  * Extends the plugin OrganisationService to provide Green Army reporting capability.
  */
@@ -334,4 +332,18 @@ class OrganisationService {
         scoreIds.collectEntries{ String scoreId ->[(scoreId):result.results?.find{it.scoreId == scoreId}?.result?.result ?: 0]}
     }
 
+
+    /**
+     * Filter services to those supported by organisation.
+     */
+    def findApplicableServices(Map organisation, List allServices) {
+
+        List supportedServices = organisation.config?.organisationReports?.collect{it.activityType}?.findAll{it}
+        List result = allServices
+        if (supportedServices) {
+            result = allServices.findAll{ supportedServices.intersect(it.outputs.formName) }
+        }
+
+        result
+    }
 }

@@ -7,8 +7,6 @@ import au.org.ala.merit.command.ViewOrganisationReportCommand
 import au.org.ala.merit.util.ProjectGroupingHelper
 import grails.converters.JSON
 import org.apache.http.HttpStatus
-import org.grails.web.json.JSONObject
-
 /**
  * Extends the plugin OrganisationController to support Green Army project reporting.
  */
@@ -53,6 +51,7 @@ class OrganisationController {
              dashboard: dashboard,
              roles:roles,
              user:user,
+             services: organisationService.findApplicableServices(organisation, metadataService.getProjectServices()),
              isAdmin:orgRole?.role == RoleService.PROJECT_ADMIN_ROLE,
              isGrantManager:orgRole?.role == RoleService.GRANT_MANAGER_ROLE,
              content:content(organisation)]

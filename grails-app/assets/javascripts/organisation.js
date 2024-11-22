@@ -548,6 +548,8 @@ OrganisationPageViewModel = function (props, options) {
             }
         }
     };
+    var organisationService = new OrganisationService(options);
+    self.periods = organisationService.getBudgetHeaders();
 
     self.initialise = function() {
         $.fn.dataTable.moment( 'dd-MM-yyyy' );
@@ -634,6 +636,32 @@ OrganisationPageViewModel = function (props, options) {
     self.reportingEnabled = ko.observable();
     self.selectedOrganisationReportCategories = ko.observableArray();
 
+    // List of service / target measure
+    self.allTargetMeasures = [];
+    var services = options.services || [];
+    for (var i=0; i<services.length; i++) {
+        if (services[i].scores) {
+            for (var j=0; j<services[i].scores.length; j++) {
+                self.allTargetMeasures.push( {
+                    label:services[i].name+' - '+services[i].scores[j].label,
+                    serviceId:services[i].id,
+                    scoreId:services[i].scores[j].scoreId,
+                    service:services[i],
+                    score:services[i].scores[j],
+                    value:services[i].scores[j].scoreId
+                });
+            }
+        }
+    }
+
+    self.allTargetMeasures = _.sortBy(self.allTargetMeasures, 'label');
+    var propDetails = props && props.custom && props.custom.details || {};
+    self.selectedTargetMeasures = ko.observableArray();
+    var details = new DetailsViewModel(propDetails, props, self.periods, self.allTargetMeasures, options);
+    updatedTargetMeasures(details);
+    self.reportingTargets = ko.observable(details);
+    self.isProjectDetailsLocked = ko.observable(false);
+
     var setStartAndEndDateDefaults = function() {
         var currentConfig = parsedConfig();
         if (!currentConfig || !currentConfig.organisationReports || currentConfig.organisationReports.length == 0) {
@@ -692,6 +720,26 @@ OrganisationPageViewModel = function (props, options) {
         reportService.regenerateReports(data,options.regenerateOrganisationReportsUrl);
     };
 
+    function updatedTargetMeasures (details) {
+        var reportingTargets = details,
+            selectedServices = reportingTargets.services.services(),
+            allServices = self.allTargetMeasures;
+
+        _.each(allServices, function (service) {
+            var found = _.find(selectedServices, function (selectedService) {
+                return selectedService.scoreId() === service.scoreId;
+            });
+
+            if (!found) {
+                reportingTargets.services.addServiceTarget(service);
+            }
+        })
+    }
+
+    self.attachValidation = function() {
+        $("#organisation-targets").validationEngine('attach', {validationAttribute: "data-validation-engine"});
+    };
+
     self.saveOrganisationConfiguration = function() {
         var currentConfig = parsedConfig();
         if (!currentConfig) {
@@ -711,6 +759,13 @@ OrganisationPageViewModel = function (props, options) {
             abn: self.abn()
         };
         return saveOrganisation(json);
+    };
+
+    self.saveCustomFields = function() {
+        if ($("#organisation-targets form").validationEngine('validate')) {
+            var json = JSON.parse(self.reportingTargets().modelAsJSON());
+            return saveOrganisation(json);
+        }
     };
 
 

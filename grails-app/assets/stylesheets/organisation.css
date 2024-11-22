@@ -108,3 +108,32 @@ ul.ui-autocomplete {
     background: red;
     color: white;
 }
+
+.service {
+    width: 25%
+}
+
+.service input {
+    width: 100%;
+}
+
+.service-targets td.service {
+    width: 30%;
+}
+.service-targets td.score {
+    width: 40%;
+}
+.service-targets td.target {
+    width: 10%;
+}
+
+.service-targets td.target-date {
+    width:7em;
+}
+.service-targets-view .target-date {
+    min-width:6em;
+}
+.service-targets td.target-date input {
+    width:7em;
+}
+
