@@ -737,7 +737,7 @@ OrganisationPageViewModel = function (props, options) {
     }
 
     self.attachValidation = function() {
-        $("#organisation-targets").validationEngine('attach', {validationAttribute: "data-validation-engine"});
+        $("#organisation-targets > table").validationEngine('attach');
     };
 
     self.saveOrganisationConfiguration = function() {
@@ -762,7 +762,7 @@ OrganisationPageViewModel = function (props, options) {
     };
 
     self.saveCustomFields = function() {
-        if ($("#organisation-targets form").validationEngine('validate')) {
+        if ($("#organisation-targets > table").validationEngine('validate')) {
             var json = JSON.parse(self.reportingTargets().modelAsJSON());
             return saveOrganisation(json);
         }

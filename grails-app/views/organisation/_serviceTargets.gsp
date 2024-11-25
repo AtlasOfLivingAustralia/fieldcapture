@@ -1,7 +1,6 @@
 <!-- ko with:reportingTargets() -->
 <h4>${title ?: "Organisation services and minimum targets"}</h4>
 <!-- ko with: services -->
-<form>
 <table class="table service-targets validationEngineContainer">
     <thead>
     <tr>
@@ -75,7 +74,6 @@
 %{--    </tr>--}%
 %{--    </tfoot>--}%
 </table>
-</form>
 <!-- /ko -->
 <!-- /ko -->
 <button class="btn btn-sm btn-primary" data-bind="click: saveCustomFields">Save changes</button>

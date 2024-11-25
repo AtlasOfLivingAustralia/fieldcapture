@@ -150,28 +150,20 @@
           {
             "dataType": "number",
             "name": "organisationFteWorkforce",
-            "description": "Enter total RDP staff (full time equivalent) deployed on Services for the Deed and all Contracts (including non-DCCEEW Contracts) during this reporting period.",
+            "description": "Enter total RDP staff (full time equivalent) deployed on Services for the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts) during this reporting period.",
             "validate": [
               {
                 "rule": "required"
               },
               {
                 "rule": "min[0]"
-              },
-              {
-                "param": {
-                  "expression": "organisationFteIndigenousWorkforce",
-                  "type": "computed"
-                },
-                "rule": "min",
-                "message": "numeric value must be higher or equal to the numeric value entered for 'What was your organisation’s full time equivalent Indigenous workforce deployed on the Services this reporting period?'"
               }
             ]
           },
           {
             "dataType": "number",
             "name": "organisationFteIndigenousWorkforce",
-            "description": "Enter total RDP Indigenous staff (full time equivalent) deployed on Services for the Deed and all Contracts (including non-DCCEEW Contracts) during this reporting period.",
+            "description": "Enter total RDP Indigenous staff (full time equivalent) deployed on Services for the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts) during this reporting period.",
             "validate": [
               {
                 "rule": "required"
@@ -185,14 +177,14 @@
                   "type": "computed"
                 },
                 "rule": "max",
-                "message": "numeric value must be less than or equal to the numeric value entered for 'What was your organisation’s full time equivalent workforce deployed on the Services this reporting period?'"
+                "message": "Numeric value must be less than or equal to the numeric value entered for 'What was your organisation’s full time equivalent workforce deployed on the Services this reporting period?'"
               }
             ]
           },
           {
             "dataType": "number",
             "name": "servicesContractedValueFirstNations",
-            "description": "Enter total dollar value (GST inclusive) of goods and services contracted to First Nations people/Indigenous enterprises, during this reporting period, for the Deed and all Contracts (including non-DCCEEW Contracts).",
+            "description": "Enter total dollar value (GST inclusive) of goods and services contracted to First Nations people/Indigenous enterprises, during this reporting period, for the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts).",
             "validate": [
               {
                 "rule": "required"
@@ -544,7 +536,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<b>Q5(c). Please complete workforce and supply chain data (Deed of Standing Offer Clause 38 Indigenous Procurement Policy). Please do not provide personal or commercial-in-confidence information when answering this question. Please retain documentation as evidence to support assurance activities undertaken to verify the reported information.</b>"
+                "source": "<b>Q5(c). Please complete workforce and supply chain data (Deed of Standing Offer Clause 38 Indigenous Procurement Policy). Please do not provide personal or <span style='white-space: nowrap;'>commercial-in-confidence</span> information when answering this question. Please retain documentation as evidence to support assurance activities undertaken to verify the reported information.</b>"
               }
             ]
           },
@@ -577,7 +569,7 @@
                 "css": "span7",
                 "preLabel": "What was the dollar value of Services contracted to First Nations people/Indigenous enterprises during this reporting period?",
                 "source": "servicesContractedValueFirstNations",
-                "type": "currency"
+                "type": "number"
               }
             ]
           },
