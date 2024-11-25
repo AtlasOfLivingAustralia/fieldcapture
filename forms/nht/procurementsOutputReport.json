@@ -21589,6 +21589,7 @@
                   }
                 ],
                 "dataType": "list",
+                "allowRowDelete": false,
                 "name": "approvalTableDetails"
               },
               {
@@ -21801,7 +21802,7 @@
             "type": "repeat",
             "source": "approvalsByOutcome",
             "userAddedRows": true,
-            "addRowText": "Add a new outcome",
+            "addRowText": "Add a new Approval",
             "items": [
               {
                 "type": "row",
@@ -21914,19 +21915,21 @@
                       {
                         "width": "10%",
                         "source": "approvalValidateDateFrom",
-                        "title": "Date approval validate from",
+                        "title": "Date approval valid from",
                         "type": "date"
                       },
                       {
                         "width": "10%",
                         "source": "approvalValidateDateTo",
-                        "title": "Date approval validate to",
+                        "title": "Date approval valid to",
                         "type": "date"
                       }
 
                     ],
-                    "userAddedRows": true,
+                    "userAddedRows": false,
+                    "disableTableUpload": true,
                     "source": "approvalTableDetails",
+                    "title": "<b>Each approval obtained must be reported as a new row in reporting</b>",
                     "type": "table"
                   }
                 ]
