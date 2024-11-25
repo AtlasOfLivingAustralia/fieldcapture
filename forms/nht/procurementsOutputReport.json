@@ -6453,7 +6453,7 @@
             ]
           }
         ],
-        "modelName": "NHT - Management plan development",
+        "modelName": "Management plan development",
         "title": "Developing Management Plans",
         "viewModel": [
           {
@@ -6913,7 +6913,7 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "NHT - Management plan development",
+      "name": "Management plan development",
       "description": null
     },
     {
@@ -21682,7 +21682,7 @@
             ]
           }
         ],
-        "modelName": "NHT - Obtaining Relevant Approvals",
+        "modelName": "Obtaining approvals",
         "title": "Obtain Relevant Approvals",
         "viewModel": [
           {
@@ -22009,7 +22009,7 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "NHT - Obtaining relevant approvals",
+      "name": "Obtaining approvals",
       "description": null
     },
 
