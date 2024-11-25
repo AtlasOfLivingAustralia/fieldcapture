@@ -6319,11 +6319,6 @@
                     "validate": "required,maxSize[200]"
                   },
                   {
-                    "dataType": "number",
-                    "name": "numberOfPlanDeveloped",
-                    "validate": "required,min[0]"
-                  },
-                  {
                     "dataType": "text",
                     "name": "speciesSiteCovered",
                     "description": "This free text field allows multiple species and/or TECs to be entered. For Species: Use Scientific names with (common name in brackets), TECs should be written as listed in EPBC. Species or TECs should be separated by commas.",
@@ -6331,15 +6326,8 @@
                   }
                 ],
                 "dataType": "list",
+                "allowRowDelete": "false",
                 "name": "managementPlansDetails"
-              },
-              {
-                "dataType": "number",
-                "name": "numberOfPlanDevelopedForOutcome",
-                "decimalPlaces": 0,
-                "computed": {
-                  "expression": "sum(managementPlansDetails, \"numberOfPlanDeveloped\")"
-                }
               }
             ],
             "dataType": "list",
@@ -6350,9 +6338,8 @@
             "name": "numberOfPlansDeveloped",
             "validate": "min[0]",
             "decimalPlaces": 0,
-            "defaultValue": 1,
             "computed": {
-              "expression": "sum(managementPlansByOutcome, \"numberOfPlanDevelopedForOutcome\")"
+              "expression": "count(managementPlansByOutcome, \"newOrRevisedPlan\")"
             }
           },
           {
@@ -6538,7 +6525,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total number of management plans developed for this reporting period",
+                        "preLabel": "(i) Ttotal number of management plans developed for this reporting period",
                         "source": "numberOfPlansDeveloped",
                         "type": "number"
                       }
@@ -6600,7 +6587,7 @@
             ]
           },
           {
-            "addRowText": "Add a new outcome",
+            "addRowText": "Add a new management plan",
             "userAddedRows": true,
             "source": "managementPlansByOutcome",
             "type": "repeat",
@@ -6794,7 +6781,7 @@
                   {
                     "width": "10%",
                     "source": "newOrRevisedPlan",
-                    "title": "Is this a new or revised plan?",
+                    "title": "New or revised plan",
                     "type": "selectOne"
                   },
                   {
@@ -6824,21 +6811,17 @@
                     ]
                   },
                   {
-                    "width": "10%",
-                    "source": "numberOfPlanDeveloped",
-                    "title": "Number of plan developed",
-                    "type": "number"
-                  },
-                  {
                     "width": "30%",
                     "source": "speciesSiteCovered",
                     "title": "Species/Threatened ecological communities/Ramsar Sites/Heritage Sites covered in plan",
                     "type": "textarea"
                   }
                 ],
-                "userAddedRows": true,
+                "userAddedRows": false,
+                "disableTableUpload": true,
                 "addRowText": "Add a new management plan",
                 "source": "managementPlansDetails",
+                "title": "<b>Each plan must be reported as a new row in reporting</b>",
                 "type": "table"
               }
             ]
