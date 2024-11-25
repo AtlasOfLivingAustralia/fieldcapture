@@ -6328,6 +6328,14 @@
                 "dataType": "list",
                 "allowRowDelete": "false",
                 "name": "managementPlansDetails"
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfPlanDevelopedForOutcome",
+                "decimalPlaces": 0,
+                "computed": {
+                  "expression": "sum(managementPlansDetails, \"newOrRevisedPlan ? 1 : 0\")"
+                }
               }
             ],
             "dataType": "list",
@@ -6338,8 +6346,9 @@
             "name": "numberOfPlansDeveloped",
             "validate": "min[0]",
             "decimalPlaces": 0,
+            "defaultValue": 1,
             "computed": {
-              "expression": "count(managementPlansByOutcome, \"newOrRevisedPlan\")"
+              "expression": "sum(managementPlansByOutcome, \"numberOfPlanDevelopedForOutcome\")"
             }
           },
           {
