@@ -6301,7 +6301,8 @@
                       "Projects and Project Sites, including project logics",
                       "Ramsar Sites",
                       "Reserves, Parks, or other protected areas",
-                      "Threatened Species or Ecological Communities",
+                      "Threatened Ecological Communities",
+                      "Threatened Species",
                       "Other entities as agreed to by the Department"
                     ],
                     "validate": "required"
@@ -6830,7 +6831,7 @@
                 "disableTableUpload": true,
                 "addRowText": "Add a new management plan",
                 "source": "managementPlansDetails",
-                "title": "<b>Each plan must be reported as a new row in reporting</b>",
+                "title": "<i>Each plan must be reported as a new section.</i>",
                 "type": "table"
               }
             ]
@@ -21929,7 +21930,7 @@
                     "userAddedRows": false,
                     "disableTableUpload": true,
                     "source": "approvalTableDetails",
-                    "title": "<b>Each approval obtained must be reported as a new row in reporting</b>",
+                    "title": "<i>Each approval obtained must be reported as a new row in reporting.</i>",
                     "type": "table"
                   }
                 ]
@@ -28705,7 +28706,7 @@
                 "userAddedRows": true,
                 "addRowText": "Add a row",
                 "source": "researchAndDevelopmentDetails",
-                "title": "<i>Each new research and/or development initiative should be set up as a separate component in MERIT, with all relevant detail recorded as far as practicable in the MERI plan. Where additional information cannot be captured in the MERI plan, this must be attached to the project in MERIT.<br><br>Reported activities and outputs are based on the aims of the research and/or development that are outlined in the MERI plan and other supporting documentation. Research and/or Development projects may cover multiple investment priorities and may require additional related project services such as Flora Survey, Fauna Survey, and Synthesising and Finalising Baseline Data</i>",
+                "title": "<i>Each new research and/or development initiative should be set up as a separate component in MERIT, with all relevant detail recorded as far as practicable in the MERI plan. Where additional information cannot be captured in the MERI plan, this must be attached to the project in MERIT.<br><br>Reported activities and outputs are based on the aims of the research and/or development that are outlined in the MERI plan and other supporting documentation. Research and/or Development projects may cover multiple investment priorities and may require additional related project services such as Flora Survey, Fauna Survey, and Synthesising and Finalising Baseline Data.</i>",
                 "type": "table"
               },
               {
