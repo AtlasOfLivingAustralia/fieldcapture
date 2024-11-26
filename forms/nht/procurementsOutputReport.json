@@ -6781,58 +6781,63 @@
                 ]
               },
               {
-                "columns": [
+                "type": "section",
+                "items": [
                   {
-                    "width": "25%",
-                    "source": "managementPlanName",
-                    "title": "Name of management plan",
-                    "type": "text"
-                  },
-                  {
-                    "width": "10%",
-                    "source": "newOrRevisedPlan",
-                    "title": "New or revised plan",
-                    "type": "selectOne"
-                  },
-                  {
-                    "width": "25%",
-                    "title": "Type of management plan<b style=\"color:red\">*</b>",
-                    "type": "col",
-                    "items": [
+                    "columns": [
                       {
-                        "type": "row",
+                        "width": "25%",
+                        "source": "managementPlanName",
+                        "title": "Name of management plan",
+                        "type": "text"
+                      },
+                      {
+                        "width": "10%",
+                        "source": "newOrRevisedPlan",
+                        "title": "New or revised plan",
+                        "type": "selectOne"
+                      },
+                      {
+                        "width": "25%",
+                        "title": "Type of management plan<b style=\"color:red\">*</b>",
+                        "type": "col",
                         "items": [
                           {
-                            "source": "managementPlan",
-                            "type": "select2"
+                            "type": "row",
+                            "items": [
+                              {
+                                "source": "managementPlan",
+                                "type": "select2"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "row",
+                            "items": [
+                              {
+                                "placeholder": "Type of management plan, if other",
+                                "source": "otherManagementPlan",
+                                "type": "textarea"
+                              }
+                            ]
                           }
                         ]
                       },
                       {
-                        "type": "row",
-                        "items": [
-                          {
-                            "placeholder": "Type of management plan, if other",
-                            "source": "otherManagementPlan",
-                            "type": "textarea"
-                          }
-                        ]
+                        "width": "30%",
+                        "source": "speciesSiteCovered",
+                        "title": "Species/Threatened ecological communities/Ramsar Sites/Heritage Sites covered in plan",
+                        "type": "textarea"
                       }
-                    ]
-                  },
-                  {
-                    "width": "30%",
-                    "source": "speciesSiteCovered",
-                    "title": "Species/Threatened ecological communities/Ramsar Sites/Heritage Sites covered in plan",
-                    "type": "textarea"
+                    ],
+                    "userAddedRows": false,
+                    "disableTableUpload": true,
+                    "addRowText": "Add a new management plan",
+                    "source": "managementPlansDetails",
+                    "title": "<i>Each plan must be reported as a new section.</i>",
+                    "type": "table"
                   }
-                ],
-                "userAddedRows": false,
-                "disableTableUpload": true,
-                "addRowText": "Add a new management plan",
-                "source": "managementPlansDetails",
-                "title": "<i>Each plan must be reported as a new section.</i>",
-                "type": "table"
+                ]
               }
             ]
           },
@@ -28647,67 +28652,72 @@
                 ]
               },
               {
-                "columns": [
+                "type": "section",
+                "items": [
                   {
-                    "width": "10%",
-                    "title": "Date research and development started",
-                    "source": "resAndDevStartDate",
-                    "type": "date"
-                  },
-                  {
-                    "width": "10%",
-                    "title": "Date research and development finished",
-                    "source": "resAndDevFinishDate",
-                    "type": "date"
-                  },
-                  {
-                    "width": "10%",
-                    "source": "anzsrcDivision",
-                    "title": "ANZSRC Classification – Division",
-                    "type": "selectOne"
-                  },
-                  {
-                    "width": "10%",
-                    "source": "anzsrcGroup",
-                    "title": "ANZSRC Classification – Group",
-                    "type": "selectOne"
-                  },
-                  {
-                    "width": "10%",
-                    "source": "anzsrcFields",
-                    "title": "ANZSRC Classification – Fields",
-                    "type": "selectOne"
-                  },
-                  {
-                    "width": "15%",
-                    "source": "summaryOfActivities",
-                    "title": "Summary of activities and research outputs delivered in this reporting period",
-                    "type": "textarea"
-                  },
-                  {
-                    "width": "15%",
-                    "source": "summaryOfSuccesses",
-                    "title": "Summary of successes or failures",
-                    "type": "textarea"
-                  },
-                  {
-                    "width": "15%",
-                    "source": "summaryOfAnyChanges",
-                    "title": "Summary of any changes to the research approach resulting from successes/failures",
-                    "type": "textarea"
-                  },
-                  {
-                    "width": "5%",
-                    "source": "willProjectContinue",
-                    "title": "Will this research and development project continue?",
-                    "type": "selectOne"
+                    "columns": [
+                      {
+                        "width": "10%",
+                        "title": "Date research and development started",
+                        "source": "resAndDevStartDate",
+                        "type": "date"
+                      },
+                      {
+                        "width": "10%",
+                        "title": "Date research and development finished",
+                        "source": "resAndDevFinishDate",
+                        "type": "date"
+                      },
+                      {
+                        "width": "10%",
+                        "source": "anzsrcDivision",
+                        "title": "ANZSRC Classification – Division",
+                        "type": "selectOne"
+                      },
+                      {
+                        "width": "10%",
+                        "source": "anzsrcGroup",
+                        "title": "ANZSRC Classification – Group",
+                        "type": "selectOne"
+                      },
+                      {
+                        "width": "10%",
+                        "source": "anzsrcFields",
+                        "title": "ANZSRC Classification – Fields",
+                        "type": "selectOne"
+                      },
+                      {
+                        "width": "15%",
+                        "source": "summaryOfActivities",
+                        "title": "Summary of activities and research outputs delivered in this reporting period",
+                        "type": "textarea"
+                      },
+                      {
+                        "width": "15%",
+                        "source": "summaryOfSuccesses",
+                        "title": "Summary of successes or failures",
+                        "type": "textarea"
+                      },
+                      {
+                        "width": "15%",
+                        "source": "summaryOfAnyChanges",
+                        "title": "Summary of any changes to the research approach resulting from successes/failures",
+                        "type": "textarea"
+                      },
+                      {
+                        "width": "5%",
+                        "source": "willProjectContinue",
+                        "title": "Will this research and development project continue?",
+                        "type": "selectOne"
+                      }
+                    ],
+                    "userAddedRows": true,
+                    "addRowText": "Add a row",
+                    "source": "researchAndDevelopmentDetails",
+                    "title": "<i>Each new research and/or development initiative should be set up as a separate component in MERIT, with all relevant detail recorded as far as practicable in the MERI plan. Where additional information cannot be captured in the MERI plan, this must be attached to the project in MERIT.<br><br>Reported activities and outputs are based on the aims of the research and/or development that are outlined in the MERI plan and other supporting documentation. Research and/or Development projects may cover multiple investment priorities and may require additional related project services such as Flora Survey, Fauna Survey, and Synthesising and Finalising Baseline Data.</i>",
+                    "type": "table"
                   }
-                ],
-                "userAddedRows": true,
-                "addRowText": "Add a row",
-                "source": "researchAndDevelopmentDetails",
-                "title": "<i>Each new research and/or development initiative should be set up as a separate component in MERIT, with all relevant detail recorded as far as practicable in the MERI plan. Where additional information cannot be captured in the MERI plan, this must be attached to the project in MERIT.<br><br>Reported activities and outputs are based on the aims of the research and/or development that are outlined in the MERI plan and other supporting documentation. Research and/or Development projects may cover multiple investment priorities and may require additional related project services such as Flora Survey, Fauna Survey, and Synthesising and Finalising Baseline Data.</i>",
-                "type": "table"
+                ]
               },
               {
                 "type": "row",
