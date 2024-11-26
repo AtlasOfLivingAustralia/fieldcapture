@@ -21590,7 +21590,7 @@
                   }
                 ],
                 "dataType": "list",
-                "allowRowDelete": false,
+                "allowRowDelete": true,
                 "name": "approvalTableDetails"
               },
               {
@@ -21802,8 +21802,8 @@
           {
             "type": "repeat",
             "source": "approvalsByOutcome",
-            "userAddedRows": true,
-            "addRowText": "Add a new Approval",
+            "userAddedRows": false,
+            "addRowText": "",
             "items": [
               {
                 "type": "row",
@@ -21927,10 +21927,10 @@
                       }
 
                     ],
-                    "userAddedRows": false,
-                    "disableTableUpload": true,
+                    "userAddedRows": true,
+                    "disableTableUpload": false,
                     "source": "approvalTableDetails",
-                    "title": "<i>Each approval obtained must be reported as a new row in reporting.</i>",
+                    "title": "<i>Each approval must be reported as a new row.</i>",
                     "type": "table"
                   }
                 ]
