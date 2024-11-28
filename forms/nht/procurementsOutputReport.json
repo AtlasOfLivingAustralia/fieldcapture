@@ -6345,7 +6345,7 @@
           {
             "dataType": "number",
             "name": "numberOfPlansDeveloped",
-            "description": "This field is not editable as it is auto populated from inputted data in the below section",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "defaultValue": 1,
@@ -6379,7 +6379,7 @@
           {
             "dataType": "number",
             "name": "totalAreaPlansDeveloped",
-            "description": "This field is not editable as it is auto populated from inputted data in the below section",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -21613,7 +21613,7 @@
           {
             "dataType": "number",
             "name": "numberApprovalsObtained",
-            "description": "This field is not editable as it is auto populated from inputted data in the below section",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "defaultValue": 1,
@@ -28259,7 +28259,7 @@
           {
             "dataType": "number",
             "name": "noDaysConductingResearchAndDevelopment",
-            "description": "This field is not editable as it is auto populated from inputted data in the below section",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "defaultValue": 1,
