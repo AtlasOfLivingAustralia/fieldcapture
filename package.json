@@ -6,7 +6,7 @@
   "directories": {},
   "private": true,
   "dependencies": {
-    "bootstrap": "4.6",
+    "bootstrap": "5.0",
     "slickgrid": "^2.4.34",
     "@atlasoflivingaustralia/ecodata-client-plugin": "6.2.0-pre.2023-08-22.f397d6f5"
   },
