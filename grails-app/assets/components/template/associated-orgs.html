@@ -58,7 +58,7 @@
                 </div>
                 <!-- ko if:$parent.displayName -->
                 <div class="form-group">
-                    <label for="name-to-use" class="required">Organisation name as it appears on the project page (e.g. name used in contract)</label>
+                    <label for="name-to-use" class="required">Organisation name as it appears on the project page (i.e. The contracted recipient name)</label>
 
                     <select class="form-control" id="name-to-use"  data-bind="enable:organisationId(), value:name, options:$parent.allowedNames"
                             data-validation-engine="validate[required]" data-prompt-position="topLeft"></select>

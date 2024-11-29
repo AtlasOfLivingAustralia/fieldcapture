@@ -216,7 +216,6 @@ OrganisationViewModel = function (props, options) {
         self.entityName(null);
         self.businessNames(null);
         self.entityType(null);
-        self.name(null);
     };
 
     self.projects = props.projects;
