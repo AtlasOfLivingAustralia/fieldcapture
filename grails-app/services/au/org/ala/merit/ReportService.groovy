@@ -143,6 +143,21 @@ class ReportService {
 
     }
 
+    /**
+     * This is to support progress targets using the same
+     * configuration as we use to generate reports such that
+     * the targets can be aligned to reports if required.
+     * (Previously MERIT only supported targets per financial year)
+     */
+    List<Map> generateTargetPeriods(ReportConfig reportConfig, ReportOwner reportOwner, String formatString = null) {
+        List<Map> reports = new ReportGenerator().generateReports(
+                reportConfig, reportOwner, 0, null)
+        Closure dateFormatter = {
+            formatString ? DateUtils.format(DateUtils.parse(it), formatString) : it
+        }
+        reports.collect{[label:dateFormatter(it.toDate), value:it.toDate]}
+    }
+
     boolean needsRegeneration(Map report1, Map report2) {
         return report1.fromDate != report2.fromDate ||
                report1.toDate != report2.toDate ||

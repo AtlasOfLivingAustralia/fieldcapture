@@ -41,6 +41,7 @@
             cancelReportUrl: "${createLink(action:'ajaxCancelReport', id:organisation.organisationId)}/",
             unCancelReportUrl: "${createLink(action:'ajaxUnCancelReport', id:organisation.organisationId)}/",
             reportsHistoryUrl:"${createLink(controller: 'report', action:'reportingHistory')}",
+            targetPeriodsUrl:"${createLink(controller: 'organisation', action:'getTargetPeriods',  id:organisation.organisationId)}",
             returnTo: '${g.createLink(action:'index', id:"${organisation.organisationId}")}',
             dashboardCategoryUrl: "${g.createLink(controller: 'report', action: 'activityOutputs', params: [fq:'organisationFacet:'+organisation.name])}",
             reportOwner: {organisationId:'${organisation.organisationId}'},
@@ -84,6 +85,7 @@
         var config = _.extend({
                 reportingConfigSelector:'#reporting-config form',
                 availableReportCategories:availableReportCategories,
+                targetPeriods: <fc:modelAsJavascript model="${content.admin?.targetPeriods}"/>
             }, fcConfig);
         var organisationViewModel = new OrganisationPageViewModel(organisation, config);
 

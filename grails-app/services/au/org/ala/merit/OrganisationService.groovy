@@ -127,6 +127,26 @@ class OrganisationService {
         regenerateOrganisationReports(organisation, organisationReportCategories)
     }
 
+    List<String> generateTargetPeriods(String id) {
+        Map organisation = get(id)
+        generateTargetPeriods(organisation)
+    }
+
+    List<Map> generateTargetPeriods(Map organisation) {
+        Map targetsConfig = organisation.config?.targets
+        if (!targetsConfig) {
+            log.info("No target configuration defined for organisation ${organisation.organisationId}")
+            return null
+        }
+        ReportConfig targetsReportConfig = new ReportConfig(targetsConfig.periodGenerationConfig)
+        ReportOwner owner = new ReportOwner(
+                id:[organisationId:organisation.organisationId],
+                name:organisation.name
+        )
+        reportService.generateTargetPeriods(targetsReportConfig, owner, targetsConfig.periodLabelFormat)
+    }
+
+
     private void regenerateOrganisationReports(Map organisation, List<String> reportCategories = null) {
 
         ReportOwner owner = new ReportOwner(

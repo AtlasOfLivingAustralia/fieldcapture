@@ -548,7 +548,7 @@ OrganisationPageViewModel = function (props, options) {
         }
     };
     var organisationService = new OrganisationService(options);
-    self.periods = organisationService.getBudgetHeaders();
+    self.periods = options.targetPeriods || [];
 
     self.initialise = function() {
         $.fn.dataTable.moment( 'dd-MM-yyyy' );

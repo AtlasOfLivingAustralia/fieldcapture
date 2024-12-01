@@ -75,7 +75,7 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
         target.targetDate = ko.observable().extend({simpleDate:false});
 
         target.periodTargets = _.map(periods, function (period) {
-            return {period: period, target: ko.observable(0)};
+            return {period: period.value, target: ko.observable(0)};
         });
 
         function evaluateAndAssignAverage() {
@@ -196,6 +196,10 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
     };
 
     self.periods = periods;
+    self.periodLabel = function (period) {
+
+        return period;
+    };
 
     self.services = ko.observableArray();
     self.addService = function () {
