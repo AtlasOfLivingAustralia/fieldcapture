@@ -52,7 +52,11 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         at RlpProjectPage // reset at check time.
 
         meriPlan = openMeriPlanEditTab()
+
         waitFor{meriPlan.projectName.displayed}
+        interact {
+            moveToElement(meriPlan.projectName)
+        }
 
         meriPlan.projectName = "MERI plan edited name"
         meriPlan.projectDescription = "MERI plan edited description"
