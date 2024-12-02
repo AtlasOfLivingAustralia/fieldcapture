@@ -506,7 +506,9 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan = openMeriPlanEditTab()
 
         meriPlan.checkObjective("objective 2")
+        Thread.sleep(2000) // Wait for floating save to be displayed
         meriPlan.hideFloatingSave() // Getting an element not interactive error here
+
         meriPlan.monitoringIndicators[0].indicator = "indicator 1"
         meriPlan.monitoringIndicators[0].approach = "approach 1"
         meriPlan.projectImplementation = "project implementation"
