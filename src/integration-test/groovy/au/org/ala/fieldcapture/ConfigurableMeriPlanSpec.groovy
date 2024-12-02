@@ -510,6 +510,10 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.hideFloatingSave() // Getting an element not interactive error here
 
         println(meriPlan.monitoringIndicators[0].indicator)
+
+        interact {
+            moveToElement(meriPlan.monitoringIndicators[0].indicator)
+        }
         meriPlan.monitoringIndicators[0].indicator = "indicator 1"
         meriPlan.monitoringIndicators[0].approach = "approach 1"
         meriPlan.projectImplementation = "project implementation"
