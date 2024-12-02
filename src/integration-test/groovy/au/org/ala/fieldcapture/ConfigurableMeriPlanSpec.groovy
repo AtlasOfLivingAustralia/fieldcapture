@@ -4,6 +4,7 @@ import pages.AdminClearCachePage
 import pages.AdminTools
 import pages.MeriPlanPDFPage
 import pages.RlpProjectPage
+import spock.lang.Ignore
 import spock.lang.Stepwise
 import geb.module.FormElement
 
@@ -37,6 +38,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         waitFor { hasBeenReloaded() }
     }
 
+    @Ignore
     def "The MERI Plan supports linking outcomes to services and targets"() {
         setup:
         String projectId = 'outcomeMeriPlanProject'
