@@ -504,6 +504,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         at RlpProjectPage // reset at check time.
 
         meriPlan = openMeriPlanEditTab()
+        Thread.sleep(1000)
         meriPlan.checkObjective("objective 2")
         meriPlan.monitoringIndicators[0].indicator = "indicator 1"
         meriPlan.monitoringIndicators[0].approach = "approach 1"
