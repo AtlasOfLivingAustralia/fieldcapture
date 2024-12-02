@@ -509,6 +509,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         Thread.sleep(2000) // Wait for floating save to be displayed
         meriPlan.hideFloatingSave() // Getting an element not interactive error here
 
+        println(meriPlan.monitoringIndicators[0].indicator)
         meriPlan.monitoringIndicators[0].indicator = "indicator 1"
         meriPlan.monitoringIndicators[0].approach = "approach 1"
         meriPlan.projectImplementation = "project implementation"
