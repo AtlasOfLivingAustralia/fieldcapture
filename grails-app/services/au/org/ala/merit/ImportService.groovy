@@ -405,7 +405,7 @@ class ImportService {
                 }
                 else {
                     refreshOrganisationList()
-                    projectDetails.associatedOrgs[0].organisationId = orgCreationResult.resp.organisationId
+                    projectDetails.project.associatedOrgs[0].organisationId = orgCreationResult.resp.organisationId
                 }
             }
 

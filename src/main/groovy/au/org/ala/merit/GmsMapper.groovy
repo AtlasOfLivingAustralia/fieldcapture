@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.com.bytecode.opencsv.CSVWriter
+import org.apache.commons.lang.WordUtils
 import org.apache.commons.validator.EmailValidator
 
 import java.text.DecimalFormat
@@ -285,7 +286,12 @@ class GmsMapper {
                     abnLookup = abnLookupService.lookupOrganisationDetailsByABN(abn)
                     if (abnLookup && !abnLookup.error) {
                         List names = [abnLookup.entityName] + abnLookup.businessNames
-                        organisation = organisations.find { it.name in names }
+                        if (contractName) {
+                            names << contractName
+                        }
+                        organisation = organisations.find { Map org ->
+                            names.find{it && (it.toLowerCase() == org.name?.toLowerCase())}
+                        }
                         if (organisation) {
                             error = "An existing organisation name was matched via the entity/business name ${organisation.name} but the ABN doesn't match the abn of the MERIT organisation (${organisation.abn})"
                         } else {
@@ -293,12 +299,11 @@ class GmsMapper {
                             String name
                             if (contractName) {
                                 name = contractName
-                                organisation = abnLookup + [name:contractName, contractNames: [contractName]]
                             }
                             else {
-                                name = abnLookup.businessNames ? abnLookup.businessNames[0] : abnLookup.entityName
-                                organisation = abnLookup + [name: name]
+                                name = WordUtils.capitalizeFully(abnLookup.entityName)
                             }
+                            organisation = abnLookup + [name: name]
                             messages << "An organisation will be created with ABN: ${abn} and name: ${name}"
                         }
                     } else {
