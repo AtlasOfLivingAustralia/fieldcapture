@@ -48,7 +48,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         1 * searchService.allProjects(params) >> searchResponse
 
         and: "The query is limited to the data we need to display"
-        params.include == ['name', 'description', 'lastUpdated', 'organisationName', 'managementUnitName','managementUnitId', 'programId', 'associatedProgram', 'associatedSubProgram']
+        params.include == ['name', 'description', 'lastUpdated', 'associatedOrgs', 'managementUnitName','managementUnitId', 'programId', 'associatedProgram', 'associatedSubProgram']
 
         and:
         Map response = response.json
@@ -96,7 +96,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         and: "The query is limited to the data we need to display"
         params.include == ['name', 'managementUnitName', 'managementUnitId', 'programId', 'description', 'associatedProgram', 'associatedSubProgram',
                            'lastUpdated',
-                           'funding', 'organisationName', 'externalId', 'plannedEndDate', 'plannedStartDate',
+                           'funding', 'associatedOrgs', 'externalId', 'plannedEndDate', 'plannedStartDate',
                            'activities.siteId','activities.type','sites.siteId', 'sites.projects', 'sites.extent.geometry']
         and:
         Map response = response.json
