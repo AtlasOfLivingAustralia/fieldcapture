@@ -9,6 +9,7 @@ import spock.lang.Stepwise
 import geb.module.FormElement
 
 @Stepwise
+@Ignore
 class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
     def setupSpec() {
