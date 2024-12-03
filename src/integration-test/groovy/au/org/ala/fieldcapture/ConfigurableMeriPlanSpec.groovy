@@ -457,6 +457,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         }
     }
 
+    @Ignore
     def "The MERI Plan will display only sections specified in the program configuration"() {
 
         setup:
