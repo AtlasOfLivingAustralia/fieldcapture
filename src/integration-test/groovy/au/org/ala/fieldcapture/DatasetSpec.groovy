@@ -237,10 +237,10 @@ class DatasetSpec extends StubbedCasSpec{
             hasBeenReloaded()
         }
         at RlpProjectPage // reset at check time.
-
         meriPlan = openMeriPlanEditTab()
+
         waitFor {
-            meriPlan.saveButton.displayed
+            meriPlan.holdsEditLock()
         }
         meriPlan.save()
 
