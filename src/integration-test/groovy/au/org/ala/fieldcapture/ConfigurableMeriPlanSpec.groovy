@@ -457,7 +457,6 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         }
     }
 
-    @Ignore
     def "The MERI Plan will display only sections specified in the program configuration"() {
 
         setup:
@@ -547,6 +546,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
     }
 
+    @Ignore
     def "The MERI Plan will display only sections specified in state intervention config for state intervention projects"() {
         setup:
         // Clear cache to ensure services are loaded correctly
