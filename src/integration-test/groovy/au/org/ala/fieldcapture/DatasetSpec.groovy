@@ -218,7 +218,6 @@ class DatasetSpec extends StubbedCasSpec{
     }
 
     /** Note that this test relies on the data set summary inserted in the previous test, as per the @Stepwise annotation */
-    @Ignore // Edit lock aquisition is failing in actions but not locally.
     def "This is a regression test for issue 2299 - MERI plan updates can clear data set summaries"() {
         setup: "We need to be a merit administrator for this test as it involves updating the project settings"
         String projectId = 'fdFundProject'

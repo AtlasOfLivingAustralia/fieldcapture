@@ -9,7 +9,6 @@ import spock.lang.Stepwise
 import geb.module.FormElement
 
 @Stepwise
-@Ignore
 class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
     def setupSpec() {
@@ -39,7 +38,6 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         waitFor { hasBeenReloaded() }
     }
 
-    @Ignore
     def "The MERI Plan supports linking outcomes to services and targets"() {
         setup:
         String projectId = 'outcomeMeriPlanProject'
@@ -458,7 +456,6 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         }
     }
 
-    @Ignore
     def "The MERI Plan will display only sections specified in the program configuration"() {
 
         setup:
@@ -548,7 +545,6 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
     }
 
-    @Ignore
     def "The MERI Plan will display only sections specified in state intervention config for state intervention projects"() {
         setup:
         // Clear cache to ensure services are loaded correctly
