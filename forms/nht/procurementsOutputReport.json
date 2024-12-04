@@ -999,6 +999,7 @@
           {
             "dataType": "number",
             "name": "totalCaptiveBreedingEstablished",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -1028,6 +1029,7 @@
           {
             "dataType": "number",
             "name": "totalCaptiveBreedingMaintained",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -1915,6 +1917,7 @@
           {
             "dataType": "number",
             "name": "totalMaterialsPublished",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "defaultValue": 1,
@@ -2569,6 +2572,7 @@
           {
             "dataType": "number",
             "name": "totalNumberEngagementHeld",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "defaultValue": 1,
@@ -3324,6 +3328,7 @@
           {
             "dataType": "number",
             "name": "totalStructuresInstalled",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "decimalPlaces": 0,
             "validate": "min[0]",
             "computed": {
@@ -3353,6 +3358,7 @@
           {
             "dataType": "number",
             "name": "totalLengthStructuresInstalled",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "decimalPlaces": 3,
             "validate": "min[0]",
             "computed": {
@@ -3385,6 +3391,7 @@
           {
             "dataType": "number",
             "name": "totalAreaStructuresInstalled",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "decimalPlaces": 3,
             "validate": "min[0]",
             "computed": {
@@ -4309,6 +4316,7 @@
           {
             "dataType": "number",
             "name": "totalAreaPestAnimalsTreatedInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "decimalPlaces": 3,
             "computed": {
               "expression": "sum(areasControlled, \"initialOrFollowup == 'Initial' ? areaTreatedHa : 0\")"
@@ -4340,6 +4348,7 @@
           {
             "dataType": "number",
             "name": "totalAreaPestAnimalsTreatedFollowUp",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -4372,6 +4381,7 @@
           {
             "dataType": "number",
             "name": "totalLengthPestAnimalsTreatedInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -5315,6 +5325,7 @@
           {
             "dataType": "number",
             "name": "totalAreaDebrisRemovedInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -5347,6 +5358,7 @@
           {
             "dataType": "number",
             "name": "totalLengthDebrisRemovedInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -5379,6 +5391,7 @@
           {
             "dataType": "number",
             "name": "totalAreaDebrisRemovedFollowup",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -7317,6 +7330,7 @@
           {
             "dataType": "number",
             "name": "totalLengthStreamCoastlineInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -7349,6 +7363,7 @@
           {
             "dataType": "number",
             "name": "totalLengthStreamCoastlineFollowup",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -7381,6 +7396,7 @@
           {
             "dataType": "number",
             "name": "totalAreaErosionControlInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -7413,6 +7429,7 @@
           {
             "dataType": "number",
             "name": "totalAreaErosionControlFollowup",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -7570,7 +7587,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vii) Total area (ha) of erosion control (initial) for this reporting period",
+                        "preLabel": "(i) Total area (ha) of erosion control (initial) for this reporting period",
                         "source": "totalAreaErosionControlInitial",
                         "type": "number"
                       }
@@ -7580,7 +7597,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(viii) Total area (ha) of erosion control (initial) <u><i>invoiced</i></u> for this reporting period",
+                        "preLabel": "(ii) Total area (ha) of erosion control (initial) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalAreaErosionControlInvoicedInitial",
                         "type": "number",
                         "displayOptions": {
@@ -7599,7 +7616,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ix) Total area (ha) of erosion control (follow up) for this reporting period",
+                        "preLabel": "(iii) Total area (ha) of erosion control (follow up) for this reporting period",
                         "source": "totalAreaErosionControlFollowup",
                         "type": "number"
                       }
@@ -7609,7 +7626,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(x) Total area (ha) of erosion control <u><i>invoiced</i></u> (follow up) for this reporting period",
+                        "preLabel": "(iv) Total area (ha) of erosion control <u><i>invoiced</i></u> (follow up) for this reporting period",
                         "source": "totalAreaErosionControlInvoicedFollowup",
                         "type": "number",
                         "displayOptions": {
@@ -7628,7 +7645,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iii) Total length (km) of stream/coastline treated for erosion (initial) for this reporting period",
+                        "preLabel": "(v) Total length (km) of stream/coastline treated for erosion (initial) for this reporting period",
                         "source": "totalLengthStreamCoastlineInitial",
                         "type": "number"
                       }
@@ -7638,7 +7655,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iv) Total length (km) of stream/coastline treated for erosion (initial) <u><i>invoiced</i></u> for this reporting period",
+                        "preLabel": "(vi) Total length (km) of stream/coastline treated for erosion (initial) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalLengthStreamCoastlineInitialInvoice",
                         "type": "number",
                         "displayOptions": {
@@ -7657,7 +7674,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(v) Total length (km) of stream/coastline treated for erosion (follow up) for this reporting period",
+                        "preLabel": "(vii) Total length (km) of stream/coastline treated for erosion (follow up) for this reporting period",
                         "source": "totalLengthStreamCoastlineFollowup",
                         "type": "number"
                       }
@@ -7667,7 +7684,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vi) Total length (km) of stream/coastline treated for erosion (follow up) <u><i>invoiced</i></u> for this reporting period",
+                        "preLabel": "(viii) Total length (km) of stream/coastline treated for erosion (follow up) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalLengthStreamCoastlineInvoicedFollowup",
                         "type": "number",
                         "displayOptions": {
@@ -8358,6 +8375,7 @@
           {
             "dataType": "number",
             "name": "totalNoPestFreeSurveyEstablished",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "defaultValue": 0,
@@ -8390,6 +8408,7 @@
           {
             "dataType": "number",
             "name": "totalNoPestFreeSurveyMaintained",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "required,min[0]",
             "decimalPlaces": 0,
             "defaultValue": 0,
@@ -8422,6 +8441,7 @@
           {
             "dataType": "number",
             "name": "totalNoDaysMaintainingPestFree",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -8453,6 +8473,7 @@
           {
             "dataType": "number",
             "name": "totalAreaPestFreeSurveyInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "defaultValue": 0,
@@ -9364,6 +9385,7 @@
           {
             "dataType": "number",
             "name": "totalAreaConservationAgreements",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -9396,6 +9418,7 @@
           {
             "dataType": "number",
             "name": "totalAreaActivitiesConducted",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -10423,6 +10446,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -10452,6 +10476,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -11532,6 +11557,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -11561,6 +11587,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -12710,6 +12737,7 @@
           {
             "dataType": "number",
             "name": "totalNoDaysCulturalPractices",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -13881,6 +13909,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -13910,6 +13939,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -14884,6 +14914,7 @@
           {
             "dataType": "number",
             "name": "totalAreaAugmentationInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -14916,6 +14947,7 @@
           {
             "dataType": "number",
             "name": "totalAreaAugmentationMaintained",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -14948,6 +14980,7 @@
           {
             "dataType": "number",
             "name": "totalStructuresInstalledInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -14977,6 +15010,7 @@
           {
             "dataType": "number",
             "name": "totalStructuresInstalledMaintained",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -16023,6 +16057,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -16052,6 +16087,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -17103,6 +17139,7 @@
           {
             "dataType": "number",
             "name": "totalPotentialSites",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -18000,6 +18037,7 @@
           {
             "dataType": "number",
             "name": "totalAreaTreatedFireMgmtInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -18032,6 +18070,7 @@
           {
             "dataType": "number",
             "name": "totalAreaTreatedFireMgmtFollowup",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -18871,6 +18910,7 @@
           {
             "dataType": "number",
             "name": "totalHydroTreatmentsInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -18900,6 +18940,7 @@
           {
             "dataType": "number",
             "name": "totalHydroTreatmentsFollowup",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -19824,6 +19865,7 @@
           {
             "dataType": "number",
             "name": "totalAreaPracticeChangeInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -19856,6 +19898,7 @@
           {
             "dataType": "number",
             "name": "totalAreaPracticeChangeFollowup",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -20683,6 +20726,7 @@
           {
             "dataType": "number",
             "name": "totalAreaDiseaseManagementInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -20715,6 +20759,7 @@
           {
             "dataType": "number",
             "name": "totalAreaDiseaseManagementFollowup",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -20747,6 +20792,7 @@
           {
             "dataType": "number",
             "name": "totalLengthDiseaseManagementInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -20779,6 +20825,7 @@
           {
             "dataType": "number",
             "name": "totalLengthDiseaseManagementFollowup",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -22510,6 +22557,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -22539,6 +22587,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -23621,6 +23670,7 @@
           {
             "dataType": "number",
             "name": "totalAreaRemediationInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -23653,6 +23703,7 @@
           {
             "dataType": "number",
             "name": "totalAreaRemediationFollowup",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -23685,6 +23736,7 @@
           {
             "dataType": "number",
             "name": "totalLengthRemediationInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -23717,6 +23769,7 @@
           {
             "dataType": "number",
             "name": "totalLengthRemediationFollowup",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -23749,6 +23802,7 @@
           {
             "dataType": "number",
             "name": "totalStructuresInstalled",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -23778,6 +23832,7 @@
           {
             "dataType": "number",
             "name": "totalStructuresInstalledFollowup",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -28423,7 +28478,13 @@
                         "type": "number"
                       }
                     ]
-                  },
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
                   {
                     "type": "row",
                     "items": [
@@ -28663,13 +28724,13 @@
                     "columns": [
                       {
                         "width": "10%",
-                        "title": "Date research and development started",
+                        "title": "Date research and/or development started",
                         "source": "resAndDevStartDate",
                         "type": "date"
                       },
                       {
                         "width": "10%",
-                        "title": "Date research and development finished",
+                        "title": "Date research and/or development finished",
                         "source": "resAndDevFinishDate",
                         "type": "date"
                       },
@@ -29164,6 +29225,7 @@
           {
             "dataType": "number",
             "name": "totalAreaWeedsTreatedInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -29196,6 +29258,7 @@
           {
             "dataType": "number",
             "name": "totalAreaWeedsTreatedFollowup",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -29228,6 +29291,7 @@
           {
             "dataType": "number",
             "name": "totalLengthWeedsTreatedInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -29260,6 +29324,7 @@
           {
             "dataType": "number",
             "name": "totalLengthWeedsTreatedFollowup",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -30237,6 +30302,7 @@
           {
             "dataType": "number",
             "name": "totalAreaWeedsTreatedInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -30269,6 +30335,7 @@
           {
             "dataType": "number",
             "name": "totalAreaWeedsTreatedFollowup",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -31205,6 +31272,7 @@
           {
             "dataType": "number",
             "name": "totalAmountSeedsCuttingsCollected",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -31234,6 +31302,7 @@
           {
             "dataType": "number",
             "name": "totalDaysSeedsCuttingsCollected",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -31263,6 +31332,7 @@
           {
             "dataType": "number",
             "name": "totalDaysPropagating",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -31292,6 +31362,7 @@
           {
             "dataType": "number",
             "name": "totalPlantsPropagated",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -32489,6 +32560,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -33491,6 +33563,7 @@
           {
             "dataType": "number",
             "name": "totalAreaSitePreparation",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -33524,6 +33597,7 @@
             "dataType": "number",
             "decimalPlaces": 3,
             "name": "totalLengthSitePreparation",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "computed": {
               "expression": "sum(sitePreparationDetailsControlled, \"lengthTreatedKm\")"
@@ -34499,6 +34573,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -34528,6 +34603,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -35507,6 +35583,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -35536,6 +35613,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -36467,6 +36545,7 @@
           {
             "dataType": "number",
             "name": "totalAnnualFtes",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
@@ -37159,6 +37238,7 @@
           {
             "dataType": "number",
             "name": "totalNumberBaselineDatasets",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -37948,6 +38028,7 @@
           {
             "dataType": "number",
             "name": "totalNumberInterventionsInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -37977,6 +38058,7 @@
           {
             "dataType": "number",
             "name": "totalNumberInterventionsFollowUp",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -39036,6 +39118,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -39065,6 +39148,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -40216,6 +40300,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyBaseline",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
@@ -40245,6 +40330,7 @@
           {
             "dataType": "number",
             "name": "totalSurveyIndicator",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
