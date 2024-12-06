@@ -138,16 +138,6 @@
             ]
           },
           {
-            "dataType": "boolean",
-            "name": "reportedToIpprs",
-            "description": ""
-          },
-          {
-            "dataType": "document",
-            "name": "ipprsReport",
-            "description": ""
-          },
-          {
             "dataType": "number",
             "name": "organisationFteWorkforce",
             "description": "Enter total RDP staff (full time equivalent) deployed on Services for the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts) during this reporting period.",
@@ -157,6 +147,14 @@
               },
               {
                 "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "organisationFteIndigenousWorkforce",
+                  "type": "computed"
+                },
+                "rule": "min",
+                "message": "Numeric value must be higher or equal to the numeric value entered for 'What was your organisation’s full time equivalent Indigenous workforce deployed on the Services this reporting period?'"
               }
             ]
           },
@@ -191,8 +189,57 @@
               },
               {
                 "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "organisationPanelProjectValue",
+                  "type": "computed"
+                },
+                "rule": "max",
+                "message": "The sum of the value of Services contracted to First Nations people/Indigenous enterprises for all reporting periods can not exceed the total $ value (GST inclusive) of the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts)"
               }
             ]
+          },
+          {
+            "dataType": "number",
+            "name": "organisationPanelProjectValue",
+            "description": "Enter the total dollar value (GST inclusive) for the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts).",
+            "validate": "required,min[0]",
+            "computed": {
+              "expression": "owner.totalContractValue"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "supplyChainPerformancePercentage",
+            "description": "Calculated using value of Services contracted to First Nations people/Indigenous enterprises ÷ stored Total Organisation Panel/Project Value $ x 100",
+            "computed": {
+              "expression": "servicesContractedValueFirstNations / organisationPanelProjectValue * 100"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "workforcePerformancePercentage",
+            "description": "Calculated using FTE Indigenous workforce ÷ FTE workforce x 100",
+            "computed": {
+                "expression": "organisationFteIndigenousWorkforce / organisationFteWorkforce * 100"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "targetIndigenousParticipationPercentage",
+            "description": "Target Indigenous Participation Percentage for this reporting period",
+            "computed": {
+              "expression": "$context.owner.targetIndigenousParticipationPercentage"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "targetIndigenousProcurementPercentage",
+            "description": "Target Indigenous Procurement Percentage for this reporting period",
+            "computed": {
+              "expression": "owner.targetIndigenousProcurementPercentage"
+            }
           },
           {
             "name": "staffDevelopmentOpportunities",
@@ -514,29 +561,8 @@
             "type": "row",
             "items": [
               {
-                "css": "span7",
-                "preLabel": "Q5(b). Please confirm that your organisation has reported via the IPPRS this period (Clause 38 Indigenous Procurement Policy), and that this report has been uploaded to the documents tab in MERIT.",
-                "source": "reportedToIpprs",
-                "type": "boolean"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "document",
-                "source": "ipprsReport",
-                "preLabel": "Please attach the document here."
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
                 "type": "literal",
-                "source": "<b>Q5(c). Please complete workforce and supply chain data (Deed of Standing Offer Clause 38 Indigenous Procurement Policy). Please do not provide personal or <span style='white-space: nowrap;'>commercial-in-confidence</span> information when answering this question. Please retain documentation as evidence to support assurance activities undertaken to verify the reported information.</b>"
+                "source": "<b>Q5(b). Please complete workforce and supply chain data (Deed of Standing Offer Clause 38 Indigenous Procurement Policy). Please do not provide personal or <span style='white-space: nowrap;'>commercial-in-confidence</span> information when answering this question. Please retain documentation as evidence to support assurance activities undertaken to verify the reported information.</b>"
               }
             ]
           },
@@ -567,8 +593,63 @@
             "items": [
               {
                 "css": "span7",
-                "preLabel": "What was the dollar value of Services contracted to First Nations people/Indigenous enterprises during this reporting period?",
+                "preLabel": "Workforce Performance % this reporting period",
+                "source": "workforcePerformancePercentage",
+                "type": "number"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "preLabel": "Target Workforce Performance % this reporting period",
+                "source": "targetIndigenousParticipationPercentage",
+                "type": "number"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "preLabel": "What is your total organisation panel/project $ value (GST inclusive)?",
+                "source": "organisationPanelProjectValue",
+                "type": "number"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "preLabel": "What was the dollar value (GST inclusive) of Services contracted to First Nations people/Indigenous enterprises during this reporting period?",
                 "source": "servicesContractedValueFirstNations",
+                "type": "number"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "preLabel": "Supply Chain Performance % this reporting period",
+                "source": "supplyChainPerformancePercentage",
+                "type": "number"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "preLabel": "Target Supply Chain Performance % this reporting period",
+                "source": "targetIndigenousProcurementPercentage",
                 "type": "number"
               }
             ]
