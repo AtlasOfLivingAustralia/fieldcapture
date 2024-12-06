@@ -359,7 +359,7 @@ class OrganisationService {
     def findApplicableServices(Map organisation, List allServices) {
 
         List supportedServices = organisation.config?.organisationReports?.collect{it.activityType}?.findAll{it}
-        List result = allServices
+        List result = []
         if (supportedServices) {
             result = allServices.findAll{ supportedServices.intersect(it.outputs.formName) }
         }

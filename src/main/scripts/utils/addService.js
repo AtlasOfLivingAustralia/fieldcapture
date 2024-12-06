@@ -1,5 +1,4 @@
-load("../../../utils/uuid.js");
-load( "../../../utils/audit.js");
+
 function addService (newServiceName, legacyId,  serviceFormName, sectionName, outputs, userId) {
     var eventType;
     legacyId = NumberInt(legacyId);
