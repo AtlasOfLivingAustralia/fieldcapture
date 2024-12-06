@@ -91,5 +91,18 @@ class ReportLifecycleListener {
         result
     }
 
+    static Map getTargetsForReportPeriod(Map report, List<Map> outputTargets) {
+        String endDate = report.toDate
+
+        outputTargets?.collectEntries { Map outputTarget ->
+            String scoreId = outputTarget.scoreId
+            String previousPeriod = ''
+            Map matchingPeriodTarget = outputTarget?.periodTargets?.find { Map periodTarget ->
+                previousPeriod < endDate && periodTarget.period >= endDate
+            }
+            [(scoreId): matchingPeriodTarget?.target]
+        }
+    }
+
 
 }

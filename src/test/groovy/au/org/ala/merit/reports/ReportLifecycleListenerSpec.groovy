@@ -59,6 +59,29 @@ class ReportLifecycleListenerSpec extends Specification {
                 [entityType:"au.org.ala.ecodata.DataSetSummary", entityIds:["5b1255a4-3b91-4fae-a243-02bd4d163898"]]]
     }
 
+    def "getTargetForReportPeriod should return the correct target for the report period"() {
+        setup:
+        Map report = [toDate: '2023-12-31']
+        String scoreId = 'score1'
+        List<Map> values = [
+                [scoreId: 'score1', periodTargets: [
+                        [period: '2023-01-01', target: 10],
+                        [period: '2023-12-31', target: 20],
+                        [period: '2024-01-01', target: 30]
+                ]],
+                [scoreId: 'score2', periodTargets: [
+                        [period: '2023-01-01', target: 5],
+                        [period: '2023-12-31', target: 15]
+                ]]
+        ]
+
+        when:
+        def result = ReportLifecycleListener.getTargetForReportPeriod(report, scoreId, values)
+
+        then:
+        result == [period: '2023-12-31', target: 20]
+    }
+
     private static Map nhtActivityForm() {
         File file = new File('forms/nht/nhtOutputReport.json')
 
