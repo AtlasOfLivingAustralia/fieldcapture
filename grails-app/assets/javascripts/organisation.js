@@ -216,7 +216,6 @@ OrganisationViewModel = function (props, options) {
         self.entityName(null);
         self.businessNames(null);
         self.entityType(null);
-        self.name(null);
     };
 
     self.projects = props.projects;
@@ -549,7 +548,7 @@ OrganisationPageViewModel = function (props, options) {
         }
     };
     var organisationService = new OrganisationService(options);
-    self.periods = organisationService.getBudgetHeaders();
+    self.periods = options.targetPeriods || [];
 
     self.initialise = function() {
         $.fn.dataTable.moment( 'dd-MM-yyyy' );

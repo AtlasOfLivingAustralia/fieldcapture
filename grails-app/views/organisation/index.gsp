@@ -41,12 +41,11 @@
             cancelReportUrl: "${createLink(action:'ajaxCancelReport', id:organisation.organisationId)}/",
             unCancelReportUrl: "${createLink(action:'ajaxUnCancelReport', id:organisation.organisationId)}/",
             reportsHistoryUrl:"${createLink(controller: 'report', action:'reportingHistory')}",
+            targetPeriodsUrl:"${createLink(controller: 'organisation', action:'getTargetPeriods',  id:organisation.organisationId)}",
             returnTo: '${g.createLink(action:'index', id:"${organisation.organisationId}")}',
             dashboardCategoryUrl: "${g.createLink(controller: 'report', action: 'activityOutputs', params: [fq:'organisationFacet:'+organisation.name])}",
             reportOwner: {organisationId:'${organisation.organisationId}'},
-            projects : <fc:modelAsJavascript model="${organisation.projects}"/>,
-            services: <fc:modelAsJavascript model="${services}"/>
-
+            projects : <fc:modelAsJavascript model="${organisation.projects}"/>
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
@@ -81,10 +80,16 @@
 
         var organisation =<fc:modelAsJavascript model="${organisation}"/>;
         var availableReportCategories = <fc:modelAsJavascript model="${content.admin?.availableReportCategories}"/>;
+        var services = <fc:modelAsJavascript model="${content.admin?.services}"/>;
+        var targetPeriods = <fc:modelAsJavascript model="${content.admin?.targetPeriods}"/>;
         var config = _.extend({
                 reportingConfigSelector:'#reporting-config form',
                 availableReportCategories:availableReportCategories,
+                targetPeriods: targetPeriods,
+                services: services
+
             }, fcConfig);
+
         var organisationViewModel = new OrganisationPageViewModel(organisation, config);
 
         ko.applyBindings(organisationViewModel);

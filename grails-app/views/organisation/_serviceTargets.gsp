@@ -7,23 +7,24 @@
         <th class="index" rowspan="2"></th>
         <th class="service required" rowspan="2">${serviceName ?: "Service"}</th>
         <th class="score required" rowspan="2" style="width: 20px">Target measure</th>
-        <th class="budget-cell required" rowspan="2">Total to be delivered <g:if test="${totalHelpText}"> <fc:iconHelp> ${totalHelpText} </fc:iconHelp></g:if> <g:else><fc:iconHelp html="true">The overall total of Organsiation Services to be delivered during the organisation delivery period.
-            <b>Note: this total is not necessarily the sum of the minimum annual targets set out for the service.</b></fc:iconHelp></g:else> </th>
+        <th class="budget-cell required" rowspan="2">Overall target <g:if test="${totalHelpText}"> <fc:iconHelp> ${totalHelpText} </fc:iconHelp></g:if></th>
         <g:if test="${showTargetDate}">
             <th class="target-date required" rowspan="2">
                 Delivery date <g:if test="${deliveryHelpText}"> <fc:iconHelp> ${deliveryHelpText} </fc:iconHelp> </g:if>
             </th>
         </g:if>
         <!-- ko if: periods && periods.length -->
-        <th data-bind="attr:{colspan:periods.length+1}">Minimum annual targets <fc:iconHelp>${minHelptext ?:"Specify the minimum total target for each Project Service to be delivered each financial year. Note: the sum of these targets will not necessarily equal the total services to be delivered."}</fc:iconHelp></th>
+        <th data-bind="attr:{colspan:periods.length+1}">${periodTargetsLabel ?: "Targets by date"}</th>
         <!-- /ko -->
     </tr>
+    <!-- ko if: periods && periods.length -->
     <tr>
 
         <!-- ko foreach: periods -->
-        <th class="budget-cell"><div data-bind="text:$data"></div></th>
+        <th class="budget-cell"><div data-bind="text:$data.label"></div></th>
         <!-- /ko -->
     </tr>
+    <!-- /ko -->
     </thead>
     <tbody data-bind="foreach : services">
     <tr>
@@ -63,16 +64,7 @@
         <!-- /ko -->
     </tr>
     </tbody>
-%{--    <tfoot>--}%
 
-%{--    <tr>--}%
-%{--        <td data-bind="attr:{colspan:periods.length+${showTargetDate ? 6 : 5}}">--}%
-%{--            <button type="button" class="btn btn-sm"--}%
-%{--                    data-bind="disable: $parent.isProjectDetailsLocked(), click: addService">--}%
-%{--                <i class="fa fa-plus"></i> Add a row</button>--}%
-%{--        </td>--}%
-%{--    </tr>--}%
-%{--    </tfoot>--}%
 </table>
 <!-- /ko -->
 <!-- /ko -->

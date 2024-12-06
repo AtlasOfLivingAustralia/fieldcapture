@@ -45,22 +45,14 @@ var config =
             {
                 "template": "additionalOutcomes",
                 "model": {
+                    "maximumPriorities": 1000,
                     "outcomePriority": "Additional outcome/s",
+                    "maxAdditionalOutcomes": 15,
                     "helpTextHeading": "If the project is not delivering additional benefits, delete the row using the 'x' in the right-most column.",
                     "title": "Additional benefits",
-                    "priority": "Additional investment priorities",
+                    "priority": "Additional Investment Priorities",
+                    "renderPrioritiesWithSelect2": true,
                     "priorityHelpText": "Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
-                }
-            },
-            {
-                "template": "outcomeStatements",
-                "model": {
-                    "outcomeType": "mid",
-                    "helpText": "Projects more than 3 years in duration must set medium-term Project outcomes achievable at project completion. Ensure proposed outcomes are measurable with consideration to the baseline and proposed monitoring regime",
-                    "minimumNumberOfOutcomes": 0,
-                    "subtitle": "Medium-term outcome statement/s",
-                    "title": "Project Outcomes",
-                    "extendedOutcomes": true
                 }
             },
             {
@@ -144,9 +136,12 @@ var config =
                 ]
             }
         ],
-        "excludes": [],
+        "excludes": [
+            "DATA_SETS",
+            "DASHBOARD"
+        ],
         "programServiceConfig": {
-            "serviceFormName": "NHT Output Report",
+            "serviceFormName": "Grants and Others Progress Report",
             "programServices": [
                 {
                     "serviceTargets": [
@@ -162,15 +157,17 @@ var config =
                 },
                 {
                     "serviceTargets": [
-                        "f9c85612-602e-465c-89e0-e155b34b1f31"
+                        "1f8161bc-908b-4ec8-ab7f-edac973a657d",
+                        "88908921-1248-4a7c-b185-51c625c737e3",
+                        "fe9f1a6c-e614-489a-80fa-4d6d76f1cf95"
                     ],
                     "serviceId": 3
                 },
                 {
                     "serviceTargets": [
+                        "aa0c6b29-285e-4344-987e-dfeaf1d95648",
                         "a9d98baa-b2ab-4428-82cf-d96185e63aa6",
-                        "c4ea5ce3-4a70-4df8-aff7-ffa929e7df61",
-                        "dcf917dc-eaf7-49e2-ae7b-abf65edeedae"
+                        "c4ea5ce3-4a70-4df8-aff7-ffa929e7df61"
                     ],
                     "serviceId": 4
                 },
@@ -306,8 +303,7 @@ var config =
                         "b9e710e4-7dd3-4acc-ac2c-c69f4bcb9787",
                         "00934509-f102-4d39-a043-7547a8ab9ac8",
                         "1021bec7-3836-4b33-90b4-76701efd4fe3",
-                        "4dad393e-cbf7-43dd-87bb-62ea8f8afcdd",
-                        "7186117e-ac17-4ed9-8c9c-8ee1c3bf473b"
+                        "4dad393e-cbf7-43dd-87bb-62ea8f8afcdd"
                     ],
                     "serviceId": 26
                 },
@@ -401,6 +397,12 @@ var config =
                 },
                 {
                     "serviceTargets": [
+                        "9ed0ab84-6d04-4926-ae36-c75a8763e09b"
+                    ],
+                    "serviceId": 45
+                },
+                {
+                    "serviceTargets": [
                         "8113ab8a-17e6-43c9-be32-9ca72dd01454",
                         "9f6f06ac-b055-48c1-9d80-b305acdeae79"
                     ],
@@ -414,7 +416,7 @@ var config =
                 }
             ]
         },
-        "visibility": "private",
+        "visibility": "public",
         "declarationPageType": "rdpReportDeclaration",
         "requiresActivityLocking": true,
         "supportsMeriPlanComparison": true,
@@ -432,6 +434,7 @@ var config =
         "meriPlanTemplate": "configurableMeriPlan",
         "riskAndThreatTypes": [
             "Performance",
+            "Work Health and Safety",
             "People resources",
             "Financial",
             "External stakeholders",
@@ -440,11 +443,10 @@ var config =
         "projectReports": [
             {
                 "reportType": "Activity",
-                "firstReportingPeriodEnd": "",
                 "reportDescriptionFormat": "Progress Report %1d",
                 "reportNameFormat": "Progress Report %1d",
                 "reportingPeriodInMonths": 6,
-                "description": "Priority Places Grants Progress Report",
+                "description": "_Please note that the reporting fields for these reports are currently being developed_",
                 "minimumReportDurationInDays": 3,
                 "label": "Semester",
                 "category": "Progress Reports",
@@ -453,29 +455,17 @@ var config =
                 "canSubmitDuringReportingPeriod": true
             },
             {
-                "firstReportingPeriodEnd": "2025-06-30T14:00:00Z",
-                "reportType": "Administrative",
-                "reportDescriptionFormat": "Annual Progress Report %2$tY - %3$tY for %4$s",
-                "reportNameFormat": "Annual Progress Report %2$tY - %3$tY",
-                "reportingPeriodInMonths": 12,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
-                "minimumReportDurationInDays": 1,
-                "label": "Annual",
-                "category": "Annual Progress Reporting",
-                "activityType": "NHT Annual Report"
-            },
-            {
                 "reportType": "Single",
                 "reportDescriptionFormat": "Final Report",
                 "reportNameFormat": "Final Report",
                 "reportingPeriodInMonths": 0,
                 "multiple": false,
-                "description": "",
+                "description": "_Please note that the reporting fields for these reports are currently being developed_",
                 "alignToOwnerEnd": true,
                 "label": "Final Report",
                 "category": "Final Report",
                 "reportsAlignedToCalendar": false,
-                "activityType": "Priority Places Final Report",
+                "activityType": "Grants and Others Final Report",
                 "alignToOwnerStart": true
             }
         ],
@@ -484,13 +474,8 @@ var config =
             "Climate Change - Changed rainfall patterns",
             "Climate Change - Sea level rises",
             "Climate Change - Unexpected seasonal/temperature extremes",
-            "Disconnection from Country - Altered or disrupted First Nations engagement/leadership in caring for land and sea country",
-            "Disconnection from Country - Altered or disrupted transfer of First Nations knowledge systems",
-            "Disconnection from Country - Altered/disrupted connection with land and sea country",
-            "Disconnection from Country - Inadequate recognition of Traditional knowledge and practices",
             "Disease/pathogens - Areas that are infected",
             "Disease/pathogens - Possible infection of disease free areas",
-            "Disengagement of community - Community are not informed and are not engaged in managing the environment",
             "Fire - Inappropriate fire regime",
             "Fire - Lack of protection for ecological assets during fire control activities",
             "Genetics - Bottleneck/inbreeding",
@@ -508,8 +493,8 @@ var config =
             "Human interference - Recreational fishing",
             "Human interference - Recreational pressures",
             "Human interference - Road/vehicle strike",
-            "Knowledge/Capacity - Inadequate scientific and/or technological capacity",
-            "Knowledge/Capacity - Insufficient knowledge to inform appropriate management or intervention actions",
+            "Knowledge/capacity - Inadequate scientific and/or technological capacity",
+            "Knowledge/capacity – Insufficient knowledge to inform appropriate management or intervention actions",
             "Land management practices - Changes to hydrology and aquatic systems",
             "Land management practices - Domestic grazing/stock impacts",
             "Land management practices - Excess recharge of groundwater",
@@ -566,190 +551,58 @@ var outcomes = [
     {
         "priorities": [
             {
-                "category": "Farmer Sector"
+                "category": "Ecological health"
             }
         ],
         "targeted": true,
-        "shortDescription": "Skills and Knowledge",
-        "category": "Farmer Sector",
-        "outcome": "1: By 2028 Partnerships and Innovations grants will have increased the number and area of Australia’s agriculture sector entities and land managers that have trialled, developed and/or implemented innovative technologies, tools or practices to improve the uptake and use of sustainable agricultural practices leading to the protection and enhancement of our soil, water and vegetation resources."
+        "category": "Ecological health",
+        "type": "primary",
+        "outcome": "1. Improve and protect marine biodiversity, including the reduction of Crown-of-Thorns Starfish (Acanthaster cf. solaris) and protection of listed threatened and migratory species such as Dugongs and marine turtles."
     },
     {
         "priorities": [
             {
-                "category": "Farmer Sector"
+                "category": "Ecological health"
             }
         ],
-        "targeted": true,
-        "shortDescription": "Capacity and Capability",
-        "category": "Farmer Sector",
-        "outcome": "2: By 2028 Partnerships and Innovations grants will have increased the number and area of Australia’s agriculture sector entities and land managers that have adopted practices which have or will build resilience to the impacts of climate change, increase carbon sequestration, and/or reduce emissions on farming systems."
+        "category": "Ecological health",
+        "type": "secondary",
+        "outcome": "Gathering biological, ecological, genetic and environmental data sets to further develop interventions and guide reef managers in their use in the Great Barrier Reef."
     },
     {
-        "priorities": [
-            {
-                "category": "Farmer Sector"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "Agricultural Practices",
-        "category": "Farmer Sector",
-        "outcome": "3: By 2028 Partnerships and Innovations grants will have supported the operationalisation and uptake of industry sustainability frameworks and credentials, and will have increased the number of sustainable agricultural practices that meet evolving market access requirements."
-    },
-    {
-        "category": "Farmer Sector",
+        "category": "Ecological health",
         "type": "medium",
-        "outcome": "1. Farmers are trialing and/or adopting CSSA practices"
+        "outcome": "1. Improve the health and resilience of coastal habitats."
     },
     {
-        "category": "Farmer Sector",
+        "category": "Ecological health",
         "type": "medium",
-        "outcome": "2. Farmers are adopting innovative tools, technologies or practices"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "3. Farmers are demonstrating sustainability credentials and traceability"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "4. Farmers are implementing sustainability frameworks"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "5. Farmers understand how and why to adopt CSSA practices (knowledge)"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "6. Farmers are aware of CSSA practices, and their value and opportunities"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "7. Farmers have the skills to adopt CSSA practices"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "8. Farmers accept and value CSSA practices"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "9. Farmers are accessing demonstrations of innovative and effective practices"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "10. Farmers are accessing relevant information resources and products"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "11. Farmers are accessing advice and support"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "12. Farmers are connecting to peer networks"
+        "outcome": "2. Improve and protect marine biodiversity, including the reduction of Crown-of-Thorns Starfish (Acanthaster cf. solaris) and protection of listed threatened and migratory species such as Dugongs and marine turtles."
     },
     {
         "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "1. Farmers understand how and why to adopt CSSA practices (Knowledge)"
+        "category": "Ecological health",
+        "outcome": "1. Improve the health and resilience of coastal habitats."
     },
     {
         "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "2. Farmers are aware of CSSA practices, and their value and opportunities"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "3. Farmers have the skills to adopt CSSA practices"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "4. Farmers accept and value CSSA practices (attitude/culture)"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "5. Farmers are accessing demonstrations of innovative and effective practices"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "6. Farmers are accessing relevant information resources and products"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "7. Farmers are accessing advice and support"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "8. Farmers are connecting to peer networks"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "9. Proven new innovative CSSA knowledge, tools, and practices are available to scale"
+        "category": "Ecological health",
+        "outcome": "2. Improve and protect marine biodiversity, including the reduction of Crown-of-Thorns Starfish (Acanthaster cf. solaris) and protection of listed threatened and migratory species such as Dugongs and marine turtles."
     }
 ];
 
 var priorities = [
     {
-        "category": "Farmer Sector",
-        "priority": "Native vegetation and biodiversity on-farm"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "On-farm emissions reduction practices"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Soil carbon"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Soil erosion"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Soil acidification"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Sustainable agriculture practices, including natural resource management"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Climate change adaptation"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Carbon and biodiversity market information"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Sustainability framework engagement"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Market access and traceability"
+        "category": "Ecological health",
+        "priority": "Great Barrier Reef"
     }
 ];
 
+
 //Create the parent program
-let programName = "Natural Heritage Trust";
+let programName = "Reef Trust";
 var parent = createOrFindProgram(programName);
-var subprograms = ["Climate-Smart Agriculture Program - Partnerships and Innovation Grants"]
+var subprograms = ["Pilot Deployments Program"]
 
 subprograms.forEach(function (subProgram){
     createOrFindProgram(subProgram, parent._id);
@@ -764,4 +617,5 @@ subprograms.forEach(function (subprogram){
         useNhtServiceLabels(p.name);
     }
 });
+
 

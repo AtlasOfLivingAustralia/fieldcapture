@@ -401,6 +401,12 @@ var config =
                 },
                 {
                     "serviceTargets": [
+                        "9ed0ab84-6d04-4926-ae36-c75a8763e09b"
+                    ],
+                    "serviceId": 45
+                },
+                {
+                    "serviceTargets": [
                         "8113ab8a-17e6-43c9-be32-9ca72dd01454",
                         "9f6f06ac-b055-48c1-9d80-b305acdeae79"
                     ],
@@ -414,7 +420,7 @@ var config =
                 }
             ]
         },
-        "visibility": "private",
+        "visibility": "public",
         "declarationPageType": "rdpReportDeclaration",
         "requiresActivityLocking": true,
         "supportsMeriPlanComparison": true,
@@ -440,46 +446,91 @@ var config =
         "projectReports": [
             {
                 "reportType": "Activity",
-                "firstReportingPeriodEnd": "",
-                "reportDescriptionFormat": "Progress Report %1d",
-                "reportNameFormat": "Progress Report %1d",
-                "reportingPeriodInMonths": 6,
-                "description": "Priority Places Grants Progress Report",
-                "minimumReportDurationInDays": 3,
-                "label": "Semester",
-                "category": "Progress Reports",
-                "activityType": "Grants and Others Progress Report",
+                "reportDescriptionFormat": "Year %5$s - %6$s %7$d Outputs Report",
+                "reportNameFormat": "Year %5$s - %6$s %7$d Outputs Report",
+                "reportingPeriodInMonths": 3,
+                "description": "",
+                "minimumReportDurationInDays": 1,
+                "label": "Quarter",
                 "reportsAlignedToCalendar": true,
+                "category": "Outputs Reporting",
+                "activityType": "NHT Output Report",
                 "canSubmitDuringReportingPeriod": true
             },
             {
-                "firstReportingPeriodEnd": "2025-06-30T14:00:00Z",
+                "firstReportingPeriodEnd": "2024-06-30T14:00:00Z",
                 "reportType": "Administrative",
                 "reportDescriptionFormat": "Annual Progress Report %2$tY - %3$tY for %4$s",
                 "reportNameFormat": "Annual Progress Report %2$tY - %3$tY",
                 "reportingPeriodInMonths": 12,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
+                "description": "",
                 "minimumReportDurationInDays": 1,
                 "label": "Annual",
                 "category": "Annual Progress Reporting",
-                "activityType": "NHT Annual Report"
+                "activityType": "NHT RDP Annual Report"
+            },
+            {
+                "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
+                "reportingPeriodInMonths": 36,
+                "multiple": false,
+                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
+                "maximumOwnerDurationInMonths": 35,
+                "label": "Outcomes Report 1",
+                "alignToOwnerStart": true,
+                "reportType": "Single",
+                "minimumOwnerDurationInMonths": null,
+                "reportNameFormat": "Outcomes Report 1",
+                "alignToOwnerEnd": true,
+                "category": "Outcomes Report 1",
+                "reportsAlignedToCalendar": false,
+                "activityType": "NHT Outcomes 1 Report"
             },
             {
                 "reportType": "Single",
-                "reportDescriptionFormat": "Final Report",
-                "reportNameFormat": "Final Report",
-                "reportingPeriodInMonths": 0,
+                "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
+                "minimumOwnerDurationInMonths": 36,
+                "reportNameFormat": "Outcomes Report 1",
+                "reportingPeriodInMonths": 24,
                 "multiple": false,
-                "description": "",
+                "maximumOwnerDurationInMonths": 47,
+                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
+                "label": "Outcomes Report 1",
+                "category": "Outcomes Report 1",
+                "activityType": "NHT Outcomes 1 Report"
+            },
+            {
+                "reportType": "Single",
+                "reportDescriptionFormat": "Outcomes Report 1 for %4$s",
+                "minimumOwnerDurationInMonths": 48,
+                "reportNameFormat": "Outcomes Report 1",
+                "reportingPeriodInMonths": 36,
+                "multiple": false,
+                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
+                "calendarAlignmentMonth": 7,
+                "label": "Outcomes Report 1",
+                "category": "Outcomes Report",
+                "reportsAlignedToCalendar": true,
+                "activityType": "NHT Outcomes 1 Report"
+            },
+            {
+                "reportType": "Single",
+                "reportDescriptionFormat": "Outcomes Report 2 for %4$s",
+                "minimumOwnerDurationInMonths": 36,
+                "reportNameFormat": "Outcomes Report 2",
+                "multiple": false,
                 "alignToOwnerEnd": true,
-                "label": "Final Report",
-                "category": "Final Report",
-                "reportsAlignedToCalendar": false,
-                "activityType": "Priority Places Final Report",
+                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
+                "label": "Outcomes Report 2",
+                "category": "Outcomes Report 2",
+                "activityType": "NHT Outcomes 2 Report",
                 "alignToOwnerStart": true
             }
         ],
         "keyThreatCodes": [
+            "Changes in Country - Inadequate recognition of Traditional knowledge and practices",
+            "Changes in Country - altered/disrupted connection with country",
+            "Changes in Country - altered/disrupted engagement or leadership in land and sea management",
+            "Changes in Country - altered/disrupted transfer of knowledge systems",
             "Climate Change - Changed flooding regime",
             "Climate Change - Changed rainfall patterns",
             "Climate Change - Sea level rises",
@@ -534,6 +585,7 @@ var config =
             "Weeds - Introduction of new weed",
             "Weeds - Spread of weeds from surrounding areas"
         ],
+        "nonAgricultureoOutcomeStartIndex": 10,
         "navigationMode": "returnToProject",
         "priorityPlaces": [
             "Australian Alps – NSW/ACT/VIC",
@@ -549,7 +601,7 @@ var config =
             "Kangaroo Island – SA",
             "MacDonnell Ranges – NT",
             "Mallee Birds Ecological Community – VIC/SA/NSW",
-            "Midlands region of central Tasmania – TAS",
+            "Midlands region of central Tasmanian – TAS",
             "Norfolk Island – External Territory",
             "Raine Island – Queensland",
             "Remnant WA Wheatbelt Woodlands – WA",
@@ -566,190 +618,43 @@ var outcomes = [
     {
         "priorities": [
             {
-                "category": "Farmer Sector"
+                "category": "Threatened Species"
             }
         ],
         "targeted": true,
-        "shortDescription": "Skills and Knowledge",
-        "category": "Farmer Sector",
-        "outcome": "1: By 2028 Partnerships and Innovations grants will have increased the number and area of Australia’s agriculture sector entities and land managers that have trialled, developed and/or implemented innovative technologies, tools or practices to improve the uptake and use of sustainable agricultural practices leading to the protection and enhancement of our soil, water and vegetation resources."
+        "shortDescription": "EPBC Species",
+        "category": "Threatened Species",
+        "supportsMultiplePrioritiesAsPrimary": true,
+        "supportsMultiplePrioritiesAsSecondary": true,
+        "outcome": "1.  Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
     },
     {
-        "priorities": [
-            {
-                "category": "Farmer Sector"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "Capacity and Capability",
-        "category": "Farmer Sector",
-        "outcome": "2: By 2028 Partnerships and Innovations grants will have increased the number and area of Australia’s agriculture sector entities and land managers that have adopted practices which have or will build resilience to the impacts of climate change, increase carbon sequestration, and/or reduce emissions on farming systems."
-    },
-    {
-        "priorities": [
-            {
-                "category": "Farmer Sector"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "Agricultural Practices",
-        "category": "Farmer Sector",
-        "outcome": "3: By 2028 Partnerships and Innovations grants will have supported the operationalisation and uptake of industry sustainability frameworks and credentials, and will have increased the number of sustainable agricultural practices that meet evolving market access requirements."
-    },
-    {
-        "category": "Farmer Sector",
+        "category": "Threatened Species",
         "type": "medium",
-        "outcome": "1. Farmers are trialing and/or adopting CSSA practices"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "2. Farmers are adopting innovative tools, technologies or practices"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "3. Farmers are demonstrating sustainability credentials and traceability"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "4. Farmers are implementing sustainability frameworks"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "5. Farmers understand how and why to adopt CSSA practices (knowledge)"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "6. Farmers are aware of CSSA practices, and their value and opportunities"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "7. Farmers have the skills to adopt CSSA practices"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "8. Farmers accept and value CSSA practices"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "9. Farmers are accessing demonstrations of innovative and effective practices"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "10. Farmers are accessing relevant information resources and products"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "11. Farmers are accessing advice and support"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "12. Farmers are connecting to peer networks"
+        "outcome": "1.  Species and Landscapes (Medium term): Threatened species - Targeted threatened species (TS) are on track for improved trajectory"
     },
     {
         "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "1. Farmers understand how and why to adopt CSSA practices (Knowledge)"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "2. Farmers are aware of CSSA practices, and their value and opportunities"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "3. Farmers have the skills to adopt CSSA practices"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "4. Farmers accept and value CSSA practices (attitude/culture)"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "5. Farmers are accessing demonstrations of innovative and effective practices"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "6. Farmers are accessing relevant information resources and products"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "7. Farmers are accessing advice and support"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "8. Farmers are connecting to peer networks"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "9. Proven new innovative CSSA knowledge, tools, and practices are available to scale"
+        "category": "Threatened Species",
+        "outcome": "1. Species and Landscapes (Short term): Managing Threates  – Pest predator an competitor species have been controlled or are under active, long-term control programs"
     }
 ];
 
 var priorities = [
     {
-        "category": "Farmer Sector",
-        "priority": "Native vegetation and biodiversity on-farm"
+        "category": "Threatened Species",
+        "priority": "Malleefowl (Leipoa occellata)"
     },
     {
-        "category": "Farmer Sector",
-        "priority": "On-farm emissions reduction practices"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Soil carbon"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Soil erosion"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Soil acidification"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Sustainable agriculture practices, including natural resource management"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Climate change adaptation"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Carbon and biodiversity market information"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Sustainability framework engagement"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Market access and traceability"
+        "category": "Threatened Species",
+        "priority": "Sandhill Dunnart (Sminthospsis psammophila)"
     }
 ];
 
 //Create the parent program
 let programName = "Natural Heritage Trust";
 var parent = createOrFindProgram(programName);
-var subprograms = ["Climate-Smart Agriculture Program - Partnerships and Innovation Grants"]
+var subprograms = ["Natural Heritage Trust - Complimentary"]
 
 subprograms.forEach(function (subProgram){
     createOrFindProgram(subProgram, parent._id);
