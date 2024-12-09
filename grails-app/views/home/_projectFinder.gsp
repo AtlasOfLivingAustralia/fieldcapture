@@ -424,7 +424,16 @@
             $tr.find('.homeLine a').attr("href", "${createLink(controller: 'project')}/" + id);
             $tr.find('a.zoom-in').data("id", id);
             $tr.find('a.zoom-out').data("id", id);
-            $tr.find('.orgLine').text(src.organisationName);
+            var organisations = '';
+            if (src.associatedOrgs) {
+                for (var i=0; i<src.associatedOrgs.length; i++) {
+                    if (organisations.length > 0) {
+                        organisations = organisations + ', ';
+                    }
+                    organisations = organisations + src.associatedOrgs[i].name;
+                }
+            }
+            $tr.find('.orgLine').text(organisations);
             $tr.find('.descLine').text(src.description);
         <g:if test="${fc.userIsSiteAdmin()}">
             $tr.find('.downloadLine a').attr("href", "${createLink(controller: 'project',action: 'downloadProjectData')}" + "?id="+id+"&view=xlsx");
