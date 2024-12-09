@@ -3,6 +3,7 @@
 //= require reportService
 //= require components.js
 //= require ecodata-components.js
+//= require budget.js
 /**
  * Knockout view model for organisation pages.
  * @param props JSON/javascript representation of the organisation.
@@ -658,7 +659,7 @@ OrganisationPageViewModel = function (props, options) {
     self.selectedTargetMeasures = ko.observableArray();
     var details = new OrganisationDetailsViewModel(propDetails, props, self.periods, self.allTargetMeasures, options);
     updatedTargetMeasures(details);
-    self.reportingTargets = ko.observable(details);
+    self.reportingTargetsAndFunding = ko.observable(details);
     self.isProjectDetailsLocked = ko.observable(false);
 
     var setStartAndEndDateDefaults = function() {
@@ -762,7 +763,7 @@ OrganisationPageViewModel = function (props, options) {
 
     self.saveCustomFields = function() {
         if ($("#organisation-targets > table").validationEngine('validate')) {
-            var json = JSON.parse(self.reportingTargets().modelAsJSON());
+            var json = JSON.parse(self.reportingTargetsAndFunding().modelAsJSON());
             return saveOrganisation(json);
         }
     };

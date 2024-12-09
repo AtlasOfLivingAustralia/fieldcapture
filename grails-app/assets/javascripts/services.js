@@ -4,6 +4,7 @@ function OrganisationDetailsViewModel(o, organisation, budgetHeaders, allService
         serviceIds = o.services && o.services.serviceIds || [],
         targets = o.services && o.services.targets || [];
     self.services = new OrganisationServicesViewModel(serviceIds, config.services, targets, budgetHeaders);
+    self.funding = new BudgetViewModel(o.funding, budgetHeaders);
     function clearHiddenFields(jsData) {
 
     };

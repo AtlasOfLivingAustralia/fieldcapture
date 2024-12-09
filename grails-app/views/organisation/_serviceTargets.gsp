@@ -1,4 +1,4 @@
-<!-- ko with:reportingTargets() -->
+<!-- ko with:reportingTargetsAndFunding() -->
 <h4>${title ?: "Organisation services and minimum targets"}</h4>
 <!-- ko with: services -->
 <table class="table service-targets validationEngineContainer">

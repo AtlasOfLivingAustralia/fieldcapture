@@ -156,6 +156,8 @@
         </g:else>
         <g:if test="${showTargets}">
         <div id="organisation-targets" class="tab-pane">
+            <h3>Total funding</h3>
+            <g:render template="/organisation/budget"/>
             <h3>Service Targets</h3>
             <g:render template="/organisation/serviceTargets" model="[services:organisation.services, periods:organisation.periods, showTargetDate:organisation.showTargetDate]"/>
         </div>

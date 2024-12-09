@@ -13,6 +13,7 @@
 //= require jquery-file-download/jquery.fileDownload.js
 //= require document.js
 //= require meriplan.js
+//= require budget.js
 //= require risks.js
 //= require sites.js
 //= require activity.js
