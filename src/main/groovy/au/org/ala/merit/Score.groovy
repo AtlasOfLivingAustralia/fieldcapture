@@ -32,6 +32,7 @@ class Score {
     String label
     String units
     String category
+    String name
     boolean isOutputTarget
 
     int overDeliveryThreshold = OVER_DELIVERY_PERCENTAGE_THRESHOLD

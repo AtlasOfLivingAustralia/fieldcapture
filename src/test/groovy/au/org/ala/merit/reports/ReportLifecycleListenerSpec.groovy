@@ -1,6 +1,7 @@
 package au.org.ala.merit.reports
 
 import au.org.ala.ecodata.forms.ActivityFormService
+import au.org.ala.merit.MetadataService
 import groovy.json.JsonSlurper
 import spock.lang.Specification
 
@@ -8,9 +9,11 @@ class ReportLifecycleListenerSpec extends Specification {
 
     ReportLifecycleListener reportData = new ReportLifecycleListener()
     ActivityFormService activityFormService = Mock(ActivityFormService)
+    MetadataService metadataService = Mock(MetadataService)
 
     def setup() {
         reportData.activityFormService = activityFormService
+        reportData.metadataService = metadataService
     }
 
 
@@ -76,10 +79,10 @@ class ReportLifecycleListenerSpec extends Specification {
         ]
 
         when:
-        def result = ReportLifecycleListener.getTargetForReportPeriod(report, scoreId, values)
+        def result = reportData.getTargetsForReportPeriod(report, values)
 
         then:
-        result == [period: '2023-12-31', target: 20]
+        result == [score1:20, score2: 15]
     }
 
     private static Map nhtActivityForm() {

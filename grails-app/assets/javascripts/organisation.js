@@ -656,7 +656,7 @@ OrganisationPageViewModel = function (props, options) {
     self.allTargetMeasures = _.sortBy(self.allTargetMeasures, 'label');
     var propDetails = props && props.custom && props.custom.details || {};
     self.selectedTargetMeasures = ko.observableArray();
-    var details = new DetailsViewModel(propDetails, props, self.periods, self.allTargetMeasures, options);
+    var details = new OrganisationDetailsViewModel(propDetails, props, self.periods, self.allTargetMeasures, options);
     updatedTargetMeasures(details);
     self.reportingTargets = ko.observable(details);
     self.isProjectDetailsLocked = ko.observable(false);

@@ -1,9 +1,9 @@
-function DetailsViewModel(o, organisation, budgetHeaders, allServices, config) {
+function OrganisationDetailsViewModel(o, organisation, budgetHeaders, allServices, config) {
     var self = this;
     var period = budgetHeaders,
         serviceIds = o.services && o.services.serviceIds || [],
         targets = o.services && o.services.targets || [];
-    self.services = new ServicesViewModel(serviceIds, config.services, targets, budgetHeaders);
+    self.services = new OrganisationServicesViewModel(serviceIds, config.services, targets, budgetHeaders);
     function clearHiddenFields(jsData) {
 
     };
@@ -33,7 +33,7 @@ function DetailsViewModel(o, organisation, budgetHeaders, allServices, config) {
  * @param outputTargets The current organisation targets
  * @param periods An array of periods, each of which require a target to be set
  */
-function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
+function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, periods) {
     var self = this,
         OPERATION_SUM = "SUM",
         OPERATION_AVG = "AVG",

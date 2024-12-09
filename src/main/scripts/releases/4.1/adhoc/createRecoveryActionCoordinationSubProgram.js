@@ -43,12 +43,15 @@ var config =
                 }
             },
             {
-                "template": "outcomeStatements",
+                "template": "additionalOutcomes",
                 "model": {
-                    "outcomeType": "short",
-                    "helpText": "Outline the degree of impact having undertaken the services for up to three years. Ensure the outcomes are measurable with consideration to the baseline and proposed monitoring regime",
-                    "subtitle": "Short-term outcome statement/s",
-                    "extendedOutcomes": true
+                    "outcomePriority": "Additional outcome/s",
+                    "maxAdditionalOutcomes": "7",
+                    "helpTextHeading": "If the project is not delivering additional benefits, delete the row using the 'x' in the right-most column.",
+                    "title": "Additional benefits",
+                    "renderPrioritiesWithSelect2": true,
+                    "priority": "Additional investment priorities",
+                    "priorityHelpText": "Other investment priorities that will benefit from the project.  Delete the row if there are no additional outcomes."
                 }
             },
             {
@@ -542,6 +545,7 @@ var outcomes = [
         "targeted": true,
         "shortDescription": "EPBC Species",
         "category": "Threatened Species",
+        "supportsMultiplePrioritiesAsSecondary": true,
         "outcome": "1.  Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
     },
     {

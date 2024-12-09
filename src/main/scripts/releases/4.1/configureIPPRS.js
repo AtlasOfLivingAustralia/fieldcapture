@@ -14,6 +14,11 @@ var scores = [
     {
         "category": "Indigenous Procurement",
         "configuration": {
+            "filter": {
+                filterValue: "Regional capacity services - reporting",
+                property: "name",
+                type: "filter"
+            },
             "childAggregations": [{
                 "property": "data.workforcePerformancePercentage",
                     "type": "AVERAGE"
@@ -27,11 +32,17 @@ var scores = [
         "label": "Indigenous workforce performance",
         "outputType": "Regional capacity services - reporting",
         "scoreId": indigenousWorkforcePerformanceScoreId,
-        "status": "active"
+        "status": "active",
+        "name":"targetIndigenousParticipationPercentage"
     },
     {
         "category": "Indigenous Procurement",
         "configuration": {
+            "filter": {
+                filterValue: "Regional capacity services - reporting",
+                property: "name",
+                type: "filter"
+            },
             "childAggregations": [{
                 "property": "data.workforcePerformancePercentage",
                 "type": "AVERAGE"
@@ -45,7 +56,8 @@ var scores = [
         "label": "Indigenous supply chain performance",
         "outputType": "Regional capacity services - reporting",
         "scoreId": indigenousSupplyChainPerformanceScoreId,
-        "status": "active"
+        "status": "active",
+        "name":"targetIndigenousProcurementPercentage"
     }
 ];
 
@@ -54,6 +66,7 @@ for (var i=0; i<scores.length; i++) {
     if (existing.hasNext()) {
         var existingScore = existing.next();
         existingScore.configuration = scores[i].configuration;
+        existingScore.name = scores[i].name;
         db.score.replaceOne({label:scores[i].label}, existingScore);
     }
     else {

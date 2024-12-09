@@ -43,7 +43,9 @@ abstract class EditOrViewReportCommand implements Validateable {
             model.documentOwner[getEntityIdField()] = id
 
             ReportLifecycleListener listener = reportService.reportLifeCycleListener(model.report)
-            model.putAll(listener.getContextData(entity, model.report))
+            if (listener) {
+                model.putAll(listener.getContextData(entity, model.report))
+            }
         }
     }
 
