@@ -9,6 +9,19 @@
       "collapsedByDefault": false,
       "templateName": "regionalCapacityServicesReport",
       "template": {
+          "pre-populate": [
+            {
+              "source": {
+                "context-path": ""
+              },
+              "mapping": [
+                {
+                  "target": "targetIndigenousParticipationPercentage",
+                  "source-path": "targetIndigenousParticipationPercentage"
+                }
+              ]
+            }
+          ],
         "dataModel": [
           {
             "name": "governanceAndFinancialFrameworksOnTrack",
@@ -228,10 +241,7 @@
           {
             "dataType": "number",
             "name": "targetIndigenousParticipationPercentage",
-            "description": "Target Indigenous Participation Percentage for this reporting period",
-            "computed": {
-              "expression": "$context.owner.targetIndigenousParticipationPercentage"
-            }
+            "description": "Target Indigenous Participation Percentage for this reporting period"
           },
           {
             "dataType": "number",
