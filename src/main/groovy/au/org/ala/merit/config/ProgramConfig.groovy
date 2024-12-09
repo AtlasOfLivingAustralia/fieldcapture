@@ -144,12 +144,15 @@ class ProgramConfig implements Map {
     boolean readOnlyUsersCanViewWhenPrivate = false
 
     /** This flag controls whether the project is using the new meri plan template(2023) */
-    boolean supportsMeriPlanComparison = false
+    boolean supportsMeriPlanComparison = true
 
     boolean supportsOutcomeTargets() {
         Map template = config.meriPlanContents?.find{ it.template == "serviceOutcomeTargets"}
         template != null
     }
+
+    /** This flag controls whether the invoice field in the dashboard is shown */
+    boolean showsDashboardInvoiceField = true
 
 }
 
