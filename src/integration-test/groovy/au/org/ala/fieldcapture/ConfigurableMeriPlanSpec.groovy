@@ -4,6 +4,7 @@ import pages.AdminClearCachePage
 import pages.AdminTools
 import pages.MeriPlanPDFPage
 import pages.RlpProjectPage
+import spock.lang.Ignore
 import spock.lang.Stepwise
 import geb.module.FormElement
 
@@ -52,6 +53,11 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         at RlpProjectPage // reset at check time.
 
         meriPlan = openMeriPlanEditTab()
+
+        waitFor{meriPlan.projectName.displayed}
+        interact {
+            moveToElement(meriPlan.projectName)
+        }
 
         meriPlan.projectName = "MERI plan edited name"
         meriPlan.projectDescription = "MERI plan edited description"
@@ -497,7 +503,9 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         at RlpProjectPage // reset at check time.
 
         meriPlan = openMeriPlanEditTab()
+
         meriPlan.checkObjective("objective 2")
+
         meriPlan.monitoringIndicators[0].indicator = "indicator 1"
         meriPlan.monitoringIndicators[0].approach = "approach 1"
         meriPlan.projectImplementation = "project implementation"

@@ -249,8 +249,8 @@ class GmsMapperSpec extends Specification{
         1 * abnLookupService.lookupOrganisationDetailsByABN(abn) >> abnValue
 
         and:
-        result.project.associatedOrgs == [[organisationId:null, name:"Test org 12345678900", description:"Recipient"]]
-        result.messages[0] == "An organisation will be created with ABN: 12345678900 and name: Test org 12345678900"
+        result.project.associatedOrgs == [[organisationId:null, name:"Test Org 12345678900", description:"Recipient"]]
+        result.messages[0] == "An organisation will be created with ABN: 12345678900 and name: Test Org 12345678900"
     }
 
     def "The organisation relationship can be derived from the program"(){
@@ -266,8 +266,8 @@ class GmsMapperSpec extends Specification{
         1 * abnLookupService.lookupOrganisationDetailsByABN(abn) >> abnValue
 
         and:
-        result.project.associatedOrgs == [[organisationId:null, name:"Test org 12345678900", description:"Recipient"]]
-        result.messages[0] == "An organisation will be created with ABN: 12345678900 and name: Test org 12345678900"
+        result.project.associatedOrgs == [[organisationId:null, name:"Test Org 12345678900", description:"Recipient"]]
+        result.messages[0] == "An organisation will be created with ABN: 12345678900 and name: Test Org 12345678900"
     }
 
     def "If an ABN is supplied in the project load, the looked up entity name cannot match another MERIT organisation"(){
