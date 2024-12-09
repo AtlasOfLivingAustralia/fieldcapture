@@ -46,6 +46,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         controller.projectService = projectService
         controller.reportService = reportService
         controller.settingService = settingService
+        controller.metadataService = metadataService
 
         grails.converters.JSON.registerObjectMarshaller(new MapMarshaller())
         grails.converters.JSON.registerObjectMarshaller(new CollectionMarshaller())
