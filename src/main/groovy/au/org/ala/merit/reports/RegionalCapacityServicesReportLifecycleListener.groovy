@@ -13,7 +13,7 @@ class RegionalCapacityServicesReportLifecycleListener extends ReportLifecycleLis
     Map getContextData(Map organisation, Map report) {
         List outputTargets = organisation.custom?.details?.services?.targets
         Map periodTargets = getTargetsForReportPeriod(report, outputTargets)
-        BigDecimal budget = new BigDecimal(0) // TODO get budget from the correct period of the budget table
-        [periodTargets:periodTargets, budget:budget]
+        BigDecimal funding = new BigDecimal(0) // TODO get budget from the correct period of the budget table
+        [periodTargets:periodTargets, totalContractValue:funding]
     }
 }

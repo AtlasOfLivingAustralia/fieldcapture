@@ -12,12 +12,12 @@
           "pre-populate": [
             {
               "source": {
-                "context-path": ""
+                "context-path": "owner"
               },
               "mapping": [
                 {
                   "target": "targetIndigenousParticipationPercentage",
-                  "source-path": "targetIndigenousParticipationPercentage"
+                  "source-path": "periodTargets.targetIndigenousParticipationPercentage"
                 }
               ]
             }
