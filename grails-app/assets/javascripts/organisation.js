@@ -763,8 +763,14 @@ OrganisationPageViewModel = function (props, options) {
 
     self.saveCustomFields = function() {
         if ($("#organisation-targets > table").validationEngine('validate')) {
+            blockUIWithMessage("Saving organisation data...");
             var json = JSON.parse(self.reportingTargetsAndFunding().modelAsJSON());
-            return saveOrganisation(json);
+            saveOrganisation(json).done(function() {
+                blockUIWithMessage("Organisation data saved...");
+                setTimeout($.unblockUI, 1000);
+            }).fail(function(){
+                $.unblockUI();
+            });
         }
     };
 
