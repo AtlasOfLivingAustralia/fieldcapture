@@ -226,7 +226,8 @@ class ProjectController {
             model.details.meriPlanTemplate = config.meriPlanTemplate ? config.meriPlanTemplate+"View" : RLP_MERI_PLAN_TEMPLATE+'View'
 
             boolean serviceDeliveryVisible = model.dashboard.visible && userHasViewAccess
-            model.serviceDelivery = [label: 'Dashboard', visible: serviceDeliveryVisible, type: 'tab', template: 'rlpServiceDashboard', includeInvoiced:config.supportsOutcomeTargets()]
+            boolean showDashboardInvoiceField = (config.showsDashboardInvoiceField == null) ? config.supportsOutcomeTargets() : config.showsDashboardInvoiceField
+            model.serviceDelivery = [label: 'Dashboard', visible: serviceDeliveryVisible, type: 'tab', template: 'rlpServiceDashboard', includeInvoiced:showDashboardInvoiceField]
             if (model.serviceDelivery.visible) {
                 // This can be a slow call so don't make it if the data won't be displayed
                 model.serviceDelivery.servicesDashboard = projectService.getServiceDashboardData(project.projectId, false)
