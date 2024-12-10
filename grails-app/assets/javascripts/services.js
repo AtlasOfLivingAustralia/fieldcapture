@@ -76,7 +76,8 @@ function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, p
         target.targetDate = ko.observable().extend({simpleDate:false});
 
         target.periodTargets = _.map(periods, function (period) {
-            return {period: period.value, target: ko.observable(0)};
+            // TODO in the future, allowing a score to specifiy the number of decimal places would be useful
+            return {period: period.value, target: ko.observable(0).extend({numericString:2})};
         });
 
         function evaluateAndAssignAverage() {
