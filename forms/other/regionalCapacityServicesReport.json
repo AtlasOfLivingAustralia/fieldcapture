@@ -20,6 +20,28 @@
                   "source-path": "periodTargets.targetIndigenousParticipationPercentage"
                 }
               ]
+            },
+            {
+              "source": {
+                "context-path": "owner"
+              },
+              "mapping": [
+                {
+                  "target": "targetIndigenousProcurementPercentage",
+                  "source-path": "periodTargets.targetIndigenousProcurementPercentage"
+                }
+              ]
+            },
+            {
+              "source": {
+                "context-path": "owner"
+              },
+              "mapping": [
+                {
+                  "target": "organisationPanelProjectValue",
+                  "source-path": "totalContractValue"
+                }
+              ]
             }
           ],
         "dataModel": [
@@ -217,10 +239,7 @@
             "dataType": "number",
             "name": "organisationPanelProjectValue",
             "description": "Enter the total dollar value (GST inclusive) for the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts).",
-            "validate": "required,min[0]",
-            "computed": {
-              "expression": "owner.totalContractValue"
-            }
+            "validate": "required,min[0]"
           },
           {
             "dataType": "number",
@@ -246,10 +265,7 @@
           {
             "dataType": "number",
             "name": "targetIndigenousProcurementPercentage",
-            "description": "Target Indigenous Procurement Percentage for this reporting period",
-            "computed": {
-              "expression": "owner.targetIndigenousProcurementPercentage"
-            }
+            "description": "Target Indigenous Procurement Percentage for this reporting period"
           },
           {
             "name": "staffDevelopmentOpportunities",
@@ -616,7 +632,8 @@
                 "css": "span7",
                 "preLabel": "Target Workforce Performance % this reporting period",
                 "source": "targetIndigenousParticipationPercentage",
-                "type": "number"
+                "type": "number",
+                "readonly": true
               }
             ]
           },
@@ -627,7 +644,8 @@
                 "css": "span7",
                 "preLabel": "What is your total organisation panel/project $ value (GST inclusive)?",
                 "source": "organisationPanelProjectValue",
-                "type": "number"
+                "type": "number",
+                "readonly": true
               }
             ]
           },
@@ -660,7 +678,8 @@
                 "css": "span7",
                 "preLabel": "Target Supply Chain Performance % this reporting period",
                 "source": "targetIndigenousProcurementPercentage",
-                "type": "number"
+                "type": "number",
+                "readonly": true
               }
             ]
           },
