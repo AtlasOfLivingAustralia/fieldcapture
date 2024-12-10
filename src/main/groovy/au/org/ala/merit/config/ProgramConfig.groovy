@@ -144,7 +144,7 @@ class ProgramConfig implements Map {
     boolean readOnlyUsersCanViewWhenPrivate = false
 
     /** This flag controls whether the project is using the new meri plan template(2023) */
-    boolean supportsMeriPlanComparison = true
+    boolean supportsMeriPlanComparison = false
 
     boolean supportsOutcomeTargets() {
         Map template = config.meriPlanContents?.find{ it.template == "serviceOutcomeTargets"}
