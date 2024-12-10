@@ -102,7 +102,9 @@ class ReportLifecycleListener {
             String name = scoreName(scoreId) ?: scoreId
             String previousPeriod = ''
             Map matchingPeriodTarget = outputTarget?.periodTargets?.find { Map periodTarget ->
-                previousPeriod < endDate && periodTarget.period >= endDate
+                boolean result = previousPeriod < endDate && periodTarget.period >= endDate
+                previousPeriod = periodTarget.period
+                result
             }
             [(name): matchingPeriodTarget?.target]
         }
