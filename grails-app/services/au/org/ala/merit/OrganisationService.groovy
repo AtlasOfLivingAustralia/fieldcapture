@@ -362,6 +362,10 @@ class OrganisationService {
         List result = []
         if (supportedServices) {
             result = allServices.findAll{ supportedServices.intersect(it.outputs.formName) }
+            result.each {
+                List scores = it.scores?.findAll{Map score -> score.isOutputTarget}
+                it.scores = scores
+            }
         }
 
         result
