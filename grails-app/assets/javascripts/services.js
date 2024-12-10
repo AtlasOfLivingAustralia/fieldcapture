@@ -83,10 +83,29 @@ function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, p
             if (periods.length === 0)
                 return;
 
-            var sum = sumOfPeriodTargets();
-            var avg = sum / periods.length;
+
+            // TODO make the behaviour of the total configurable so we can make this more reusable
+            var avg = averageOfPeriodTargets();
+
             target.target(avg);
         }
+
+        function averageOfPeriodTargets() {
+            // For RCS reporting, targets are evaluated each year so we don't want to include undefined
+            // targets in the average.
+            var sum = 0;
+            var count = 0;
+            _.each(target.periodTargets, function (periodTarget) {
+                var target = parseInt(periodTarget.target());
+                if (!_.isNaN(target)) {
+                    sum += target
+                    count++;
+                }
+            });
+
+            return sum/count;
+        }
+
         function sumOfPeriodTargets() {
             var sum = 0;
             _.each(target.periodTargets, function (periodTarget) {
@@ -113,14 +132,14 @@ function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, p
                 return target.scoreId() == outputTarget.scoreId;
             });
             _.each(periods, function (period, i) {
-                var periodTarget = 0;
+                var periodTarget = null;
                 if (currentTarget) {
                     var currentPeriodTarget = _.find(currentTarget.periodTargets || [], function (periodTarget) {
-                        return periodTarget.period == period;
+                        return periodTarget.period == period.value;
                     }) || {};
                     periodTarget = currentPeriodTarget.target;
                 }
-                target.periodTargets[i].target(periodTarget || 0);
+                target.periodTargets[i].target(periodTarget);
                 // subscribe after setting the initial value
                 !subscribed && target.periodTargets[i].target.subscribe(evaluateAndAssignAverage);
             });

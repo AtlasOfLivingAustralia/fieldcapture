@@ -1,7 +1,7 @@
 <!-- ko with:reportingTargetsAndFunding().funding -->
 <div class="funding">
 
-    <label><b>Funding</b><fc:iconHelp title="Project Budget">${budgetHelpText?:"Enter the budget as reviewed each year"}</fc:iconHelp></label>
+    <label><b>Funding</b><fc:iconHelp title="Funding">${budgetHelpText?:"Enter the total value of contracts at the date of the review"}</fc:iconHelp></label>
     <g:if test="${explanation}">
         <p>${explanation}</p>
     </g:if>
