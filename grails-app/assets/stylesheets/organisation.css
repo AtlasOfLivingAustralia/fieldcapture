@@ -137,3 +137,9 @@ ul.ui-autocomplete {
     width:7em;
 }
 
+#organisation-details th {
+    white-space: normal;
+    word-wrap: normal;
+    min-width: 7em;
+}
+

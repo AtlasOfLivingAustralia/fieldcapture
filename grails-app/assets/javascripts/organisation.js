@@ -737,7 +737,7 @@ OrganisationPageViewModel = function (props, options) {
     }
 
     self.attachValidation = function() {
-        $("#organisation-targets > table").validationEngine('attach');
+        $(options.organisationDetailsSelector).validationEngine('attach');
     };
 
     self.saveOrganisationConfiguration = function() {
@@ -762,7 +762,7 @@ OrganisationPageViewModel = function (props, options) {
     };
 
     self.saveCustomFields = function() {
-        if ($("#organisation-targets > table").validationEngine('validate')) {
+        if ($(options.organisationDetailsSelector).validationEngine('validate')) {
             blockUIWithMessage("Saving organisation data...");
             var json = JSON.parse(self.reportingTargetsAndFunding().modelAsJSON());
             saveOrganisation(json).done(function() {

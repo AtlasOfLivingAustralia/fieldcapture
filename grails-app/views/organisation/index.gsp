@@ -86,7 +86,8 @@
                 reportingConfigSelector:'#reporting-config form',
                 availableReportCategories:availableReportCategories,
                 targetPeriods: targetPeriods,
-                services: services
+                services: services,
+                organisationDetailsSelector: '#organisation-details',
 
             }, fcConfig);
 

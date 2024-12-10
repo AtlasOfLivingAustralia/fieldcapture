@@ -1,20 +1,20 @@
 <!-- ko with:reportingTargetsAndFunding() -->
 <h4>${title ?: "Organisation services and minimum targets"}</h4>
 <!-- ko with: services -->
-<table class="table service-targets validationEngineContainer">
+<table class="table service-targets">
     <thead>
     <tr>
         <th class="index" rowspan="2"></th>
         <th class="service required" rowspan="2">${serviceName ?: "Service"}</th>
         <th class="score required" rowspan="2" style="width: 20px">Target measure</th>
-        <th class="budget-cell required" rowspan="2">Overall target <g:if test="${totalHelpText}"> <fc:iconHelp> ${totalHelpText} </fc:iconHelp></g:if></th>
+        <th class="budget-cell required" rowspan="2">Overall target (%) <g:if test="${totalHelpText}"> <fc:iconHelp> ${totalHelpText} </fc:iconHelp></g:if></th>
         <g:if test="${showTargetDate}">
             <th class="target-date required" rowspan="2">
                 Delivery date <g:if test="${deliveryHelpText}"> <fc:iconHelp> ${deliveryHelpText} </fc:iconHelp> </g:if>
             </th>
         </g:if>
         <!-- ko if: periods && periods.length -->
-        <th data-bind="attr:{colspan:periods.length+1}">${periodTargetsLabel ?: "Targets by date"}</th>
+        <th data-bind="attr:{colspan:periods.length+1}">${periodTargetsLabel ?: " % Targets by date"}</th>
         <!-- /ko -->
     </tr>
     <!-- ko if: periods && periods.length -->
@@ -30,16 +30,16 @@
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
         <td class="service">
-            <select class="form-control form-control-sm" data-bind="options: selectableServices, optionsText:'name', optionsValue:'id', optionsCaption: 'Please select', value:serviceId, disable: $root.isProjectDetailsLocked()"
+            <select class="form-control form-control-sm" data-bind="options: selectableServices, optionsText:'name', optionsValue:'id',  value:serviceId, disable: $root.isProjectDetailsLocked()"
                     data-validation-engine="validate[required]"></select>
         </td>
         <td class="score">
-            <select class="form-control form-control-sm" data-bind="options: selectableScores, optionsText:'label', optionsValue:'scoreId', optionsCaption: 'Please select', value:scoreId, disable: $root.isProjectDetailsLocked()"
+            <select class="form-control form-control-sm" data-bind="options: selectableScores, optionsText:'label', optionsValue:'scoreId',  value:scoreId, disable: $root.isProjectDetailsLocked()"
                     data-validation-engine="validate[required]"></select>
         </td>
         <td class="budget-cell">
             <input class="form-control form-control-sm" type="number" disabled data-bind="value: target"
-                   data-validation-engine="validate[min[0.01]]"  data-warningmessage="The sum of the minimum targets must be less than or equal to the overall target">
+                   data-validation-engine="validate[min[0]]"  data-warningmessage="The sum of the minimum targets must be less than or equal to the overall target">
         </td>
 
         <g:if test="${showTargetDate}">

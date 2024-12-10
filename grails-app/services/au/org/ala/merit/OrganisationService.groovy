@@ -127,7 +127,7 @@ class OrganisationService {
         regenerateOrganisationReports(organisation, organisationReportCategories)
     }
 
-    List<String> generateTargetPeriods(String id) {
+    List<Map> generateTargetPeriods(String id) {
         Map organisation = get(id)
         generateTargetPeriods(organisation)
     }

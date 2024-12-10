@@ -152,10 +152,16 @@ class ReportService {
     List<Map> generateTargetPeriods(ReportConfig reportConfig, ReportOwner reportOwner, String formatString = null) {
         List<Map> reports = new ReportGenerator().generateReports(
                 reportConfig, reportOwner, 0, null)
-        Closure dateFormatter = {
-            formatString ? DateUtils.format(DateUtils.parse(it), formatString) : it
+        Closure fromDateFormatter = {
+            formatString ? DateUtils.format(DateUtils.parse(it), formatString, DateTimeZone.default) : it
         }
-        reports.collect{[label:dateFormatter(it.toDate), value:it.toDate]}
+        Closure toDateFormatter = {
+            // Compensate for the endDate of a report being 00:00:00 on the following day to have no overlap with the next start time.
+            DateTime toDate = DateUtils.parse(it).minusHours(1)
+            formatString ? DateUtils.format(toDate, formatString, DateTimeZone.default) : it
+        }
+
+        reports.collect{[label:fromDateFormatter(it.fromDate) +' - '+toDateFormatter(it.toDate), value:it.toDate]}
     }
 
     boolean needsRegeneration(Map report1, Map report2) {
