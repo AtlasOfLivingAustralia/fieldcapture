@@ -80,7 +80,7 @@ class OrganisationController {
             services = organisationService.findApplicableServices(organisation, metadataService.getProjectServices())
             targetPeriods = organisationService.generateTargetPeriods(organisation)
         }
-        boolean showTargets = services != null
+        boolean showTargets = userService.userIsSiteAdmin() && services && targetPeriods
 
         List reportOrder = null
         if (reportingVisible) {
