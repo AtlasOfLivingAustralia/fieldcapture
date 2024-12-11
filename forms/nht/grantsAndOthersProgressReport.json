@@ -5520,7 +5520,13 @@
                     "dataType": "text",
                     "name": "speciesSiteCovered",
                     "description": "This free text field allows multiple species and/or TECs to be entered. For Species: Use Scientific names with (common name in brackets), TECs should be written as listed in EPBC. Species or TECs should be separated by commas.",
-                    "validate": "required,maxSize[300]"
+                    "validate": "maxSize[300]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "managementPlanObjective",
+                    "description": "",
+                    "validate": "maxSize[500]"
                   }
                 ],
                 "dataType": "list",
@@ -5548,16 +5554,6 @@
             "defaultValue": 1,
             "computed": {
               "expression": "sum(managementPlansByOutcome, \"numberOfPlanDevelopedForOutcome\")"
-            }
-          },
-          {
-            "dataType": "number",
-            "name": "totalAreaPlansDeveloped",
-            "description": "This field is not editable as it is auto populated from inputted data in the section below",
-            "validate": "min[0]",
-            "decimalPlaces": 3,
-            "computed": {
-              "expression": "sum(managementPlansByOutcome, \"areaTreatedHa\")"
             }
           },
           {
@@ -5678,22 +5674,6 @@
                       {
                         "preLabel": "(i) Total number of management plans developed for this reporting period",
                         "source": "numberOfPlansDeveloped",
-                        "type": "number"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "col",
-                "css": "span4 col-border-right",
-                "items": [
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(ii) Total area (ha) covered by management plan for this reporting period",
-                        "source": "totalAreaPlansDeveloped",
                         "type": "number"
                       }
                     ]
@@ -5876,7 +5856,7 @@
                   {
                     "columns": [
                       {
-                        "width": "25%",
+                        "width": "20%",
                         "source": "managementPlanName",
                         "title": "Name of management plan",
                         "type": "text"
@@ -5888,7 +5868,7 @@
                         "type": "selectOne"
                       },
                       {
-                        "width": "25%",
+                        "width": "20%",
                         "title": "Type of management plan<b style=\"color:red\">*</b>",
                         "type": "col",
                         "items": [
@@ -5914,9 +5894,15 @@
                         ]
                       },
                       {
-                        "width": "30%",
+                        "width": "20%",
                         "source": "speciesSiteCovered",
-                        "title": "Species/Threatened ecological communities/Ramsar Sites/Heritage Sites covered in plan",
+                        "title": "Species/Threatened ecological communities/Ramsar Sites/Heritage Sites covered in plan, if applicable",
+                        "type": "textarea"
+                      },
+                      {
+                        "width": "20%",
+                        "source": "managementPlanObjective",
+                        "title": "Objective/purpose of the plan",
                         "type": "textarea"
                       }
                     ],

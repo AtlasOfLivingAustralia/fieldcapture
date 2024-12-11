@@ -6174,8 +6174,7 @@
               {
                 "dataType": "feature",
                 "name": "sitesDevelopingManagementPlans",
-                "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.",
-                "validate": "required"
+                "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
               },
               {
                 "computed": {
@@ -6196,7 +6195,7 @@
                 "description": "Manually enter correct figure for this reporting period if different to mapped value.",
                 "units": "ha",
                 "decimalPlaces": 3,
-                "validate": "required,min[0]"
+                "validate": "min[0]"
               },
               {
                 "dataType": "text",
@@ -6243,9 +6242,6 @@
                 "units": "ha",
                 "decimalPlaces": 3,
                 "validate": [
-                  {
-                    "rule": "required"
-                  },
                   {
                     "rule": "min[0]"
                   },
@@ -6336,7 +6332,13 @@
                     "dataType": "text",
                     "name": "speciesSiteCovered",
                     "description": "This free text field allows multiple species and/or TECs to be entered. For Species: Use Scientific names with (common name in brackets), TECs should be written as listed in EPBC. Species or TECs should be separated by commas.",
-                    "validate": "required,maxSize[300]"
+                    "validate": "maxSize[300]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "managementPlanObjective",
+                    "description": "",
+                    "validate": "maxSize[500]"
                   }
                 ],
                 "dataType": "list",
@@ -6390,46 +6392,13 @@
             "defaultValue": ""
           },
           {
-            "dataType": "number",
-            "name": "totalAreaPlansDeveloped",
-            "description": "This field is not editable as it is auto populated from inputted data in the section below",
-            "validate": "min[0]",
-            "decimalPlaces": 3,
-            "computed": {
-              "expression": "sum(managementPlansByOutcome, \"areaTreatedHa\")"
-            }
-          },
-          {
-            "dataType": "number",
-            "decimalPlaces": 3,
-            "name": "totalAreaPlansDevelopedInvoiced",
-            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
-            "validate": [
-              {
-                "rule": "required"
-              },
-              {
-                "rule": "min[0]"
-              },
-              {
-                "param": {
-                  "expression": "totalAreaPlansDeveloped",
-                  "type": "computed",
-                  "decimalPlaces": 3
-                },
-                "rule": "max"
-              }
-            ],
-            "defaultValue": ""
-          },
-          {
             "dataType": "text",
             "name": "totalInvoicedPlansDevelopedMismatched",
             "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "+numberOfPlansDevelopedInvoiced < +numberOfPlansDeveloped or +totalAreaPlansDevelopedInvoiced < totalAreaPlansDeveloped",
+                "condition": "+numberOfPlansDevelopedInvoiced < +numberOfPlansDeveloped",
                 "type": "enable"
               }
             ]
@@ -6563,35 +6532,6 @@
                         "preLabel": "(ii) Total number of management plans developed <u><i>invoiced</i></u> for this reporting period",
                         "source": "numberOfPlansDevelopedInvoiced",
                         "type": "number"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "col",
-                "css": "span4 col-border-right",
-                "items": [
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(iii) Total area (ha) covered by management plan for this reporting period",
-                        "source": "totalAreaPlansDeveloped",
-                        "type": "number"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(iv) Total area (ha) covered by management plan <u><i>invoiced</i></u> for this reporting period",
-                        "source": "totalAreaPlansDevelopedInvoiced",
-                        "type": "number",
-                        "displayOptions": {
-                          "removeTrailingZeros": false
-                        }
                       }
                     ]
                   }
@@ -6801,7 +6741,7 @@
                   {
                     "columns": [
                       {
-                        "width": "25%",
+                        "width": "20%",
                         "source": "managementPlanName",
                         "title": "Name of management plan",
                         "type": "text"
@@ -6813,7 +6753,7 @@
                         "type": "selectOne"
                       },
                       {
-                        "width": "25%",
+                        "width": "20%",
                         "title": "Type of management plan<b style=\"color:red\">*</b>",
                         "type": "col",
                         "items": [
@@ -6839,9 +6779,15 @@
                         ]
                       },
                       {
-                        "width": "30%",
+                        "width": "20%",
                         "source": "speciesSiteCovered",
-                        "title": "Species/Threatened ecological communities/Ramsar Sites/Heritage Sites covered in plan",
+                        "title": "Species/Threatened ecological communities/Ramsar Sites/Heritage Sites covered in plan, if applicable",
+                        "type": "textarea"
+                      },
+                      {
+                        "width": "20%",
+                        "source": "managementPlanObjective",
+                        "title": "Objective/purpose of the plan",
                         "type": "textarea"
                       }
                     ],
