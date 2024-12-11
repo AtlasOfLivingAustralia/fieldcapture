@@ -120,6 +120,13 @@ var config =
                 }
             },
             {
+                "template": "nationalAndRegionalPlans",
+                "model": {
+                    "includeUrl": true,
+                    "headingTitle": "Conservation and management plans"
+                }
+            },
+            {
                 "template": "serviceOutcomeTargets",
                 "model": {
                     "titleHelpText": "Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections",
