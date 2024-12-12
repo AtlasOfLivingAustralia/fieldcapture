@@ -227,6 +227,19 @@ OrganisationViewModel = function (props, options) {
 
     self.transients = self.transients || {};
 
+    function toTitleCase(name) {
+        return name.replace(/\S+/g, function(word) {
+            if (!word) {
+                return word;
+            }
+            word = word.toLowerCase();
+            var joiningWords = ['and', 'of', 'the', 'in', 'for', 'to', 'a', 'an', 'on', 'at', 'by', 'with', 'from', 'as', 'but', 'or', 'nor'];
+            if (joiningWords.indexOf(word) >= 0) {
+                return word;
+            }
+            return word.charAt(0).toUpperCase() + word.substring(1)
+        });
+    }
     self.prepopulateFromABN = function() {
         if ($(config.abnSelector).validationEngine()) {
             var abn = self.abn;
@@ -242,11 +255,12 @@ OrganisationViewModel = function (props, options) {
                     self.entityType(orgDetails.entityType);
                     if (!self.name()) {
                         var defaultName = '';
-                        if (self.businessNames().length > 0) {
-                            defaultName = self.businessNames()[0];
+
+                        if (self.entityName()) {
+                            defaultName = toTitleCase(self.entityName());
                         }
-                        else if (self.entityName()) {
-                            defaultName = self.entityName();
+                        else if (self.businessNames().length > 0) {
+                            defaultName = self.businessNames()[0];
                         }
                         self.name(defaultName);
                     }

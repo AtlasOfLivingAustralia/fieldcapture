@@ -4,6 +4,7 @@
 *= require associated-orgs.css
 *= require_self
 *= require jquery-ui/1.13.2/jquery-ui
+*= require jquery-ui/1.13.2/juery-ui.theme
 */
 
 #projectList th {

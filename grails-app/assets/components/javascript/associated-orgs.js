@@ -35,6 +35,18 @@ ko.components.register('associated-orgs', {
         var $modal = $('#add-or-edit-organisation');
         $modal.find('form').validationEngine();
 
+        function findMatchingOrganisation(organisationId, callback) {
+            $.get(self.organisationSearchUrl+'?searchTerm='+organisationId).done(function(results) {
+                if (results && results.hits && results.hits.hits) {
+                    var matchingOrg = _.find(results.hits.hits, function (hit) {
+                        return hit._id == organisationId;
+                    });
+
+                    callback(matchingOrg);
+                }
+            });
+        }
+
         function AssociatedOrg(associatedOrg) {
 
             associatedOrg = associatedOrg || {};
@@ -44,9 +56,32 @@ ko.components.register('associated-orgs', {
             this.organisationId = ko.observable(associatedOrg.organisationId);
             this.fromDate = ko.observable(associatedOrg.fromDate).extend({simpleDate:false});
             this.toDate = ko.observable(associatedOrg.toDate).extend({simpleDate:false});
+            this.label = ko.observable(this.name());
+
+            this.updateLabel = function() {
+                if (this.organisationId) {
+                    var self = this;
+                    findMatchingOrganisation(self.organisationId(), function(matchingOrg) {
+                        if (matchingOrg && matchingOrg._source) {
+                            if (matchingOrg._source.name && matchingOrg._source.name != self.name()) {
+                                self.label(self.name() + ' (' + matchingOrg._source.name + ')');
+                            }
+                        }
+                    });
+                }
+                else {
+                    this.label(this.name());
+                }
+            }
+            this.organisationId.subscribe(this.updateLabel, this);
+            this.name.subscribe(this.updateLabel, this);
+            this.updateLabel();
+
 
             this.toJSON = function() {
-                return ko.mapping.toJS(this);
+                var result =  ko.mapping.toJS(this);
+                delete result.label;
+                return result;
             }
         }
 
@@ -100,18 +135,6 @@ ko.components.register('associated-orgs', {
                 $modal.modal('show');
             }
 
-        }
-
-        function findMatchingOrganisation(organisationId, callback) {
-            $.get(self.organisationSearchUrl+'?searchTerm='+organisationId).done(function(results) {
-                if (results && results.hits && results.hits.hits) {
-                    var matchingOrg = _.find(results.hits.hits, function (hit) {
-                        return hit._id == organisationId;
-                    });
-
-                    callback(matchingOrg);
-                }
-            });
         }
 
         self.okPressed = function () {
@@ -176,6 +199,10 @@ ko.components.register('associated-orgs', {
             }
 
         }
+
+        self.orgSearchLabel = function(org) {
+            return org.name + ' ( ' + org.organisationId + ' )';
+        };
 
         self.clearSelectedOrganisation = function() {
             $('#searchOrganisation').val('');
