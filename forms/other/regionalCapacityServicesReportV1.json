@@ -257,7 +257,7 @@
           {
             "dataType": "number",
             "name": "organisationPanelProjectValue",
-            "description": "Enter the total dollar value (GST inclusive) for the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts).",
+            "description": "Total dollar value (GST inclusive) for the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts).",
             "validate": "required,min[0]"
           },
           {
@@ -731,7 +731,7 @@
             "items": [
               {
                 "css": "span7",
-                "preLabel": "What is your total organisation panel/project $ value (GST inclusive)?",
+                "preLabel": "Your total organisation panel/project $ value (GST inclusive).",
                 "source": "organisationPanelProjectValue",
                 "type": "number",
                 "readonly": true

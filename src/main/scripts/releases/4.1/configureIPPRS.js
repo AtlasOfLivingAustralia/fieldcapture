@@ -20,7 +20,7 @@ var scores = [
                 type: "filter"
             },
             "childAggregations": [{
-                "property": "data.workforcePerformancePercentage",
+                "property": "data.tmp.workforcePerformancePercentage",
                     "type": "AVERAGE"
             }]
         },
@@ -44,7 +44,7 @@ var scores = [
                 type: "filter"
             },
             "childAggregations": [{
-                "property": "data.workforcePerformancePercentage",
+                "property": "data.tmp.supplyChainPerformancePercentage",
                 "type": "AVERAGE"
             }]
         },

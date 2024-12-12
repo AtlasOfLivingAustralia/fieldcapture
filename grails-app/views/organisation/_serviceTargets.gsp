@@ -1,5 +1,5 @@
 <!-- ko with:reportingTargetsAndFunding() -->
-<h4>${title ?: "Organisation services and minimum targets"}</h4>
+<h4>${title ?: "Organisation targets"}</h4>
 <!-- ko with: services -->
 <table class="table service-targets">
     <thead>
