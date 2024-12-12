@@ -9,41 +9,56 @@
       "collapsedByDefault": false,
       "templateName": "regionalCapacityServicesReport",
       "template": {
-          "pre-populate": [
-            {
-              "source": {
-                "context-path": "owner"
-              },
-              "mapping": [
-                {
-                  "target": "targetIndigenousParticipationPercentage",
-                  "source-path": "periodTargets.targetIndigenousParticipationPercentage"
-                }
-              ]
+        "pre-populate": [
+          {
+            "source": {
+              "context-path": "owner"
             },
-            {
-              "source": {
-                "context-path": "owner"
-              },
-              "mapping": [
-                {
-                  "target": "targetIndigenousProcurementPercentage",
-                  "source-path": "periodTargets.targetIndigenousProcurementPercentage"
-                }
-              ]
-            },
-            {
-              "source": {
-                "context-path": "owner"
-              },
-              "mapping": [
-                {
-                  "target": "organisationPanelProjectValue",
-                  "source-path": "totalContractValue"
-                }
-              ]
+            "mapping": [
+              {
+                "target": "targetIndigenousParticipationPercentage",
+                "source-path": "periodTargets.targetIndigenousParticipationPercentage"
+              }
+            ],
+            "merge": {
+              "targetIndigenousParticipationPercentage": {
+                "replaceExisting": true
+              }
             }
-          ],
+          },
+          {
+            "source": {
+              "context-path": "owner"
+            },
+            "mapping": [
+              {
+                "target": "targetIndigenousProcurementPercentage",
+                "source-path": "periodTargets.targetIndigenousProcurementPercentage"
+              }
+            ],
+            "merge": {
+              "targetIndigenousProcurementPercentage": {
+                "replaceExisting": true
+              }
+            }
+          },
+          {
+            "source": {
+              "context-path": "owner"
+            },
+            "mapping": [
+              {
+                "target": "organisationPanelProjectValue",
+                "source-path": "totalContractValue"
+              }
+            ],
+            "merge": {
+              "organisationPanelProjectValue": {
+                "replaceExisting": true
+              }
+            }
+          }
+        ],
         "dataModel": [
           {
             "name": "governanceAndFinancialFrameworksOnTrack",
