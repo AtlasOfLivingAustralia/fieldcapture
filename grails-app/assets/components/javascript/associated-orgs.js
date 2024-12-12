@@ -83,7 +83,7 @@ ko.components.register('associated-orgs', {
                 setLabel();
             }
             this.organisationId.subscribe(updateLabel, this);
-            this.name.subscribe(updateLabel, this);
+            this.name.subscribe(setLabel, this);
             updateLabel();
 
 
