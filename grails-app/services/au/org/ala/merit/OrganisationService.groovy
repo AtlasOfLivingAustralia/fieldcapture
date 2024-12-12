@@ -4,11 +4,9 @@ import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportOwner
 import org.grails.web.json.JSONArray
-import org.grails.web.json.JSONObject
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Period
-
 /**
  * Extends the plugin OrganisationService to provide Green Army reporting capability.
  */
@@ -128,6 +126,26 @@ class OrganisationService {
 
         regenerateOrganisationReports(organisation, organisationReportCategories)
     }
+
+    List<Map> generateTargetPeriods(String id) {
+        Map organisation = get(id)
+        generateTargetPeriods(organisation)
+    }
+
+    List<Map> generateTargetPeriods(Map organisation) {
+        Map targetsConfig = organisation.config?.targets
+        if (!targetsConfig) {
+            log.info("No target configuration defined for organisation ${organisation.organisationId}")
+            return null
+        }
+        ReportConfig targetsReportConfig = new ReportConfig(targetsConfig.periodGenerationConfig)
+        ReportOwner owner = new ReportOwner(
+                id:[organisationId:organisation.organisationId],
+                name:organisation.name
+        )
+        reportService.generateTargetPeriods(targetsReportConfig, owner, targetsConfig.periodLabelFormat)
+    }
+
 
     private void regenerateOrganisationReports(Map organisation, List<String> reportCategories = null) {
 
@@ -334,4 +352,22 @@ class OrganisationService {
         scoreIds.collectEntries{ String scoreId ->[(scoreId):result.results?.find{it.scoreId == scoreId}?.result?.result ?: 0]}
     }
 
+
+    /**
+     * Filter services to those supported by organisation.
+     */
+    def findApplicableServices(Map organisation, List allServices) {
+
+        List supportedServices = organisation.config?.organisationReports?.collect{it.activityType}?.findAll{it}
+        List result = []
+        if (supportedServices) {
+            result = allServices.findAll{ supportedServices.intersect(it.outputs.formName) }
+            result.each {
+                List scores = it.scores?.findAll{Map score -> score.isOutputTarget}
+                it.scores = scores
+            }
+        }
+
+        result
+    }
 }

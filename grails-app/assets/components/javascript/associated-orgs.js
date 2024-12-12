@@ -58,24 +58,33 @@ ko.components.register('associated-orgs', {
             this.toDate = ko.observable(associatedOrg.toDate).extend({simpleDate:false});
             this.label = ko.observable(this.name());
 
-            this.updateLabel = function() {
-                if (this.organisationId) {
-                    var self = this;
-                    findMatchingOrganisation(self.organisationId(), function(matchingOrg) {
-                        if (matchingOrg && matchingOrg._source) {
-                            if (matchingOrg._source.name && matchingOrg._source.name != self.name()) {
-                                self.label(self.name() + ' (' + matchingOrg._source.name + ')');
-                            }
-                        }
-                    });
+            var previousOrganisationId = null;
+            var organisationName = null;
+            var queryInProgress = false;
+            var self = this;
+            function setLabel() {
+                if (organisationName && organisationName != self.name()) {
+                    self.label(self.name() + ' (' + organisationName + ')');
                 }
                 else {
-                    this.label(this.name());
+                    self.label(self.name());
                 }
             }
-            this.organisationId.subscribe(this.updateLabel, this);
-            this.name.subscribe(this.updateLabel, this);
-            this.updateLabel();
+            function updateLabel() {
+                if (!queryInProgress && self.organisationId() && self.organisationId() != previousOrganisationId) {
+                    queryInProgress = true;
+                    findMatchingOrganisation(self.organisationId(), function(matchingOrg) {
+                        previousOrganisationId = self.organisationId();
+                        organisationName = matchingOrg && matchingOrg._source ? matchingOrg._source.name : null;
+                        setLabel();
+                        queryInProgress = false;
+                    });
+                }
+                setLabel();
+            }
+            this.organisationId.subscribe(updateLabel, this);
+            this.name.subscribe(setLabel, this);
+            updateLabel();
 
 
             this.toJSON = function() {

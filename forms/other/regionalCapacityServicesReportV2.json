@@ -1,14 +1,57 @@
 {
+  "id": "6683e3d1a31b681e3d2d304c",
+  "dateCreated": "2024-07-02T11:26:09Z",
+  "minOptionalSectionsCompleted": 1,
+  "supportsSites": false,
+  "tags": [],
+  "lastUpdated": "2024-07-02T22:39:07Z",
+  "createdUserId": "1493",
+  "external": false,
+  "activationDate": null,
+  "supportsPhotoPoints": false,
+  "publicationStatus": "unpublished",
+  "externalIds": null,
+  "gmsId": null,
   "name": "Regional Capacity Services Report",
-  "type": "Report",
   "sections": [
     {
-      "name": "Regional capacity services - reporting",
-      "optionalQuestionText": null,
-      "optional": false,
       "collapsedByDefault": false,
-      "templateName": "regionalCapacityServicesReport",
       "template": {
+        "pre-populate": [
+          {
+            "source": {
+              "context-path": "owner"
+            },
+            "mapping": [
+              {
+                "target": "targetIndigenousParticipationPercentage",
+                "source-path": "periodTargets.targetIndigenousParticipationPercentage"
+              }
+            ]
+          },
+          {
+            "source": {
+              "context-path": "owner"
+            },
+            "mapping": [
+              {
+                "target": "targetIndigenousProcurementPercentage",
+                "source-path": "periodTargets.targetIndigenousProcurementPercentage"
+              }
+            ]
+          },
+          {
+            "source": {
+              "context-path": "owner"
+            },
+            "mapping": [
+              {
+                "target": "organisationPanelProjectValue",
+                "source-path": "totalContractValue"
+              }
+            ]
+          }
+        ],
         "dataModel": [
           {
             "name": "governanceAndFinancialFrameworksOnTrack",
@@ -150,7 +193,7 @@
           {
             "dataType": "number",
             "name": "organisationFteWorkforce",
-            "description": "Enter total RDP staff (full time equivalent) deployed on Services for the Deed and all Contracts (including non-DCCEEW Contracts) during this reporting period.",
+            "description": "Enter total RDP staff (full time equivalent) deployed on Services for the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts) during this reporting period.",
             "validate": [
               {
                 "rule": "required"
@@ -164,14 +207,14 @@
                   "type": "computed"
                 },
                 "rule": "min",
-                "message": "numeric value must be higher or equal to the numeric value entered for 'What was your organisation’s full time equivalent Indigenous workforce deployed on the Services this reporting period?'"
+                "message": "Numeric value must be higher or equal to the numeric value entered for 'What was your organisation’s full time equivalent Indigenous workforce deployed on the Services this reporting period?'"
               }
             ]
           },
           {
             "dataType": "number",
             "name": "organisationFteIndigenousWorkforce",
-            "description": "Enter total RDP Indigenous staff (full time equivalent) deployed on Services for the Deed and all Contracts (including non-DCCEEW Contracts) during this reporting period.",
+            "description": "Enter total RDP Indigenous staff (full time equivalent) deployed on Services for the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts) during this reporting period.",
             "validate": [
               {
                 "rule": "required"
@@ -185,22 +228,62 @@
                   "type": "computed"
                 },
                 "rule": "max",
-                "message": "numeric value must be less than or equal to the numeric value entered for 'What was your organisation’s full time equivalent workforce deployed on the Services this reporting period?'"
+                "message": "Numeric value must be less than or equal to the numeric value entered for 'What was your organisation’s full time equivalent workforce deployed on the Services this reporting period?'"
               }
             ]
           },
           {
             "dataType": "number",
             "name": "servicesContractedValueFirstNations",
-            "description": "Enter total dollar value (GST inclusive) of goods and services contracted to First Nations people/Indigenous enterprises, during this reporting period, for the Deed and all Contracts (including non-DCCEEW Contracts).",
+            "description": "Enter total dollar value (GST inclusive) of goods and services contracted to First Nations people/Indigenous enterprises, during this reporting period, for the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts).",
             "validate": [
               {
                 "rule": "required"
               },
               {
                 "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "organisationPanelProjectValue",
+                  "type": "computed"
+                },
+                "rule": "max",
+                "message": "The sum of the value of Services contracted to First Nations people/Indigenous enterprises for all reporting periods can not exceed the total $ value (GST inclusive) of the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts)"
               }
             ]
+          },
+          {
+            "dataType": "number",
+            "name": "organisationPanelProjectValue",
+            "description": "Total dollar value (GST inclusive) for the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts).",
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "number",
+            "name": "supplyChainPerformancePercentage",
+            "description": "Calculated using value of Services contracted to First Nations people/Indigenous enterprises ÷ stored Total Organisation Panel/Project Value $ x 100",
+            "computed": {
+              "expression": "servicesContractedValueFirstNations / organisationPanelProjectValue * 100"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "workforcePerformancePercentage",
+            "description": "Calculated using FTE Indigenous workforce ÷ FTE workforce x 100",
+            "computed": {
+              "expression": "organisationFteIndigenousWorkforce / organisationFteWorkforce * 100"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "targetIndigenousParticipationPercentage",
+            "description": "Target Indigenous Participation Percentage for this reporting period"
+          },
+          {
+            "dataType": "number",
+            "name": "targetIndigenousProcurementPercentage",
+            "description": "Target Indigenous Procurement Percentage for this reporting period"
           },
           {
             "name": "staffDevelopmentOpportunities",
@@ -544,7 +627,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<b>Q5(c). Please complete workforce and supply chain data (Deed of Standing Offer Clause 38 Indigenous Procurement Policy). Please do not provide personal or commercial-in-confidence information when answering this question. Please retain documentation as evidence to support assurance activities undertaken to verify the reported information.</b>"
+                "source": "<b>Q5(c). Please complete workforce and supply chain data (Deed of Standing Offer Clause 38 Indigenous Procurement Policy). Please do not provide personal or <span style='white-space: nowrap;'>commercial-in-confidence</span> information when answering this question. Please retain documentation as evidence to support assurance activities undertaken to verify the reported information.</b>"
               }
             ]
           },
@@ -575,9 +658,67 @@
             "items": [
               {
                 "css": "span7",
-                "preLabel": "What was the dollar value of Services contracted to First Nations people/Indigenous enterprises during this reporting period?",
+                "preLabel": "Workforce Performance % this reporting period",
+                "source": "workforcePerformancePercentage",
+                "type": "number"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "preLabel": "Target Workforce Performance % this reporting period",
+                "source": "targetIndigenousParticipationPercentage",
+                "type": "number",
+                "readonly": true
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "preLabel": "Your total organisation panel/project $ value (GST inclusive).",
+                "source": "organisationPanelProjectValue",
+                "type": "number",
+                "readonly": true
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "preLabel": "What was the dollar value (GST inclusive) of Services contracted to First Nations people/Indigenous enterprises during this reporting period?",
                 "source": "servicesContractedValueFirstNations",
-                "type": "currency"
+                "type": "number"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "preLabel": "Supply Chain Performance % this reporting period",
+                "source": "supplyChainPerformancePercentage",
+                "type": "number"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "preLabel": "Target Supply Chain Performance % this reporting period",
+                "source": "targetIndigenousProcurementPercentage",
+                "type": "number",
+                "readonly": true
               }
             ]
           },
@@ -792,14 +933,21 @@
             ]
           }
         ]
-      }
+      },
+      "modelName": null,
+      "templateName": "regionalCapacityServicesReport",
+      "optional": false,
+      "optionalQuestionText": null,
+      "title": null,
+      "collapsibleHeading": null,
+      "name": "Regional capacity services - reporting",
+      "description": null
     }
   ],
-  "formVersion": 3,
+  "type": "Report",
   "category": null,
   "status": "active",
-  "gmsId": null,
-  "supportsSites": false,
-  "supportsPhotoPoints": false,
-  "minOptionalSectionsCompleted": 1
+  "lastUpdatedUserId": "1493",
+  "description": null,
+  "formVersion": 2
 }

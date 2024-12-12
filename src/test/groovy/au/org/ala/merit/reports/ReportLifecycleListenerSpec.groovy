@@ -1,6 +1,7 @@
 package au.org.ala.merit.reports
 
 import au.org.ala.ecodata.forms.ActivityFormService
+import au.org.ala.merit.MetadataService
 import groovy.json.JsonSlurper
 import spock.lang.Specification
 
@@ -8,9 +9,11 @@ class ReportLifecycleListenerSpec extends Specification {
 
     ReportLifecycleListener reportData = new ReportLifecycleListener()
     ActivityFormService activityFormService = Mock(ActivityFormService)
+    MetadataService metadataService = Mock(MetadataService)
 
     def setup() {
         reportData.activityFormService = activityFormService
+        reportData.metadataService = metadataService
     }
 
 
@@ -57,6 +60,29 @@ class ReportLifecycleListenerSpec extends Specification {
                 [entityType:"au.org.ala.ecodata.DataSetSummary", entityIds:["297cbf04-b8b1-43d5-a1b4-e833ef00a718", "0847b4c6-aba9-425c-a3e4-a07035d40b9b"]],
                 [entityType:"au.org.ala.ecodata.DataSetSummary", entityIds:["e4e3f304-5ee7-458b-ad7e-0e3ee0cbb202", "0d2d2b6c-50ce-46f8-a8f0-5f9238d84120", "144ca417-43a8-4eab-94c3-f857263bbc06"]],
                 [entityType:"au.org.ala.ecodata.DataSetSummary", entityIds:["5b1255a4-3b91-4fae-a243-02bd4d163898"]]]
+    }
+
+    def "getTargetForReportPeriod should return the correct target for the report period"() {
+        setup:
+        Map report = [toDate: '2023-12-31']
+        String scoreId = 'score1'
+        List<Map> values = [
+                [scoreId: 'score1', periodTargets: [
+                        [period: '2023-01-01', target: 10],
+                        [period: '2023-12-31', target: 20],
+                        [period: '2024-01-01', target: 30]
+                ]],
+                [scoreId: 'score2', periodTargets: [
+                        [period: '2023-01-01', target: 5],
+                        [period: '2023-12-31', target: 15]
+                ]]
+        ]
+
+        when:
+        def result = reportData.getTargetsForReportPeriod(report, values)
+
+        then:
+        result == [score1:20, score2: 15]
     }
 
     private static Map nhtActivityForm() {

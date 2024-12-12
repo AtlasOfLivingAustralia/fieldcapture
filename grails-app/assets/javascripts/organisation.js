@@ -3,6 +3,7 @@
 //= require reportService
 //= require components.js
 //= require ecodata-components.js
+//= require budget.js
 /**
  * Knockout view model for organisation pages.
  * @param props JSON/javascript representation of the organisation.
@@ -561,6 +562,8 @@ OrganisationPageViewModel = function (props, options) {
             }
         }
     };
+    var organisationService = new OrganisationService(options);
+    self.periods = options.targetPeriods || [];
 
     self.initialise = function() {
         $.fn.dataTable.moment( 'dd-MM-yyyy' );
@@ -647,6 +650,32 @@ OrganisationPageViewModel = function (props, options) {
     self.reportingEnabled = ko.observable();
     self.selectedOrganisationReportCategories = ko.observableArray();
 
+    // List of service / target measure
+    self.allTargetMeasures = [];
+    var services = options.services || [];
+    for (var i=0; i<services.length; i++) {
+        if (services[i].scores) {
+            for (var j=0; j<services[i].scores.length; j++) {
+                self.allTargetMeasures.push( {
+                    label:services[i].name+' - '+services[i].scores[j].label,
+                    serviceId:services[i].id,
+                    scoreId:services[i].scores[j].scoreId,
+                    service:services[i],
+                    score:services[i].scores[j],
+                    value:services[i].scores[j].scoreId
+                });
+            }
+        }
+    }
+
+    self.allTargetMeasures = _.sortBy(self.allTargetMeasures, 'label');
+    var propDetails = props && props.custom && props.custom.details || {};
+    self.selectedTargetMeasures = ko.observableArray();
+    var details = new OrganisationDetailsViewModel(propDetails, props, self.periods, self.allTargetMeasures, options);
+    updatedTargetMeasures(details);
+    self.reportingTargetsAndFunding = ko.observable(details);
+    self.isProjectDetailsLocked = ko.observable(false);
+
     var setStartAndEndDateDefaults = function() {
         var currentConfig = parsedConfig();
         if (!currentConfig || !currentConfig.organisationReports || currentConfig.organisationReports.length == 0) {
@@ -705,6 +734,26 @@ OrganisationPageViewModel = function (props, options) {
         reportService.regenerateReports(data,options.regenerateOrganisationReportsUrl);
     };
 
+    function updatedTargetMeasures (details) {
+        var reportingTargets = details,
+            selectedServices = reportingTargets.services.services(),
+            allServices = self.allTargetMeasures;
+
+        _.each(allServices, function (service) {
+            var found = _.find(selectedServices, function (selectedService) {
+                return selectedService.scoreId() === service.scoreId;
+            });
+
+            if (!found) {
+                reportingTargets.services.addServiceTarget(service);
+            }
+        })
+    }
+
+    self.attachValidation = function() {
+        $(options.organisationDetailsSelector).validationEngine('attach');
+    };
+
     self.saveOrganisationConfiguration = function() {
         var currentConfig = parsedConfig();
         if (!currentConfig) {
@@ -724,6 +773,19 @@ OrganisationPageViewModel = function (props, options) {
             abn: self.abn()
         };
         return saveOrganisation(json);
+    };
+
+    self.saveCustomFields = function() {
+        if ($(options.organisationDetailsSelector).validationEngine('validate')) {
+            blockUIWithMessage("Saving organisation data...");
+            var json = JSON.parse(self.reportingTargetsAndFunding().modelAsJSON());
+            saveOrganisation(json).done(function() {
+                blockUIWithMessage("Organisation data saved...");
+                setTimeout($.unblockUI, 1000);
+            }).fail(function(){
+                $.unblockUI();
+            });
+        }
     };
 
 
