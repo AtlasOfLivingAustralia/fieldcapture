@@ -12,3 +12,8 @@
     padding: 5px;
     margin-right: 5px;
 }
+
+ul.ui-menu {
+    list-style: none;
+}
+
