@@ -60,6 +60,7 @@ ko.components.register('associated-orgs', {
 
             var previousOrganisationId = null;
             var organisationName = null;
+            var queryInProgress = false;
             var self = this;
             function setLabel() {
                 if (organisationName && organisationName != self.name()) {
@@ -70,12 +71,13 @@ ko.components.register('associated-orgs', {
                 }
             }
             function updateLabel() {
-                if (self.organisationId() && self.organisationId() != previousOrganisationId) {
-
+                if (!queryInProgress && self.organisationId() && self.organisationId() != previousOrganisationId) {
+                    queryInProgress = true;
                     findMatchingOrganisation(self.organisationId(), function(matchingOrg) {
                         previousOrganisationId = self.organisationId();
                         organisationName = matchingOrg && matchingOrg._source ? matchingOrg._source.name : null;
                         setLabel();
+                        queryInProgress = false;
                     });
                 }
                 setLabel();
