@@ -27,7 +27,12 @@
                 "target": "targetIndigenousParticipationPercentage",
                 "source-path": "periodTargets.targetIndigenousParticipationPercentage"
               }
-            ]
+            ],
+            "merge": {
+              "targetIndigenousParticipationPercentage": {
+                "replaceExisting": true
+              }
+            }
           },
           {
             "source": {
@@ -38,7 +43,12 @@
                 "target": "targetIndigenousProcurementPercentage",
                 "source-path": "periodTargets.targetIndigenousProcurementPercentage"
               }
-            ]
+            ],
+            "merge": {
+              "targetIndigenousProcurementPercentage": {
+                "replaceExisting": true
+              }
+            }
           },
           {
             "source": {
@@ -49,7 +59,12 @@
                 "target": "organisationPanelProjectValue",
                 "source-path": "totalContractValue"
               }
-            ]
+            ],
+            "merge": {
+              "organisationPanelProjectValue": {
+                "replaceExisting": true
+              }
+            }
           }
         ],
         "dataModel": [
