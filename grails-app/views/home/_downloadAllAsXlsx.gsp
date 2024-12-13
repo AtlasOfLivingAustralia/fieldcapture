@@ -49,6 +49,11 @@
         </g:each>
     </ul>
 
+    <strong>Contracted Recipient Details</strong><br/>
+    <ul class="unstyled">
+        <li><label class="checkbox"><input type="checkbox" name="tabs" value="Organisation Details" data-validation-engine="validate[minCheckbox[1]]">Organisation Details</label></li>
+    </ul>
+
     <strong>Electorate Coord</strong><br/>
     <ul class="unstyled">
         <li><label class="checkbox"><input type="checkbox" name="tabs" value="Electorate Coord" data-validation-engine="validate[minCheckbox[1]]">Electorate Coord</label></li>

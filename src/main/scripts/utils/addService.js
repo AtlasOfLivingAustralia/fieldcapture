@@ -1,5 +1,4 @@
-load("../../../utils/uuid.js");
-load( "../../../utils/audit.js");
+
 function addService (newServiceName, legacyId,  serviceFormName, sectionName, outputs, userId) {
     var eventType;
     legacyId = NumberInt(legacyId);
@@ -35,4 +34,19 @@ function addService (newServiceName, legacyId,  serviceFormName, sectionName, ou
     audit(service, service.serviceId, 'au.org.ala.ecodata.Service', userId, undefined, eventType);
 
     return legacyId;
+}
+
+function addServiceOutput(legacyId, formName, sectionName, userId) {
+    let service = db.service.findOne({legacyId:legacyId});
+    let outputs = service.outputs;
+    let output = {
+        formName: formName,
+        sectionName: sectionName
+    };
+    outputs.push(output);
+    db.service.updateOne(
+        {legacyId: legacyId},
+        {$set: {outputs:outputs, lastUpdated:ISODate()}}
+    );
+    audit(service, service.serviceId, 'au.org.ala.ecodata.Service', userId, undefined, 'Update');
 }

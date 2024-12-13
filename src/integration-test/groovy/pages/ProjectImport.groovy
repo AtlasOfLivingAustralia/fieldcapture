@@ -4,7 +4,7 @@ import geb.Page
 
 class ProjectImport extends Page {
 
-    static url = "admin/gmsProjectImport"
+    static url = "admin/importMeritProjects"
 
     static at = { title.startsWith("Import Projects") }
 

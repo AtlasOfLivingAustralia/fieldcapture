@@ -1,0 +1,101 @@
+
+<div class="associatedOrgs mt-3">
+        Associated Organisations
+
+        <div class=" pl-0 associated-org-list" data-bind="foreach:associatedOrgs">
+
+                <div class="actions">
+                    <button class="btn btn-sm btn-container" data-bind="click:$parent.editAssociatedOrg"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-sm btn-container" data-bind="click:$parent.removeAssociatedOrg"><i class="fa fa-remove"></i></button>
+                </div>
+                <div>
+                <!-- ko if: $data.organisationId() -->
+                    <a href="" data-bind="attr:{href:$parent.organisationViewUrl + '/' + $data.organisationId()}">
+                        <span data-bind="text:label"></span>
+                    </a>
+                <!-- /ko -->
+
+                <!-- ko if:!$data.organisationId() -->
+                    <span data-bind="text:name"></span>
+                <!-- /ko -->
+                    </div>
+                <div>
+                ( <span data-bind="text:description"></span>
+                <!-- ko if:fromDate -->
+                    <span> from <span data-bind="text:fromDate.formattedDate"></span></span>
+                <!-- /ko -->
+                <!-- ko if:toDate -->
+                    <span> to <span data-bind="text:toDate.formattedDate"></span></span>
+                <!-- /ko -->
+                )
+                </div>
+
+        </div>
+            <div class="mb-3">
+        <button id="addAssociatedOrgButton" class="btn btn-sm" data-bind="click:addAssociatedOrg">Add Organisation</button>
+        <input type="text" class="invisibleValidationHolder" name="invisibleValidationHolder" data-bind="jqueryValidationEngine:{namespace:validationNamespace, validationFunction:associatedOrgValidation}">
+            </div>
+
+</div>
+
+<!-- ko using:editableOrganisation -->
+<div id="add-or-edit-organisation" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="title">Organisation relationship</h4>
+            </div>
+
+
+            <form class="modal-body">
+                <div class="form-group">
+                    <label for="searchOrganisation">Search for an existing organisation</label>
+                    <div class="input-group input-append">
+                        <input type="text" id="searchOrganisation" name="organisation-search" autocomplete="off" class="form-control form-control-sm" placeholder="Search organisations..."
+                               data-bind="enable:!organisationId(), elasticSearchAutocomplete:{url:$parent.organisationSearchUrl, value:'name', label:$parent.orgSearchLabel, result:$parent.selectOrganisation}"/>
+                        <span class="input-group-text"><i class="fa fa-remove" data-bind="click:$parent.clearSelectedOrganisation"></i></span>
+                    </div>
+                </div>
+                <!-- ko if:$parent.displayName -->
+                <div class="form-group">
+                    <label for="name-to-use" class="required">Organisation name as it appears on the project page (i.e. The contracted recipient name)</label>
+
+                    <select class="form-control" id="name-to-use"  data-bind="enable:organisationId(), value:name, options:$parent.allowedNames"
+                            data-validation-engine="validate[required]" data-prompt-position="topLeft"></select>
+                </div>
+                <!-- /ko -->
+                <div class="form-group">
+                    <label class="required" for="relationship-description">Relationship</label>
+                    <!-- ko if:$parent.relationshipTypes -->
+                    <select id="relationship-description" name="description" class="form-control form-control-sm" data-bind="enable:organisationId(), options:$parent.relationshipTypes, value:description"></select>
+                    <!-- /ko -->
+                    <!-- ko if:!$parent.relationshipTypes -->
+                    <input type="text" id="relationship-description" name="description" class="form-control form-control-sm" data-bind="enable:organisationId(), value:description"></input>
+                    <!-- /ko -->
+                </div>
+                <div class="form-group">
+                    <label for="relationship-from-date">From date</label>
+                    <div class="input-group input-append">
+                        <input id="relationship-from-date" name="relationship-from-date" autocomplete="off" class="form-control" data-bind="enable:organisationId(), datepicker:fromDate.date" type="text">
+                        <span class="input-group-text open-datepicker"><i class="fa fa-th"></i></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="relationship-to-date">To date</label>
+                    <div class="input-group input-append">
+                        <input id="relationship-to-date" class="form-control" autocomplete="off" data-bind="enable:organisationId(), datepicker:toDate.date" name="to-date" type="text"
+                               data-validation-engine="validate[future[#relationship-from-date]]" data-prompt-position="topLeft">
+                        <span class="input-group-text open-datepicker"><i class="fa fa-th"></i></span>
+                    </div>
+                </div>
+            </form>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-success" name="save-org-changes"
+                        data-bind="enable:organisationId(), click:$parent.okPressed">OK</button>
+                <button class="btn btn-sm btn-danger" data-bind="click:$parent.close">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /ko -->

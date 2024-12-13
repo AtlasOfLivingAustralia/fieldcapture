@@ -235,6 +235,8 @@ ko.bindingHandlers.elasticSearchAutocomplete = {
 
     var options = {};
 
+    var getLabel = _.isFunction(labelProp) ? labelProp : function(item) { return item[labelProp]; };
+    var getValue = _.isFunction(valueProp) ? valueProp : function(item) { return item[valueProp]; };
     options.source = function(request, response) {
       $(element).addClass("ac_loading");
 
@@ -248,7 +250,7 @@ ko.bindingHandlers.elasticSearchAutocomplete = {
           if (data.hits) {
             var hits = data.hits.hits || [];
             items = $.map(hits, function (hit) {
-              return {label: hit._source[labelProp], value: hit._source[valueProp], source:hit._source};
+              return {label: getLabel(hit._source), value: getValue(hit._source), source:hit._source};
             });
             response(items);
           }
@@ -264,7 +266,6 @@ ko.bindingHandlers.elasticSearchAutocomplete = {
     };
     options.select = function(event, ui) {
       result(ui.item);
-      $(this).val(""); // Clear the search field
     };
 
     $(element).autocomplete(options);

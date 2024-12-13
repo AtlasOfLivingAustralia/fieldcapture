@@ -1,6 +1,7 @@
 package au.org.ala.merit.reports
 
 import au.org.ala.ecodata.forms.ActivityFormService
+import au.org.ala.merit.MetadataService
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 /**
@@ -13,6 +14,8 @@ class ReportLifecycleListener {
     boolean deleteSiteOnReset = true
     @Autowired
     ActivityFormService activityFormService
+    @Autowired
+    MetadataService metadataService
 
     Map getContextData(Map context, Map report) { [:] }
     Map getOutputData(Map context, Map outputConfig, Map report) { [:] }
@@ -89,6 +92,27 @@ class ReportLifecycleListener {
         }
         result << current[pathElements[i]]
         result
+    }
+
+    Map getTargetsForReportPeriod(Map report, List<Map> outputTargets) {
+        String endDate = report.toDate
+
+        outputTargets?.collectEntries { Map outputTarget ->
+            String scoreId = outputTarget.scoreId
+            String name = scoreName(scoreId) ?: scoreId
+            String previousPeriod = ''
+            Map matchingPeriodTarget = outputTarget?.periodTargets?.find { Map periodTarget ->
+                boolean result = previousPeriod < endDate && periodTarget.period >= endDate
+                previousPeriod = periodTarget.period
+                result
+            }
+            [(name): matchingPeriodTarget?.target]
+        }
+    }
+
+    String scoreName(String scoreId) {
+        List scores = metadataService.getScores(false)
+        scores.find { it.scoreId == scoreId }?.name
     }
 
 

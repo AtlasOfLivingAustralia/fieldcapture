@@ -13,6 +13,7 @@
 //= require jquery-file-download/jquery.fileDownload.js
 //= require document.js
 //= require meriplan.js
+//= require budget.js
 //= require risks.js
 //= require sites.js
 //= require activity.js
@@ -73,7 +74,8 @@ function isValid(p, a) {
 	 return p;
 }
 
-function ProjectViewModel(project, isUserEditor, organisations) {
+function ProjectViewModel(project) {
+    project.geographicInfo = project.geographicInfo || {};
     var self = this;
     // documents
     var docDefaults = newDocumentDefaults(project);
@@ -107,16 +109,6 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     }));
     self.externalIdTypes = PROJECT_EXTERNAL_ID_TYPES;
 
-    if (isUserEditor === undefined) {
-        isUserEditor = false;
-    }
-    if (!organisations) {
-        organisations = [];
-    }
-    var organisationsMap = {};
-    $.each(organisations, function(org) {
-        organisationsMap[org.organisationId] = org;
-    });
     self.transients = self.transients || {};
     self.transients.defaultTags = ["Fires", "Flood", "Cyclone", "Drought", "Storm", "Wind"];
 
@@ -156,31 +148,7 @@ function ProjectViewModel(project, isUserEditor, organisations) {
         }
     });
 
-    self.organisationId = ko.observable(project.organisationId);
-    self.transients.organisation = ko.observable(organisationsMap[self.organisationId()]);
-    self.organisationName = ko.computed(function() {
-        var org = self.transients.organisation();
-        return org? org.name: project.organisationName;
-    });
-    self.transients.organisation.subscribe(function(org) {
-        if (org && org.organisationId) {
-            self.organisationId(org.organisationId);
-        }
-    });
-
-    self.orgIdSvcProvider = ko.observable(project.orgIdSvcProvider);
-    self.transients.serviceProviderOrganisation = ko.observable(organisationsMap[self.orgIdSvcProvider()]);
-    self.serviceProviderName = ko.computed(function() {
-        var org = self.transients.serviceProviderOrganisation();
-        return org? org.name: project.serviceProviderName;
-    });
-    self.collectoryInstitutionId = ko.computed(function() {
-        var org = self.transients.organisation();
-        return org? org.collectoryInstitutionId: "";
-    });
-
-    self.orgIdGrantee = ko.observable(project.orgIdGrantee);
-    self.orgIdSponsor = ko.observable(project.orgIdSponsor);
+    self.associatedOrgs = ko.observable(project.associatedOrgs);
 
     self.associatedProgram = ko.observable(); // don't initialise yet - we want the change to trigger dependents
     self.associatedSubProgram = ko.observable(project.associatedSubProgram);
@@ -209,12 +177,76 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     self.urlWeb = ko.observable(project.urlWeb).extend({url:true});
     self.contractStartDate = ko.observable(project.contractStartDate).extend({simpleDate: false});
     self.contractEndDate = ko.observable(project.contractEndDate).extend({simpleDate: false});
+    self.geographicInfo = {
+        nationwide: ko.observable(project.geographicInfo.nationwide || false),
+        statewide: ko.observable(project.geographicInfo.statewide || false),
+        isDefault: ko.observable(project.geographicInfo.isDefault || false),
+        primaryState: ko.observable(project.geographicInfo.primaryState),
+        primaryElectorate: ko.observable(project.geographicInfo.primaryElectorate),
+        otherStates: ko.observableArray(project.geographicInfo.otherStates || []),
+        otherElectorates: ko.observableArray(project.geographicInfo.otherElectorates || [])
+    };
+    self.geographicInfo.nationwide.subscribe(function(newValue) {
+        if (newValue) {
+            self.geographicInfo.statewide(false);
+            self.geographicInfo.primaryState("");
+            self.geographicInfo.primaryElectorate("");
+            self.geographicInfo.otherStates([]);
+            self.geographicInfo.otherElectorates([]);
+        }
+    });
+
+    self.geographicInfo.statewide.subscribe(function(newValue) {
+        if (newValue) {
+            self.geographicInfo.nationwide(false);
+            self.geographicInfo.primaryElectorate("");
+            self.geographicInfo.otherStates([]);
+            self.geographicInfo.otherElectorates([]);
+        }
+    });
+
+    self.geographicInfo.primaryElectorate.subscribe(function(newValue) {
+        if (newValue) {
+            var electorate = findElectorate(newValue);
+            if (electorate && electorate.state && electorate.state.length > 0) {
+                self.geographicInfo.primaryState(electorate.state[0]);
+                // if state is set to primary state, remove it from other states
+                if (self.geographicInfo.otherStates.indexOf(electorate.state[0]) > -1) {
+                    self.geographicInfo.otherStates.remove(electorate.state[0]);
+                }
+            }
+        }
+    });
+
+    // automatically add states of selected electorates to other states field
+    self.geographicInfo.otherElectorates.subscribe(function(newValue) {
+        if (newValue) {
+            var otherElectorates = self.geographicInfo.otherElectorates();
+            otherElectorates && _.each(otherElectorates, function(name) {
+                var electorate = findElectorate(name);
+                var states = electorate && electorate.state;
+                _.each(states, function(state) {
+                    if (state && self.geographicInfo.otherStates.indexOf(state) === -1 && self.geographicInfo.primaryState() !== state) {
+                        self.geographicInfo.otherStates.push(state);
+                    }
+                })
+            });
+        }
+    });
     self.transients.programs = [];
     self.transients.subprograms = {};
     self.transients.subprogramsToDisplay = ko.computed(function () {
         return self.transients.subprograms[self.associatedProgram()];
     });
     self.transients.fixedProjectDuration = ko.observable(false);
+
+
+    function findElectorate(electorateName) {
+        var electorates = self.transients.electorates.originalElectorateList;
+        return electorates && _.find(electorates, function(electorate) {
+            return electorate.name === electorateName;
+        });
+    };
 
     var isBeforeToday = function(date) {
         return moment(date) < moment().startOf('day');
@@ -410,60 +442,13 @@ function ProjectViewModel(project, isUserEditor, organisations) {
     });
 
     self.transients.projectId = project.projectId;
+    self.transients.currentAssociatedOrgs = ko.pureComputed(function() {
+        return _.filter(self.associatedOrgs(), function(org) {
+            var toDate = ko.utils.unwrapObservable(org.toDate);
+            var fromDate = ko.utils.unwrapObservable(org.fromDate);
+            return (!toDate || toDate >= new Date().toISOStringNoMillis()) && (!fromDate || fromDate <= new Date().toISOStringNoMillis());
 
-    self.transients.dataSharingLicenses = [
-            {lic:'CC BY', name:'Creative Commons Attribution'},
-            {lic:'CC BY-NC', name:'Creative Commons Attribution-NonCommercial'},
-            {lic:'CC BY-SA', name:'Creative Commons Attribution-ShareAlike'},
-            {lic:'CC BY-NC-SA', name:'Creative Commons Attribution-NonCommercial-ShareAlike'}
-        ];
-    self.transients.organisations = organisations;
-
-    self.transients.difficultyLevels = [ "Easy", "Medium", "Hard" ];
-
-    var scienceTypesList = [
-        {name:'Biodiversity', value:'biodiversity'},
-        {name:'Ecology', value:'ecology'},
-        {name:'Natural resource management', value:'nrm'}
-    ];
-    self.transients.availableScienceTypes = scienceTypesList;
-    self.transients.scienceTypeDisplay = ko.pureComputed(function () {
-        for (var st = self.scienceType(), i = 0; i < scienceTypesList.length; i++)
-            if (st === scienceTypesList[i].value)
-                return scienceTypesList[i].name;
-    });
-
-    var availableProjectTypes = [
-        {name:'Citizen Science Project', display:'Citizen\nScience', value:'citizenScience'},
-        {name:'Ecological or biological survey / assessment (not citizen science)', display:'Biological\nScience', value:'survey'},
-        {name:'Natural resource management works project', display:'Works\nProject', value:'works'}
-    ];
-    self.transients.availableProjectTypes = availableProjectTypes;
-    self.transients.kindOfProjectDisplay = ko.pureComputed(function () {
-        for (var pt = self.transients.kindOfProject(), i = 0; i < availableProjectTypes.length; i++)
-            if (pt === availableProjectTypes[i].value)
-                return availableProjectTypes[i].display;
-    });
-    /** Map between the available selection of project types and how the data is stored */
-    self.transients.kindOfProject = ko.pureComputed({
-        read: function() {
-            if (self.isCitizenScience()) {
-                return 'citizenScience';
-            }
-            if (self.projectType()) {
-                return self.projectType() == 'survey' ? 'survey' : 'works';
-            }
-        },
-        write: function(value) {
-            if (value === 'citizenScience') {
-                self.isCitizenScience(true);
-                self.projectType('survey');
-            }
-            else {
-                self.isCitizenScience(false);
-                self.projectType(value);
-            }
-        }
+        });
     });
 
     self.loadPrograms = function (programsModel) {
@@ -477,6 +462,64 @@ function ProjectViewModel(project, isUserEditor, organisations) {
         });
         self.associatedProgram(project.associatedProgram); // to trigger the computation of sub-programs
     };
+
+    self.transients.states = ko.observableArray([]);
+    self.transients.states.filteredStates = ko.computed(function() {
+        var primaryState = self.geographicInfo.primaryState(), states = self.transients.states().concat([]);
+        if (primaryState) {
+            var index = states.indexOf(primaryState);
+            if (index > -1) {
+                states.splice(index, 1);
+            }
+        }
+
+        return states;
+    });
+    self.transients.electorates = ko.observableArray([]);
+    self.transients.electorates.filteredElectorates = ko.computed(function() {
+        var primaryElectorate = self.geographicInfo.primaryElectorate(), electorates = self.transients.electorates().concat([]);
+        if (primaryElectorate) {
+            var index = electorates.indexOf(primaryElectorate);
+            if (index > -1) {
+                electorates.splice(index, 1);
+            }
+        }
+
+        return electorates;
+    });
+
+    self.loadStatesAndElectorates = function() {
+        var promise1 = $.getJSON(fcConfig.listOfStatesUrl, function(data) {
+            var states = [];
+            $.each(data, function(i, state) {
+                states.push(state.name);
+            });
+
+            self.transients.states(states);
+        });
+
+        var promse2 = $.getJSON(fcConfig.listOfElectoratesUrl, function(data) {
+            var electorates = [];
+            $.each(data, function(i, electorate) {
+                electorates.push(electorate.name);
+            });
+
+            self.transients.electorates(electorates);
+            self.transients.electorates.originalElectorateList = data;
+        });
+
+        $.when(promise1, promse2).done(self.loadGeographicInfo);
+    }
+
+    self.loadGeographicInfo = function () {
+        self.geographicInfo.nationwide(project.geographicInfo.nationwide);
+        self.geographicInfo.statewide(project.geographicInfo.statewide);
+        self.geographicInfo.isDefault(project.geographicInfo.isDefault);
+        self.geographicInfo.primaryState(project.geographicInfo.primaryState);
+        self.geographicInfo.primaryElectorate(project.geographicInfo.primaryElectorate);
+        self.geographicInfo.otherStates(project.geographicInfo.otherStates);
+        self.geographicInfo.otherElectorates(project.geographicInfo.otherElectorates);
+    }
 
     self.toJS = function() {
         var toIgnore = self.ignore; // document properties to ignore.
@@ -809,12 +852,15 @@ function exclusive (field, rules, i, options) {
     }
 };
 
-function ProjectPageViewModel(project, sites, activities, organisations, userRoles, config) {
+function ProjectPageViewModel(project, sites, activities, userRoles, config) {
     var self = this;
 
     var projectService = new ProjectService(project, config);
     _.extend(this, projectService);
-    _.extend(this, new ProjectViewModel(project, userRoles.editor, organisations));
+    _.extend(this, new ProjectViewModel(project));
+
+    self.organisationSearchUrl = config.organisationSearchUrl;
+    self.organisationViewUrl = config.organisationViewUrl;
 
     self.internalOrderId = ko.observable(project.internalOrderId);
     self.userIsCaseManager = ko.observable(userRoles.grantManager);
@@ -958,10 +1004,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             plannedEndDate: self.plannedEndDate(),
             contractStartDate: self.contractStartDate(),
             contractEndDate: self.contractEndDate(),
-            organisationId: self.organisationId(),
-            organisationName: self.organisationName(),
-            orgIdSvcProvider: self.orgIdSvcProvider(),
-            serviceProviderName: self.serviceProviderName(),
+            associatedOrgs: self.associatedOrgs(),
             associatedProgram: self.associatedProgram(),
             associatedSubProgram: self.associatedSubProgram(),
             programId: self.programId(),
@@ -972,6 +1015,7 @@ function ProjectPageViewModel(project, sites, activities, organisations, userRol
             tags: self.tags(),
             promoteOnHomepage: self.promoteOnHomepage(),
             externalIds: ko.mapping.toJS(self.externalIds),
+            geographicInfo: ko.mapping.toJS(self.geographicInfo),
             options: {
                 changeActivityDates: self.changeActivityDates(),
                 includeSubmittedReports: self.includeSubmittedReports(),
