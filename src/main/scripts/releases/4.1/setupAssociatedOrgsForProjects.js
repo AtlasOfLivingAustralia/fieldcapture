@@ -17,8 +17,15 @@ while (projects.hasNext()) {
         if (!organisation) {
             print("OrganisationId "+project.organisationId+" not found for project "+project.projectId+" name:"+project.name);
         }
-        else {
-            associatedOrg.organisationName = organisation.name;
+        else if (!associatedOrg.name) {
+            associatedOrg.name = organisation.name;
+        }
+        else if (associatedOrg.name != organisation.name && (!organisation.contractNames || organisation.contractNames.indexOf(associatedOrg.name) < 0)) {
+            organisation.contractNames = organisation.contractNames || [];
+            organisation.contractNames.push(associatedOrg.name);
+            print("Adding contract name "+associatedOrg.name+" to organisation "+organisation.name);
+            db.organisation.replaceOne({organisationId:organisation.organisationId}, organisation);
+            audit(organisation, organisation.organisationId, 'org.ala.ecodata.Organisation', adminUserId);
         }
     }
 

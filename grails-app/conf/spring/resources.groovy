@@ -5,6 +5,7 @@ import au.org.ala.merit.hub.HubAwareLinkGenerator
 import au.org.ala.merit.StatisticsFactory
 import au.org.ala.merit.hub.HubAwareLinkGenerator
 import au.org.ala.merit.reports.NHTOutputReportLifecycleListener
+import au.org.ala.merit.reports.RegionalCapacityServicesReportLifecycleListener
 import au.org.ala.merit.util.ProjectGroupingHelper
 
 // Place your Spring DSL code here
@@ -25,6 +26,7 @@ beans = {
     NHTOutputReport(NHTOutputReportLifecycleListener)
     GrantsandOthersProgressReport(NHTOutputReportLifecycleListener)
     ProcurementOutputReport(NHTOutputReportLifecycleListener)
+    RegionalCapacityServicesReport(RegionalCapacityServicesReportLifecycleListener)
 
     meritServletContextConfig(MeritServletContextConfig)
     bdrTokenConfig(BdrTokenConfig)

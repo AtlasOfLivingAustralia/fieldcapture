@@ -466,6 +466,9 @@ class EditableMeriPlan extends Module {
 
     /** Users of this method should waitFor hasBeenReloaded as this triggers a page reload */
     void aquireEditLock() {
+        waitFor {
+            lockMeriPlanButton.displayed
+        }
         lockMeriPlanButton.click()
     }
 

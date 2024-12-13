@@ -15,6 +15,7 @@
             prepopulateAbnUrl:"${createLink(action:'prepopulateAbn')}",
             organisationListUrl: '${g.createLink(action:"list")}',
             organisationSaveUrl: "${createLink(action:'ajaxUpdate')}",
+            i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
             returnTo: "${createLink(action:'list')}"
             };
     </script>

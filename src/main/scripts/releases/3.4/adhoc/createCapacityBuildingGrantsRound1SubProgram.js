@@ -120,13 +120,6 @@ var config =
                 }
             },
             {
-                "template": "nationalAndRegionalPlans",
-                "model": {
-                    "includeUrl": true,
-                    "headingTitle": "Conservation and management plans"
-                }
-            },
-            {
                 "template": "serviceOutcomeTargets",
                 "model": {
                     "titleHelpText": "Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections",
@@ -398,6 +391,19 @@ var config =
                         "b8304577-afd8-45e0-8ef4-b71ae10998f5"
                     ],
                     "serviceId": 44
+                },
+                {
+                    "serviceTargets": [
+                        "8113ab8a-17e6-43c9-be32-9ca72dd01454",
+                        "9f6f06ac-b055-48c1-9d80-b305acdeae79"
+                    ],
+                    "serviceId": 6
+                },
+                {
+                    "serviceTargets": [
+                        "0e887410-a3c5-49ca-a6f5-0f2f6fae30db"
+                    ],
+                    "serviceId": 46
                 }
             ]
         },
@@ -435,7 +441,7 @@ var config =
                 "minimumReportDurationInDays": 3,
                 "label": "Semester",
                 "category": "Progress Reports",
-                "activityType": "Progress Report",
+                "activityType": "Grants and Others Progress Report",
                 "reportsAlignedToCalendar": true,
                 "canSubmitDuringReportingPeriod": true
             },
@@ -471,13 +477,13 @@ var config =
             "Climate Change - Changed rainfall patterns",
             "Climate Change - Sea level rises",
             "Climate Change - Unexpected seasonal/temperature extremes",
-            "Disconnection from Country - Altered/disrupted connection with land and sea country",
             "Disconnection from Country - Altered or disrupted First Nations engagement/leadership in caring for land and sea country",
             "Disconnection from Country - Altered or disrupted transfer of First Nations knowledge systems",
+            "Disconnection from Country - Altered/disrupted connection with land and sea country",
             "Disconnection from Country - Inadequate recognition of Traditional knowledge and practices",
-            "Disengagement of community - Community are not informed and are not engaged in managing the environment",
             "Disease/pathogens - Areas that are infected",
             "Disease/pathogens - Possible infection of disease free areas",
+            "Disengagement of community - Community are not informed and are not engaged in managing the environment",
             "Fire - Inappropriate fire regime",
             "Fire - Lack of protection for ecological assets during fire control activities",
             "Genetics - Bottleneck/inbreeding",
@@ -495,6 +501,8 @@ var config =
             "Human interference - Recreational fishing",
             "Human interference - Recreational pressures",
             "Human interference - Road/vehicle strike",
+            "Knowledge/Capacity - Inadequate scientific and/or technological capacity",
+            "Knowledge/Capacity - Insufficient knowledge to inform appropriate management or intervention actions",
             "Land management practices - Changes to hydrology and aquatic systems",
             "Land management practices - Domestic grazing/stock impacts",
             "Land management practices - Excess recharge of groundwater",

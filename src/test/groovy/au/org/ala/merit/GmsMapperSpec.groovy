@@ -54,7 +54,7 @@ class GmsMapperSpec extends Specification{
         'GreenArmy-1234567-1' == project.externalId
         'Test Project Name' == project.name
         'Test Project Description' == project.description
-        [[organisationId:"123", name:"Test org 1", organisationName:"Test org 1", description:"Recipient"]] == project.associatedOrgs
+        [[organisationId:"123", name:"Test org 1", description:"Recipient"]] == project.associatedOrgs
         'gar1' == project.programId
         [[idType:'INTERNAL_ORDER_NUMBER', externalId:'111111']] == project.externalIds
 
@@ -249,8 +249,8 @@ class GmsMapperSpec extends Specification{
         1 * abnLookupService.lookupOrganisationDetailsByABN(abn) >> abnValue
 
         and:
-        result.project.associatedOrgs == [[organisationId:null, name:"Test org 12345678900", organisationName:"Test org 12345678900", description:"Recipient"]]
-        result.messages[0] == "An organisation will be created with ABN: 12345678900 and name: Test org 12345678900"
+        result.project.associatedOrgs == [[organisationId:null, name:"Test Org 12345678900", description:"Recipient"]]
+        result.messages[0] == "An organisation will be created with ABN: 12345678900 and name: Test Org 12345678900"
     }
 
     def "The organisation relationship can be derived from the program"(){
@@ -266,8 +266,8 @@ class GmsMapperSpec extends Specification{
         1 * abnLookupService.lookupOrganisationDetailsByABN(abn) >> abnValue
 
         and:
-        result.project.associatedOrgs == [[organisationId:null, name:"Test org 12345678900", organisationName:"Test org 12345678900", description:"Recipient"]]
-        result.messages[0] == "An organisation will be created with ABN: 12345678900 and name: Test org 12345678900"
+        result.project.associatedOrgs == [[organisationId:null, name:"Test Org 12345678900", description:"Recipient"]]
+        result.messages[0] == "An organisation will be created with ABN: 12345678900 and name: Test Org 12345678900"
     }
 
     def "If an ABN is supplied in the project load, the looked up entity name cannot match another MERIT organisation"(){

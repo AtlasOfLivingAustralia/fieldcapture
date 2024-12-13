@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.com.bytecode.opencsv.CSVWriter
+import org.apache.commons.lang.WordUtils
 import org.apache.commons.validator.EmailValidator
 
 import java.text.DecimalFormat
@@ -285,13 +286,23 @@ class GmsMapper {
                     abnLookup = abnLookupService.lookupOrganisationDetailsByABN(abn)
                     if (abnLookup && !abnLookup.error) {
                         List names = [abnLookup.entityName] + abnLookup.businessNames
-                        organisation = organisations.find { it.name in names }
+                        if (contractName) {
+                            names << contractName
+                        }
+                        organisation = organisations.find { Map org ->
+                            names.find{it && (it.toLowerCase() == org.name?.toLowerCase())}
+                        }
                         if (organisation) {
                             error = "An existing organisation name was matched via the entity/business name ${organisation.name} but the ABN doesn't match the abn of the MERIT organisation (${organisation.abn})"
                         } else {
                             createOrganisation = true
-
-                            String name = abnLookup.businessNames ? abnLookup.businessNames[0] : abnLookup.entityName
+                            String name
+                            if (contractName) {
+                                name = contractName
+                            }
+                            else {
+                                name = WordUtils.capitalizeFully(abnLookup.entityName)
+                            }
                             organisation = abnLookup + [name: name]
                             messages << "An organisation will be created with ABN: ${abn} and name: ${name}"
                         }
@@ -306,7 +317,7 @@ class GmsMapper {
 
             // Validate we can use the contract name
             if (organisation && contractName) {
-                List names = [organisation.name] + organisation.businessNames
+                List names = [organisation.name] + organisation.contractNames
                 if (contractName && !contractName in names) {
                     error = "The organisation name in the contract ${contractName} doesn't match a known organisation name"
                 }
@@ -315,7 +326,7 @@ class GmsMapper {
                 // We are standardising on "Recipient" as the default organisation relationship
                 String description = 'Recipient'
                 project.associatedOrgs = [
-                        [organisationId:organisation.organisationId, name: contractName ?: organisation.name, organisationName:organisation.name, description:description]]
+                        [organisationId:organisation.organisationId, name: contractName ?: organisation.name, description:description]]
             }
         } else {
             error = "Please supply an organisationId (ORG_ID) or ABN (ABN) for the project"

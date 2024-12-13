@@ -2,12 +2,14 @@ package au.org.ala.fieldcapture
 
 import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.GreenMailUtil
+import org.openqa.selenium.ElementClickInterceptedException
 import pages.ProjectDownloadReport
 import pages.ProjectIndex
 import pages.RlpProjectPage
 import pages.ReportPage
 import pages.ViewReportPage
 import pages.modules.ReportCategory
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -720,7 +722,18 @@ class RlpReportingSpec extends StubbedCasSpec {
         getFormSections().each {
             // Mark all sections except the Weed Distribution Survey as not applicable
             if (isOptional(it) && it != 'koRLP_-_Weed_distribution_survey') {
-                markAsNotApplicable(it)
+                try {
+                    markAsNotApplicable(it)
+                }
+                catch (ElementClickInterceptedException e) {
+                    println "ElementClickInterceptedException: $it"
+                    String section = it
+                    interact {
+                        moveToElement(notApplicableCheckbox(section))
+                    }
+                    markAsNotApplicable(it)
+                }
+
             }
         }
         def section = $('#koRLP_-_Weed_distribution_survey')

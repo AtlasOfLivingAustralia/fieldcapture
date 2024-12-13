@@ -35,7 +35,7 @@ class AdminSpec extends StubbedCasSpec {
         at MERITAdministrationPage
 
         and:
-        administration.adminTab.size() == 12
+        administration.adminTab.size() == 13
         administration.audit.text() == " Audit"
         administration.staticPages.text() == " Static pages"
         administration.helpResources.text() == " Help Resources"

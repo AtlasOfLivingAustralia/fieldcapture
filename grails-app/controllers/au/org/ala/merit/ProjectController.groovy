@@ -228,7 +228,8 @@ class ProjectController {
             model.details.meriPlanTemplate = config.meriPlanTemplate ? config.meriPlanTemplate+"View" : RLP_MERI_PLAN_TEMPLATE+'View'
 
             boolean serviceDeliveryVisible = model.dashboard.visible && userHasViewAccess
-            model.serviceDelivery = [label: 'Dashboard', visible: serviceDeliveryVisible, type: 'tab', template: 'rlpServiceDashboard', includeInvoiced:config.supportsOutcomeTargets()]
+            boolean showDashboardInvoiceField = (config.showsDashboardInvoiceField == null) ? config.supportsOutcomeTargets() : config.showsDashboardInvoiceField
+            model.serviceDelivery = [label: 'Dashboard', visible: serviceDeliveryVisible, type: 'tab', template: 'rlpServiceDashboard', includeInvoiced:showDashboardInvoiceField]
             if (model.serviceDelivery.visible) {
                 // This can be a slow call so don't make it if the data won't be displayed
                 model.serviceDelivery.servicesDashboard = projectService.getServiceDashboardData(project.projectId, false)
@@ -1240,8 +1241,8 @@ class ProjectController {
         render reportData as JSON
     }
 
-    def spatialFeatures (String layerId) {
-        webService.proxyGetRequest(response, grailsApplication.config.getProperty('ecodata.baseUrl') + "spatial/features?layerId=${layerId}", false, true, 120000)
+    def spatialFeatures (String layerId, String intersectWith) {
+        webService.proxyGetRequest(response, grailsApplication.config.getProperty('ecodata.baseUrl') + "spatial/features?layerId=${layerId}&intersectWith=${intersectWith?:''}", false, true, 120000)
         return null
     }
 

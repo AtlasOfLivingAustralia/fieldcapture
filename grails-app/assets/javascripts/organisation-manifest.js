@@ -6,4 +6,6 @@
 //= require sites.js
 //= require reporting.js
 //= require document.js
+//= require organisationService.js
+//= require services.js
 //= require organisation.js

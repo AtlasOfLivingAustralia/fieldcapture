@@ -1,21 +1,25 @@
 {
-  "name": "Saving Native Species Grants Final Report",
+  "name": "Grants and Others Final Report",
   "type": "Report",
   "sections": [
     {
-      "name": "Saving Native Species Grants Final Report",
+      "name": "Grants and Others Final Report",
       "optionalQuestionText": null,
       "optional": false,
       "collapsedByDefault": false,
-      "templateName": "sns_grants_final_report",
+      "templateName": "grants_and_others_final_report",
       "template": {
-        "modelName": "Saving Native Species Grants Final Report",
+        "modelName": "Grants and Others Final Report",
         "dataModel": [
           {
             "dataType": "list",
             "name": "projectOutcomes",
-            "allowRowDelete": "false",
+            "allowRowDelete": true,
             "columns": [
+              {
+                "dataType": "text",
+                "name": "code"
+              },
               {
                 "dataType": "text",
                 "name": "outcomeStatement",
@@ -24,7 +28,7 @@
               {
                 "dataType": "text",
                 "name": "achievement",
-                "validate": "required,maxSize[1250]"
+                "validate": "required,maxSize[500]"
               },
               {
                 "dataType": "text",
@@ -39,34 +43,33 @@
                   "Unable to rate"
                 ],
                 "validate": "required"
-              },
-              {
-                "name": "monitoringIndicator",
-                "dataType": "text",
-                "description": "",
-                "validate": "required",
-                "constraints": {
-                  "textProperty": "data1",
-                  "valueProperty": "data2",
-                  "type": "pre-populated",
-                  "config": {
-                    "source": {
-                      "context-path": "owner.custom.details.objectives.rows"
-                    }
-                  }
-                }
               }
             ]
           },
           {
             "dataType": "text",
             "name": "achievedOutcomesSummary",
-            "validate": "required,maxSize[1250]"
+            "validate": "required,maxSize[500]"
           },
           {
             "dataType": "text",
-            "name": "achievedOutcomesMaintained",
-            "validate": "required,maxSize[1250]"
+            "name": "howOutcomesMaintain",
+            "validate": "maxSize[400]"
+          },
+          {
+            "dataType": "stringList",
+            "name": "achievementLevel",
+            "validate": "required",
+            "description": "A measure of the extent to which a program, project or initiative has attained, or is expected to attain, its relevant objectives efficiently and in a sustainable way.",
+            "constraints": [
+              "Achieved (100%)",
+              "Significantly achieved (76-99%)",
+              "Satisfactorily achieved (51-75%)",
+              "Partially achieved (26-50%)",
+              "Inadequately achieved (1-25%)",
+              "Not achieved (0%)",
+              "Unable to rate"
+            ]
           },
           {
             "dataType": "stringList",
@@ -120,23 +123,95 @@
                     "type": "enable_and_clear"
                   }
                 ],
-                "validate": "required"
+                "validate": "required,maxSize[500]"
               }
             ],
             "dataType": "list",
-            "allowRowDelete": "false",
+            "allowRowDelete": true,
             "name": "projectTargets"
           },
           {
-            "dataType": "text",
-            "description": "",
-            "name": "projectLearningsSummary",
-            "validate": "required,maxSize[1250]"
+            "dataType": "stringList",
+            "name": "projectEngagement",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No",
+              "Not applicable"
+            ]
           },
           {
             "dataType": "text",
-            "description": "",
-            "name": "futureEffortLessons",
+            "name": "yesProjectEngagement",
+            "validate": "required,maxSize[300]",
+            "behaviour": [
+              {
+                "condition": "projectEngagement == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "dataType": "stringList",
+            "name": "unexpectedChanges",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No",
+              "Not applicable"
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "yesUnexpectedChanges",
+            "validate": "required,maxSize[300]",
+            "behaviour": [
+              {
+                "condition": "unexpectedChanges == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "dataType": "stringList",
+            "name": "outcomesMaintenance",
+            "validate": "required",
+            "constraints": [
+              "Significantly",
+              "Satisfactorily",
+              "Partially",
+              "Not at all",
+              "Not applicable"
+            ]
+          },
+          {
+            "columns": [
+              {
+                "dataType": "stringList",
+                "name": "summaryName",
+                "validate": "required",
+                "constraints": [
+                  "Monitoring",
+                  "Evaluation",
+                  "Activity changes",
+                  "Risk management",
+                  "Lesson/s learnt"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "summaryProgress",
+                "description": "",
+                "validate": "required,maxSize[1250]"
+              }
+            ],
+            "dataType": "list",
+            "allowRowDelete": true,
+            "name": "projectLearningsSummary"
+          },
+          {
+            "dataType": "text",
+            "name": "documentAdditionalInformation",
             "validate": "required,maxSize[1250]"
           }
         ],
@@ -144,7 +219,17 @@
           {
             "items": [
               {
-                "source": "<h4>1. Project Outputs</h4>",
+                "source": "achievementLevel",
+                "preLabel": "1. To what extent did you achieve your project outcomes and project services? <br>Please select the one of the levels of achievement you have reached  e.g. Achieved (100%), Partially achieved (26-50%)",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>2. Project Outputs</h4>",
                 "type": "literal"
               }
             ],
@@ -154,7 +239,7 @@
             "items": [
               {
                 "source": "isTargetAchieved",
-                "preLabel": "1.1 Did you achieve the target for each activity listed in the MERI Plan?",
+                "preLabel": "2.1 Did you achieve the target for each activity listed in the MERI Plan?",
                 "type": "selectOne"
               }
             ],
@@ -174,7 +259,7 @@
               },
               {
                 "readonly": true,
-                "width": "13%",
+                "width": "20%",
                 "source": "serviceName",
                 "type": "textarea",
                 "rows": 3,
@@ -182,7 +267,7 @@
               },
               {
                 "readonly": true,
-                "width": "15%",
+                "width": "20%",
                 "source": "targetMeasure",
                 "type": "textarea",
                 "rows": 3,
@@ -190,36 +275,36 @@
               },
               {
                 "readonly": true,
-                "width": "13%",
+                "width": "15%",
                 "source": "projectTarget",
                 "type": "text",
                 "title": "Total to be delivered"
               },
               {
                 "readonly": true,
-                "width": "12%",
+                "width": "15%",
                 "source": "delivered",
                 "type": "text",
                 "title": "Total delivered",
                 "helpText": "please refer to the Dashboard for your project for this figure.  The dashboard automatically adds the figures from each of your progress reports (as a cumulative figure)."
               },
               {
-                "width": "30%",
+                "width": "25%",
                 "source": "reasonTargetNotMet",
                 "type": "textarea",
                 "rows": 3,
-                "title": "<b>Explanation if target not fully delivered</b><br>No response is required if the target was reached or exceeded."
+                "title": "<b>Explain why the target measure was not fully delivered or over delivered. (500 characters [approx. 100 words] limit)</b>"
               }
             ],
             "userAddedRows": false,
             "source": "projectTargets",
-            "title": "If you have answered no¸ please list the activity, target measure and target, the amount you delivered and explain why the target was not reached.<br><i>Refer to the Activities and Targets Table in the MERI Plan.</i>",
+            "title": "<b>2.2 Report on and explain any activities that have been under or significantly over delivered (50% above target)</b>",
             "type": "table"
           },
           {
             "items": [
               {
-                "source": "<h4>2. Project Outcomes</h4>",
+                "source": "<h4>3. Project Outcomes</h4>",
                 "type": "literal"
               }
             ],
@@ -228,7 +313,7 @@
           {
             "items": [
               {
-                "source": "<b>2.1 Briefly describe the achievements that have been made against each outcome statement in the MERI Plan and how they align with and demonstrate achievement towards relevant actions and strategies in the 2022-2032 Threatened Species Action Plan Towards Zero Extinctions.</b><p>Where possible, please reference the project monitoring indicators that are listed in the MERI Plan to support your response. Please provide other supporting information (e.g. report, photos), where this has not been previously supplied, as attachments to this report via the Admin tab > Documents sub-tab of MERIT. Where supporting evidence contains sensitive or confidential information, please send to the department Project Manager (DCCEW) by email.",
+                "source": "<b>3.1 Briefly describe the achievements that have been made against each outcome statement in the MERI Plan including details of any enablers and/or barriers throughout the life of the project.</b><p>Please provide supporting information (e.g. report, photos), where this has not been previously supplied, as attachments to this report via the Admin tab > Documents sub-tab of MERIT. Where supporting evidence contains sensitive or confidential information, please send to the department Project Manager (DCCEW) by email.",
                 "type": "literal"
               }
             ],
@@ -238,38 +323,30 @@
             "source": "projectOutcomes",
             "type": "table",
             "userAddedRows": true,
+            "disableTableUpload": true,
             "columns": [
               {
-                "source": "",
-                "type": "literal",
-                "width": "5%",
-                "preLabel": {
-                  "computed": "\\'No. \\' || (index + 1)"
-                },
+                "source": "code",
+                "type": "readonlyText",
                 "title": "Outcome No."
               },
               {
                 "type": "textarea",
+                "readonly": true,
                 "source": "outcomeStatement",
                 "title": "Outcome",
                 "rows": 5,
-                "width": "30%"
-              },
-              {
-                "source": "monitoringIndicator",
-                "type": "selectOne",
-                "title": "Monitoring Indicator",
-                "width": "20%"
+                "width": "35%"
               },
               {
                 "type": "textarea",
                 "source": "achievement",
                 "title": "Achievement/s",
                 "rows": 5,
-                "width": "30%"
+                "width": "35%"
               },
               {
-                "width": "15%",
+                "width": "25%",
                 "source": "basedRating",
                 "title": "Rating based on the effectiveness evaluation criteria",
                 "type": "select2"
@@ -279,8 +356,9 @@
           {
             "items": [
               {
-                "source": "<b>2.2 Provide a brief summary of other outcomes achieved for this project that you wish to highlight, such as other environmental or social outcomes (e.g. engagement with Traditional Owners, landholders and local community, the contribution of partners, the generation/use of new technology).</b>",
-                "type": "literal"
+                "source": "projectEngagement",
+                "preLabel": "3.2 Did your project engage with traditional owners, landholders and local community?",
+                "type": "selectOne"
               }
             ],
             "type": "row"
@@ -289,38 +367,40 @@
             "type": "row",
             "items": [
               {
-                "source": "achievedOutcomesSummary",
+                "source": "yesProjectEngagement",
                 "type": "textarea",
                 "rows": 5,
-                "preLabel": "As part of your response you may wish to describe any unexpected or unintended outcomes."
+                "preLabel": "3.2.1 If yes, which group/s and how?"
               }
             ]
+          },
+          {
+            "items": [
+              {
+                "source": "unexpectedChanges",
+                "preLabel": "3.3 Were there any unexpected or unintended (positive or negative) changes or other outcomes delivered by this project?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
           },
           {
             "type": "row",
             "items": [
               {
-                "source": "achievedOutcomesMaintained",
+                "source": "yesUnexpectedChanges",
                 "type": "textarea",
                 "rows": 5,
-                "preLabel": "<b>2.3 In your view, how will the outcomes achieved by this project be maintained, and if relevant, who will do this?</b>"
+                "preLabel": "3.3.1 If yes, what were they?"
               }
             ]
           },
           {
             "items": [
               {
-                "source": "<h4>3. Monitoring, Evaluation and Project Learnings</h4>",
-                "type": "literal"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "items": [
-              {
-                "source": "<b>3.1 Briefly describe how you applied adaptive management for this project. This should consider:</b>",
-                "type": "literal"
+                "source": "outcomesMaintenance",
+                "preLabel": "3.4 To what extent will the outcomes achieved by this project be maintained after the project has been completed?",
+                "type": "selectOne"
               }
             ],
             "type": "row"
@@ -329,21 +409,61 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "a) any key project-level monitoring and/or evaluation activities <br>b) any key findings or learnings that you gained during project implementation<br>c) any changes that you made in response to these during the project, including changes in methodology",
-                "source": "projectLearningsSummary",
+                "source": "howOutcomesMaintain",
                 "type": "textarea",
-                "rows": 3
+                "rows": 5,
+                "preLabel": "<b>3.5 If they will be maintained, how and who will do this?</b>"
               }
             ]
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>4. Monitoring, Evaluation and Project Learnings</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>4.1 Summarise how the project progressed in the areas of Monitoring, Evaluation, Activity changes, Risk management and lessons learnt in project delivery towards the investment priority.</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "width": "25%",
+                "source": "summaryName",
+                "type": "selectOne",
+                "title": "Name"
+              },
+              {
+                "width": "75%",
+                "source": "summaryProgress",
+                "type": "text",
+                "title": "Summarised progress",
+                "helpText": ""
+              }
+            ],
+            "userAddedRows": true,
+            "source": "projectLearningsSummary",
+            "title": "<b>Monitoring/Evaluation/Activity changes/Risk management/Lesson/s learnt</b>",
+            "type": "table"
           },
           {
             "type": "row",
             "items": [
               {
-                "preLabel": "<b>3.2 Provide a project summary highlighting achievements, including photos (with appropriate credits) that can be shared with the public.</b>",
-                "source": "futureEffortLessons",
+                "source": "documentAdditionalInformation",
                 "type": "textarea",
-                "rows": 3
+                "rows": 5,
+                "preLabel": "<b>5. Please document any additional information relating to the project.</b>"
               }
             ]
           }
@@ -366,6 +486,10 @@
               {
                 "target": "projectOutcomes",
                 "mapping": [
+                  {
+                    "target": "code",
+                    "source-path": "code"
+                  },
                   {
                     "target": "outcomeStatement",
                     "source-path": "description"

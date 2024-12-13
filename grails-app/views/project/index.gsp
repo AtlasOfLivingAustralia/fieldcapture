@@ -84,7 +84,7 @@
                 healthCheckUrl: "${createLink(controller:'ajax', action:'keepSessionAlive')}",
                 projectDatesValidationUrl: "${createLink(controller:'project', action:'ajaxValidateProjectDates', id:project.projectId)}",
                 listOfStatesUrl: "${createLink(controller:'project', action:'spatialFeatures', params: [layerId: "${grailsApplication.config.getProperty('layers.states')}"])}",
-                listOfElectoratesUrl: "${createLink(controller:'project', action:'spatialFeatures', params: [layerId: "${grailsApplication.config.getProperty('layers.elect')}"])}",
+                listOfElectoratesUrl: "${createLink(controller:'project', action:'spatialFeatures', params: [layerId: "${grailsApplication.config.getProperty('layers.elect')}", intersectWith: "${grailsApplication.config.getProperty('layers.states')}"])}",
                 spinnerUrl: "${asset.assetPath(src:'loading.gif')}",
                 projectSitesUrl: "${createLink(action:'ajaxProjectSites', id:project.projectId)}",
                 useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
