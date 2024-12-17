@@ -15880,7 +15880,8 @@
             ]
           },
           {
-            "dataType": "lookupTable",
+            "dataType": "",
+
             "name": "baselineIndicatorMapping",
             "config": {
               "source": {
@@ -24720,7 +24721,7 @@
                 "description": "Manually enter correct figure for this reporting period if different to mapped value.",
                 "units": "ha",
                 "decimalPlaces": 3,
-                "validate": "required,min[0]"
+                "validate": "min[0]"
               },
               {
                 "dataType": "text",
@@ -24784,9 +24785,38 @@
                 "validate": "required"
               },
               {
+                "dataType": "text",
+                "name": "daysOrHours",
+                "description": "Only one of these targets could be invoiced for this reporting period.",
+                "constraints": [
+                  "Days",
+                  "Hours"
+                ],
+                "validate": "required"
+              },
+              {
                 "dataType": "number",
                 "name": "numberOfDaysConducted",
-                "validate": "required,min[0]"
+                "description": "Only one of these targets could be invoiced for this reporting period.",
+                "validate": "required,min[0]",
+                "behaviour": [
+                  {
+                    "condition": "daysOrHours == \"Days\"",
+                    "type": "enable_and_clear"
+                  }
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfHoursConducted",
+                "description": "Only one of these targets could be invoiced for this reporting period.",
+                "validate": "required,min[0]",
+                "behaviour": [
+                  {
+                    "condition": "daysOrHours == \"Hours\"",
+                    "type": "enable_and_clear"
+                  }
+                ]
               },
               {
                 "columns": [
@@ -24848,7 +24878,6 @@
                     "name": "anzsrcGroup",
                     "validate": "required",
                     "constraints": {
-                      "default": [],
                       "options": [
                         {
                           "condition": "anzsrcDivision == \"AGRICULTURAL, VETERINARY AND FOOD SCIENCES\"",
@@ -28218,6 +28247,63 @@
                     }
                   },
                   {
+                    "dataType": "lookupTable",
+                    "name": "lookupMap",
+                    "config": {
+                      "source": {
+                        "literal": {
+                          "Agricultural biotechnology diagnostics (incl. biosensors)": 300101,
+                          "Agricultural marine biotechnology": 300102,
+                          "Agricultural molecular engineering of nucleic acids and proteins": 300103,
+                          "Genetically modified animals": 300104,
+                          "Genetically modified field crops and pasture": 300105,
+                          "Genetically modified horticulture plants": 300106,
+                          "Genetically modified trees": 300107,
+                          "Livestock cloning": 300108,
+                          "Non-genetically modified uses of biotechnology": 300109,
+                          "Transgenesis": 300110,
+                          "Agricultural biotechnology not elsewhere classified": 300199,
+                          "Agricultural hydrology": 300201,
+                          "Agricultural land management": 300202,
+                          "Agricultural land planning": 300203,
+                          "Agricultural management of nutrients": 300204,
+                          "Agricultural production systems simulation": 300205,
+                          "Agricultural spatial analysis and modelling": 300206,
+                          "Agricultural systems analysis and modelling": 300207,
+                          "Farm management, rural management and agribusiness": 300208,
+                          "Germplasm management": 300209,
+                          "Sustainable agricultural development": 300210,
+                          "Agriculture, land and farm management not elsewhere classified": 300299,
+                          "Animal growth and development": 300301,
+                          "Animal management": 300302,
+                          "Animal nutrition": 300303,
+                          "Animal protection (incl. pests and pathogens)": 300304,
+                          "Animal reproduction and breeding": 300305,
+                          "Animal welfare": 300305
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "selectDropdown",
+                    "description": "",
+                    "constraints": [
+                      "Nil",
+                      "1 - 5",
+                      "6 - 20",
+                      "20 +"
+                    ]
+                  },
+                  {
+                    "decimalPlaces": 0,
+                    "computed": {
+                      "expression": "lookupMap.lookupValue(anzsrcFields)"
+                    },
+                    "dataType": "number",
+                    "name": "computedValue"
+                  },
+                  {
                     "dataType": "text",
                     "name": "willProjectContinue",
                     "constraints": [
@@ -28292,13 +28378,47 @@
             "defaultValue": ""
           },
           {
+            "dataType": "number",
+            "name": "noHoursConductingResearchAndDevelopment",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
+            "validate": "min[0]",
+            "decimalPlaces": 0,
+            "defaultValue": 1,
+            "computed": {
+              "expression": "sum(researchAndDevelopmentByOutcome, \"numberOfDaysConducted\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "decimalPlaces": 3,
+            "name": "noHoursConductingResearchAndDevelopmentInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
+            "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "noHoursConductingResearchAndDevelopment",
+                  "type": "computed",
+                  "decimalPlaces": 3
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": ""
+          },
+          {
             "dataType": "text",
             "name": "totalInvoicedResearchAndDevelopmentMismatched",
             "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "+noDaysConductingResearchAndDevelopmentInvoiced < +noDaysConductingResearchAndDevelopment",
+                "condition": "+noDaysConductingResearchAndDevelopmentInvoiced < +noDaysConductingResearchAndDevelopment or +noHoursConductingResearchAndDevelopmentInvoiced < noHoursConductingResearchAndDevelopment",
                 "type": "enable"
               }
             ]
@@ -28419,8 +28539,18 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total number of days conducting research and development for this reporting period",
+                        "preLabel": "(i) Total number of days conducting research and/or development for this reporting period",
                         "source": "noDaysConductingResearchAndDevelopment",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(ii) Total number of days conducting research and/or development <u><i>invoiced</i></u> for this reporting period",
+                        "source": "noDaysConductingResearchAndDevelopmentInvoiced",
                         "type": "number"
                       }
                     ]
@@ -28435,8 +28565,18 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total number of days conducting research and development <u><i>invoiced</i></u> for this reporting period",
-                        "source": "noDaysConductingResearchAndDevelopmentInvoiced",
+                        "preLabel": "(iii) Total number of hours conducting research and/or development for this reporting period",
+                        "source": "noHoursConductingResearchAndDevelopment",
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(iv) Total number of hours conducting research and/or development <u><i>invoiced</i></u> for this reporting period",
+                        "source": "noHoursConductingResearchAndDevelopmentInvoiced",
                         "type": "number"
                       }
                     ]
@@ -28513,13 +28653,7 @@
                         ]
                       }
                     ]
-                  }
-                ]
-              },
-              {
-                "type": "row",
-                "css": "border-bottom",
-                "items": [
+                  },
                   {
                     "css": "span3",
                     "type": "col",
@@ -28535,6 +28669,28 @@
                         ]
                       }
                     ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "css": "border-bottom",
+                "items": [
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "daysOrHours",
+                            "type": "selectOne",
+                            "preLabel": "Days or Hours"
+                          }
+                        ]
+                      }
+                    ]
                   },
                   {
                     "css": "span3",
@@ -28546,7 +28702,23 @@
                           {
                             "source": "numberOfDaysConducted",
                             "type": "number",
-                            "preLabel": "Number of days conducting research and development"
+                            "preLabel": "Number of days conducting research and/or development"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "css": "span3",
+                    "type": "col",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "numberOfHoursConducted",
+                            "type": "number",
+                            "preLabel": "Number of hours conducting research and/or development"
                           }
                         ]
                       }
@@ -28697,6 +28869,13 @@
                         "source": "anzsrcFields",
                         "title": "ANZSRC Classification – Fields",
                         "type": "selectOne"
+                      },
+                      {
+                        "width": "10%",
+                        "title": "ANZSRC Classification - Code",
+                        "readonly": true,
+                        "source": "computedValue",
+                        "type": "text"
                       },
                       {
                         "width": "15%",
