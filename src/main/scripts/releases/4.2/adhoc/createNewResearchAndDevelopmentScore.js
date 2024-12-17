@@ -1,8 +1,11 @@
-load('../../utils/audit.js');
+load('../../../utils/uuid.js');
+load('../../../utils/audit.js');
 let adminUserId = '<tbd>'
+const invoiceScoreId = '7u24188f-852h-3bex-c49g-60a2dsaa8723';
 let scores = [
+
   {
-    scoreId: UUID.generate(),
+    scoreId: invoiceScoreId,
     entityTypes: undefined,
     tags: [],
     displayType: '',
@@ -33,7 +36,7 @@ let scores = [
   }
   ,
   {
-    _id: ObjectId('664c25abb61a6108c799ea73'),
+    _id: ObjectId('664c25abb61a6108c799bb66'),
     scoreId: UUID.generate(),
     label: 'Number of hours conducting research and development',
     status: 'active',
@@ -58,7 +61,13 @@ let scores = [
       ]
     },
     dateCreated: ISODate('2024-12-17T04:40:11.160Z'),
-    lastUpdated: ISODate('2024-12-17T04:40:11.160Z')
+    lastUpdated: ISODate('2024-12-17T04:40:11.160Z'),
+    relatedScores: [
+      {
+        description: 'Invoiced by',
+        scoreId: invoiceScoreId
+      }
+    ]
   }];
 
 
@@ -68,5 +77,8 @@ for (let i=0; i<scores.length; i+=2) {
 
   audit(invoiced, invoiced.scoreId, 'au.org.ala.ecodata.Score', adminUserId, null, 'Insert');
   db.score.insertOne(invoiced);
+
+  audit(delivered, delivered.scoreId, 'au.org.ala.ecodata.Score', adminUserId, null, 'Insert');
+  db.score.insertOne(delivered);
 
 }
