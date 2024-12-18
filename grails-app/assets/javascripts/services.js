@@ -72,7 +72,7 @@ function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, p
         target.serviceId = ko.observable(service ? service.id : null);
         target.scoreId = ko.observable(score ? score.scoreId : null);
 
-        var decimalPlaces = _.isNumber(score.decimalPlaces) ? score.decimalPlaces : 2;
+        var decimalPlaces = _.isNumber(score && score.decimalPlaces) ? score.decimalPlaces : 2;
         target.target = ko.observable().extend({numericString: decimalPlaces});
         target.targetDate = ko.observable().extend({simpleDate:false});
 
@@ -210,6 +210,11 @@ function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, p
         });
 
         target.scoreId.subscribe(function () {
+            var score = target.scoreId() ? target.score() : null;
+            if (score) {
+                var decimalPlaces = _.isNumber(score && score.decimalPlaces) ? score.decimalPlaces : 2;
+                target.target = ko.observable().extend({numericString: decimalPlaces});
+            }
             target.updateTargets();
         });
 

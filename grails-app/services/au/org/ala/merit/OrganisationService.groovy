@@ -352,6 +352,23 @@ class OrganisationService {
         scoreIds.collectEntries{ String scoreId ->[(scoreId):result.results?.find{it.scoreId == scoreId}?.result?.result ?: 0]}
     }
 
+    List scoresForOrganisation(Map organisation, List<String> scoreIds, boolean approvedOnly = true) {
+
+        String url =  grailsApplication.config.getProperty('ecodata.baseUrl')+"organisation/organisationMetrics/"+organisation.organisationId
+        Map params = [approvedOnly: approvedOnly, scoreIds: scoreIds]
+
+        Map result = webService.doPost(url, params)
+
+        List scores = result?.resp?.collect { Map score ->
+            Map target = organisation?.custom?.details?.services?.targets?.find { it.scoreId == score.scoreId }
+            score.target = target?.target
+            score
+        }
+
+        scores
+
+    }
+
 
     /**
      * Filter services to those supported by organisation.
