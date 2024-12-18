@@ -72,7 +72,8 @@ function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, p
         target.serviceId = ko.observable(service ? service.id : null);
         target.scoreId = ko.observable(score ? score.scoreId : null);
 
-        target.target = ko.observable();
+        var decimalPlaces = _.isNumber(score && score.decimalPlaces) ? score.decimalPlaces : 2;
+        target.target = ko.observable().extend({numericString: decimalPlaces});
         target.targetDate = ko.observable().extend({simpleDate:false});
 
         target.periodTargets = _.map(periods, function (period) {
@@ -96,7 +97,7 @@ function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, p
             var sum = 0;
             var count = 0;
             _.each(target.periodTargets, function (periodTarget) {
-                var target = parseInt(periodTarget.target());
+                var target = parseFloat(periodTarget.target());
                 if (!_.isNaN(target)) {
                     sum += target
                     count++;
@@ -209,6 +210,11 @@ function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, p
         });
 
         target.scoreId.subscribe(function () {
+            var score = target.scoreId() ? target.score() : null;
+            if (score) {
+                var decimalPlaces = _.isNumber(score && score.decimalPlaces) ? score.decimalPlaces : 2;
+                target.target = ko.observable().extend({numericString: decimalPlaces});
+            }
             target.updateTargets();
         });
 
