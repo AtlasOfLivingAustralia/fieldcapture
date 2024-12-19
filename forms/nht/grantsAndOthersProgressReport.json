@@ -19167,7 +19167,7 @@
 
                     ],
                     "userAddedRows": true,
-                    "disableTableUpload": false,
+                    "disableTableUpload": true,
                     "source": "approvalTableDetails",
                     "title": "<i>Each approval must be reported as a new row.</i>",
                     "type": "table"
