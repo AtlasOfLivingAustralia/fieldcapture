@@ -455,7 +455,7 @@ class OrganisationController {
             return
         }
         def outputModels = activityModel.outputs.collect {
-            [name:it, annotatedModel:metadataService.annotatedOutputDataModel(it), dataModel:metadataService.getDataModelFromOutputName(it)]
+            [name:it, annotatedModel:metadataService.annotatedOutputDataModel(activityType, it, null), dataModel:metadataService.getDataModelFromOutputName(it)]
         }
 
         def criteria = [type:activityType, projectId:organisation.projects.collect{it.projectId}, dateProperty:'plannedEndDate', startDate:params.plannedStartDate, endDate:params.plannedEndDate]

@@ -1340,7 +1340,7 @@ class ProjectService  {
 
                 stageReportActivityModel.outputs.each { outputType ->
                     def output = activity.outputs?.find { it.name == outputType }
-                    def type = metadataService.annotatedOutputDataModel(outputType)
+                    def type = metadataService.annotatedOutputDataModel(activity.type, outputType, activity.formVersion)
 
                     append(html,"<b> ${outputType}: </b> <br>");
                     type.each { field ->

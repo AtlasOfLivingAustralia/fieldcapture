@@ -539,6 +539,8 @@ class ActivityControllerSpec extends Specification implements ControllerUnitTest
 
         params.type = 'RLP - Flora survey'
         params.listName = 'floraSurveyDetails'
+        params.activityForm = 'Flora Survey'
+        params.formVersion = 2
 
         JSON.createNamedConfig("clientSideFormattedDates", { cfg ->
             DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy")
@@ -550,7 +552,7 @@ class ActivityControllerSpec extends Specification implements ControllerUnitTest
         controller.ajaxUpload()
 
         then:
-        1 * metadataService.annotatedOutputDataModel('RLP - Flora survey') >> getListModel()
+        1 * metadataService.annotatedOutputDataModel('Flora Survey', 'RLP - Flora survey', 2) >> getListModel()
         1 * metadataService.findByName('floraSurveyDetails', getListModel()) >> getMapModel()
         1 * speciesService.searchByScientificName(_) >> getScientificModel()
 
