@@ -507,8 +507,10 @@ class ActivityController {
 
                 def outputName = params.type
                 def listName = params.listName
+                String activityForm = params.activityForm
+                Integer formVersion = params.getInt('formVersion', null)
 
-                def model = metadataService.annotatedOutputDataModel(outputName)
+                def model = metadataService.annotatedOutputDataModel(activityForm, outputName, formVersion)
                 if (listName) {
                     model = metadataService.findByName(listName, model)?.columns
                 }
@@ -617,14 +619,9 @@ class ActivityController {
 
         String url =  "${grailsApplication.config.getProperty('ecodata.baseUrl')}metadata/excelOutputTemplate"
 
-        if (params.data) {
-            webService.proxyPostRequest(response, url,
-                    [listName:params.listName, type:params.type, data:params.data, editMode:params.editMode, allowExtraRows:params.allowExtraRows, autosizeColumns:false])
-        }
-        else {
-            url += "?type=${params.type?.encodeAsURL()}&listName=${params.listName?.encodeAsURL()}"
-            webService.proxyGetRequest(response, url, true, true)
-        }
+        Map postParams = [listName:params.listName, type:params.type, data:params.data, editMode:params.editMode, allowExtraRows:params.allowExtraRows, autosizeColumns:false, formVersion:params.getInt('formVersion'), activityForm:params.activityForm]
+
+        webService.proxyPostRequest(response, url, postParams)
 
         return null
     }

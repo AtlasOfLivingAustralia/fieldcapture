@@ -23,10 +23,14 @@ class MetadataService {
         })
     }
 
-    def annotatedOutputDataModel(type) {
-        return cacheService.get('annotated-output-model'+type,{
-            Collections.unmodifiableList(webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') +
-                    'metadata/annotatedOutputDataModel?type='+type.encodeAsURL()))
+    def annotatedOutputDataModel(String activityForm, String formSection, Integer formVersion) {
+        return cacheService.get('annotated-output-model'+activityForm+'_'+formSection,{
+            String url = grailsApplication.config.getProperty('ecodata.baseUrl') +
+                    'metadata/annotatedOutputDataModel?type='+formSection.encodeAsURL()+"&activityForm="+activityForm.encodeAsURL()
+            if (formVersion) {
+                url += "&formVersion="+formVersion
+            }
+            Collections.unmodifiableList(webService.getJson(url))
         })
     }
 
