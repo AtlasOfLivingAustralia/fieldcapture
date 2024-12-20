@@ -42,7 +42,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
 
     function isDownloadableMonitorDataSet(dataSet) {
 
-        if (dataSet.createdIn !== MONITOR_APP) {
+        if (dataSet.collectionApp !== MONITOR_APP) {
             return false;
         }
         var protocolId = dataSet.protocol;
@@ -52,7 +52,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         if (isDownloadable) {
             var now = moment();
             var creationDate = moment(dataSet.dateCreated);
-            var minutesToInjestDataSet = options.minutesToInjestDataSet || 1;
+            var minutesToInjestDataSet = config.minutesToInjestDataSet || 1;
             if (dataSet.progress !== ActivityProgress.planned) {
                 if (creationDate.add(minutesToInjestDataSet, 'minutes').isBefore(now)) {
                     isDownloadable = true;
@@ -98,6 +98,9 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
 
         if (this.createdIn === MONITOR_APP) {
             if (this.progress == ActivityProgress.planned) {
+                var now = moment();
+                var creationDate = moment(dataSet.dateCreated);
+
                 if (creationDate.add(1, 'minutes').isBefore(now)) {
                     this.progress = 'sync error';
                 }
