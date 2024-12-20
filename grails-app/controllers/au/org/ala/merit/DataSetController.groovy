@@ -180,7 +180,7 @@ class DataSetController {
         else {
             if (isMonitorDataSet(dataSet)) {
                 if (isProtocolSupportedForDownload(dataSet)) {
-                    bdrService.downloadDataSet(dataSet.dataSetId, format, response)
+                    bdrService.downloadDataSet(id, dataSet.dataSetId, format, response)
                 }
             }
             else if (dataSet.url) {

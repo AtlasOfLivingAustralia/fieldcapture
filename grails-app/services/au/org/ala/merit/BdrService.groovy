@@ -37,11 +37,11 @@ class BdrService {
 
     AccessTokenCache accessTokenCache
 
-    void downloadDataSet(String dataSetId, String format, HttpServletResponse response) {
+    void downloadDataSet(String projectId, String dataSetId, String format, HttpServletResponse response) {
         String bdrBaseUrl = grailsApplication.config.getProperty('bdr.api.url')
 
         format = URLEncoder.encode(format, 'UTF-8')
-        String url = bdrBaseUrl+'/collections/ns3:'+dataSetId+'/items?_mediatype='+format
+        String url = bdrBaseUrl+'/collections/ns3:'+projectId+'/items?_mediatype='+format
 
         String azureToken = getAzureAccessToken()
 
