@@ -1,6 +1,9 @@
 //= require tab-init.js
 //= require attach-document-no-ui
 //= require reportService
+//= require components.js
+//= require ecodata-components.js
+//= require budget.js
 /**
  * Knockout view model for organisation pages.
  * @param props JSON/javascript representation of the organisation.
@@ -18,51 +21,203 @@ OrganisationViewModel = function (props, options) {
 
     var config = _.extend({}, defaults, options);
 
-    var orgTypesMap = {
-        aquarium:'Aquarium',
-        archive:'Archive',
-        botanicGarden:'Botanic Garden',
-        conservation:'Conservation',
-        fieldStation:'Field Station',
-        government:'Government',
-        governmentDepartment:'Government Department',
-        herbarium:'Herbarium',
-        historicalSociety:'Historical Society',
-        horticulturalInstitution:'Horticultural Institution',
-        independentExpert:'Independent Expert',
-        industry:'Industry',
-        laboratory:'Laboratory',
-        library:'Library',
-        management:'Management',
-        museum:'Museum',
-        natureEducationCenter:'Nature Education Center',
-        nonUniversityCollege:'Non-University College',
-        park:'Park',
-        repository:'Repository',
-        researchInstitute:'Research Institute',
-        school:'School',
-        scienceCenter:'Science Center',
-        society:'Society',
-        university:'University',
-        voluntaryObserver:'Voluntary Observer',
-        zoo:'Zoo'
-    };
+    // Organisation entity types from the ABN lookup service
+    self.entityTypes = [
+
+    {code:"ADF", label:"Approved Deposit Fund"},
+    {code:"ARF", label:"APRA Regulated Fund (Fund Type Unknown)"},
+    {code:"CCB", label:"Commonwealth Government Public Company"},
+    {code:"CCC",label:"Commonwealth Government Co-operative"},
+    {code:"CCL", label:"Commonwealth Government Limited Partnership"},
+    {code:"CCN", label:"Commonwealth Government Other Unincorporated Entity"},
+    {code:"CCO", label:"Commonwealth Government Other Incorporated Entity"},
+    {code:"CCP", label:"Commonwealth Government Pooled Development Fund"},
+    {code:"CCR", label:"Commonwealth Government Private Company"},
+    {code:"CCS", label:"Commonwealth Government Strata Title"},
+    {code:"CCT", label:"Commonwealth Government Public Trading Trust"},
+    {code:"CCU", label:"Commonwealth Government Corporate Unit Trust"},
+    {code:"CGA", label:"Commonwealth Government Statutory Authority"},
+    {code:"CGC", label:"Commonwealth Government Company"},
+    {code:"CGE", label:"Commonwealth Government Entity"},
+    {code:"CGP", label:"Commonwealth Government Partnership"},
+    {code:"CGS", label:"Commonwealth Government Super Fund"},
+    {code:"CGT", label:"Commonwealth Government Trust"},
+    {code:"CMT", label:"Cash Management Trust"},
+    {code:"COP", label:"Co-operative"},
+    {code:"CSA", label:"Commonwealth Government APRA Regulated Public Sector Fund"},
+    {code:"CSP", label:"Commonwealth Government APRA Regulated Public Sector Scheme"},
+    {code:"CSS", label:"Commonwealth Government Non-Regulated Super Fund"},
+    {code:"CTC", label:"Commonwealth Government Cash Management Trust"},
+    {code:"CTD", label:"Commonwealth Government Discretionary Services Management Trust"},
+    {code:"CTF", label:"Commonwealth Government Fixed Trust"},
+    {code:"CTH", label:"Commonwealth Government Hybrid Trust"},
+    {code:"CTI", label:"Commonwealth Government Discretionary Investment Trust"},
+    {code:"CTL", label:"Commonwealth Government Listed Public Unit Trust"},
+    {code:"CTQ", label:"Commonwealth Government Unlisted Public Unit Trust"},
+    {code:"CTT", label:"Commonwealth Government Discretionary Trading Trust"},
+    {code:"CTU", label:"Commonwealth Government Fixed Unit Trust"},
+    {code:"CUT", label:"Corporate Unit Trust"},
+    {code:"DES", label:"Deceased Estate"},
+    {code:"DIP", label:"Diplomatic/Consulate Body or High Commissioner"},
+    {code:"DIT", label:"Discretionary Investment Trust"},
+    {code:"DST", label:"Discretionary Services Management Trust"},
+    {code:"DTT", label:"Discretionary Trading Trust"},
+    {code:"FHS", label:"First Home Saver Accounts Trust"},
+    {code:"FPT", label:"Family Partnership"},
+    {code:"FUT", label:"Fixed Unit Trust"},
+    {code:"FXT", label:"Fixed Trust"},
+    {code:"HYT", label:"Hybrid Trust"},
+    {code:"IND", label:"Individual/Sole Trader"},
+    {code:"LCB", label:"Local Government Public Company"},
+    {code:"LCC", label:"Local Government Co-operative"},
+    {code:"LCL", label:"Local Government Limited Partnership"},
+    {code:"LCN", label:"Local Government Other Unincorporated Entity"},
+    {code:"LCO", label:"Local Government Other Incorporated Entity"},
+    {code:"LCP", label:"Local Government Pooled Development Fund"},
+    {code:"LCR", label:"Local Government Private Company"},
+    {code:"LCS", label:"Local Government Strata Title"},
+    {code:"LCT", label:"Local Government Public Trading Trust"},
+    {code:"LCU", label:"Local Government Corporate Unit Trust"},
+    {code:"LGA", label:"Local Government Statutory Authority"},
+    {code:"LGC", label:"Local Government Company"},
+    {code:"LGE", label:"Local Government Entity"},
+    {code:"LGP", label:"Local Government Partnership"},
+    {code:"LGT", label:"Local Government Trust"},
+    {code:"LPT", label:"Limited Partnership"},
+    {code:"LSA", label:"Local Government APRA Regulated Public Sector Fund"},
+    {code:"LSP", label:"Local Government APRA Regulated Public Sector Scheme"},
+    {code:"LSS", label:"Local Government Non-Regulated Super Fund"},
+    {code:"LTC", label:"Local Government Cash Management Trust"},
+    {code:"LTD", label:"Local Government Discretionary Services Management Trust"},
+    {code:"LTF", label:"Local Government Fixed Trust"},
+    {code:"LTH", label:"Local Government Hybrid Trust"},
+    {code:"LTI", label:"Local Government Discretionary Investment Trust"},
+    {code:"LTL", label:"Local Government Listed Public Unit Trust"},
+    {code:"LTQ", label:"Local Government Unlisted Public Unit Trust"},
+    {code:"LTT", label:"Local Government Discretionary Trading Trust"},
+    {code:"LTU", label:"Local Government Fixed Unit Trust"},
+    {code:"NPF", label:"APRA Regulated Non-Public Offer Fund"},
+    {code:"NRF", label:"Non-Regulated Superannuation Fund"},
+    {code:"OIE", label:"Other Incorporated Entity"},
+    {code:"PDF", label:"Pooled Development Fund"},
+    {code:"POF", label:"APRA Regulated Public Offer Fund"},
+    {code:"PQT", label:"Unlisted Public Unit Trust"},
+    {code:"PRV", label:"Australian Private Company"},
+    {code:"PST", label:"Pooled Superannuation Trust"},
+    {code:"PTR", label:"Other Partnership"},
+    {code:"PTT", label:"Public Trading trust"},
+    {code:"PUB", label:"Australian Public Company"},
+    {code:"PUT", label:"Listed Public Unit Trust"},
+    {code:"SAF", label:"Small APRA Regulated Fund"},
+    {code:"SCB", label:"State Government Public Company"},
+    {code:"SCC", label:"State Government Co-operative"},
+    {code:"SCL", label:"State Government Limited Partnership"},
+    {code:"SCN", label:"State Government Other Unincorporated Entity"},
+    {code:"SCO", label:"State Government Other Incorporated Entity"},
+    {code:"SCP", label:"State Government Pooled Development Fund"},
+    {code:"SCR", label:"State Government Private Company"},
+    {code:"SCS", label:"State Government Strata Title"},
+    {code:"SCT", label:"State Government Public Trading Trust"},
+    {code:"SCU", label:"State Government Corporate Unit Trust"},
+    {code:"SGA", label:"State Government Statutory Authority"},
+    {code:"SGC", label:"State Government Company"},
+    {code:"SGE", label:"State Government Entity"},
+    {code:"SGP", label:"State Government Partnership"},
+    {code:"SGT", label:"State Government Trust"},
+    {code:"SMF", label:"ATO Regulated Self-Managed Superannuation Fund"},
+    {code:"SSA", label:"State Government APRA Regulated Public Sector Fund"},
+    {code:"SSP", label:"State Government APRA Regulated Public Sector Scheme"},
+    {code:"SSS", label:"State Government Non-Regulated Super Fund"},
+    {code:"STC", label:"State Government Cash Management Trust"},
+    {code:"STD", label:"State Government Discretionary Services Management Trust"},
+    {code:"STF", label:"State Government Fixed Trust"},
+    {code:"STH", label:"State Government Hybrid Trust"},
+    {code:"STI", label:"State Government Discretionary Investment Trust"},
+    {code:"STL", label:"State Government Listed Public Unit Trust"},
+    {code:"STQ", label:"State Government Unlisted Public Unit Trust"},
+    {code:"STR", label:"Strata-title"},
+    {code:"STT", label:"State Government Discretionary Trading Trust"},
+    {code:"STU", label:"State Government Fixed Unit Trust"},
+    {code:"SUP", label:"Super Fund"},
+    {code:"TCB", label:"Territory Government Public Company"},
+    {code:"TCC", label:"Territory Government Co-operative"},
+    {code:"TCL", label:"Territory Government Limited Partnership"},
+    {code:"TCN", label:"Territory Government Other Unincorporated Entity"},
+    {code:"TCO", label:"Territory Government Other Incorporated Entity"},
+    {code:"TCP", label:"Territory Government Pooled Development Fund"},
+    {code:"TCR", label:"Territory Government Private Company"},
+    {code:"TCS", label:"Territory Government Strata Title"},
+    {code:"TCT", label:"Territory Government Public Trading Trust"},
+    {code:"TCU", label:"Territory Government Corporate Unit Trust"},
+    {code:"TGA", label:"Territory Government Statutory Authority"},
+    {code:"TGE", label:"Territory Government Entity"},
+    {code:"TGP", label:"Territory Government Partnership"},
+    {code:"TGT", label:"Territory Government Trust"},
+    {code:"TRT", label:"Other trust"},
+    {code:"TSA", label:"Territory Government APRA Regulated Public Sector Fund"},
+    {code:"TSP", label:"Territory Government APRA Regulated Public Sector Scheme"},
+    {code:"TSS", label:"Territory Government Non-Regulated Super Fund"},
+    {code:"TTC", label:"Territory Government Cash Management Trust"},
+    {code:"TTD", label:"Territory Government Discretionary Services Management Trust"},
+    {code:"TTF", label:"Territory Government Fixed Trust"},
+    {code:"TTH", label:"Territory Government Hybrid Trust"},
+    {code:"TTI", label:"Territory Government Discretionary Investment Trust"},
+    {code:"TTL", label:"Territory Government Listed Public Unit Trust"},
+    {code:"TTQ", label:"Territory Government Unlisted Public Unit Trust"},
+    {code:"TTT", label:"Territory Government Discretionary Trading Trust"},
+    {code:"TTU", label:"Territory Government Fixed Unit Trust"},
+    {code:"UIE", label:"Other Unincorporated Entity"}];
 
     self.organisationId = props.organisationId;
+    self.entityType = ko.observable(props.entityType);
     self.orgType = ko.observable(props.orgType);
-    self.orgTypeDisplayOnly = ko.computed(function() {
-        return orgTypesMap[self.orgType()] || "Unspecified";
-    });
     self.name = ko.observable(props.name);
+    self.entityName = ko.observable(props.entityName);
+    self.businessNames = ko.observableArray(props.businessNames);
+    self.contractNames = ko.observableArray(props.contractNames);
     self.acronym = ko.observable(props.acronym);
     self.description = ko.observable(props.description).extend({markdown:true});
     self.abn = ko.observable(props.abn);
+    self.abnStatus = ko.observable(props.abnStatus);
+    self.postcode = ko.observable(props.postcode);
+    self.state = ko.observable(props.state);
     self.url = ko.observable(props.url);
     self.newsAndEvents = ko.observable(props.newsAndEvents).extend({markdown:true});;
     self.collectoryInstitutionId = props.collectoryInstitutionId;
     self.breadcrumbName = ko.computed(function() {
         return self.name()?self.name():'New Organisation';
     });
+    self.associatedOrgs = ko.observableArray(props.associatedOrgs);
+    self.externalIds = ko.observableArray(_.map(props.externalIds, function (externalId) {
+        return {
+            idType: ko.observable(externalId.idType),
+            externalId: ko.observable(externalId.externalId)
+        };
+    }));
+    self.externalIdTypes = [
+        'TECH_ONE_PARTY_ID'
+    ];
+    self.indigenousOrganisationTypes = [
+        'Office of the Registrar of Indigenous Corporations (ORIC)',
+        'Under the Corporations (Aboriginal and Torres Strait Islander) Act 2006 (CATSI Act)',
+        'Australian Securities and Investments Commission (ASIC)'
+    ];
+    self.indigenousOrganisationRegistration = ko.observableArray(props.indigenousOrganisationRegistration);
+    self.organisationSearchUrl = options && options.organisationSearchUrl;
+
+
+    self.orgType = ko.pureComputed(function() {
+       var entityType = _.find(self.entityTypes, function(entityType) {
+           return entityType.code == self.entityType();
+       });
+       return entityType ? entityType.label : null;
+    });
+    self.clearAbnDetails = function() {
+        self.abn(null);
+        self.entityName(null);
+        self.businessNames(null);
+        self.entityType(null);
+    };
 
     self.projects = props.projects;
 
@@ -71,54 +226,44 @@ OrganisationViewModel = function (props, options) {
     };
 
     self.transients = self.transients || {};
-    self.transients.orgTypes = [];
-    for (var ot in orgTypesMap) {
-        if (orgTypesMap.hasOwnProperty(ot))
-            self.transients.orgTypes.push({orgType:ot, name:orgTypesMap[ot]});
+
+    function toTitleCase(name) {
+        return name.replace(/\S+/g, function(word) {
+            if (!word) {
+                return word;
+            }
+            word = word.toLowerCase();
+            var joiningWords = ['and', 'of', 'the', 'in', 'for', 'to', 'a', 'an', 'on', 'at', 'by', 'with', 'from', 'as', 'but', 'or', 'nor'];
+            if (joiningWords.indexOf(word) >= 0) {
+                return word;
+            }
+            return word.charAt(0).toUpperCase() + word.substring(1)
+        });
     }
-
-    self.toJS = function(includeDocuments) {
-        var ignore = self.ignore.concat(['breadcrumbName', 'orgTypeDisplayOnly', 'collectoryInstitutionId', 'projects', 'reports']);
-        var js = ko.mapping.toJS(self, {include:['documents'], ignore:ignore} );
-        if (includeDocuments) {
-            js.documents = ko.toJS(self.documents);
-            js.links = ko.mapping.toJS(self.links());
-        }
-        return js;
-    };
-
-    self.modelAsJSON = function(includeDocuments) {
-        var orgJs = self.toJS(includeDocuments);
-        return JSON.stringify(orgJs);
-    };
-
-    self.save = function() {
-        if ($('.validationEngineContainer').validationEngine('validate')) {
-
-            var orgData = self.modelAsJSON(true);
-            $.ajax(config.organisationSaveUrl, {type:'POST', data:orgData, contentType:'application/json'}).done( function(data) {
-                if (data.errors) {
-
-                }
-                else {
-                    var orgId = self.organisationId?self.organisationId:data.organisationId;
-                    window.location = config.organisationViewUrl+'/'+orgId;
-                }
-
-            }).fail( function() {
-
-            });
-        }
-    };
-
     self.prepopulateFromABN = function() {
         if ($(config.abnSelector).validationEngine()) {
             var abn = self.abn;
             $.get(config.prepopulateAbnUrl, {abn:abn, contentType:'application/json'}).done(function (orgDetails) {
-                if (orgDetails.error === "invalid"){
+                if (orgDetails.error === "invalid") {
                     bootbox.alert("Abn Number is invalid");
-                }else{
-                    self.name(orgDetails.name);
+                } else {
+                    self.entityName(orgDetails.entityName);
+                    self.businessNames(orgDetails.businessNames);
+                    self.postcode(orgDetails.postcode);
+                    self.state(orgDetails.state);
+                    self.abnStatus(orgDetails.abnStatus);
+                    self.entityType(orgDetails.entityType);
+                    if (!self.name()) {
+                        var defaultName = '';
+
+                        if (self.entityName()) {
+                            defaultName = toTitleCase(self.entityName());
+                        }
+                        else if (self.businessNames().length > 0) {
+                            defaultName = self.businessNames()[0];
+                        }
+                        self.name(defaultName);
+                    }
                 }
             }).fail(function () {
                 bootbox.alert("Abn Web Service is failed to lookup abn name. Please press ok to continue to create organisation");
@@ -127,6 +272,12 @@ OrganisationViewModel = function (props, options) {
 
         }
     };
+
+    self.abnStatus.subscribe(function(value) {
+        if (value == 'N/A') {
+            self.clearAbnDetails();
+        }
+    });
 
     if (props.documents !== undefined && props.documents.length > 0) {
         $.each(['logo', 'banner', 'mainImage'], function(i, role){
@@ -147,6 +298,169 @@ OrganisationViewModel = function (props, options) {
     return self;
 
 };
+
+EditOrganisationViewModel = function(props, options) {
+    var self = this;
+    _.extend(self, new OrganisationViewModel(props, options));
+
+    self.onPasteAbn = function(vm, event) {
+
+        if (event.originalEvent && event.originalEvent.clipboardData) {
+            text = event.originalEvent.clipboardData.getData("text/plain");
+
+            // remove any non digit characters from the data - this is because if you copy and paste an ABN it
+            // is normally formatted with spaces.
+            self.abn(text.replaceAll(/\D/g, ''));
+        }
+
+
+        // Indicate that text could be added into textbox
+        return false;
+    };
+
+    /** We need to track changes to contract names so we can update the contract names in projects. */
+    var contractNameChangeTracking = _.map(props.contractNames, function(name) {
+        return {
+            originalName: name,
+            currentName: name,
+            projects: props.contractNamesAndProjects[name],
+            projectCount: function() {
+                return props.contractNamesAndProjects[name] ? props.contractNamesAndProjects[name].length : 0;
+            }
+        }
+    });
+
+    self.getProjectCountForName = function(name) {
+        var nameAndProjects = _.find(contractNameChangeTracking, function(nameAndProjects) {
+            return nameAndProjects.currentName == name;
+        });
+        return nameAndProjects.projectCount();
+    }
+
+    self.getHelpText = function(name) {
+        var projectCount = self.getProjectCountForName(name);
+        if (projectCount > 0) {
+            helpText = "This name is used by "+projectCount+" projects";
+        }
+        else {
+            helpText = "This name is not used by any projects";
+        }
+        return helpText;
+    };
+
+    self.nameUsed = function(name) {
+        return self.getProjectCountForName(name) > 0;
+    }
+
+
+    self.contractNames.subscribe(function(value) {
+
+        var namesBeforeEdit = _.filter(_.map(contractNameChangeTracking, function(previous) {return previous.currentName} ), function(name) { return name != null});
+        var namesAfterEdit = self.contractNames();
+        var added = _.difference(namesAfterEdit, namesBeforeEdit);
+        var removed = _.difference(namesBeforeEdit, namesAfterEdit);
+
+        // New name added.  No project renaming action required here except to exclude it from appearing in the next edit
+        if (added.length == 1 && removed.length == 0) {
+            contractNameChangeTracking.push({originalName: null, currentName: added[0], projects:[], projectCount: function() { return 0; }});
+        }
+
+        // Name removed.  We will update project contract names to the organsiation name.
+        if (removed.length == 1 && added.length == 0) {
+            var name = _.find(contractNameChangeTracking, function(previous) {return previous.currentName == removed[0]});
+            name.currentName = null;
+        }
+
+        // Name changed.  We will update project contract names to the new name.
+        if (removed.length == 1 && added.length == 1) {
+            var name = _.find(contractNameChangeTracking, function(previous) {return previous.currentName == removed[0]});
+            name.currentName = added[0];
+        }
+    });
+
+    self.getModifiedNames = function() {
+
+        var modifiedNames = [];
+        for (var i=0; i<contractNameChangeTracking.length; i++) {
+            var nameAndProjects = contractNameChangeTracking[i];
+
+            if (nameAndProjects.projectCount()) { // Don't need action for new names or unused names
+                if (nameAndProjects.currentName == null) {
+                    // need to update any contract names with the original name to the organisation name.
+                    modifiedNames.push({oldName:nameAndProjects.originalName, newName:nameAndProjects.currentName});
+                }
+                else if (nameAndProjects.currentName != nameAndProjects.originalName) {
+                    // need to update any contract names with the original name to the new name.
+                    modifiedNames.push({oldName:nameAndProjects.originalName, newName:nameAndProjects.currentName});
+                }
+            }
+
+        }
+
+        return modifiedNames;
+    };
+
+
+    autoSaveModel(self, options.organisationSaveUrl,
+        {
+            blockUIOnSave:true,
+            blockUISaveMessage:'Saving organisation....',
+            healthCheckUrl: options.healthCheckUrl,
+            serializeModel:function() {return self.modelAsJSON(true);}
+        });
+
+    self.save = function() {
+        if ($(options.validationContainerSelector).validationEngine('validate')) {
+
+            self.saveWithErrorDetection(
+                function(data) {
+                    var url = options.organisationViewUrl;
+                    // When creating a new organisation we need the organisationId.
+                    if (!self.organisationId && data.organisationId) {
+                        url += '/' + data.organisationId;
+                    }
+                    window.location.href = url;
+                },
+                function(data) {
+                    bootbox.alert('<span class="label label-important">Error</span><p>'+data.detail+'</p>');
+                }
+            );
+        }
+    };
+
+    self.cancel = function() {
+        window.location = options.returnTo;
+    }
+
+    self.attachValidation = function() {
+        $(options.validationContainerSelector).validationEngine();
+    };
+
+    self.toJS = function(includeDocuments) {
+        var ignore = self.ignore.concat(['breadcrumbName', 'entityTypes', 'externalIdTypes', 'organisationSearchUrl', 'collectoryInstitutionId', 'projects', 'reports', 'indigenousOrganisationTypes', 'dirtyFlag', 'selectedOrganisation']);
+        var js = ko.mapping.toJS(self, {include:['documents'], ignore:ignore} );
+        if (self.externalIds().length > 0) {
+            js.externalIds = ko.mapping.toJS(self.externalIds);
+        }
+        if (includeDocuments) {
+            js.documents = ko.toJS(self.documents);
+            js.links = ko.mapping.toJS(self.links());
+        }
+        var contractNameChanges = self.getModifiedNames();
+        if (contractNameChanges.length > 0) {
+            js.contractNameChanges = contractNameChanges;
+        }
+
+        return js;
+    };
+
+    self.modelAsJSON = function(includeDocuments) {
+        var orgJs = self.toJS(includeDocuments);
+        orgJs.postcode = Number(orgJs.postcode);
+        return JSON.stringify(orgJs);
+    };
+
+}
 
 
 OrganisationPageViewModel = function (props, options) {
@@ -248,6 +562,8 @@ OrganisationPageViewModel = function (props, options) {
             }
         }
     };
+    var organisationService = new OrganisationService(options);
+    self.periods = options.targetPeriods || [];
 
     self.initialise = function() {
         $.fn.dataTable.moment( 'dd-MM-yyyy' );
@@ -334,6 +650,32 @@ OrganisationPageViewModel = function (props, options) {
     self.reportingEnabled = ko.observable();
     self.selectedOrganisationReportCategories = ko.observableArray();
 
+    // List of service / target measure
+    self.allTargetMeasures = [];
+    var services = options.services || [];
+    for (var i=0; i<services.length; i++) {
+        if (services[i].scores) {
+            for (var j=0; j<services[i].scores.length; j++) {
+                self.allTargetMeasures.push( {
+                    label:services[i].name+' - '+services[i].scores[j].label,
+                    serviceId:services[i].id,
+                    scoreId:services[i].scores[j].scoreId,
+                    service:services[i],
+                    score:services[i].scores[j],
+                    value:services[i].scores[j].scoreId
+                });
+            }
+        }
+    }
+
+    self.allTargetMeasures = _.sortBy(self.allTargetMeasures, 'label');
+    var propDetails = props && props.custom && props.custom.details || {};
+    self.selectedTargetMeasures = ko.observableArray();
+    var details = new OrganisationDetailsViewModel(propDetails, props, self.periods, self.allTargetMeasures, options);
+    updatedTargetMeasures(details);
+    self.reportingTargetsAndFunding = ko.observable(details);
+    self.isProjectDetailsLocked = ko.observable(false);
+
     var setStartAndEndDateDefaults = function() {
         var currentConfig = parsedConfig();
         if (!currentConfig || !currentConfig.organisationReports || currentConfig.organisationReports.length == 0) {
@@ -392,6 +734,26 @@ OrganisationPageViewModel = function (props, options) {
         reportService.regenerateReports(data,options.regenerateOrganisationReportsUrl);
     };
 
+    function updatedTargetMeasures (details) {
+        var reportingTargets = details,
+            selectedServices = reportingTargets.services.services(),
+            allServices = self.allTargetMeasures;
+
+        _.each(allServices, function (service) {
+            var found = _.find(selectedServices, function (selectedService) {
+                return selectedService.scoreId() === service.scoreId;
+            });
+
+            if (!found) {
+                reportingTargets.services.addServiceTarget(service);
+            }
+        })
+    }
+
+    self.attachValidation = function() {
+        $(options.organisationDetailsSelector).validationEngine('attach');
+    };
+
     self.saveOrganisationConfiguration = function() {
         var currentConfig = parsedConfig();
         if (!currentConfig) {
@@ -413,6 +775,19 @@ OrganisationPageViewModel = function (props, options) {
         return saveOrganisation(json);
     };
 
+    self.saveCustomFields = function() {
+        if ($(options.organisationDetailsSelector).validationEngine('validate')) {
+            blockUIWithMessage("Saving organisation data...");
+            var json = JSON.parse(self.reportingTargetsAndFunding().modelAsJSON());
+            saveOrganisation(json).done(function() {
+                blockUIWithMessage("Organisation data saved...");
+                setTimeout($.unblockUI, 1000);
+            }).fail(function(){
+                $.unblockUI();
+            });
+        }
+    };
+
 
     var saveOrganisation = function(json) {
         return $.ajax({
@@ -427,103 +802,6 @@ OrganisationPageViewModel = function (props, options) {
     };
 
     return self;
-
-};
-
-/**
- * Provides the ability to search a user's organisations and other organisations at the same time.  The results
- * are maintained as separate lists for ease of display (so a users existing organisations can be prioritised).
- * @param organisations the organisations not belonging to the user.
- * @param userOrganisations the organisations that belong to the user.
- * @param (optional) if present, this value should contain the organisationId of an organisation to pre-select.
- */
-OrganisationSelectionViewModel = function(organisations, userOrganisations, inititialSelection) {
-
-    var self = this;
-    var userOrgList = new SearchableList(userOrganisations, ['name']);
-    var otherOrgList = new SearchableList(organisations, ['name']);
-
-    self.term = ko.observable('');
-    self.term.subscribe(function() {
-        userOrgList.term(self.term());
-        otherOrgList.term(self.term());
-    });
-
-    self.selection = ko.computed(function() {
-        return userOrgList.selection() || otherOrgList.selection();
-    });
-
-    self.userOrganisationResults = userOrgList.results;
-    self.otherResults = otherOrgList.results;
-
-    self.clearSelection = function() {
-
-        userOrgList.clearSelection();
-        otherOrgList.clearSelection();
-        self.term('');
-    };
-    self.isSelected = function(value) {
-        return userOrgList.isSelected(value) || otherOrgList.isSelected(value);
-    };
-    self.select = function(value) {
-        self.term(value['name']);
-
-        userOrgList.select(value);
-        otherOrgList.select(value);
-    };
-
-    self.allViewed = ko.observable(false);
-
-    self.scrolled = function(blah, event) {
-        var elem = event.target;
-        var scrollPos = elem.scrollTop;
-        var maxScroll = elem.scrollHeight - elem.clientHeight;
-
-        if ((maxScroll - scrollPos) < 9) {
-            self.allViewed(true);
-        }
-    };
-
-    self.visibleRows = ko.computed(function() {
-        var count = 0;
-        if (self.userOrganisationResults().length) {
-            count += self.userOrganisationResults().length+1; // +1 for the "user orgs" label.
-        }
-        if (self.otherResults().length) {
-            count += self.otherResults().length;
-            if (self.userOrganisationResults().length) {
-                count ++; // +1 for the "other orgs" label (it will only show if the my organisations label is also showing.
-            }
-        }
-        return count;
-    });
-
-    self.visibleRows.subscribe(function() {
-        if (self.visibleRows() <= 4 && !self.selection()) {
-            self.allViewed(true);
-        }
-    });
-    self.visibleRows.notifySubscribers();
-
-
-    self.organisationNotPresent = ko.observable();
-
-    var findByOrganisationId = function(list, organisationId) {
-        for (var i=0; i<list.length; i++) {
-            if (list[i].organisationId === organisationId) {
-                return list[i];
-            }
-        }
-        return null;
-    };
-
-    if (inititialSelection) {
-        var userOrg = findByOrganisationId(userOrganisations, inititialSelection);
-        var orgToSelect = userOrg ? userOrg : findByOrganisationId(organisations, inititialSelection);
-        if (orgToSelect) {
-            self.select(orgToSelect);
-        }
-    }
 
 };
 

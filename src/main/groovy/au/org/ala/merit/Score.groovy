@@ -32,12 +32,14 @@ class Score {
     String label
     String units
     String category
+    String name
     boolean isOutputTarget
 
     int overDeliveryThreshold = OVER_DELIVERY_PERCENTAGE_THRESHOLD
     BigDecimal target
     Map result
     List<Map> periodTargets
+    Integer decimalPlaces
 
     double singleResult() {
         this.result?.result ?: 0d

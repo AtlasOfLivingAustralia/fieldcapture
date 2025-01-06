@@ -7,17 +7,16 @@
     <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script>
         var fcConfig = {
-            serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
-            viewProjectUrl: "${createLink(controller:'project', action:'index')}",
             documentUpdateUrl: '${g.createLink(controller:"document", action:"documentUpdate")}',
             documentDeleteUrl: '${g.createLink(controller:"document", action:"deleteDocument")}',
             organisationDeleteUrl: '${g.createLink(action:"ajaxDelete", id:organisation.organisationId)}',
             organisationEditUrl: '${g.createLink(action:"edit", id:organisation.organisationId)}',
             organisationViewUrl: '${g.createLink(action:"index", id:organisation.organisationId)}',
+            organisationSearchUrl: '${g.createLink(action:'search')}',
             prepopulateAbnUrl:"${createLink(action:'prepopulateAbn', id:organisation.organisationId)}",
             organisationListUrl: '${g.createLink(action:"list")}',
             organisationSaveUrl: "${createLink(action:'ajaxUpdate', id:organisation.organisationId)}",
-            imageUploadUrl: "${createLink(controller: 'image', action:'upload')}",
+            i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
             returnTo: "${params.returnTo?:createLink(action:'index', id:organisation.organisationId)}"
 
             };
@@ -49,7 +48,7 @@
 
     <div class="form-actions">
         <button type="button" id="save" data-bind="click:save" class="btn btn-primary">Save</button>
-        <button type="button" id="cancel" class="btn">Cancel</button>
+        <button type="button" id="cancel" data-bind="click:cancel" class="btn">Cancel</button>
     </div>
 
 </div>
@@ -57,58 +56,25 @@
 <asset:script>
 
    $(function () {
-        var organisation = <fc:modelAsJavascript model="${organisation}"/>;
-        var options = {prepopulateAbnUrl: fcConfig.prepopulateAbnUrl, abnSelector: '#abnSelector',
-                       organisationSaveUrl:fcConfig.organisationSaveUrl,
-                       viewProjectUrl: fcConfig.viewProjectUrl, serverUrl: fcConfig.serverUrl,
-                       organisationViewUrl: fcConfig.organisationViewUrl,
-                       documentUpdateUrl: fcConfig.documentUpdateUrl,
-                       documentDeleteUrl: fcConfig.documentDeleteUrl,
-                       organisationEditUrl: fcConfig.organisationEditUrl,
-                       organisationListUrl: fcConfig.organisationListUrl,
-                       organisationDeleteUrl: fcConfig.organisationDeleteUrl,
-                       imageUploadUrl: fcConfig.imageUploadUrl, returnTo: fcConfig.returnTo }
+       var organisation = <fc:modelAsJavascript model="${organisation}"/>;
+       var options = {
+           prepopulateAbnUrl: fcConfig.prepopulateAbnUrl,
+           organisationSaveUrl:fcConfig.organisationSaveUrl,
+           viewProjectUrl: fcConfig.viewProjectUrl, serverUrl: fcConfig.serverUrl,
+           organisationViewUrl: fcConfig.organisationViewUrl,
+           documentUpdateUrl: fcConfig.documentUpdateUrl,
+           documentDeleteUrl: fcConfig.documentDeleteUrl,
+           organisationEditUrl: fcConfig.organisationEditUrl,
+           organisationListUrl: fcConfig.organisationListUrl,
+           organisationDeleteUrl: fcConfig.organisationDeleteUrl,
+           organisationSearchUrl: fcConfig.organisationSearchUrl,
+           validationContainerSelector: '.validationEngineContainer',
+           abnSelector: '#abnSelector',
+           returnTo: fcConfig.returnTo };
 
-        var organisationViewModel = new OrganisationViewModel(organisation, options);
-        autoSaveModel(organisationViewModel, fcConfig.organisationSaveUrl,
-            {
-                blockUIOnSave:true,
-                blockUISaveMessage:'Saving organisation....',
-                 serializeModel:function() {return organisationViewModel.modelAsJSON(true);}
-            });
-        organisationViewModel.save = function() {
-            if ($('.validationEngineContainer').validationEngine('validate')) {
-                organisationViewModel.saveWithErrorDetection(
-                    function(data) {
-                        var orgId = self.organisationId?self.organisationId:data.organisationId;
-
-                        var url;
-                        if (fcConfig.returnTo) {
-                            if (fcConfig.returnTo.indexOf('?') > 0) {
-                                url = fcConfig.returnTo+'&organisationId='+orgId;
-                            }
-                            else {
-                                url = fcConfig.returnTo+'?organisationId='+orgId;
-                            }
-                        }
-                        else {
-                            url = fcConfig.organisationViewUrl+'/'+orgId;
-                        }
-                        window.location.href = url;
-                    },
-                    function(data) {
-                        bootbox.alert('<span class="label label-important">Error</span><p>'+data.detail+'</p>');
-                    }
-                );
-
-            }
-        };
-
+        var organisationViewModel = new EditOrganisationViewModel(organisation, options);
         ko.applyBindings(organisationViewModel);
-        $('.validationEngineContainer').validationEngine();
-         $("#cancel").on("click", function() {
-            document.location.href = fcConfig.returnTo;
-         });
+        organisationViewModel.attachValidation();
     });
 
 

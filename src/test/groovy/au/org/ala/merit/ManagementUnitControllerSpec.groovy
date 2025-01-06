@@ -17,6 +17,7 @@ class ManagementUnitControllerSpec extends Specification implements ControllerUn
     ProjectService projectService = Mock(ProjectService)
     MetadataService metadataService = Mock(MetadataService)
 
+
     String adminUserId = 'admin'
     String editorUserId = 'editor'
     String grantManagerUserId = 'grantManager'

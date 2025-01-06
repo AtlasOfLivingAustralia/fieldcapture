@@ -1,0 +1,15 @@
+{
+  "request": {
+    "urlPattern": "/ws/objects/.+",
+
+    "method": "GET"
+  },
+  "response" : {
+    "status": 200,
+    "headers": {
+      "content-Type": "application/json"
+    },
+    "body": "[]"
+
+  }
+}

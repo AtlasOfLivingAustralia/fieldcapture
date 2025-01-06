@@ -20,37 +20,10 @@
     </div>
 </div>
 </g:if>
-<div class="row mb-2">
-    <div class="col-sm-6">
-        <label class="control-label" for="organisation">Search for an organisation</label>
-        <input type="text" class="form-control form-control-sm input-medium" id="organisation" placeholder="Search organisations..."
-                data-bind="elasticSearchAutocomplete:{url:fcConfig.organisationSearchUrl, value:'name', label:'name', result:transients.selectOrganisation}"/>
-    </div>
-    <div class="col-sm-6">
-        <label class="control-label" for="organisationName">Organisation name</label>
-        <div class="control-label">
-            <input type="text"  disabled="disabled" class="form-control form-control-sm input-medium disabled" aria-readonly="true" readonly="readonly" data-bind="value:organisationName" id="organisationName"/>
-        </div>
 
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-6">
-        <label class="control-label" for="serviceProviderOrganisation">Search for a service provider organisation</label>
-        <div class="control">
-            <input type="text" class="form-control form-control-sm input-medium" id="serviceProviderOrganisation" placeholder="Search organisations..."
-                   data-bind="elasticSearchAutocomplete:{url:fcConfig.organisationSearchUrl, value:'name', label:'name', result:transients.selectServiceProviderOrganisation}"/>
-        </div>
 
-    </div>
-    <div class="col-sm-6">
-        <label class="control-label">Service provider organisation name</label>
-        <div class="control">
-            <input type="text" class="form-control form-control-sm input-medium disabled" disabled="disabled" readonly="readonly" data-bind="value:serviceProviderName" id="serviceProviderName"/>
-        </div>
+<associated-orgs params="associatedOrgs:associatedOrgs, validationNamespace:'projectSettingsAssociatedOrgs', organisationSearchUrl:organisationSearchUrl, organisationViewUrl:organisationViewUrl, displayName:true, relationshipTypes: ['Recipient', 'Service provider', 'Grantee']"></associated-orgs>
 
-    </div>
-</div>
 <div class="row mb-2">
     <div class="col-sm-12">
         <label for="comment">Comment (including organisation changes)</label>
@@ -286,6 +259,84 @@
         <label class="required" for="terminationReason">Termination Reason </label>
             <textarea class="form-control form-control-sm col-sm-12" id="terminationReason" rows="3" data-bind=" value:terminationReason" data-validation-engine="validate[required]"></textarea>
 
+    </div>
+</div>
+
+<div class="row mb-2">
+    <div class="col-sm-12">
+        <label>Override Sites
+        <fc:iconHelp title="Project geographic information">Override sites based geographic location calculation of a project to find geographic extent</fc:iconHelp>
+        </label>
+        <div class="alert alert-info">
+            The following information only needs to be filled out if:
+            <ul>
+                <li>Downloaded information contradicts the actual electorate/state names that should be displayed.</li>
+                <li>There is no information available in the Sites tab.</li>
+            </ul>
+        </div>
+        <div class="control">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td>
+                        Settings
+                    </td>
+                    <td>
+                        The sites for this project should be:
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="national" data-bind="checked: geographicInfo.nationwide">
+                            <label class="form-check-label" for="national">National</label>
+                        </div>
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="statewide" data-bind="checked: geographicInfo.statewide">
+                            <label class="form-check-label" for="statewide">Statewide</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="geographicInfoBehaviour" data-bind="checked: geographicInfo.isDefault">
+                            <label class="form-check-label" for="geographicInfoBehaviour">Override calculated primary state and electorate with selections below.</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="primaryElectorate">Primary electorate</label>
+                    </td>
+                    <td>
+                        <select id="primaryElectorate" data-bind="options:transients.electorates, value:geographicInfo.primaryElectorate, optionsCaption: 'Select an electorate', disable: geographicInfo.nationwide() || geographicInfo.statewide()" class="select form-control"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="otherElectorates">Other electorates</label>
+                    </td>
+                    <td>
+                        <select id="otherElectorates" multiple="multiple" data-bind="options:transients.electorates.filteredElectorates, multiSelect2:{value:geographicInfo.otherElectorates, placeholder:''}, disable: geographicInfo.nationwide() || geographicInfo.statewide()" class="select form-control"></select>
+                    </td>
+                </tr>
+                    <tr>
+                        <td>
+                            <label for="primaryState">Primary state</label>
+                        </td>
+                        <td>
+                            <select id="primaryState" data-bind="options:transients.states, value:geographicInfo.primaryState, optionsCaption: 'Select a state', disable: geographicInfo.nationwide()" class="select form-control"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="otherStates">Other states</label>
+                        </td>
+                        <td>
+                            <select id="otherStates" multiple="multiple" data-bind="options:transients.states.filteredStates, multiSelect2:{value:geographicInfo.otherStates, placeholder:''}, disable: geographicInfo.nationwide()" class="select form-control"></select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

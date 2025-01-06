@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import static java.net.URLEncoder.encode
 import grails.core.GrailsApplication
 import org.springframework.web.multipart.MultipartFile
 
@@ -41,8 +42,7 @@ class SpatialService {
      * attributes of that feature. eg. [shp_id: <shapefileId>, "0":[attribute1:<value>, attribute2:<value>, etc], "1":[attribute1:<value>, attribute2:<value>, etc]]]
      */
     Map uploadShapefile(MultipartFile shapefile) {
-        String url = "${grailsApplication.config.getProperty('spatial.layersUrl')}${UPLOAD_SHAPE_PATH}"
-
+        String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}/shapefile"
         webService.postMultipart(url, [:], shapefile, 'files', true)
     }
 
@@ -57,15 +57,10 @@ class SpatialService {
      * @return [statusCode:<HTTP status code returned from the call>, resp:[id:<id of new object in spatial portal>], error:<if there was an error creating the object>]
      * e.g [statusCode:200, resp:[id:12345]] or [statusCode:500, error:"Failed to create object"]
      */
-    Map createObjectFromShapefileFeature(String shapeFileId, String featureId, String objectName, String objectDescription) {
-        String baseUrl = "${grailsApplication.config.getProperty('spatial.layersUrl')}${UPLOAD_SHAPE_PATH}"
-        String userId = userService.getCurrentUserId()
-
-        Map site = [name:objectName, description: objectDescription, user_id:userId]
-
-        String url = "${baseUrl}/${shapeFileId}/${featureId}"
-
-        webService.doPost(url, site, true)
+    Map createObjectFromShapefileFeature(String shapeFileId, String featureId) {
+        String baseUrl = "${grailsApplication.config.getProperty('ecodata.baseUrl')}/shapefile/geojson"
+        String url = "${baseUrl}/${encode(shapeFileId, "UTF-8")}/${encode(featureId, "UTF-8")}"
+        webService.getJson2(url)
     }
 
     /**

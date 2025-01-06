@@ -86,6 +86,10 @@ class ProjectController {
             user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
         }
         def project = projectService.get(id, user,'all')
+        Map stateElectorate = projectService.findStateAndElectorateForProject(project.projectId)
+        if (stateElectorate) {
+            project << stateElectorate
+        }
         Map config = null
         if (project && !project.error) {
             config = projectService.getProgramConfiguration(project)
@@ -200,7 +204,8 @@ class ProjectController {
         if (datasetsVisible && project.custom?.dataSets) {
             projectService.filterDataSetSummaries(project.custom?.dataSets)
         }
-        def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates, outcomes:project.outcomes, objectives:config.program?.config?.objectives],
+        boolean showExternalIds = userService.userHasReadOnlyAccess() || userService.userIsSiteAdmin()
+        def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates, outcomes:project.outcomes, objectives:config.program?.config?.objectives, showExternalIds:showExternalIds],
                      documents      : [label: 'Documents', visible: config.includesContent(ProgramConfig.ProjectContent.DOCUMENTS), type: 'tab', user:user, template:'docs', activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
                      details        : [label: 'MERI Plan', default: false, disabled: !meriPlanEnabled, visible: meriPlanVisible, meriPlanVisibleToUser: meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: true, project:project, type: 'tab', template:'viewMeriPlan', meriPlanTemplate:MERI_PLAN_TEMPLATE+'View', config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
                      plan           : [label: 'Activities', visible: true, disabled: !user?.hasViewAccess, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:user?.isCaseManager, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: risksAndThreatsVisible],
@@ -217,15 +222,12 @@ class ProjectController {
             // The RLP Project Template doesn't need site details or activities.
             project.sites = new JSONArray(project.sites?.collect{new JSONObject([name:it.name, siteId:it.siteId, lastUpdated:it.lastUpdated, type:it.type, extent:[:], publicationStatus:it.publicationStatus, externalIds:it.externalIds])} ?: [])
             project.remove('activities')
-            model.overview.template = 'rlpOverview'
-
-            boolean showExternalIds = userService.userHasReadOnlyAccess() || userService.userIsSiteAdmin()
-            model.overview.showExternalIds = showExternalIds
 
             model.details.meriPlanTemplate = config.meriPlanTemplate ? config.meriPlanTemplate+"View" : RLP_MERI_PLAN_TEMPLATE+'View'
 
             boolean serviceDeliveryVisible = model.dashboard.visible && userHasViewAccess
-            model.serviceDelivery = [label: 'Dashboard', visible: serviceDeliveryVisible, type: 'tab', template: 'rlpServiceDashboard', includeInvoiced:config.supportsOutcomeTargets()]
+            boolean showDashboardInvoiceField = (config.showsDashboardInvoiceField == null) ? config.supportsOutcomeTargets() : config.showsDashboardInvoiceField
+            model.serviceDelivery = [label: 'Dashboard', visible: serviceDeliveryVisible, type: 'tab', template: 'rlpServiceDashboard', includeInvoiced:showDashboardInvoiceField]
             if (model.serviceDelivery.visible) {
                 // This can be a slow call so don't make it if the data won't be displayed
                 model.serviceDelivery.servicesDashboard = projectService.getServiceDashboardData(project.projectId, false)
@@ -1224,6 +1226,11 @@ class ProjectController {
         }
 
         render reportData as JSON
+    }
+
+    def spatialFeatures (String layerId, String intersectWith) {
+        webService.proxyGetRequest(response, grailsApplication.config.getProperty('ecodata.baseUrl') + "spatial/features?layerId=${layerId}&intersectWith=${intersectWith?:''}", false, true, 120000)
+        return null
     }
 
     private def error(String message, String projectId) {

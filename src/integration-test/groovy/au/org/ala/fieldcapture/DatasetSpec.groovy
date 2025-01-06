@@ -3,6 +3,7 @@ package au.org.ala.fieldcapture
 import geb.module.FormElement
 import pages.DatasetPage
 import pages.RlpProjectPage
+import spock.lang.Ignore
 import spock.lang.Stepwise
 
 @Stepwise
@@ -237,8 +238,11 @@ class DatasetSpec extends StubbedCasSpec{
             hasBeenReloaded()
         }
         at RlpProjectPage // reset at check time.
-
         meriPlan = openMeriPlanEditTab()
+
+        waitFor {
+            meriPlan.holdsEditLock()
+        }
         meriPlan.save()
 
         and: "We reload the page and reopen the data set summary tab"

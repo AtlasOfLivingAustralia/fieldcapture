@@ -1,4 +1,5 @@
 describe("OrganisationViewModel Spec", function () {
+    var hasSimpleDirtyFlag = true;
     beforeAll(function() {
         window.fcConfig = {
             imageLocation:'/'
@@ -11,9 +12,20 @@ describe("OrganisationViewModel Spec", function () {
         if (!$.unblockUI) {
             $.unblockUI = function() {};
         }
+        if (!ko.simpleDirtyFlag) {
+            hasSimpleDirtyFlag = false;
+            ko.simpleDirtyFlag  = function() {
+                this.isDirty = ko.observable(false);
+                return this;
+            };
+        }
+
     });
     afterAll(function() {
         delete window.fcConfig;
+        if (!hasSimpleDirtyFlag) {
+            delete ko.simpleDirtyFlag;
+        }
     });
 
     it("should serialize into JSON which does not contain any fields that are only useful to the view", function() {
@@ -22,11 +34,23 @@ describe("OrganisationViewModel Spec", function () {
             {label:'Quarterly (First period ends 30 September 2023)', firstReportingPeriodEnd:'2023-09-30T14:00:00Z', reportingPeriodInMonths:3, reportConfigLabel:'Quarterly'}
         ];
 
-        var organisation = { organisationId:'1', description:'Org 1 description', collectoryInstitutionId:'dr123', newsAndEvents:'this is the latest news',
-            documents:[], links:[]
+        var organisation = {
+            organisationId:'1',
+            description:'Org 1 description',
+            collectoryInstitutionId:'dr123',
+            newsAndEvents:'this is the latest news',
+            orgType:'Individual/Sole Trader',
+            entityType:'IND',
+            postcode:1234,
+            externalIds:[],
+            associatedOrgs:[],
+            documents:[], links:[],
+            businessNames:[],
+            contractNames:[],
+            indigenousOrganisationRegistration: []
         };
 
-        var model = new OrganisationViewModel(organisation);
+        var model = new EditOrganisationViewModel(organisation, {healthCheckUrl:'/'});
 
         var json = model.modelAsJSON(true);
 
@@ -47,7 +71,7 @@ describe("OrganisationViewModel Spec", function () {
     it('should get name based on the abn provided', function () {
         let options = {prepopulateAbnUrl: "test/url"};
 
-        let abnDetails = {abn: "11111111111", name: "test org"}
+        let abnDetails = {abn: "11111111111", entityName: "test org", businessNames:['test org 1']}
         let organisation = {organisationId: "1234", name: "OrgName"}
 
         spyOn($, 'get').and.returnValue(
@@ -58,7 +82,7 @@ describe("OrganisationViewModel Spec", function () {
         model.abn = "11111111111";
         model.prepopulateFromABN();
 
-        expect(model.name()).toEqual(abnDetails.name);
+        expect(model.name()).toEqual(organisation.name); //Org name is not overwritten unless empty
     });  // end it
 
 

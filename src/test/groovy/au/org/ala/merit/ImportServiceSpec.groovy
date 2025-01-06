@@ -58,7 +58,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         1 * siteService.uploadShapefile(shapefile) >> [statusCode: HttpStatus.SC_OK, resp:[shp_id:shapefileId, "0":["GRANT_ID":"g1", "EXTERNAL_I":"e1"]]]
         1 * projectService.search([grantId:"g1", externalId:"e1"]) >> [resp:[projects:[[projectId:"p1", grantId: "g1"]]]]
         1 * projectService.get('p1', _) >> [name:'p1 name', description:'p1 description']
-        1 * siteService.createSiteFromUploadedShapefile(shapefileId, "0", shapefileId+'-0', "g1 - Site 1", _, "p1", false) >> [success:true, siteId:'s1']
+        1 * siteService.createSiteFromUploadedShapefile(shapefileId, "0", shapefileId+'-0', "g1 - Site 1", _, "p1") >> [success:true, siteId:'s1']
         result.success == true
         result.message.sites.size() == 1
     }
@@ -77,7 +77,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         1 * projectService.search([grantId:"g1", externalId:"e1"]) >> [resp:[projects:[]]]
         1 * projectService.search([grantId:"g1"]) >> [resp:[projects:[[projectId:"p1", grantId: "g1"]]]]
         1 * projectService.get('p1', _) >> [name:'p1 name', description:'p1 description']
-        1 * siteService.createSiteFromUploadedShapefile(shapefileId, "0", shapefileId+'-0', "g1 - Site 1", _, "p1", false) >> [success:true, siteId:'s1']
+        1 * siteService.createSiteFromUploadedShapefile(shapefileId, "0", shapefileId+'-0', "g1 - Site 1", _, "p1") >> [success:true, siteId:'s1']
         result.success == true
         result.message.sites.size() == 1
 
@@ -89,7 +89,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         1 * projectService.search([grantId:"g1", externalId:"e1"]) >> [resp:[projects:[]]]
         1 * projectService.search([grantId:"g1"]) >> [resp:[projects:[[projectId:"p1", grantId: "g1"], [projectId:'p2', grantId:'g1']]]]
         0 * projectService.get('p1', _) >> [name:'p1 name', description:'p1 description']
-        0 * siteService.createSiteFromUploadedShapefile(shapefileId, "0", shapefileId+'-0', "g1 - Site 1", _, "p1", false) >> [success:true, siteId:'s1']
+        0 * siteService.createSiteFromUploadedShapefile(shapefileId, "0", shapefileId+'-0', "g1 - Site 1", _, "p1") >> [success:true, siteId:'s1']
         result.success == true
         result.message.sites.size() == 0
         result.message.errors.size() == 1
@@ -107,14 +107,14 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         1 * siteService.uploadShapefile(shapefile) >> [statusCode: HttpStatus.SC_OK, resp:[shp_id:shapefileId, "0":["GRANT_ID":"g1", "EXTERNAL_I":"e1"]]]
         1 * projectService.search([grantId:"g1", externalId:"e1"]) >> [resp:[projects:[[projectId:"p1", grantId: "g1"]]]]
         1 * projectService.get('p1', _) >> [name:'p1 name', description:'p1 description']
-        0 * siteService.createSiteFromUploadedShapefile(shapefileId, "0", shapefileId+'-0', "g1 - Site 1", _, "p1", false) >> [success:true, siteId:'s1']
+        0 * siteService.createSiteFromUploadedShapefile(shapefileId, "0", shapefileId+'-0', "g1 - Site 1", _, "p1") >> [success:true, siteId:'s1']
         result.success == true
         result.message.sites.size() == 1
     }
 
     def "The import service can create projects that have been loaded and mapped via CSV"() {
         setup:
-        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [],abnLookupService, scores, [:])
+        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [[organisationId:"123", name:"Test organisation"]],abnLookupService, scores, ["Test program":["programId":"p1"]], ["Test MU":"m1"])
         List projectRows = projectRowData()
         List status = []
         String projectId = 'p1'
@@ -130,9 +130,11 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         0 * projectService.generateProjectStageReports(projectId, new ReportGenerationOptions())
         projectDetails.grantId == "Grant 1"
         projectDetails.name == "Test project"
+        projectDetails.programId == "p1"
+        projectDetails.managementUnitId == "m1"
         projectDetails.description == "Test project description"
         projectDetails.externalId == "123"
-        projectDetails.organisationName == "Test organisation"
+        projectDetails.associatedOrgs == [[organisationId:"123", name:"Test organisation", description:"Recipient"]]
         !projectDetails.associatedProgram  // We didn't supply a program name in the test.
         !projectDetails.associatedSubProgram
         projectDetails.plannedStartDate == "2019-06-30T14:00:00+0000"
@@ -149,7 +151,6 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         projectDetails.origin == 'merit'
         projectDetails.projectType == "works"
         projectDetails.isMERIT == true
-        !projectDetails.managementUnitId
         projectDetails.hubId == 'merit'
         projectDetails.projectId == 'p1'
 
@@ -170,7 +171,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         1 * metadataService.organisationList() >> [list:[[name:"Test Organisation 2", organisationId:'org2Id', abn:'12345678901']]]
         1 * metadataService.programsModel() >> [programs:[[name:'Green Army', subprograms:[[name:"Green Army Round 1"]]]]]
         1 * managementUnitService.getByName("ACT") >> [managementUnitId:"actId", name:"ACT"]
-        1 * programService.getByName("Green Army Round 1") >> null
+        1 * programService.getByName("Green Army Round 1") >> [programId:"gar1", name:"Green Army Round 1"]
 
         and: "The project was processed without errors"
         !result.error
@@ -195,7 +196,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         1 * metadataService.organisationList() >> [list:[[name:"Test Organisation 2", organisationId:'org2Id', abn:'12345678901']]]
         1 * metadataService.programsModel() >> [programs:[[name:'Green Army', subprograms:[[name:"Green Army Round 1"]]]]]
         1 * managementUnitService.getByName("ACT") >> [managementUnitId:"actId", name:"ACT"]
-        1 * programService.getByName("Green Army Round 1") >> null
+        1 * programService.getByName("Green Army Round 1") >> [programId:"gar1"]
         1 * projectService.update('', _) >> [resp:[projectId:'p1']]
         1 * userService.checkEmailExists('editor@test.com') >> "u3"
         1 * userService.checkEmailExists('editor2@test.com') >> "u4"
@@ -229,7 +230,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
 
     def "A project won't be imported if update=false and MERIT already has a project with the same grantId/externalId"() {
         setup:
-        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [],abnLookupService, scores, [:])
+        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [[organisationId:"123", name:"Test organisation"]],abnLookupService, scores, ["Test program":[programId:"p1"]], ["Test MU":"m1"])
         List projectRows = projectRowData()
         List status = []
         String projectId = 'p1'
@@ -250,7 +251,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
 
     def "A project won't be updated if update=true and MERIT does not have a project with the same grantId/externalId"() {
         setup:
-        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [],abnLookupService, scores, [:])
+        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [[organisationId:"123", name:"Test organisation"]],abnLookupService, scores, ["Test program":[programId:"p1"]], ["Test MU":"m1"])
         List projectRows = projectRowData()
         List status = []
         String projectId = 'p1'
@@ -273,10 +274,11 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
         [[
                  APP_ID:'Grant 1',
                  MANAGEMENT_UNIT:'Test MU',
+                 PROGRAM_NM:'Test program',
                  APP_NM:'Test project',
                  APP_DESC:'Test project description',
                  EXTERNAL_ID:'123',
-                 ORG_TRADING_NAME:'Test organisation',
+                 ORG_ID:'123',
                  START_DT: '01/07/2019',
                  FINISH_DT: '30/06/2023',
                  WORK_ORDER_ID: 'WO1234',

@@ -201,7 +201,7 @@ function autoSaveModel(viewModel, saveUrl, options) {
         preventNavigationIfDirty: false,
         defaultDirtyFlag:ko.simpleDirtyFlag,
         dirtyFlagRateLimitMs: 0, // If ko.dirtyFlag is used (rather than ko.simpleDirtyFlag), this is the rate limit in ms for detecting changes.
-        healthCheckUrl:fcConfig  && fcConfig.healthCheckUrl
+        healthCheckUrl: fcConfig  && fcConfig.healthCheckUrl
     };
     var config = $.extend(defaults, options);
 
@@ -581,7 +581,8 @@ function Documents(options) {
         var lcFilter = (self.documentFilter() || '').trim().toLowerCase();
         var field = self.documentFilterField();
         return ko.utils.arrayFilter(self.documents(), function(doc) {
-            return (doc[field.fun]() || '').toLowerCase().indexOf(lcFilter) !== -1;
+            var docValue = ko.utils.unwrapObservable(doc[field.fun]);
+            return (docValue || '').toLowerCase().indexOf(lcFilter) !== -1;
         });
     });
 

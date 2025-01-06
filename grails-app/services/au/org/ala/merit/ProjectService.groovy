@@ -66,6 +66,15 @@ class ProjectService  {
 
     }
 
+    Map findStateAndElectorateForProject(String projectId) {
+        Map result = webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/findStateAndElectorateForProject?projectId=' + projectId) as Map
+        if (result.error) {
+            result = [:]
+        }
+
+        result
+    }
+
     void filterDataSetSummaries(List dataSetSummaries) {
         List<Map> forms = activityService.monitoringProtocolForms()
 
@@ -1331,7 +1340,7 @@ class ProjectService  {
 
                 stageReportActivityModel.outputs.each { outputType ->
                     def output = activity.outputs?.find { it.name == outputType }
-                    def type = metadataService.annotatedOutputDataModel(outputType)
+                    def type = metadataService.annotatedOutputDataModel(activity.type, outputType, activity.formVersion)
 
                     append(html,"<b> ${outputType}: </b> <br>");
                     type.each { field ->

@@ -151,6 +151,9 @@ class ProgramConfig implements Map {
         template != null
     }
 
+    /** This flag controls whether the invoice field in the dashboard is shown */
+    boolean showsDashboardInvoiceField = true
+
 }
 
 

@@ -577,7 +577,6 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         model.projectContent.admin.visible == false
         model.projectContent.reporting.visible == false
         model.projectContent.datasets.visible == false
-        model.projectContent.overview.template == 'rlpOverview'
         model.projectContent.overview.visible == true
         model.projectContent.documents.visible == true
     }

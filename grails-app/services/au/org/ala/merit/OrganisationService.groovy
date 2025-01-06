@@ -7,7 +7,6 @@ import org.grails.web.json.JSONArray
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Period
-
 /**
  * Extends the plugin OrganisationService to provide Green Army reporting capability.
  */
@@ -30,8 +29,8 @@ class OrganisationService {
     def get(String id, view = '') {
 
         String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}organisation/$id?view=$view"
-        Map organisation = webService.getJson(url)
-
+        Map resp = webService.getJson2(url)
+        Map organisation = resp?.resp
         if (view != 'flat') {
             organisation.reports = getReportsForOrganisation(organisation, getReportConfig(id))
         }
@@ -50,6 +49,21 @@ class OrganisationService {
             List categorisedDocs = results.documents.split{it.type == DocumentService.TYPE_LINK}
             organisation.documents = new JSONArray(categorisedDocs[1])
         }
+
+        Map orgContractNames = [:]
+        organisation.projects?.each { Map project ->
+            project.associatedOrgs?.each { Map associatedOrg ->
+                if (associatedOrg.organisationId == id) {
+                    if (!orgContractNames[associatedOrg.name]) {
+                        orgContractNames[associatedOrg.name] = []
+                    }
+                    orgContractNames[associatedOrg.name] << [projectId: project.projectId, projectName: project.name]
+                }
+            }
+
+        }
+        organisation.contractNamesAndProjects = orgContractNames
+
 
         organisation
     }
@@ -112,6 +126,26 @@ class OrganisationService {
 
         regenerateOrganisationReports(organisation, organisationReportCategories)
     }
+
+    List<Map> generateTargetPeriods(String id) {
+        Map organisation = get(id)
+        generateTargetPeriods(organisation)
+    }
+
+    List<Map> generateTargetPeriods(Map organisation) {
+        Map targetsConfig = organisation.config?.targets
+        if (!targetsConfig) {
+            log.info("No target configuration defined for organisation ${organisation.organisationId}")
+            return null
+        }
+        ReportConfig targetsReportConfig = new ReportConfig(targetsConfig.periodGenerationConfig)
+        ReportOwner owner = new ReportOwner(
+                id:[organisationId:organisation.organisationId],
+                name:organisation.name
+        )
+        reportService.generateTargetPeriods(targetsReportConfig, owner, targetsConfig.periodLabelFormat)
+    }
+
 
     private void regenerateOrganisationReports(Map organisation, List<String> reportCategories = null) {
 
@@ -290,11 +324,9 @@ class OrganisationService {
 
     Map getAbnDetails(String abnNumber){
         Map result
-        result = abnLookupService.lookupOrganisationNameByABN(abnNumber)
+        result = abnLookupService.lookupOrganisationDetailsByABN(abnNumber)
         if (result.abn == ''){
             result.error = "invalid"
-        }else{
-            result = [abn: result.abn, name: result.entityName]
         }
         return result
     }
@@ -320,4 +352,39 @@ class OrganisationService {
         scoreIds.collectEntries{ String scoreId ->[(scoreId):result.results?.find{it.scoreId == scoreId}?.result?.result ?: 0]}
     }
 
+    List scoresForOrganisation(Map organisation, List<String> scoreIds, boolean approvedOnly = true) {
+
+        String url =  grailsApplication.config.getProperty('ecodata.baseUrl')+"organisation/organisationMetrics/"+organisation.organisationId
+        Map params = [approvedOnly: approvedOnly, scoreIds: scoreIds]
+
+        Map result = webService.doPost(url, params)
+
+        List scores = result?.resp?.collect { Map score ->
+            Map target = organisation?.custom?.details?.services?.targets?.find { it.scoreId == score.scoreId }
+            score.target = target?.target
+            score
+        }
+
+        scores
+
+    }
+
+
+    /**
+     * Filter services to those supported by organisation.
+     */
+    def findApplicableServices(Map organisation, List allServices) {
+
+        List supportedServices = organisation.config?.organisationReports?.collect{it.activityType}?.findAll{it}
+        List result = []
+        if (supportedServices) {
+            result = allServices.findAll{ supportedServices.intersect(it.outputs.formName) }
+            result.each {
+                List scores = it.scores?.findAll{Map score -> score.isOutputTarget}
+                it.scores = scores
+            }
+        }
+
+        result
+    }
 }

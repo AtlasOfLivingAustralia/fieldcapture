@@ -7,7 +7,6 @@ import au.org.ala.merit.command.ViewOrganisationReportCommand
 import au.org.ala.merit.util.ProjectGroupingHelper
 import grails.converters.JSON
 import org.apache.http.HttpStatus
-
 /**
  * Extends the plugin OrganisationController to support Green Army project reporting.
  */
@@ -27,7 +26,7 @@ class OrganisationController {
     def list() {}
 
     def index(String id) {
-        def organisation = organisationService.get(id, 'all')
+        Map organisation = organisationService.get(id, 'all')
 
         if (!organisation || organisation.error) {
             organisationNotFound(id, organisation)
@@ -60,7 +59,7 @@ class OrganisationController {
 
 
 
-    protected Map content(organisation) {
+    protected Map content(Map organisation) {
 
         def user = userService.getUser()
         def members = userService.getMembersOfOrganisation(organisation.organisationId)
@@ -73,10 +72,18 @@ class OrganisationController {
         def dashboardReports = [[name:'dashboard', label:'Activity Outputs']]
 
         Map availableReportCategories = null
+        List services = null
+        List targetPeriods = null
+        List dashboardData = null
         if (adminVisible) {
             dashboardReports += [name:'announcements', label:'Announcements']
             availableReportCategories = settingService.getJson(SettingPageType.ORGANISATION_REPORT_CONFIG)
+            services = organisationService.findApplicableServices(organisation, metadataService.getProjectServices())
+            targetPeriods = organisationService.generateTargetPeriods(organisation)
+            List scores = services.collect{it.scores}.flatten()
+            dashboardData = organisationService.scoresForOrganisation(organisation, scores?.collect{it.scoreId}, !hasEditorAccess)
         }
+        boolean showTargets = userService.userIsSiteAdmin() && services && targetPeriods
 
         List reportOrder = null
         if (reportingVisible) {
@@ -106,8 +113,8 @@ class OrganisationController {
         [about     : [label: 'About', visible: true, stopBinding: false, type:'tab', default:!reportingVisible, displayedPrograms:projectGroups.displayedPrograms, servicesDashboard:[visible:true]],
          projects : [label: 'Reporting', template:"/shared/projectListByProgram", visible: reportingVisible, stopBinding:true, default:reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes, reportOrder:reportOrder, hideDueDate:true, displayedPrograms:projectGroups.displayedPrograms, reportsFirst:true, declarationType:SettingPageType.RDP_REPORT_DECLARATION],
          sites     : [label: 'Sites', visible: reportingVisible, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:adminVisible],
-         dashboard : [label: 'Dashboard', visible: reportingVisible, stopBinding:true, type: 'tab', template:'/shared/dashboard', reports:dashboardReports],
-         admin     : [label: 'Admin', visible: adminVisible, type: 'tab', template:'admin', showEditAnnoucements:showEditAnnoucements, availableReportCategories:availableReportCategories]]
+         dashboard : [label: 'Dashboard', visible: reportingVisible, stopBinding:true, type: 'tab', template:'dashboard', reports:dashboardReports, dashboardData:dashboardData],
+         admin     : [label: 'Admin', visible: adminVisible, type: 'tab', template:'admin', showEditAnnoucements:showEditAnnoucements, availableReportCategories:availableReportCategories, targetPeriods:targetPeriods, services: services, showTargets:showTargets]]
 
     }
 
@@ -136,14 +143,15 @@ class OrganisationController {
     @PreAuthorise(accessLevel = 'editor')
     def edit(String id) {
 
-        def organisation = organisationService.get(id)
+        def organisation = organisationService.get(id, 'all')
 
         if (!organisation || organisation.error) {
             organisationNotFound(id, organisation)
         }
         else {
             if (organisationService.isUserAdminForOrganisation(id)) {
-
+                organisation.remove('projects')
+                organisation.remove('reports')
                 [organisation: organisation,
                  isNameEditable   : userService.userIsAlaOrFcAdmin()]
             }
@@ -175,7 +183,7 @@ class OrganisationController {
     }
 
     private void createOrUpdateOrganisation(String organisationId, Map organisationDetails) {
-        def originalOrganisation = organisationService.get(organisationId)
+        def originalOrganisation = organisationId ? organisationService.get(organisationId) : null
         def documents = organisationDetails.remove('documents')
         def links = organisationDetails.remove('links')
         def result = organisationService.update(organisationId, organisationDetails)
@@ -195,7 +203,7 @@ class OrganisationController {
         }
 
         List existingLinks = links?.findResults { it.documentId }
-        List toDeleteLinks = originalOrganisation?.links?.findAll { !existingLinks.contains(it.documentId) }
+        List toDeleteLinks = originalOrganisation?.links?.findAll { !existingLinks?.contains(it.documentId) }
         // delete any links that were removed.
         if (toDeleteLinks && !result.error) {
             toDeleteLinks.each { link ->
@@ -447,7 +455,7 @@ class OrganisationController {
             return
         }
         def outputModels = activityModel.outputs.collect {
-            [name:it, annotatedModel:metadataService.annotatedOutputDataModel(it), dataModel:metadataService.getDataModelFromOutputName(it)]
+            [name:it, annotatedModel:metadataService.annotatedOutputDataModel(activityType, it, null), dataModel:metadataService.getDataModelFromOutputName(it)]
         }
 
         def criteria = [type:activityType, projectId:organisation.projects.collect{it.projectId}, dateProperty:'plannedEndDate', startDate:params.plannedStartDate, endDate:params.plannedEndDate]
@@ -686,6 +694,12 @@ class OrganisationController {
 
         Map result = organisationService.scoresForOrganisationReport(id, reportId, scoreIds)
 
+        render result as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def generateTargetPeriods(String id) {
+        List<Map> result = organisationService.generateTargetPeriods(id)
         render result as JSON
     }
 }
