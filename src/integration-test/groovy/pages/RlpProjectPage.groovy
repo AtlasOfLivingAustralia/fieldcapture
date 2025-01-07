@@ -81,6 +81,7 @@ class RlpProjectPage extends ReloadablePage {
     def openMERIPlanTab() {
         meriPlanTab.click()
         waitFor {meriPlanTabContent.displayed }
+        Thread.sleep(1000)
 
         return meriPlanTabContent
     }
