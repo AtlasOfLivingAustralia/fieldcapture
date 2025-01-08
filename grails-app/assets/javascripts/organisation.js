@@ -228,16 +228,16 @@ OrganisationViewModel = function (props, options) {
     self.transients = self.transients || {};
 
     function toTitleCase(name) {
-        return name.replace(/\S+/g, function(word) {
+        return name.replace(/\S+/g, function(word, offset) {
             if (!word) {
                 return word;
             }
             word = word.toLowerCase();
             var joiningWords = ['and', 'of', 'the', 'in', 'for', 'to', 'a', 'an', 'on', 'at', 'by', 'with', 'from', 'as', 'but', 'or', 'nor'];
-            if (joiningWords.indexOf(word) >= 0) {
+            if (offset && joiningWords.indexOf(word) >= 0) {
                 return word;
             }
-            return word.charAt(0).toUpperCase() + word.substring(1)
+            return word.charAt(0).toUpperCase() + word.substring(1);
         });
     }
     self.prepopulateFromABN = function() {
