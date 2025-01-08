@@ -26,7 +26,7 @@ class GmsMapper {
     static final REPORTING_THEME_COLUMN = 'PGAT_PRIORITY'
 
     static final FINANCIAL_YEAR_FUNDING_PREFIX = 'FUNDING_'
-
+    static final FINANCIAL_YEAR_FUNDING_DESCRIPTION = "FINANCIAL_YEAR_FUNDING_DESCRIPTION"
     static MERIT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
 
     static final GMS_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy")
@@ -95,10 +95,10 @@ class GmsMapper {
 
     def geographicInfoMapping = [
             NATIONWIDE:[name:'nationwide', type:'boolean', description:'If true, this project does not have a primary state'],
-            PRIMARY_STATE:[name:'primaryState', type:'string', description:''],
-            PRIMARY_ELECTORATE:[name:'primaryElectorate', type:'string', description:''],
-            OTHER_ELECTORATES:[name:'otherElectorates', type:'list', description:''],
-            OTHER_STATES:[name:'otherStates', type:'list', description:'']
+            PRIMARY_STATE:[name:'primaryState', type:'string', description:'The primary state to be manually assigned to this project'],
+            PRIMARY_ELECTORATE:[name:'primaryElectorate', type:'string', description:'The primary electorate to be manually assigned to this project'],
+            OTHER_ELECTORATES:[name:'otherElectorates', type:'list', description:'Other electorates to be manually assigned to this project.  Enter as a comma separated list'],
+            OTHER_STATES:[name:'otherStates', type:'list', description:'Other states to be manually assigned to this project.  Enter as a comma separated list'],
     ]
 
 
@@ -164,7 +164,7 @@ class GmsMapper {
         List descriptions = []
         List mandatoryFlags = []
         List headers = []
-        projectMapping.each { String key, Map value ->
+        (projectMapping + geographicInfoMapping).each { String key, Map value ->
            // Deliberately omit fields without a description as they are largely deprecated.
             String description = value.description
             if (description) {
@@ -176,6 +176,15 @@ class GmsMapper {
                 descriptions << description
            }
         }
+        // Special case for MERI plan funding mapping
+        headers << FINANCIAL_YEAR_FUNDING_DESCRIPTION
+        descriptions << "Description of the funding for each financial year.  Must be present for financial year funding amounts to be imported"
+
+        for (int i : (18..30)) {
+            headers << FINANCIAL_YEAR_FUNDING_PREFIX+i+"_"+(i+1)
+            descriptions << "Funding amount for the financial year ${i} to ${i+1}"
+        }
+
         csvWriter.writeNext(descriptions as String[])
         csvWriter.writeNext(mandatoryFlags as String[])
         csvWriter.writeNext(headers as String[])
@@ -190,7 +199,7 @@ class GmsMapper {
         mappingKeys.add(DATA_SUB_TYPE_COLUMN)
         mappingKeys.add(REPORTING_THEME_COLUMN)
         mappingKeys.add(FINANCIAL_YEAR_FUNDING_PREFIX)
-        mappingKeys.add("FINANCIAL_YEAR_FUNDING_DESCRIPTION")
+        mappingKeys.add(FINANCIAL_YEAR_FUNDING_DESCRIPTION)
 
         projectRows[0].keySet().each { key ->
             if (!key?.trim() || key == 'index') {
