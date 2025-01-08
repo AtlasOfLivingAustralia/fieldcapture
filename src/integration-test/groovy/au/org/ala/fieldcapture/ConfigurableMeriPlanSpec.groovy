@@ -59,7 +59,6 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
             moveToElement(meriPlan.projectName)
         }
 
-        println meriPlan.projectName
         meriPlan.projectName = "MERI plan edited name"
         meriPlan.projectDescription = "MERI plan edited description"
         meriPlan.priorityPlace.supportsPriorityPlaces = 'Yes'
