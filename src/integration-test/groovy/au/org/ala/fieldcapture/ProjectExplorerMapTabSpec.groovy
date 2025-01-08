@@ -10,7 +10,6 @@ class ProjectExplorerMapTabSpec extends StubbedCasSpec {
         useDataSet("dataset_project_sites")
     }
 
-    @Ignore
     // Temporarily ignoring this test as it seems that google maps is not loading
     void "The project explorer displays a list of projects"() {
 
