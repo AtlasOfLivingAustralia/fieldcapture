@@ -47,7 +47,7 @@ class CreateOrEditOrganisationSpec extends StubbedCasSpec {
         openAboutTab()
 
         then:
-        orgName.text() == "THE TRUSTEE FOR PSS FUND Test"
+        orgName.text() == "The Trustee for Pss Fund Test"
         waitFor {orgDescription.displayed }
         orgDescription.text() == "Test Organisation Description test"
         waitFor {orgAbn.displayed }

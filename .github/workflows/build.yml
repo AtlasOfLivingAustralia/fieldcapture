@@ -80,11 +80,11 @@ jobs:
       - name: Run javascript unit tests
         run: node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
 
-#      - name: Run MERIT functional tests
-#        run: ./src/main/scripts/runFunctionalTests.sh
-#        env:
-#          GPR_USER: ${{env.GITHUB_ACTOR}}
-#          GPR_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: Run MERIT functional tests
+        run: ./src/main/scripts/runFunctionalTests.sh
+        env:
+          GPR_USER: ${{env.GITHUB_ACTOR}}
+          GPR_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Clean to remove clover instrumentation
         uses: gradle/gradle-build-action@v2.4.2
