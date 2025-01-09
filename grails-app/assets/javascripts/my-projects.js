@@ -6,8 +6,6 @@ var ProjectReportsViewModel = function (project) {
     var reportService = new ReportService({});
 
     self.projectId = project.projectId;
-    self.organisationId = project.orgIdSvcProvider || project.organisationId;
-    self.organisationName = project.serviceProviderName || project.organisationName;
     self.name = project.name;
     self.grantId = project.grantId || '';
     self.associatedProgram = project.associatedProgram;
@@ -15,7 +13,11 @@ var ProjectReportsViewModel = function (project) {
     self.submittedReportCount = 0;
     self.recommendAsCaseStudy = ko.observable(project.promoteOnHomepage);
     self.activityCount = project.activityCount || 0;
-
+    self.currentAssociatedOrgs = _.filter(project.associatedOrgs, function(org) {
+            var toDate = ko.utils.unwrapObservable(org.toDate);
+            var fromDate = ko.utils.unwrapObservable(org.fromDate);
+            return (!toDate || toDate >= new Date().toISOStringNoMillis()) && (!fromDate || fromDate <= new Date().toISOStringNoMillis());
+    });
     self.reports = [];
     self.extendedStatus = [];
     var reportingTimeSum = 0;
