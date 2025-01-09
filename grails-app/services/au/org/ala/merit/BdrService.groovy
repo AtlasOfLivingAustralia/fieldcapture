@@ -41,8 +41,8 @@ class BdrService {
         String bdrBaseUrl = grailsApplication.config.getProperty('bdr.api.url')
 
         format = URLEncoder.encode(format, 'UTF-8')
-        String url = bdrBaseUrl+'/collections/ns3:'+projectId+'/items?_mediatype='+format
-
+        //String url = bdrBaseUrl+'/collections/ns3:'+projectId+'/items?_mediatype='+format
+        String url = 'https://bdr.azure-api.net/merit/v2/catalogs/bdr-cat:merit-datasets/collections/bdr-ds:dabc7e5d-81ce-40bf-8f74-8ecf3c7ce055/features/collections'
         String azureToken = getAzureAccessToken()
 
         log.info("Downloading data set from BDR: $url")
