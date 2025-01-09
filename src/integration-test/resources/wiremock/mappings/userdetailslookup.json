@@ -1,4 +1,5 @@
 {
+  "priority": 4,
   "request": {
     "urlPath": "/userdetails/userDetails/getUserDetails",
     "method": "ANY"
@@ -9,6 +10,12 @@
     "headers": {
       "Content-Type": "application/json"
     },
-    "body": "{{#if (request.query.userName != jwtId)}} {\"userName\":\"user.{{request.query.userName}}@nowhere.com.au\",\"email\":\"user.{{request.query.userName}}@nowhere.com.au\",\"userId\":\"{{request.query.userName}}\",\"firstName\": \"First {{request.query.userName}}\",\"lastName\": \"Last {{request.query.userName}}\"}{{/if}}{{#if (request.query.userName == 'jwtId')}}null{{/if}}"
+    "jsonBody": {
+        "userName":"user.{{request.query.userName}}@nowhere.com.au",
+        "email":"user.{{request.query.userName}}@nowhere.com.au",
+        "userId":"{{request.query.userName}}",
+        "firstName": "First {{request.query.userName}}",
+        "lastName": "Last {{request.query.userName}}"
+    }
   }
 }
