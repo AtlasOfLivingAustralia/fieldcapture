@@ -49,7 +49,7 @@
         var facetsUsed = false;
         <g:if test="${params.fq}">
             <g:set var="fqList" value="${[params.fq].flatten()}"/>
-            url += "&fq=${fqList.collect{it.encodeAsURL()}.join('&fq=')}";
+            url += "&fq=${raw(fqList.collect{it.encodeAsURL()}.join('&fq='))}";
             facetsUsed = true;
         </g:if>
         <g:if test="${params.fromDate}">
