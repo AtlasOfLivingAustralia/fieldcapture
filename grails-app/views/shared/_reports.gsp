@@ -22,9 +22,13 @@
             <td data-bind="text:associatedSubProgram"></td>
             <td><a data-bind="attr:{href:fcConfig.projectViewUrl+'/'+projectId}"><span data-bind="text:name"></span></a></td>
             <td>
-                <a data-bind="if:organisationId, attr:{href:fcConfig.organisationViewUrl+'/'+organisationId}"><span data-bind="text:organisationName"></span></a>
-                <!-- ko if:!organisationId -->
-                <span data-bind="text:organisationName"></span>
+                <!-- ko foreach:currentAssociatedOrgs -->
+                <div class="organisationName">
+                    <a data-bind="visible:ko.utils.unwrapObservable($data.organisationId),attr:{href:fcConfig.organisationLinkBaseUrl+'/'+ko.utils.unwrapObservable($data.organisationId)}">
+                        <span data-bind="text:$data.name"></span>
+                    </a>
+                    <span data-bind="visible:!ko.utils.unwrapObservable($data.organisationId),text:$data.name"></span>
+                </div>
                 <!-- /ko -->
             </td>
             <td>
