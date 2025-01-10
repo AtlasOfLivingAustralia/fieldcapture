@@ -186,7 +186,6 @@ class WebService {
 
         def readTimeout = timeout?:defaultTimeout()
         HttpURLConnection conn = configureConnection(url, authHeaderType, readTimeout, externalToken)
-        conn.setRequestProperty('Accept', 'application/anot+ld+json')
 
         def headers = [HttpHeaders.CONTENT_DISPOSITION, HttpHeaders.CACHE_CONTROL, HttpHeaders.EXPIRES, HttpHeaders.LAST_MODIFIED, HttpHeaders.ETAG]
         def resp = [status:conn.responseCode]
