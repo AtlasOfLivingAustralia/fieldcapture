@@ -96,6 +96,7 @@ class BdrService {
                         ["op":"=","args":[["property":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],"http://www.opengis.net/ont/geosparql#Feature"]]
                 ]
         ]
+        query
     }
 
 
