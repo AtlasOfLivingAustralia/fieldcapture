@@ -9,9 +9,11 @@ import com.azure.storage.blob.BlobContainerClient
 import com.azure.storage.blob.BlobServiceClient
 import com.azure.storage.blob.BlobServiceClientBuilder
 import com.nimbusds.jwt.JWT
+import grails.converters.JSON
 import grails.core.GrailsApplication
 import groovy.util.logging.Slf4j
 import com.azure.identity.ClientAssertionCredential
+import net.sf.json.JSONArray
 import org.pac4j.oidc.profile.OidcProfile
 import software.amazon.awssdk.services.cognitoidentity.CognitoIdentityClient
 import software.amazon.awssdk.services.cognitoidentity.model.GetIdRequest
@@ -38,12 +40,15 @@ class BdrService {
     AccessTokenCache accessTokenCache
 
     void downloadDataSet(String projectId, String dataSetId, String format, HttpServletResponse response) {
-        String bdrBaseUrl = grailsApplication.config.getProperty('bdr.api.url')
-
-        format = URLEncoder.encode(format, 'UTF-8')
-        //String url = bdrBaseUrl+'/collections/ns3:'+projectId+'/items?_mediatype='+format
-        String url = 'https://bdr.azure-api.net/merit/v2/catalogs/bdr-cat:merit-datasets/collections/bdr-ds:dabc7e5d-81ce-40bf-8f74-8ecf3c7ce055/features/collections'
         String azureToken = getAzureAccessToken()
+
+        String bdrBaseUrl = grailsApplication.config.getProperty('bdr.api.url')
+        format = URLEncoder.encode(format, 'UTF-8')
+        String url = bdrBaseUrl+'/cql?_mediatype='+format
+        String query = (dataSetQuery(dataSetId) as JSON).toString()
+        String encodedQuery = URLEncoder.encode(query, "UTF-8")
+
+        url+="&filter="+encodedQuery
 
         log.info("Downloading data set from BDR: $url")
 
@@ -81,6 +86,16 @@ class BdrService {
 
         AccessToken accessToken = accessTokenCache.getTokenSync(tokenRequestContext, false)
         accessToken.getToken()
+    }
+
+    private Map dataSetQuery(String dataSetId) {
+        Map query = [
+                "op": "and",
+                "args": [
+                        ["op":"=","args":[["property":"nrm-submission"], dataSetId]],
+                        ["op":"=","args":[["property":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],"http://www.opengis.net/ont/geosparql#Feature"]]
+                ]
+        ]
     }
 
 
