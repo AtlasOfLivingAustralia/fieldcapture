@@ -12,9 +12,24 @@
         "modelName": "Grants and Others Final Report",
         "dataModel": [
           {
+            "dataType": "text",
+            "name": "projectEffectiveness",
+            "validate": "required,maxSize[1000]"
+          },
+          {
+            "dataType": "text",
+            "name": "projectImpact",
+            "validate": "required,maxSize[500]"
+          },
+          {
+            "dataType": "text",
+            "name": "projectImplementationChanges",
+            "validate": "required,maxSize[1000]"
+          },
+          {
             "dataType": "list",
             "name": "projectOutcomes",
-            "allowRowDelete": true,
+            "allowRowDelete": "false",
             "columns": [
               {
                 "dataType": "text",
@@ -60,7 +75,7 @@
             "dataType": "stringList",
             "name": "achievementLevel",
             "validate": "required",
-            "description": "A measure of the extent to which a program, project or initiative has attained, or is expected to attain, its relevant objectives efficiently and in a sustainable way.",
+            "description": "Partially achieved’ means that the project delivered, on average, around 26-50% of the target set for each service and outcome rating (e.g., target was 10ha of revegetation, project achieved 5ha). If every activity targets/outcomes are met, select ‘Achieved 100%.",
             "constraints": [
               "Achieved (100%)",
               "Significantly achieved (76-99%)",
@@ -127,7 +142,7 @@
               }
             ],
             "dataType": "list",
-            "allowRowDelete": true,
+            "allowRowDelete": "false",
             "name": "projectTargets"
           },
           {
@@ -185,46 +200,181 @@
             ]
           },
           {
-            "columns": [
-              {
-                "dataType": "stringList",
-                "name": "summaryName",
-                "validate": "required",
-                "constraints": [
-                  "Monitoring",
-                  "Evaluation",
-                  "Activity changes",
-                  "Risk management",
-                  "Lesson/s learnt"
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "summaryProgress",
-                "description": "",
-                "validate": "required,maxSize[1250]"
-              }
-            ],
-            "dataType": "list",
-            "allowRowDelete": true,
-            "name": "projectLearningsSummary"
+            "dataType": "text",
+            "name": "projectLearningsSummary",
+            "validate": "required,maxSize[1000]"
           },
           {
             "dataType": "text",
             "name": "documentAdditionalInformation",
-            "validate": "required,maxSize[1250]"
+            "validate": "required,maxSize[1000]"
+          },
+          {
+            "dataType": "list",
+            "description": "",
+            "name": "goodNewsStories",
+            "columns": [
+              {
+                "dataType": "text",
+                "description": "",
+                "name": "storyDetails",
+                "validate": "required,maxSize[5000]"
+              },
+              {
+                "dataType": "image",
+                "name": "photo"
+              }
+            ]
           }
         ],
         "viewModel": [
           {
             "items": [
               {
-                "source": "achievementLevel",
-                "preLabel": "1. To what extent did you achieve your project outcomes and project services? <br>Please select the one of the levels of achievement you have reached  e.g. Achieved (100%), Partially achieved (26-50%)",
+                "source": "<h4>1. Project Outcomes</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "projectEffectiveness",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "1.1 Describe the effectiveness of the project and whether it delivered what was intended."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "projectImpact",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "1.2 What impact has the project had?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "projectImplementationChanges",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "1.3 Describe any changes to the project implementation and why these were necessary."
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<b>1.4 Briefly describe the achievements that have been made against each outcome statement in the MERI Plan including details of any enablers and/or barriers throughout the life of the project.</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "source": "projectOutcomes",
+            "title": "Please provide supporting information (e.g. report, photos), where this has not been previously supplied, as attachments to this report via the Admin tab > Documents sub-tab of MERIT. Where supporting evidence contains sensitive or confidential information, please send to the departmental Project Manager by email.",
+            "type": "table",
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "source": "code",
+                "type": "readonlyText",
+                "title": "Outcome No."
+              },
+              {
+                "type": "textarea",
+                "readonly": true,
+                "source": "outcomeStatement",
+                "title": "Outcome",
+                "rows": 5,
+                "width": "35%"
+              },
+              {
+                "type": "textarea",
+                "source": "achievement",
+                "title": "Achievement/s",
+                "rows": 5,
+                "width": "35%"
+              },
+              {
+                "width": "25%",
+                "source": "basedRating",
+                "title": "Rating based on the achievement of the outcome statement",
+                "type": "select2"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "projectEngagement",
+                "preLabel": "1.5 Did your project engage with First Nations people (including traditional owners, indigenous organisations/rangers), landholders and local community?",
                 "type": "selectOne"
               }
             ],
             "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "yesProjectEngagement",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "1.5.1 If yes, which group/s and how?"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "unexpectedChanges",
+                "preLabel": "1.6 Were there any unexpected or unintended (positive or negative) changes or other outcomes delivered by this project including environmental, social and economic impacts?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "yesUnexpectedChanges",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "1.6.1 If yes, what were they?"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "outcomesMaintenance",
+                "preLabel": "1.7 To what extent will the outcomes achieved by this project be maintained after the project has been completed?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "howOutcomesMaintain",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "<b>1.7.1 If they will be maintained, how and who will do this?</b>"
+              }
+            ]
           },
           {
             "items": [
@@ -298,67 +448,14 @@
             ],
             "userAddedRows": false,
             "source": "projectTargets",
-            "title": "<b>2.2 Report on and explain any activities that have been under or significantly over delivered (50% above target)</b>",
+            "title": "<b>2.2 Report on and explain any activities that have been under delivered (below target) or over delivered (above target)</b>",
             "type": "table"
           },
           {
             "items": [
               {
-                "source": "<h4>3. Project Outcomes</h4>",
+                "source": "<h4>3. Monitoring, Evaluation and Lessons Learnt</h4>",
                 "type": "literal"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "items": [
-              {
-                "source": "<b>3.1 Briefly describe the achievements that have been made against each outcome statement in the MERI Plan including details of any enablers and/or barriers throughout the life of the project.</b><p>Please provide supporting information (e.g. report, photos), where this has not been previously supplied, as attachments to this report via the Admin tab > Documents sub-tab of MERIT. Where supporting evidence contains sensitive or confidential information, please send to the department Project Manager (DCCEW) by email.",
-                "type": "literal"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "source": "projectOutcomes",
-            "type": "table",
-            "userAddedRows": true,
-            "disableTableUpload": true,
-            "columns": [
-              {
-                "source": "code",
-                "type": "readonlyText",
-                "title": "Outcome No."
-              },
-              {
-                "type": "textarea",
-                "readonly": true,
-                "source": "outcomeStatement",
-                "title": "Outcome",
-                "rows": 5,
-                "width": "35%"
-              },
-              {
-                "type": "textarea",
-                "source": "achievement",
-                "title": "Achievement/s",
-                "rows": 5,
-                "width": "35%"
-              },
-              {
-                "width": "25%",
-                "source": "basedRating",
-                "title": "Rating based on the effectiveness evaluation criteria",
-                "type": "select2"
-              }
-            ]
-          },
-          {
-            "items": [
-              {
-                "source": "projectEngagement",
-                "preLabel": "3.2 Did your project engage with traditional owners, landholders and local community?",
-                "type": "selectOne"
               }
             ],
             "type": "row"
@@ -367,94 +464,12 @@
             "type": "row",
             "items": [
               {
-                "source": "yesProjectEngagement",
+                "source": "projectLearningsSummary",
                 "type": "textarea",
                 "rows": 5,
-                "preLabel": "3.2.1 If yes, which group/s and how?"
+                "preLabel": "<b>3.1 Summarise the lessons learnt in project delivery. This may include monitoring, evaluation, activity changes and risk management.</b>"
               }
             ]
-          },
-          {
-            "items": [
-              {
-                "source": "unexpectedChanges",
-                "preLabel": "3.3 Were there any unexpected or unintended (positive or negative) changes or other outcomes delivered by this project?",
-                "type": "selectOne"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "source": "yesUnexpectedChanges",
-                "type": "textarea",
-                "rows": 5,
-                "preLabel": "3.3.1 If yes, what were they?"
-              }
-            ]
-          },
-          {
-            "items": [
-              {
-                "source": "outcomesMaintenance",
-                "preLabel": "3.4 To what extent will the outcomes achieved by this project be maintained after the project has been completed?",
-                "type": "selectOne"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "source": "howOutcomesMaintain",
-                "type": "textarea",
-                "rows": 5,
-                "preLabel": "<b>3.5 If they will be maintained, how and who will do this?</b>"
-              }
-            ]
-          },
-          {
-            "items": [
-              {
-                "source": "<h4>4. Monitoring, Evaluation and Project Learnings</h4>",
-                "type": "literal"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "items": [
-              {
-                "source": "<b>4.1 Summarise how the project progressed in the areas of Monitoring, Evaluation, Activity changes, Risk management and lessons learnt in project delivery towards the investment priority.</b>",
-                "type": "literal"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "disableTableUpload": true,
-            "columns": [
-              {
-                "width": "25%",
-                "source": "summaryName",
-                "type": "selectOne",
-                "title": "Name"
-              },
-              {
-                "width": "75%",
-                "source": "summaryProgress",
-                "type": "text",
-                "title": "Summarised progress",
-                "helpText": ""
-              }
-            ],
-            "userAddedRows": true,
-            "source": "projectLearningsSummary",
-            "title": "<b>Monitoring/Evaluation/Activity changes/Risk management/Lesson/s learnt</b>",
-            "type": "table"
           },
           {
             "type": "row",
@@ -463,9 +478,66 @@
                 "source": "documentAdditionalInformation",
                 "type": "textarea",
                 "rows": 5,
-                "preLabel": "<b>5. Please document any additional information relating to the project.</b>"
+                "preLabel": "<b>4. Please document any additional information relating to the project.</b>"
               }
             ]
+          },
+          {
+            "items": [
+              {
+                "source": "achievementLevel",
+                "preLabel": "5. To what extent did you achieve your project outcomes and project services? <br>Please select the one of the levels of achievement you have reached  e.g. Achieved (100%), Partially achieved (26-50%)",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>6. Good News Stories</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<b>6.1 Please provide good news stories that highlight what the project achieved in the final period.</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "columns": [
+              {
+                "source": "",
+                "type": "literal",
+                "width": "5%",
+                "preLabel": {
+                  "computed": "\\'No. \\' || (index + 1)"
+                },
+                "title": "Story No."
+              },
+              {
+                "source": "storyDetails",
+                "type": "textarea",
+                "rows": 4,
+                "title": "Good News Story Details",
+                "width": "50%"
+              },
+              {
+                "type": "image",
+                "source": "photo",
+                "title": "",
+                "width": "45%"
+              }
+            ],
+            "userAddedRows": true,
+            "source": "goodNewsStories",
+            "type": "table"
           }
         ],
         "pre-populate": [
