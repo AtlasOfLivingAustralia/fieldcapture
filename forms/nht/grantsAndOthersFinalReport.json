@@ -207,6 +207,7 @@
           {
             "dataType": "text",
             "name": "documentAdditionalInformation",
+            "description": "Provide details of specific program information relating to your project.",
             "validate": "required,maxSize[1000]"
           },
           {
@@ -428,14 +429,14 @@
                 "width": "15%",
                 "source": "projectTarget",
                 "type": "text",
-                "title": "Total to be delivered"
+                "title": "Total to be delivered (Targets from MERI Plan)"
               },
               {
                 "readonly": true,
                 "width": "15%",
                 "source": "delivered",
                 "type": "text",
-                "title": "Total delivered",
+                "title": "Total delivered (collated from Progress Reports)",
                 "helpText": "please refer to the Dashboard for your project for this figure.  The dashboard automatically adds the figures from each of your progress reports (as a cumulative figure)."
               },
               {
@@ -467,7 +468,7 @@
                 "source": "projectLearningsSummary",
                 "type": "textarea",
                 "rows": 5,
-                "preLabel": "<b>3.1 Summarise the lessons learnt in project delivery. This may include monitoring, evaluation, activity changes and risk management.</b>"
+                "preLabel": "<b>3.1 Summarise the lessons learnt in the project delivery. This may include monitoring, evaluation, activity changes and risk management.</b>"
               }
             ]
           },
@@ -504,7 +505,7 @@
           {
             "items": [
               {
-                "source": "<b>6.1 Please provide good news stories that highlight what the project achieved in the final period.</b>",
+                "source": "<b>6.1 Please provide good news stories that highlight what the project achieved in the final period.</b><p>This information is intended for potential use by the Department in publicly promoting the program. Photos may be attached to the report via attachment to email however please ensure permissions of persons in the photos being attached and used for promotional purposes.</p>",
                 "type": "literal"
               }
             ],
