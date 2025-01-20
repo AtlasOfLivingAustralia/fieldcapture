@@ -468,7 +468,7 @@
                 "source": "projectLearningsSummary",
                 "type": "textarea",
                 "rows": 5,
-                "preLabel": "<b>3.1 Summarise the lessons learnt in the project delivery. This may include monitoring, evaluation, activity changes and risk management.</b>"
+                "preLabel": "<b>3.1 Summarise how the project progressed in the areas of the lessons learnt in the project delivery. This may include monitoring, evaluation, activity changes and risk management.</b>"
               }
             ]
           },
