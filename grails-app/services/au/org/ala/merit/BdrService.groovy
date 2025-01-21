@@ -43,6 +43,7 @@ class BdrService {
         String azureToken = getAzureAccessToken()
 
         String bdrBaseUrl = grailsApplication.config.getProperty('bdr.api.url')
+        Integer readTimeout = grailsApplication.config.getInt('bdr.api.readTimeout', 60000)
         format = URLEncoder.encode(format, 'UTF-8')
         String url = bdrBaseUrl+'/cql?_mediatype='+format
         String query = (dataSetQuery(dataSetId) as JSON).toString()
@@ -52,7 +53,7 @@ class BdrService {
 
         log.info("Downloading data set from BDR: $url")
 
-        webService.proxyGetRequest(response, url, WebService.AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN, null, azureToken)
+        webService.proxyGetRequest(response, url, WebService.AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN, readTimeout, azureToken)
     }
 
     /**

@@ -254,6 +254,7 @@ security {
     }
 }
 bdr.api.url="https://changeMe.org.au/api"
+bdr.api.readTimeout=60000
 bdr['client-id']="changeMe"
 bdr['client-secret']="changeMe"
 bdr.discoveryUri="https://changeMe.org.au/.well-known"
