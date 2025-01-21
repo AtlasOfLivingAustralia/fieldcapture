@@ -17,7 +17,7 @@ class MyProjects extends Page {
     }
 
     List projectNames() {
-        projectTable.find('td span[data-bind*=name]').collect{it.text()}
+        projectTable.find('td.project [data-bind*=name]').collect{it.text()}
     }
     List managementUnitNames() {
         managementUnits.find('li>a').collect{it.text()}
