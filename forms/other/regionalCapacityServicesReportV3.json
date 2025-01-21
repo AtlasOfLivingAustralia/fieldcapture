@@ -279,8 +279,7 @@
           },
           {
             "dataType": "number",
-            "name": "targetIndigenousProcurementPercentage",
-            "description": "Target Indigenous Procurement Percentage for this reporting period"
+            "name": "targetIndigenousProcurementPercentage"
           },
           {
             "name": "staffDevelopmentOpportunities",
@@ -680,9 +679,10 @@
             "items": [
               {
                 "css": "span7",
-                "preLabel": "Supply Chain Performance % this reporting period",
+                "preLabel": "Supply Chain Performance to date",
                 "source": "supplyChainPerformancePercentage",
-                "type": "number"
+                "type": "number",
+                "helpText": "Supply chain performance to date (note this is a cumulative measure over the life of the contract consistent with the approach used by NIAA measuring indigenous participation. Performance to date should meet or exceed target performance by the end of the Deed period)"
               }
             ]
           },
@@ -691,7 +691,7 @@
             "items": [
               {
                 "css": "span7",
-                "preLabel": "Target Supply Chain Performance % this reporting period",
+                "preLabel": "Target supply chain performance at end of Deed period",
                 "source": "targetIndigenousProcurementPercentage",
                 "type": "number",
                 "readonly": true
