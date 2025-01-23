@@ -253,7 +253,7 @@
           {
             "dataType": "number",
             "name": "organisationPanelProjectValue",
-            "description": "Total dollar value (GST inclusive) for the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts).",
+            "description": "Total dollar value (GST inclusive) for the Deed and all active contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> contracts) as reported on AusTender.",
             "validate": "required,min[0]"
           },
           {
