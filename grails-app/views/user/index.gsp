@@ -11,6 +11,7 @@
         projectReportsUrl:"${createLink(controller: 'project', action:'reportingHistory')}",
         userProjectsUrl:"${createLink(action:'userProjects')}",
         organisationViewUrl: "${createLink(controller:'organisation', action:'index')}",
+        organisationLinkBaseUrl: "${createLink(controller:'organisation', action:'index')}",
         imageLocation:"${assetPath(src:'/')}"
         },
         here = window.location.href;
