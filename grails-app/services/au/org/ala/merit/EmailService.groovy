@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.config.EmailTemplate
+import au.org.ala.merit.util.MarkdownUtils
 import groovy.util.logging.Slf4j
 
 
@@ -17,7 +18,8 @@ class EmailService {
         def systemEmailAddress = grailsApplication.config.getProperty('fieldcapture.system.email.address')
         try {
             def subjectLine = settingService.getSettingText(mailSubjectTemplate, model)
-            def body = settingService.getSettingText(mailTemplate, model).markdownToHtml()
+            String bodyMarkdown = settingService.getSettingText(mailTemplate, model)
+            String body = MarkdownUtils.markdownToHtmlAndSanitise(bodyMarkdown)
 
             log.info("Sending email: ${subjectLine} to: ${recipient}, from: ${sender}, cc:${ccList}, body: ${body}")
             // This is to prevent spamming real users while testing.
