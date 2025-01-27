@@ -136,7 +136,6 @@ dependencies {
         exclude module: "xercesImpl"
     }
     implementation 'org.grails.plugins:grails-cookie:2.0.3'
-    implementation 'org.grails.plugins:grails-markdown:3.0.0'
 
     implementation 'org.apache.poi:ooxml-schemas:1.4'
     implementation 'org.apache.poi:poi:4.1.2'
@@ -150,7 +149,8 @@ dependencies {
     implementation "commons-io:commons-io:2.6"
     implementation "org.seleniumhq.selenium:selenium-chrome-driver:3.14.0"
     implementation "com.bertramlabs.plugins:asset-pipeline-grails:$assetPipelineVersion"
-    implementation group: 'com.googlecode.owasp-java-html-sanitizer', name: 'owasp-java-html-sanitizer', version: '20220608.1'
+    implementation "org.commonmark:commonmark:0.24.0"
+    implementation "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20240325.1"
 
     // Used to get a token that can be used to access the BDR API hosted in Azure
     implementation platform('com.azure:azure-sdk-bom:1.2.28')
