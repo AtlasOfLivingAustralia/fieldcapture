@@ -21,6 +21,8 @@ plugins {
     id 'jacoco'
     id 'com.williamhill.wiremock' version '0.4.1'
 }
+sourceCompatibility = '11'
+targetCompatibility = '17'
 
 version "$meritVersion"
 group "au.org.ala"
