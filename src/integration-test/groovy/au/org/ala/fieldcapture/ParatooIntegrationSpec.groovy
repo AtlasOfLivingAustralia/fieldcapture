@@ -17,6 +17,7 @@ import org.pac4j.core.context.WebContext
 import org.pac4j.jee.context.JEEContextFactory
 import org.pac4j.jee.context.JEEFrameworkParameters
 import org.pac4j.jee.context.session.JEESessionStore
+import org.pac4j.jee.context.session.JEESessionStoreFactory
 import org.pac4j.oidc.config.OidcConfiguration
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
@@ -63,7 +64,8 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
                 new JEEFrameworkParameters(request, response)
             }
         }
-        def sessionStore = JEESessionStore.INSTANCE
+        JEEFrameworkParameters params = new JEEFrameworkParameters(request, response)
+        def sessionStore = JEESessionStoreFactory.INSTANCE.newSessionStore(params)
         def tokenClient = new TokenClient(oidcConfiguration)
         def tokenService = new TokenService(config, oidcConfiguration, pac4jContextProvider, sessionStore, tokenClient, testConfig.webservice["client-id"], testConfig.webservice["client-secret"], testConfig.webservice["jwt-scopes"], false)
 
