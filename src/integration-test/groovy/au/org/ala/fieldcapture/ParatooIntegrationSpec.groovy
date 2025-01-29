@@ -34,7 +34,11 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
         String token = tokenForUser('1')
         AccessToken accessToken = new BearerAccessToken(token)
         TokenService tokenService = Stub(TokenService)
-        tokenService.getAuthToken(_) >> accessToken
+        tokenService.getAuthToken(true) >> accessToken
+
+        String m2mToken = setupTokenForSystem()
+        AccessToken m2mAccessToken = new BearerAccessToken(m2mToken)
+        tokenService.getAuthToken(false) >> m2mAccessToken
         webService = new WebService(grailsApplication: getGrailsApplication(), tokenService: tokenService)
     }
 
@@ -138,7 +142,7 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
         when:
         collectionPayload.orgMintedUUID = orgMintedUUID
         url = testConfig.ecodata.baseUrl + '/paratoo/collection'
-        resp = webService.post(url, collectionPayload, null, ContentType.APPLICATION_JSON, false, false, headers)
+        resp = webService.post(url, collectionPayload, null, ContentType.APPLICATION_JSON, true, false, headers)
 
         then:
         resp.statusCode == HttpStatus.SC_OK
@@ -180,6 +184,7 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
             callables.add(callable)
         }
         executor.invokeAll(callables)
+
 
         String url = testConfig.ecodata.baseUrl + 'project/'+projectId
         Map resp = webService.get(url, [:], ContentType.APPLICATION_JSON, true, false)
