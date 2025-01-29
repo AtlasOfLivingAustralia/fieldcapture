@@ -131,7 +131,7 @@ class FCTagLib {
                 id:"${attrs.id ?: attrs.name}",
                 type:'text',
                 size:'16',
-                class: attrs.size ?: 'input-xlarge'
+                class: attrs.size() ?: 'input-xlarge'
             ]
 
             def ignoreList = ['name', 'id']
@@ -172,7 +172,7 @@ class FCTagLib {
             def inputAttrs = [
                 name:"${attrs.name}",
                 id:"${attrs.id ?: attrs.name}",
-                class: (attrs.size ?: 'span6') + ' printed-form-field'
+                class: (attrs.size() ?: 'span6') + ' printed-form-field'
             ]
 
             def ignoreList = ['name', 'id']
