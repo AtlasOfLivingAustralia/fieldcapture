@@ -12,8 +12,10 @@ import org.apache.http.HttpStatus
 import org.apache.http.entity.ContentType
 import org.grails.testing.GrailsUnitTest
 import org.pac4j.core.config.Config
+import org.pac4j.core.context.FrameworkParameters
 import org.pac4j.core.context.WebContext
 import org.pac4j.jee.context.JEEContextFactory
+import org.pac4j.jee.context.JEEFrameworkParameters
 import org.pac4j.jee.context.session.JEESessionStore
 import org.pac4j.oidc.config.OidcConfiguration
 import org.springframework.mock.web.MockHttpServletRequest
@@ -54,6 +56,11 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
             @Override
             WebContext webContext() {
                 JEEContextFactory.INSTANCE.newContext(request, response)
+            }
+
+            @Override
+            FrameworkParameters frameworkParameters() {
+                new JEEFrameworkParameters(request, response)
             }
         }
         def sessionStore = JEESessionStore.INSTANCE
