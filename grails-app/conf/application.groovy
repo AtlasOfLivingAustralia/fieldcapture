@@ -253,6 +253,16 @@ security {
         requiredClaims = ["sub", "iat", "exp", "jti", "client_id"]
     }
 }
+bdr.api.url="https://changeMe.org.au/api"
+bdr.api.readTimeout=60000
+bdr['client-id']="changeMe"
+bdr['client-secret']="changeMe"
+bdr.discoveryUri="https://changeMe.org.au/.well-known"
+bdr.jwtScopes="read"
+bdr.azure.clientId='changeMe'
+bdr.azure.tenantId='changeMe'
+bdr.azure.apiScope='api://changeme/.default'
+bdr.dataSet.formats=["application/geo+json","application/rdf+xml", "text/turtle", "application/ld+json", "application/n-triples"]
 
 webservice.jwt = true
 webservice['jwt-scopes'] = "ala/internal users/read ala/attrs ecodata/read_test ecodata/write_test"

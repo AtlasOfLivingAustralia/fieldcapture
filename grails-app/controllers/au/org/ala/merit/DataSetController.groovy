@@ -12,6 +12,7 @@ class DataSetController {
 
     ProjectService projectService
     DataSetSummaryService dataSetSummaryService
+    BdrService bdrService
 
     // Note that authorization is done against a project, so the project id must be supplied to the method.
     @PreAuthorise(accessLevel = 'editor')
@@ -155,6 +156,45 @@ class DataSetController {
 
         Map response = dataSetSummaryService.saveDataSet(id, dataSet)
         render response as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def download(String id, String dataSetId, String format) {
+        Map projectData = projectData(id)
+
+        List supportedFormats = grailsApplication.config.getProperty('bdr.dataSet.formats', List)
+        if (!format) {
+            format = supportedFormats[0]
+        }
+        if (!format in supportedFormats) {
+            render status: HttpStatus.BAD_REQUEST
+            return
+        }
+
+        Map dataSet = projectData.project?.custom?.dataSets?.find{it.dataSetId == dataSetId}
+
+        if (!dataSet) {
+            render status: HttpStatus.NOT_FOUND
+            return
+        }
+        else {
+            if (isMonitorDataSet(dataSet)) {
+                if (isProtocolSupportedForDownload(dataSet)) {
+                    bdrService.downloadDataSet(id, dataSet.dataSetId, format, response)
+                }
+            }
+            else if (dataSet.url) {
+                webService.proxyGetRequest(response, dataSet.url, false)
+            }
+        }
+    }
+
+    private static boolean isMonitorDataSet(Map dataSet) {
+        return dataSet.protocol
+    }
+
+    private static boolean isProtocolSupportedForDownload(Map dataSet) {
+        return true
     }
 
     @PreAuthorise(accessLevel = 'editor')

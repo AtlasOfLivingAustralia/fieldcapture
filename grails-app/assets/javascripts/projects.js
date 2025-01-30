@@ -1203,8 +1203,10 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             editDataSetUrl: config.editDataSetUrl,
             deleteDataSetUrl: config.deleteDataSetUrl,
             viewDataSetUrl: config.viewDataSetUrl,
+            downloadDataSetUrl: config.downloadDataSetUrl,
             returnToUrl: config.returnToUrl,
             reports: project.reports || [],
+            downloadableProtocols: config.downloadableProtocols,
             viewReportUrl: config.viewReportUrl
         };
         var projectService = new ProjectService({}, config);

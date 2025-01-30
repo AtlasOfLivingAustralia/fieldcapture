@@ -40,6 +40,28 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         return (report && report.name);
     }
 
+    function isDownloadableMonitorDataSet(dataSet) {
+
+        if (dataSet.collectionApp !== MONITOR_APP) {
+            return false;
+        }
+        var protocolId = dataSet.protocol;
+        var downloadableProtocols = config.downloadableProtocols || [];
+
+        var isDownloadable = downloadableProtocols.indexOf(protocolId) >= 0;
+        if (isDownloadable) {
+            var now = moment();
+            var creationDate = moment(dataSet.dateCreated);
+            var minutesToInjestDataSet = config.minutesToInjestDataSet || 1;
+            if (dataSet.progress !== ActivityProgress.planned) {
+                if (creationDate.add(minutesToInjestDataSet, 'minutes').isBefore(now)) {
+                    isDownloadable = true;
+                }
+            }
+        }
+        return isDownloadable;
+    }
+
     /** View model backing for a single row in the data set summary table */
     function DataSetSummary(dataSet) {
 
@@ -69,20 +91,24 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
             });
         };
 
+        this.downloadUrl = null;
+        if (isDownloadableMonitorDataSet(dataSet)) {
+            this.downloadUrl = config.downloadDataSetUrl + '/' + dataSet.dataSetId;
+        }
+
         if (this.createdIn === MONITOR_APP) {
             if (this.progress == ActivityProgress.planned) {
                 var now = moment();
                 var creationDate = moment(dataSet.dateCreated);
+
                 if (creationDate.add(1, 'minutes').isBefore(now)) {
                     this.progress = 'sync error';
                 }
                 else {
                     this.progress = 'sync in progress';
                 }
-
             }
         }
-
     }
 };
 

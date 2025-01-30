@@ -58,6 +58,17 @@
                 <a class="btn btn-container btn-sm" href="#" data-bind="visible:!readOnly,click:deleteDataSet">
                     <i class="fa fa-remove" title="Delete this dataset"></i>
                 </a>
+                <div class="dropdown" data-bind="if:downloadUrl" style="display:inline-block">
+                    <a class="btn btn-container btn-sm dropdown-toggle" href="#" data-toggle="dropdown">
+                        <i class="fa fa-download" title="Download data for this dataset from the BDR"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <g:each in="${supportedFormats}" var="format">
+                            <a class="dropdown-item" href="#" target="_blank" data-bind="attr:{href:downloadUrl+'?format=${URLEncoder.encode(format, 'UTF-8')}'}"><g:message code="bdr.dataSet.format.${format}" default="${format}"/></a>
+                        </g:each>
+                    </div>
+                </div>
+
             </td>
             <td class="dataset-name" data-bind="text:name"></td>
             <td class="service" data-bind="text:service"></td>

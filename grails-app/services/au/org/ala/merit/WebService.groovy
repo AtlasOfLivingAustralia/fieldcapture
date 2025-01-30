@@ -49,14 +49,13 @@ class WebService {
     static String AUTHORIZATION_HEADER_TYPE_USER_BEARER_TOKEN = 'userToken'
 
     /** Use the MERIT bearer token.  Do not use with non ALA systems */
-    static String AUTHORIZATION_HEADER_TYPE_SYSTEM_BEAREN_TOKEN = 'systemToken'
+    static String AUTHORIZATION_HEADER_TYPE_SYSTEM_BEARER_TOKEN = 'systemToken'
 
     /** A bearer token issued by an external system.  E.g. the BDR */
     static String AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN = 'externalToken'
 
     static String AUTHORIZATION_HEADER_TYPE_NONE = 'none'
     List WHITE_LISTED_DOMAINS = []
-
 
     TokenService tokenService
     @PostConstruct
@@ -126,20 +125,19 @@ class WebService {
 
     private URLConnection configureConnection(String url, boolean includeUserId, Integer timeout = null, boolean useToken = false) {
         useToken = useToken || useJWT()
-        String authHeaderType = useToken ? AUTHORIZATION_HEADER_TYPE_SYSTEM_BEAREN_TOKEN : AUTHORIZATION_HEADER_TYPE_API_KEY
+        String authHeaderType = useToken ? AUTHORIZATION_HEADER_TYPE_SYSTEM_BEARER_TOKEN : AUTHORIZATION_HEADER_TYPE_API_KEY
         configureConnection(url, authHeaderType, timeout)
     }
 
-    private URLConnection configureConnection(String url, String authorizationHeaderType, Integer timeout = null) {
+
+
+    private URLConnection configureConnection(String url, String authorizationHeaderType, Integer timeout = null, String externalToken = null) {
         URLConnection conn = createAndConfigureConnection(url, timeout)
         boolean addUserId = false
         if(canAddSecret(url)) {
-            if (authorizationHeaderType == AUTHORIZATION_HEADER_TYPE_API_KEY) {
-                conn.setRequestProperty(HttpHeaders.AUTHORIZATION, grailsApplication.config.getProperty('api_key'))
-                addUserId = true
-            } else if (authorizationHeaderType == AUTHORIZATION_HEADER_TYPE_USER_BEARER_TOKEN) {
+            if (authorizationHeaderType == AUTHORIZATION_HEADER_TYPE_USER_BEARER_TOKEN) {
                 conn.setRequestProperty(HttpHeaders.AUTHORIZATION, getToken(true))
-            } else if (authorizationHeaderType == AUTHORIZATION_HEADER_TYPE_SYSTEM_BEAREN_TOKEN) {
+            } else if (authorizationHeaderType == AUTHORIZATION_HEADER_TYPE_SYSTEM_BEARER_TOKEN) {
                 conn.setRequestProperty(HttpHeaders.AUTHORIZATION, getToken(false))
                 addUserId = true
             }
@@ -150,6 +148,12 @@ class WebService {
                     conn.setRequestProperty(grailsApplication.config.getProperty('app.http.header.userId'), user.userId)
                 }
             }
+        }
+        else if (authorizationHeaderType == AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN) {
+            if (!externalToken.startsWith("Bearer ")) {
+                externalToken = "Bearer " + externalToken
+            }
+            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, externalToken)
         }
         conn
     }
@@ -169,10 +173,7 @@ class WebService {
     }
 
     def proxyGetRequest(HttpServletResponse response, String url, boolean includeUserId = true, boolean includeApiKey = false, Integer timeout = null) {
-        String authHeaderType = AUTHORIZATION_HEADER_TYPE_NONE
-        if (includeApiKey) {
-            authHeaderType = useJWT() ? AUTHORIZATION_HEADER_TYPE_SYSTEM_BEAREN_TOKEN : AUTHORIZATION_HEADER_TYPE_API_KEY
-        }
+        String authHeaderType = includeApiKey ? AUTHORIZATION_HEADER_TYPE_SYSTEM_BEARER_TOKEN : AUTHORIZATION_HEADER_TYPE_NONE
 
         proxyGetRequest(response, url, authHeaderType, timeout)
     }
@@ -181,10 +182,10 @@ class WebService {
      * Proxies a request URL but doesn't assume the response is text based. (Used for proxying requests to
      * ecodata for excel-based reports)
      */
-    def proxyGetRequest(HttpServletResponse response, String url, String authHeaderType, Integer timeout = null) {
+    def proxyGetRequest(HttpServletResponse response, String url, String authHeaderType, Integer timeout = null, String externalToken = null) {
 
         def readTimeout = timeout?:defaultTimeout()
-        HttpURLConnection conn = configureConnection(url, authHeaderType, readTimeout)
+        HttpURLConnection conn = configureConnection(url, authHeaderType, readTimeout, externalToken)
 
         def headers = [HttpHeaders.CONTENT_DISPOSITION, HttpHeaders.CACHE_CONTROL, HttpHeaders.EXPIRES, HttpHeaders.LAST_MODIFIED, HttpHeaders.ETAG]
         def resp = [status:conn.responseCode]
