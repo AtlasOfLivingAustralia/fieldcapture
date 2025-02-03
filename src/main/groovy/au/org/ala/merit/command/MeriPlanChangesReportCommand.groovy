@@ -67,9 +67,16 @@ class MeriPlanChangesReportCommand implements Validateable{
             errors.reject("Project not found")
             model = [statusCode: HttpStatus.SC_NOT_FOUND, error:getErrors()]
         } else {
+            project.remove("sites")
+            project.remove('activities')
+
             Map config = projectService.getProgramConfiguration(project)
             changed = projectService.get(id, 'all')
 
+            if (changed) {
+                changed.remove("sites")
+                changed.remove('activities')
+            }
             project?.referenceDocument = content?.referenceDocument
             project?.dateApproved = content?.dateApproved
 
