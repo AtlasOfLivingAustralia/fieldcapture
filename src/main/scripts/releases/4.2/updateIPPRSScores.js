@@ -39,7 +39,7 @@ var scores = [
             },
             "childAggregations": [{
                 "property": "data.supplyChainPerformancePercentage",
-                "type": "AVERAGE"
+                "type": "SUM"
             }]
         },
         "description": "",
