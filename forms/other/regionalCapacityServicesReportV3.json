@@ -18,11 +18,18 @@
               {
                 "target": "targetIndigenousParticipationPercentage",
                 "source-path": "periodTargets.targetIndigenousParticipationPercentage"
+              },
+              {
+                "target": "reportedFundingExcludingThisReport",
+                "source-path": "reportedFundingExcludingThisReport"
               }
             ],
             "merge": {
               "targetIndigenousParticipationPercentage": {
                 "replaceExisting": true
+              },
+              "reportedFundingExcludingThisReport": {
+                  "replaceExisting": true
               }
             }
           },
@@ -60,6 +67,10 @@
           }
         ],
         "dataModel": [
+          {
+            "name": "reportedFundingExcludingThisReport",
+            "dataType": "number"
+          },
           {
             "name": "governanceAndFinancialFrameworksOnTrack",
             "dataType": "text",
@@ -242,7 +253,7 @@
               },
               {
                 "param": {
-                  "expression": "organisationPanelProjectValue",
+                  "expression": "organisationPanelProjectValue-reportedFundingExcludingThisReport",
                   "type": "computed"
                 },
                 "rule": "max",

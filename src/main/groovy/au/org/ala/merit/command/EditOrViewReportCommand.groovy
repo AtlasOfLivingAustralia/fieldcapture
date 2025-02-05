@@ -44,7 +44,7 @@ abstract class EditOrViewReportCommand implements Validateable {
 
             ReportLifecycleListener listener = reportService.reportLifeCycleListener(model.report)
             if (listener) {
-                model.context.putAll(listener.getContextData(entity, model.report))
+                model.context.putAll(listener.getContextData(entity, model.report, model.activity))
             }
         }
     }

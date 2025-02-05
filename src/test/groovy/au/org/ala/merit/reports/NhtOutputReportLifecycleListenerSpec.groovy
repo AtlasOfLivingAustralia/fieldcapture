@@ -19,9 +19,10 @@ class NhtOutputReportLifecycleListenerSpec extends Specification {
         Map project = [:]
         Map report = [:]
         List protocols = [[name:'test', externalId:'e1']]
+        Map activity = [:]
 
         when:
-        Map contextData = reportData.getContextData(project, report)
+        Map contextData = reportData.getContextData(project, report, activity)
 
         then:
         1 * projectService.listProjectProtocols(project) >> protocols
@@ -47,7 +48,7 @@ class NhtOutputReportLifecycleListenerSpec extends Specification {
         List protocols = [[name:'test', externalId:'e1']]
 
         when:
-        Map contextData = reportData.getContextData(project, report)
+        Map contextData = reportData.getContextData(project, report, [:])
 
         then:
         1 * projectService.listProjectProtocols(project) >> protocols
@@ -60,12 +61,13 @@ class NhtOutputReportLifecycleListenerSpec extends Specification {
         setup:
         String projectId = 'p1'
         Map report = [:]
+        Map activity = [:]
         List secondaryOutcomes = [ [ "assets" : [ "Investment priority 1" ], "description" : "Outcome 2" ] ]
         Map primaryOutcome = [:]
         Map project = [projectId:projectId, custom:[details:[outcomes:[secondaryOutcomes:secondaryOutcomes, primaryOutcome:primaryOutcome]]]]
 
         when:
-        Map contextData = reportData.getContextData(project, report)
+        Map contextData = reportData.getContextData(project, report, activity)
 
         then:
         1 * projectService.listProjectInvestmentPriorities(projectId) >> ['Investment priority 1']

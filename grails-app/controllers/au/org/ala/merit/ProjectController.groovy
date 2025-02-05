@@ -912,7 +912,7 @@ class ProjectController {
         }
 
         model.context = new HashMap(project)
-        model.context.putAll(reportData.getContextData(project, model.report))
+        model.context.putAll(reportData.getContextData(project, model.report, model.activity))
         model.returnTo = g.createLink(action:'exitReport', id:projectId, params:[reportId:reportId])
         model.contextViewUrl = g.createLink(action:'index', id:projectId)
         model.reportHeaderTemplate = '/project/rlpProjectReportHeader'
