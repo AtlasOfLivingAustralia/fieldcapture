@@ -81,7 +81,7 @@ jobs:
         run: node_modules/karma/bin/karma start karma.conf.js --single-run --browsers ChromeHeadless
 
       - name: Run MERIT functional tests
-        run: ./src/main/scripts/runFunctionalTests.sh
+        run: ./src/main/scripts/runFunctionalTests.sh chromeHeadless /tmp/ecodata feature/issue3430
         env:
           GPR_USER: ${{env.GITHUB_ACTOR}}
           GPR_TOKEN: ${{secrets.GITHUB_TOKEN}}

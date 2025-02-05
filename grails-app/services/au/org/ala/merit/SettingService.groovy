@@ -88,9 +88,9 @@ class SettingService {
                     title:'Default',
                     skin:'ala2',
                     urlPath:grailsApplication.config.getProperty('app.default.hub', String, 'default'),
-                    availableFacets: ['status', 'organisationFacet','associatedProgramFacet','associatedSubProgramFacet','mainThemeFacet','stateFacet','nrmFacet','lgaFacet','mvgFacet','ibraFacet','imcra4_pbFacet','otherFacet', 'gerSubRegionFacet','electFacet'],
-                    adminFacets: ['electFacet'],
-                    availableMapFacets: ['status', 'organisationFacet','associatedProgramFacet','associatedSubProgramFacet','stateFacet','nrmFacet','lgaFacet','mvgFacet','ibraFacet','imcra4_pbFacet','electFacet']
+                    availableFacets: ['status', 'organisationFacet','associatedProgramFacet','associatedSubProgramFacet','mainThemeFacet','autoStateFacet','nrmFacet','lgaFacet','mvgFacet','ibraFacet','imcra4_pbFacet','otherFacet', 'gerSubRegionFacet','autoElectFacet'],
+                    adminFacets: ['autoElectFacet'],
+                    availableMapFacets: ['status', 'organisationFacet','associatedProgramFacet','associatedSubProgramFacet','autoStateFacet','nrmFacet','lgaFacet','mvgFacet','ibraFacet','imcra4_pbFacet','autoElectFacet']
             )
         }
         if (log.isDebugEnabled()) {
