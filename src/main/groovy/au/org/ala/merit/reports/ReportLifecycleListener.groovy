@@ -17,7 +17,7 @@ class ReportLifecycleListener {
     @Autowired
     MetadataService metadataService
 
-    Map getContextData(Map context, Map report) { [:] }
+    Map getContextData(Map context, Map report, Map activity) { [:] }
     Map getOutputData(Map context, Map outputConfig, Map report) { [:] }
     Map reportSaved(Map report, Map activityData) { [:] }
     Map reportSubmitted(Map report, List reportActivityIds, Map reportOwner) { [:] }

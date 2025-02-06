@@ -25,7 +25,7 @@ class NHTOutputReportLifecycleListener extends ReportLifecycleListener {
     boolean containsEntityReferences() {
         true
     }
-    Map getContextData(Map project, Map report) {
+    Map getContextData(Map project, Map report, Map activity) {
         // Side effect - filter data sets.
         List eligibleDataSets = project.custom?.dataSets?.findAll {
             // This is a side effect and a workaround for the problem that selected outcomes

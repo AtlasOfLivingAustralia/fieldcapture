@@ -82,12 +82,14 @@
         var availableReportCategories = <fc:modelAsJavascript model="${content.admin?.availableReportCategories}"/>;
         var services = <fc:modelAsJavascript model="${content.admin?.services}"/>;
         var targetPeriods = <fc:modelAsJavascript model="${content.admin?.targetPeriods}"/>;
+        var areTargetsAndFundingEditable = ${Boolean.valueOf(content.admin?.targetsEditable)};
         var config = _.extend({
                 reportingConfigSelector:'#reporting-config form',
                 availableReportCategories:availableReportCategories,
                 targetPeriods: targetPeriods,
                 services: services,
                 organisationDetailsSelector: '#organisation-details',
+                areTargetsAndFundingEditable: areTargetsAndFundingEditable
 
             }, fcConfig);
 
