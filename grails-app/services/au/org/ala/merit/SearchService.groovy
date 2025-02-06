@@ -60,7 +60,7 @@ class SearchService {
         params.fsort = "term"
         params.offset = 0
         params.query = "geo.loc.lat:*"
-        params.facets = "stateFacet,nrmFacet,lgaFacet,mvgFacet"
+        params.facets = "projectStateFacet,nrmFacet,lgaFacet,mvgFacet"
         def url = elasticBaseUrl + commonService.buildUrlParamsFromMap(params)
         log.debug "allGeoPoints - $url with $params"
         webService.getJson(url)
@@ -225,7 +225,7 @@ class SearchService {
             params.remove("ids");
             def idList = ids.tokenize(",")
             params.query = "_id:" + idList.join(" OR _id:")
-            params.facets = "stateFacet,nrmFacet,lgaFacet,mvgFacet"
+            params.facets = "projectStateFacet,nrmFacet,lgaFacet,mvgFacet"
             def url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'search/elasticPost'
             webService.doPost(url, params)
         } else if (params.query) {

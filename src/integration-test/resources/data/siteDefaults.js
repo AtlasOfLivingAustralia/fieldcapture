@@ -33,7 +33,19 @@ var siteDefaults = {
                         "-35.4472033329209"
                     ],
                     "elect" : "Eden-Monaro",
-                    "cmz" : "South Eastern Australia mixed temperate forests woodlands and grasslands"
+                    "cmz" : "South Eastern Australia mixed temperate forests woodlands and grasslands",
+                    "intersectionAreaByFacets": {
+                        "state": {
+                            "CURRENT": {
+                                "New South Wales (including Coastal Waters)": 27948.017399781053
+                            }
+                        },
+                        "elect": {
+                            "CURRENT": {
+                                "Eden-Monaro": 27948.017399781053
+                            }
+                        }
+                    }
                 }
             },
             "lastUpdated" : ISODate("2015-06-26T22:55:25.942Z"),
