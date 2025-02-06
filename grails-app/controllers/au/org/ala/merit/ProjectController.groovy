@@ -86,10 +86,6 @@ class ProjectController {
             user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
         }
         def project = projectService.get(id, user,'all')
-        Map stateElectorate = projectService.findStateAndElectorateForProject(project.projectId)
-        if (stateElectorate) {
-            project << stateElectorate
-        }
         Map config = null
         if (project && !project.error) {
             config = projectService.getProgramConfiguration(project)
@@ -925,7 +921,7 @@ class ProjectController {
         }
 
         model.context = new HashMap(project)
-        model.context.putAll(reportData.getContextData(project, model.report))
+        model.context.putAll(reportData.getContextData(project, model.report, model.activity))
         model.returnTo = g.createLink(action:'exitReport', id:projectId, params:[reportId:reportId])
         model.contextViewUrl = g.createLink(action:'index', id:projectId)
         model.reportHeaderTemplate = '/project/rlpProjectReportHeader'

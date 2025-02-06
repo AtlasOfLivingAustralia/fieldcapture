@@ -18,7 +18,7 @@
         <tr>
             <!-- ko foreach: costs -->
             <td class="budget-amount">
-                <input type="number" class="form-control form-control-sm" data-bind="value: dollar, numeric: $root.number, disable: $root.isProjectDetailsLocked()" data-validation-engine="validate[custom[number],min[0]"/>
+                <input type="number" class="form-control form-control-sm" data-bind="value: dollar, numeric: $root.number, enable: $parents[1].isEditable" data-validation-engine="validate[custom[number],min[0]"/>
             </td>
             <!-- /ko -->
         </tr>

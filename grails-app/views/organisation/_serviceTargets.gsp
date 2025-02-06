@@ -30,11 +30,11 @@
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
         <td class="service">
-            <select class="form-control form-control-sm" data-bind="options: selectableServices, optionsText:'name', optionsValue:'id',  value:serviceId, disable: $root.isProjectDetailsLocked()"
+            <select class="form-control form-control-sm" data-bind="options: selectableServices, optionsText:'name', optionsValue:'id',  value:serviceId, enable: $parent.areTargetsEditable"
                     data-validation-engine="validate[required]"></select>
         </td>
         <td class="score">
-            <select class="form-control form-control-sm" data-bind="options: selectableScores, optionsText:'label', optionsValue:'scoreId',  value:scoreId, disable: $root.isProjectDetailsLocked()"
+            <select class="form-control form-control-sm" data-bind="options: selectableScores, optionsText:'label', optionsValue:'scoreId',  value:scoreId, enable: $parent.areTargetsEditable"
                     data-validation-engine="validate[required]"></select>
         </td>
         <td class="budget-cell">
@@ -45,7 +45,7 @@
         <g:if test="${showTargetDate}">
             <td class="target-date">
                 <div class="input-group">
-                    <input class="form-control form-control-sm" data-bind="datepicker:targetDate.date, disable: $root.isProjectDetailsLocked()" type="text" size="16" data-validation-engine="validate[required]">
+                    <input class="form-control form-control-sm" data-bind="datepicker:targetDate.date, enable: $parent.areTargetsEditable" type="text" size="16" data-validation-engine="validate[required]">
                     <div class="input-group-append open-datepicker">
                         <span class="input-group-text">
                             <i class="fa fa-th ">&nbsp;</i>
@@ -58,7 +58,7 @@
         <!-- ko foreach: periodTargets -->
         <td class="budget-cell">
             <input class="form-control form-control-sm" type="number"
-                   data-bind="value: target, disable: $root.isProjectDetailsLocked()"
+                   data-bind="value: target, enable: $parents[1].areTargetsEditable"
                    data-validation-engine="validate[custom[number],min[0]]"/>
         </td>
         <!-- /ko -->
@@ -68,4 +68,4 @@
 </table>
 <!-- /ko -->
 <!-- /ko -->
-<button class="btn btn-sm btn-primary" data-bind="click: saveCustomFields">Save changes</button>
+<button class="btn btn-sm btn-primary" data-bind="click: saveCustomFields, enable:areTargetsAndFundingEditable">Save changes</button>

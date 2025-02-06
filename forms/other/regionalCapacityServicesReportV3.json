@@ -18,11 +18,18 @@
               {
                 "target": "targetIndigenousParticipationPercentage",
                 "source-path": "periodTargets.targetIndigenousParticipationPercentage"
+              },
+              {
+                "target": "reportedFundingExcludingThisReport",
+                "source-path": "reportedFundingExcludingThisReport"
               }
             ],
             "merge": {
               "targetIndigenousParticipationPercentage": {
                 "replaceExisting": true
+              },
+              "reportedFundingExcludingThisReport": {
+                  "replaceExisting": true
               }
             }
           },
@@ -60,6 +67,10 @@
           }
         ],
         "dataModel": [
+          {
+            "name": "reportedFundingExcludingThisReport",
+            "dataType": "number"
+          },
           {
             "name": "governanceAndFinancialFrameworksOnTrack",
             "dataType": "text",
@@ -242,7 +253,7 @@
               },
               {
                 "param": {
-                  "expression": "organisationPanelProjectValue",
+                  "expression": "organisationPanelProjectValue-reportedFundingExcludingThisReport",
                   "type": "computed"
                 },
                 "rule": "max",
@@ -644,18 +655,6 @@
             "items": [
               {
                 "css": "span7",
-                "preLabel": "Target Workforce Performance % this reporting period",
-                "source": "targetIndigenousParticipationPercentage",
-                "type": "number",
-                "readonly": true
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span7",
                 "preLabel": "Your total organisation panel/project $ value (GST inclusive).",
                 "source": "organisationPanelProjectValue",
                 "type": "number",
@@ -679,25 +678,12 @@
             "items": [
               {
                 "css": "span7",
-                "preLabel": "Supply Chain Performance to date",
-                "source": "supplyChainPerformancePercentage",
-                "type": "number",
-                "helpText": "Supply chain performance to date (note this is a cumulative measure over the life of the contract consistent with the approach used by NIAA measuring indigenous participation. Performance to date should meet or exceed target performance by the end of the Deed period)"
+                "source": "To check how your performance to date against the agreed targets, please click on the dashboard tab after closing the report",
+                "type": "literal"
               }
             ]
           },
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span7",
-                "preLabel": "Target supply chain performance at end of Deed period",
-                "source": "targetIndigenousProcurementPercentage",
-                "type": "number",
-                "readonly": true
-              }
-            ]
-          },
+
           {
             "type": "row",
             "items": [
