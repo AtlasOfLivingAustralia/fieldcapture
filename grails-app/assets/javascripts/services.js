@@ -3,8 +3,11 @@ function OrganisationDetailsViewModel(o, organisation, budgetHeaders, allService
     var period = budgetHeaders,
         serviceIds = o.services && o.services.serviceIds || [],
         targets = o.services && o.services.targets || [];
-    self.services = new OrganisationServicesViewModel(serviceIds, config.services, targets, budgetHeaders);
+    self.areTargetsAndFundingEditable = config.areTargetsAndFundingEditable;
+    self.services = new OrganisationServicesViewModel(serviceIds, config.services, targets, budgetHeaders, {areTargetsEditable:config.areTargetsAndFundingEditable});
     self.funding = new BudgetViewModel(o.funding, budgetHeaders);
+    self.funding.isEditable = config.areTargetsAndFundingEditable;
+
     function clearHiddenFields(jsData) {
 
     };
@@ -34,13 +37,13 @@ function OrganisationDetailsViewModel(o, organisation, budgetHeaders, allService
  * @param outputTargets The current organisation targets
  * @param periods An array of periods, each of which require a target to be set
  */
-function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, periods) {
+function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, periods, options) {
     var self = this,
         OPERATION_SUM = "SUM",
         OPERATION_AVG = "AVG",
         operation = OPERATION_AVG;
 
-    self.isProjectDetailsLocked = ko.observable(false);
+    self.areTargetsEditable = options.areTargetsEditable;
 
     allServices = _.sortBy(allServices || [], function (service) {
         return service.name

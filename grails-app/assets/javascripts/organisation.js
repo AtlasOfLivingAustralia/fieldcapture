@@ -466,7 +466,7 @@ EditOrganisationViewModel = function(props, options) {
 OrganisationPageViewModel = function (props, options) {
     var self = this;
     _.extend(self, new OrganisationViewModel(props, options));
-
+    self.areTargetsAndFundingEditable = options.areTargetsAndFundingEditable;
     var tabs = {
         'about': {
             initialiser: function() {

@@ -277,6 +277,16 @@ class MetadataService {
         })
     }
 
+    /**
+     * Returns a Map cantaining the properties of a Score identified by a supplied name.
+     * A score name is a unique identifier that is human readable and stable between test/staging/production
+     * environments.
+     * @param name  The name of the Score of interest.
+     */
+    Map findScoreByName(String name) {
+        getScores(false).find { it.name == name }
+    }
+
     List<Map> getScores(boolean includeConfig) {
         cacheService.get("scores-${includeConfig}", {
             String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/scores"
