@@ -1,5 +1,5 @@
 load( "../../utils/audit.js");
-var oldAndNewFacets = {electFacet: 'autoElectFacet', stateFacet: 'autoStateFacet'}
+var oldAndNewFacets = {electFacet: 'projectElectFacet', stateFacet: 'projectStateFacet'}
 var propsToCheck = ["adminFacets", "availableFacets", "availableMapFacets", "officerFacets"]
 var oldFacets = Object.keys(oldAndNewFacets);
 var adminUserId = "system";

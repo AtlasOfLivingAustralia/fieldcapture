@@ -86,10 +86,6 @@ class ProjectController {
             user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
         }
         def project = projectService.get(id, user,'all')
-        Map stateElectorate = projectService.findStateAndElectorateForProject(project.projectId)
-        if (stateElectorate) {
-            project << stateElectorate
-        }
         Map config = null
         if (project && !project.error) {
             config = projectService.getProgramConfiguration(project)
