@@ -314,6 +314,8 @@ environments {
         app.default.hub='merit'
         wiremock.port = 8018
         security.oidc.discoveryUri = "http://localhost:${wiremock.port}/cas/oidc/.well-known"
+        security.jwt.discoveryUri = "http://localhost:${wiremock.port}/cas/oidc/.well-known"
+        bdr.discoveryUri = "http://localhost:${wiremock.port}/cas/oidc/.well-known"
         security.oidc.allowUnsignedIdTokens = true
         security.oidc.clientId="oidcId"
         security.oidc.secret="oidcSecret"
@@ -345,7 +347,7 @@ environments {
         spatial.baseUrl = "http://localhost:${wiremock.port}"
         spatial.layersUrl = spatial.baseUrl + "/ws"
         grails.mail.port = 3025 // com.icegreen.greenmail.util.ServerSetupTest.SMTP.port
-        bdr.discoveryUri = "${auth.baseUrl}/cas/oidc/.well-known"
+
     }
     production {
         grails.logging.jul.usebridge = false
