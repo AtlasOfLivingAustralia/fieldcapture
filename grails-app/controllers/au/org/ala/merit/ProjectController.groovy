@@ -918,12 +918,7 @@ class ProjectController {
             if (model.activity.siteId) {
                 model.reportSite = sites?.find { it.siteId == model.activity.siteId }
             }
-
-            Map siteData = projectService.projectSites(projectId)
-            if (!siteData.error) {
-                model.projectArea = siteData.projectArea
-                model.features = siteData.features
-            }
+            model.selectableFeaturesUrl = g.createLink(action:'ajaxProjectSites', id:projectId)
         }
         model
     }
