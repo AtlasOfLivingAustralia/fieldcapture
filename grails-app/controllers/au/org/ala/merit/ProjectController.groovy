@@ -918,6 +918,10 @@ class ProjectController {
             if (model.activity.siteId) {
                 model.reportSite = sites?.find { it.siteId == model.activity.siteId }
             }
+            Map projectArea = sites?.find { it.type == SiteService.SITE_TYPE_PROJECT_AREA }
+            if (projectArea) {
+                model.projectArea = siteService.getSiteGeoJson(projectArea.siteId)
+            }
             model.selectableFeaturesUrl = g.createLink(action:'ajaxProjectSites', id:projectId)
         }
         model

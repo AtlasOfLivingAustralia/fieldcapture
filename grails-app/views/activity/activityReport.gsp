@@ -143,7 +143,7 @@
             };
 
             var locked = ${locked};
-            var metaModel = <fc:modelAsJavascript model="${metaModel}" default="{}"/>
+            var metaModel = <fc:modelAsJavascript model="${metaModel}" default="{}"/>;
             var master = null;
             var mapPopupSelector = '#map-modal';
             var reportMasterOptions = {
