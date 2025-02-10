@@ -346,7 +346,7 @@ var protocols = {
                     "dataType": "species"
                 },
                 "recruitment-sapling-and-seedling-count.juvenile_count": {
-                    "dwcExpression": "(juvenile_count ?:0) + (seedling_count ?:0) + (sapling_count ?:0)",
+                    "dwcExpression": "(['juvenile_count'] == null ? 0 : ['juvenile_count']) + (['seedling_count'] == null ? 0 : ['seedling_count']) + (['sapling_count'] == null ? 0 :['sapling_count'])",
                     "dwcAttribute": "individualCount"
                 },
                 "recruitment-sapling-and-seedling-count.voucher_full.host_species": {
