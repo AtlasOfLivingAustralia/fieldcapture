@@ -952,7 +952,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         controller.getSpeciesRecordsFromActivity (activityId)
 
         then:
-        numberOfCalls * projectService.getSpeciesRecordsFromActivity (activityId) >> data
+        numberOfCalls * projectService.getSpeciesRecordsFromActivity (activityId, _, _) >> data
         controller.response.status == statusCode
 
         where:
