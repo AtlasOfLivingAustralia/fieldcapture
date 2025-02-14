@@ -38,6 +38,9 @@ class ProjectService  {
     static final String PLAN_SUBMITTED = 'submitted'
     static final String PLAN_UNLOCKED = 'unlocked for correction'
     public static final String DOCUMENT_ROLE_APPROVAL = 'approval'
+    public static final String FLATTEN_BY_SUM = "SUM"
+    public static final String FLATTEN_BY_COUNT = "COUNT"
+    public static final String DEFAULT_GROUP_BY = 'scientificName,vernacularName,scientificNameID,individualsOrGroups'
 
     // All projects can use the Plot Selection and Layout, Plot Description and Opportune modules, but
     // we don't want users recording data sets for Plot Selection and Layout so it's not included here.
@@ -2234,12 +2237,12 @@ class ProjectService  {
         result
     }
 
-    List getSpeciesRecordsFromActivity (String activityId) {
+    List getSpeciesRecordsFromActivity (String activityId, String groupBy = DEFAULT_GROUP_BY, String operator = FLATTEN_BY_SUM) {
         if (activityId) {
             String displayFormat = 'SCIENTIFICNAME(COMMONNAME)'
             String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}record/listForActivity/${activityId}"
-            def records = webService.getJson(url)?.records
-
+            List records = webService.getJson(url)?.records
+            records = groupRecords(records, groupBy, operator)
             records?.each { record ->
                 record.species = [
                         scientificName: record.scientificName,
@@ -2253,5 +2256,59 @@ class ProjectService  {
 
             records
         }
+    }
+
+    /**
+     * Groups records by the user defined attributes and applies the operator to the numeric values.
+     * @param records - dwc records
+     * @param groupBy - scientificName, individualsOrGroups, etc.
+     * @param operator - SUM
+     * @return
+     */
+    List groupRecords (List records, String groupBy = DEFAULT_GROUP_BY, String operator = FLATTEN_BY_SUM) {
+        if (records && groupBy) {
+            List groupByAttributes = groupBy.tokenize(',')
+            // Group the records by the user defined attributes such as scientificName, individualsOrGroups, etc.
+            Map recordsByGroup = records.groupBy { dwcRecord ->
+                groupByAttributes.collect { dwcRecord[it] }
+            }
+
+            // For each group, summarize the records by applying the operator
+            Map groupsAndTheirSummary= recordsByGroup.collectEntries { groupKey, groupedRecords ->
+                // iterate over the records in the group and summarize them
+                Map summaryOfGroupedRecords = groupedRecords.inject([:], { newRecord, recordInGroup ->
+                    // iterate over the attributes of the record and apply the operator
+                    recordInGroup.each { dwcAttribute, dwcValue ->
+                        // sum or count all numeric values that are not used for grouping
+                        if (dwcAttribute !in groupByAttributes && dwcValue instanceof Number) {
+                            switch (operator) {
+                                case FLATTEN_BY_COUNT:
+                                    // implement count operator
+                                    break
+
+                                case FLATTEN_BY_SUM:
+                                    newRecord[dwcAttribute] = (newRecord[dwcAttribute] ?: 0) + dwcValue
+                                    break
+                                default:
+                                    log.error "Unsupported operator: ${operator}"
+                            }
+                        }
+                        else {
+                            // if not a numeric value, just copy the value to the new record
+                            newRecord[dwcAttribute] = dwcValue
+                        }
+                    }
+
+                    newRecord
+                })
+
+                // flattens groupedRecords (list) to a map
+                [(groupKey): summaryOfGroupedRecords]
+            }
+
+            return groupsAndTheirSummary.values().toList()
+        }
+
+        records
     }
 }
