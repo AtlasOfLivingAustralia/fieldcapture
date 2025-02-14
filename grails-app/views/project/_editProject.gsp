@@ -294,20 +294,15 @@
                     </td>
                 </tr>
                 <tr>
-                    <td></td>
-                    <td>
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="geographicInfoBehaviour" data-bind="checked: geographicInfo.isDefault">
-                            <label class="form-check-label" for="geographicInfoBehaviour">Override calculated primary state and electorate with selections below.</label>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
                     <td>
                         <label for="primaryElectorate">Primary electorate</label>
                     </td>
                     <td>
-                        <select id="primaryElectorate" data-bind="options:transients.electorates, value:geographicInfo.primaryElectorate, optionsCaption: 'Select an electorate', disable: geographicInfo.nationwide() || geographicInfo.statewide()" class="select form-control"></select>
+                        <select id="primaryElectorate" data-bind="options:transients.electorates, value:geographicInfo.primaryElectorate, optionsCaption: 'Select an electorate', disable: geographicInfo.nationwide() || geographicInfo.statewide() || !geographicInfo.overridePrimaryElectorate()" class="select form-control" data-validation-engine="validate[required]"></select>
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="geographicInfoElectorateBehaviour" name="geographicInfoElectorateBehaviour" data-bind="checked: geographicInfo.overridePrimaryElectorate">
+                            <label class="form-check-label" for="geographicInfoElectorateBehaviour">Override primary electorate with above selection.</label>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -315,7 +310,14 @@
                         <label for="otherElectorates">Other electorates</label>
                     </td>
                     <td>
-                        <select id="otherElectorates" multiple="multiple" data-bind="options:transients.electorates.filteredElectorates, multiSelect2:{value:geographicInfo.otherElectorates, placeholder:''}, disable: geographicInfo.nationwide() || geographicInfo.statewide()" class="select form-control"></select>
+                        <div class="form-group">
+                            <label for="otherElectorates">Include</label>
+                            <select id="otherElectorates" multiple="multiple" data-bind="options:transients.electorates.electoratesToInclude, multiSelect2:{value:geographicInfo.otherElectorates, placeholder:'', tags: false}, disable: geographicInfo.nationwide() || geographicInfo.statewide()" class="select form-control"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="otherExcludedElectorates">Exclude</label>
+                            <select id="otherExcludedElectorates" multiple="multiple" data-bind="options:transients.electorates.electoratesToExclude, multiSelect2:{value:geographicInfo.otherExcludedElectorates, placeholder:'', tags: false}, disable: geographicInfo.nationwide() || geographicInfo.statewide()" class="select form-control"></select>
+                        </div>
                     </td>
                 </tr>
                     <tr>
@@ -323,7 +325,11 @@
                             <label for="primaryState">Primary state</label>
                         </td>
                         <td>
-                            <select id="primaryState" data-bind="options:transients.states, value:geographicInfo.primaryState, optionsCaption: 'Select a state', disable: geographicInfo.nationwide()" class="select form-control"></select>
+                            <select id="primaryState" data-bind="options:transients.states, value:geographicInfo.primaryState, optionsCaption: 'Select a state', disable: geographicInfo.nationwide() || !geographicInfo.overridePrimaryState()" class="select form-control"  data-validation-engine="validate[required]"></select>
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="geographicInfoStateBehaviour" name="geographicInfoStateBehaviour" data-bind="checked: geographicInfo.overridePrimaryState">
+                                <label class="form-check-label" for="geographicInfoStateBehaviour">Override primary state with above selection.</label>
+                            </div>
                         </td>
                     </tr>
                     <tr>
@@ -331,7 +337,14 @@
                             <label for="otherStates">Other states</label>
                         </td>
                         <td>
-                            <select id="otherStates" multiple="multiple" data-bind="options:transients.states.filteredStates, multiSelect2:{value:geographicInfo.otherStates, placeholder:''}, disable: geographicInfo.nationwide()" class="select form-control"></select>
+                            <div class="form-group">
+                                <label for="otherStates">Include</label>
+                                <select id="otherStates" multiple="multiple" data-bind="options:transients.states.statesToInclude, multiSelect2:{value:geographicInfo.otherStates, placeholder:'', tags: false}, disable: geographicInfo.nationwide()" class="select form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="otherExcludedStates">Exclude</label>
+                                <select id="otherExcludedStates" multiple="multiple" data-bind="options:transients.states.statesToExclude, multiSelect2:{value:geographicInfo.otherExcludedStates, placeholder:'', tags: false}, disable: geographicInfo.nationwide()" class="select form-control"></select>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
