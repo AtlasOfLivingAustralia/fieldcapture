@@ -24,16 +24,9 @@ class RegionalCapacityServicesReportLifecycleListener extends ReportLifecycleLis
         [periodTargets:periodTargets, totalContractValue:funding, reportedFundingExcludingThisReport:reportedFundingExcludingThisReport]
     }
 
-    private static def getFundingForPeriod(Map organisation, Map report) {
+    private double getFundingForPeriod(Map organisation, Map report) {
         String endDate = report.toDate
-        String previousPeriod = ''
-        def index = organisation.custom?.details?.funding?.headers?.findIndexOf {
-            String period = it.data.value
-            boolean result = previousPeriod < endDate && period >= endDate
-            previousPeriod = period
-            result
-        }
-        index >= 0 ? organisation.custom?.details?.funding?.rows[0].costs[index].dollar : 0
+        organisationService.getRcsFundingForPeriod(organisation, endDate)
 
     }
 
