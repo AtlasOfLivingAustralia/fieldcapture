@@ -40,6 +40,9 @@
                 initialScrollPositionDelay: "${grailsApplication.config.getProperty('reports.initialScrollPositionDelay') ?: 1000}"
             },
             here = document.location.href;
+            <g:if test="${selectableFeaturesUrl}">
+            fcConfig.selectableFeaturesUrl = "${selectableFeaturesUrl}";
+            </g:if>
     </script>
     <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="activity.css"/>
@@ -140,10 +143,9 @@
             };
 
             var locked = ${locked};
-            var metaModel = <fc:modelAsJavascript model="${metaModel}" default="{}"/>
+            var metaModel = <fc:modelAsJavascript model="${metaModel}" default="{}"/>;
             var master = null;
             var mapPopupSelector = '#map-modal';
-            var features = <fc:modelAsJavascript model="${features}" default="{}"/>
             var reportMasterOptions = {
                 locked: locked,
                 activityUpdateUrl: fcConfig.activityUpdateUrl,
@@ -151,6 +153,30 @@
                 projectTargetsAndScoresUrl: fcConfig.projectTargetsAndScoresUrl,
                 performOverDeliveryCheck: true
             };
+            function categoriseSelectableSites(features) {
+                if (!features || !_.isArray(features)) {
+                    return null;
+                }
+                var planningSitesCategory = 'Planning Sites';
+                var planningFeatures = [];
+                var allFeatures = [];
+                _.each(features, function (feature) {
+                    // Group the planning sites together into a single collection
+                    if (feature.properties && feature.properties.category && feature.properties.category == planningSitesCategory) {
+                        planningFeatures.push(feature);
+                    } else {
+                        allFeatures.push(feature);
+                    }
+                });
+                if (planningFeatures.length > 0) {
+                    allFeatures.unshift({
+                        type: 'Feature Collection',
+                        features: planningFeatures,
+                        properties: {category: planningSitesCategory, name: planningSitesCategory}
+                    });
+                }
+                return allFeatures;
+            }
             if (metaModel.supportsSites) {
                 // Workaround for problems with IE11 and leaflet draw
                 L.Browser.touch = false;
@@ -159,29 +185,13 @@
                 if (fcConfig.useGoogleBaseMap) {
                     mapOptions.baseLayersName = 'Google'; // Default is Open Street Maps
                 }
-                var planningSitesCategory = 'Planning Sites';
-                if (features && _.isArray(features)) {
-                    var planningFeatures = [];
-                    var allFeatures = [];
-                    _.each(features, function (feature) {
-                        // Group the planning sites together into a single collection
-                        if (feature.properties && feature.properties.category && feature.properties.category == planningSitesCategory) {
-                            planningFeatures.push(feature);
-                        } else {
-                            allFeatures.push(feature);
-                        }
-                    });
-                    if (planningFeatures.length > 0) {
-                        allFeatures.unshift({
-                            type: 'Feature Collection',
-                            features: planningFeatures,
-                            properties: {category: planningSitesCategory, name: planningSitesCategory}
-                        });
+
+                mapOptions.selectableFeatures = $.Deferred();
+                $.get(fcConfig.selectableFeaturesUrl).done(function(features) {
+                    if (features && features.features) {
+                        mapOptions.selectableFeatures.resolve(categoriseSelectableSites(features.features));
                     }
-                    mapOptions.selectableFeatures = allFeatures;
-
-
-                }
+                });
 
                 var formFeatures = new ecodata.forms.FeatureCollection(reportSite ? reportSite.features : []);
                 context.featureCollection = formFeatures;
