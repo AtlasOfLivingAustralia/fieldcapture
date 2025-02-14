@@ -12,9 +12,6 @@ import org.grails.web.converters.marshaller.json.MapMarshaller
 import org.joda.time.Period
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import java.util.concurrent.locks.Lock
-
 /**
  * Tests the ProjectService class.
  */
@@ -1507,13 +1504,21 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
     def "Get species records for an activity id and construct species object" (){
         setup:
         String activityId = 'a1'
-        def record = [scientificName: "sc1", vernacularName: "vn1", guid: "g1", outputSpeciesId: "o1"]
+        def record = [scientificName: "sc1", vernacularName: "vn1", guid: "g1", outputSpeciesId: "o1", individualCount: 1, seedMass: 5]
         when:
         def result = service.getSpeciesRecordsFromActivity(activityId)
 
         then:
-        1 * webService.getJson( {it.contains("record/listForActivity/"+activityId)}) >> [records:[record], statusCode: HttpStatus.SC_OK]
-        result == [record + [species: [scientificName: "sc1", commonName: "vn1", outputSpeciesId: "o1", guid: "g1", name: "sc1 (vn1)"]]]
+        1 * webService.getJson( {it.contains("record/listForActivity/"+activityId)}) >> [records:[record, record], statusCode: HttpStatus.SC_OK]
+        result == [[scientificName: "sc1", vernacularName: "vn1", guid: "g1", outputSpeciesId: "o1", individualCount: 2, seedMass: 10] + [species: [scientificName: "sc1", commonName: "vn1", outputSpeciesId: "o1", guid: "g1", name: "sc1 (vn1)"]]]
+
+        when:
+        result = service.getSpeciesRecordsFromActivity(activityId, null, null)
+
+        then:
+        1 * webService.getJson( {it.contains("record/listForActivity/"+activityId)}) >> [records:[record, record], statusCode: HttpStatus.SC_OK]
+        result.size() == 2
+        result[0] == record + [species: [scientificName: "sc1", commonName: "vn1", outputSpeciesId: "o1", guid: "g1", name: "sc1 (vn1)"]]
 
     }
 
