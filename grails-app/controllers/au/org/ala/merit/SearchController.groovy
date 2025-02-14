@@ -7,6 +7,7 @@ import org.apache.http.HttpStatus
 class SearchController {
     def searchService, webService, speciesService, commonService, documentService, reportService
     GrailsApplication grailsApplication
+    UserService userService
 
     /**
      * Main search page that takes its input from the search bar in the header
@@ -33,8 +34,11 @@ class SearchController {
         render speciesService.searchSpeciesList(sort, max, offset) as JSON
     }
 
-    @PreAuthorise(accessLevel = 'siteReadOnly', redirectController ='home', redirectAction = 'index')
     def downloadAllData() {
+        if (!userService.userIsSiteAdmin() && !userService.userHasReadOnlyAccess()) {
+            redirect(controller:'home')
+            return
+        }
         params.putAll(downloadParams())
         params.max = 10000 // The default is 5000, and some downloads require more than that.
         def response = searchService.downloadAllData(params)
