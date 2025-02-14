@@ -84,6 +84,12 @@ class OrganisationController {
             dashboardData = organisationService.scoresForOrganisation(organisation, scores?.collect{it.scoreId}, !hasEditorAccess)
         }
         boolean showTargets = userService.userIsSiteAdmin() && services && targetPeriods
+        // This call is used to ensure the organisation funding total is kept up to date as the algorithm
+        // for selecting the current total is based on the current date.  The funding total is used when
+        // calculating data for the dashboard.
+        if (showTargets) {
+            organisationService.checkAndUpdateFundingTotal(organisation)
+        }
         boolean targetsEditable = userService.userIsAlaOrFcAdmin()
         List reportOrder = null
         if (reportingVisible) {
@@ -100,7 +106,7 @@ class OrganisationController {
             }
         }
 
-        boolean showEditAnnoucements = organisation.projects?.find{Status.isActive(it.status)}
+        boolean showEditAnnouncements = organisation.projects?.find{Status.isActive(it.status)}
 
         List adHocReportTypes =[ [type: ReportService.PERFORMANCE_MANAGEMENT_REPORT]]
 
@@ -114,7 +120,7 @@ class OrganisationController {
          projects : [label: 'Reporting', template:"/shared/projectListByProgram", visible: reportingVisible, stopBinding:true, default:reportingVisible, type: 'tab', reports:organisation.reports, adHocReportTypes:adHocReportTypes, reportOrder:reportOrder, hideDueDate:true, displayedPrograms:projectGroups.displayedPrograms, reportsFirst:true, declarationType:SettingPageType.RDP_REPORT_DECLARATION],
          sites     : [label: 'Sites', visible: reportingVisible, type: 'tab', stopBinding:true, projectCount:organisation.projects?.size()?:0, showShapefileDownload:adminVisible],
          dashboard : [label: 'Dashboard', visible: reportingVisible, stopBinding:true, type: 'tab', template:'dashboard', reports:dashboardReports, dashboardData:dashboardData],
-         admin     : [label: 'Admin', visible: adminVisible, type: 'tab', template:'admin', showEditAnnoucements:showEditAnnoucements, availableReportCategories:availableReportCategories, targetPeriods:targetPeriods, services: services, showTargets:showTargets, targetsEditable:targetsEditable]]
+         admin     : [label: 'Admin', visible: adminVisible, type: 'tab', template:'admin', showEditAnnoucements:showEditAnnouncements, availableReportCategories:availableReportCategories, targetPeriods:targetPeriods, services: services, showTargets:showTargets, targetsEditable:targetsEditable]]
 
     }
 
