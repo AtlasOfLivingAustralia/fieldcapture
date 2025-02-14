@@ -1,5 +1,7 @@
 <!-- ko with:reportingTargetsAndFunding() -->
 <h4>${title ?: "Organisation targets"}</h4>
+<p>The overall targets in the table below is calculated as the average of every non-blank target in the table.  If future year targets are entered in to the table, they will be included in the overall target calculation.</p>
+<p>The overall target is display on the Organisation dashboard tab.</p>
 <!-- ko with: services -->
 <table class="table service-targets">
     <thead>

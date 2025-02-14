@@ -45,6 +45,7 @@
             returnTo: '${g.createLink(action:'index', id:"${organisation.organisationId}")}',
             dashboardCategoryUrl: "${g.createLink(controller: 'report', action: 'activityOutputs', params: [fq:'organisationFacet:'+organisation.name])}",
             reportOwner: {organisationId:'${organisation.organisationId}'},
+            i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
             projects : <fc:modelAsJavascript model="${organisation.projects}"/>
         };
     </script>

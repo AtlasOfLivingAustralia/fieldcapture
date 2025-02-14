@@ -4,13 +4,13 @@ import grails.core.GrailsApplication
 
 import javax.servlet.http.HttpServletResponse
 
-@PreAuthorise(accessLevel = 'siteReadOnly', redirectController = "home")
 class DownloadController {
 
     private List DOWNLOAD_EXTENSIONS = ['xls', 'xlsx', 'zip', 'json', 'xml', 'pdf', 'csv']
 
     GrailsApplication grailsApplication
     WebService webService
+    UserService userService
 
     /**
      * Deliberately not add .format in urlMapping to support file.extension on purpose
@@ -18,6 +18,10 @@ class DownloadController {
      * @return
      */
     def get(String id) {
+        if (!userService.userIsSiteAdmin() && !userService.userHasReadOnlyAccess()) {
+            redirect(controller:'home')
+            return
+        }
         if (!id) {
             response.setStatus(400)
             render "A download ID is required"

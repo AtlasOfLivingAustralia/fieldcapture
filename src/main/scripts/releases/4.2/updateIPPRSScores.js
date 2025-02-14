@@ -14,14 +14,27 @@ var scores = [
                 type: "filter"
             },
             "childAggregations": [{
-                "property": "data.workforcePerformancePercentage",
-                "type": "AVERAGE"
+                "expression":"totalFirstNationsFteWorkforce/totalOrganisationFteWorkforce*100",
+                "defaultValue": 0,
+                "childAggregations": [
+                    {
+                        "label":"totalFirstNationsFteWorkforce",
+                        "property":"data.organisationFteIndigenousWorkforce",
+                        "type":"SUM"
+                    },
+                    {
+                        "label":"totalOrganisationFteWorkforce",
+                        "property":"data.organisationFteWorkforce",
+                        "type":"SUM"
+                    }
+                ]
             }]
         },
         "description": "",
         "displayType": "",
         "entity": "Activity",
         "entityTypes": [],
+        "units":"percentage",
         "isOutputTarget": true,
         "label": "Indigenous workforce performance (% of Indigenous FTE achieved to date/% FTE target for Indigenous employment to date)",
         "outputType": "Regional capacity services - reporting",
@@ -38,14 +51,28 @@ var scores = [
                 type: "filter"
             },
             "childAggregations": [{
-                "property": "data.supplyChainPerformancePercentage",
-                "type": "SUM"
+                "expression":"totalFirstNationsProcurement/currentTotalProcurement*100",
+                "defaultValue": 0,
+                "childAggregations": [
+                    {
+                        "label": "totalFirstNationsProcurement",
+                        "property": "data.servicesContractedValueFirstNations",
+                        "type": "SUM"
+                    },
+                    {
+                        "label": "currentTotalProcurement",
+                        "property": "activity.organisation.custom.details.funding.overallTotal",
+                        "type": "DISTINCT_SUM",
+                        "keyProperty": "activity.organisation.organisationId"
+                    }
+                ]
             }]
         },
         "description": "",
         "displayType": "",
         "entity": "Activity",
         "entityTypes": [],
+        "units": "$",
         "isOutputTarget": true,
         "label": "Indigenous supply chain performance (% of procurement from Indigenous suppliers achieved to date/% procurement target of procurement from Indigenous suppliers at end of Deed period)",
         "outputType": "Regional capacity services - reporting",

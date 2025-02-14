@@ -1,3 +1,8 @@
+var BudgetConstants = {
+    PERIODICALLY_REVISED_TOTAL : 'periodicallyRevisedTotal',
+    PERIODIC_TOTAL : 'perPeriodBreakdown'
+};
+
 function BudgetViewModel(o, period) {
     var self = this;
     if (!o) o = {};
@@ -71,11 +76,15 @@ function BudgetTotalViewModel(rows, index) {
 
 function BudgetRowViewModel(o, period) {
     var self = this;
+
+
     if (!o) o = {};
     if (!o.activities || !_.isArray(o.activities)) o.activities = [];
     self.shortLabel = ko.observable(o.shortLabel);
     self.description = ko.observable(o.description);
     self.activities = ko.observableArray(o.activities);
+    self.type = o.type || BudgetConstants.PERIODIC_TOTAL;
+
 
     var arr = [];
     // Have at least one period to record, which will essentially be a project total.
@@ -94,10 +103,30 @@ function BudgetRowViewModel(o, period) {
 
     self.rowTotal = ko.computed(function () {
         var total = 0.0;
-        ko.utils.arrayForEach(this.costs(), function (cost) {
-            if (cost.dollar())
-                total += parseFloat(cost.dollar());
-        });
+        // The Periodically Revised Total is a special case used by the IPPRS system whereby each year they
+        // revise the total contract value.  For this case, the rowTotal is determined by starting in the
+        // current year and working backwards until a non-zero value is found.
+        if (self.type === BudgetConstants.PERIODICALLY_REVISED_TOTAL) {
+            var currentDateString = convertToIsoDate(new Date());
+            var i = 0;
+
+            // Find the current period.
+            while (i<period.length-1 && period[i].value <= currentDateString) {
+                i++;
+            }
+            total = parseFloat(self.costs()[i].dollar());
+            while (i>0 && (isNaN(total) || total == 0)) {
+                i--;
+                total = parseFloat(self.costs()[i].dollar());
+            }
+        }
+        else { //self.type === PERIODIC_TOTAL is the default - i.e. the default behaviour is to sum the columns
+            ko.utils.arrayForEach(this.costs(), function (cost) {
+                if (cost.dollar())
+                    total += parseFloat(cost.dollar());
+            });
+        }
+
         return total;
     }, this).extend({currency: {}});
 };
