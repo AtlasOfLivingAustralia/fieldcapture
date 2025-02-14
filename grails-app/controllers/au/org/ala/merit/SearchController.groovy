@@ -82,8 +82,11 @@ class SearchController {
        searchService.downloadSummaryData(params, response)
     }
 
-    @PreAuthorise(accessLevel = 'siteReadOnly', redirectController ='home', redirectAction = 'index')
     def downloadShapefile() {
+        if (!userService.userIsSiteAdmin() && !userService.userHasReadOnlyAccess()) {
+            redirect(controller:'home')
+            return
+        }
         params.putAll(downloadParams())
         boolean success = searchService.downloadShapefile(params)
         Map resp = [status: success ? HttpStatus.SC_OK : HttpStatus.SC_INTERNAL_SERVER_ERROR]
