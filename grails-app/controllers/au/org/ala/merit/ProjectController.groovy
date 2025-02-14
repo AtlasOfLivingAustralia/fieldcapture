@@ -1162,13 +1162,15 @@ class ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'editor')
-    def getSpeciesRecordsFromActivity (String activityId) {
+    def getSpeciesRecordsFromActivity (String activityId, String groupBy, String operator) {
         if(!activityId) {
             render status: HttpStatus.SC_BAD_REQUEST, text: [message: 'Activity ID must be supplied'] as JSON
             return
         }
 
-        render projectService.getSpeciesRecordsFromActivity(activityId) as JSON
+        groupBy = groupBy ?: ProjectService.DEFAULT_GROUP_BY
+        operator = operator ?: ProjectService.FLATTEN_BY_SUM
+        render projectService.getSpeciesRecordsFromActivity(activityId, groupBy, operator) as JSON
     }
 
     @PreAuthorise(accessLevel = 'editor')
