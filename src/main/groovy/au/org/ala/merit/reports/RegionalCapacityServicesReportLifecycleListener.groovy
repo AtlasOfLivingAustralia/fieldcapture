@@ -24,7 +24,7 @@ class RegionalCapacityServicesReportLifecycleListener extends ReportLifecycleLis
         [periodTargets:periodTargets, totalContractValue:funding, reportedFundingExcludingThisReport:reportedFundingExcludingThisReport]
     }
 
-    private double getFundingForPeriod(Map organisation, Map report) {
+    private def getFundingForPeriod(Map organisation, Map report) {
         String endDate = report.toDate
         organisationService.getRcsFundingForPeriod(organisation, endDate)
 

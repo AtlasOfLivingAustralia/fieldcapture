@@ -147,7 +147,7 @@ class OrganisationService {
         reportService.generateTargetPeriods(targetsReportConfig, owner, targetsConfig.periodLabelFormat)
     }
 
-    double getRcsFundingForPeriod(Map organisation, String periodEndDate) {
+    String getRcsFundingForPeriod(Map organisation, String periodEndDate) {
 
         int index = findIndexOfPeriod(organisation, periodEndDate)
         def result = 0
