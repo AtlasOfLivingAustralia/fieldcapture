@@ -1250,6 +1250,7 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             deleteDataSetUrl: config.deleteDataSetUrl,
             viewDataSetUrl: config.viewDataSetUrl,
             downloadDataSetUrl: config.downloadDataSetUrl,
+            downloadProjectDataSetsUrl: config.downloadProjectDataSetsUrl,
             returnToUrl: config.returnToUrl,
             reports: project.reports || [],
             downloadableProtocols: config.downloadableProtocols,

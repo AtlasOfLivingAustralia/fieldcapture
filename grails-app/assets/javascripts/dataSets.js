@@ -18,6 +18,8 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         return new DataSetSummary(dataSet);
     });
 
+    self.downloadProjectDataSetsUrl = config.downloadProjectDataSetsUrl;
+
     self.newDataSet = function() {
         window.location.href = config.newDataSetUrl;
     };
@@ -61,6 +63,8 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         }
         return isDownloadable;
     }
+
+    self.enableProjectDataSetsDownload = _.find(dataSets, isDownloadableMonitorDataSet) != null;
 
     /** View model backing for a single row in the data set summary table */
     function DataSetSummary(dataSet) {
