@@ -39,16 +39,26 @@ class BdrService {
 
     AccessTokenCache accessTokenCache
 
+    void downloadProjectDataSet(String projectId, String format, HttpServletResponse response) {
+        String query = (projectQuery    (projectId) as JSON).toString()
+        executeBdrQuery(query, format, response)
+    }
+
     void downloadDataSet(String projectId, String dataSetId, String format, HttpServletResponse response) {
+        String query = (dataSetQuery(dataSetId) as JSON).toString()
+        executeBdrQuery(query, format, response)
+    }
+
+    private void executeBdrQuery(String query, String format, HttpServletResponse response) {
         String azureToken = getAzureAccessToken()
 
         String bdrBaseUrl = grailsApplication.config.getProperty('bdr.api.url')
         Integer readTimeout = grailsApplication.config.getProperty('bdr.api.readTimeout', Integer, 60000)
         format = URLEncoder.encode(format, 'UTF-8')
         String url = bdrBaseUrl+'/cql?_mediatype='+format
-        String query = (dataSetQuery(dataSetId) as JSON).toString()
         String encodedQuery = URLEncoder.encode(query, "UTF-8")
 
+        url+="&_profile="+"bdr-feature-human"
         url+="&filter="+encodedQuery
 
         log.info("Downloading data set from BDR: $url")
@@ -89,11 +99,22 @@ class BdrService {
         accessToken.getToken()
     }
 
-    private Map dataSetQuery(String dataSetId) {
+    private static Map dataSetQuery(String dataSetId) {
         Map query = [
                 "op": "and",
                 "args": [
                         ["op":"=","args":[["property":"nrm-submission"], dataSetId]],
+                        ["op":"=","args":[["property":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],"http://www.opengis.net/ont/geosparql#Feature"]]
+                ]
+        ]
+        query
+    }
+
+    private static Map projectQuery(String projectId) {
+        Map query = [
+                "op": "and",
+                "args": [
+                        ["op":"=","args":[["property":"https://schema.org/isPartOf"], "https://linked.data.gov.au/dataset/bdr/"+projectId]],
                         ["op":"=","args":[["property":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],"http://www.opengis.net/ont/geosparql#Feature"]]
                 ]
         ]

@@ -13,6 +13,7 @@ class DataSetController {
     ProjectService projectService
     DataSetSummaryService dataSetSummaryService
     BdrService bdrService
+    WebService webService
 
     // Note that authorization is done against a project, so the project id must be supplied to the method.
     @PreAuthorise(accessLevel = 'editor')
@@ -156,6 +157,24 @@ class DataSetController {
 
         Map response = dataSetSummaryService.saveDataSet(id, dataSet)
         render response as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def downloadProjectDataSets(String id, String format) {
+        if (!id) {
+            render status: HttpStatus.NOT_FOUND
+            return
+        }
+        List supportedFormats = grailsApplication.config.getProperty('bdr.dataSet.formats', List)
+        if (!format) {
+            format = supportedFormats[0]
+        }
+        if (!format in supportedFormats) {
+            render status: HttpStatus.BAD_REQUEST
+            return
+        }
+
+        bdrService.downloadProjectDataSet(id, format, response)
     }
 
     @PreAuthorise(accessLevel = 'admin')
