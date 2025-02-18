@@ -83,11 +83,12 @@ class OrganisationController {
             List scores = services.collect{it.scores}.flatten()
             dashboardData = organisationService.scoresForOrganisation(organisation, scores?.collect{it.scoreId}, !hasEditorAccess)
         }
-        boolean showTargets = userService.userIsSiteAdmin() && services && targetPeriods
+        boolean hasTargets = services && targetPeriods
+        boolean showTargets = hasTargets && userService.userIsSiteAdmin()
         // This call is used to ensure the organisation funding total is kept up to date as the algorithm
         // for selecting the current total is based on the current date.  The funding total is used when
         // calculating data for the dashboard.
-        if (showTargets) {
+        if (hasTargets) {
             organisationService.checkAndUpdateFundingTotal(organisation)
         }
         boolean targetsEditable = userService.userIsAlaOrFcAdmin()

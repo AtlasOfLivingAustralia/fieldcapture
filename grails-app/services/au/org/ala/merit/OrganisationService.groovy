@@ -208,7 +208,7 @@ class OrganisationService {
             rcsFunding.rowTotal = funding
             organisation.custom.details.funding.overallTotal = rcsFunding.rowTotal
             log.info("Updating the funding information for organisation ${organisation.organisationId} to $funding")
-            update(organisation.organisationId, organisation.custom)
+            update(organisation.organisationId, [custom:organisation.custom])
         }
 
     }
