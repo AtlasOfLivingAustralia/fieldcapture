@@ -678,7 +678,7 @@
             "items": [
               {
                 "css": "span7",
-                "source": "To check how your performance to date against the agreed targets, please click on the dashboard tab after closing the report",
+                "source": "To check your performance to date against the agreed targets, please click on the dashboard tab after closing the report",
                 "type": "literal"
               }
             ]
