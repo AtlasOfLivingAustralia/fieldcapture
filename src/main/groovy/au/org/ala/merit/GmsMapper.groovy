@@ -179,10 +179,12 @@ class GmsMapper {
         // Special case for MERI plan funding mapping
         headers << FINANCIAL_YEAR_FUNDING_DESCRIPTION
         descriptions << "Description of the funding for each financial year.  Must be present for financial year funding amounts to be imported"
+        mandatoryFlags << 'Optional'
 
         for (int i : (18..30)) {
             headers << FINANCIAL_YEAR_FUNDING_PREFIX+i+"_"+(i+1)
             descriptions << "Funding amount for the financial year ${i} to ${i+1}"
+            mandatoryFlags << 'Optional'
         }
 
         csvWriter.writeNext(descriptions as String[])
