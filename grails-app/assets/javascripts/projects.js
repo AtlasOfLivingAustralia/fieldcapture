@@ -212,6 +212,13 @@ function ProjectViewModel(project) {
         }
     });
 
+    // if overriding primary electorate, then we must override primary state by default.
+    self.geographicInfo.overridePrimaryElectorate.subscribe(function(newValue) {
+        if (newValue) {
+            self.geographicInfo.overridePrimaryState(true);
+        }
+    })
+
     self.geographicInfo.primaryElectorate.subscribe(function(newValue) {
         if (newValue) {
             var electorate = findElectorate(newValue);
@@ -240,6 +247,22 @@ function ProjectViewModel(project) {
             });
         }
     });
+
+    /**
+     * Automatically add states of excluded electorates to excluded states field provided that state is
+     * available for selection.
+     */
+    self.geographicInfo.otherExcludedElectorates.subscribe(function(newOtherExcludedElectorates) {
+        var statesOfNewOtherExcludedElectorates = findStatesElectoratesBelong(newOtherExcludedElectorates),
+            availableStates = self.transients.states.statesToExclude();
+
+        statesOfNewOtherExcludedElectorates && statesOfNewOtherExcludedElectorates.forEach(function(state) {
+            if (availableStates.indexOf(state) > -1) {
+                self.geographicInfo.otherExcludedStates.push(state);
+            }
+        })
+    })
+
     self.transients.programs = [];
     self.transients.subprograms = {};
     self.transients.subprogramsToDisplay = ko.computed(function () {
@@ -254,6 +277,20 @@ function ProjectViewModel(project) {
             return electorate.name === electorateName;
         });
     };
+
+    function findStatesElectoratesBelong (electorates) {
+        var states = []
+        electorates && electorates.forEach(function(electorate) {
+            var electorateObj = findElectorate(electorate);
+            electorateObj && electorateObj.state && electorateObj.state.forEach (function (state) {
+                if (states.indexOf(state) === -1) {
+                    states.push.apply(states, electorateObj.state)
+                }
+            });
+        });
+
+        return states;
+    }
 
     var isBeforeToday = function(date) {
         return moment(date) < moment().startOf('day');
