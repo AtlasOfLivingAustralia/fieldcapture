@@ -528,10 +528,16 @@ var protocols = {
         "overrides": {
             "dataModel": {
                 "recruitment-growth-stage.floristics_voucher.voucher_full.host_species": {
-                    "dataType": "species"
+                    "dataType": "text"
                 },
                 "recruitment-growth-stage.floristics_voucher.voucher_lite.host_species": {
-                    "dataType": "species"
+                    "dataType": "text"
+                },
+                "recruitment-growth-stage.floristics_voucher.voucher_full.field_name": {
+                    "dataType": "text"
+                },
+                "recruitment-growth-stage.floristics_voucher.voucher_lite.field_name": {
+                    "dataType": "text"
                 },
                 "recruitment-sapling-and-seedling-count.juvenile_count": {
                     "dwcExpression": "(['juvenile_count'] == null ? 0 : ['juvenile_count']) + (['seedling_count'] == null ? 0 : ['seedling_count']) + (['sapling_count'] == null ? 0 :['sapling_count'])",
@@ -546,10 +552,10 @@ var protocols = {
             },
             "viewModel": {
                 "recruitment-growth-stage.floristics_voucher.voucher_full.host_species": {
-                    "type": "speciesSelect"
+                    "type": "text"
                 },
-                "recruitment-growth-stage.floristics_voucher.voucher_lite.host_species": {
-                    "type": "speciesSelect"
+                "recruitment-growth-stage.floristics_voucher.voucher_full.field_name": {
+                    "type": "text"
                 },
                 "recruitment-sapling-and-seedling-count.voucher_full.host_species": {
                     "type": "speciesSelect"

@@ -327,7 +327,7 @@
                         <td>
                             <select id="primaryState" data-bind="options:transients.states, value:geographicInfo.primaryState, optionsCaption: 'Select a state', disable: geographicInfo.nationwide() || !geographicInfo.overridePrimaryState()" class="select form-control"  data-validation-engine="validate[required]"></select>
                             <div class="form-group form-check">
-                                <input type="checkbox" class="form-check-input" id="geographicInfoStateBehaviour" name="geographicInfoStateBehaviour" data-bind="checked: geographicInfo.overridePrimaryState">
+                                <input type="checkbox" class="form-check-input" id="geographicInfoStateBehaviour" name="geographicInfoStateBehaviour" data-bind="checked: geographicInfo.overridePrimaryState, disable: geographicInfo.overridePrimaryElectorate()">
                                 <label class="form-check-label" for="geographicInfoStateBehaviour">Override primary state with above selection.</label>
                             </div>
                         </td>
