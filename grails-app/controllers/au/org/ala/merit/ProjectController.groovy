@@ -85,7 +85,7 @@ class ProjectController {
             user.isEditor = projectService.canUserEditProject(user.userId, id) ?: false
             user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
         }
-        def project = projectService.get(id, user,'all')
+        def project = projectService.get(id, user)
         Map config = null
         if (project && !project.error) {
             config = projectService.getProgramConfiguration(project)
@@ -213,11 +213,13 @@ class ProjectController {
         if (template == MERI_ONLY_TEMPLATE) {
             model = [details:model.details]
         }
+        else if (!template || template == ProgramConfig.ProjectTemplate.DEFAULT.name()) {
+            project.activities = activityService.activitiesForProject(project.projectId)
+        }
         else if (template == RLP_TEMPLATE) {
 
             // The RLP Project Template doesn't need site details or activities.
             project.sites = new JSONArray(project.sites?.collect{new JSONObject([name:it.name, siteId:it.siteId, lastUpdated:it.lastUpdated, type:it.type, extent:[:], publicationStatus:it.publicationStatus, externalIds:it.externalIds])} ?: [])
-            project.remove('activities')
 
             model.details.meriPlanTemplate = config.meriPlanTemplate ? config.meriPlanTemplate+"View" : RLP_MERI_PLAN_TEMPLATE+'View'
 

@@ -58,15 +58,18 @@ class ProjectService  {
 
         params += levelOfDetail ? "view=${levelOfDetail}&" : ''
         params += "includeDeleted=${includeDeleted}"
-        Map project = webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/' + id + params)
-        if (!project.reports) {
-            project.reports = reportService.getReportsForProject(id)
-        }
-        else {
-            project.reports.sort ({ it.toDate })
-        }
-        project
+        Map resp = webService.getJson2(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/' + id + params, 1000000)
+        if (resp?.statusCode == HttpStatus.SC_OK) {
+            Map project = resp.resp
 
+            if (!project.reports) {
+                project.reports = reportService.getReportsForProject(id)
+            } else {
+                project.reports.sort({ it.toDate })
+            }
+            return project
+        }
+        return resp
     }
 
     Map findStateAndElectorateForProject(String projectId) {
