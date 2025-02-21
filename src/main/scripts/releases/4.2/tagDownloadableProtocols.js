@@ -12,7 +12,8 @@ const downloadableProtocols = [
     'Plant Tissue Vouchering - Enhanced',
     'Photo Points - DSLR Panorama',
     'Photo Points - Compact Panorama',
-    'Photo Points - Device Panorama'
+    'Photo Points - Device Panorama',
+    'Opportune'
 
 ];
 
