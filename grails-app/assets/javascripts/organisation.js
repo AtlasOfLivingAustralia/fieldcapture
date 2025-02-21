@@ -228,16 +228,16 @@ OrganisationViewModel = function (props, options) {
     self.transients = self.transients || {};
 
     function toTitleCase(name) {
-        return name.replace(/\S+/g, function(word) {
+        return name.replace(/\S+/g, function(word, offset) {
             if (!word) {
                 return word;
             }
             word = word.toLowerCase();
             var joiningWords = ['and', 'of', 'the', 'in', 'for', 'to', 'a', 'an', 'on', 'at', 'by', 'with', 'from', 'as', 'but', 'or', 'nor'];
-            if (joiningWords.indexOf(word) >= 0) {
+            if (offset && joiningWords.indexOf(word) >= 0) {
                 return word;
             }
-            return word.charAt(0).toUpperCase() + word.substring(1)
+            return word.charAt(0).toUpperCase() + word.substring(1);
         });
     }
     self.prepopulateFromABN = function() {
@@ -466,7 +466,7 @@ EditOrganisationViewModel = function(props, options) {
 OrganisationPageViewModel = function (props, options) {
     var self = this;
     _.extend(self, new OrganisationViewModel(props, options));
-
+    self.areTargetsAndFundingEditable = options.areTargetsAndFundingEditable;
     var tabs = {
         'about': {
             initialiser: function() {
@@ -705,20 +705,25 @@ OrganisationPageViewModel = function (props, options) {
                 return;
             }
 
+            // The end date will be set to midnight at the start of the day because the datepicker
+            // isn't supplying the time.  This causes issues with the display of the end date of the final
+            // report because the final report end date is fudged because project end dates are a day early.
+            // Setting a time of 23:59:59 fixes this.
+            var periodEnd = moment(self.endDate());
+            periodEnd.set('hour', 23);
+            periodEnd.set('minute', 59);
+            periodEnd.set('second', 59);
+            var periodEndString = periodEnd.toDate().toISOStringNoMillis();
+
             _.each(currentConfig.organisationReports, function(reportCategory) {
                 reportCategory.periodStart = self.startDate();
-
-                // The end date will be set to midnight at the start of the day because the datepicker
-                // isn't supplying the time.  This causes issues with the display of the end date of the final
-                // report because the final report end date is fudged because project end dates are a day early.
-                // Setting a time of 23:59:59 fixes this.
-                var periodEnd = moment(self.endDate());
-                periodEnd.set('hour', 23);
-                periodEnd.set('minute', 59);
-                periodEnd.set('second', 59);
-
-                reportCategory.periodEnd = periodEnd.toDate().toISOStringNoMillis();
+                reportCategory.periodEnd = periodEndString;
             });
+
+            if (currentConfig.targets && currentConfig.targets.periodGenerationConfig) {
+                currentConfig.targets.periodGenerationConfig.periodStart = self.startDate();
+                currentConfig.targets.periodGenerationConfig.periodEnd = periodEndString;
+            }
 
             blockUIWithMessage("Saving configuration...");
             self.saveConfig(currentConfig).done(function() {

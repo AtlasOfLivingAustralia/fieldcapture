@@ -39,6 +39,7 @@ class Score {
     BigDecimal target
     Map result
     List<Map> periodTargets
+    Integer decimalPlaces
 
     double singleResult() {
         this.result?.result ?: 0d

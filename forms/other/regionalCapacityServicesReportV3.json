@@ -18,11 +18,18 @@
               {
                 "target": "targetIndigenousParticipationPercentage",
                 "source-path": "periodTargets.targetIndigenousParticipationPercentage"
+              },
+              {
+                "target": "reportedFundingExcludingThisReport",
+                "source-path": "reportedFundingExcludingThisReport"
               }
             ],
             "merge": {
               "targetIndigenousParticipationPercentage": {
                 "replaceExisting": true
+              },
+              "reportedFundingExcludingThisReport": {
+                  "replaceExisting": true
               }
             }
           },
@@ -60,6 +67,10 @@
           }
         ],
         "dataModel": [
+          {
+            "name": "reportedFundingExcludingThisReport",
+            "dataType": "number"
+          },
           {
             "name": "governanceAndFinancialFrameworksOnTrack",
             "dataType": "text",
@@ -242,7 +253,7 @@
               },
               {
                 "param": {
-                  "expression": "organisationPanelProjectValue",
+                  "expression": "organisationPanelProjectValue-reportedFundingExcludingThisReport",
                   "type": "computed"
                 },
                 "rule": "max",
@@ -253,7 +264,7 @@
           {
             "dataType": "number",
             "name": "organisationPanelProjectValue",
-            "description": "Total dollar value (GST inclusive) for the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts).",
+            "description": "Total dollar value (GST inclusive) for the Deed and all active contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> contracts) as reported on AusTender.",
             "validate": "required,min[0]"
           },
           {
@@ -279,8 +290,7 @@
           },
           {
             "dataType": "number",
-            "name": "targetIndigenousProcurementPercentage",
-            "description": "Target Indigenous Procurement Percentage for this reporting period"
+            "name": "targetIndigenousProcurementPercentage"
           },
           {
             "name": "staffDevelopmentOpportunities",
@@ -645,18 +655,6 @@
             "items": [
               {
                 "css": "span7",
-                "preLabel": "Target Workforce Performance % this reporting period",
-                "source": "targetIndigenousParticipationPercentage",
-                "type": "number",
-                "readonly": true
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span7",
                 "preLabel": "Your total organisation panel/project $ value (GST inclusive).",
                 "source": "organisationPanelProjectValue",
                 "type": "number",
@@ -680,24 +678,12 @@
             "items": [
               {
                 "css": "span7",
-                "preLabel": "Supply Chain Performance % this reporting period",
-                "source": "supplyChainPerformancePercentage",
-                "type": "number"
+                "source": "To check your performance to date against the agreed targets, please click on the dashboard tab after closing the report",
+                "type": "literal"
               }
             ]
           },
-          {
-            "type": "row",
-            "items": [
-              {
-                "css": "span7",
-                "preLabel": "Target Supply Chain Performance % this reporting period",
-                "source": "targetIndigenousProcurementPercentage",
-                "type": "number",
-                "readonly": true
-              }
-            ]
-          },
+
           {
             "type": "row",
             "items": [

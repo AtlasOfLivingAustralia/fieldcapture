@@ -2,9 +2,9 @@ package au.org.ala.merit
 
 import au.org.ala.cas.util.AuthenticationCookieUtils
 import au.org.ala.merit.config.ProgramConfig
+import au.org.ala.merit.util.MarkdownUtils
 import au.org.ala.web.AuthService
 import bootstrap.Attribute
-import com.naleid.grails.MarkdownService
 import grails.converters.JSON
 import grails.web.servlet.mvc.GrailsParameterMap
 import groovy.util.logging.Slf4j
@@ -12,10 +12,6 @@ import groovy.xml.MarkupBuilder
 import org.apache.commons.lang.WordUtils
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
-import org.owasp.html.HtmlChangeListener
-import org.owasp.html.HtmlPolicyBuilder
-import org.owasp.html.PolicyFactory
-import org.owasp.html.Sanitizers
 
 @Slf4j
 class FCTagLib {
@@ -25,12 +21,7 @@ class FCTagLib {
     def commonService
     def userService
     def settingService
-    MarkdownService markdownService
     AuthService authService
-    MetadataService metadataService
-
-    /** Allow simple formatting, links and text within p and divs by default */
-    def policy = (Sanitizers.FORMATTING & Sanitizers.LINKS & Sanitizers.BLOCKS) & new HtmlPolicyBuilder().allowTextIn("p", "div").toFactory()
 
     def textField = { attrs ->
         def outerClass = attrs.remove 'outerClass'
@@ -1170,23 +1161,11 @@ class FCTagLib {
     def markdownToHtml = { Map attrs, body ->
         String text = attrs.text ?: body()
 
-        out << markdownToHtmlAndSanitise(text)
+        out << MarkdownUtils.markdownToHtmlAndSanitise(text)
     }
 
     private String markdownToHtmlAndSanitise(String text) {
-        String html = markdownService.markdown(text)
-        internalSanitise(policy, html)
-    }
-
-    private static String internalSanitise(PolicyFactory policyFactory, String input, String imageId = '', String metadataName = '') {
-        policyFactory.sanitize(input, new HtmlChangeListener<Object>() {
-            void discardedTag(Object context, String elementName) {
-                log.warn("Dropping element $elementName in $imageId.$metadataName")
-            }
-            void discardedAttributes(Object context, String tagName, String... attributeNames) {
-                log.warn("Dropping attributes $attributeNames from $tagName in $imageId.$metadataName")
-            }
-        }, null)
+       MarkdownUtils.markdownToHtmlAndSanitise(text)
     }
 
     private static String getScoreLabels(def scoreIds, ProgramConfig config, Boolean includeService) {

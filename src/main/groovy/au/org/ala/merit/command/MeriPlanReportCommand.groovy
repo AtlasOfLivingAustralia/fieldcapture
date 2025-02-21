@@ -53,9 +53,6 @@ class MeriPlanReportCommand implements Validateable{
         }
         else {
             project = projectService.get(id, 'all')
-            if (project != null){
-                project.remove("sites")
-            }
         }
 
         Map model
@@ -64,6 +61,8 @@ class MeriPlanReportCommand implements Validateable{
             model = [statusCode: HttpStatus.SC_NOT_FOUND, error:getErrors()]
         }
         else {
+            project.remove("sites")
+            project.remove('activities')
             Map config = projectService.getProgramConfiguration(project)
 
             project?.referenceDocument = content?.referenceDocument

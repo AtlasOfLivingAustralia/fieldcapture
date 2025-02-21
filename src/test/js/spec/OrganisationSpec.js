@@ -155,4 +155,37 @@ describe("OrganisationViewModel Spec", function () {
 
     });
 
+    it("Can tidy the case of the org entity name", function() {
+        var options = {organisationSaveUrl:'/test/url', healthCheckUrl:'/test/health'};
+        var org = { name: '', organisationId:"org1" };
+        var model = new OrganisationPageViewModel(org, options);
+
+        var inputOutput = [
+            ["TEST ALL CAPS", "Test All Caps"],
+            ["THE TEST FOR FIRST JOINING WORD", "The Test for First Joining Word"],
+            ["Another test", "Another Test"],
+            ["Already Correct", "Already Correct"]
+        ];
+
+        let result = {
+            entityName:''
+        };
+
+        spyOn($, 'get').and.callFake(function () {
+            var d = $.Deferred();
+            // resolve using our mock data
+            d.resolve(result);
+            return d.promise();
+        });
+
+        for (var i=0; i<inputOutput.length; i++) {
+            model.name(''); // The name won't be overwritten if already set.
+            result.entityName = inputOutput[i][0];
+            model.prepopulateFromABN();
+
+
+            expect(model.name()).toEqual(inputOutput[i][1]);
+        }
+    });
+
 });

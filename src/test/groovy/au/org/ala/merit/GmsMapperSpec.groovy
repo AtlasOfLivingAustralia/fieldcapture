@@ -374,8 +374,9 @@ class GmsMapperSpec extends Specification{
 
         then: "We are just checking every value in the spreadsheet is mappable and has a description"
         lines.size() == 4
+        Map mappings = gmsMapper.projectMapping + gmsMapper.geographicInfoMapping
         lines[3].every {String value ->
-            gmsMapper.projectMapping[value].description != null
+            value == GmsMapper.FINANCIAL_YEAR_FUNDING_DESCRIPTION || value.startsWith(GmsMapper.FINANCIAL_YEAR_FUNDING_PREFIX) || mappings[value].description != null
         }
     }
 

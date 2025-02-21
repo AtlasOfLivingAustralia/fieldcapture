@@ -180,11 +180,14 @@ function ProjectViewModel(project) {
     self.geographicInfo = {
         nationwide: ko.observable(project.geographicInfo.nationwide || false),
         statewide: ko.observable(project.geographicInfo.statewide || false),
-        isDefault: ko.observable(project.geographicInfo.isDefault || false),
+        overridePrimaryElectorate: ko.observable(project.geographicInfo.overridePrimaryElectorate || false),
+        overridePrimaryState: ko.observable(project.geographicInfo.overridePrimaryState || false),
         primaryState: ko.observable(project.geographicInfo.primaryState),
         primaryElectorate: ko.observable(project.geographicInfo.primaryElectorate),
         otherStates: ko.observableArray(project.geographicInfo.otherStates || []),
-        otherElectorates: ko.observableArray(project.geographicInfo.otherElectorates || [])
+        otherExcludedStates: ko.observableArray(project.geographicInfo.otherExcludedStates || []),
+        otherElectorates: ko.observableArray(project.geographicInfo.otherElectorates || []),
+        otherExcludedElectorates: ko.observableArray(project.geographicInfo.otherExcludedElectorates || [])
     };
     self.geographicInfo.nationwide.subscribe(function(newValue) {
         if (newValue) {
@@ -193,6 +196,8 @@ function ProjectViewModel(project) {
             self.geographicInfo.primaryElectorate("");
             self.geographicInfo.otherStates([]);
             self.geographicInfo.otherElectorates([]);
+            self.geographicInfo.otherExcludedStates([]);
+            self.geographicInfo.otherExcludedElectorates([]);
         }
     });
 
@@ -202,8 +207,17 @@ function ProjectViewModel(project) {
             self.geographicInfo.primaryElectorate("");
             self.geographicInfo.otherStates([]);
             self.geographicInfo.otherElectorates([]);
+            self.geographicInfo.otherExcludedStates([]);
+            self.geographicInfo.otherExcludedElectorates([]);
         }
     });
+
+    // if overriding primary electorate, then we must override primary state by default.
+    self.geographicInfo.overridePrimaryElectorate.subscribe(function(newValue) {
+        if (newValue) {
+            self.geographicInfo.overridePrimaryState(true);
+        }
+    })
 
     self.geographicInfo.primaryElectorate.subscribe(function(newValue) {
         if (newValue) {
@@ -233,6 +247,7 @@ function ProjectViewModel(project) {
             });
         }
     });
+
     self.transients.programs = [];
     self.transients.subprograms = {};
     self.transients.subprogramsToDisplay = ko.computed(function () {
@@ -247,6 +262,20 @@ function ProjectViewModel(project) {
             return electorate.name === electorateName;
         });
     };
+
+    function findStatesElectoratesBelong (electorates) {
+        var states = []
+        electorates && electorates.forEach(function(electorate) {
+            var electorateObj = findElectorate(electorate);
+            electorateObj && electorateObj.state && electorateObj.state.forEach (function (state) {
+                if (states.indexOf(state) === -1) {
+                    states.push.apply(states, electorateObj.state)
+                }
+            });
+        });
+
+        return states;
+    }
 
     var isBeforeToday = function(date) {
         return moment(date) < moment().startOf('day');
@@ -462,30 +491,66 @@ function ProjectViewModel(project) {
         });
         self.associatedProgram(project.associatedProgram); // to trigger the computation of sub-programs
     };
+    self.transients.removeAll = function (source, toRemove) {
+        for(var i = 0; i < toRemove.length; i++) {
+            var index = source.indexOf(toRemove[i]);
+            if (index > -1) {
+                source.splice(index, 1);
+            }
+        }
+
+        return source
+    }
 
     self.transients.states = ko.observableArray([]);
-    self.transients.states.filteredStates = ko.computed(function() {
-        var primaryState = self.geographicInfo.primaryState(), states = self.transients.states().concat([]);
-        if (primaryState) {
-            var index = states.indexOf(primaryState);
-            if (index > -1) {
-                states.splice(index, 1);
-            }
-        }
+    self.transients.statesUnavailableForSelection = function (included) {
+        var result = [],
+            primaryState = self.geographicInfo.primaryState(),
+            otherStates = self.geographicInfo.otherStates() || [],
+            excludedStates = self.geographicInfo.otherExcludedStates() || [];
 
-        return states;
+        if (primaryState)
+            result.push(primaryState)
+        if (!included)
+            result.push.apply(result, otherStates)
+        else
+            result.push.apply(result, excludedStates)
+        return result
+    }
+    self.transients.states.statesToIncludeOrExclude = function(include) {
+        var toRemove = self.transients.statesUnavailableForSelection(include), states = self.transients.states().concat([]);
+        return self.transients.removeAll(states, toRemove);
+    };
+    self.transients.states.statesToInclude = ko.computed(function() {
+        return self.transients.states.statesToIncludeOrExclude(true);
+    });
+    self.transients.states.statesToExclude = ko.computed(function() {
+        return self.transients.states.statesToIncludeOrExclude(false);
     });
     self.transients.electorates = ko.observableArray([]);
-    self.transients.electorates.filteredElectorates = ko.computed(function() {
-        var primaryElectorate = self.geographicInfo.primaryElectorate(), electorates = self.transients.electorates().concat([]);
-        if (primaryElectorate) {
-            var index = electorates.indexOf(primaryElectorate);
-            if (index > -1) {
-                electorates.splice(index, 1);
-            }
-        }
+    self.transients.electoratesUnavailableForSelection = function (included) {
+        var result = [],
+            primaryElectorate = self.geographicInfo.primaryElectorate(),
+            otherElectorates = self.geographicInfo.otherElectorates() || [],
+            excludedElectorates = self.geographicInfo.otherExcludedElectorates() || [];
 
-        return electorates;
+        if (primaryElectorate)
+            result.push(primaryElectorate)
+        if (!included)
+            result.push.apply(result, otherElectorates)
+        else
+            result.push.apply(result, excludedElectorates)
+        return result
+    }
+    self.transients.electorates.electoratesToIncludeOrExclude = function(include) {
+        var toRemove = self.transients.electoratesUnavailableForSelection(include), source = self.transients.electorates().concat([]);
+        return self.transients.removeAll(source, toRemove);
+    };
+    self.transients.electorates.electoratesToInclude = ko.computed(function() {
+        return self.transients.electorates.electoratesToIncludeOrExclude(true);
+    });
+    self.transients.electorates.electoratesToExclude = ko.computed(function() {
+        return self.transients.electorates.electoratesToIncludeOrExclude(false);
     });
 
     self.loadStatesAndElectorates = function() {
@@ -514,11 +579,14 @@ function ProjectViewModel(project) {
     self.loadGeographicInfo = function () {
         self.geographicInfo.nationwide(project.geographicInfo.nationwide);
         self.geographicInfo.statewide(project.geographicInfo.statewide);
-        self.geographicInfo.isDefault(project.geographicInfo.isDefault);
+        self.geographicInfo.overridePrimaryElectorate(project.geographicInfo.overridePrimaryElectorate);
+        self.geographicInfo.overridePrimaryElectorate(project.geographicInfo.overridePrimaryElectorate);
         self.geographicInfo.primaryState(project.geographicInfo.primaryState);
         self.geographicInfo.primaryElectorate(project.geographicInfo.primaryElectorate);
         self.geographicInfo.otherStates(project.geographicInfo.otherStates);
         self.geographicInfo.otherElectorates(project.geographicInfo.otherElectorates);
+        self.geographicInfo.otherExcludedStates(project.geographicInfo.otherExcludedStates);
+        self.geographicInfo.otherExcludedElectorates(project.geographicInfo.otherExcludedElectorates);
     }
 
     self.toJS = function() {

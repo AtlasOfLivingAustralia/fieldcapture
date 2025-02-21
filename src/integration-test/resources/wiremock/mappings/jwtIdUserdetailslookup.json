@@ -1,0 +1,17 @@
+{
+
+  "priority": 1,
+  "request": {
+    "urlPath": "/userdetails/userDetails/getUserDetails",
+    "method": "ANY",
+    "queryParameters": {
+      "userName": {
+        "equalTo": "jwtId"
+      }
+    }
+  },
+  "response": {
+    "transformers": ["response-template"],
+    "status": 404
+  }
+}

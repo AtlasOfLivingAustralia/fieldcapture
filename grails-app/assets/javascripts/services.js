@@ -3,8 +3,23 @@ function OrganisationDetailsViewModel(o, organisation, budgetHeaders, allService
     var period = budgetHeaders,
         serviceIds = o.services && o.services.serviceIds || [],
         targets = o.services && o.services.targets || [];
-    self.services = new OrganisationServicesViewModel(serviceIds, config.services, targets, budgetHeaders);
+    self.areTargetsAndFundingEditable = config.areTargetsAndFundingEditable;
+    self.services = new OrganisationServicesViewModel(serviceIds, config.services, targets, budgetHeaders, {areTargetsEditable:config.areTargetsAndFundingEditable});
+
+    if (!o.funding) {
+        o.funding = {
+            rows: [
+                {
+                    type:BudgetConstants.PERIODICALLY_REVISED_TOTAL,
+                    shortLabel: 'rcsContractedFunding',
+                    description: 'RCS Contracted Funding'
+                }
+            ]
+        }
+    }
     self.funding = new BudgetViewModel(o.funding, budgetHeaders);
+    self.funding.isEditable = config.areTargetsAndFundingEditable;
+
     function clearHiddenFields(jsData) {
 
     };
@@ -34,13 +49,13 @@ function OrganisationDetailsViewModel(o, organisation, budgetHeaders, allService
  * @param outputTargets The current organisation targets
  * @param periods An array of periods, each of which require a target to be set
  */
-function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, periods) {
+function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, periods, options) {
     var self = this,
         OPERATION_SUM = "SUM",
         OPERATION_AVG = "AVG",
         operation = OPERATION_AVG;
 
-    self.isProjectDetailsLocked = ko.observable(false);
+    self.areTargetsEditable = options.areTargetsEditable;
 
     allServices = _.sortBy(allServices || [], function (service) {
         return service.name
@@ -72,7 +87,8 @@ function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, p
         target.serviceId = ko.observable(service ? service.id : null);
         target.scoreId = ko.observable(score ? score.scoreId : null);
 
-        target.target = ko.observable();
+        var decimalPlaces = _.isNumber(score && score.decimalPlaces) ? score.decimalPlaces : 2;
+        target.target = ko.observable().extend({numericString: decimalPlaces});
         target.targetDate = ko.observable().extend({simpleDate:false});
 
         target.periodTargets = _.map(periods, function (period) {
@@ -96,7 +112,7 @@ function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, p
             var sum = 0;
             var count = 0;
             _.each(target.periodTargets, function (periodTarget) {
-                var target = parseInt(periodTarget.target());
+                var target = parseFloat(periodTarget.target());
                 if (!_.isNaN(target)) {
                     sum += target
                     count++;
@@ -209,6 +225,11 @@ function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, p
         });
 
         target.scoreId.subscribe(function () {
+            var score = target.scoreId() ? target.score() : null;
+            if (score) {
+                var decimalPlaces = _.isNumber(score && score.decimalPlaces) ? score.decimalPlaces : 2;
+                target.target = ko.observable().extend({numericString: decimalPlaces});
+            }
             target.updateTargets();
         });
 

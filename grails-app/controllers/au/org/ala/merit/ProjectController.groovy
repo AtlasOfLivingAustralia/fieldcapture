@@ -86,10 +86,6 @@ class ProjectController {
             user.hasViewAccess = projectService.canUserViewProject(user.userId, id) ?: false
         }
         def project = projectService.get(id, user,'all')
-        Map stateElectorate = projectService.findStateAndElectorateForProject(project.projectId)
-        if (stateElectorate) {
-            project << stateElectorate
-        }
         Map config = null
         if (project && !project.error) {
             config = projectService.getProgramConfiguration(project)
@@ -912,7 +908,7 @@ class ProjectController {
         }
 
         model.context = new HashMap(project)
-        model.context.putAll(reportData.getContextData(project, model.report))
+        model.context.putAll(reportData.getContextData(project, model.report, model.activity))
         model.returnTo = g.createLink(action:'exitReport', id:projectId, params:[reportId:reportId])
         model.contextViewUrl = g.createLink(action:'index', id:projectId)
         model.reportHeaderTemplate = '/project/rlpProjectReportHeader'
@@ -922,12 +918,11 @@ class ProjectController {
             if (model.activity.siteId) {
                 model.reportSite = sites?.find { it.siteId == model.activity.siteId }
             }
-
-            Map siteData = projectService.projectSites(projectId)
-            if (!siteData.error) {
-                model.projectArea = siteData.projectArea
-                model.features = siteData.features
+            Map projectArea = sites?.find { it.type == SiteService.SITE_TYPE_PROJECT_AREA }
+            if (projectArea) {
+                model.projectArea = siteService.getSiteGeoJson(projectArea.siteId)
             }
+            model.selectableFeaturesUrl = g.createLink(action:'ajaxProjectSites', id:projectId)
         }
         model
     }
@@ -1166,13 +1161,15 @@ class ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'editor')
-    def getSpeciesRecordsFromActivity (String activityId) {
+    def getSpeciesRecordsFromActivity (String activityId, String groupBy, String operator) {
         if(!activityId) {
             render status: HttpStatus.SC_BAD_REQUEST, text: [message: 'Activity ID must be supplied'] as JSON
             return
         }
 
-        render projectService.getSpeciesRecordsFromActivity(activityId) as JSON
+        groupBy = groupBy ?: ProjectService.DEFAULT_GROUP_BY
+        operator = operator ?: ProjectService.FLATTEN_BY_SUM
+        render projectService.getSpeciesRecordsFromActivity(activityId, groupBy, operator) as JSON
     }
 
     @PreAuthorise(accessLevel = 'editor')
