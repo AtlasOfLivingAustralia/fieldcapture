@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus
 class DataSetController {
 
     static allowedMethods = [create:'GET', edit:'GET', save:'POST', delete:'POST']
-
+    private static final Integer DEFAULT_LIMIT = 1000
     ProjectService projectService
     DataSetSummaryService dataSetSummaryService
     BdrService bdrService
@@ -160,7 +160,7 @@ class DataSetController {
     }
 
     @PreAuthorise(accessLevel = 'admin')
-    def downloadProjectDataSets(String id, String format) {
+    def downloadProjectDataSets(String id, String format, Integer limit) {
         if (!id) {
             render status: HttpStatus.NOT_FOUND
             return
@@ -174,11 +174,11 @@ class DataSetController {
             return
         }
 
-        bdrService.downloadProjectDataSet(id, format, response)
+        bdrService.downloadProjectDataSet(id, format, response, limit ?: DEFAULT_LIMIT)
     }
 
     @PreAuthorise(accessLevel = 'admin')
-    def download(String id, String dataSetId, String format) {
+    def download(String id, String dataSetId, String format, Integer limit) {
         Map projectData = projectData(id)
 
         List supportedFormats = grailsApplication.config.getProperty('bdr.dataSet.formats', List)
@@ -199,7 +199,7 @@ class DataSetController {
         else {
             if (isMonitorDataSet(dataSet)) {
                 if (isProtocolSupportedForDownload(dataSet)) {
-                    bdrService.downloadDataSet(id, dataSet.dataSetId, format, response)
+                    bdrService.downloadDataSet(id, dataSet.dataSetId, format, response, limit ?: DEFAULT_LIMIT)
                 }
             }
             else if (dataSet.url) {

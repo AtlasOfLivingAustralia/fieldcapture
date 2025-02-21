@@ -39,17 +39,17 @@ class BdrService {
 
     AccessTokenCache accessTokenCache
 
-    void downloadProjectDataSet(String projectId, String format, HttpServletResponse response) {
+    void downloadProjectDataSet(String projectId, String format, HttpServletResponse response, int limit=1000) {
         String query = (projectQuery    (projectId) as JSON).toString()
-        executeBdrQuery(query, format, response)
+        executeBdrQuery(query, format, response, limit)
     }
 
-    void downloadDataSet(String projectId, String dataSetId, String format, HttpServletResponse response) {
+    void downloadDataSet(String projectId, String dataSetId, String format, HttpServletResponse response, int limit=1000) {
         String query = (dataSetQuery(dataSetId) as JSON).toString()
-        executeBdrQuery(query, format, response)
+        executeBdrQuery(query, format, response, limit)
     }
 
-    private void executeBdrQuery(String query, String format, HttpServletResponse response) {
+    private void executeBdrQuery(String query, String format, HttpServletResponse response, int limit) {
         String azureToken = getAzureAccessToken()
 
         String bdrBaseUrl = grailsApplication.config.getProperty('bdr.api.url')
@@ -59,6 +59,7 @@ class BdrService {
         String encodedQuery = URLEncoder.encode(query, "UTF-8")
 
         url+="&_profile="+"bdr-feature-human"
+        url+="&limit=$limit"
         url+="&filter="+encodedQuery
 
         log.info("Downloading data set from BDR: $url")
