@@ -29,7 +29,7 @@
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
         excelDataUploadUrl:"${createLink(controller:'activity', action:'ajaxUpload')}",
         searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
-        speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
+        speciesListUrl:"${createLink(controller:'speciesList', action:'speciesListItems')}",
         speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:activity.projectId, params:[surveyName:metaModel.name])}",
         speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
         noImageUrl: "${assetPath(src:'nophoto.png')}",
