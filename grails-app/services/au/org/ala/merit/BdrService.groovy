@@ -39,32 +39,50 @@ class BdrService {
 
     AccessTokenCache accessTokenCache
 
-    void downloadProjectDataSet(String projectId, String format, HttpServletResponse response, int limit=1000) {
+    static String FORMAT_GEOJSON = 'application/geo+json'
+    static Map FILE_EXTENSION_MAP = [
+            'application/geo+json': 'geojson',
+            'application/json': 'json',
+            'text/turtle': 'ttl',
+            'text/csv': 'csv'
+    ]
+
+    static private String buildFileName(String fileName, String format) {
+        fileName+'.'+FILE_EXTENSION_MAP[format]
+    }
+
+    void downloadProjectDataSet(String projectId, String format, String fileName, HttpServletResponse response, int limit=1000) {
         String query = (projectQuery    (projectId) as JSON).toString()
-        executeBdrQuery(query, format, response, limit)
+        executeBdrQuery(query, format, response, limit, fileName)
     }
 
-    void downloadDataSet(String projectId, String dataSetId, String format, HttpServletResponse response, int limit=1000) {
+    void downloadDataSet(String projectId, String dataSetId, String fileName, String format, HttpServletResponse response, int limit=1000) {
         String query = (dataSetQuery(dataSetId) as JSON).toString()
-        executeBdrQuery(query, format, response, limit)
+        executeBdrQuery(query, format, response, limit, fileName)
     }
 
-    private void executeBdrQuery(String query, String format, HttpServletResponse response, int limit) {
+    private void executeBdrQuery(String query, String format, HttpServletResponse response, int limit, String fileName) {
         String azureToken = getAzureAccessToken()
 
         String bdrBaseUrl = grailsApplication.config.getProperty('bdr.api.url')
         Integer readTimeout = grailsApplication.config.getProperty('bdr.api.readTimeout', Integer, 60000)
-        format = URLEncoder.encode(format, 'UTF-8')
-        String url = bdrBaseUrl+'/cql?_mediatype='+format
+        String url = bdrBaseUrl+'/cql?_mediatype='+URLEncoder.encode(format, 'UTF-8')
         String encodedQuery = URLEncoder.encode(query, "UTF-8")
 
-        url+="&_profile="+"bdr-feature-human"
+        String fileNameWithExtension = buildFileName(fileName, format)
+        if (format == FORMAT_GEOJSON) {
+            url+="&_profile="+"bdr-feature-human"
+        }
         url+="&limit=$limit"
         url+="&filter="+encodedQuery
 
         log.info("Downloading data set from BDR: $url")
 
-        webService.proxyGetRequest(response, url, WebService.AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN, readTimeout, azureToken)
+
+        Map headers = [
+                'Content-Disposition': 'attachment; filename="'+fileNameWithExtension+'"',
+        ]
+        webService.proxyGetRequest(response, url, WebService.AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN, readTimeout, azureToken, headers)
     }
 
     /**

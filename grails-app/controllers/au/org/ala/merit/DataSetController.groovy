@@ -165,6 +165,7 @@ class DataSetController {
             render status: HttpStatus.NOT_FOUND
             return
         }
+        Map projectData = projectData(id)
         List supportedFormats = grailsApplication.config.getProperty('bdr.dataSet.formats', List)
         if (!format) {
             format = supportedFormats[0]
@@ -174,7 +175,7 @@ class DataSetController {
             return
         }
 
-        bdrService.downloadProjectDataSet(id, format, response, limit ?: DEFAULT_LIMIT)
+        bdrService.downloadProjectDataSet(id, format, projectData.project.name, response, limit ?: DEFAULT_LIMIT)
     }
 
     @PreAuthorise(accessLevel = 'admin')
@@ -199,7 +200,7 @@ class DataSetController {
         else {
             if (isMonitorDataSet(dataSet)) {
                 if (isProtocolSupportedForDownload(dataSet)) {
-                    bdrService.downloadDataSet(id, dataSet.dataSetId, format, response, limit ?: DEFAULT_LIMIT)
+                    bdrService.downloadDataSet(id, dataSet.dataSetId, dataSet.name, format, response, limit ?: DEFAULT_LIMIT)
                 }
             }
             else if (dataSet.url) {
