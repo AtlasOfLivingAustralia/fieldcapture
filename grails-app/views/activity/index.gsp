@@ -22,7 +22,7 @@
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
         bieUrl: "${grailsApplication.config.getProperty('bie.baseURL')}",
         searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
-        speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
+        speciesListUrl:"${createLink(controller:'speciesList', action:'speciesListItems')}",
         speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:activity.projectId, params:[surveyName:metaModel.name])}",
         speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
         imageLocation:"${assetPath(src:'/')}",
