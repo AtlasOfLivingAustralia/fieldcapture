@@ -125,9 +125,6 @@ if (!sld.polgon.default.url) {
 if (!sld.polgon.highlight.url) {
     sld.polgon.highlight.url = "http://fish.ala.org.au/data/fc-highlight.sld"
 }
-if (!lists.baseURL) {
-    lists.baseURL = "https://lists.ala.org.au"
-}
 
 //this is for SpeciesService class in Merit
 if (!bie.service.baseURL) {
@@ -207,7 +204,8 @@ if (!pdfgen.baseURL){
 
 abn.abnLookupToken = "Insert abn Token here"
 abn.abnUrl= "https://abr.business.gov.au/json/AbnDetails.aspx?abn="
-
+lists.baseURL = "https://lists-ws.test.ala.org.au"
+//lists.baseURL = "https://lists-test.ala.org.au/ws"
 esp.activities.admin = 'ESP Annual Report Submission'
 reports.initialScrollPositionDelay = 1000
 risks.scheduleCheckingPeriod = 7
