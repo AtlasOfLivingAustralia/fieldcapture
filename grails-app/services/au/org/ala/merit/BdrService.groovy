@@ -4,16 +4,12 @@ import au.org.ala.ws.tokens.TokenService
 import com.azure.core.credential.AccessToken
 import com.azure.core.credential.TokenRequestContext
 import com.azure.core.implementation.AccessTokenCache
+import com.azure.identity.ClientAssertionCredential
 import com.azure.identity.ClientAssertionCredentialBuilder
-import com.azure.storage.blob.BlobContainerClient
-import com.azure.storage.blob.BlobServiceClient
-import com.azure.storage.blob.BlobServiceClientBuilder
 import com.nimbusds.jwt.JWT
 import grails.converters.JSON
 import grails.core.GrailsApplication
 import groovy.util.logging.Slf4j
-import com.azure.identity.ClientAssertionCredential
-import net.sf.json.JSONArray
 import org.pac4j.oidc.profile.OidcProfile
 import software.amazon.awssdk.services.cognitoidentity.CognitoIdentityClient
 import software.amazon.awssdk.services.cognitoidentity.model.GetIdRequest
@@ -22,7 +18,6 @@ import software.amazon.awssdk.services.cognitoidentity.model.GetOpenIdTokenReque
 import software.amazon.awssdk.services.cognitoidentity.model.GetOpenIdTokenResponse
 
 import javax.annotation.PostConstruct
-import javax.persistence.Access
 import javax.servlet.http.HttpServletResponse
 
 /**

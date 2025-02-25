@@ -1,7 +1,6 @@
 package au.org.ala.merit
 
-import au.org.ala.merit.PreAuthorise
-import au.org.ala.merit.ProjectService
+
 import au.org.ala.merit.config.ProgramConfig
 import grails.converters.JSON
 import org.springframework.http.HttpStatus
@@ -9,7 +8,7 @@ import org.springframework.http.HttpStatus
 class DataSetController {
 
     static allowedMethods = [create:'GET', edit:'GET', save:'POST', delete:'POST']
-    private static final Integer DEFAULT_LIMIT = 1000
+    private static final Integer DEFAULT_BDR_QUERY_LIMIT = 5000
     ProjectService projectService
     DataSetSummaryService dataSetSummaryService
     BdrService bdrService
@@ -175,7 +174,7 @@ class DataSetController {
             return
         }
 
-        bdrService.downloadProjectDataSet(id, format, projectData.project.name, response, limit ?: DEFAULT_LIMIT)
+        bdrService.downloadProjectDataSet(id, format, projectData.project.name, response, limit ?: DEFAULT_BDR_QUERY_LIMIT)
     }
 
     @PreAuthorise(accessLevel = 'admin')
@@ -200,7 +199,7 @@ class DataSetController {
         else {
             if (isMonitorDataSet(dataSet)) {
                 if (isProtocolSupportedForDownload(dataSet)) {
-                    bdrService.downloadDataSet(id, dataSet.dataSetId, dataSet.name, format, response, limit ?: DEFAULT_LIMIT)
+                    bdrService.downloadDataSet(id, dataSet.dataSetId, dataSet.name, format, response, limit ?: DEFAULT_BDR_QUERY_LIMIT)
                 }
             }
             else if (dataSet.url) {
