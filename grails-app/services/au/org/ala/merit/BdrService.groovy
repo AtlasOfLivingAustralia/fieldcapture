@@ -31,7 +31,7 @@ class BdrService {
     }
 
     void downloadProjectDataSet(String projectId, String format, String fileName, HttpServletResponse response, int limit=1000) {
-        String query = (projectQuery    (projectId) as JSON).toString()
+        String query = (projectQuery(projectId) as JSON).toString()
         executeBdrQuery(query, format, response, limit, fileName)
     }
 

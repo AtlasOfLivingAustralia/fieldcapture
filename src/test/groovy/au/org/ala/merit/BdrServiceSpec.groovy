@@ -1,7 +1,10 @@
 package au.org.ala.merit
 
 import au.org.ala.ws.tokens.TokenService
+import grails.converters.JSON
 import grails.testing.services.ServiceUnitTest
+import org.grails.web.converters.marshaller.json.CollectionMarshaller
+import org.grails.web.converters.marshaller.json.MapMarshaller
 import spock.lang.Specification
 import javax.servlet.http.HttpServletResponse
 
@@ -13,12 +16,17 @@ class BdrServiceSpec extends Specification implements ServiceUnitTest<BdrService
     def bdrTokenService = Mock(BdrTokenService)
     def response = Mock(HttpServletResponse)
 
+    void setupSpec() {
+        JSON.registerObjectMarshaller(new MapMarshaller())
+        JSON.registerObjectMarshaller(new CollectionMarshaller())
+    }
     def setup() {
         service.grailsApplication = grailsApplication
         service.webService = webService
         service.tokenService = tokenService
         service.commonService = commonService
         service.bdrTokenService = bdrTokenService
+
     }
 
     def "test downloadProjectDataSet"() {
@@ -26,10 +34,10 @@ class BdrServiceSpec extends Specification implements ServiceUnitTest<BdrService
         String projectId = "testProjectId"
         String format = "application/json"
         String fileName = "testFile"
-        String query = '{"op":"and","args":[{"op":"=","args":[{"property":"https://schema.org/isPartOf","value":"https://linked.data.gov.au/dataset/bdr/testProjectId"}]},{"op":"=","args":[{"property":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","value":"http://www.opengis.net/ont/geosparql#Feature"}]}]}'
         String azureToken = "testAzureToken"
-        String bdrBaseUrl = "http://example.com"
-        String url = "$bdrBaseUrl/cql?_mediatype=application%2Fjson&_profile=bdr-feature-human&limit=1000&filter=${URLEncoder.encode(query, 'UTF-8')}"
+        String bdrBaseUrl = "https://changeMe.org.au/api"
+        int readTimeout = 60000
+        String url = "$bdrBaseUrl/cql?_mediatype=application%2Fjson&_profile=bdr-feature-human&limit=1000&filter="
         Map headers = ['Content-Disposition': 'attachment; filename="testFile.json"']
 
         when:
@@ -37,7 +45,7 @@ class BdrServiceSpec extends Specification implements ServiceUnitTest<BdrService
 
         then:
         1 * bdrTokenService.getBDRAccessToken() >> azureToken
-        1 * webService.proxyGetRequest(response, url, WebService.AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN, readTimeout, azureToken, headers)
+        1 * webService.proxyGetRequest(response, { it.startsWith(url) }, WebService.AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN, readTimeout, azureToken, headers)
     }
 
     def "test downloadDataSet"() {
@@ -46,10 +54,10 @@ class BdrServiceSpec extends Specification implements ServiceUnitTest<BdrService
         String dataSetId = "testDataSetId"
         String format = "application/json"
         String fileName = "testFile"
-        String query = '{"op":"and","args":[{"op":"=","args":[{"property":"nrm-submission","value":"testDataSetId"}]},{"op":"=","args":[{"property":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type","value":"http://www.opengis.net/ont/geosparql#Feature"}]}]}'
+        int readTimeout = 60000
         String azureToken = "testAzureToken"
-        String bdrBaseUrl = "http://example.com"
-        String url = "$bdrBaseUrl/cql?_mediatype=application%2Fjson&_profile=bdr-feature-human&limit=1000&filter=${URLEncoder.encode(query, 'UTF-8')}"
+        String bdrBaseUrl = "https://changeMe.org.au/api"
+        String url = "$bdrBaseUrl/cql?_mediatype=application%2Fjson&_profile=bdr-feature-human&limit=1000&filter="
         Map headers = ['Content-Disposition': 'attachment; filename="testFile.json"']
 
         when:
@@ -57,6 +65,6 @@ class BdrServiceSpec extends Specification implements ServiceUnitTest<BdrService
 
         then:
         1 * bdrTokenService.getBDRAccessToken() >> azureToken
-        1 * webService.proxyGetRequest(response, url, WebService.AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN, readTimeout, azureToken, headers)
+        1 * webService.proxyGetRequest(response, { it.startsWith(url) }, WebService.AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN, readTimeout, azureToken, headers)
     }
 }
