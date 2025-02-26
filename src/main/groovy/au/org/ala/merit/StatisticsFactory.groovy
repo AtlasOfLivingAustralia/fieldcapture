@@ -29,6 +29,9 @@ class StatisticsFactory {
     @Autowired
     GrailsApplication grailsApplication
 
+    /** Lazily initialized in the getConfig method based on the HOME_PAGE_STATISTICS setting */
+    private Map config
+
     public StatisticsFactory() {}
 
     private String initialize() {
@@ -46,29 +49,52 @@ class StatisticsFactory {
     public synchronized void clearConfig() {
         Cache cache = grailsCacheManager.getCache(STATISTICS_CACHE_REGION)
         cache.clear()
+        config = null
     }
 
     private synchronized Map getConfig() {
-        String config = grailsCacheManager.getCache(STATISTICS_CACHE_REGION).get(CONFIG_KEY)?.get()
-        if (!config) {
-            config = initialize()
-            grailsCacheManager.getCache(STATISTICS_CACHE_REGION).put(CONFIG_KEY, config)
+        String configString = grailsCacheManager.getCache(STATISTICS_CACHE_REGION).get(CONFIG_KEY)?.get()
+        // We check for the config string cache instead of whether this.config is null because
+        // this allows the generic admin cache page to clear the cache and allow a config update
+        // without having to know to call StatisticsFactory.clearConfig()
+        // We can't cache the parsed config directly as it is not serializable.
+        if (!configString || !this.config) { // Check both as the cache can survive a restart sometimes, but not the field.
+            configString = initialize()
+            grailsCacheManager.getCache(STATISTICS_CACHE_REGION).put(CONFIG_KEY, configString)
+            JsonSlurper jsonSlurper = new JsonSlurper()
+            this.config = Collections.synchronizedMap(jsonSlurper.parseText(configString))
         }
-        JsonSlurper jsonSlurper = new JsonSlurper()
-        jsonSlurper.parseText(config)
+
+        this.config
     }
 
-    public synchronized List<Map> getStatisticsGroup(int groupNumber) {
+    public List<Map> getStatisticsGroupFromCache(int groupNumber) {
+        fromCache(groupNumber)
+    }
+
+    public List<Map> getStatisticsGroup(int groupNumber) {
 
         Map config = getConfig()
-        List<Map> statistics = fromCache(groupNumber)
-        if (!statistics) {
-            log.info("Cache miss for homepage stats, key: ${groupNumber}")
-            statistics = this.config.groups[groupNumber].collect { statisticName ->
-                Map statistic = config.statistics[statisticName]
-                evaluateStatistic(statistic)
+        List groupConfig = config.groups[groupNumber]
+        if (!groupConfig) {
+            log.error("No configuration found for group number: ${groupNumber}")
+            return null
+        }
+
+        List<Map> statistics
+        // Only one thread should recalculate the statistics.  The config is a shared
+        // synchronized instance so is safe to synchronize on.
+        synchronized (groupConfig) {
+            statistics = fromCache(groupNumber)
+            if (!statistics) {
+                log.info("Cache miss for homepage stats, key: ${groupNumber} - recalculating...")
+                statistics = groupConfig.collect { statisticName ->
+                    Map statistic = config.statistics[statisticName]
+                    evaluateStatistic(statistic)
+                }
+                log.info("Caching homepage stats, key: ${groupNumber}")
+                cache(groupNumber, statistics)
             }
-            cache(groupNumber, statistics)
         }
         statistics
     }
@@ -87,13 +113,19 @@ class StatisticsFactory {
         stats
     }
 
-    public Map randomGroup(int exclude = -1) {
+    public Map randomGroup(int exclude = -1, boolean recacluateIfMissing = false) {
         int groupCount = getGroupCount()
         int group = Math.floor(Math.random()*groupCount)
         while (group == exclude) {
             group = Math.floor(Math.random()*groupCount)
         }
-        List stats = getStatisticsGroup(group)
+        List stats
+        if (recacluateIfMissing) {
+            stats = getStatisticsGroup(group)
+        }
+        else {
+            stats = getStatisticsGroupFromCache(group)
+        }
 
         [group:group, statistics:stats]
     }
