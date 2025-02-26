@@ -49,7 +49,7 @@ class BdrTokenConfig {
     }
 
     @Bean
-    TokenService bdrTokenService(
+    TokenService oidcBdrTokenService(
             @Autowired(required = false) OidcConfiguration bdrOidcConfiguration,
             @Autowired(required = false) SessionStoreFactory sessionStoreFactory,
             @Autowired TokenClient tokenClient

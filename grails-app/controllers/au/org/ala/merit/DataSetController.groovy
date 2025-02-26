@@ -169,7 +169,7 @@ class DataSetController {
         if (!format) {
             format = supportedFormats[0]
         }
-        if (!format in supportedFormats) {
+        if (format !in supportedFormats) {
             render status: HttpStatus.BAD_REQUEST
             return
         }
@@ -185,7 +185,7 @@ class DataSetController {
         if (!format) {
             format = supportedFormats[0]
         }
-        if (!format in supportedFormats) {
+        if (format !in supportedFormats) {
             render status: HttpStatus.BAD_REQUEST
             return
         }

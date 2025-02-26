@@ -1,23 +1,10 @@
 package au.org.ala.merit
 
 import au.org.ala.ws.tokens.TokenService
-import com.azure.core.credential.AccessToken
-import com.azure.core.credential.TokenRequestContext
-import com.azure.core.implementation.AccessTokenCache
-import com.azure.identity.ClientAssertionCredential
-import com.azure.identity.ClientAssertionCredentialBuilder
-import com.nimbusds.jwt.JWT
 import grails.converters.JSON
 import grails.core.GrailsApplication
 import groovy.util.logging.Slf4j
-import org.pac4j.oidc.profile.OidcProfile
-import software.amazon.awssdk.services.cognitoidentity.CognitoIdentityClient
-import software.amazon.awssdk.services.cognitoidentity.model.GetIdRequest
-import software.amazon.awssdk.services.cognitoidentity.model.GetIdResponse
-import software.amazon.awssdk.services.cognitoidentity.model.GetOpenIdTokenRequest
-import software.amazon.awssdk.services.cognitoidentity.model.GetOpenIdTokenResponse
 
-import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletResponse
 
 /**
@@ -30,11 +17,8 @@ class BdrService {
     WebService webService
     TokenService tokenService
     CommonService commonService
-    TokenService bdrTokenService
+    BdrTokenService bdrTokenService
 
-    AccessTokenCache accessTokenCache
-
-    static String FORMAT_GEOJSON = 'application/geo+json'
     static Map FILE_EXTENSION_MAP = [
             'application/geo+json': 'geojson',
             'application/json': 'json',
@@ -57,7 +41,7 @@ class BdrService {
     }
 
     private void executeBdrQuery(String query, String format, HttpServletResponse response, int limit, String fileName) {
-        String azureToken = getAzureAccessToken()
+        String azureToken = bdrTokenService.getBDRAccessToken()
 
         String bdrBaseUrl = grailsApplication.config.getProperty('bdr.api.url')
         Integer readTimeout = grailsApplication.config.getProperty('bdr.api.readTimeout', Integer, 60000)
@@ -77,39 +61,6 @@ class BdrService {
                 'Content-Disposition': 'attachment; filename="'+fileNameWithExtension+'"',
         ]
         webService.proxyGetRequest(response, url, WebService.AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN, readTimeout, azureToken, headers)
-    }
-
-    /**
-     * The way MERIT authenticates with the BDR is via an Azure federated identity.
-     * MERIT exchanges a token with known subject and audience claims for an Azure token.
-     * @param alaToken the ALA token to exchange for a BDR token
-     * @return the Azure token
-     */
-    @PostConstruct
-    private void buildAzureAccessTokenCache() {
-
-        String azureTenantId = grailsApplication.config.getProperty('bdr.azure.tenantId')
-        String azureClientId = grailsApplication.config.getProperty('bdr.azure.clientId')
-
-        ClientAssertionCredential credentials = new ClientAssertionCredentialBuilder()
-                .tenantId(azureTenantId)
-                .clientId(azureClientId)
-                .clientAssertion {  bdrTokenService.getAuthToken(false)?.getValue() }
-                .build()
-
-        accessTokenCache = new AccessTokenCache(credentials)
-
-    }
-
-    private String getAzureAccessToken() {
-        // Scope to request when authenticating with Azure
-        String azureApiAccessScope = grailsApplication.config.getProperty('bdr.azure.apiScope')
-
-        TokenRequestContext tokenRequestContext = new TokenRequestContext()
-        tokenRequestContext.addScopes(azureApiAccessScope)
-
-        AccessToken accessToken = accessTokenCache.getTokenSync(tokenRequestContext, false)
-        accessToken.getToken()
     }
 
     private static Map dataSetQuery(String dataSetId) {
@@ -134,38 +85,5 @@ class BdrService {
         query
     }
 
-
-    String getTokenFromCognitoIdentityPool(String userToken) {
-
-        OidcProfile oidcProfile = tokenService.profileManager.getProfile(OidcProfile).orElse(null)
-        JWT idTokenJWT = oidcProfile.getIdToken()
-        String idToken = idTokenJWT.serialize()
-        CognitoIdentityClient client = CognitoIdentityClient.builder().build()
-
-        String identityPoolId = grailsApplication.config.getProperty('bdr.cognito.identityPoolId')
-        String identityProvider = "" // Extract from token iss claim minus https:// prefix
-        GetIdRequest getIdRequest = GetIdRequest.builder()
-                .identityPoolId(identityPoolId)
-                .logins((identityProvider):idToken).build()
-        GetIdResponse getIdResponse = client.getId(getIdRequest)
-        String identityId = getIdResponse.identityId()
-        GetOpenIdTokenRequest request = GetOpenIdTokenRequest.builder()
-                .identityId(identityId)
-                .logins((identityProvider):idToken).build()
-
-        GetOpenIdTokenResponse getOpenIdTokenResponse = client.getOpenIdToken(request)
-        String accessToken = getOpenIdTokenResponse.token()
-
-//        GetCredentialsForIdentityRequest credentialsRequest = GetCredentialsForIdentityRequest.builder()
-//                .identityId(identityId)
-//                .logins("cognito-idp.ap-southeast-2.amazonaws.com/ap-southeast-2_OOXU9GW39":idToken).build()
-//
-//        GetCredentialsForIdentityResponse credentialsResponse = client.getCredentialsForIdentity(credentialsRequest)
-//        Credentials credentials = credentialsResponse.credentials()
-//
-//        String accessToken = credentials.sessionToken()
-
-        accessToken
-    }
 }
 
