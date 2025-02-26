@@ -65,9 +65,8 @@ class BdrService {
         String encodedQuery = URLEncoder.encode(query, "UTF-8")
 
         String fileNameWithExtension = buildFileName(fileName, format)
-        if (format == FORMAT_GEOJSON) {
-            url+="&_profile="+"bdr-feature-human"
-        }
+
+        url+="&_profile="+"bdr-feature-human"
         url+="&limit=$limit"
         url+="&filter="+encodedQuery
 
