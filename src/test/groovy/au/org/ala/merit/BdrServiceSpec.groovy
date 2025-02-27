@@ -35,9 +35,12 @@ class BdrServiceSpec extends Specification implements ServiceUnitTest<BdrService
         String format = "application/json"
         String fileName = "testFile"
         String azureToken = "testAzureToken"
-        String bdrBaseUrl = "https://changeMe.org.au/api"
-        int readTimeout = 60000
-        String url = "$bdrBaseUrl/cql?_mediatype=application%2Fjson&_profile=bdr-feature-human&limit=1000&filter="
+        String expectedBdrApiUrl = "https://changeMe.org.au/api"
+        Map expectedParams = [
+                _mediatype: format,
+                _profile: "bdr-feature-human",
+                limit: 1000,
+                filter: (service.projectQuery(projectId) as JSON).toString() ] // Copying and pasting the encoded query doesn't test the query works and makes it less maintainable.
         Map headers = ['Content-Disposition': 'attachment; filename="testFile.json"']
 
         when:
@@ -45,7 +48,7 @@ class BdrServiceSpec extends Specification implements ServiceUnitTest<BdrService
 
         then:
         1 * bdrTokenService.getBDRAccessToken() >> azureToken
-        1 * webService.proxyGetRequest(response, { it.startsWith(url) }, WebService.AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN, readTimeout, azureToken, headers)
+        1 * webService.proxyGetRequest(response, expectedBdrApiUrl, expectedParams, WebService.AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN, readTimeout, azureToken, headers)
     }
 
     def "test downloadDataSet"() {
@@ -56,8 +59,13 @@ class BdrServiceSpec extends Specification implements ServiceUnitTest<BdrService
         String fileName = "testFile"
         int readTimeout = 60000
         String azureToken = "testAzureToken"
-        String bdrBaseUrl = "https://changeMe.org.au/api"
-        String url = "$bdrBaseUrl/cql?_mediatype=application%2Fjson&_profile=bdr-feature-human&limit=1000&filter="
+        String expectedBdrApiUrl = "https://changeMe.org.au/api"
+        Map expectedParams = [
+                _mediatype: format,
+                _profile: "bdr-feature-human",
+                limit: 1000,
+                filter: (service.dataSetQuery(dataSetId) as JSON).toString() // Copying and pasting the encoded query doesn't test the query works and makes it less maintainable.
+        ]
         Map headers = ['Content-Disposition': 'attachment; filename="testFile.json"']
 
         when:
@@ -65,6 +73,6 @@ class BdrServiceSpec extends Specification implements ServiceUnitTest<BdrService
 
         then:
         1 * bdrTokenService.getBDRAccessToken() >> azureToken
-        1 * webService.proxyGetRequest(response, { it.startsWith(url) }, WebService.AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN, readTimeout, azureToken, headers)
+        1 * webService.proxyGetRequest(response, expectedBdrApiUrl, expectedParams, WebService.AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN, readTimeout, azureToken, headers)
     }
 }

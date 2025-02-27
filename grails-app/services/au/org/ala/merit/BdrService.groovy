@@ -19,6 +19,8 @@ class BdrService {
     CommonService commonService
     BdrTokenService bdrTokenService
 
+    static String BDR_CQL_API_PATH = '/cql'
+
     static Map FILE_EXTENSION_MAP = [
             'application/geo+json': 'geojson',
             'application/json': 'json',
@@ -45,22 +47,22 @@ class BdrService {
 
         String bdrBaseUrl = grailsApplication.config.getProperty('bdr.api.url')
         Integer readTimeout = grailsApplication.config.getProperty('bdr.api.readTimeout', Integer, 60000)
-        String url = bdrBaseUrl+'/cql?_mediatype='+URLEncoder.encode(format, 'UTF-8')
-        String encodedQuery = URLEncoder.encode(query, "UTF-8")
+        String url = bdrBaseUrl+BDR_CQL_API_PATH
+
+        Map params = [
+                _mediatype: format,
+                _profile: "bdr-feature-human",
+                limit: limit,
+                filter: query
+        ]
+
+        log.info("Downloading data set from BDR: $url and params: $params")
 
         String fileNameWithExtension = buildFileName(fileName, format)
-
-        url+="&_profile="+"bdr-feature-human"
-        url+="&limit=$limit"
-        url+="&filter="+encodedQuery
-
-        log.info("Downloading data set from BDR: $url")
-
-
         Map headers = [
                 'Content-Disposition': 'attachment; filename="'+fileNameWithExtension+'"',
         ]
-        webService.proxyGetRequest(response, url, WebService.AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN, readTimeout, azureToken, headers)
+        webService.proxyGetRequest(response, url, params, WebService.AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN, readTimeout, azureToken, headers)
     }
 
     private static Map dataSetQuery(String dataSetId) {
