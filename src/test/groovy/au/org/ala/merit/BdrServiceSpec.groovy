@@ -34,8 +34,9 @@ class BdrServiceSpec extends Specification implements ServiceUnitTest<BdrService
         String projectId = "testProjectId"
         String format = "application/json"
         String fileName = "testFile"
+        int readTimeout = 60000
         String azureToken = "testAzureToken"
-        String expectedBdrApiUrl = "https://changeMe.org.au/api"
+        String expectedBdrApiUrl = "https://changeMe.org.au/api/cql"
         Map expectedParams = [
                 _mediatype: format,
                 _profile: "bdr-feature-human",
@@ -59,7 +60,7 @@ class BdrServiceSpec extends Specification implements ServiceUnitTest<BdrService
         String fileName = "testFile"
         int readTimeout = 60000
         String azureToken = "testAzureToken"
-        String expectedBdrApiUrl = "https://changeMe.org.au/api"
+        String expectedBdrApiUrl = "https://changeMe.org.au/api/cql"
         Map expectedParams = [
                 _mediatype: format,
                 _profile: "bdr-feature-human",
