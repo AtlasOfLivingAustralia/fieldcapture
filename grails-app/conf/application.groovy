@@ -251,6 +251,17 @@ security {
         requiredClaims = ["sub", "iat", "exp", "jti", "client_id"]
     }
 }
+bdr.api.url="https://changeMe.org.au/api"
+bdr.api.readTimeout=60000
+bdr['client-id']="changeMe"
+bdr['client-secret']="changeMe"
+bdr.discoveryUri="https://changeMe.org.au/.well-known"
+bdr.jwtScopes="read"
+bdr.azure.clientId='changeMe'
+bdr.azure.tenantId='changeMe'
+bdr.azure.apiScope='api://changeme/.default'
+//bdr.dataSet.formats=["application/geo+json","application/rdf+xml", "text/turtle", "application/ld+json", "application/n-triples"]
+bdr.dataSet.formats=["application/geo+json", "text/turtle"]
 
 webservice.jwt = true
 webservice['jwt-scopes'] = "ala/internal users/read ala/attrs ecodata/read_test ecodata/write_test"
@@ -302,6 +313,8 @@ environments {
         app.default.hub='merit'
         wiremock.port = 8018
         security.oidc.discoveryUri = "http://localhost:${wiremock.port}/cas/oidc/.well-known"
+        security.jwt.discoveryUri = "http://localhost:${wiremock.port}/cas/oidc/.well-known"
+        bdr.discoveryUri = "http://localhost:${wiremock.port}/cas/oidc/.well-known"
         security.oidc.allowUnsignedIdTokens = true
         security.oidc.clientId="oidcId"
         security.oidc.secret="oidcSecret"
@@ -333,6 +346,7 @@ environments {
         spatial.baseUrl = "http://localhost:${wiremock.port}"
         spatial.layersUrl = spatial.baseUrl + "/ws"
         grails.mail.port = 3025 // com.icegreen.greenmail.util.ServerSetupTest.SMTP.port
+
     }
     production {
         grails.logging.jul.usebridge = false

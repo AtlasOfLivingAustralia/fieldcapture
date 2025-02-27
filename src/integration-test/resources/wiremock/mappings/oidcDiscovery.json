@@ -1,7 +1,6 @@
 {
   "request": {
-    "urlPath": "/cas/oidc/.well-known",
-    "method": "GET"
+    "urlPath": "/cas/oidc/.well-known"
   },
   "response": {
     "status": 200,

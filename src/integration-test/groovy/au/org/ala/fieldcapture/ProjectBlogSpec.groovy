@@ -103,7 +103,7 @@ class ProjectBlogSpec extends StubbedCasSpec {
         and:
         //Force to nav to overview page
         overviewBtn().click()
-        blogModule.blogs().size == 1
+        blogModule.blogs().size() == 1
 
 
         when:
