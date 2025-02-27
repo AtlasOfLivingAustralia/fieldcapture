@@ -30,8 +30,9 @@ class HomeIndexPageSpec extends StubbedCasSpec {
         to HomePage
 
         then:
-        waitFor 30,{ at HomePage}
-
+        waitFor 60, { // The homepage statistics are loaded via AJAX when the cache is cleared
+            box1.size() == 1
+        }
         and:
         box1[0].statTitle.text() == "THREATENED SPECIES STRATEGY"
         box1[0].statValue.text() =="3"
