@@ -9542,17 +9542,12 @@
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.investmentPriorities"
                     },
                     "constraints": {
+                      "textProperty": "label",
+                      "valueProperty": "value",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            }
-                          ],
-                          "url": "/project/listProjectInvestmentPriorities/"
+                          "context-path": "owner.investmentPriorities"
                         }
                       }
                     }
@@ -10544,17 +10539,12 @@
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.investmentPriorities"
                     },
                     "constraints": {
+                      "textProperty": "label",
+                      "valueProperty": "value",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            }
-                          ],
-                          "url": "/project/listProjectInvestmentPriorities/"
+                          "context-path": "owner.investmentPriorities"
                         }
                       }
                     }
@@ -12918,17 +12908,12 @@
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.investmentPriorities"
                     },
                     "constraints": {
+                      "textProperty": "label",
+                      "valueProperty": "value",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            }
-                          ],
-                          "url": "/project/listProjectInvestmentPriorities/"
+                          "context-path": "owner.investmentPriorities"
                         }
                       }
                     }
@@ -15016,17 +15001,12 @@
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.investmentPriorities"
                     },
                     "constraints": {
+                      "textProperty": "label",
+                      "valueProperty": "value",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            }
-                          ],
-                          "url": "/project/listProjectInvestmentPriorities/"
+                          "context-path": "owner.investmentPriorities"
                         }
                       }
                     }
@@ -20890,17 +20870,12 @@
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.investmentPriorities"
                     },
                     "constraints": {
+                      "textProperty": "label",
+                      "valueProperty": "value",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            }
-                          ],
-                          "url": "/project/listProjectInvestmentPriorities/"
+                          "context-path": "owner.investmentPriorities"
                         }
                       }
                     }
@@ -33008,17 +32983,12 @@
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.investmentPriorities"
                     },
                     "constraints": {
+                      "textProperty": "label",
+                      "valueProperty": "value",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            }
-                          ],
-                          "url": "/project/listProjectInvestmentPriorities/"
+                          "context-path": "owner.investmentPriorities"
                         }
                       }
                     }
@@ -35009,17 +34979,12 @@
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.investmentPriorities"
                     },
                     "constraints": {
+                      "textProperty": "label",
+                      "valueProperty": "value",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            }
-                          ],
-                          "url": "/project/listProjectInvestmentPriorities/"
+                          "context-path": "owner.investmentPriorities"
                         }
                       }
                     }
@@ -36008,17 +35973,12 @@
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.investmentPriorities"
                     },
                     "constraints": {
+                      "textProperty": "label",
+                      "valueProperty": "value",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            }
-                          ],
-                          "url": "/project/listProjectInvestmentPriorities/"
+                          "context-path": "owner.investmentPriorities"
                         }
                       }
                     }
@@ -39533,17 +39493,12 @@
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.investmentPriorities"
                     },
                     "constraints": {
+                      "textProperty": "label",
+                      "valueProperty": "value",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            }
-                          ],
-                          "url": "/project/listProjectInvestmentPriorities/"
+                          "context-path": "owner.investmentPriorities"
                         }
                       }
                     }
@@ -40748,17 +40703,12 @@
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.investmentPriorities"
                     },
                     "constraints": {
+                      "textProperty": "label",
+                      "valueProperty": "value",
                       "type": "pre-populated",
                       "config": {
                         "source": {
-                          "params": [
-                            {
-                              "expression": "owner.projectId",
-                              "name": "id",
-                              "type": "computed"
-                            }
-                          ],
-                          "url": "/project/listProjectInvestmentPriorities/"
+                          "context-path": "owner.investmentPriorities"
                         }
                       }
                     }
