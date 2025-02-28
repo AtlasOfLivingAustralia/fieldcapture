@@ -1750,8 +1750,10 @@
                       "Advertising",
                       "Books",
                       "Booklets",
+                      "Data Portals",
                       "Educational/Interpretive Signage",
                       "Event Flyers",
+                      "Exhibits/Installations",
                       "Extension materials",
                       "Fact Sheets",
                       "Marketing materials",
@@ -1761,7 +1763,8 @@
                       "Podcasts",
                       "Reports",
                       "Social media posts",
-                      "Videos"
+                      "Videos",
+                      "Websites"
                     ],
                     "validate": "required"
                   },
