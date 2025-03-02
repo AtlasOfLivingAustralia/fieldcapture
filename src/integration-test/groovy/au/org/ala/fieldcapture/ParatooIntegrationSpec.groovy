@@ -1,23 +1,14 @@
 package au.org.ala.fieldcapture
 
-import au.org.ala.web.Pac4jContextProvider
+
 import au.org.ala.ws.service.WebService
-import au.org.ala.ws.tokens.TokenClient
 import au.org.ala.ws.tokens.TokenService
-import com.nimbusds.oauth2.sdk.id.Issuer
-import com.nimbusds.openid.connect.sdk.SubjectType
-import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata
+import com.nimbusds.oauth2.sdk.token.AccessToken
+import com.nimbusds.oauth2.sdk.token.BearerAccessToken
 import groovy.json.JsonSlurper
 import org.apache.http.HttpStatus
 import org.apache.http.entity.ContentType
 import org.grails.testing.GrailsUnitTest
-import org.pac4j.core.config.Config
-import org.pac4j.core.context.WebContext
-import org.pac4j.jee.context.JEEContextFactory
-import org.pac4j.jee.context.session.JEESessionStore
-import org.pac4j.oidc.config.OidcConfiguration
-import org.springframework.mock.web.MockHttpServletRequest
-import org.springframework.mock.web.MockHttpServletResponse
 import pages.RlpProjectPage
 import spock.lang.Stepwise
 
@@ -40,26 +31,14 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
     }
 
     def setup() {
-        def config = Stub(Config)
-        def oidcConfiguration = Stub(OidcConfiguration)
-        oidcConfiguration.clientId >> testConfig.security.oidc.clientId
-        oidcConfiguration.secret >> testConfig.security.oidc.secret
-        def providerMetadata = new OIDCProviderMetadata(new Issuer(testConfig.issuerURI), [SubjectType.PUBLIC], testConfig.jwkURI.toURI())
-        providerMetadata.setTokenEndpointURI(testConfig.tokenURI.toURI())
-        oidcConfiguration.findProviderMetadata() >> providerMetadata
-        def request = new MockHttpServletRequest()
-        request.getSession(true)
-        def response = new MockHttpServletResponse()
-        def pac4jContextProvider = new Pac4jContextProvider() {
-            @Override
-            WebContext webContext() {
-                JEEContextFactory.INSTANCE.newContext(request, response)
-            }
-        }
-        def sessionStore = JEESessionStore.INSTANCE
-        def tokenClient = new TokenClient(oidcConfiguration)
-        def tokenService = new TokenService(config, oidcConfiguration, pac4jContextProvider, sessionStore, tokenClient, testConfig.webservice["client-id"], testConfig.webservice["client-secret"], testConfig.webservice["jwt-scopes"], false)
+        String token = tokenForUser('1')
+        AccessToken accessToken = new BearerAccessToken(token)
+        TokenService tokenService = Stub(TokenService)
+        tokenService.getAuthToken(true) >> accessToken
 
+        String m2mToken = setupTokenForSystem()
+        AccessToken m2mAccessToken = new BearerAccessToken(m2mToken)
+        tokenService.getAuthToken(false) >> m2mAccessToken
         webService = new WebService(grailsApplication: getGrailsApplication(), tokenService: tokenService)
     }
 
@@ -163,7 +142,7 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
         when:
         collectionPayload.orgMintedUUID = orgMintedUUID
         url = testConfig.ecodata.baseUrl + '/paratoo/collection'
-        resp = webService.post(url, collectionPayload, null, ContentType.APPLICATION_JSON, false, false, headers)
+        resp = webService.post(url, collectionPayload, null, ContentType.APPLICATION_JSON, true, false, headers)
 
         then:
         resp.statusCode == HttpStatus.SC_OK
@@ -205,6 +184,7 @@ class ParatooIntegrationSpec extends StubbedCasSpec implements GrailsUnitTest {
             callables.add(callable)
         }
         executor.invokeAll(callables)
+
 
         String url = testConfig.ecodata.baseUrl + 'project/'+projectId
         Map resp = webService.get(url, [:], ContentType.APPLICATION_JSON, true, false)
