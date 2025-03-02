@@ -5423,55 +5423,6 @@
                   }
                 ]
               },
-
-              {
-                "dataType": "number",
-                "name": "areaInvoicedHa",
-                "units": "ha",
-                "decimalPlaces": 3,
-                "validate": [
-                  {
-                    "rule": "required"
-                  },
-                  {
-                    "rule": "min[0]"
-                  },
-                  {
-                    "param": {
-                      "expression": "areaTreatedHa",
-                      "type": "computed"
-                    },
-                    "rule": "max"
-                  }
-                ]
-              },
-              {
-                "dataType": "text",
-                "name": "invoicedNotActualReason",
-                "behaviour": [
-                  {
-                    "condition": "roundTo(areaTreatedHa, 2) != roundTo(areaInvoicedHa, 2)",
-                    "type": "visible"
-                  }
-                ],
-                "constraints": [
-                  "Work was undertaken over a greater area than will be invoiced for",
-                  "Other"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "invoicedNotActualComments",
-                "behaviour": [
-                  {
-                    "condition": "\"Other\" == invoicedNotActualReason",
-                    "type": "visible"
-                  }
-                ],
-                "validate": "required,maxSize[300]"
-              },
-
               {
                 "columns": [
                   {
@@ -5804,46 +5755,6 @@
                           {
                             "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
                             "source": "mappingNotAlignedComments",
-                            "type": "textarea",
-                            "rows": 5
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "col",
-                    "css": "span3 col-border-right",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Invoiced area (ha) covered by the plan/s",
-                            "source": "areaInvoicedHa",
-                            "type": "number",
-                            "displayOptions": {
-                              "displayUnits": true
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "preLabel": "Reason for invoiced amount being different to actual amount",
-                            "source": "invoicedNotActualReason",
-                            "type": "selectOne"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "placeholder": "Please enter the reason/s the mapping didn't align with the invoiced amount",
-                            "source": "invoicedNotActualComments",
                             "type": "textarea",
                             "rows": 5
                           }
@@ -27211,18 +27122,6 @@
           },
           {
             "dataType": "text",
-            "name": "totalInvoicedResearchAndDevelopmentMismatched",
-            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
-            "validate": "maxSize[400],required",
-            "behaviour": [
-              {
-                "condition": "+noDaysConductingResearchAndDevelopmentInvoiced < +noDaysConductingResearchAndDevelopment or +noHoursConductingResearchAndDevelopmentInvoiced < noHoursConductingResearchAndDevelopment",
-                "type": "enable"
-              }
-            ]
-          },
-          {
-            "dataType": "text",
             "name": "comments",
             "validate": "maxSize[1500]"
           },
@@ -27342,16 +27241,6 @@
                         "type": "number"
                       }
                     ]
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(ii) Total number of days conducting research and/or development <u><i>invoiced</i></u> for this reporting period",
-                        "source": "noDaysConductingResearchAndDevelopmentInvoiced",
-                        "type": "number"
-                      }
-                    ]
                   }
                 ]
               },
@@ -27363,35 +27252,13 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iii) Total number of hours conducting research and/or development for this reporting period",
+                        "preLabel": "(ii) Total number of hours conducting research and/or development for this reporting period",
                         "source": "noHoursConductingResearchAndDevelopment",
-                        "type": "number"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(iv) Total number of hours conducting research and/or development <u><i>invoiced</i></u> for this reporting period",
-                        "source": "noHoursConductingResearchAndDevelopmentInvoiced",
                         "type": "number"
                       }
                     ]
                   }
                 ]
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
-                "source": "totalInvoicedResearchAndDevelopmentMismatched",
-                "type": "textarea",
-                "rows": 4,
-                "placeholder": ""
               }
             ]
           },
