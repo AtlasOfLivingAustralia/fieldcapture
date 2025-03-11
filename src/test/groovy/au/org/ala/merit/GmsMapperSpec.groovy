@@ -30,7 +30,7 @@ class GmsMapperSpec extends Specification{
         activitiesModel = JSON.parse(new InputStreamReader(getClass().getResourceAsStream('/activities-model.json')))
         Map programModel = [programs:[[name:'Green Army']]]
         List organisations = [[ organisationId: "123", name:'Test org 1', abn:'12345678901'], [organisationId:'2', name:"Org 2", abn:""]]
-        gmsMapper = new GmsMapper(activitiesModel, programModel, organisations, abnLookupService, scores, programs)
+        gmsMapper = new GmsMapper(activitiesModel, programModel, organisations, abnLookupService, scores, programs, [:], false, false)
     }
 
     /**

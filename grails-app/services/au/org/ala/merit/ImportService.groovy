@@ -307,8 +307,7 @@ class ImportService {
             mu?.managementUnitId
         }
         refreshOrganisationList()
-        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), organisations, abnLookupService, metadataService.getOutputTargetScores(), programs, managementUnits)
-
+        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), organisations, abnLookupService, metadataService.getOutputTargetScores(), programs, managementUnits, false, update)
         def action = preview?{rows -> mapProjectRows(rows, status, mapper, update)}:{rows -> importAll(rows, status, mapper, update)}
 
         Map result = [:]
@@ -360,7 +359,7 @@ class ImportService {
 
     def mapProjectRows(projectRows, List status, GmsMapper mapper, Boolean update) {
 
-        Map mappingResults = mapper.mapProject(projectRows)
+        Map mappingResults = mapper.mapProject(projectRows, update)
 
         String grantId = mappingResults.project.grantId
         String externalId = mappingResults.project.externalId
@@ -393,9 +392,6 @@ class ImportService {
             def adminEmail2 = projectDetails.project.remove('adminEmail2')
             def editorEmail = projectDetails.project.remove('editorEmail')
             def editorEmail2 = projectDetails.project.remove('editorEmail2')
-
-            //When projects are loaded into MERIT via CSV upload, they are given a status of "Application".
-            projectDetails.project.status ?: 'application'
 
             // Create the organisation first so we can link it to the project.
             if (projectDetails.organisation) {
