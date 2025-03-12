@@ -28,8 +28,8 @@ class ImageService {
         Map resp = webService.postMultipart(grailsApplication.config.getProperty('ecodata.baseUrl') + "document/createThumbnail", [size: size], imageIn, contentType, thumbnailFile.name, 'image')
         if (resp.statusCode == HttpStatus.SC_OK) {
             def thumbnailData = resp.resp
-            if (thumbnailData instanceof InputStream) {
-                new FileOutputStream(thumbnailFile).withStream { it << thumbnailData }
+            if (thumbnailData instanceof byte[]) {
+                new FileOutputStream(thumbnailFile).withStream { it << new ByteArrayInputStream(thumbnailData) }
             }
         }
         return thumbnailFile.exists()
