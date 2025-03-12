@@ -9,6 +9,7 @@ import com.drew.metadata.exif.GpsDirectory
 import groovy.util.logging.Slf4j
 import groovyx.net.http.HttpResponseDecorator
 import grails.core.GrailsApplication
+import org.apache.http.HttpStatus
 
 @Slf4j
 class ImageService {
@@ -23,14 +24,14 @@ class ImageService {
      * @return true if the thumbail was generated.
      */
     boolean createThumbnail(InputStream imageIn, File thumbnailFile, String contentType, int size = 300) {
-        Closure saveThumbnail = { HttpResponseDecorator resp, Object parsedData ->
-            if (parsedData instanceof InputStream) {
-                new FileOutputStream(thumbnailFile).withStream { it << parsedData }
+
+        Map resp = webService.postMultipart(grailsApplication.config.getProperty('ecodata.baseUrl') + "document/createThumbnail", [size: size], imageIn, contentType, thumbnailFile.name, 'image')
+        if (resp.statusCode == HttpStatus.SC_OK) {
+            def thumbnailData = resp.resp
+            if (thumbnailData instanceof InputStream) {
+                new FileOutputStream(thumbnailFile).withStream { it << thumbnailData }
             }
         }
-
-        webService.postMultipart(grailsApplication.config.getProperty('ecodata.baseUrl') + "document/createThumbnail", [size: size], imageIn, contentType, thumbnailFile.name, 'image', saveThumbnail)
-
         return thumbnailFile.exists()
 
     }
