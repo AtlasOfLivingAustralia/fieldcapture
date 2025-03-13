@@ -11,13 +11,14 @@ import pages.RlpProjectPage
 @Slf4j
 class ImportProjectsSpec extends StubbedCasSpec {
 
-    def setup() {
+    def setupSpec() {
         useDataSet('dataset2')
         loginAsAlaAdmin(browser)
         to AdminTools
         clearMetadata()
         to AdminClearCachePage
         clearProgramListCache()
+        at AdminClearCachePage // reset at check time
         clearServiceListCache()
     }
 
