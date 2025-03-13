@@ -986,7 +986,7 @@ class ProjectController {
         render results as JSON
     }
 
-    @PreAuthorise
+    @PreAuthorise(accessLevel = 'readOnly')
     def scoresForReport(String id) {
         List scoreIds = params.getList('scoreIds')
         String reportId = params.get('reportId')
@@ -996,7 +996,7 @@ class ProjectController {
         render result as JSON
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly')
     def projectTargetsAndScores(String id) {
         boolean approvedDataOnly = params.getBoolean("approvedDataOnly", true)
         Map result = projectService.getServiceDashboardData(id, approvedDataOnly)
@@ -1026,7 +1026,7 @@ class ProjectController {
         render response as JSON
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly')
     def targetsAndScoresForActivity(String id, String activityId) {
         if (!id || !activityId || !projectService.doesActivityBelongToProject(id, activityId)) {
             error('An invalid activity was selected', id)
@@ -1128,19 +1128,19 @@ class ProjectController {
      * @param id the project id of the project of interest
      * @return a List of outcomes selected in the project MERI plan
      */
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly')
     def listProjectInvestmentPriorities(String id) {
         List investmentPriorities = projectService.listProjectInvestmentPriorities(id)
         investmentPriorities <<  "Other"
         render investmentPriorities as JSON
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly')
     def projectPrioritiesByOutcomeType(String id) {
         render projectService.projectPrioritiesByOutcomeType(id) as JSON
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly')
     def monitoringProtocolFormCategories() {
         String MONITORING_TAG = 'survey'
         List<Map> forms = activityService.monitoringProtocolForms()
@@ -1150,7 +1150,7 @@ class ProjectController {
         render categories as JSON
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly')
     def outcomesByScores(String id) {
         List scoreIds = params.getList('scoreIds')
         if (!scoreIds) {

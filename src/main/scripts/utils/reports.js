@@ -283,3 +283,27 @@ function createReportForProject(reportDetails, project, adminUserId) {
     audit(savedActivity, savedActivity.activityId, 'au.org.ala.ecodata.Activity', adminUserId, project.projectId);
 
 }
+
+
+function deleteActivity(activityId, adminUserId) {
+
+
+    let activity = db.activity.findOne({activityId: activityId});
+    print("deleting activity: "+activityId+" "+activity.description);
+    if (activity) {
+        activity.status = 'deleted';
+
+        db.activity.replaceOne({activityId: activityId}, activity);
+        audit(activity, activity.activityId, 'au.org.ala.ecodata.Activity', adminUserId, activity.projectId);
+
+        let outputs = db.output.find({activityId: activityId});
+        while (outputs.hasNext()) {
+            let output = outputs.next();
+            output.status = 'deleted';
+            print("deleting output: "+output.outputId+" "+output.name);
+            db.output.replaceOne({outputId: output.outputId}, output);
+            audit(output, output.outputId, 'au.org.ala.ecodata.Output', adminUserId, activity.projectId);
+        }
+    }
+
+}
