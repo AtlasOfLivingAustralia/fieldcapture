@@ -8777,7 +8777,7 @@
                 "name": "rowCount",
                 "decimalPlaces": 0,
                 "computed": {
-                  "expression": "sum(agreementsTable, \"numberOfAgreements\")"
+                  "expression": "sum(agreementsTable, \"agreementType ? 1 : 0\")"
                 }
               }
             ],
@@ -9080,24 +9080,18 @@
                       },
                       {
                         "width": "10%",
-                        "source": "numberOfAgreements",
-                        "type": "number",
-                        "title": "Number of agreements established"
-                      },
-                      {
-                        "width": "10%",
                         "source": "yearsOfTheAgreement",
                         "type": "number",
                         "title": "Length (years of the agreement)"
                       },
                       {
-                        "width": "25%",
+                        "width": "30%",
                         "source": "agreementPurpose",
                         "title": "Purpose of agreement",
                         "type": "textarea"
                       },
                       {
-                        "width": "25%",
+                        "width": "30%",
                         "source": "agreementMadeWith",
                         "title": "Who the agreement was made with?",
                         "type": "textarea"
@@ -9105,6 +9099,7 @@
                     ],
                     "userAddedRows": true,
                     "source": "agreementsTable",
+                    "title": "<b>Please report on each agreement in a separate row using the ‘+Add a row’ button</b>",
                     "type": "table"
                   }
                 ]
