@@ -10633,7 +10633,7 @@
                     ],
                     "userAddedRows": true,
                     "source": "agreementsTable",
-                    "title": "<b>Please report on each agreement in a separate row using the ‘+Add a row’ button</b>",
+                    "title": "<b style=\"color:red\">Please report on each agreement in a separate row using the ‘+Add a row’ button’.  Where the agreement relates to an area, please report each agreement and it’s area using the ‘+Add a new agreement area’ button below.</b>",
                     "type": "table"
                   }
                 ]
