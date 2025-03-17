@@ -101,11 +101,29 @@ for (let i=0; i<scores.length; i+=2) {
     }
 }
 
-var excludedPrograms = []
 var programServices = [
     {
         serviceTargets: [scoreId],
         serviceId: NumberInt(49)
     }
 ];
+
+// RDP panel procurements are excluded
+var excludedPrograms = []
+db.program.find({'config.programServiceConfig.serviceFormName': {"$eq": 'NHT Output Report'}})
+    .forEach(function (program) {
+        excludedPrograms.push(program.name)
+    });
+
+var programs = db.program.find({name: {$nin: excludedPrograms}, 'config.meriPlanContents.template':'extendedKeyThreats'})
+while (programs.hasNext()) {
+    var program = programs.next();
+    programServices.forEach(function (programService) {
+        updateProgramServiceConfig(program, programService.serviceId, programService.serviceTargets);
+    });
+
+    db.program.updateOne({programId: program.programId}, {$set: {config: program.config}});
+    audit(program, program.programId, 'au.org.ala.ecodata.Program', userId, undefined, "Update");
+    print("Updated "+ program.name);
+}
 
