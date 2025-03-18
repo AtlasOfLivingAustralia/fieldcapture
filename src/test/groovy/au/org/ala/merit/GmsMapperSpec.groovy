@@ -412,4 +412,19 @@ class GmsMapperSpec extends Specification{
                                        [idType:'GRANT_AWARD', externalId: 'g1'], [idType:'GRANT_AWARD', externalId: 'g2']]
         !result.errors
     }
+
+    def "The GMSMapper can update multi-column values such as the externalIds"() {
+        when:
+        Map project = [APP_ID:'g1', PROGRAM_NM:"Green Army", ORG_TRADING_NAME:'Test org 1', ABN:'12345678901', FUNDING_TYPE:"RLP", START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        Map idData = [ORDER_NO:'o1', ORDER_NO_2:'o2', WORK_ORDER_ID:'w1', GRANT_AWARD_ID:'g1', GRANT_AWARD_ID_2:'g2', TECH_ONE_ID:'t1', TECH_ONE_ID_2:'t2']
+        project += idData
+        Map result = gmsMapper.mapProject([project], true)
+
+        then:
+        result.project.externalIds == [[idType:'INTERNAL_ORDER_NUMBER', externalId: 'o1'], [idType:'INTERNAL_ORDER_NUMBER', externalId: 'o2'],
+                                       [idType:'TECH_ONE_CODE', externalId: 't1'], [idType:'TECH_ONE_CODE', externalId: 't2'],
+                                       [idType:'WORK_ORDER', externalId: 'w1'],
+                                       [idType:'GRANT_AWARD', externalId: 'g1'], [idType:'GRANT_AWARD', externalId: 'g2']]
+        !result.errors
+    }
 }

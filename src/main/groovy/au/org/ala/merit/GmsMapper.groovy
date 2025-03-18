@@ -642,10 +642,10 @@ class GmsMapper {
                 String propertyName = columnMapping.name
                 if (columnMapping.multipleColumnsSupported) {
                     List values = findMultiValue(mappingColumnName, rowMap)
-                    if (!result[propertyName] && !update) {
+                    values = values.findAll{it}
+                    if (!result[propertyName] && (values || !update)) {
                         result[propertyName] = []
                     }
-                    values = values.findAll{it}
                     if (values || !update) {
                         result[propertyName].addAll(values.collect{convertByType(it, columnMapping, update)}.findAll{it})
                     }
