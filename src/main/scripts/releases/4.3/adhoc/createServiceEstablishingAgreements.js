@@ -4,8 +4,8 @@ load('../../../utils/program.js');
 load("../../../utils/addService.js")
 
 const adminUserId = "system";
-const invoiceScoreId = '72dK3150f-763b-4taf-j49f-60a2dbda4398';
-const scoreId = '5803150k-653q-ubag-s49d-60a2dbda0784';
+const invoiceScoreId = '12dK3150f-763b-4taf-j49f-60a2dbda4311';
+const scoreId = '1103150k-653q-ubag-s49d-60a2dbda0711';
 var serviceName = "Establishing Agreements"
 var newOutputs = [
     {formName: "NHT Output Report", sectionName: serviceName},
@@ -14,7 +14,7 @@ var newOutputs = [
 ];
 
 
-addService(serviceName, NumberInt(48), undefined, undefined, newOutputs, adminUserId)
+addService(serviceName, NumberInt(49), undefined, undefined, newOutputs, adminUserId)
 
 let scores = [
     {
@@ -49,7 +49,7 @@ let scores = [
     }
     ,
     {
-        _id: ObjectId('576ddg76a458s30890b60jlk5'),
+        _id: ObjectId('517cde76a291e30890b60fd8'),
         scoreId: scoreId,
         label: 'Number of agreements established',
         status: 'active',

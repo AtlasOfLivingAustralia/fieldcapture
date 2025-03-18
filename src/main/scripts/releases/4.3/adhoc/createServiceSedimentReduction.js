@@ -28,7 +28,7 @@ let scores = [
         isOutputTarget: false,
         category: "Reporting",
         status: 'active',
-        label: 'Invoiced tonnes of sediment saved',
+        label: 'Invoiced tonnes of sediment saved/year',
         description: '',
         configuration: {
             childAggregations: [
@@ -52,7 +52,7 @@ let scores = [
     {
         _id: ObjectId('617cde76a291e30890b60fd8'),
         scoreId: '8d03150f-763b-4baf-b49f-60a2dbda0235',
-        label: 'Tonnes of sediment saved',
+        label: 'Tonnes of sediment saved/year',
         status: 'active',
         isOutputTarget: true,
         category: "Natural Heritage Trust",

@@ -10210,17 +10210,6 @@
                   },
                   {
                     "dataType": "number",
-                    "name": "numberOfAgreements",
-                    "validate": "required,min[0]"
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "numberOfDaysMaintainingAgreements",
-                    "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days).",
-                    "validate": "required,min[0]"
-                  },
-                  {
-                    "dataType": "number",
                     "name": "yearsOfTheAgreement",
                     "validate": "required,min[0]"
                   },
@@ -10243,7 +10232,7 @@
                 "name": "rowCount",
                 "decimalPlaces": 0,
                 "computed": {
-                  "expression": "sum(agreementsTable, \"numberOfAgreements\")"
+                  "expression": "sum(agreementsTable, \"agreementType ? 1 : 0\")"
                 }
               }
             ],
@@ -10625,24 +10614,18 @@
                       },
                       {
                         "width": "10%",
-                        "source": "numberOfAgreements",
-                        "type": "number",
-                        "title": "Number of agreements established"
-                      },
-                      {
-                        "width": "10%",
                         "source": "yearsOfTheAgreement",
                         "type": "number",
                         "title": "Length (years of the agreement)"
                       },
                       {
-                        "width": "25%",
+                        "width": "30%",
                         "source": "agreementPurpose",
                         "title": "Purpose of agreement",
                         "type": "textarea"
                       },
                       {
-                        "width": "25%",
+                        "width": "30%",
                         "source": "agreementMadeWith",
                         "title": "Who the agreement was made with?",
                         "type": "textarea"
@@ -10650,6 +10633,7 @@
                     ],
                     "userAddedRows": true,
                     "source": "agreementsTable",
+                    "title": "<b style=\"color:red\">Please report on each agreement in a separate row using the ‘+Add a row’ button’.  Where the agreement relates to an area, please report each agreement and it’s area using the ‘+Add a new agreement area’ button below.</b>",
                     "type": "table"
                   }
                 ]
