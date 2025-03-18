@@ -1,12 +1,12 @@
 <div id="project-partnership-view" class="well well-small">
-    <h4>Project partnerships</h4>
+    <h4>${title ?: 'Project partnerships'}</h4>
     <table class="table" id="project-partnerships">
         <thead>
         <tr>
             <th class="index"></th>
-            <th class="partner-name">Partner name</th>
-            <th class="partnership-nature">Nature of partnership</th>
-            <th class="partner-organisation-type">Type of organisation</th>
+            <th class="partner-name">${partnerNameHeading ?: 'Partner name'}</th>
+            <th class="partnership-nature">${naturePartnershipHeading ?: 'Nature of partnership'}</th>
+            <th class="partner-organisation-type">${typeOrganisationHeading ?: 'Type of organisation'}</th>
         </tr>
         </thead>
         <tbody>

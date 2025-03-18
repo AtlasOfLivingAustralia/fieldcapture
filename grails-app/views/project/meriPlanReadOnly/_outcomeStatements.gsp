@@ -13,8 +13,8 @@
         </g:else>
         <th class="outcome">${subtitle ?: ""} </th>
         <g:if test="${extendedOutcomes}">
-            <th class="investment-priority">Investment priority</th>
-            <th class="program-outcome">Related program outcome/s</th>
+            <th class="investment-priority">${investmentPriorityHeading ?: 'Investment priority'}</th>
+            <th class="program-outcome">${programOutcomeHeading ?: 'Related program outcome/s'}</th>
         </g:if>
     </tr>
     </thead>
