@@ -165,7 +165,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
 
         when:
         List status = []
-        Map result = service.gmsImport(csv, status, true, false)
+        Map result = service.projectImport(csv, status, true, false)
 
         then:
         1 * metadataService.organisationList() >> [list:[[name:"Test Organisation 2", organisationId:'org2Id', abn:'12345678901']]]
@@ -190,7 +190,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
 
         when:
         List status = []
-        Map result = service.gmsImport(csv, status, false, false)
+        Map result = service.projectImport(csv, status, false, false)
 
         then:
         1 * metadataService.organisationList() >> [list:[[name:"Test Organisation 2", organisationId:'org2Id', abn:'12345678901']]]

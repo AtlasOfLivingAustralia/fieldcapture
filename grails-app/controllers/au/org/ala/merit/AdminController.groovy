@@ -418,7 +418,7 @@ class AdminController {
             session.status = status
             def fileIn = new FileInputStream(file)
             try {
-                def result = importService.gmsImport(fileIn, status.projects, preview, update)
+                def result = importService.projectImport(fileIn, status.projects, preview, update)
                 status.finished = true
                 status.error = result.error
             }

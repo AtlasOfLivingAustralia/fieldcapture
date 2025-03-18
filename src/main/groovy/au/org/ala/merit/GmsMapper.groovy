@@ -267,13 +267,28 @@ class GmsMapper {
         }
 
         if (update) {
-            Set propertiesToUpdate = new HashSet(project.keySet())
+            Map flatProperties = flattenMap(project)
+            Set propertiesToUpdate = flatProperties.keySet()
             propertiesToUpdate.remove('grantId') // This identifies the project and won't be updated.
             messages << "Update: ${propertiesToUpdate}"
+
         }
 
         [project:project, sites:sites, activities:activities, errors:errors, messages:messages, organisation:organisation]
 
+    }
+
+    private Map flattenMap(Map map, String separator = '.') {
+        map.collectEntries { k, v ->
+            if (v instanceof Map) {
+                flattenMap(v, separator).collectEntries { k1, v1 ->
+                    String newKey = k+separator+k1
+                    [(newKey): v1]
+                }
+            } else {
+                [(k): v]
+            }
+        }
     }
 
     private Map mapProgram(LinkedHashMap<Object, Object> project, boolean update, ArrayList errors) {

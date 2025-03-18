@@ -297,7 +297,7 @@ class ImportService {
         organisations += metadataService.organisationList()?.list
     }
 
-    Map gmsImport(InputStream csv, List status, Boolean preview, Boolean update, String charEncoding = 'Cp1252') {
+    Map projectImport(InputStream csv, List status, Boolean preview, Boolean update, String charEncoding = 'Cp1252') {
 
         Map programs = [:].withDefault{name ->
             programService.getByName(name)
@@ -379,7 +379,7 @@ class ImportService {
 
     void importAll(projectRows, List status, GmsMapper mapper, Boolean update) {
 
-        def projectDetails = mapper.mapProject(projectRows)
+        def projectDetails = mapper.mapProject(projectRows, update)
 
         def grantId = projectDetails.project.grantId?:'<not mapped>'
         def externalId = projectDetails.project.externalId?:'<not mapped>'
@@ -405,7 +405,7 @@ class ImportService {
                 }
             }
 
-            def result = importProject(projectDetails.project, update) // Do not overwrite existing projects because of the impacts to sites / activities etc.
+            def result = importProject(projectDetails.project, update)
 
             if (result.project == 'existing' && !update) {
                 status << [grantId:grantId, externalId:externalId, success:false, errors:['Project already exists in MERIT, skipping']]
