@@ -7,8 +7,8 @@
     <tr>
         <th class="code"></th>
         <th class="outcome">${subtitle ?: ""} </th>
-        <th class="investment-priority">Investment priority</th>
-        <th class="program-outcome">Related program outcome/s</th>
+        <th class="investment-priority">${investmentPriorityHeading ?: 'Investment priority'}</th>
+        <th class="program-outcome">${programOutcomeHeading ?: 'Related program outcome/s'}</th>
     </tr>
     </thead>
     <g:if test="${outcomeType == 'mid'}">

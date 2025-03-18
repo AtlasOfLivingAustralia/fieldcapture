@@ -6,7 +6,7 @@
     <tr>
         <th class="index"></th>
         <th class="required service">${serviceName ?: "Project Service"}</th>
-        <th class="required score">Target measure</th>
+        <th class="required score">${targetMeasureHeading ?: 'Target measure'}</th>
         <th></th>
     </tr>
     </thead>
@@ -33,8 +33,8 @@
 
     <tr>
         <td class="index"></td>
-        <th>Project Outcome/s</th>
-        <th>Target</th>
+        <th>${projectOutcomesHeading ?: 'Project Outcome/s'}</th>
+        <th>${targetHeading ?: 'Target'}</th>
         <th></th>
     </tr>
     <!-- ko foreach:outcomeTargets -->
