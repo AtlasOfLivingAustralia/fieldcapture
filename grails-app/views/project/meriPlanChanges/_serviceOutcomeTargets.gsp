@@ -6,7 +6,7 @@
     <tr>
         <th class="index"></th>
         <th class="service required">${serviceName ?: "Project Service"}</th>
-        <th class="score required">Target measure</th>
+        <th class="score required">${targetMeasureHeading ?: 'Target measure'}</th>
     </tr>
     </thead>
     <tbody>
@@ -24,8 +24,8 @@
     </tr>
     <tr>
         <td class="index"></td>
-        <th>Project Outcome/s</th>
-        <th>Target</th>
+        <th>${projectOutcomesHeading ?: 'Project Outcome/s'}</th>
+        <th>${targetHeading ?: 'Target'}</th>
     </tr>
     <tr class="outcome-target">
         <td class="index"></td>

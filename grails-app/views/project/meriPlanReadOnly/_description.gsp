@@ -2,7 +2,7 @@
     <table class="table">
         <thead>
         <tr>
-            <th>Project description</th>
+            <th>${projectDescHeading ?: 'Project description'}</th>
         </tr>
         </thead>
         <tbody>
@@ -13,7 +13,7 @@
     </table>
 </g:if>
 <g:else>
-    <h4>Project description</h4>
+    <h4>${projectDescHeading ?: 'Project description'}</h4>
     <span class="description" data-bind="text:details.description"></span>
 </g:else>
 

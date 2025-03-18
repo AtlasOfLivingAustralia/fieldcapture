@@ -1,5 +1,5 @@
 <div id="project-partnership" class="well well-small">
-    <label><b>Project partnerships</b><g:if test="${helpTextHeading}"> <fc:iconHelp html="true" container="body">${helpTextHeading}</fc:iconHelp></g:if></label>
+    <label><b>${title?:'Project partnerships'}</b><g:if test="${helpTextHeading}"> <fc:iconHelp html="true" container="body">${helpTextHeading}</fc:iconHelp></g:if></label>
     <p>${explanation?: "Provide details on all project partners and the nature and scope of their participation in the project."}</p>
     <table class="table">
         <thead>
