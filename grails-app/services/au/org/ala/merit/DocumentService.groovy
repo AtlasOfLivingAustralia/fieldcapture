@@ -56,6 +56,19 @@ class DocumentService {
         return []
     }
 
+    List findAllHelpDocuments(String category = null) {
+        String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}document/search"
+        Map params = [role:'helpDocument']
+        if (category) {
+            params.labels = category
+        }
+        def result = webService.doPost(url, params)
+        if (result.statusCode == SC_OK) {
+            return result.resp.documents
+        }
+        return []
+    }
+
     def updateDocument(Map doc) {
         Map result
         if (canEdit(doc)) {

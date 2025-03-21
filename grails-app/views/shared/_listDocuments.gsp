@@ -1,18 +1,21 @@
 
 <div class="row-eq-height" id="${containerId}">
     <div class="row">
+        <g:if test="${!excludeReportColumn}">
         <div class="col-sm-5 filterDocumentHolder">
             <div id="filter-by-stage" class="document-filter-group btn-group pull-right dropdown">
                 <a class="btn dropdown-toggle" data-toggle="dropdown" id="filterDropDown" href="#">
                     <i class="fa fa-filter"></i> Filter by report
                     <span class="caret"></span>
                 </a>
+
                 <ul class="dropdown-menu" aria-labelledby="filterDropDown" data-bind="foreach:distinctDocumentProperty('reportName')">
                     <li><a href="#" class="dropdown-item"><label class="checkbox"> <input data-column="2" name="doc-filter" class="checkbox" type="checkbox" data-bind="attr:{value:$data}"> <span data-bind="text:$data"></span></label></a> </li>
                 </ul>
 
             </div>
         </div>
+        </g:if>
     </div>
     <div class="row">
         <div class="col-sm-5">
@@ -46,7 +49,6 @@
                     <td>
                         <span data-bind="text:reportName()"></span>
                     </td>
-
                     <td>
                         <span data-bind="text:uploadDate.formattedDate()"></span>
                     </td>
@@ -108,13 +110,23 @@
 <asset:script>
     var imageLocation = "${imageUrl}",
         useExistingModel = ${useExistingModel};
+    var documents = <fc:modelAsJavascript model="${documents}"/>;
+    var containerId = "${containerId}";
+    var excludeReportColumn = ${Boolean.valueOf(excludeReportColumn)};
+
 
     $(function () {
 
         if (!useExistingModel) {
-
-            var docListViewModel = new DocListViewModel(${documents ?: []});
-            ko.applyBindings(docListViewModel, document.getElementById('${containerId}'));
+            var owner = {hubId:'merit'};
+            options = {
+                imageLocation: imageLocation,
+                selector:'#'+containerId,
+                excludeReportColumn:excludeReportColumn
+            };
+            var docListViewModel = new DocListViewModel(documents || [], owner, options);
+            ko.applyBindings(docListViewModel, document.getElementById(containerId));
+            initialiseDocumentTable(options.selector, options.excludeReportColumn);
         }
     });
 

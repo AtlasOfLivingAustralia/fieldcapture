@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import grails.core.GrailsApplication
 import groovy.json.JsonSlurper
@@ -163,5 +164,22 @@ class DocumentController {
         }
         filename = UriUtils.decode(filename, encoding?:"UTF-8")
         new Tuple2(path, filename)
+    }
+
+    @PreAuthorise(accessLevel = "siteAdmin")
+    def addHubDocumentCategory(String category) {
+        if (!category) {
+            response.status = SC_BAD_REQUEST
+            return
+        }
+        HubSettings settings = SettingService.getHubConfig()
+        if (!settings.helpDocumentCategories) {
+            settings.helpDocumentCategories = []
+        }
+        if (!settings.helpDocumentCategories.contains(category)) {
+            settings.helpDocumentCategories.add(category)
+            SettingService.updateHubSettings(settings)
+        }
+        respond settings.helpDocumentCategories
     }
 }
