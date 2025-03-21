@@ -50,7 +50,8 @@ class HomeController {
     @PreAuthorise(accessLevel = 'siteAdmin')
     def editHelpDocuments(String category) {
         List documents = documentService.findAllHelpDocuments(category)
-        [documents:documents, category:category, hubId:SettingService.hubConfig.hubId]
+        List categories = documents?.collect{it.labels}.flatten()?.findAll()?.unique()
+        [documents:documents, category:category, hubId:SettingService.hubConfig.hubId, categories:categories]
     }
 
     /**
