@@ -114,7 +114,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
 
     def "The import service can create projects that have been loaded and mapped via CSV"() {
         setup:
-        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [[organisationId:"123", name:"Test organisation"]],abnLookupService, scores, ["Test program":["programId":"p1"]], ["Test MU":"m1"])
+        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [[organisationId:"123", name:"Test organisation"]],abnLookupService, scores, ["Test program":["programId":"p1"]], ["Test MU":"m1"], false, false)
         List projectRows = projectRowData()
         List status = []
         String projectId = 'p1'
@@ -165,7 +165,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
 
         when:
         List status = []
-        Map result = service.gmsImport(csv, status, true, false)
+        Map result = service.projectImport(csv, status, true, false)
 
         then:
         1 * metadataService.organisationList() >> [list:[[name:"Test Organisation 2", organisationId:'org2Id', abn:'12345678901']]]
@@ -190,7 +190,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
 
         when:
         List status = []
-        Map result = service.gmsImport(csv, status, false, false)
+        Map result = service.projectImport(csv, status, false, false)
 
         then:
         1 * metadataService.organisationList() >> [list:[[name:"Test Organisation 2", organisationId:'org2Id', abn:'12345678901']]]
@@ -230,7 +230,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
 
     def "A project won't be imported if update=false and MERIT already has a project with the same grantId/externalId"() {
         setup:
-        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [[organisationId:"123", name:"Test organisation"]],abnLookupService, scores, ["Test program":[programId:"p1"]], ["Test MU":"m1"])
+        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [[organisationId:"123", name:"Test organisation"]],abnLookupService, scores, ["Test program":[programId:"p1"]], ["Test MU":"m1"], false, false)
         List projectRows = projectRowData()
         List status = []
         String projectId = 'p1'
@@ -251,7 +251,7 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
 
     def "A project won't be updated if update=true and MERIT does not have a project with the same grantId/externalId"() {
         setup:
-        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [[organisationId:"123", name:"Test organisation"]],abnLookupService, scores, ["Test program":[programId:"p1"]], ["Test MU":"m1"])
+        GmsMapper mapper = new GmsMapper(activitiesModel, [:], [[organisationId:"123", name:"Test organisation"]],abnLookupService, scores, ["Test program":[programId:"p1"]], ["Test MU":"m1"], false, false)
         List projectRows = projectRowData()
         List status = []
         String projectId = 'p1'
