@@ -35,7 +35,7 @@ class AdminSpec extends StubbedCasSpec {
         at MERITAdministrationPage
 
         and:
-        administration.adminTab.size() == 13
+        administration.adminTab.size() == 14
         administration.audit.text() == " Audit"
         administration.staticPages.text() == " Static pages"
         administration.helpResources.text() == " Help Resources"
@@ -45,6 +45,7 @@ class AdminSpec extends StubbedCasSpec {
         administration.loadProject.text() == " Load new projects into MERIT"
         administration.removeUser.text() == " Remove User from MERIT"
         administration.userPermission.text() == " User Permissions for MERIT"
+        administration.manageHelpDocuments.text() == " Manage Help Documents"
         administration.tools.text() == " Tools"
         administration.settings.text() == " Settings"
         administration.caches.text() == " Caches"

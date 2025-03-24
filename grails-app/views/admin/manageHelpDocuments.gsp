@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta name="layout" content="adminLayout"/>
-    <title>Edit help documents | MERIT</title>
+    <title>Manage help documents | MERIT</title>
     <script>
         window.fcConfig = {
             baseUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
