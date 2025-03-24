@@ -27,8 +27,8 @@
     <h3>Manage Help Documents</h3>
     <p>Create a new category of help documents by entering the category name and pressing Add new category below</p>
     <form class="form form-inline">
-        <input type="text" data-bind="value: newCategoryName" class="form-control col-8" placeholder="Name of new category"/>
-        <button class="btn btn-success" data-bind="enable: newCategoryName, click:newCategory">Add new category</button>
+        <input id="new-category-name" type="text" data-bind="value: newCategoryName" class="form-control col-8" placeholder="Name of new category"/>
+        <button id="add-new-category" class="btn btn-success" data-bind="enable: newCategoryName, click:newCategory">Add new category</button>
     </form>
 
     <br/>
@@ -75,9 +75,9 @@
                         <button class="btn btn-mini deleteDocument" type="button" data-bind="enable:!readOnly,click:$root.deleteDocument"><i class="fa fa-remove"></i></button>
                         <button class="btn btn-mini editDocument" type="button" data-bind="enable:!readOnly,click:$root.editDocumentMetadata"><i class="fa fa-edit"></i></button>
                         <!-- ko if:!embeddedVideo() -->
-                        <button class="btn btn-mini" data-bind="attr:{href:url}" target="_blank">
+                        <a class="btn btn-mini" data-bind="attr:{href:url}" target="_blank">
                             <i class="fa fa-download"></i>
-                        </button>
+                        </a>
                         <!-- /ko -->
                         <!-- ko if:embeddedVideo() -->
 

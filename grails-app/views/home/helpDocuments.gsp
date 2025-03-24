@@ -17,7 +17,7 @@
         }
     </script>
     <asset:stylesheet src="common-bs4.css"/>
-%{--    <asset:styleSheet src="document.css"/>--}%
+    <asset:stylesheet src="document.css"/>
 </head>
 <body>
 

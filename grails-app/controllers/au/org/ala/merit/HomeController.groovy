@@ -44,7 +44,7 @@ class HomeController {
 
     def helpDocuments(String category) {
         List documents = documentService.findAllHelpDocuments(category)
-        [documents:documents]
+        [documents:documents, category:category]
     }
 
     /**
