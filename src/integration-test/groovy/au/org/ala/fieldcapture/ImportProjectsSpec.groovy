@@ -49,6 +49,7 @@ class ImportProjectsSpec extends StubbedCasSpec {
         and:
         List rows2 = projectResults()
         rows2.size() == 2
+        rows2[1].success == 'Yes'
 
         when:
         to Organisation, 'test_organisation'
@@ -75,6 +76,8 @@ class ImportProjectsSpec extends StubbedCasSpec {
         and: "The data is relevant to the projects loaded"
         List rows = projectResults()
         rows.size() == 3
+        rows[1].success == 'Yes'
+        rows[2].success == 'Yes'
 
         when:
         importProjects()
@@ -125,6 +128,7 @@ class ImportProjectsSpec extends StubbedCasSpec {
         and:
         List rows2 = projectResults()
         rows2.size() == 2
+        rows2[1].success == 'Yes'
 
         when: "We navigate to the program page to find the new imported project, then open it"
         to ProgramPage, 'configurable_meri_plan'
@@ -152,4 +156,59 @@ class ImportProjectsSpec extends StubbedCasSpec {
         adminContent.meriPlan.budget[0].budgetAmounts()*.value() == ["20000", "10000"]
 
     }
+
+    def "Projects can be updated via import with only the fields provided in the spreadsheet being updated"() {
+
+        setup:
+        File csv = new File(getClass().getResource("/grants-hub-update-data.csv").toURI())
+        loginAsMeritAdmin(browser)
+
+        when:
+        to ProjectImport
+        checkUpdateCheckbox()
+        attachFile(csv)
+
+        then: "The projects are validated and the validation results are displayed"
+        waitFor{validateComplete()}
+
+        and: "The data is relevant to the projects loaded"
+        projectResults().size() == 2
+
+        when:
+        importProjects()
+
+        then:
+        waitFor{loadComplete()}
+        and:
+        List rows2 = projectResults()
+        rows2.size() == 2
+        rows2[1].success == 'Yes'
+
+        when: "We navigate to the program page to find the new imported project, then open it"
+        to ProgramPage, 'configurable_meri_plan'
+        openProjectByGrantId('cep-1')
+
+        then:
+        at RlpProjectPage
+
+        when:
+        displayOverview()
+
+        then:
+        overview.program.text() == "Configurable MERI Plan Program"
+        overview.projectId.text() == "cep-1"
+        overview.status.text().equalsIgnoreCase("Active")
+        overview.externalIds*.text() == ["1234"]
+        overview.description.text() == "Grants project description - updated"
+
+        when:
+        openMeriPlanEditTab()
+
+        then:
+        adminContent.meriPlan.budget.size() == 1
+        adminContent.meriPlan.budget[0].description.value() == "Project funding"
+        adminContent.meriPlan.budget[0].budgetAmounts()*.value() == ["1", "2"]
+
+    }
+
 }
