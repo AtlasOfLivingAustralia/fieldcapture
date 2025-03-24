@@ -2,8 +2,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <g:set var="layoutName" value="nrm_bs4"/>
-    <meta name="layout" content="${layoutName}"/>
+    <meta name="layout" content="adminLayout"/>
     <title>Edit help documents | MERIT</title>
     <script>
         window.fcConfig = {
@@ -22,10 +21,10 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><g:link controller="home">Home</g:link></li>
             <li class="breadcrumb-item"><g:link controller="admin">Admin</g:link></li>
-            <li class="breadcrumb-item">Edit help documents</li>
+            <li class="breadcrumb-item">Manage help documents</li>
         </ol>
     </section>
-    <h3>Edit Help Documents</h3>
+    <h3>Manage Help Documents</h3>
     <p>Create a new category of help documents by entering the category name and pressing Add new category below</p>
     <form class="form form-inline">
         <input type="text" data-bind="value: newCategoryName" class="form-control col-8" placeholder="Name of new category"/>

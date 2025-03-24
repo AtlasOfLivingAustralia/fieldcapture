@@ -47,13 +47,6 @@ class HomeController {
         [documents:documents]
     }
 
-    @PreAuthorise(accessLevel = 'siteAdmin')
-    def editHelpDocuments(String category) {
-        List documents = documentService.findAllHelpDocuments(category)
-        List categories = documents?.collect{it.labels}.flatten()?.findAll()?.unique()
-        [documents:documents, category:category, hubId:SettingService.hubConfig.hubId, categories:categories]
-    }
-
     /**
      * When we press the login button, the CAS service URL will point at this action, which is a protected path
      * which ensures the CAS ticket validation filter consumes the service ticket.
