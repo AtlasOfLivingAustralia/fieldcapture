@@ -248,27 +248,6 @@ function ProjectViewModel(project) {
         }
     });
 
-    /**
-     * Automatically exclude an electorate's state if it is not already in the included states list.
-     */
-    self.geographicInfo.otherExcludedElectorates.subscribe(function(newValue) {
-        // check if excluded electorates' states can also be added to exclude state
-        if (newValue) {
-            var states = findStatesElectoratesBelong(newValue);
-            if (!states)
-                return;
-
-            for (var i = 0; i < states.length; i++) {
-                var state = states[i],
-                    excludeAbleStates = self.transients.states.statesToExclude();
-                // exclude-able states are those that are not already selected as primary or in included states lists.
-                if ((excludeAbleStates.indexOf(state) >= 0) && (self.geographicInfo.otherExcludedStates.indexOf(state) === -1)) {
-                    self.geographicInfo.otherExcludedStates.push(state);
-                }
-            }
-        }
-    });
-
     self.transients.programs = [];
     self.transients.subprograms = {};
     self.transients.subprogramsToDisplay = ko.computed(function () {
