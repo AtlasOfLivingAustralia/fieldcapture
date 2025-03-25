@@ -15,3 +15,7 @@
     height: 35px;
     border-radius: 3px;
 }
+
+.fc-resource-preview-container {
+    min-height: 600px;
+}

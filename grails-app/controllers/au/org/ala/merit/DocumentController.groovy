@@ -165,21 +165,4 @@ class DocumentController {
         filename = UriUtils.decode(filename, encoding?:"UTF-8")
         new Tuple2(path, filename)
     }
-
-    @PreAuthorise(accessLevel = "siteAdmin")
-    def addHubDocumentCategory(String category) {
-        if (!category) {
-            response.status = SC_BAD_REQUEST
-            return
-        }
-        HubSettings settings = SettingService.getHubConfig()
-        if (!settings.helpDocumentCategories) {
-            settings.helpDocumentCategories = []
-        }
-        if (!settings.helpDocumentCategories.contains(category)) {
-            settings.helpDocumentCategories.add(category)
-            SettingService.updateHubSettings(settings)
-        }
-        respond settings.helpDocumentCategories
-    }
 }
