@@ -16,6 +16,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
     SettingService settingService = Mock(SettingService)
     MetadataService metadataService = Mock(MetadataService)
     ActivityService activityService = Mock(ActivityService)
+    DocumentService documentService = Mock(DocumentService)
 
     def setup() {
         controller.searchService = searchService
@@ -24,6 +25,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         controller.settingService = settingService
         controller.metadataService = metadataService
         controller.activityService = activityService
+        controller.documentService = documentService
     }
 
     def "The geoservice method delegates to SearchService.allProjects if the geo param is absent"() {
@@ -301,5 +303,24 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         ['a2'] | [[name:'Category 1', list:[[name:'a2']]]]
         ['a5', 'EMSA 1'] | [[name:'Category 2', list:[[name:'a5']]]]
     }
+
+    def "The controller can setup the model for displaying help documents"() {
+        setup:
+        List documents = [[documentId:'1', title:'Test Document', labels:['Test Category']]]
+        HubSettings hubSettings = new HubSettings(hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+        String category = 'Test Category'
+
+        when:
+        Map model = controller.helpDocuments(category)
+
+        then:
+        1 * documentService.findAllHelpDocuments(hubSettings.hubId, category) >> documents
+
+        and:
+        model.documents == documents
+        model.category == category
+    }
+
 
 }

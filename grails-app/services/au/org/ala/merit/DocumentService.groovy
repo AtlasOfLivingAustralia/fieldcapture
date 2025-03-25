@@ -19,6 +19,9 @@ class DocumentService {
     public static final String TYPE_LINK = "link"
     public static final String ROLE_LOGO = "logo"
     public static final String ROLE_MAIN_IMAGE = "mainImage"
+    public static final String ROLE_HELP_DOCUMENT = "helpDocument"
+    public static final String ROLE_HELP_RESOURCE = "helpResource"
+
 
     public static final List PUBLIC_ROLES = [ROLE_MAIN_IMAGE, ROLE_LOGO]
 
@@ -49,16 +52,16 @@ class DocumentService {
     @Cacheable(DocumentService.HELP_DOCUMENTS_CACHE_REGION)
     def findAllHelpResources() {
         def url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}document/search"
-        def result = webService.doPost(url, [role:'helpResource'])
+        def result = webService.doPost(url, [role:ROLE_HELP_RESOURCE])
         if (result.statusCode == SC_OK) {
             return result.resp.documents
         }
         return []
     }
 
-    List findAllHelpDocuments(String category = null) {
+    List findAllHelpDocuments(String hubId, String category = null) {
         String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}document/search"
-        Map params = [role:'helpDocument']
+        Map params = [hubId:hubId, role:ROLE_HELP_DOCUMENT]
         if (category) {
             params.labels = category
         }

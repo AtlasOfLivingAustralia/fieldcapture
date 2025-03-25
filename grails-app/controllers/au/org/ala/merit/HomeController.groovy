@@ -43,7 +43,8 @@ class HomeController {
 
 
     def helpDocuments(String category) {
-        List documents = documentService.findAllHelpDocuments(category)
+        HubSettings hubSettings = SettingService.hubConfig
+        List documents = documentService.findAllHelpDocuments(hubSettings.hubId, category)
         [documents:documents, category:category]
     }
 

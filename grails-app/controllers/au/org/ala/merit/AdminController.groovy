@@ -293,9 +293,10 @@ class AdminController {
 
     @PreAuthorise(accessLevel = 'siteAdmin')
     def manageHelpDocuments(String category) {
-        List documents = documentService.findAllHelpDocuments(category)
+        HubSettings hubSettings = SettingService.hubConfig
+        List documents = documentService.findAllHelpDocuments(hubSettings.hubId, category)
         List categories = documents?.collect{it.labels}.flatten()?.findAll()?.unique()
-        [documents:documents, category:category, hubId:SettingService.hubConfig.hubId, categories:categories]
+        [documents:documents, category:category, hubId:hubSettings.hubId, categories:categories]
     }
 
     def audit() {
