@@ -2505,7 +2505,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total number of events held/attended",
+                        "preLabel": "(i) Total number of engagement events for this reporting period",
                         "source": "totalNumberEngagementHeld",
                         "type": "number"
                       }
@@ -9099,7 +9099,7 @@
                     ],
                     "userAddedRows": true,
                     "source": "agreementsTable",
-                    "title": "<b style=\"color:red\">Please report on each agreement in a separate row using the ‘+Add a row’ button’.  Where the agreement relates to an area, please report each agreement and it’s area using the ‘+Add a new agreement area’ button below.</b>",
+                    "title": "<b>Please report on each agreement in a separate row using the ‘+Add a row’ button’.  Where the agreement relates to an area, please report each agreement and it’s area using the ‘+Add a new agreement area’ button below.</b>",
                     "type": "table"
                   }
                 ]
@@ -11849,7 +11849,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total number of days conducting cultural practices during this reporting period",
+                        "preLabel": "(i) Total number of days conducting cultural practices for this reporting period",
                         "source": "totalNoDaysCulturalPractices",
                         "type": "number"
                       }
@@ -11860,7 +11860,7 @@
             ]
           },
           {
-            "addRowText": "Add new First Nations Cultural Practice",
+            "addRowText": "Add new First Nations Cultural Practice site or outcome",
             "userAddedRows": true,
             "source": "firstNationAreasControlled",
             "type": "repeat",
@@ -12124,7 +12124,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Individuals or groups?",
+                            "preLabel": "Individuals or Groups participating in this activity?",
                             "source": "individualsOrGroups",
                             "type": "selectOne"
                           }
@@ -12140,7 +12140,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Number of participants",
+                            "preLabel": "Number of people participating in this activity?",
                             "source": "noOfParticipants",
                             "type": "number"
                           }
@@ -12165,7 +12165,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Number of First Nations participants",
+                            "preLabel": "Number of First Nations people participating in this activity?",
                             "source": "noOfFirstNationsParticipants",
                             "type": "number"
                           }
@@ -12251,7 +12251,8 @@
                 ],
                 "userAddedRows": true,
                 "source": "firstNationsDetails",
-                "type": "table"
+                "type": "table",
+                "title": "<b>Please report each activity for this site or outcome as a separate row</b>"
               }
             ]
           },
