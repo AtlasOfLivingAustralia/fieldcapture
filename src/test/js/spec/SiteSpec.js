@@ -39,3 +39,17 @@ describe("SiteViewModelWithMapIntegration Spec", function () {
 
 });
 
+describe("PidLocation Spec", function () {
+    it("if fid is not in known shapes, it should check previous layers", function() {
+        var pidLocation = new PidLocation({fid:"cl1", pid:"123"}, {
+            knownShapeConfig: [
+                {id:"cl2", name:"", previousLayers:{ cl1: "states - pre 2024"}}
+            ]
+        });
+
+        var layers = pidLocation.layers();
+        expect(layers[layers.length -1].name).toBe("states - pre 2024");
+        expect(layers[layers.length -1].id).toBe("cl1");
+
+    });
+})

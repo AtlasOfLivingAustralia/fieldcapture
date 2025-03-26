@@ -274,10 +274,17 @@ pdfbox.fontcache="/data/${appName}/cache/"
 markdown.hardwraps = true
 
 sites.known_shapes = [
-        [id:'cl11160', name:'NRM (2023)'],
+        [id:'cl11160', name:'NRM (2023)', previousLayers : [
+                "cl916" : 'NRM Regions - pre 2023',
+                "cl2111": 'NRM Regions - pre 2023',
+                "cl2120": 'NRM Regions - pre 2023'
+            ]
+        ],
         [id:'cl1048', name:'IBRA 7 Regions'],
         [id:'cl1049', name:'IBRA 7 Subregions'],
-        [id:'cl22',name:'Australian states'],
+        [id:'cl927',name:'Australian states', previousLayers : [
+                "cl22": 'Australian states - pre 2024'
+        ]],
         [id:'cl959', name:'Local Gov. Areas'],
         [id:'cl11194', name:'Australian Marine Parks (2024)']
 ]
