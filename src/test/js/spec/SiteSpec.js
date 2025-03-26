@@ -40,6 +40,11 @@ describe("SiteViewModelWithMapIntegration Spec", function () {
 });
 
 describe("PidLocation Spec", function () {
+    beforeAll(function() {
+        window.fcConfig = {
+        }
+    });
+
     it("if fid is not in known shapes, it should check previous layers", function() {
         var pidLocation = new PidLocation({fid:"cl1", pid:"123"}, {
             knownShapeConfig: [
