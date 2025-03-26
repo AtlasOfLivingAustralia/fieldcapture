@@ -474,7 +474,7 @@ var PidLocation = function (l, options) {
     function getOldLayers (knownShapeConfig) {
         var result  = {};
         (knownShapeConfig || []).forEach(function(layer) {
-            layer.previousLayers && $.extend(result, layer.previousLayers);
+            layer.previousLayers && _.extend(result, layer.previousLayers);
         });
 
         return result;
