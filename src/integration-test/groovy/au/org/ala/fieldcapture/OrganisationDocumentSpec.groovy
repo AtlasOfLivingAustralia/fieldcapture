@@ -13,13 +13,9 @@ class OrganisationDocumentsSpec extends StubbedCasSpec {
         loginAsAlaAdmin(browser)
         to AdminClearCachePage
         clearProgramListCache()
+        at AdminClearCachePage // reset at check time
         clearServiceListCache()
     }
-
-    def cleanup() {
-        logout(browser)
-    }
-
 
     def "documents can be attached to a organisation"() {
 

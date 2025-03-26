@@ -109,8 +109,22 @@ class ProjectExplorerSpec extends StubbedCasSpec {
             projects.size() == 1
         }
 
+        when: "We organisation facet is selected, date option selection should remain checked"
+        at ProjectExplorer
+        organisationFacet.click()
+        waitFor {
+            organisationFacetItems.displayed
+        }
+        organisationFacetItems[0].click()
+
+        then:
+        dateOption.value() == "true"
+
         when: "We clear dates"
         at ProjectExplorer
+        waitFor {
+            clearDatesBtn.displayed
+        }
         clearDatesBtn.click()
 
         then:

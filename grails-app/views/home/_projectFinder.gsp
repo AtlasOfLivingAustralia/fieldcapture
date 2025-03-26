@@ -13,7 +13,7 @@
 <g:elseif test="${results?.hits?.total?:0 > 0}">
     <div class="row">
         <div id="facetsCol" class="bg-white" style="display:none;">
-            <g:set var="reqParams" value="query,sort,order,max,fq,fromDate,toDate"/>
+            <g:set var="reqParams" value="query,sort,order,max,fq,fromDate,toDate,isFilterByCompletedProjects"/>
             <div class="visible-phone pull-right" style="margin-top: 5px;">
                 <a href="#" id="toggleFacetDisplay" rel="facetsContent" role="button" class="btn btn-sm btn-inverse" style="color:white;">
                     <span>show</span> options&nbsp;

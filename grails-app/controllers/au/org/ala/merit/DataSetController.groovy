@@ -1,7 +1,6 @@
 package au.org.ala.merit
 
-import au.org.ala.merit.PreAuthorise
-import au.org.ala.merit.ProjectService
+
 import au.org.ala.merit.config.ProgramConfig
 import grails.converters.JSON
 import org.springframework.http.HttpStatus
@@ -9,10 +8,11 @@ import org.springframework.http.HttpStatus
 class DataSetController {
 
     static allowedMethods = [create:'GET', edit:'GET', save:'POST', delete:'POST']
-
+    private static final Integer DEFAULT_BDR_QUERY_LIMIT = 5000
     ProjectService projectService
     DataSetSummaryService dataSetSummaryService
     BdrService bdrService
+    WebService webService
 
     // Note that authorization is done against a project, so the project id must be supplied to the method.
     @PreAuthorise(accessLevel = 'editor')
@@ -159,14 +159,33 @@ class DataSetController {
     }
 
     @PreAuthorise(accessLevel = 'admin')
-    def download(String id, String dataSetId, String format) {
+    def downloadProjectDataSets(String id, String format, Integer limit) {
+        if (!id) {
+            render status: HttpStatus.NOT_FOUND
+            return
+        }
+        Map projectData = projectData(id)
+        List supportedFormats = grailsApplication.config.getProperty('bdr.dataSet.formats', List)
+        if (!format) {
+            format = supportedFormats[0]
+        }
+        if (format !in supportedFormats) {
+            render status: HttpStatus.BAD_REQUEST
+            return
+        }
+
+        bdrService.downloadProjectDataSet(id, format, projectData.project.name, response, limit ?: DEFAULT_BDR_QUERY_LIMIT)
+    }
+
+    @PreAuthorise(accessLevel = 'admin')
+    def download(String id, String dataSetId, String format, Integer limit) {
         Map projectData = projectData(id)
 
         List supportedFormats = grailsApplication.config.getProperty('bdr.dataSet.formats', List)
         if (!format) {
             format = supportedFormats[0]
         }
-        if (!format in supportedFormats) {
+        if (format !in supportedFormats) {
             render status: HttpStatus.BAD_REQUEST
             return
         }
@@ -180,7 +199,7 @@ class DataSetController {
         else {
             if (isMonitorDataSet(dataSet)) {
                 if (isProtocolSupportedForDownload(dataSet)) {
-                    bdrService.downloadDataSet(id, dataSet.dataSetId, format, response)
+                    bdrService.downloadDataSet(id, dataSet.dataSetId, dataSet.name, format, response, limit ?: DEFAULT_BDR_QUERY_LIMIT)
                 }
             }
             else if (dataSet.url) {

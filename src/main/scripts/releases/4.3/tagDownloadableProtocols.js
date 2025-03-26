@@ -7,12 +7,12 @@ const downloadableProtocols = [
 'Vegetation Mapping',
 'Plot Description - Standard',
 'Plot Description - Enhanced',
-'Plot Selection',
     'Plant Tissue Vouchering - Standard',
     'Plant Tissue Vouchering - Enhanced',
     'Photo Points - DSLR Panorama',
     'Photo Points - Compact Panorama',
-    'Photo Points - Device Panorama'
+    'Photo Points - Device Panorama',
+    'Opportune'
 
 ];
 

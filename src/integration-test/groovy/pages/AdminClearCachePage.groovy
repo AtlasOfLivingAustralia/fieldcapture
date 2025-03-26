@@ -52,4 +52,12 @@ class AdminClearCachePage extends ReloadablePage {
             waitFor { hasBeenReloaded() }
         }
     }
+
+    void clearHomePageDocuments() {
+        if (homePageDocuments.displayed) {
+            homePageDocuments.click()
+
+            waitFor { hasBeenReloaded() }
+        }
+    }
 }

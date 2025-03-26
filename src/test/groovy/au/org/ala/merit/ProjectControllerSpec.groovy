@@ -949,10 +949,10 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
     def "Get species record for an activity id" (String activityId, int statusCode, int numberOfCalls, def data) {
         when:
         request.method = 'GET'
-        controller.getSpeciesRecordsFromActivity (activityId)
+        controller.getSpeciesRecordsFromActivity (activityId, null, null)
 
         then:
-        numberOfCalls * projectService.getSpeciesRecordsFromActivity (activityId) >> data
+        numberOfCalls * projectService.getSpeciesRecordsFromActivity (activityId, _, _) >> data
         controller.response.status == statusCode
 
         where:

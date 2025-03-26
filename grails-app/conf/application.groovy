@@ -125,9 +125,6 @@ if (!sld.polgon.default.url) {
 if (!sld.polgon.highlight.url) {
     sld.polgon.highlight.url = "http://fish.ala.org.au/data/fc-highlight.sld"
 }
-if (!lists.baseURL) {
-    lists.baseURL = "https://lists.ala.org.au"
-}
 
 //this is for SpeciesService class in Merit
 if (!bie.service.baseURL) {
@@ -207,7 +204,8 @@ if (!pdfgen.baseURL){
 
 abn.abnLookupToken = "Insert abn Token here"
 abn.abnUrl= "https://abr.business.gov.au/json/AbnDetails.aspx?abn="
-
+lists.baseURL = "https://lists-ws.test.ala.org.au"
+//lists.baseURL = "https://lists-test.ala.org.au/ws"
 esp.activities.admin = 'ESP Annual Report Submission'
 reports.initialScrollPositionDelay = 1000
 risks.scheduleCheckingPeriod = 7
@@ -262,7 +260,8 @@ bdr.jwtScopes="read"
 bdr.azure.clientId='changeMe'
 bdr.azure.tenantId='changeMe'
 bdr.azure.apiScope='api://changeme/.default'
-bdr.dataSet.formats=["application/geo+json","application/rdf+xml", "text/turtle", "application/ld+json", "application/n-triples"]
+//bdr.dataSet.formats=["application/geo+json","application/rdf+xml", "text/turtle", "application/ld+json", "application/n-triples"]
+bdr.dataSet.formats=["application/geo+json", "text/turtle"]
 
 webservice.jwt = true
 webservice['jwt-scopes'] = "ala/internal users/read ala/attrs ecodata/read_test ecodata/write_test"
@@ -275,10 +274,17 @@ pdfbox.fontcache="/data/${appName}/cache/"
 markdown.hardwraps = true
 
 sites.known_shapes = [
-        [id:'cl11160', name:'NRM (2023)'],
+        [id:'cl11160', name:'NRM (2023)', previousLayers : [
+                "cl916" : 'NRM Regions - pre 2023',
+                "cl2111": 'NRM Regions - pre 2023',
+                "cl2120": 'NRM Regions - pre 2023'
+            ]
+        ],
         [id:'cl1048', name:'IBRA 7 Regions'],
         [id:'cl1049', name:'IBRA 7 Subregions'],
-        [id:'cl22',name:'Australian states'],
+        [id:'cl927',name:'Australian states', previousLayers : [
+                "cl22": 'Australian states - pre 2024'
+        ]],
         [id:'cl959', name:'Local Gov. Areas'],
         [id:'cl11194', name:'Australian Marine Parks (2024)']
 ]
@@ -314,6 +320,8 @@ environments {
         app.default.hub='merit'
         wiremock.port = 8018
         security.oidc.discoveryUri = "http://localhost:${wiremock.port}/cas/oidc/.well-known"
+        security.jwt.discoveryUri = "http://localhost:${wiremock.port}/cas/oidc/.well-known"
+        bdr.discoveryUri = "http://localhost:${wiremock.port}/cas/oidc/.well-known"
         security.oidc.allowUnsignedIdTokens = true
         security.oidc.clientId="oidcId"
         security.oidc.secret="oidcSecret"
@@ -345,6 +353,7 @@ environments {
         spatial.baseUrl = "http://localhost:${wiremock.port}"
         spatial.layersUrl = spatial.baseUrl + "/ws"
         grails.mail.port = 3025 // com.icegreen.greenmail.util.ServerSetupTest.SMTP.port
+
     }
     production {
         grails.logging.jul.usebridge = false

@@ -41,6 +41,13 @@ class HomeController {
         publicHome()
     }
 
+
+    def helpDocuments(String category) {
+        HubSettings hubSettings = SettingService.hubConfig
+        List documents = documentService.findAllHelpDocuments(hubSettings.hubId, category)
+        [documents:documents, category:category]
+    }
+
     /**
      * When we press the login button, the CAS service URL will point at this action, which is a protected path
      * which ensures the CAS ticket validation filter consumes the service ticket.
@@ -91,12 +98,13 @@ class HomeController {
         def facetsList = new ArrayList(SettingService.getHubConfig().availableFacets ?:[])
         def mapFacets = new ArrayList(SettingService.getHubConfig().availableMapFacets ?: [])
 
-        boolean canViewAdminFacetsAndDownloads = userService.userIsAlaOrFcAdmin() || userService.userHasReadOnlyAccess()
-        if (!canViewAdminFacetsAndDownloads) {
+        boolean canViewAdminFacets = userService.userIsAlaOrFcAdmin() || userService.userHasReadOnlyAccess()
+        if (!canViewAdminFacets) {
             List adminFacetList = SettingService.getHubConfig().adminFacets ?: []
             facetsList?.removeAll(adminFacetList)
             mapFacets?.removeAll(adminFacetList)
         }
+        boolean canViewDownloads = canViewAdminFacets || userService.userIsSiteAdmin()
         boolean canViewOfficerFacets = userService.userIsSiteAdmin() || userService.userHasReadOnlyAccess()
         if (!canViewOfficerFacets) {
             List officerFacetList = SettingService.getHubConfig().officerFacets ?: []
@@ -117,10 +125,10 @@ class HomeController {
            description: settingService.getSettingText(SettingPageType.DESCRIPTION),
            results: resp,
            projectCount: resp?.hits?.total ?: 0,
-           includeDownloads: canViewAdminFacetsAndDownloads
+           includeDownloads: canViewDownloads
         ]
 
-        if (canViewAdminFacetsAndDownloads) {
+        if (canViewAdminFacets) {
             List activityTypes = metadataService.activityTypesList()
             Map activityTypesFacet = resp?.facets?.get(ACTIVITY_TYPE_FACET_NAME)
             model.activityTypes = filterActivityTypesToProjectSelection(activityTypes, activityTypesFacet)

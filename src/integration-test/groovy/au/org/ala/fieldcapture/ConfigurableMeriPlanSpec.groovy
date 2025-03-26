@@ -16,7 +16,9 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         loginAsAlaAdmin(browser)
         to AdminClearCachePage
         clearProgramListCache()
+        at AdminClearCachePage // reset at check time.
         clearServiceListCache()
+        at AdminClearCachePage // reset at check time.
         clearProtocolListCache()
     }
 

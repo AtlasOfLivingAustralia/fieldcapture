@@ -1,3 +1,23 @@
+var individuals = {
+        "dataType": "text",
+        "name": "countTypeIndividual",
+        "dwcAttribute": "individualsOrGroups",
+        "dwcExpression": "'Individuals'",
+        "constraints": [
+            "Individuals",
+            "Groups"
+        ]
+    },
+    groups = {
+        "dataType": "text",
+        "name": "countTypeGroup",
+        "dwcAttribute": "individualsOrGroups",
+        "dwcExpression": "'Groups'",
+        "constraints": [
+            "Individuals",
+            "Groups"
+        ]
+    };
 var protocols = {
     "068d17e8-e042-ae42-1e42-cff4006e64b0":
         {
@@ -12,6 +32,13 @@ var protocols = {
                     }
                 },
                 "viewModel": null
+            },
+            "insertions": {
+                "dataModel": {
+                    "<root>" : [
+                        individuals
+                    ]
+                }
             }
         },
     "cd2cbbc7-2f17-4b0f-91b4-06f46e9c90f2": {
@@ -19,14 +46,28 @@ var protocols = {
         "usesPlotLayout": false,
         "tags": ["survey"],
         "apiEndpoint": "vegetation-mapping-surveys",
-        "geometryType": "Point"
+        "geometryType": "Point",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "a9cb9e38-690f-41c9-8151-06108caf539d":
         {
             "name": "Plot Selection",
             "usesPlotLayout": false,
             "apiEndpoint": "plot-selections",
-            "tags": ["site"]
+            "tags": ["site"],
+            "insertions": {
+                "dataModel": {
+                    "<root>" : [
+                        individuals
+                    ]
+                }
+            }
         },
     "d7179862-1be3-49fc-8ec9-2e219c6f3854": {
         "name": "Plot Layout and Visit",
@@ -34,51 +75,114 @@ var protocols = {
         "apiEndpoint": "plot-definition-surveys",
         "startDatePath": "plot_visit.start_date",
         "endDatePath": "plot_visit.end_date",
-        "tags": ["site"]
+        "tags": ["site"],
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "617df00c-0e4f-4267-9efc-9ca9eae19686": {
         "name": "Plot Description(enhanced)",
         "apiEndpoint": "plot-description-enhanceds",
         "usesPlotLayout": true,
-        "tags": ["survey"]
+        "tags": ["survey"],
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "dc10f902-e310-45eb-b82a-bebab050b46b": {
         "name": "Plot Description(standard)",
         "apiEndpoint": "plot-description-standards",
         "usesPlotLayout": true,
-        "tags": ["survey"]
+        "tags": ["survey"],
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "3cbc5277-45fb-4e7a-8f33-19d9bff4cd78": {
         "name": "Drone Survey", "usesPlotLayout": false, "tags": ["development"],
-        "apiEndpoint": "drone-surveys"
+        "apiEndpoint": "drone-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "3d2eaa76-a610-4575-ac30-abf40e57b68a": {
         "name": "Dev sandbox", "usesPlotLayout": false, "tags": ["development"],
-        "apiEndpoint": "dev-sandbox-surveys"
+        "apiEndpoint": "dev-sandbox-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "5fd206b5-25cb-4371-bd90-7b2e8801ea25": {
         "name": "Photopoints - DSLR Panorama",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "photopoints-surveys"
+        "apiEndpoint": "photopoints-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "383fa013-c52d-4186-911b-35e9b2375653": {
         "name": "Photopoints - Compact Panorama",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "photopoints-surveys"
+        "apiEndpoint": "photopoints-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "2dbb595b-3541-46bd-b200-13db3a823b74": {
         "name": "Photopoints - Device Panorama",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "photopoints-surveys"
+        "apiEndpoint": "photopoints-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "e15db26f-55de-4459-841b-d7ef87dea5cd": {
         "name": "Floristics - Enhanced",
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "floristics-veg-survey-fulls",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "floristics-veg-voucher-full.host_species": {
@@ -97,6 +201,13 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "floristics-veg-survey-lites",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "floristics-veg-virtual-voucher.host_species": {
@@ -133,6 +244,13 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "floristics-veg-genetic-voucher-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "floristics-veg-genetic-voucher.floristics_voucher.voucher_full.host_species": {
@@ -157,6 +275,13 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "floristics-veg-genetic-voucher-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "floristics-veg-genetic-voucher.floristics_voucher.voucher_full.host_species": {
@@ -181,6 +306,13 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "cover-point-intercept-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "cover-point-intercept-point.species_intercepts.floristics_voucher_lite.host_species": {
@@ -205,6 +337,13 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "cover-point-intercept-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "cover-point-intercept-point.species_intercepts.floristics_voucher_lite.host_species": {
@@ -229,6 +368,13 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "cover-point-intercept-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "cover-point-intercept-point.species_intercepts.floristics_voucher_lite.host_species": {
@@ -253,6 +399,13 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "cover-point-intercept-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "cover-point-intercept-point.species_intercepts.floristics_voucher_lite.host_species": {
@@ -276,13 +429,27 @@ var protocols = {
         "name": "Fire Survey",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "fire-surveys"
+        "apiEndpoint": "fire-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "5005b0af-4360-4a8c-a203-b2c9e440547e": {
         "name": "Basal Area - DBH",
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "basal-area-dbh-measure-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "basal-area-dbh-measure-observation.floristics_voucher.voucher_full.host_species": {
@@ -307,6 +474,13 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "basal-wedge-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "basal-wedge-observation.floristics_voucher.voucher_full.host_species": {
@@ -330,28 +504,43 @@ var protocols = {
         "name": "Coarse Woody Debris",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "coarse-woody-debris-surveys"
+        "apiEndpoint": "coarse-woody-debris-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "a05f8914-ef4f-4a46-8cf1-d035c9c46d4d": {
         "name": "Recruitment - Age Structure",
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "recruitment-field-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "recruitment-growth-stage.floristics_voucher.voucher_full.host_species": {
-                    "dataType": "species"
+                    "dataType": "text"
                 },
                 "recruitment-growth-stage.floristics_voucher.voucher_lite.host_species": {
-                    "dataType": "species"
+                    "dataType": "text"
+                },
+                "recruitment-growth-stage.floristics_voucher.voucher_full.field_name": {
+                    "dataType": "text"
+                },
+                "recruitment-growth-stage.floristics_voucher.voucher_lite.field_name": {
+                    "dataType": "text"
                 },
                 "recruitment-sapling-and-seedling-count.juvenile_count": {
-                    "dwcAttribute": "individualCount"
-                },
-                "recruitment-sapling-and-seedling-count.seedling_count": {
-                    "dwcAttribute": "individualCount"
-                },
-                "recruitment-sapling-and-seedling-count.sapling_count": {
+                    "dwcExpression": "(['juvenile_count'] == null ? 0 : ['juvenile_count']) + (['seedling_count'] == null ? 0 : ['seedling_count']) + (['sapling_count'] == null ? 0 :['sapling_count'])",
                     "dwcAttribute": "individualCount"
                 },
                 "recruitment-sapling-and-seedling-count.voucher_full.host_species": {
@@ -363,10 +552,10 @@ var protocols = {
             },
             "viewModel": {
                 "recruitment-growth-stage.floristics_voucher.voucher_full.host_species": {
-                    "type": "speciesSelect"
+                    "type": "text"
                 },
-                "recruitment-growth-stage.floristics_voucher.voucher_lite.host_species": {
-                    "type": "speciesSelect"
+                "recruitment-growth-stage.floristics_voucher.voucher_full.field_name": {
+                    "type": "text"
                 },
                 "recruitment-sapling-and-seedling-count.voucher_full.host_species": {
                     "type": "speciesSelect"
@@ -382,6 +571,13 @@ var protocols = {
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "recruitment-survivorship-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "recruitment-survivorship-observation.species": {
@@ -423,25 +619,53 @@ var protocols = {
         "name": "Soil Sub-pit and Metagenomics",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "soil-sub-pit-and-metagenomics-surveys"
+        "apiEndpoint": "soil-sub-pit-and-metagenomics-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "15ea86ab-22f6-43fa-8cd5-751eab2347ad": {
         "name": "Soil Sample Pit",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "soil-pit-characterisation-lites"
+        "apiEndpoint": "soil-pit-characterisation-lites",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "1de5eed1-8f97-431c-b7ca-a8371deb3c28": {
         "name": "Soil Site Observation and Pit Characterisation",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "soil-pit-characterisation-fulls"
+        "apiEndpoint": "soil-pit-characterisation-fulls",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "39da41f1-dd45-4838-ae57-ea50588fd2bc": {
         "name": "Soils - Bulk Density",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "soil-bulk-density-surveys"
+        "apiEndpoint": "soil-bulk-density-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "c1b38b0f-a888-4f28-871b-83da2ac1e533": {
         "name": "Vertebrate Fauna - Bird Survey",
@@ -450,6 +674,13 @@ var protocols = {
         "apiEndpoint": "bird-surveys",
         "startDatePath": "start_date",
         "endDatePath": "end_date",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "bird-survey-observation.count": {
@@ -462,25 +693,53 @@ var protocols = {
         "name": "Vertebrate Fauna - Trapping Survey Closure",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "vertebrate-end-trapping-surveys"
+        "apiEndpoint": "vertebrate-end-trapping-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "82463b77-aac2-407c-a03c-8669bd73baf0": {
         "name": "Invertebrate Fauna - Malaise Trapping",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "invertebrate-malaise-trappings"
+        "apiEndpoint": "invertebrate-malaise-trappings",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "8041a1a4-3e19-4fd2-86b9-d453023b5592": {
         "name": "Invertebrate Fauna - Active Search",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "invertebrate-active-search-surveys"
+        "apiEndpoint": "invertebrate-active-search-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "7f95710a-2003-4119-a2c6-41ce4e34d12a": {
         "name": "Condition - Attributes",
         "usesPlotLayout": true,
         "tags": ["survey"],
         "apiEndpoint": "condition-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "condition-tree-survey.tree_record.species.voucher_full.host_species": {
@@ -504,7 +763,14 @@ var protocols = {
         "name": "Dev Sandbox Bulk Survey",
         "usesPlotLayout": true,
         "tags": ["development"],
-        "apiEndpoint": "dev-sandbox-bulk-surveys"
+        "apiEndpoint": "dev-sandbox-bulk-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "6000cb5f-ad75-41e2-9e3e-c070c527453a": {
         "name": "Metadata Collection",
@@ -538,6 +804,13 @@ var protocols = {
         "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "aerial-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "aerial-observation.ferals_aerial_count_survey.available_species.deer": {
@@ -570,55 +843,118 @@ var protocols = {
         "name": "Vertebrate Fauna - Trapping Survey Setup",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "vertebrate-trapping-setup-surveys"
+        "apiEndpoint": "vertebrate-trapping-setup-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "70fbd236-9e51-47a8-93da-125a18a13acc": {
         "name": "Vertebrate Fauna - Identify, Measure and Release",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "vertebrate-trap-check-surveys"
+        "apiEndpoint": "vertebrate-trap-check-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "9d2c3fcf-881b-41df-944d-33bb6ef8ac51": {
         "name": "Vertebrate Fauna - Active and Passive Search",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "vertebrate-active-passive-search-surveys"
+        "apiEndpoint": "vertebrate-active-passive-search-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "0628e486-9b33-4d86-98db-c6d3f10f7744": {
         "name": "Vertebrate Fauna - Acoustic and Ultrasonic Recordings",
         "usesPlotLayout": false,
         "tags": ["survey"],
-        "apiEndpoint": ""
+        "apiEndpoint": "<root>",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "9e75385a-4783-4911-8870-cca78b44d781": {
         "name": "Invertebrate Fauna - Wet Pitfall Trapping",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "invertebrate-wet-pitfall-surveys"
+        "apiEndpoint": "invertebrate-wet-pitfall-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "7dc49039-4999-43f6-8896-e33d7b28a934": {
         "name": "Invertebrate Fauna - Rapid Ground Trapping",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "invertebrate-rapid-ground-trappings"
+        "apiEndpoint": "invertebrate-rapid-ground-trappings",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "7b0e4526-726e-4292-a897-238f336ce51e": {
         "name": "Invertebrate Fauna - Pan Trapping",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": "invertebrate-pan-trappings"
+        "apiEndpoint": "invertebrate-pan-trappings",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "aa64fd4d-2c5a-4f84-a197-9f3ce6409152": {
         "name": "Invertebrate Fauna - Post-field Sampling Curation",
         "usesPlotLayout": true,
         "tags": ["survey"],
-        "apiEndpoint": ""
+        "apiEndpoint": "<root>",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "08adf0ff-43c1-4f19-b2c4-f5da667baf65": {
         "name": "Interventions - Data Collection",
         "usesPlotLayout": false,
         "tags": ["intervention"],
-        "apiEndpoint": "interventions-general-project-informations"
+        "apiEndpoint": "interventions-general-project-informations",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "ad088dbe-02b2-472a-901f-bd081e590bcf": {
         "name": "Camera Trap Deployment",
@@ -640,6 +976,13 @@ var protocols = {
         "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "within-plot-belt-transect-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "within-plot-belt-transect.quadrat.sign_observed.attributable_fauna_species.attributable_fauna_species": {
@@ -680,6 +1023,13 @@ var protocols = {
         "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "off-plot-belt-transect-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "off-plot-belt-transect.quadrat.sign_observed.attributable_fauna_species.attributable_fauna_species": {
@@ -717,6 +1067,13 @@ var protocols = {
         "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "sign-based-vehicle-track-set-ups",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "sign-based-vehicle-track-observation.observations.attributable_fauna_species.attributable_fauna_species": {
@@ -769,6 +1126,13 @@ var protocols = {
         "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "fauna-ground-counts-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "fauna-ground-counts-conduct-survey.observation.species.attributable_fauna_species": {
@@ -814,7 +1178,14 @@ var protocols = {
         "usesPlotLayout": false,
         "tags": ["intervention"],
         "apiEndpoint": "pest-fauna-control-activities",
-        "geometryType": "LineString"
+        "geometryType": "LineString",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
     },
     "228e5e1e-aa9f-47a3-930b-c1468757f81d": {
         "name": "Herbivory and Physical Damage - Active Plot Search",
@@ -822,6 +1193,13 @@ var protocols = {
         "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "herbivory-and-physical-damage-active-search-setups",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "herbivory-and-physical-damage-active-search-transect.track_log": {
@@ -883,6 +1261,13 @@ var protocols = {
         "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "sign-based-active-plot-search-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "sign-based-active-plot-search.sign.attributable_fauna_species.attributable_fauna_species": {
@@ -958,6 +1343,13 @@ var protocols = {
         "usesPlotLayout": false,
         "createSpeciesRecord":true,
         "tags": ["survey"],
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "sign-based-track-station-observation.observations.attributable_fauna_species.attributable_fauna_species": {
@@ -996,6 +1388,13 @@ var protocols = {
         "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "ground-counts-vantage-point-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "vantage-point-conduct-survey.observations.count_of_individuals": {
@@ -1036,6 +1435,13 @@ var protocols = {
         "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "herbivory-and-physical-damage-belt-transect-setups",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "herbivory-and-physical-damage-transect.quadrat.quadrat_observation.physical_damage_attributable_fauna_species.attributable_fauna_species": {
@@ -1091,6 +1497,13 @@ var protocols = {
         "createSpeciesRecord":true,
         "tags": ["survey"],
         "apiEndpoint": "herbivory-off-plot-belt-transect-setups",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        },
         "overrides": {
             "dataModel": {
                 "herbivory-off-plot-transect.quadrat.quadrat_observation.physical_damage_attributable_fauna_species.attributable_fauna_species": {

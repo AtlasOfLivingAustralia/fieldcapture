@@ -290,6 +290,15 @@ class AdminController {
         render adminService.reIndexAll()
     }
 
+
+    @PreAuthorise(accessLevel = 'siteAdmin')
+    def manageHelpDocuments(String category) {
+        HubSettings hubSettings = SettingService.hubConfig
+        List documents = documentService.findAllHelpDocuments(hubSettings.hubId, category)
+        List categories = documents?.collect{it.labels}.flatten()?.findAll()?.unique()
+        [documents:documents, category:category, hubId:hubSettings.hubId, categories:categories]
+    }
+
     def audit() {
     }
 
@@ -418,7 +427,7 @@ class AdminController {
             session.status = status
             def fileIn = new FileInputStream(file)
             try {
-                def result = importService.gmsImport(fileIn, status.projects, preview, update)
+                def result = importService.projectImport(fileIn, status.projects, preview, update)
                 status.finished = true
                 status.error = result.error
             }

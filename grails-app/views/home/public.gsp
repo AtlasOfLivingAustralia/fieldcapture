@@ -59,20 +59,29 @@
     <asset:deferredScripts/>
     <script>
                 $(function() {
-
+                    var working = false;
                     var url = '${g.createLink(controller:'report', action:'statisticsReport')}';
 
-                    var working = false;
-                    $('#stats-holder').on('click', '.show-more-stats', function() {
+                    function showMoreStats() {
                         if (!working) {
                             working = true;
                             replaceContentSection('.statistics', url).always(function() { working = false; });
                         }
+                    }
+
+                    $('#stats-holder').on('click', '.show-more-stats', function() {
+                       showMoreStats();
                     });
 
                     if ($('#latest-news').height() > 400) {
                         $('#latest-news').height(400).css('overflow-y', 'scroll');
                     }
+
+                    var hasStatistics = ${statistics ? 'true' : 'false'};
+                    if (!hasStatistics) {
+                        showMoreStats();
+                    }
+
                 });
 
     </script>

@@ -5,6 +5,18 @@ function OrganisationDetailsViewModel(o, organisation, budgetHeaders, allService
         targets = o.services && o.services.targets || [];
     self.areTargetsAndFundingEditable = config.areTargetsAndFundingEditable;
     self.services = new OrganisationServicesViewModel(serviceIds, config.services, targets, budgetHeaders, {areTargetsEditable:config.areTargetsAndFundingEditable});
+
+    if (!o.funding) {
+        o.funding = {
+            rows: [
+                {
+                    type:BudgetConstants.PERIODICALLY_REVISED_TOTAL,
+                    shortLabel: 'rcsContractedFunding',
+                    description: 'RCS Contracted Funding'
+                }
+            ]
+        }
+    }
     self.funding = new BudgetViewModel(o.funding, budgetHeaders);
     self.funding.isEditable = config.areTargetsAndFundingEditable;
 

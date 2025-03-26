@@ -2,9 +2,11 @@ package au.org.ala.merit.config
 
 import au.org.ala.ws.tokens.TokenClient
 import au.org.ala.ws.tokens.TokenService
-import org.pac4j.core.context.session.SessionStore
+import com.nimbusds.jose.util.ResourceRetriever
+import org.pac4j.core.context.session.SessionStoreFactory
 import org.pac4j.oidc.config.OidcConfiguration
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -29,12 +31,13 @@ class BdrTokenConfig {
     String discoveryUri
 
     @Bean
-    OidcConfiguration bdrOidcConfiguration() {
+    OidcConfiguration bdrOidcConfiguration(@Qualifier("oidcResourceRetriever") ResourceRetriever jwtResourceRetriever) {
         OidcConfiguration config = new OidcConfiguration()
         config.setClientId(clientId)
         config.setSecret(clientSecret)
         config.setDiscoveryURI(discoveryUri)
-
+        config.setResourceRetriever(jwtResourceRetriever)
+        config.init()
         return config
     }
 
@@ -46,13 +49,13 @@ class BdrTokenConfig {
     }
 
     @Bean
-    TokenService bdrTokenService(
+    TokenService oidcBdrTokenService(
             @Autowired(required = false) OidcConfiguration bdrOidcConfiguration,
-            @Autowired(required = false) SessionStore sessionStore,
+            @Autowired(required = false) SessionStoreFactory sessionStoreFactory,
             @Autowired TokenClient tokenClient
     ) {
         new TokenService(bdrOidcConfiguration,
-                sessionStore, tokenClient, clientId, clientSecret, jwtScopes, cacheTokens)
+                sessionStoreFactory, tokenClient, clientId, clientSecret, jwtScopes, cacheTokens)
     }
 
 }
