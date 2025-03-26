@@ -1276,7 +1276,9 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             returnToUrl: config.returnToUrl,
             reports: project.reports || [],
             downloadableProtocols: config.downloadableProtocols,
-            viewReportUrl: config.viewReportUrl
+            viewReportUrl: config.viewReportUrl,
+            minutesToIngestDataSet: config.minutesToIngestDataSet
+
         };
         var projectService = new ProjectService({}, config);
         var viewModel = new DataSetsViewModel(project.custom && project.custom.dataSets, projectService, dataSetsConfig);
