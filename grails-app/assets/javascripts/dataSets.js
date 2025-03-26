@@ -54,9 +54,9 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         if (isDownloadable) {
             var now = moment();
             var creationDate = moment(dataSet.dateCreated);
-            var minutesToInjestDataSet = config.minutesToInjestDataSet || 1;
+            var minutesToIngestDataSet = config.minutesToIngestDataSet || 1;
             if (dataSet.progress !== ActivityProgress.planned) {
-                if (creationDate.add(minutesToInjestDataSet, 'minutes').isBefore(now)) {
+                if (creationDate.add(minutesToIngestDataSet, 'minutes').isBefore(now)) {
                     isDownloadable = true;
                 }
             }

@@ -111,7 +111,8 @@
                 searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
                 speciesListUrl:"${createLink(controller:'speciesList', action:'speciesListItems')}",
                 speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
-                speciesProfileUrl:"${createLink(controller:'species', action:'speciesProfile')}"
+                speciesProfileUrl:"${createLink(controller:'species', action:'speciesProfile')}",
+                minutesToIngestDataSet: ${grailsApplication.config.getProperty('bdr.api.minutesToIngestDataSet', Integer, 10)},
 
             },
             here = "${createLink(action:'index', id: project.projectId)}";
@@ -348,6 +349,7 @@ var config = {
     config.speciesProfileUrl = fcConfig.speciesProfileUrl;
     config.organisationSearchUrl = fcConfig.organisationSearchUrl;
     config.organisationViewUrl = fcConfig.organisationLinkBaseUrl;
+    config.minutesToIngestDataSet = fcConfig.minutesToIngestDataSet;
     project.mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
     var viewModel = new ProjectPageViewModel(project, project.sites, project.activities || [], userRoles, config);
     viewModel.loadPrograms(programs);
