@@ -536,14 +536,14 @@
                 "css": "span6",
                 "type": "selectOne",
                 "source": "plansDeveloped",
-                "preLabel": "During this reporting period have any site/project/monitoring plans been developed to support project delivery? "
+                "preLabel": "During this reporting period have any site/project/monitoring plans been developed to support project delivery?"
               }
             ]
           },
           {
             "items": [
               {
-                "source": "If yes, please provide name and purpose of plan.",
+                "source": "If yes, please provide the name and purpose of each plan developed as a separate row.",
                 "type": "literal"
               }
             ],
@@ -588,7 +588,7 @@
           {
             "items": [
               {
-                "source": "If yes, please provide date and objective of the meeting/workshop.",
+                "source": "If yes, please provide the date and objective of each meeting as a separate row.",
                 "type": "literal"
               }
             ],
