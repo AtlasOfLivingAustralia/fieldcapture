@@ -76,4 +76,20 @@ class BdrServiceSpec extends Specification implements ServiceUnitTest<BdrService
         1 * bdrTokenService.getBDRAccessToken() >> azureToken
         1 * webService.proxyGetRequest(response, expectedBdrApiUrl, expectedParams, WebService.AUTHORIZATION_HEADER_TYPE_EXTERNAL_TOKEN, readTimeout, azureToken, headers)
     }
+
+    def "When datasets are downloaded from the BDR, the content disposition filename should only include alphanumerics and underscores"(String fileName, String format, String expectedFileName) {
+        when:
+        String result = service.buildFileName(fileName, format)
+
+        then:
+        result == expectedFileName
+
+        where:
+        fileName | format | expectedFileName
+        "test file name" | "application/json" | "test_file_name.json"
+        "test file name" | "application/geo+json" | "test_file_name.geojson"
+        "data_set_summary" | "application/json" | "data_set_summary.json"
+        "This is a project with special @ characters'" | "application/json" | "This_is_a_project_with_special__characters.json"
+
+    }
 }
