@@ -1,6 +1,7 @@
 package pages
 
 import geb.Page
+import geb.module.Checkbox
 
 class ProjectImport extends Page {
 
@@ -12,6 +13,7 @@ class ProjectImport extends Page {
         fileInput { $('#fileUpload') }
         importButton { $('button[data-bind*=doImport]')}
         progressSummary { $('span[data-bind*=progressSummary]') }
+        updateCheckbox { $('#update').module(Checkbox) }
     }
 
     def attachFile(File file) {
@@ -22,7 +24,13 @@ class ProjectImport extends Page {
         importButton.click()
     }
 
+    def checkUpdateCheckbox() {
+        updateCheckbox.check()
+    }
+
     List<List> projectResults() {
+
+        List columns = ["grantId", "externalId", "success", "errors", "messages"]
         List rows = []
         def progressTable = $('table.table')
         progressTable.find("tbody tr").each {
@@ -30,7 +38,11 @@ class ProjectImport extends Page {
             it.find("td").each { col ->
                 cols << col.text()
             }
-            rows << cols
+            Map row = [:]
+            columns.eachWithIndex{ col, index ->
+                row[col] = cols[index]
+            }
+            rows << row
         }
 
         rows

@@ -15,7 +15,7 @@
     <appender-ref ref="STDOUT" />
   </logger>
 
-  <logger name="org.pac4j" level="WARN">
+  <logger name="org.pac4j" level="INFO">
     <appender-ref ref="STDOUT" />
   </logger>
 

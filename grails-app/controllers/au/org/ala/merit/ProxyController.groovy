@@ -25,10 +25,6 @@ class ProxyController {
         render webService.get("${grailsApplication.config.getProperty('lists.baseURL')}/ws/speciesList?druid=${params.druid}", false)
     }
 
-    def speciesItemsForList() {
-        render webService.get("${grailsApplication.config.getProperty('lists.baseURL')}/ws/speciesListItems/${params.druid}?includeKVP=true", false)
-    }
-
     def intersect(){
         render webService.get("${grailsApplication.config.getProperty('spatial.layersUrl')}/intersect/${params.layerId}/${params.lat}/${params.lng}", false)
     }

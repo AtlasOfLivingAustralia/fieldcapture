@@ -1,4 +1,5 @@
 <div class="statistics">
+    <g:if test="${statistics}">
     %{--This section expects exactly 6 statistics to display--}%
     <div class="row">
         <div class="col-sm-4 box1">
@@ -22,7 +23,9 @@
             <g:render template="/report/statistic" model="${statistics[5]}"/>
         </div>
     </div>
+
     <div class="row">
         <div class="col-sm-12 align-content-center text-center"><a href="#" class="show-more-stats text-dark">Show more stats <i class="fa fa-refresh"></i></a></div>
     </div>
+    </g:if>
 </div>

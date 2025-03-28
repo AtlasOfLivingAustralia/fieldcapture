@@ -285,3 +285,40 @@ var ProjectImportViewModel = function (config) {
         setTimeout(self.showProgress, 2000);
     }
 };
+
+EditHelpDocumentsViewModel = function(hubId, categories, documents) {
+    let self = this;
+    var options = {
+        roles: ['helpDocument'],
+        owner: {
+            hubId:hubId
+        },
+        documentDefaults: {
+            role: 'helpDocument',
+            public: true
+        },
+        modalSelector: '#attachDocument',
+        documentUpdateUrl: fcConfig.documentUpdateUrl,
+        documentDeleteUrl: fcConfig.documentDeleteUrl,
+        imageLocation: fcConfig.imageLocation
+    };
+    self.selectedCategory = ko.observable();
+    self.documentCategories = ko.observableArray(categories);
+    self.newCategoryName = ko.observable();
+
+    self.newCategory = function() {
+        let category = self.newCategoryName();
+        self.documentCategories.push(category);
+        self.selectedCategory(category);
+        self.newCategoryName(null);
+    }
+    self.selectedCategory.subscribe(function (category) {
+        options.documentDefaults.labels = [category];
+    });
+
+    _.extend(self, new EditableDocumentsViewModel(options));
+
+    documentRoles = [{id:'helpDocument', name:'Help Document', isPublicRole:true}];
+    self.loadDocuments(documents);
+
+}

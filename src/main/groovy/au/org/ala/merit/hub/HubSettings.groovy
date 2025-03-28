@@ -10,6 +10,8 @@ class HubSettings extends JSONObject {
 
     String hubId
 
+    List helpDocumentCategories
+
     public HubSettings() {
         super()
     }

@@ -1271,9 +1271,14 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             editDataSetUrl: config.editDataSetUrl,
             deleteDataSetUrl: config.deleteDataSetUrl,
             viewDataSetUrl: config.viewDataSetUrl,
+            downloadDataSetUrl: config.downloadDataSetUrl,
+            downloadProjectDataSetsUrl: config.downloadProjectDataSetsUrl,
             returnToUrl: config.returnToUrl,
             reports: project.reports || [],
-            viewReportUrl: config.viewReportUrl
+            downloadableProtocols: config.downloadableProtocols,
+            viewReportUrl: config.viewReportUrl,
+            minutesToIngestDataSet: config.minutesToIngestDataSet
+
         };
         var projectService = new ProjectService({}, config);
         var viewModel = new DataSetsViewModel(project.custom && project.custom.dataSets, projectService, dataSetsConfig);

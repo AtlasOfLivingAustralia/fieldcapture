@@ -6,9 +6,23 @@
         <div class="col-sm-12">
             <div class="form-group form-actions">
                 <button class="btn btn-sm btn-primary" type="button" data-bind="click:newDataSet">New data set summary</button>
+
+                <!-- ko if: enableProjectDataSetsDownload -->
+                <div class="dropdown" style="display:inline-block">
+                    <button class="btn btn-sm btn-info dropdown-toggle" type="button" data-toggle="dropdown">
+                        Download Monitor data
+                    </button>
+                    <div class="dropdown-menu">
+                        <g:each in="${supportedFormats}" var="format">
+                            <a class="dropdown-item" href="#" target="_blank" data-bind="attr:{href:downloadProjectDataSetsUrl+'?format=${URLEncoder.encode(format, 'UTF-8')}'}"><g:message code="bdr.dataSet.format.${format}" default="${format}"/></a>
+                        </g:each>
+                    </div>
+                </div>
+                <!-- /ko -->
             </div>
         </div>
     </div>
+
     <table class="table table-striped w-100" data-bind="dataTable:dataTableConfig, css: { 'dataset-summary-with-dates':supportsDateColumn, 'dataset-summary':!supportsDateColumn }">
         <thead>
         <tr>
@@ -58,6 +72,17 @@
                 <a class="btn btn-container btn-sm" href="#" data-bind="visible:!readOnly,click:deleteDataSet">
                     <i class="fa fa-remove" title="Delete this dataset"></i>
                 </a>
+                <div class="dropdown" data-bind="if:downloadUrl" style="display:inline-block">
+                    <a class="btn btn-container btn-sm dropdown-toggle" href="#" data-toggle="dropdown">
+                        <i class="fa fa-download" title="Download data for this dataset from the BDR"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <g:each in="${supportedFormats}" var="format">
+                            <a class="dropdown-item" href="#" target="_blank" data-bind="attr:{href:downloadUrl+'?format=${URLEncoder.encode(format, 'UTF-8')}'}"><g:message code="bdr.dataSet.format.${format}" default="${format}"/></a>
+                        </g:each>
+                    </div>
+                </div>
+
             </td>
             <td class="dataset-name" data-bind="text:name"></td>
             <td class="service" data-bind="text:service"></td>

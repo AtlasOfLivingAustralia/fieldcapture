@@ -98,6 +98,8 @@
                 editDataSetUrl: "${createLink(controller:'dataSet', action:'edit', id:project.projectId)}",
                 deleteDataSetUrl: "${createLink(controller:'dataSet', action:'delete', id:project.projectId)}",
                 viewDataSetUrl: "${createLink(controller:'dataSet', action:'view', id:project.projectId)}",
+                downloadDataSetUrl: "${createLink(controller:'dataSet', action:'download', id:project.projectId)}",
+                downloadProjectDataSetsUrl: "${createLink(controller:'dataSet', action:'downloadProjectDataSets', id:project.projectId)}",
                 unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}",
                 projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:project.projectId)}",
                 i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
@@ -107,9 +109,10 @@
                 requestLabelUrl:"${createLink(action:'requestVoucherBarcodeLabels', id: project.projectId)}",
                 bieUrl: "${grailsApplication.config.getProperty('bie.baseURL')}",
                 searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
-                speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
+                speciesListUrl:"${createLink(controller:'speciesList', action:'speciesListItems')}",
                 speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
-                speciesProfileUrl:"${createLink(controller:'species', action:'speciesProfile')}"
+                speciesProfileUrl:"${createLink(controller:'species', action:'speciesProfile')}",
+                minutesToIngestDataSet: ${grailsApplication.config.getProperty('bdr.api.minutesToIngestDataSet', Integer, 10)},
 
             },
             here = "${createLink(action:'index', id: project.projectId)}";
@@ -301,6 +304,9 @@ var config = {
             editDataSetUrl: fcConfig.editDataSetUrl,
             deleteDataSetUrl: fcConfig.deleteDataSetUrl,
             viewDataSetUrl: fcConfig.viewDataSetUrl,
+            downloadDataSetUrl: fcConfig.downloadDataSetUrl,
+            downloadProjectDataSetsUrl: fcConfig.downloadProjectDataSetsUrl,
+            downloadableProtocols: <fc:modelAsJavascript model="${projectContent.datasets.downloadableProtocols}" default="[]"/>,
             returnToUrl: fcConfig.returnTo
         };
 
@@ -343,6 +349,7 @@ var config = {
     config.speciesProfileUrl = fcConfig.speciesProfileUrl;
     config.organisationSearchUrl = fcConfig.organisationSearchUrl;
     config.organisationViewUrl = fcConfig.organisationLinkBaseUrl;
+    config.minutesToIngestDataSet = fcConfig.minutesToIngestDataSet;
     project.mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
     var viewModel = new ProjectPageViewModel(project, project.sites, project.activities || [], userRoles, config);
     viewModel.loadPrograms(programs);

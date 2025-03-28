@@ -128,6 +128,11 @@ class UrlMappings {
             action = 'upload'
         }
 
+        "/dataSet/download/$id/$dataSetId" {
+            controller = 'dataSet'
+            action = 'download'
+        }
+
         "500"(view:'/error')
         "404"(view:'/404')
         "/$hub/$controller/ws/$action/$id" {

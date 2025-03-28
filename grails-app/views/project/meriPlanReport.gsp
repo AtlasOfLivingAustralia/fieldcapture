@@ -12,7 +12,7 @@
         healthCheckUrl:"${createLink(controller:'ajax', action:'keepSessionAlive')}",
         bieUrl: "${grailsApplication.config.getProperty('bie.baseURL')}",
         searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
-        speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
+        speciesListUrl:"${createLink(controller:'speciesList', action:'speciesListItems')}",
         speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
         speciesProfileUrl:"${createLink(controller:'species', action:'speciesProfile')}",
         returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}"
