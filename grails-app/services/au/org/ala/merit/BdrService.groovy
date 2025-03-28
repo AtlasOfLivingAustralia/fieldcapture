@@ -29,6 +29,8 @@ class BdrService {
     ]
 
     static private String buildFileName(String fileName, String format) {
+        // Remove any non-alphanumeric characters from the file name and replace spaces with underscores
+        fileName = fileName.replaceAll(' ', '_').replaceAll(/[^a-zA-Z0-9_]/, '')
         fileName+'.'+FILE_EXTENSION_MAP[format]
     }
 
