@@ -10225,19 +10225,19 @@
                   }
                 ],
                 "dataType": "list",
-                "name": "agreementsTable"
+                "name": "establishingAgreementsTable"
               },
               {
                 "dataType": "number",
                 "name": "rowCount",
                 "decimalPlaces": 0,
                 "computed": {
-                  "expression": "sum(agreementsTable, \"agreementType ? 1 : 0\")"
+                  "expression": "sum(establishingAgreementsTable, \"agreementType ? 1 : 0\")"
                 }
               }
             ],
             "dataType": "list",
-            "name": "conservationAgreementsControlled"
+            "name": "establishingAgreementsControlled"
           },
           {
             "dataType": "number",
@@ -10245,7 +10245,7 @@
             "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(conservationAgreementsControlled, \"rowCount\")"
+              "expression": "sum(establishingAgreementsControlled, \"rowCount\")"
             }
           },
           {
@@ -10443,7 +10443,7 @@
               {
                 "addRowText": "Add a new agreement area",
                 "userAddedRows": true,
-                "source": "conservationAgreementsControlled",
+                "source": "establishingAgreementsControlled",
                 "type": "repeat",
                 "items": [
                   {
@@ -10632,7 +10632,7 @@
                       }
                     ],
                     "userAddedRows": true,
-                    "source": "agreementsTable",
+                    "source": "establishingAgreementsTable",
                     "title": "<b>Please report on each agreement in a separate row using the ‘+Add a row’ button’.  Where the agreement relates to an area, please report each agreement and it’s area using the ‘+Add a new agreement area’ button below.</b>",
                     "type": "table"
                   }
