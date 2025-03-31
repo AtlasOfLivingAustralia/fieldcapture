@@ -8792,41 +8792,6 @@
             }
           },
           {
-            "dataType": "number",
-            "decimalPlaces": 3,
-            "name": "totalNumberOfAgreementsInvoiced",
-            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
-            "validate": [
-              {
-                "rule": "required"
-              },
-              {
-                "rule": "min[0]"
-              },
-              {
-                "param": {
-                  "expression": "totalNumberOfAgreements",
-                  "type": "computed",
-                  "decimalPlaces": 3
-                },
-                "rule": "max"
-              }
-            ],
-            "defaultValue": ""
-          },
-          {
-            "dataType": "text",
-            "name": "totalInvoicedActivitiesConductedMismatched",
-            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
-            "validate": "maxSize[400],required",
-            "behaviour": [
-              {
-                "condition": "+totalNumberOfAgreementsInvoiced < +totalNumberOfAgreements",
-                "type": "enable"
-              }
-            ]
-          },
-          {
             "dataType": "text",
             "name": "comments",
             "validate": "maxSize[1500]"
@@ -8944,22 +8909,6 @@
                       {
                         "preLabel": "(i) Total number of agreements established",
                         "source": "totalNumberOfAgreements",
-                        "type": "number"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "col",
-                "css": "span4 col-border-right",
-                "items": [
-                  {
-                    "type": "row",
-                    "items": [
-                      {
-                        "preLabel": "(ii) Total number of agreements established <u><i>invoiced</i></u> for during this reporting period",
-                        "source": "totalNumberOfAgreementsInvoiced",
                         "type": "number"
                       }
                     ]
