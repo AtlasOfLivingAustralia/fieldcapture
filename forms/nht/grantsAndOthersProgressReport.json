@@ -8622,15 +8622,6 @@
                 ]
               },
               {
-                "dataType": "text",
-                "name": "invoicingThisActivity",
-                "constraints": [
-                  "Yes",
-                  "No"
-                ],
-                "validate": "required"
-              },
-              {
                 "dataType": "feature",
                 "name": "sitesAgreementsEstablished",
                 "description": "Mapping field to be done and Area (ha) field be auto-calculated from mapping."
@@ -8918,18 +8909,6 @@
             ]
           },
           {
-            "type": "row",
-            "items": [
-              {
-                "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
-                "source": "totalInvoicedActivitiesConductedMismatched",
-                "type": "textarea",
-                "rows": 4,
-                "placeholder": ""
-              }
-            ]
-          },
-          {
             "type": "section",
             "items": [
               {
@@ -8968,22 +8947,6 @@
                                 "source": "investmentPriorities2",
                                 "preLabel": "Which investment priority does this activity relate to?",
                                 "type": "select2Many"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "css": "span3",
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "invoicingThisActivity",
-                                "preLabel": "Are you invoicing for this activity in this reporting period?",
-                                "type": "selectOne"
                               }
                             ]
                           }
