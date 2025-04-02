@@ -12,21 +12,6 @@
         "modelName": "Grants and Others Final Report",
         "dataModel": [
           {
-            "dataType": "text",
-            "name": "projectEffectiveness",
-            "validate": "required,maxSize[1000]"
-          },
-          {
-            "dataType": "text",
-            "name": "projectImpact",
-            "validate": "required,maxSize[500]"
-          },
-          {
-            "dataType": "text",
-            "name": "projectImplementationChanges",
-            "validate": "required,maxSize[1000]"
-          },
-          {
             "dataType": "list",
             "name": "projectOutcomes",
             "allowRowDelete": "false",
@@ -49,15 +34,253 @@
                 "dataType": "text",
                 "name": "basedRating",
                 "constraints": [
-                  "Achieved (100%)",
-                  "Significantly achieved (76-99%)",
-                  "Satisfactorily achieved (51-75%)",
-                  "Partially achieved (26-50%)",
-                  "Inadequately achieved (1-25%)",
-                  "Not achieved (0%)",
-                  "Unable to rate"
+                  "Fully Achieved",
+                  "Mostly Achieved",
+                  "Partially Achieved",
+                  "Not achieved"
                 ],
                 "validate": "required"
+              }
+            ]
+          },
+          {
+            "dataType": "stringList",
+            "name": "meriPlanOutcomesAchieved",
+            "validate": "required",
+            "description": "<ul><li>Fully Achieved = all MERI plan outcome statements were met as planned,</li><li>Mostly Achieved = at least half of all MERI plan outcome statements were met as planned,</li><li>Partially Achieved = less than half of all MERI plan outcome statements were met as planned,</li><li>Not Achieved = none of the MERI plan outcome statements were met as planned.</li></ul>",
+            "constraints": [
+              "Fully achieved",
+              "Mostly achieved",
+              "Partially achieved",
+              "Not achieved"
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "achievementComments",
+            "validate": "maxSize[1000]"
+          },
+          {
+            "dataType": "list",
+            "name": "projectImpacts",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "code"
+              },
+              {
+                "dataType": "text",
+                "name": "outcomeStatement",
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "outcomeAssets",
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "nominatedPriorityAchievements",
+                "validate": "required,maxSize[1000]"
+              },
+              {
+                "dataType": "stringList",
+                "name": "keyAspectsEnabler",
+                "validate": "required",
+                "constraints": [
+                  "Stakeholder Engagement",
+                  "Community involvement",
+                  "Partnerships with local groups",
+                  "Collaboration with Indigenous groups",
+                  "Adequate Funding and Resources",
+                  "In-kind contributions",
+                  "Governance and accountability with well-defined roles and responsibilities",
+                  "Project planning",
+                  "Regular Monitoring and evaluation",
+                  "Time and capacity",
+                  "Resource use or economic priorities",
+                  "Data and knowledge",
+                  "IT infrastructure",
+                  "Site access/location",
+                  "Access to expertise and skilled personnel",
+                  "Other"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "otherKeyAspectsEnabler",
+                "description": "",
+                "validate": "maxSize[1000]"
+              },
+              {
+                "dataType": "stringList",
+                "name": "keyAspectsBarriers",
+                "validate": "required",
+                "constraints": [
+                  "Inadequate Stakeholder Engagement",
+                  "Inadequate Community involvement",
+                  "Inadequate Partnerships with local groups",
+                  "Inadequate Collaboration with Indigenous groups",
+                  "Insufficient Funding and Resources",
+                  "In-kind contributions not realised",
+                  "Inadequate Governance and accountability with well-defined roles and responsibilities",
+                  "Regulatory or policy requirements",
+                  "Inadequate Project planning",
+                  "Inadequate Regular monitoring and evaluation",
+                  "Lack of stakeholder buy-in",
+                  "Regulatory or policy requirements",
+                  "Unpredictable weather conditions",
+                  "Natural disasters or extreme weather events",
+                  "Disease/Pandemic",
+                  "Time and capacity constraints",
+                  "Conflicting resource use or economic priorities",
+                  "Inadequate data and knowledge",
+                  "Inadequate IT infrastructure",
+                  "Inadequate Site Access/Remote site location",
+                  "Inadequate access to expertise and skilled personnel",
+                  "Other"
+
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "otherKeyAspectsBarriers",
+                "validate": "maxSize[1000]"
+              }
+            ]
+          },
+          {
+            "dataType": "list",
+            "name": "assuranceDocuments",
+            "columns": [
+              {
+                "dataType": "document",
+                "name": "attachments",
+                "description": "Please attach any Evidence of Service Delivery here."
+              }
+            ]
+          },
+          {
+            "dataType": "list",
+            "name": "programLevelOutcome",
+            "allowRowDelete": "true",
+            "columns": [
+              {
+                "dataType": "stringList",
+                "name": "impactedOutcome",
+                "validate": "required",
+                "constraints": [
+                  "Species conservation",
+                  "Ecological community conservation",
+                  "Ramsar site conservation",
+                  "World Heritage Area conservation",
+                  "Marine Protected Area conservation",
+                  "Habitat restoration",
+                  "Waterway restoration",
+                  "Heritage site protection",
+                  "Cultural connection and knowledge",
+                  "Climate Resilience",
+                  "Land condition improvement",
+                  "Soil health improvement",
+                  "Farm profitability",
+                  "Market access",
+                  "Adopting sustainable agriculture practices",
+                  "Other"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "otherImpactedOutcome",
+                "validate": "maxSize[1000]"
+              },
+              {
+                "dataType": "stringList",
+                "name": "impactedProjectActivities",
+                "validate": "required",
+                "constraints": [
+                  "Captive Breding/Translocation/Re-introduction",
+                  "Communication materials",
+                  "Community/Stakeholder Engagement",
+                  "Controlling Access",
+                  "Controlling Pest Animals",
+                  "Debris removal",
+                  "Developing Management Plans",
+                  "Erosion Management",
+                  "Establishing Agreements",
+                  "Establishing and Implementing Conservation Agreements",
+                  "Establishing and Maintaining Pest animal- free enclosures",
+                  "First Nations Cultural Practices",
+                  "Habitat Augmentation",
+                  "Improving Hydrological Regimes",
+                  "Implementing Fire management actions",
+                  "Improving Land management Practices",
+                  "Managing disease",
+                  "Obtaining relevant approvals",
+                  "Removing Weeds",
+                  "Research and Development",
+                  "Revegetating habitat",
+                  "Seed collection and propagation",
+                  "Site Preparation",
+                  "Undertaking Emergency Interventions to prevent extinction"
+                ]
+              },
+              {
+                "dataType": "stringList",
+                "name": "impactedMainStakeholders",
+                "validate": "required",
+                "constraints": [
+                  "Local regional community/communities",
+                  "Suburban community/communities",
+                  "Coastal community/communities",
+                  "Remote community/communities",
+                  "Farmers, rural landowners",
+                  "Landcare groups",
+                  "Industry bodies (e.g.  grower groups)",
+                  "First Nations peoples and groups",
+                  "Educational Institutions",
+                  "Researchers",
+                  "Natural resource managers",
+                  "Local government",
+                  "Conservation interests",
+                  "Marine industry (fishing, tourism)",
+                  "Recreational users",
+                  "Tourism operators",
+                  "Government agencies",
+                  "Other"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "otherImpactedMainStakeholders",
+                "validate": "maxSize[1000]"
+              },
+              {
+                "dataType": "text",
+                "name": "describeImpacts",
+                "validate": "required,maxSize[1000]"
+              }
+            ]
+          },
+          {
+            "dataType": "stringList",
+            "name": "maintainOutcomesAchieved",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No",
+              "Not applicable"
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "yesMaintainOutcomesAchieved",
+            "validate": "required,maxSize[300]",
+            "description": "Detail what formal commitment/s have been made to maintain the project outcomes beyond the date of project completion/life of the grant i.e. ongoing management of the project site. For a project located on public land, describe the commitment of the responsible land manager/s to maintain the project outcomes.",
+            "behaviour": [
+              {
+                "condition": "maintainOutcomesAchieved == \"Yes\"",
+                "type": "enable"
               }
             ]
           },
@@ -67,31 +290,46 @@
             "validate": "required,maxSize[500]"
           },
           {
-            "dataType": "text",
-            "name": "howOutcomesMaintain",
-            "validate": "maxSize[400]"
+            "dataType": "stringList",
+            "name": "additionalProjectInformation",
+            "description": "Your contract manager will inform you if there are any program-specific information you need to report.",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No",
+              "Not applicable"
+            ]
           },
           {
-            "dataType": "stringList",
-            "name": "achievementLevel",
-            "validate": "required",
-            "description": "Partially achieved’ means that the project delivered, on average, around 26-50% of the target set for each service and outcome rating (e.g., target was 10ha of revegetation, project achieved 5ha). If every activity targets/outcomes are met, select ‘Achieved 100%.",
-            "constraints": [
-              "Achieved (100%)",
-              "Significantly achieved (76-99%)",
-              "Satisfactorily achieved (51-75%)",
-              "Partially achieved (26-50%)",
-              "Inadequately achieved (1-25%)",
-              "Not achieved (0%)",
-              "Unable to rate"
+            "dataType": "text",
+            "name": "additionalInformation",
+            "validate": "required,maxSize[1000]",
+            "behaviour": [
+              {
+                "condition": "additionalProjectInformation == \"Yes\"",
+                "type": "enable_and_clear"
+              }
+            ]
+          },
+          {
+            "dataType": "list",
+            "name": "additionalInformationDocuments",
+            "columns": [
+              {
+                "dataType": "document",
+                "name": "additionalInformationAttachments",
+                "description": "Please attach any Evidence of Service Delivery here."
+              }
             ]
           },
           {
             "dataType": "stringList",
-            "name": "isTargetAchieved",
+            "name": "havePromotionalSummary",
+            "validate": "required",
             "constraints": [
               "Yes",
-              "No"
+              "No",
+              "Not applicable"
             ]
           },
           {
@@ -134,7 +372,7 @@
                 "name": "reasonTargetNotMet",
                 "behaviour": [
                   {
-                    "condition": "delivered < projectTarget",
+                    "condition": "delivered != projectTarget",
                     "type": "enable_and_clear"
                   }
                 ],
@@ -146,8 +384,98 @@
             "name": "projectTargets"
           },
           {
+            "dataType": "text",
+            "name": "deliveredActivitiesComments",
+            "validate": "maxSize[1000]"
+          },
+          {
             "dataType": "stringList",
-            "name": "projectEngagement",
+            "name": "didProjectStakeholderEngage",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No",
+              "Not applicable"
+            ]
+          },
+          {
+            "dataType": "list",
+            "name": "projectEngagementDetails",
+            "allowRowDelete": "true",
+            "columns": [
+              {
+                "dataType": "stringList",
+                "name": "stakeholderGroup",
+                "validate": "required",
+                "constraints": [
+                  "Local regional community/communities",
+                  "Suburban community/communities",
+                  "Coastal community/communities",
+                  "Remote community/communities",
+                  "Farmers, rural landowners",
+                  "Landcare groups",
+                  "Industry bodies (e.g. grower groups)",
+                  "First Nations peoples and groups",
+                  "Researchers",
+                  "Educational Institutions",
+                  "Natural resource managers",
+                  "Local government",
+                  "Conservation interests",
+                  "Marine industry (fishing, tourism)",
+                  "Recreational users",
+                  "Tourism operators",
+                  "Government agencies",
+                  "Other"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "otherStakeholderGroup",
+                "validate": "maxSize[1000]"
+              },
+              {
+                "dataType": "text",
+                "name": "describeEngagement",
+                "validate": "required,maxSize[1000]"
+              },
+              {
+                "dataType": "stringList",
+                "name": "isEngagementPlanned",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ]
+              },
+              {
+                "dataType": "stringList",
+                "name": "yesEngagementPlanned",
+                "constraints": [
+                  "Yes",
+                  "No"
+                ],
+                "behaviour": [
+                  {
+                    "condition": "isEngagementPlanned == \"Yes\"",
+                    "type": "enable_and_clear"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "describeEngagementUnplanned",
+                "validate": "required,maxSize[1000]",
+                "behaviour": [
+                  {
+                    "condition": "yesEngagementPlanned == \"No\"",
+                    "type": "enable_and_clear"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "dataType": "stringList",
+            "name": "anyPlannedProjectChanges",
             "validate": "required",
             "constraints": [
               "Yes",
@@ -157,18 +485,18 @@
           },
           {
             "dataType": "text",
-            "name": "yesProjectEngagement",
-            "validate": "required,maxSize[300]",
+            "name": "yesPlannedProjectChanges",
+            "validate": "required,maxSize[1000]",
             "behaviour": [
               {
-                "condition": "projectEngagement == \"Yes\"",
-                "type": "enable"
+                "condition": "anyPlannedProjectChanges == \"Yes\"",
+                "type": "enable_and_clear"
               }
             ]
           },
           {
             "dataType": "stringList",
-            "name": "unexpectedChanges",
+            "name": "projectUnexpectedChanges",
             "validate": "required",
             "constraints": [
               "Yes",
@@ -177,38 +505,103 @@
             ]
           },
           {
-            "dataType": "text",
-            "name": "yesUnexpectedChanges",
-            "validate": "required,maxSize[300]",
-            "behaviour": [
+            "dataType": "list",
+            "name": "projectUnexpectedChangesDetails",
+            "allowRowDelete": "true",
+            "columns": [
               {
-                "condition": "unexpectedChanges == \"Yes\"",
-                "type": "enable"
+                "dataType": "stringList",
+                "name": "typeOfChange",
+                "validate": "required",
+                "constraints": [
+                  "Positive",
+                  "Negative",
+                  "Unexpected",
+                  "Unintended"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "describeUnexpectedChanges",
+                "validate": "required,maxSize[1000]"
+              },
+              {
+                "dataType": "stringList",
+                "name": "unexpectedChangesImpact",
+                "validate": "required",
+                "constraints": [
+                  "Species conservation",
+                  "Ecological community conservation",
+                  "Ramsar site conservation",
+                  "World Heritage Area conservation",
+                  "Marine Protected Area conservation",
+                  "Habitat restoration",
+                  "Waterway restoration",
+                  "Heritage site protection",
+                  "Cultural connection and knowledge",
+                  "Climate Resilience",
+                  "Land condition improvement",
+                  "Soil health improvement",
+                  "Adoption in best practice",
+                  "Market access",
+                  "Reduction in carbon emissions",
+                  "Stakeholder engagement",
+                  "Community involvement",
+                  "Partnerships with local groups",
+                  "Expertise and skilled personnel",
+                  "Knowledge and skills set",
+                  "Farm profitability",
+                  "Other"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "otherUnexpectedChangesImpact",
+                "validate": "maxSize[1000]"
               }
             ]
           },
           {
-            "dataType": "stringList",
-            "name": "outcomesMaintenance",
-            "validate": "required",
-            "constraints": [
-              "Significantly",
-              "Satisfactorily",
-              "Partially",
-              "Not at all",
-              "Not applicable"
+            "dataType": "list",
+            "name": "lessonsLearntDetails",
+            "allowRowDelete": "true",
+            "columns": [
+              {
+                "dataType": "stringList",
+                "name": "lessonsLearntArea",
+                "validate": "required",
+                "constraints": [
+                  "Project Partners",
+                  "Stakeholder Engagement",
+                  "First Nations Engagement",
+                  "Project Assumptions/ dependencies",
+                  "Project Implementation",
+                  "Monitoring",
+                  "Project design/planning",
+                  "Budget Governance",
+                  "Resources",
+                  "Evaluation",
+                  "Activity changes",
+                  "Risk management",
+                  "Other"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "otherLessonsLearntArea",
+                "validate": "maxSize[1000]"
+              },
+              {
+                "dataType": "text",
+                "name": "describeLessonsLearnt",
+                "validate": "required,maxSize[1000]"
+              },
+              {
+                "dataType": "text",
+                "name": "willDoDifferently",
+                "validate": "required,maxSize[1000]"
+              }
             ]
-          },
-          {
-            "dataType": "text",
-            "name": "projectLearningsSummary",
-            "validate": "required,maxSize[1000]"
-          },
-          {
-            "dataType": "text",
-            "name": "documentAdditionalInformation",
-            "description": "Provide details of specific program information relating to your project.",
-            "validate": "required,maxSize[1000]"
           },
           {
             "dataType": "list",
@@ -232,49 +625,25 @@
           {
             "items": [
               {
-                "source": "<h4>1. Project Outcomes</h4>",
+                "source": "<h4>1. PROJECT OUTCOMES</h4>",
                 "type": "literal"
               }
             ],
             "type": "row"
           },
           {
-            "type": "row",
             "items": [
               {
-                "source": "projectEffectiveness",
-                "type": "textarea",
-                "rows": 5,
-                "preLabel": "1.1 Describe the effectiveness of the project and whether it delivered what was intended."
+                "source": "<b>1.1 To what extent did you achieve the MERI plan outcomes for your project?</b><b style=\"color:red\">*</b><br><i>(Fully Achieved = Outcome measure achieved, Mostly Achieved = half or more of the outcome measure achieved, Partially Achieved = Less than half of the outcome measure achieved, Not Achieved = Outcome measure not achieved)</i>",
+                "type": "literal"
               }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "source": "projectImpact",
-                "type": "textarea",
-                "rows": 5,
-                "preLabel": "1.2 What impact has the project had?"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "source": "projectImplementationChanges",
-                "type": "textarea",
-                "rows": 5,
-                "preLabel": "1.3 Describe any changes to the project implementation and why these were necessary."
-              }
-            ]
+            ],
+            "type": "row"
           },
           {
             "items": [
               {
-                "source": "<b>1.4 Briefly describe the achievements that have been made against each outcome statement in the MERI Plan including details of any enablers and/or barriers throughout the life of the project.</b>",
+                "source": "Reflecting on the each of the project outcome statements in your MERI plan, please specifically state what your project achieved, and the degree to which the planned outcome was achieved.",
                 "type": "literal"
               }
             ],
@@ -282,7 +651,72 @@
           },
           {
             "source": "projectOutcomes",
-            "title": "Please provide supporting information (e.g. report, photos), where this has not been previously supplied, as attachments to this report via the Admin tab > Documents sub-tab of MERIT. Where supporting evidence contains sensitive or confidential information, please send to the departmental Project Manager by email.",
+            "title": "",
+            "type": "table",
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "source": "code",
+                "type": "readonlyText",
+                "title": "Outcome Statement Number"
+              },
+              {
+                "type": "textarea",
+                "readonly": true,
+                "source": "outcomeStatement",
+                "title": "Outcome Statement",
+                "rows": 5,
+                "width": "35%"
+              },
+              {
+                "type": "textarea",
+                "source": "achievement",
+                "title": "What did the project achieve against this outcome statement?",
+                "rows": 5,
+                "width": "35%"
+              },
+              {
+                "width": "25%",
+                "source": "basedRating",
+                "title": "The degree to which the project outcome was achieved",
+                "type": "select2"
+              }
+            ]
+          },
+
+          {
+            "items": [
+              {
+                "source": "meriPlanOutcomesAchieved",
+                "preLabel": "1.2 Considered collectively, to what extent were all the MERI plan outcomes achieved for your project?<br><span style=\"font-weight:normal\">Please select one of the following statements that most accurately reflects the overall achievement of your project against the outcome statements in your MERI plan.</span>",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "achievementComments",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "1.3 If you have any other comments about the achievements against outcomes outlined in your MERI plan, please outline below."
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<b>1.4 Describe the project’s impact on the investment priorities, and what helped (enabled) or made it difficult (was a barrier) to achieve the outcomes for the investment priorities?</b><b style=\"color:red\">*</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "source": "projectImpacts",
+            "title": "",
             "type": "table",
             "disableTableUpload": true,
             "columns": [
@@ -297,101 +731,169 @@
                 "source": "outcomeStatement",
                 "title": "Outcome",
                 "rows": 5,
-                "width": "35%"
+                "width": "20%"
               },
               {
                 "type": "textarea",
-                "source": "achievement",
-                "title": "Achievement/s",
+                "readonly": true,
+                "source": "outcomeAssets",
+                "title": "Investment Priority",
                 "rows": 5,
-                "width": "35%"
+                "width": "20%"
               },
               {
-                "width": "25%",
-                "source": "basedRating",
-                "title": "Rating based on the achievement of the outcome statement",
-                "type": "select2"
-              }
-            ]
-          },
-          {
-            "items": [
-              {
-                "source": "projectEngagement",
-                "preLabel": "1.5 Did your project engage with First Nations people (including traditional owners, indigenous organisations/rangers), landholders and local community?",
-                "type": "selectOne"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "source": "yesProjectEngagement",
                 "type": "textarea",
+                "source": "nominatedPriorityAchievements",
+                "title": "Achievements for the nominated investment priority/priorities",
                 "rows": 5,
-                "preLabel": "1.5.1 If yes, which group/s and how?"
+                "width": "20%"
+              },
+              {
+                "width": "20%",
+                "type": "col",
+                "title": "What key aspects helped (enabled) to achieve the outcomes for the investment priorities?<b style=\"color:red\">*</b>",
+                "items": [
+                  {
+                    "source": "keyAspectsEnabler",
+                    "type": "select2Many"
+                  },
+                  {
+                    "source": "otherKeyAspectsEnabler",
+                    "placeholder": "If ‘Other’ was selected, please describe here ",
+                    "type": "textarea"
+                  }
+                ]
+              },
+              {
+                "width": "20%",
+                "type": "col",
+                "title": "What key aspects made it difficult (was a barrier) to achieve the outcomes for the investment priorities?<b style=\"color:red\">*</b>",
+                "items": [
+                  {
+                    "source": "keyAspectsBarriers",
+                    "type": "select2Many"
+                  },
+                  {
+                    "source": "otherKeyAspectsBarriers",
+                    "placeholder": "If ‘Other’ was selected, please describe here ",
+                    "type": "textarea"
+                  }
+                ]
               }
             ]
           },
           {
             "items": [
               {
-                "source": "unexpectedChanges",
-                "preLabel": "1.6 Were there any unexpected or unintended (positive or negative) changes or other outcomes delivered by this project including environmental, social and economic impacts?",
-                "type": "selectOne"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "source": "yesUnexpectedChanges",
-                "type": "textarea",
-                "rows": 5,
-                "preLabel": "1.6.1 If yes, what were they?"
-              }
-            ]
-          },
-          {
-            "items": [
-              {
-                "source": "outcomesMaintenance",
-                "preLabel": "1.7 To what extent will the outcomes achieved by this project be maintained after the project has been completed?",
-                "type": "selectOne"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "source": "howOutcomesMaintain",
-                "type": "textarea",
-                "rows": 5,
-                "preLabel": "<b>1.7.1 If they will be maintained, how and who will do this?</b>"
-              }
-            ]
-          },
-          {
-            "items": [
-              {
-                "source": "<h4>2. Project Outputs</h4>",
+                "source": "Please provide supporting information (e.g. report, photos), where this has not been previously supplied, as attachments to this report via the ‘Attach Document’ button below, or via the Admin tab > Documents sub-tab of MERIT. Where supporting evidence contains sensitive or confidential information, please send to the departmental Project Manager by email.<br><br>Attachments must be less than 20Mb. Acceptable formats include .jpeg, .jpg, .png, .pdf, .docx. If you have videos, please upload to a video sharing service (e.g. YouTube, Vimeo) and provide link/s in an attached document. Do not upload videos directly to MERIT. If in doubt, please contact your contract manager.",
                 "type": "literal"
               }
             ],
             "type": "row"
           },
           {
+            "type": "table",
+            "source": "assuranceDocuments",
+            "userAddedRows": true,
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "title": "Attached documents",
+                "source": "attachments",
+                "type": "document"
+              }
+            ]
+          },
+          {
             "items": [
               {
-                "source": "isTargetAchieved",
-                "preLabel": "2.1 Did you achieve the target for each activity listed in the MERI Plan?",
+                "source": "<b>1.5 What were the main impacts of the project? Select up to three program level outcomes</b><b style=\"color:red\">*</b>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "source": "programLevelOutcome",
+            "title": "Please report each program level outcome as a new row (maximum of three)",
+            "type": "table",
+            "userAddedRows": true,
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "width": "25%",
+                "type": "col",
+                "title": "What program level outcome was impacted?<b style=\"color:red\">*</b>",
+                "items": [
+                  {
+                    "source": "impactedOutcome",
+                    "type": "selectOne"
+                  },
+                  {
+                    "source": "otherImpactedOutcome",
+                    "placeholder": "If ‘Other’ was selected, please describe here ",
+                    "type": "textarea"
+                  }
+                ]
+              },
+              {
+                "width": "20%",
+                "source": "impactedProjectActivities",
+                "title": "What project activities had the most significant impact?",
+                "type": "select2Many"
+              },
+              {
+                "width": "25%",
+                "type": "col",
+                "title": "Who were the main stakeholders impacted by the project?<b style=\"color:red\">*</b>",
+                "items": [
+                  {
+                    "source": "impactedMainStakeholders",
+                    "type": "select2Many"
+                  },
+                  {
+                    "source": "otherImpactedMainStakeholders",
+                    "placeholder": "If ‘Other’ was selected, please describe here ",
+                    "type": "textarea"
+                  }
+                ]
+              },
+              {
+                "type": "textarea",
+                "source": "describeImpacts",
+                "title": "Please explain how the project activities impacted the program outcome and how the main stakeholders were impacted",
+                "rows": 5,
+                "width": "30%"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "maintainOutcomesAchieved",
+                "preLabel": "1.6 Will you maintain the outcomes achieved by this project after the project has been completed?",
                 "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "yesMaintainOutcomesAchieved",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "1.6.1 If you answered yes, specifically describe how the outcomes will be maintained, including who will be responsible?"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>2. PROJECT OUTPUTS</h4>",
+                "type": "literal"
               }
             ],
             "type": "row"
@@ -449,45 +951,25 @@
             ],
             "userAddedRows": false,
             "source": "projectTargets",
-            "title": "<b>2.2 Report on and explain any activities that have been under delivered (below target) or over delivered (above target)</b>",
+            "title": "<b>2.1 Report on and explain any activities that have been under delivered (below target) or over delivered (above target)</b>",
             "type": "table"
           },
           {
-            "items": [
-              {
-                "source": "<h4>3. Monitoring, Evaluation and Lessons Learnt</h4>",
-                "type": "literal"
-              }
-            ],
-            "type": "row"
-          },
-          {
             "type": "row",
             "items": [
               {
-                "source": "projectLearningsSummary",
+                "source": "deliveredActivitiesComments",
                 "type": "textarea",
                 "rows": 5,
-                "preLabel": "<b>3.1 Summarise the lessons learnt in the project delivery. This may include monitoring, evaluation, activity changes and risk management.</b>"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "source": "documentAdditionalInformation",
-                "type": "textarea",
-                "rows": 5,
-                "preLabel": "<b>4. Please document any additional information relating to the project.</b>"
+                "preLabel": "2.1.1 If you have any other comments about the delivery of the activities outlined in your MERI plan, please outline below."
               }
             ]
           },
           {
             "items": [
               {
-                "source": "achievementLevel",
-                "preLabel": "5. To what extent did you achieve your project outcomes and project services? <br>Please select the one of the levels of achievement you have reached  e.g. Achieved (100%), Partially achieved (26-50%)",
+                "source": "didProjectStakeholderEngage",
+                "preLabel": "2.2 Did your project engage with stakeholder groups? (e.g. landholders, the local community, and/or First Nations people, including traditional owners, indigenous organisations/rangers)?",
                 "type": "selectOne"
               }
             ],
@@ -496,7 +978,69 @@
           {
             "items": [
               {
-                "source": "<h4>6. Good News Stories</h4>",
+                "source": "projectEngagementDetails",
+                "title": "<b>2.2.1 If yes, which stakeholder group/s and how? Please report each group as a new row.</b>",
+                "type": "table",
+                "disableTableUpload": true,
+                "userAddedRows": true,
+                "columns": [
+                  {
+                    "width": "20%",
+                    "type": "col",
+                    "title": "Stakeholder Group<b style=\"color:red\">*</b>",
+                    "items": [
+                      {
+                        "source": "stakeholderGroup",
+                        "type": "selectOne"
+                      },
+                      {
+                        "source": "otherStakeholderGroup",
+                        "placeholder": "If ‘Other’ was selected, please describe here ",
+                        "type": "textarea"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "textarea",
+                    "source": "describeEngagement",
+                    "title": "How did you engage with this group?",
+                    "rows": 5,
+                    "width": "25%"
+                  },
+                  {
+                    "width": "15%",
+                    "source": "isEngagementPlanned",
+                    "title": "Was the engagement planned as part of your project?",
+                    "type": "selectOne"
+                  },
+                  {
+                    "width": "15%",
+                    "source": "yesEngagementPlanned",
+                    "title": "If yes, was the engagement conducted as planned?",
+                    "type": "selectOne"
+                  },
+                  {
+                    "type": "textarea",
+                    "source": "describeEngagementUnplanned",
+                    "title": "If the engagement was not conducted as planned, what was different and why?",
+                    "rows": 5,
+                    "width": "25%"
+                  }
+                ]
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "didProjectStakeholderEngage == \"Yes\""
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>3. CHANGES</h4>",
                 "type": "literal"
               }
             ],
@@ -505,40 +1049,243 @@
           {
             "items": [
               {
-                "source": "<b>6.1 Please provide good news stories that highlight what the project achieved in the final period.</b><p>This information is intended for potential use by the Department in publicly promoting the program. Photos may be attached to the report via attachment to email however please ensure permissions of persons in the photos being attached and used for promotional purposes.</p>",
+                "source": "anyPlannedProjectChanges",
+                "preLabel": "3.1 Were any changes required to the planned project implementation?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "yesPlannedProjectChanges",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "3.1.1 If yes, describe any changes to the project implementation and why these were necessary."
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "projectUnexpectedChanges",
+                "preLabel": "3.2 Were there any unexpected or unintended (positive or negative) changes or other outcomes delivered by this project, including environmental, social and economic impacts?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "projectUnexpectedChangesDetails",
+                "title": "<b>3.2.1 If yes, what were they? Please enter each unexpected or unintended change or other outcome as a new row.</b>",
+                "type": "table",
+                "disableTableUpload": true,
+                "userAddedRows": true,
+                "columns": [
+                  {
+                    "width": "25%",
+                    "source": "typeOfChange",
+                    "title": "Type of Change",
+                    "type": "selectOne"
+                  },
+                  {
+                    "type": "textarea",
+                    "source": "describeUnexpectedChanges",
+                    "title": "What were the unexpected or unintended changes or outcomes?",
+                    "rows": 5,
+                    "width": "40%"
+                  },
+                  {
+                    "width": "35%",
+                    "type": "col",
+                    "title": "What did they impact?<b style=\"color:red\">*</b>",
+                    "items": [
+                      {
+                        "source": "unexpectedChangesImpact",
+                        "type": "select2Many"
+                      },
+                      {
+                        "source": "otherUnexpectedChangesImpact",
+                        "placeholder": "If ‘Other’ was selected, please describe here ",
+                        "type": "textarea"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "projectUnexpectedChanges == \"Yes\""
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>4. MONITORING, EVALUATION AND LESSONS LEARNT</h4>",
                 "type": "literal"
               }
             ],
             "type": "row"
           },
           {
-            "columns": [
+            "items": [
               {
-                "source": "",
-                "type": "literal",
-                "width": "5%",
-                "preLabel": {
-                  "computed": "\\'No. \\' || (index + 1)"
-                },
-                "title": "Story No."
-              },
-              {
-                "source": "storyDetails",
-                "type": "textarea",
-                "rows": 4,
-                "title": "Good News Story Details",
-                "width": "50%"
-              },
-              {
-                "type": "image",
-                "source": "photo",
-                "title": "",
-                "width": "45%"
+                "source": "<b>4.1 Please summarise the lessons learnt in the project delivery. This may include implementation, interventions undertaken, monitoring, evaluation, activity changes and risk management.</b><b style=\"color:red\">*</b>",
+                "type": "literal"
               }
             ],
+            "type": "row"
+          },
+          {
+            "source": "lessonsLearntDetails",
+            "title": "Please enter each lesson learnt as a new row.",
+            "type": "table",
+            "disableTableUpload": true,
             "userAddedRows": true,
-            "source": "goodNewsStories",
-            "type": "table"
+            "columns": [
+              {
+                "width": "30%",
+                "type": "col",
+                "title": "Area in which lessons learnt<b style=\"color:red\">*</b>",
+                "items": [
+                  {
+                    "source": "lessonsLearntArea",
+                    "type": "selectOne"
+                  },
+                  {
+                    "source": "otherLessonsLearntArea",
+                    "placeholder": "If ‘Other’ was selected, please describe here ",
+                    "type": "textarea"
+                  }
+                ]
+              },
+              {
+                "type": "textarea",
+                "source": "describeLessonsLearnt",
+                "title": "Describe the lessons learnt",
+                "rows": 5,
+                "width": "35%"
+              },
+              {
+                "type": "textarea",
+                "source": "willDoDifferently",
+                "title": "What would you do differently i.e. considering the issues encountered and lessons learned, if you were to repeat the project?",
+                "rows": 5,
+                "width": "35%"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>5. ADDITIONAL INFORMATION</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "additionalProjectInformation",
+                "preLabel": "5.1 Do you have any additional information regarding the project that you are required to provide?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "additionalInformation",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "5.1.1 If yes, please document any additional information relating to the project and attach any supporting documents/images/information."
+              }
+            ]
+          },
+          {
+            "type": "table",
+            "source": "additionalInformationDocuments",
+            "title": "Attachments must be less than 20Mb. Acceptable formats include .jpeg, .jpg, .png, .pdf, .docx. If you have videos, please upload to a video sharing service (e.g. YouTube, Vimeo) and provide link/s in an attached document. Do not upload videos directly to MERIT. If in doubt, please contact your contract manager.",
+            "userAddedRows": true,
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "title": "Attached documents",
+                "source": "additionalInformationAttachments",
+                "type": "document"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>6. PROMOTIONAL SUMMARY</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "havePromotionalSummary",
+                "preLabel": "6.1 Do you have a promotional summary (good news story) describing the outcomes your project achieved?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "columns": [
+                  {
+                    "source": "",
+                    "type": "literal",
+                    "width": "5%",
+                    "preLabel": {
+                      "computed": "\\'No. \\' || (index + 1)"
+                    },
+                    "title": "Story No."
+                  },
+                  {
+                    "source": "storyDetails",
+                    "type": "textarea",
+                    "rows": 4,
+                    "title": "Good News Story Details",
+                    "width": "50%"
+                  },
+                  {
+                    "type": "image",
+                    "source": "photo",
+                    "title": "",
+                    "width": "45%"
+                  }
+                ],
+                "userAddedRows": true,
+                "source": "goodNewsStories",
+                "type": "table",
+                "title": "<b>6.1.1 If yes, please provide details.<br>Please report each promotional summary (good news story) in a new row.</b><p>This information is intended for potential use by the Department in publicly promoting the program. This can include before and after photos that demonstrate the change achieved by the project. Photos may be attached to the report via attachment to email however please ensure permissions of persons in the photos being attached and used for promotional purposes. Attachments must be less than 20Mb. Acceptable formats include .jpeg, .jpg, .png, .pdf, .docx. If you have videos, please upload to a video sharing service (e.g. YouTube, Vimeo) and provide link/s in an attached document. Do not upload videos directly to MERIT. If in doubt, please contact your contract manager.</p>"
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "havePromotionalSummary == \"Yes\""
+              }
+            ],
+            "type": "row"
           }
         ],
         "pre-populate": [
@@ -566,6 +1313,40 @@
                   {
                     "target": "outcomeStatement",
                     "source-path": "description"
+                  }
+                ],
+                "source-path": "custom.details.outcomes.shortTermOutcomes"
+              }
+            ]
+          },
+          {
+            "source": {
+              "context-path": "owner"
+            },
+            "merge": {
+              "projectImpacts": {
+                "deleteUnmatchedExistingRows": true,
+                "addUnmatchedNewRows": true,
+                "keys": [
+                  "outcomeStatement"
+                ]
+              }
+            },
+            "mapping": [
+              {
+                "target": "projectImpacts",
+                "mapping": [
+                  {
+                    "target": "code",
+                    "source-path": "code"
+                  },
+                  {
+                    "target": "outcomeStatement",
+                    "source-path": "description"
+                  },
+                  {
+                    "target": "outcomeAssets",
+                    "source-path": "assets"
                   }
                 ],
                 "source-path": "custom.details.outcomes.shortTermOutcomes"
