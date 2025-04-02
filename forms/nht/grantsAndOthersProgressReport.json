@@ -22164,15 +22164,6 @@
                 ]
               },
               {
-                "dataType": "text",
-                "name": "invoicingThisActivity",
-                "constraints": [
-                  "Yes",
-                  "No"
-                ],
-                "validate": "required"
-              },
-              {
                 "dataType": "feature",
                 "name": "sitesResearchAndDevelopment",
                 "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
@@ -27818,7 +27809,7 @@
             "decimalPlaces": 0,
             "defaultValue": 1,
             "computed": {
-              "expression": "sum(researchAndDevelopmentByOutcome, \"numberOfDaysConducted\")"
+              "expression": "sum(researchAndDevelopmentByOutcome, \"numberOfHoursConducted\")"
             }
           },
           {
@@ -28022,22 +28013,6 @@
                             "source": "investmentPriorities2",
                             "preLabel": "Which investment priority/ies does this activity relate to?",
                             "type": "select2Many"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "css": "span3",
-                    "type": "col",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "invoicingThisActivity",
-                            "preLabel": "Are you invoicing for this activity in this reporting period?",
-                            "type": "selectOne"
                           }
                         ]
                       }
