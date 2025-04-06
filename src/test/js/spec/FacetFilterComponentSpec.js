@@ -52,6 +52,20 @@ describe("Facet filter component unit tests", function () {
     it("should render component template correctly", function () {
         expect($(mockElement).find('.fa.fa-plus').length).toEqual(0);
         expect($(mockElement).find('.moreFacets').length).toEqual(2);
-        expect($(mockElement).find('input').length).toEqual(7);
-    })
+        expect($(mockElement).find('input[type="checkbox"]').length).toEqual(7);
+    });
+
+    it("allows searching for facet terms", function () {
+        facetFilterVM = ko.dataFor($(mockElement).find('facet-filter div')[0]);
+        var orgFacet = $(mockElement).find('#organisationFacetModal');
+        var orgFilter = orgFacet.find('input[name="filter"]');
+        orgFilter[0].value = "Rangelands";
+        $(orgFilter[0]).trigger('change');
+        expect(facetFilterVM.filter()).toEqual("Rangelands");
+        expect(orgFacet.find('ul.facetValues li')).toHaveLength(2);
+        facetFilterVM.filter("NRM");
+        $(orgFilter[0]).trigger('change');
+        expect(orgFacet.find('ul.facetValues li')).toHaveLength(1);
+
+    });
 });
