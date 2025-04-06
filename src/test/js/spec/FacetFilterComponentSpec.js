@@ -20,6 +20,7 @@ describe("Facet filter component unit tests", function () {
     var mockElement = null;
     var facetFilterVM = null;
     beforeAll(function() {
+        jasmine.clock().install();
         vm = {
             facetsList : ["status", "organisationFacet", "facet.test"],
             results: {"facets":{"status":{"terms":[{"term":"Completed","count":2}]},"organisationFacet":{"terms":[{"term":"Rangelands","count":2},{"term":"Rangelands NRM Co-ordinating Group (Inc.) ","count":2}]}, "facet.test":{"terms":[{"term":"Term 1","count":1}, {"term":"Term 2","count":4}]}}},
@@ -35,7 +36,12 @@ describe("Facet filter component unit tests", function () {
         facetFilter.setAttribute('params',"facetsList : facetsList, results:  results, fqLink: fqLink, baseUrl: baseUrl, projectExplorerUrl: projectExplorerUrl, max: max" );
         mockElement.appendChild(facetFilter);
         ko.applyBindings(vm, mockElement);
+        jasmine.clock().tick(100);
     });
+
+    afterAll(function() {
+        jasmine.clock().uninstall();
+    })
 
 
     it("should map data correctly to component view model", function() {
