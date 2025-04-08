@@ -85,7 +85,7 @@
 
 <div class="row mb-2">
     <div class="col-sm-4">
-        <label for="funding">Project funding</label>
+        <label for="funding">Project Funding (GST Exclusive)</label>
         <div>
             <g:textField class="form-control form-control-sm input-small" id="funding" name="funding" data-bind="value:funding" data-validation-engine="validate[custom[number]]"/>
         </div>
