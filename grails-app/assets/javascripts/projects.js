@@ -1080,7 +1080,6 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             fundingVerificationDate: self.fundingVerificationDate() || null, // Convert empty string to null
             status: self.status(),
             terminationReason: self.terminationReason(),
-            tags: self.tags(),
             promoteOnHomepage: self.promoteOnHomepage(),
             externalIds: ko.mapping.toJS(self.externalIds),
             geographicInfo: ko.mapping.toJS(self.geographicInfo),
@@ -1094,6 +1093,14 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
         projectService.saveProjectData(jsData);
 
     };
+
+    self.tagsChanged = ko.computed(function() {
+        return !_.isEqual(self.tags(), project.tags);
+    });
+
+    self.saveTags = function() {
+        projectService.saveProjectDataWithoutValidation({tags:self.tags()});
+    }
 
     self.initialiseSitesTab = function(options) {
         var defaults = {
