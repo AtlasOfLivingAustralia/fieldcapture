@@ -13,6 +13,8 @@
         }
     </script>
     <asset:stylesheet src="common-bs4.css"/>
+    <asset:stylesheet src="select2/css/select2.css"/>
+    <asset:stylesheet src="select2-theme-bootstrap4/select2-bootstrap.css"/>
     <asset:stylesheet src="documents.css"/>
 </head>
 <body>
@@ -25,20 +27,16 @@
         </ol>
     </section>
     <h3>Manage Help Documents</h3>
-    <p>Create a new category of help documents by entering the category name and pressing Add new category below</p>
+    <p>
+        Add a new help document by pressing the "New help document" button below.
+        Specify the category or categories the document should appear in by selecting
+        from the list of categories in the dialog.
+        Adding a new category can be achieved by typing it into the Categories input and pressing Enter/Return.
+    </p>
+
     <form class="form form-inline">
-        <input id="new-category-name" type="text" data-bind="value: newCategoryName" class="form-control col-8" placeholder="Name of new category"/>
-        <button id="add-new-category" class="btn btn-success" data-bind="enable: newCategoryName, click:newCategory">Add new category</button>
+        <button class="btn btn-info" id="doAttach" data-bind="click:attachDocument">New help document</button>
     </form>
-
-    <br/>
-    <p>Add a new help document in the selected category by selecting the category then pressing New help document in category below</p>
-    <form class="form form-inline">
-
-        <select class="form-control col-8" id="document-category" name="documentCategory" data-bind="options: documentCategories, value: selectedCategory, optionsCaption: 'Select a category'"></select>
-        <button class="btn btn-info" id="doAttach" data-bind="enable:selectedCategory, click:attachDocument">New help document in category</button>
-    </form>
-
 
     <hr/>
     <p>Help documents</p>
@@ -48,7 +46,7 @@
             <tr>
                 <th class="icon"></th>
                 <th class="name">Name</th>
-                <th class="info">Category</th>
+                <th class="info">Categories</th>
                 <th class="last-updated">Last updated</th>
                 <th></th>
                 <th></th>
@@ -67,7 +65,7 @@
 
                     </td>
                     <td class="name"><span data-bind="text:name() || filename()"></span></td>
-                    <td class="info"><span data-bind="text:labels"></span></td>
+                    <td class="info"><span data-bind="text:labels().join(', \n')"></span></td>
                     <td class="last-updated"><span data-bind="text:uploadDate.formattedDate()"></span></td>
                     <td><span data-bind="text:uploadDate"></span></td>
                     <td></td>
@@ -97,6 +95,8 @@
     </div>
 </div>
 <asset:javascript src="common-bs4.js"/>
+<asset:javascript src="select2/js/select2.full.js"/>
+<asset:javascript src="forms-knockout-bindings.js"/>
 <asset:javascript src="document.js"/>
 <asset:javascript src="file-upload-manifest.js"/>
 <asset:javascript src="admin.js"/>

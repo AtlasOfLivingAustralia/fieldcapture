@@ -20,6 +20,7 @@ class DocumentDialog extends Module {
         reportOptions {$('select#associatedReport option')}
         firstReportOption {$('select#associatedReport option',1)}
 
+        labels(required:false) {$('.labels input[type="search"]')}
 
     }
 
@@ -50,5 +51,12 @@ class DocumentDialog extends Module {
     def cancel() {
         cancelButton.click()
         Thread.sleep(500) // Wait for the modal to animate closed.
+    }
+
+    def addLabel(String label) {
+        $('.labels .select2-selection').click()// Wait for the input to be displayed
+        waitFor {labels.displayed}
+        labels << label << "\n"
+        Thread.sleep(1000) // Wait for the label to be added
     }
 }

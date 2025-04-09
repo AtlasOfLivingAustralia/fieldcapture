@@ -448,6 +448,10 @@ function showDocumentAttachInModal(uploadUrl, documentViewModel, modalSelector, 
             },
 
         }, scroll:false, autoPositionUpdate:true, promptPosition:'inline', customFunctions:{validateReportAssociation:validateReportAssociation}});
+        // Select2 doesn't like being initialised while invisible and leaves some components
+        // at 0 size.  This is a workaround.
+        $modal.find('.select2-container input[type="search"]').width('100%');
+
     });
 
     return result;
@@ -658,7 +662,9 @@ var EditableDocumentsViewModel = function(options) {
 
     var documentViewModelSettings  = {
         reports: settings.reports,
-        stages: settings.stages
+        stages: settings.stages,
+        labels:settings.labels,
+        labelsLabel: settings.labelsLabel
     };
 
     _.extend(self, new Documents(settings));

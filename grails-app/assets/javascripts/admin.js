@@ -297,6 +297,8 @@ EditHelpDocumentsViewModel = function(hubId, categories, documents) {
             role: 'helpDocument',
             public: true
         },
+        labelsLabel: 'Categories',
+        labels: categories,
         modalSelector: '#attachDocument',
         documentUpdateUrl: fcConfig.documentUpdateUrl,
         documentDeleteUrl: fcConfig.documentDeleteUrl,
