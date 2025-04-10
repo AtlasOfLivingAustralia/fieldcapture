@@ -1756,6 +1756,7 @@
                       "Exhibits/Installations",
                       "Extension materials",
                       "Fact Sheets",
+                      "Maps",
                       "Marketing materials",
                       "Media releases",
                       "Newsletters",
@@ -19578,7 +19579,7 @@
           }
         ],
         "modelName": "Obtaining approvals",
-        "title": "Obtain Relevant Approvals",
+        "title": "Obtaining Relevant Approvals",
         "viewModel": [
           {
             "type": "row",
