@@ -1088,6 +1088,12 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
     self.forecastPeriods = forecastPeriods;
     self.outcomeTargets = ko.observableArray();
 
+    self.sortedOutcomeTargets = ko.computed(function() {
+        return _.sortBy(self.outcomeTargets(), function(target) {
+            return target.serviceLabel + target.scoreLabel;
+        });
+    })
+
     self.addOutcomeTarget = function(outputTarget) {
         self.outcomeTargets.push(new Targets(outputTarget));
     }
