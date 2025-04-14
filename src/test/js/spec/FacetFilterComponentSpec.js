@@ -58,6 +58,7 @@ describe("Facet filter component unit tests", function () {
     it("should render component template correctly", function () {
         expect($(mockElement).find('.fa.fa-plus').length).toEqual(0);
         expect($(mockElement).find('.moreFacets').length).toEqual(2);
+        console.log($(mockElement).find('input[type="checkbox"]'));
         expect($(mockElement).find('input[type="checkbox"]').length).toEqual(7);
     });
 
