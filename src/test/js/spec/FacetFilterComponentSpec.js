@@ -42,6 +42,11 @@ describe("Facet filter component unit tests", function () {
 
     afterAll(function() {
         jasmine.clock().uninstall();
+    });
+
+    beforeEach(function() {
+        facetFilterVM = ko.dataFor($(mockElement).find('facet-filter div')[0]);
+        facetFilterVM.filter(null);
     })
 
 
