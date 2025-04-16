@@ -10,7 +10,7 @@
         <th class="score required">${targetMeasureHeading ?: 'Target measure'}</th>
     </tr>
     </thead>
-    <tbody data-bind="foreach : outcomeTargets">
+    <tbody data-bind="foreach : sortedOutcomeTargets">
     <tr class="service-target">
         <td class="index"><span data-bind="text:$index()+1"></span></td>
         <td class="service">

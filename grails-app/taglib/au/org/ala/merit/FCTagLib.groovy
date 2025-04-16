@@ -1001,6 +1001,29 @@ class FCTagLib {
         out << '<span class="diff"></span>'
     }
 
+    /**
+     * Acts as a customised loop that iterates through the combined targets in original and changed output targets
+     * and renders the body with a scoreId and index (i) variable.
+     * It's required as presenting a sorted version of output targets can't be done with the raw data as it
+     * only references a score id and we want to sort by the associated service then output target
+     */
+    def sortedServiceTargetMeasures = { Map attrs, body ->
+        List original = attrs.originalOutputTargets ?: []
+        List changed = attrs.changedOutputTargets ?: []
+        ProgramConfig config = attrs.programConfig
+
+        List scoreIds = (original.collect{it.scoreId} + changed.collect{it.scoreId}).unique()
+        List scoreLabels = scoreIds.collect{
+            [label:scoreLabel(it, config, true), scoreId:it]}
+
+        scoreLabels.sort{it.label}
+
+        scoreLabels.eachWithIndex { Map it, int i ->
+            out << body([scoreId: it.scoreId, i:i])
+        }
+    }
+
+
     def renderComparisonScoreLabel = { attrs ->
 
         List original = attrs.original

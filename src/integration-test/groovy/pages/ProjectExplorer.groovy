@@ -63,6 +63,7 @@ class ProjectExplorer extends ReloadablePage {
         dateOption(required: false, wait: true) { $("#isFilterByCompletedProjectsOption", dynamic: true) }
         dateFacet(required: false) { $("#projectDates", dynamic: true) }
         clearDatesBtn(required: false) { $("#facet-dates .clearDates", dynamic: true) }
+        applyDatesBtn(required: false) { $("#facet-dates .applyDates", dynamic: true) }
         organisationFacet(required: false) { $("#organisationFacet", dynamic: true) }
         organisationFacetItems(required: false) { $("#facet-organisationFacet > div > ul > li > a", dynamic: true) }
         inputText{ $("#keywords")}
