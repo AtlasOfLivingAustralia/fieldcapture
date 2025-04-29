@@ -397,7 +397,18 @@ ManageTagsViewModel = function(tags, options) {
     }
 
     self.initialiseDataTable = function(tableSelector) {
-        var table = $(tableSelector).DataTable();
+        var table = $(tableSelector).DataTable({
+            columnDefs: [
+                {
+                    targets: 0,
+                    orderable: true
+                },
+                {
+                    targets: 1,
+                    orderable:false
+                }
+            ]
+        });
         self.table = table;
         table.on('search.dt', function(e) {
 
