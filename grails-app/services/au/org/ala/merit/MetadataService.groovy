@@ -14,8 +14,6 @@ class MetadataService {
     static final String PROJECT_SERVICES_CACHE_REGION = 'projectServices'
     static final String PROJECT_SERVICES_KEY = 'projectServices'
 
-
-
     def activitiesModel() {
         return cacheService.get('activity-model',{
             webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') +
@@ -359,5 +357,49 @@ class MetadataService {
         result
     }
 
+    final String SUPPORTED_PROJECT_TAGS = 'supported_tags'
+
+    List<String> getTags() {
+        Map result = settingService.getJson(SUPPORTED_PROJECT_TAGS)
+
+        result.tags ?: []
+    }
+
+    Map updateTags(List<String> tags) {
+        settingService.setJson(SUPPORTED_PROJECT_TAGS, [tags:tags])
+    }
+
+    Map updateProjectTag(String oldTag, String newTag) {
+        Map result = [success:true]
+        List tags = getTags()
+        if (!tags.contains(newTag)) {
+            tags.add(newTag)
+        }
+        if (tags.contains(oldTag)) {
+            tags.remove(oldTag)
+        }
+        updateTags(tags)
+        result
+    }
+
+    Map addProjectTag(String tag) {
+        Map result = [success:true]
+        List tags = getTags()
+        if (!tags.contains(tag)) {
+            tags.add(tag)
+            result = updateTags(tags)
+        }
+        result
+    }
+
+    Map deleteProjectTag(String tag) {
+        Map result = [success:true]
+        List tags = getTags()
+        if (tags.contains(tag)) {
+            tags.remove(tag)
+            result = updateTags(tags)
+        }
+        result
+    }
 
 }

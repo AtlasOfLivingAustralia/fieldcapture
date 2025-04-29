@@ -130,4 +130,7 @@
     margin-left: -14px;
 }
 
+table.tags-table .admin-actions {
+    width: 120px;
+}
 

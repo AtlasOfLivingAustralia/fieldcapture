@@ -22,7 +22,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest
 @PreAuthorise(accessLevel = 'officer', redirectController = "home")
 @Slf4j
 class AdminController {
-    static allowedMethods = [ searchUserDetails: "GET", removeUserDetails:"POST"]
+    static allowedMethods = [ searchUserDetails: "GET", removeUserDetails:"POST", updateTag: "POST", addTag: "POST", deleteTag: "POST"]
+    static responseFormats = ['json', 'xml']
 
     BlogService blogService
     GrailsCacheManager grailsCacheManager
@@ -596,6 +597,33 @@ class AdminController {
     def checkForRisksAndThreatsChanges() {
         risksService.checkAndSendEmail()
         render 'ok'
+    }
+
+    def manageTags() {
+        [tags:metadataService.getTags()]
+    }
+
+    def updateTag(String oldTag, String newTag) {
+        if (!oldTag || !newTag) {
+            flash.message = "Both old and new tags must be specified."
+            redirect(action: 'manageTags')
+            return
+        }
+        metadataService.updateProjectTag(oldTag, newTag)
+        Map result = projectService.updateProjectTags(oldTag, newTag)
+
+        respond result
+    }
+
+    def addTag(String tag) {
+        Map result = metadataService.addProjectTag(tag)
+        respond result
+    }
+
+    def deleteTag(String tag) {
+        metadataService.deleteProjectTag(tag)
+        Map result = projectService.deleteProjectTags(tag)
+        respond result
     }
 
     def organisationModifications() {

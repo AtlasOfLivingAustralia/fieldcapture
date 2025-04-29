@@ -957,7 +957,7 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
         }
     });
 
-
+    self.transients.projectTags = config.projectTags;
     self.transients.startDateInvalid = ko.observable(false);
     self.transients.disableSave = ko.pureComputed(function() {
         return self.transients.startDateInvalid();

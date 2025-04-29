@@ -5,7 +5,7 @@
     </p>
     <form>
         <label for="tags">Tags</label>
-        <select multiple="multiple" id="tags" data-bind="options:transients.defaultTags, multiSelect2:{value:tags, placeholder:'Add your tag/s here'}" class="form-control form-control-sm input-small"></select>
+        <select multiple="multiple" id="tags" data-bind="options:transients.projectTags,  multiSelect2:{value:tags, placeholder:'Add your tag/s here', tags:false}" class="form-control form-control-sm input-small"></select>
         <button class="btn btn-success" data-bind="click:saveTags, enable:tagsChanged">Save changes</button>
     </form>
 </div>

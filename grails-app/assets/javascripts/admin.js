@@ -323,4 +323,87 @@ EditHelpDocumentsViewModel = function(hubId, categories, documents) {
     documentRoles = [{id:'helpDocument', name:'Help Document', isPublicRole:true}];
     self.loadDocuments(documents);
 
-}
+};
+
+ManageTagsViewModel = function(tags, options) {
+    tags = tags || [];
+
+    function Tag(tag) {
+        var self = this;
+        self.editable = ko.observable(false);
+        self.tag = ko.observable(tag);
+        self.originalTag = tag;
+
+        this.edit = function() {
+            self.editable(true);
+        }
+
+        self.saveable = ko.computed(function() {
+            return self.editable() && self.tag() != tag;
+        });
+    }
+
+    let self = this;
+    self.tags = _.map(tags, function(tag) {
+        return new Tag(tag);
+    });
+
+    self.filter = ko.observable();
+    self.matchedTags = ko.observable(tags.length);
+    self.table = null;
+
+    // We are doing page reloads as an alternative to manually syncing this model with the
+    // data tables API.
+    self.deleteTag = function(tag) {
+        if (confirm("Are you sure you want to delete this tag?")) {
+            blockUIWithMessage("Deleting tag...");
+            $.post(fcConfig.deleteTagUrl, {tag: tag.tag()}, function(response) {
+                if (response.error) {
+                    alert('Error deleting tag: ' + response.error);
+                } else {
+                    $.unblockUI();
+                    window.location.reload();
+                }
+            });
+        }
+    };
+    self.updateTag = function(tag) {
+        blockUIWithMessage("Adding tag...");
+        $.post(fcConfig.updateTagUrl, {oldTag: tag.originalTag, newTag: tag.tag()}, function(response) {
+            if (!response.error) {
+                tag.editable(false);
+                $.unblockUI();
+                window.location.reload();
+            } else {
+                alert('Error adding tag: ' + response.error);
+            }
+        });
+    };
+
+    self.addTag = function() {
+        let tag = self.filter();
+        if (tag) {
+            blockUIWithMessage("Adding tag...");
+            $.post(fcConfig.addTagUrl, {tag: tag}, function(response) {
+                if (!response.error) {
+                    blockUIWithMessage("Reloading page...");
+                    window.location.reload();
+                } else {
+                    $.unblockUI();
+                    alert('Error adding tag: ' + response.error);
+                }
+            });
+        }
+    }
+
+    self.initialiseDataTable = function(tableSelector) {
+        var table = $(tableSelector).DataTable();
+        self.table = table;
+        table.on('search.dt', function(e) {
+
+            let pageInfo = table.page.info();
+            self.matchedTags(pageInfo.recordsDisplay);
+            self.filter(table.search());
+        });
+    }
+};

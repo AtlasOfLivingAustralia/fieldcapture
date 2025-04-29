@@ -131,6 +131,11 @@ class SettingService {
         })
     }
 
+    Map setJson(String key, Map json) {
+        String jsonString = (json as JSON).toString()
+        set(key, jsonString)
+    }
+
     private def set(key, settings) {
         cacheService.clear(key)
         String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "setting/ajaxSetSettingText/${key}"

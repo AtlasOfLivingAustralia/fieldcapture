@@ -2311,4 +2311,20 @@ class ProjectService  {
 
         records
     }
+
+    Map updateProjectTags(String oldTagName, String newTagName) {
+        Map results = search([tags:oldTagName, view:'flat'])
+        results?.resp?.projects.each {
+            update(it.projectId, [tags: it.tags - oldTagName + newTagName])
+        }
+        [:]
+    }
+
+    Map deleteProjectTags(String tag) {
+        Map results = search([tags:tag, view:'flat'])
+        results?.resp?.projects.each {
+            update(it.projectId, [tags: it.tags - tag])
+        }
+        [:]
+    }
 }
