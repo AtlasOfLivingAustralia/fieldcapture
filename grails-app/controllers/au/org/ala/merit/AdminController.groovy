@@ -8,6 +8,7 @@ import grails.util.Environment
 import grails.util.GrailsNameUtils
 import grails.web.http.HttpHeaders
 import groovy.util.logging.Slf4j
+import io.micronaut.http.HttpStatus
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Workbook
@@ -603,26 +604,37 @@ class AdminController {
         [tags:metadataService.getTags()]
     }
 
-    def updateTag(String oldTag, String newTag) {
-        if (!oldTag || !newTag) {
+    def updateTag() {
+        Map tag = request.JSON
+        if (!tag.oldTag?.tag || !tag.newTag?.tag) {
             flash.message = "Both old and new tags must be specified."
             redirect(action: 'manageTags')
             return
         }
-        metadataService.updateProjectTag(oldTag, newTag)
-        Map result = projectService.updateProjectTags(oldTag, newTag)
+        metadataService.updateProjectTag(tag.oldTag, tag.newTag)
+        Map result = projectService.updateProjectTags(tag.oldTag.tag, tag.newTag.tag)
 
         respond result
     }
 
-    def addTag(String tag) {
+    def addTag() {
+        Map tag = request.JSON
+        if (!tag.tag) {
+            respond status: HttpStatus.BAD_REQUEST, text:'{"error":"Tag name is required"}'
+            return
+        }
         Map result = metadataService.addProjectTag(tag)
         respond result
     }
 
-    def deleteTag(String tag) {
+    def deleteTag() {
+        Map tag = request.JSON
+        if (!tag.tag) {
+            respond status: HttpStatus.BAD_REQUEST, text:'{"error":"Tag name is required"}'
+            return
+        }
         metadataService.deleteProjectTag(tag)
-        Map result = projectService.deleteProjectTags(tag)
+        Map result = projectService.deleteProjectTags(tag.tag)
         respond result
     }
 

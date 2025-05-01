@@ -31,18 +31,11 @@
     <hr/>
 
     <div id="tags" class="pill-pane tab-pane">
-        <div class="mb-4">
-        <form class="form form-inline d-flex justify-content-end mb-10">
-            <!-- ko if: filter() && matchedTags() == 0 -->
-            <span data-bind="text:'Add new tag with value: &quot'+filter()+'&quot'"></span>
-            <!-- /ko -->
-            <button class="btn btn-info ml-1" disabled data-bind="enable: filter() && matchedTags() == 0, click:addTag">New tag</button>
-        </form>
-        </div>
         <table class="table w-100 tags-table">
             <thead>
             <tr>
                 <th class="tag">Tag</th>
+                <th class="description">Description</th>
                 <th class="admin-actions">Actions</th>
             </tr>
             </thead>
@@ -56,6 +49,15 @@
                     <span data-bind="text:tag"></span>
                     <!-- /ko -->
                 </td>
+                <td class="description">
+                    <!-- ko if: editable -->
+                    <textarea class="form-control form-control-sm" rows="4" class="form-control form-control-sm" data-bind="value:description"></textarea>
+                    <!-- /ko -->
+                    <!-- ko if: !editable() -->
+                    <span data-bind="text:description"></span>
+                    <!-- /ko -->
+                </td>
+
                 <td class="admin-actions">
                     <button class="btn btn-mini deleteTag" title="Delete this tag" type="button" data-bind="click:$root.deleteTag"><i class="fa fa-remove"></i></button>
                     <button class="btn btn-mini editTag" title="Edit this tag" type="button" data-bind="enable:!editable(), click:edit"><i class="fa fa-edit"></i></button>
@@ -63,6 +65,20 @@
                 </td>
             </tr>
             </tbody>
+            <tfoot data-bind="if: canAddNewTag">
+            <tr>
+                <td class="tag">
+                    <input class="form-control form-control-sm" data-bind="value:newTag.tag"></input>
+                </td>
+                <td class="description">
+                    <textarea class="form-control form-control-sm" data-bind="value:newTag.description"></textarea>
+                </td>
+                <td class="admin-actions">
+                    <button type="button" class="btn btn-sm btn-success" data-bind="click:addTag, enable:newTag.tag()">
+                        <i class="fa fa-plus"></i> Add new tag</button>
+                </td>
+            </tr>
+            </tfoot>
         </table>
     </div>
 </div>
@@ -81,7 +97,7 @@
         ko.applyBindings(viewModel, document.getElementById('wrapper'));
 
         // This needs to be done after the table is rendered by the applyBindings call.
-        viewModel.initialiseDataTable('#tags table');
+        viewModel.initialiseDataTable('#tags .tags-table');
 
     });
 

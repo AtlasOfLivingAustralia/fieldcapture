@@ -135,3 +135,11 @@ table.tags-table .admin-actions {
     min-width: 120px;
 }
 
+table.tags-table .tag {
+    width: 50%;
+}
+table.tags-table .description {
+    width: 50%;
+}
+
+

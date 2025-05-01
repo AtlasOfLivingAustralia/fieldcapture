@@ -369,35 +369,45 @@ class MetadataService {
         settingService.setJson(SUPPORTED_PROJECT_TAGS, [tags:tags])
     }
 
-    Map updateProjectTag(String oldTag, String newTag) {
-        Map result = [success:true]
+    Map updateProjectTag(Map oldTag, Map newTag) {
         List tags = getTags()
-        if (!tags.contains(newTag)) {
-            tags.add(newTag)
+
+        Map oldTagMatch = tags.find{it.tag == oldTag.tag}
+        if (oldTagMatch) {
+            tags.remove(oldTagMatch)
         }
-        if (tags.contains(oldTag)) {
-            tags.remove(oldTag)
-        }
-        updateTags(tags)
-        result
+        addProjectTagInternal(tags, newTag)
     }
 
-    Map addProjectTag(String tag) {
-        Map result = [success:true]
+    Map addProjectTag(Map tag) {
         List tags = getTags()
-        if (!tags.contains(tag)) {
-            tags.add(tag)
+
+        addProjectTagInternal(tags, tag)
+    }
+
+    private Map addProjectTagInternal(List tags, Map tag) {
+        Map result
+        Map newTagMatch = tags.find{it.tag == tag.tag}
+        if (newTagMatch) {
+            result = [error: "Tag ${tag.tag} already exists"]
+        }
+        else {
+            tags << tag
             result = updateTags(tags)
         }
         result
     }
 
-    Map deleteProjectTag(String tag) {
-        Map result = [success:true]
+    Map deleteProjectTag(Map tag) {
+        Map result
         List tags = getTags()
-        if (tags.contains(tag)) {
-            tags.remove(tag)
+        Map tagMatch = tags.find{it.tag == tag.tag}
+        if (tagMatch) {
+            tags.removeAll{it.tag == tag.tag}
             result = updateTags(tags)
+        }
+        else {
+            result = [error:"Tag ${tag.tag} does not exist"]
         }
         result
     }

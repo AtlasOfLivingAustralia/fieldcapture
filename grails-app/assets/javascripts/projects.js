@@ -957,7 +957,14 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
         }
     });
 
-    self.transients.projectTags = config.projectTags;
+    self.transients.projectTags = _.map(config.projectTags, function(tag) {
+       return {
+           id:tag.tag,
+           text:tag.tag,
+           description:tag.description
+       };
+    });
+
     self.transients.startDateInvalid = ko.observable(false);
     self.transients.disableSave = ko.pureComputed(function() {
         return self.transients.startDateInvalid();
@@ -1097,6 +1104,10 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
     self.tagsChanged = ko.computed(function() {
         return !_.isEqual(self.tags(), project.tags);
     });
+    self.formatTag = function(tag) {
+
+        return $("<span>"+tag.text + '</span><i class="pull-right">'+tag.description+"</i>");
+    };
 
     self.saveTags = function() {
         projectService.saveProjectDataWithoutValidation({tags:self.tags()});

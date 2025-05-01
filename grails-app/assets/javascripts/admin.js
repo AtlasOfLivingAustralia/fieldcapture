@@ -331,7 +331,8 @@ ManageTagsViewModel = function(tags, options) {
     function Tag(tag) {
         var self = this;
         self.editable = ko.observable(false);
-        self.tag = ko.observable(tag);
+        self.tag = ko.observable(tag.tag);
+        self.description = ko.observable(tag.description);
         self.originalTag = tag;
 
         this.edit = function() {
@@ -339,7 +340,7 @@ ManageTagsViewModel = function(tags, options) {
         }
 
         self.saveable = ko.computed(function() {
-            return self.editable() && self.tag() != tag;
+            return self.editable() && (self.tag() != tag.tag || self.description() != tag.description);
         });
     }
 
@@ -352,39 +353,74 @@ ManageTagsViewModel = function(tags, options) {
     self.matchedTags = ko.observable(tags.length);
     self.table = null;
 
+    self.canAddNewTag = ko.pureComputed(function() {
+        return self.matchedTags() == 0;
+    });
+
+    self.newTag = new Tag({});
+
     // We are doing page reloads as an alternative to manually syncing this model with the
     // data tables API.
     self.deleteTag = function(tag) {
         if (confirm("Are you sure you want to delete this tag?")) {
             blockUIWithMessage("Deleting tag...");
-            $.post(fcConfig.deleteTagUrl, {tag: tag.tag()}, function(response) {
-                if (response.error) {
-                    alert('Error deleting tag: ' + response.error);
-                } else {
-                    $.unblockUI();
-                    window.location.reload();
-                }
+
+            $.post({
+                url: fcConfig.deleteTagUrl,
+                data: JSON.stringify({tag: tag.tag()}),
+                contentType: 'application/json'
+            }).done(function(response) {
+                    if (response.error) {
+                        bootbox.alert('Error deleting tag: ' + response.error);
+                    } else {
+                        $.unblockUI();
+                        window.location.reload();
+                    }
+            }).fail(function() {
+                $.unblockUI();
+                bootbox.alert("An error was encountered deleting the tag. Please try again.");
             });
         }
     };
     self.updateTag = function(tag) {
-        blockUIWithMessage("Adding tag...");
-        $.post(fcConfig.updateTagUrl, {oldTag: tag.originalTag, newTag: tag.tag()}, function(response) {
+        blockUIWithMessage("Updating tag...");
+        var newTag = {
+            tag:tag.tag(),
+            description:tag.description()
+        };
+        $.post({
+            url:fcConfig.updateTagUrl,
+            data: JSON.stringify({oldTag: tag.originalTag, newTag: newTag}),
+            contentType: 'application/json'
+        }).done(function(response) {
             if (!response.error) {
                 tag.editable(false);
                 $.unblockUI();
                 window.location.reload();
             } else {
-                alert('Error adding tag: ' + response.error);
+                alert('Error updating tag: ' + response.error);
             }
-        });
+        }).fail(
+            function() {
+                $.unblockUI();
+                alert("An error was encountered updating the tag. Please try again.");
+            }
+        );
     };
 
     self.addTag = function() {
-        let tag = self.filter();
-        if (tag) {
+        let tag = {
+            tag: self.newTag.tag(),
+            description: self.newTag.description()
+        };
+
+        if (tag.tag) {
             blockUIWithMessage("Adding tag...");
-            $.post(fcConfig.addTagUrl, {tag: tag}, function(response) {
+            $.post({
+                url: fcConfig.addTagUrl,
+                data: JSON.stringify(tag),
+                contentType: 'application/json'
+            }).done(function(response) {
                 if (!response.error) {
                     blockUIWithMessage("Reloading page...");
                     window.location.reload();
@@ -392,6 +428,9 @@ ManageTagsViewModel = function(tags, options) {
                     $.unblockUI();
                     alert('Error adding tag: ' + response.error);
                 }
+            }).fail(function() {
+                $.unblockUI();
+                alert("An error was encountered adding the tag. Please try again.");
             });
         }
     }
@@ -414,7 +453,7 @@ ManageTagsViewModel = function(tags, options) {
 
             let pageInfo = table.page.info();
             self.matchedTags(pageInfo.recordsDisplay);
-            self.filter(table.search());
+            self.newTag.tag(table.search());
         });
     }
 };
