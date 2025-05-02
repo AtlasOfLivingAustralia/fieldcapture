@@ -1874,6 +1874,7 @@
                       "Exhibits/Installations",
                       "Extension materials",
                       "Fact Sheets",
+                      "Maps",
                       "Marketing materials",
                       "Media releases",
                       "Newsletters",
@@ -2742,7 +2743,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total number of events held/attended",
+                        "preLabel": "(i) Total number of engagement events for this reporting period",
                         "source": "totalNumberEngagementHeld",
                         "type": "number"
                       }
@@ -2758,7 +2759,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total number of events <u><i>invoiced</i></u> for this reporting period",
+                        "preLabel": "(ii) Total number of engagement events <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalNumberEngagementHeldInvoiced",
                         "type": "number"
                       }
@@ -10225,19 +10226,19 @@
                   }
                 ],
                 "dataType": "list",
-                "name": "agreementsTable"
+                "name": "establishingAgreementsTable"
               },
               {
                 "dataType": "number",
                 "name": "rowCount",
                 "decimalPlaces": 0,
                 "computed": {
-                  "expression": "sum(agreementsTable, \"agreementType ? 1 : 0\")"
+                  "expression": "sum(establishingAgreementsTable, \"agreementType ? 1 : 0\")"
                 }
               }
             ],
             "dataType": "list",
-            "name": "conservationAgreementsControlled"
+            "name": "establishingAgreementsControlled"
           },
           {
             "dataType": "number",
@@ -10245,7 +10246,7 @@
             "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(conservationAgreementsControlled, \"rowCount\")"
+              "expression": "sum(establishingAgreementsControlled, \"rowCount\")"
             }
           },
           {
@@ -10443,7 +10444,7 @@
               {
                 "addRowText": "Add a new agreement area",
                 "userAddedRows": true,
-                "source": "conservationAgreementsControlled",
+                "source": "establishingAgreementsControlled",
                 "type": "repeat",
                 "items": [
                   {
@@ -10632,8 +10633,8 @@
                       }
                     ],
                     "userAddedRows": true,
-                    "source": "agreementsTable",
-                    "title": "<b style=\"color:red\">Please report on each agreement in a separate row using the ‘+Add a row’ button’.  Where the agreement relates to an area, please report each agreement and it’s area using the ‘+Add a new agreement area’ button below.</b>",
+                    "source": "establishingAgreementsTable",
+                    "title": "<b>Please report on each agreement in a separate row using the ‘+Add a row’ button’.  Where the agreement relates to an area, please report each agreement and it’s area using the ‘+Add a new agreement area’ button below.</b>",
                     "type": "table"
                   }
                 ]
@@ -10718,7 +10719,686 @@
       "name": "Establishing Agreements",
       "description": null
     },
-
+    {
+      "collapsedByDefault": false,
+      "template": {
+        "dataModel": [
+          {
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "participationIndividualsOrGroups",
+                "description": "Once Individuals or groups is selected, the related number field in the next two columns will become editable to report.",
+                "constraints": [
+                  "Individuals",
+                  "Groups"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "number",
+                "name": "participationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
+              },
+              {
+                "dataType": "text",
+                "name": "participationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ]
+              },
+              {
+                "dataType": "number",
+                "name": "firstNationIndividualNumber",
+                "defaultValue": 0,
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Individuals\"",
+                    "type": "enable"
+                  }
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "rule": "min[0]"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationIndividualNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationGroupNumber",
+                "behaviour": [
+                  {
+                    "condition": "participationIndividualsOrGroups == \"Groups\"",
+                    "type": "enable"
+                  }
+                ],
+                "constraints": [
+                  "0",
+                  "1-10",
+                  "11-20",
+                  "21-30",
+                  "31-40",
+                  "41-50"
+                ],
+                "validate": [
+                  {
+                    "rule": "required"
+                  },
+                  {
+                    "param": {
+                      "expression": "participationGroupNumber",
+                      "type": "computed"
+                    },
+                    "rule": "max",
+                    "message": "The number of first nation participants cannot be greater than the total number of participants"
+                  }
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "participationDetails",
+                "validate": "required, maxSize[3000]"
+              }
+            ],
+            "dataType": "list",
+            "name": "participationInformationTableEsa"
+          },
+          {
+            "dataType": "list",
+            "name": "psoCommunicationDetails",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "communicationMaterialType",
+                "constraints": [
+                  "Advertising",
+                  "Extension materials",
+                  "Event Flyers and Brochures",
+                  "Media release",
+                  "Newsletters",
+                  "Newspaper articles",
+                  "Publishing reports",
+                  "Social media",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "communicationTitle",
+                "validate": "required,maxSize[100]"
+              },
+              {
+                "dataType": "text",
+                "name": "communicationPurpose",
+                "validate": "required,maxSize[4000]"
+              },
+              {
+                "dataType": "date",
+                "name": "publishedDate",
+                "validate": "required,past[now]"
+              },
+              {
+                "dataType": "text",
+                "name": "link"
+              }
+            ]
+          },
+          {
+            "name": "hasNotifiableIncident",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No",
+              "Not applicable"
+            ]
+          },
+          {
+            "name": "yesHasNotifiableIncident",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No",
+              "Not applicable"
+            ],
+            "behaviour": [
+              {
+                "condition": "hasNotifiableIncident == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "hasVerifiedSubContractors",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No",
+              "Not Applicable"
+            ]
+          },
+          {
+            "name": "notVerifiedSubContractors",
+            "dataType": "text",
+            "validate": "required,maxSize[300]",
+            "behaviour": [
+              {
+                "condition": "hasVerifiedSubContractors == \"No\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "name": "hasAnyManagementActionsUndertaken",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No",
+              "Not Applicable"
+            ]
+          },
+          {
+            "columns": [
+              {
+                "columns": [
+                  {
+                    "dataType": "text",
+                    "name": "agreementType",
+                    "description": "",
+                    "constraints": [
+                      "Memorandum of Understanding",
+                      "Employment Agreement",
+                      "Collaboration Agreement (e.g. for research partnerships)",
+                      "Indigenous Cultural and Intellectual Property (ICIP) Agreement",
+                      "Data Sharing Agreements",
+                      "Other agreements as agreed by the department (explanation of the agreement type is required)"
+                    ],
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "otherAgreementType",
+                    "description": "",
+                    "behaviour": [
+                      {
+                        "condition": "agreementType == \"Other agreements as agreed by the department (explanation of the agreement type is required)\"",
+                        "type": "enable"
+                      }
+                    ],
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "yearsOfTheAgreement",
+                    "validate": "required,min[0]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "agreementPurpose",
+                    "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "agreementMadeWith",
+                    "validate": "required,maxSize[300]"
+                  }
+                ],
+                "dataType": "list",
+                "name": "psoTable"
+              },
+              {
+                "dataType": "number",
+                "name": "rowCount",
+                "decimalPlaces": 0,
+                "computed": {
+                  "expression": "sum(psoTable, \"agreementType ? 1 : 0\")"
+                }
+              }
+            ],
+            "dataType": "list",
+            "name": "psoControlled"
+          },
+          {
+            "dataType": "number",
+            "name": "fteEquivalent",
+            "decimalPlaces": 0,
+            "validate": "required,min[0]"
+          },
+          {
+            "name": "anyCommunicationPublished",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No",
+              "Not Applicable"
+            ]
+          },
+          {
+            "dataType": "number",
+            "name": "totalNumberPso",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(psoControlled, \"rowCount\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "decimalPlaces": 3,
+            "name": "totalNumberPsoInvoiced",
+            "description": "Manually enter if values have decimal points e.g. 0.350 or 2.545",
+            "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "totalNumberPso",
+                  "type": "computed",
+                  "decimalPlaces": 3
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": ""
+          },
+          {
+            "dataType": "text",
+            "name": "totalInvoicedPsoMismatched",
+            "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
+            "validate": "maxSize[400],required",
+            "behaviour": [
+              {
+                "condition": "+totalNumberPsoInvoiced < +totalNumberPso",
+                "type": "enable"
+              }
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "comments",
+            "validate": "maxSize[1500]"
+          },
+          {
+            "dataType": "boolean",
+            "name": "dataUploaded",
+            "description": "<ul><li>Tick box to confirm data has been uploaded</li><li>URL Link (mandatory if below is ticked) in available evidence</li></ul>"
+          },
+          {
+            "name": "projectAssuranceDetails",
+            "dataType": "text",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "dataType": "list",
+            "name": "assuranceDocuments",
+            "columns": [
+              {
+                "dataType": "document",
+                "name": "attachments",
+                "description": "Please attach any Evidence of Service Delivery here."
+              }
+            ]
+          }
+        ],
+        "modelName": "First Nations Delivery Partners PSO",
+        "title": "First Nations Delivery Partners Project Support and Overheads",
+        "viewModel": [
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Participation information</h3>"
+              }
+            ]
+          },
+          {
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "width": "10%",
+                "source": "participationIndividualsOrGroups",
+                "title": "Are individuals or groups delivering this service?",
+                "type": "selectOne"
+              },
+              {
+                "width": "20%",
+                "type": "col",
+                "title": "Total number of people participating in the delivery of this service <br>(including First Nations people, paid employees, unpaid employees, and volunteers)<b style=\"color:red\">*</b>",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
+                "items": [
+                  {
+                    "source": "participationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "participationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "width": "20%",
+                "title": "Total number of First Nations people participating in the delivery of this service, including paid employees, unpaid employees and volunteers<b style=\"color:red\">*</b>",
+                "helpText": "Please record either the total number of individuals or the number of individuals in the group that delivered this service. If you have a mix of Individuals and groups, you should report them separately by adding a row.",
+                "items": [
+                  {
+                    "source": "firstNationIndividualNumber",
+                    "type": "number"
+                  },
+                  {
+                    "source": "firstNationGroupNumber",
+                    "type": "selectOne"
+                  }
+                ]
+              },
+              {
+                "width": "20%",
+                "source": "participationDetails",
+                "rows": 4,
+                "title": "If no First Nations people participated in the delivery of this service, <br>what are the reasons? If there was participation, please provide details.",
+                "helpText": "If there were no First Nations people participating in the delivery of this service, please explain the reasons. If there were First Nations people involved, please outline how they were involved.",
+                "type": "textarea"
+              }
+            ],
+            "source": "participationInformationTableEsa",
+            "type": "table"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Totals Summary</h3>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(i) Total number of PS&O services delivered for this reporting period",
+                        "source": "totalNumberPso",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4 col-border-right",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(ii) Total number of PS&O services delivered <u><i>invoiced</i></u> for this reporting period",
+                        "source": "totalNumberPsoInvoiced",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
+                "source": "totalInvoicedPsoMismatched",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": ""
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "number",
+                "source": "fteEquivalent",
+                "preLabel": "FTE equivalent supporting and/or delivering the project"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "anyCommunicationPublished",
+                "preLabel": "Was any communication material developed and published during this reporting period"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "type": "table",
+                "source": "psoCommunicationDetails",
+                "title": "<b>Each activity must be reported in a separate row.</b>",
+                "preLabel": "If yes, please provide link or copy of the material.",
+                "userAddedRows": true,
+                "columns": [
+                  {
+                    "source": "communicationMaterialType",
+                    "type": "selectOne",
+                    "width": "15%",
+                    "title": "Type of Communications Material"
+                  },
+                  {
+                    "source": "communicationTitle",
+                    "type": "text",
+                    "width": "25%",
+                    "title": "Title"
+                  },
+                  {
+                    "type": "textarea",
+                    "source": "communicationPurpose",
+                    "width": "35%",
+                    "title": "Purpose",
+                    "rows": 4
+                  },
+                  {
+                    "title": "Date published",
+                    "source": "publishedDate",
+                    "type": "date",
+                    "width": "15%"
+                  },
+                  {
+                    "source": "link",
+                    "type": "text",
+                    "width": "20%",
+                    "title": "URL/link"
+                  }
+                ]
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "anyCommunicationPublished == \"Yes\""
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<h4>Project Workplace Health and Safety (WHS) Risk</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "hasNotifiableIncident",
+                "preLabel": "During this reporting period, have any notifiable incidents or events occurred during the delivery of the project services?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "yesHasNotifiableIncident",
+                "preLabel": "If yes, has the incident/event been reported to the department and the relevant documentation provided? Please note, the department should be informed of notifiable incidents as soon as practical."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "hasVerifiedSubContractors",
+                "preLabel": "Have you verified that all subcontractors engaged during the reporting period (existing and new) are meeting WHS requirements \n            under this contract, and that corroborating documentation such as relevant permits, licences etc have been retained?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "notVerifiedSubContractors",
+                "preLabel": "If no, please outline steps to be undertaken to ensure subcontractors are meeting their contractual WHS obligations."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "hasAnyManagementActionsUndertaken",
+                "preLabel": "During this period were there any adaptive management actions undertaken that require a change to the MERI plan?"
+              }
+            ]
+          },
+          {
+            "type": "section",
+            "items": [
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "Clarification, if needed",
+                    "type": "textarea",
+                    "rows": 4,
+                    "css": "span8",
+                    "source": "comments",
+                    "placeholder": "Clarification comments include information for your project manager about the service like:\n • any reported items that are not being invoiced (eg, over-achievement) \n • any extraneous circumstances that affected delivery of the service \n"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "literal",
+                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
+                  },
+                  {
+                    "preLabel": "Data have been uploaded",
+                    "source": "dataUploaded",
+                    "type": "boolean"
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "preLabel": "",
+                    "source": "projectAssuranceDetails",
+                    "type": "textarea",
+                    "rows": 4,
+                    "placeholder": "List the documentary evidence you have available for this project service. Include specifically, the document titles and location (e.g. internal IT network pathway, URLs) to assist with locating this material for future audits/assurance purposes."
+                  }
+                ]
+              },
+              {
+                "type": "table",
+                "source": "assuranceDocuments",
+                "userAddedRows": true,
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "title": "Attached documents",
+                    "source": "attachments",
+                    "type": "document"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "modelName": null,
+      "templateName": "firstNationsDeliveryPartnersPso",
+      "optional": true,
+      "optionalQuestionText": null,
+      "title": null,
+      "collapsibleHeading": null,
+      "name": "First Nations Delivery Partners PSO",
+      "description": null
+    },
     {
       "collapsedByDefault": false,
       "template": {
@@ -13642,7 +14322,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total number of days conducting cultural practices during this reporting period",
+                        "preLabel": "(i) Total number of days conducting cultural practices for this reporting period",
                         "source": "totalNoDaysCulturalPractices",
                         "type": "number"
                       }
@@ -13658,7 +14338,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total number of days conducting cultural practices <u><i>invoiced</i></u> for during this reporting period",
+                        "preLabel": "(ii) Total number of days conducting cultural practices <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalNoDaysCulturalPracticesInvoiced",
                         "type": "number"
                       }
@@ -13681,7 +14361,7 @@
             ]
           },
           {
-            "addRowText": "Add new First Nations Cultural Practice",
+            "addRowText": "Add new First Nations Cultural Practice site or outcome",
             "userAddedRows": true,
             "source": "firstNationAreasControlled",
             "type": "repeat",
@@ -13961,7 +14641,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Individuals or groups?",
+                            "preLabel": "Individuals or Groups participating in this activity?",
                             "source": "individualsOrGroups",
                             "type": "selectOne"
                           }
@@ -13977,7 +14657,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Number of participants",
+                            "preLabel": "Number of people participating in this activity?",
                             "source": "noOfParticipants",
                             "type": "number"
                           }
@@ -14002,7 +14682,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Number of First Nations participants",
+                            "preLabel": "Number of First Nations people participating in this activity?",
                             "source": "noOfFirstNationsParticipants",
                             "type": "number"
                           }
@@ -14088,7 +14768,8 @@
                 ],
                 "userAddedRows": true,
                 "source": "firstNationsDetails",
-                "type": "table"
+                "type": "table",
+                "title": "<b>Please report each activity for this site or outcome as a separate row</b>"
               }
             ]
           },
@@ -22474,7 +23155,7 @@
           }
         ],
         "modelName": "Obtaining approvals",
-        "title": "Obtain Relevant Approvals",
+        "title": "Obtaining Relevant Approvals",
         "viewModel": [
           {
             "type": "row",

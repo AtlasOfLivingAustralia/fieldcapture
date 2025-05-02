@@ -21,21 +21,11 @@ class ManageHelpDocuments extends ReloadablePage {
     static at = { title == 'Manage help documents | MERIT' }
 
     static content = {
-        newCategoryName { $('#new-category-name')}
-        newCategoryButton{ $('#add-new-category')}
-
-        categorySelect {$('#document-category')}
         attachDocumentButton {$('#doAttach')}
 
         attachDocumentDialog { module DocumentDialog }
 
         documents {$('#help-documents').moduleList HelpDocument}
-    }
-
-
-    void addCategory(String category) {
-        newCategoryName = category
-        newCategoryButton.click()
     }
 
     void openDocumentDialog() {

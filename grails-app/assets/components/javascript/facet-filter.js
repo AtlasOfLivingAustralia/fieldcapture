@@ -26,6 +26,7 @@ ko.components.register('facet-filter', {
         self.baseUrl = params.baseUrl;
         self.projectExplorerUrl = params.projectExplorerUrl;
         self.containerId = params.containerId || "#facetsContent";
+        self.filter = ko.observable().extend({timeout: 500, method: "notifyWhenChangesStop"});
 
         self.getFacetTerms = function (facet) {
             return self.results && self.results.facets[facet].terms;
@@ -158,6 +159,19 @@ ko.components.register('facet-filter', {
             $i18nAsync('label.' + this.facet, self.capitalise(this.facet), this.displayname);
         }
 
+        function filteredTerms(terms) {
+            return ko.computed(function() {
+                var filter = self.filter();
+                if (!filter) {
+                    return terms;
+                }
+
+                return _.filter(terms, function(term) {
+                    return term.term.toLowerCase().indexOf(filter.toLowerCase()) !== -1;
+                });
+            });
+        }
+
         function init() {
             for (var i = 0; i < self.facetsList.length; i++) {
                 self.facetsList[i] = new FacetViewModel(self.facetsList[i]);
@@ -168,6 +182,7 @@ ko.components.register('facet-filter', {
                 for (var i= 0; i < terms.length; i++) {
                     terms[i] = new TermViewModel(terms[i]);
                 }
+                self.results.facets[facet].filteredTerms = filteredTerms(terms);
             }
         }
 

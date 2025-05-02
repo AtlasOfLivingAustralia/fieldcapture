@@ -23,17 +23,27 @@
                         <!-- ko if: f.terms.length > max -->
                         <a data-bind="attr: { href: '#' + fn.safeId + 'Modal'}" role="button" class="moreFacets tooltips" data-toggle="modal" title="View full list of values"><i class="fa fa-hand-o-right"></i> choose more...</a>
                         <div data-bind="attr: { id: fn.safeId + 'Modal'}" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                            <div class="modal-dialog modal-dialog-scrollable all-facets" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h3 data-bind="html: 'Filter by ' + fn.displayname()"></h3>
+                                        <div>
+                                            <h3 data-bind="html: 'Filter by ' + fn.displayname()"></h3>
+                                            <div class="form-group">
+                                                <span class="fa fa-search form-control-icon"></span>
+                                                <input class="form-control form-control-sm" aria-label="Filter values" type="text" name="filter" placeholder="Filter values"
+                                                       data-bind="value: filter, valueUpdate:'keyup'">
+                                            </div>
+
+
+                                        </div>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
+
                                     </div>
                                     <div class="modal-body">
                                         <ul style="list-style-type: none;" class="facetValues">
-                                            <!-- ko foreach: {data: f.terms, as: 't', noChildContext: true} -->
+                                            <!-- ko foreach: {data: f.filteredTerms, as: 't', noChildContext: true} -->
                                             <li data-bind="attr: {'data-sortalpha': t.term.toLowerCase().trim(), 'data-sortcount':t.count}">
                                                 <input type="checkbox" class="facetSelection" name="facetSelection" data-bind="value: getFQForTerm(fn, t.term), checked: t.selected, attr: {'aria-label': t.term}">
                                                 <a data-bind="text:  t.displayname, attr: {href: generateFQLink(fn.facet, t.term)}"></a> (<span class="fcount"><!-- ko text: t.count --><!-- /ko --></span>)

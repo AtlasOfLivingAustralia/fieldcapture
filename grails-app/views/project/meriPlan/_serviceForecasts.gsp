@@ -18,7 +18,7 @@
         <!-- /ko -->
     </tr>
     </thead>
-    <tbody data-bind="foreach : outcomeTargets">
+    <tbody data-bind="foreach : sortedOutcomeTargets">
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
         <td class="service">

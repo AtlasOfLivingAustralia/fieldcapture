@@ -74,7 +74,9 @@
                                         Project start and end dates are within the selected range.
                                     </label>
                                 </div>
-                                <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn btn-sm clearDates"><i class="fa fa-remove"></i> Clear dates</button></div>
+                                <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn btn-sm clearDates"><i class="fa fa-remove"></i> Clear dates</button>
+                                    <button data-bind="click:applyDates, enable:fromDate() || toDate()" class="btn btn-sm applyDates"><i class="fa fa-check"></i> Apply dates</button>
+                                </div>
 
             </div>
                         </div>

@@ -12,7 +12,9 @@ const downloadableProtocols = [
     'Photo Points - DSLR Panorama',
     'Photo Points - Compact Panorama',
     'Photo Points - Device Panorama',
-    'Opportune'
+    'Opportune',
+    'Fauna Ground Counts Vantage Point',
+    'Fauna Ground Counts Transects'
 
 ];
 
