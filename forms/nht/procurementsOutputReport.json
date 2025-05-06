@@ -5297,7 +5297,7 @@
                   {
                     "dataType": "text",
                     "name": "otherDebrisType",
-                    "description": "if Other",
+                    "description": "if Other was selected",
                     "behaviour": [
                       {
                         "condition": "debrisType == \"Other\"",
@@ -5892,38 +5892,30 @@
                 "columns": [
                   {
                     "width": "20%",
+                    "source": "debrisType",
                     "title": "Type of debris removed",
-                    "type": "col",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "debrisType",
-                            "type": "selectOne"
-                          }
-                        ]
-                      },
-                      {
-                        "source": "otherDebrisType",
-                        "type": "text"
-                      }
-                    ]
+                    "type": "selectOne"
                   },
                   {
                     "width": "20%",
+                    "source": "otherDebrisType",
+                    "title": "Type of debris removed (if Other)",
+                    "type": "textarea"
+                  },
+                  {
+                    "width": "15%",
                     "source": "weightOfDebrisTonnes",
                     "title": "Weight (tonnes) of debris removed",
                     "type": "number"
                   },
                   {
-                    "width": "20%",
+                    "width": "15%",
                     "source": "volumeRemovedM3",
                     "title": "Volume (m3) of debris removed",
                     "type": "number"
                   },
                   {
-                    "width": "40%",
+                    "width": "30%",
                     "source": "teqDebrisRemoval",
                     "title": "Technique used to remove debris",
                     "type": "textarea",
@@ -6199,7 +6191,7 @@
                 "description": "Manually enter correct figure for this reporting period if different to mapped value.",
                 "units": "ha",
                 "decimalPlaces": 3,
-                "validate": "min[0]"
+                "validate": "required,min[0]"
               },
               {
                 "dataType": "text",
@@ -6309,6 +6301,7 @@
                       "Administrative areas (e.g. LGA)",
                       "Catchments",
                       "Culturally important sites",
+                      "Data management plan",
                       "Farms",
                       "Heritage Sites",
                       "Projects and Project Sites, including project logics",
@@ -9138,6 +9131,7 @@
               {
                 "dataType": "text",
                 "name": "otherInvestmentPriority",
+                "description": "Describe the investment priority (if Other) was selected",
                 "behaviour": [
                   {
                     "type": "enable",
@@ -9252,7 +9246,6 @@
                   {
                     "dataType": "text",
                     "name": "agreementType",
-                    "description": "",
                     "constraints": [
                       "On title in perpetuity (e.g. conservation convenant)",
                       "Binding agreement not on title in perpetuity (e.g. property vegetation plan)",
@@ -9746,30 +9739,16 @@
                   {
                     "columns": [
                       {
-                        "width": "15%",
-                        "title": "Type of agreement",
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "agreementType",
-                                "type": "selectOne"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "otherAgreementType",
-                                "title": "Type of Agreement (if other)",
-                                "type": "textarea"
-                              }
-                            ]
-                          }
-                        ]
+                        "width": "10%",
+                        "source": "agreementType",
+                        "type": "selectOne",
+                        "title": "Type of agreement"
+                      },
+                      {
+                        "width": "12%",
+                        "source": "otherAgreementType",
+                        "type": "textarea",
+                        "title": "Type of Agreement (if other)"
                       },
                       {
                         "width": "10%",
@@ -9784,7 +9763,7 @@
                         "title": "Number of days maintaining agreements (if applicable)"
                       },
                       {
-                        "width": "10%",
+                        "width": "8%",
                         "source": "yearsOfTheAgreement",
                         "type": "number",
                         "title": "Length (years of the agreement)"
@@ -10400,7 +10379,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total number of agreements established",
+                        "preLabel": "(i) Total number of agreements established for this reporting period",
                         "source": "totalNumberOfAgreements",
                         "type": "number"
                       }
@@ -16894,41 +16873,28 @@
                     "title": "Activity start date",
                     "source": "activitiesStartDate",
                     "type": "date",
-                    "width": "20%"
+                    "width": "15%"
                   },
                   {
                     "title": "Activity end date",
                     "source": "activitiesEndDate",
                     "type": "date",
-                    "width": "20%"
+                    "width": "15%"
                   },
                   {
-                    "width": "25%",
+                    "width": "20%",
+                    "source": "habitatAugmentationType",
                     "title": "Type of habitat augmentation / installed",
-                    "type": "col",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "habitatAugmentationType",
-                            "type": "select2"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherHabitatAugmentationType",
-                            "type": "textarea"
-                          }
-                        ]
-                      }
-                    ]
+                    "type": "selectOne"
                   },
                   {
-                    "width": "35%",
+                    "width": "20%",
+                    "source": "otherHabitatAugmentationType",
+                    "title": "Type of habitat augmentation / installed (if other)",
+                    "type": "textarea"
+                  },
+                  {
+                    "width": "30%",
                     "source": "habitatAugmentationObjective",
                     "title": "Purpose of habitat augmentation",
                     "type": "textarea"
@@ -17343,7 +17309,7 @@
                       {
                         "dataType": "text",
                         "name": "habitatCondition",
-                        "validate": "maxSize[300]"
+                        "validate": "required,maxSize[300]"
                       }
                     ],
                     "dataType": "list",
@@ -18036,16 +18002,16 @@
                       {
                         "columns": [
                           {
-                            "width": "40%",
+                            "width": "30%",
                             "source": "typesOfHabitat",
                             "title": "Types of habitat",
                             "type": "selectOne"
                           },
                           {
-                            "width": "60%",
+                            "width": "70%",
                             "source": "habitatCondition",
                             "title": "Condition of habitat",
-                            "type": "text"
+                            "type": "textarea"
                           }
                         ],
                         "userAddedRows": true,
@@ -26191,7 +26157,7 @@
                 "description": "Manually enter correct figure for this reporting period if different to mapped value.",
                 "units": "ha",
                 "decimalPlaces": 3,
-                "validate": "min[0]"
+                "validate": "required,min[0]"
               },
               {
                 "dataType": "text",
@@ -31746,7 +31712,7 @@
               {
                 "dataType": "text",
                 "name": "conclusionsAndFutureDirections",
-                "validate": "maxSize[400]"
+                "validate": "required,maxSize[400]"
               }
             ],
             "dataType": "list",
@@ -32307,7 +32273,7 @@
                       {
                         "width": "5%",
                         "source": "willProjectContinue",
-                        "title": "Will this research and development project continue?",
+                        "title": "Will this research and/or development project continue?",
                         "type": "selectOne"
                       }
                     ],

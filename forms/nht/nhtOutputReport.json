@@ -5542,7 +5542,7 @@
                   {
                     "dataType": "text",
                     "name": "otherDebrisType",
-                    "description": "if Other",
+                    "description": "if Other was selected",
                     "behaviour": [
                       {
                         "condition": "debrisType == \"Other\"",
@@ -6138,38 +6138,30 @@
                 "columns": [
                   {
                     "width": "20%",
+                    "source": "debrisType",
                     "title": "Type of debris removed",
-                    "type": "col",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "debrisType",
-                            "type": "selectOne"
-                          }
-                        ]
-                      },
-                      {
-                        "source": "otherDebrisType",
-                        "type": "text"
-                      }
-                    ]
+                    "type": "selectOne"
                   },
                   {
                     "width": "20%",
+                    "source": "otherDebrisType",
+                    "title": "Type of debris removed (if Other)",
+                    "type": "textarea"
+                  },
+                  {
+                    "width": "15%",
                     "source": "weightOfDebrisTonnes",
                     "title": "Weight (tonnes) of debris removed",
                     "type": "number"
                   },
                   {
-                    "width": "20%",
+                    "width": "15%",
                     "source": "volumeRemovedM3",
                     "title": "Volume (m3) of debris removed",
                     "type": "number"
                   },
                   {
-                    "width": "40%",
+                    "width": "30%",
                     "source": "teqDebrisRemoval",
                     "title": "Technique used to remove debris",
                     "type": "textarea",
@@ -6911,7 +6903,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vii) Total area (ha) of erosion control (initial) for this reporting period",
+                        "preLabel": "(i) Total area (ha) of erosion control (initial) for this reporting period",
                         "source": "totalAreaErosionControlInitial",
                         "type": "number"
                       }
@@ -6921,7 +6913,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(viii) Total area (ha) of erosion control (initial) <u><i>invoiced</i></u> for this reporting period",
+                        "preLabel": "(ii) Total area (ha) of erosion control (initial) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalAreaErosionControlInvoicedInitial",
                         "type": "number",
                         "displayOptions": {
@@ -6940,7 +6932,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ix) Total area (ha) of erosion control (follow up) for this reporting period",
+                        "preLabel": "(iii) Total area (ha) of erosion control (follow up) for this reporting period",
                         "source": "totalAreaErosionControlFollowup",
                         "type": "number"
                       }
@@ -6950,7 +6942,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(x) Total area (ha) of erosion control <u><i>invoiced</i></u> (follow up) for this reporting period",
+                        "preLabel": "(iv) Total area (ha) of erosion control <u><i>invoiced</i></u> (follow up) for this reporting period",
                         "source": "totalAreaErosionControlInvoicedFollowup",
                         "type": "number",
                         "displayOptions": {
@@ -6969,7 +6961,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iii) Total length (km) of stream/coastline treated for erosion (initial) for this reporting period",
+                        "preLabel": "(v) Total length (km) of stream/coastline treated for erosion (initial) for this reporting period",
                         "source": "totalLengthStreamCoastlineInitial",
                         "type": "number"
                       }
@@ -6979,7 +6971,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(iv) Total length (km) of stream/coastline treated for erosion (initial) <u><i>invoiced</i></u> for this reporting period",
+                        "preLabel": "(vi) Total length (km) of stream/coastline treated for erosion (initial) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalLengthStreamCoastlineInitialInvoice",
                         "type": "number",
                         "displayOptions": {
@@ -6998,7 +6990,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(v) Total length (km) of stream/coastline treated for erosion (follow up) for this reporting period",
+                        "preLabel": "(vii) Total length (km) of stream/coastline treated for erosion (follow up) for this reporting period",
                         "source": "totalLengthStreamCoastlineFollowup",
                         "type": "number"
                       }
@@ -7008,7 +7000,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vi) Total length (km) of stream/coastline treated for erosion (follow up) <u><i>invoiced</i></u> for this reporting period",
+                        "preLabel": "(viii) Total length (km) of stream/coastline treated for erosion (follow up) <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalLengthStreamCoastlineInvoicedFollowup",
                         "type": "number",
                         "displayOptions": {
@@ -8626,7 +8618,6 @@
                   {
                     "dataType": "text",
                     "name": "agreementType",
-                    "description": "",
                     "constraints": [
                       "On title in perpetuity (e.g. conservation convenant)",
                       "Binding agreement not on title in perpetuity (e.g. property vegetation plan)",
@@ -9120,30 +9111,16 @@
                   {
                     "columns": [
                       {
-                        "width": "15%",
-                        "title": "Type of agreement",
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "agreementType",
-                                "type": "selectOne"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "otherAgreementType",
-                                "title": "Type of Agreement (if other)",
-                                "type": "textarea"
-                              }
-                            ]
-                          }
-                        ]
+                        "width": "10%",
+                        "source": "agreementType",
+                        "type": "selectOne",
+                        "title": "Type of agreement"
+                      },
+                      {
+                        "width": "12%",
+                        "source": "otherAgreementType",
+                        "type": "textarea",
+                        "title": "Type of Agreement (if other)"
                       },
                       {
                         "width": "10%",
@@ -9158,7 +9135,7 @@
                         "title": "Number of days maintaining agreements (if applicable)"
                       },
                       {
-                        "width": "10%",
+                        "width": "8%",
                         "source": "yearsOfTheAgreement",
                         "type": "number",
                         "title": "Length (years of the agreement)"
@@ -14800,41 +14777,28 @@
                     "title": "Activity start date",
                     "source": "activitiesStartDate",
                     "type": "date",
-                    "width": "20%"
+                    "width": "15%"
                   },
                   {
                     "title": "Activity end date",
                     "source": "activitiesEndDate",
                     "type": "date",
-                    "width": "20%"
+                    "width": "15%"
                   },
                   {
-                    "width": "25%",
+                    "width": "20%",
+                    "source": "habitatAugmentationType",
                     "title": "Type of habitat augmentation / installed",
-                    "type": "col",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "habitatAugmentationType",
-                            "type": "select2"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherHabitatAugmentationType",
-                            "type": "textarea"
-                          }
-                        ]
-                      }
-                    ]
+                    "type": "selectOne"
                   },
                   {
-                    "width": "35%",
+                    "width": "20%",
+                    "source": "otherHabitatAugmentationType",
+                    "title": "Type of habitat augmentation / installed (if other)",
+                    "type": "textarea"
+                  },
+                  {
+                    "width": "30%",
                     "source": "habitatAugmentationObjective",
                     "title": "Purpose of habitat augmentation",
                     "type": "textarea"
@@ -15249,7 +15213,7 @@
                       {
                         "dataType": "text",
                         "name": "habitatCondition",
-                        "validate": "maxSize[300]"
+                        "validate": "required,maxSize[300]"
                       }
                     ],
                     "dataType": "list",
@@ -15929,16 +15893,16 @@
                       {
                         "columns": [
                           {
-                            "width": "40%",
+                            "width": "30%",
                             "source": "typesOfHabitat",
                             "title": "Types of habitat",
                             "type": "selectOne"
                           },
                           {
-                            "width": "60%",
+                            "width": "70%",
                             "source": "habitatCondition",
                             "title": "Condition of habitat",
-                            "type": "text"
+                            "type": "textarea"
                           }
                         ],
                         "userAddedRows": true,
@@ -23419,7 +23383,7 @@
                 "description": "Manually enter correct figure for this reporting period if different to mapped value.",
                 "units": "ha",
                 "decimalPlaces": 3,
-                "validate": "min[0]"
+                "validate": "required,min[0]"
               },
               {
                 "dataType": "text",
@@ -28974,7 +28938,7 @@
               {
                 "dataType": "text",
                 "name": "conclusionsAndFutureDirections",
-                "validate": "maxSize[400]"
+                "validate": "required,maxSize[400]"
               }
             ],
             "dataType": "list",
@@ -29535,7 +29499,7 @@
                       {
                         "width": "5%",
                         "source": "willProjectContinue",
-                        "title": "Will this research and development project continue?",
+                        "title": "Will this research and/or development project continue?",
                         "type": "selectOne"
                       }
                     ],
@@ -34106,6 +34070,7 @@
               {
                 "dataType": "text",
                 "name": "otherInvestmentPriority",
+                "description": "Describe the investment priority (if Other) was selected",
                 "behaviour": [
                   {
                     "type": "enable",
@@ -34219,7 +34184,8 @@
                 "dataType": "number",
                 "name": "noSedimentSaved",
                 "decimalPlaces": 0,
-                "validate": "required,min[0]"
+                "validate": "required,min[0]",
+                "description": "Only enter tonnes of sediment being delivered under Stage 3-Works Implemented in this quarter"
               },
               {
                 "dataType": "text",
@@ -34306,7 +34272,7 @@
             ]
           }
         ],
-        "modelName": "Sediment Reduction",
+        "modelName": "LRP - Sediment reduction",
         "title": "Sediment Reduction",
         "viewModel": [
           {
@@ -34497,7 +34463,7 @@
                       {
                         "type": "number",
                         "source": "noSedimentSaved",
-                        "preLabel": "How many tonnes of sediment has been saved for this reporting period?"
+                        "preLabel": "How many tonnes of sediment has been saved in this reporting period?"
                       }
                     ]
                   },
@@ -34506,7 +34472,7 @@
                     "items": [
                       {
                         "type": "literal",
-                        "source": "<b>Provide the project reference ID and link to the P2R Projector </b>"
+                        "source": "<b>Provide the project reference ID and link to the P2R Projector </b><br><i>(Please provide temporary reference (i.e. Site name-1, Site name-2) when inputting units for Stage 1-Planning if P2R ID has not been generated yet)</i>"
                       }
                     ]
                   },
@@ -34616,7 +34582,7 @@
       "optionalQuestionText": null,
       "title": null,
       "collapsibleHeading": null,
-      "name": "Sediment Reduction",
+      "name": "LRP - Sediment reduction",
       "description": null
     },
 
