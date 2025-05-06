@@ -42243,7 +42243,7 @@
                           {
                             "width": "10%",
                             "source": "estimatedCoverPercent",
-                            "title": "Estimated weed cover (%)",
+                            "title": "Estimated weed cover for area mapped (%)",
                             "type": "number"
                           },
                           {
