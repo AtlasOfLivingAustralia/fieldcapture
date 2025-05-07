@@ -785,14 +785,20 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
     for (var i=0; i<services.length; i++) {
         if (services[i].scores) {
             for (var j=0; j<services[i].scores.length; j++) {
-                self.allTargetMeasures.push( {
-                    label:services[i].name+' - '+services[i].scores[j].label,
-                    serviceId:services[i].id,
-                    scoreId:services[i].scores[j].scoreId,
-                    service:services[i],
-                    score:services[i].scores[j],
-                    value:services[i].scores[j].scoreId
-                });
+                // Mandatory services are always included in reports and can't be marked
+                // as "Not applicable".  The current use case is for project management/overheads
+                // reporting and as such don't have target measures.
+                if (!(services[i].mandatory)) {
+                    self.allTargetMeasures.push( {
+                        label:services[i].name+' - '+services[i].scores[j].label,
+                        serviceId:services[i].id,
+                        scoreId:services[i].scores[j].scoreId,
+                        service:services[i],
+                        score:services[i].scores[j],
+                        value:services[i].scores[j].scoreId
+                    });
+                }
+
             }
         }
     }
