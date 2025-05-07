@@ -328,25 +328,42 @@ EditHelpDocumentsViewModel = function(hubId, categories, documents) {
 ManageTagsViewModel = function(tags, options) {
     tags = tags || [];
 
-    function Tag(tag) {
+    function Term(term) {
         var self = this;
-        self.editable = ko.observable(false);
-        self.tag = ko.observable(tag.tag);
-        self.description = ko.observable(tag.description);
-        self.originalTag = tag;
 
-        this.edit = function() {
+        self.editable = ko.observable(false);
+        self.term = ko.observable(term.term);
+        self.description = ko.observable(term.description);
+        self.category = ko.observable(term.category);
+        self.originalTerm = term;
+
+        self.edit = function() {
             self.editable(true);
         }
 
+        self.cancelEdit = function() {
+            self.editable(false);
+            self.term(term.term);
+            self.description(term.description);
+        }
+
         self.saveable = ko.computed(function() {
-            return self.editable() && (self.tag() != tag.tag || self.description() != tag.description);
+            return self.editable() && (self.term() != term.term || self.description() != term.description);
         });
+
+        self.toJSON = function() {
+            return {
+                termId: term.termId,
+                term: self.term(),
+                description: self.description(),
+                category: self.category()
+            };
+        }
     }
 
     let self = this;
     self.tags = _.map(tags, function(tag) {
-        return new Tag(tag);
+        return new Term(tag);
     });
 
     self.filter = ko.observable();
@@ -357,7 +374,7 @@ ManageTagsViewModel = function(tags, options) {
         return self.matchedTags() == 0;
     });
 
-    self.newTag = new Tag({});
+    self.newTag = new Term({});
 
     // We are doing page reloads as an alternative to manually syncing this model with the
     // data tables API.
@@ -367,13 +384,14 @@ ManageTagsViewModel = function(tags, options) {
 
             $.post({
                 url: fcConfig.deleteTagUrl,
-                data: JSON.stringify({tag: tag.tag()}),
+                data: JSON.stringify(tag),
                 contentType: 'application/json'
             }).done(function(response) {
                     if (response.error) {
+                        $.unblockUI();
                         bootbox.alert('Error deleting tag: ' + response.error);
                     } else {
-                        $.unblockUI();
+                        blockUIWithMessage("Reloading page...");
                         window.location.reload();
                     }
             }).fail(function() {
@@ -384,13 +402,10 @@ ManageTagsViewModel = function(tags, options) {
     };
     self.updateTag = function(tag) {
         blockUIWithMessage("Updating tag...");
-        var newTag = {
-            tag:tag.tag(),
-            description:tag.description()
-        };
+
         $.post({
             url:fcConfig.updateTagUrl,
-            data: JSON.stringify({oldTag: tag.originalTag, newTag: newTag}),
+            data: JSON.stringify(tag.toJSON()),
             contentType: 'application/json'
         }).done(function(response) {
             if (!response.error) {
@@ -409,12 +424,9 @@ ManageTagsViewModel = function(tags, options) {
     };
 
     self.addTag = function() {
-        let tag = {
-            tag: self.newTag.tag(),
-            description: self.newTag.description()
-        };
+        let tag = self.newTag.toJSON();
 
-        if (tag.tag) {
+        if (tag.term) {
             blockUIWithMessage("Adding tag...");
             $.post({
                 url: fcConfig.addTagUrl,
@@ -453,7 +465,7 @@ ManageTagsViewModel = function(tags, options) {
 
             let pageInfo = table.page.info();
             self.matchedTags(pageInfo.recordsDisplay);
-            self.newTag.tag(table.search());
+            self.newTag.term(table.search());
         });
     }
 };

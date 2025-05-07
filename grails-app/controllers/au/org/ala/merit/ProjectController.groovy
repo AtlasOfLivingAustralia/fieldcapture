@@ -202,7 +202,7 @@ class ProjectController {
         }
         List tags = []
         if (adminTabVisible) {
-            tags = metadataService.getTags()
+            tags = projectService.getProjectTags()
         }
         List downloadableProtocols = downloadableProtocols()
 

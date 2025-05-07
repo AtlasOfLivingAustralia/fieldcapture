@@ -8,7 +8,7 @@ import grails.util.Environment
 import grails.util.GrailsNameUtils
 import grails.web.http.HttpHeaders
 import groovy.util.logging.Slf4j
-import io.micronaut.http.HttpStatus
+import org.apache.http.HttpStatus
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Workbook
@@ -601,40 +601,39 @@ class AdminController {
     }
 
     def manageTags() {
-        [tags:metadataService.getTags()]
+        [tags:projectService.getProjectTags()]
     }
 
     def updateTag() {
         Map tag = request.JSON
-        if (!tag.oldTag?.tag || !tag.newTag?.tag) {
-            flash.message = "Both old and new tags must be specified."
-            redirect(action: 'manageTags')
+        Map result
+        if (!tag.termId) {
+            respond([status: HttpStatus.SC_BAD_REQUEST], [error:"Missing property termId"])
             return
         }
-        metadataService.updateProjectTag(tag.oldTag, tag.newTag)
-        Map result = projectService.updateProjectTags(tag.oldTag.tag, tag.newTag.tag)
 
+        result = projectService.updateProjectTag(tag)
         respond result
     }
 
     def addTag() {
         Map tag = request.JSON
-        if (!tag.tag) {
-            respond status: HttpStatus.BAD_REQUEST, text:'{"error":"Tag name is required"}'
+        if (!tag.term) {
+            respond([status: HttpStatus.SC_BAD_REQUEST], [text:'{"error":"Tag name is required"}'])
             return
         }
-        Map result = metadataService.addProjectTag(tag)
+        Map result = projectService.addProjectTag(tag)
         respond result
     }
 
     def deleteTag() {
         Map tag = request.JSON
-        if (!tag.tag) {
-            respond status: HttpStatus.BAD_REQUEST, text:'{"error":"Tag name is required"}'
+        if (!tag.termId) {
+            respond([status: HttpStatus.SC_BAD_REQUEST], [text:'{"error":"Missing required field termId"}'])
             return
         }
-        metadataService.deleteProjectTag(tag)
-        Map result = projectService.deleteProjectTags(tag.tag)
+
+        Map result = projectService.deleteProjectTag(tag)
         respond result
     }
 

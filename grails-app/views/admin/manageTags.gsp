@@ -43,10 +43,10 @@
             <tr>
                 <td class="tag">
                     <!-- ko if: editable -->
-                    <input class="form-control form-control-sm" data-bind="value:tag"></input>
+                    <input class="form-control form-control-sm" data-bind="value:term"></input>
                     <!-- /ko -->
                     <!-- ko if: !editable() -->
-                    <span data-bind="text:tag"></span>
+                    <span data-bind="text:term"></span>
                     <!-- /ko -->
                 </td>
                 <td class="description">
@@ -59,8 +59,13 @@
                 </td>
 
                 <td class="admin-actions">
-                    <button class="btn btn-mini deleteTag" title="Delete this tag" type="button" data-bind="click:$root.deleteTag"><i class="fa fa-remove"></i></button>
-                    <button class="btn btn-mini editTag" title="Edit this tag" type="button" data-bind="enable:!editable(), click:edit"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-mini deleteTag" title="Delete this tag" type="button" data-bind="enable:!editable(), click:$root.deleteTag"><i class="fa fa-trash"></i></button>
+                    <!-- ko if:!editable() -->
+                    <button class="btn btn-mini editTag" title="Edit this tag" type="button" data-bind="if:!editable(), click:edit"><i class="fa fa-edit"></i></button>
+                    <!-- /ko -->
+                    <!-- ko if:editable() -->
+                    <button class="btn btn-mini cancelEditTag" title="Cancel editing" type="button" data-bind="if:editable(), click:cancelEdit"><i class="fa fa-remove"></i></button>
+                    <!-- /ko -->
                     <button class="btn btn-mini updateTag" title="Save changes made to this tag" type="button" data-bind="enable: saveable, click:$root.updateTag"><i class="fa fa-save"></i></button>
                 </td>
             </tr>
@@ -68,13 +73,13 @@
             <tfoot data-bind="if: canAddNewTag">
             <tr>
                 <td class="tag">
-                    <input class="form-control form-control-sm" data-bind="value:newTag.tag"></input>
+                    <input class="form-control form-control-sm" data-bind="value:newTag.term"></input>
                 </td>
                 <td class="description">
                     <textarea class="form-control form-control-sm" data-bind="value:newTag.description"></textarea>
                 </td>
                 <td class="admin-actions">
-                    <button type="button" class="btn btn-sm btn-success" data-bind="click:addTag, enable:newTag.tag()">
+                    <button type="button" class="btn btn-sm btn-success" data-bind="click:addTag, enable:newTag.term()">
                         <i class="fa fa-plus"></i> Add new tag</button>
                 </td>
             </tr>

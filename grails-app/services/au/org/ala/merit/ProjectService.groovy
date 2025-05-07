@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.ecodata.forms.TermsService
 import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
@@ -41,6 +42,7 @@ class ProjectService  {
     public static final String FLATTEN_BY_SUM = "SUM"
     public static final String FLATTEN_BY_COUNT = "COUNT"
     public static final String DEFAULT_GROUP_BY = 'scientificName,vernacularName,scientificNameID,individualsOrGroups'
+    static final String PROJECT_TAGS_CATEGORY = 'MERIT Project Tags'
 
     // All projects can use the Plot Selection and Layout, Plot Description and Opportune modules, but
     // we don't want users recording data sets for Plot Selection and Layout so it's not included here.
@@ -51,6 +53,7 @@ class ProjectService  {
     def programService
     LockService lockService
     DataSetSummaryService dataSetSummaryService
+    TermsService termsService
 
     def get(id, levelOfDetail = "", includeDeleted = false) {
 
@@ -152,7 +155,7 @@ class ProjectService  {
         [targets:scoresWithTargetsByOutput, other:scoresWithoutTargetsByOutputs]
     }
 
-    def search(params) {
+    Map search(params) {
         webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/search', params)
     }
 
@@ -2312,19 +2315,57 @@ class ProjectService  {
         records
     }
 
-    Map updateProjectTags(String oldTagName, String newTagName) {
-        Map results = search([tags:oldTagName, view:'flat'])
-        results?.resp?.projects.each {
-            update(it.projectId, [tags: it.tags - oldTagName + newTagName])
-        }
-        [:]
+
+    List getProjectTags() {
+        String hubId = SettingService.hubConfig.hubId
+        termsService.getTerms(hubId, PROJECT_TAGS_CATEGORY)
     }
 
-    Map deleteProjectTags(String tag) {
-        Map results = search([tags:tag, view:'flat'])
-        results?.resp?.projects.each {
-            update(it.projectId, [tags: it.tags - tag])
+    Map addProjectTag(Map tag) {
+        tag.category = PROJECT_TAGS_CATEGORY
+        String hubId = SettingService.hubConfig.hubId
+        tag.hubId = hubId
+        termsService.addTerm(hubId, tag)
+    }
+
+    Map updateProjectTag(Map tag) {
+        List existingTags = getProjectTags()
+        Map result = [errors:[]]
+        Map existingTag = existingTags?.find{it.termId == tag.termId}
+        if (existingTag) {
+            Map projectsUsingTag = search([tags:existingTag.term, view:'flat'])
+            projectsUsingTag?.resp?.projects.each {
+                Map projectUpdateResult = update(it.projectId, [tags: it.tags - existingTag.term + tag.term])
+                if (projectUpdateResult.error) {
+                    result.errors << projectUpdateResult.error
+                }
+            }
         }
-        [:]
+        String hubId = SettingService.hubConfig.hubId
+        tag.hubId = hubId
+        tag.category = PROJECT_TAGS_CATEGORY
+        Map termUpdateResult = termsService.updateTerm(hubId, tag)
+        if (termUpdateResult.error) {
+            result.errors << termUpdateResult.error
+        }
+        result.success = result.errors.size() == 0
+        result
+    }
+
+    Map deleteProjectTag(Map tag) {
+        Map result = [errors:[]]
+        Map results = search([tags:tag.term, view:'flat'])
+        results?.resp?.projects.each {
+            Map projectUpdateResult = update(it.projectId, [tags: it.tags - tag.term])
+            if (projectUpdateResult.error) {
+                result.errors << projectUpdateResult.error
+            }
+        }
+        Map termDeleteResult = termsService.deleteTerm(tag.termId)
+        if (termDeleteResult.error) {
+            result.errors << termUpdateResult.error
+        }
+        result.success = result.errors.size() == 0
+        result
     }
 }

@@ -110,7 +110,6 @@ function ProjectViewModel(project) {
     self.externalIdTypes = PROJECT_EXTERNAL_ID_TYPES;
 
     self.transients = self.transients || {};
-    self.transients.defaultTags = ["Fires", "Flood", "Cyclone", "Drought", "Storm", "Wind"];
 
     self.name = ko.observable(project.name);
     self.programId = ko.observable(project.programId);
@@ -959,8 +958,8 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
 
     self.transients.projectTags = _.map(config.projectTags, function(tag) {
        return {
-           id:tag.tag,
-           text:tag.tag,
+           id:tag.term,
+           text:tag.term,
            description:tag.description
        };
     });
