@@ -52,7 +52,7 @@ let scores = [
     ,
     {
         scoreId: followUpScoreId,
-        label: 'Number of pre on-ground work images or imagery taken - follow-up',
+        label: 'Number of paired post on-ground works images or imagery taken - follow-up',
         status: 'active',
         isOutputTarget: true,
         category: "Reporting",
@@ -67,7 +67,7 @@ let scores = [
                     },
                     childAggregations: [
                         {
-                            property: 'data.numberOfPreOnGroundWorkImagesTakenFollowup',
+                            property: 'data.numberOfPostOnGroundWorkImagesFollowup',
                             type: 'SUM'
                         }
                     ]
