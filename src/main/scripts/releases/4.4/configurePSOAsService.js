@@ -51,11 +51,13 @@ while (programs.hasNext()) {
 
 let firstNationsPSO = db.service.findOne({legacyId:50});
 firstNationsPSO.outputs[0].formName = formName;
+
 db.service.replaceOne({legacyId:50}, firstNationsPSO);
 audit(firstNationsPSO, firstNationsPSO.serviceId, 'au.org.ala.ecodata.Service', adminUserId, undefined, "Update");
 
 let firstNationsProgram = db.program.findOne({name: "First Nations Delivery Partner"});
 firstNationsProgram.config.programServiceConfig.serviceFormName = formName;
+firstNationsProgram.config.projectReports[0].activityType = formName;
 
 db.program.updateOne({programId: firstNationsProgram.programId}, {$set: {config: firstNationsProgram.config}});
 audit(firstNationsProgram, firstNationsProgram.programId, 'au.org.ala.ecodata.Program', adminUserId, undefined, "Update");
