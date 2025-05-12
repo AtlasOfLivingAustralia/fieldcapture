@@ -413,6 +413,7 @@ ManageTagsViewModel = function(tags, options) {
                 $.unblockUI();
                 window.location.reload();
             } else {
+                $.unblockUI();
                 alert('Error updating tag: ' + response.error);
             }
         }).fail(
