@@ -5,7 +5,7 @@ let projects = db.project.find({isMERIT:true, 'custom.details':{$exists:true}, s
 // 2. custom.details.assets.description
 // 3. custom.details.outcomes.*.assets
 
-let allInvestmentPriorities = {};
+let projectInvestmentPriorities = {};
 
 while (projects.hasNext()) {
     let project = projects.next();
@@ -15,14 +15,25 @@ while (projects.hasNext()) {
 }
 
 // Sort the investment priorities by the property name
-let investmentPriorityNames = Object.keys(allInvestmentPriorities);
+let investmentPriorityNames = Object.keys(projectInvestmentPriorities);
 investmentPriorityNames.sort();
 
-const maxPrograms = 30;
-const maxManagementUnits = 10;
+const maxPrograms = 33;
+const maxManagementUnits = 53;
+
+let headerRow = "Investment Priority, Number of Projects";
+for (let i=0; i<maxPrograms; i++) {
+    headerRow += ", Program Id "+i+", Program Name "+i+", Program Category "+i;
+}
+for (let i=0; i<maxManagementUnits; i++) {
+    headerRow += ", Management Unit Id "+i+", Management Unit Name "+i+", Management Unit Category "+i;
+}
+print(headerRow);
+
+
 for (var i=0; i<investmentPriorityNames.length; i++) {
     let investmentPriority = investmentPriorityNames[i];
-    let investmentPriorityObj = allInvestmentPriorities[investmentPriority];
+    let investmentPriorityObj = projectInvestmentPriorities[investmentPriority];
 
     let line = "\""+investmentPriority+"\"";
     line += ', '+investmentPriorityObj.projects.length+", ";
@@ -32,11 +43,17 @@ for (var i=0; i<investmentPriorityNames.length; i++) {
             let program = investmentPriorityObj.programs[i];
             line += program.programId + ", " + program.name + ", " + program.category + ", ";
         }
+        else {
+            line += ", , , ";
+        }
     }
     for (let i=0; i<maxManagementUnits; i++) {
         if (i < investmentPriorityObj.managementUnits.length) {
             let mu = investmentPriorityObj.managementUnits[i];
-            line += mu.managementUnitId + ", " + mu.category + ", ";
+            line += mu.managementUnitId + ", " + mu.name + ", " + mu.category + ", ";
+        }
+        else {
+            line += ", , , ";
         }
     }
     print(line)
@@ -46,11 +63,11 @@ for (var i=0; i<investmentPriorityNames.length; i++) {
 function addInvestmentPriorities(project, investmentPriorities) {
     for (let i=0; i<investmentPriorities.length; i++) {
         let investmentPriority = investmentPriorities[i];
-        if (!allInvestmentPriorities[investmentPriority]) {
-            allInvestmentPriorities[investmentPriority] = {projects: [], programs: [], managementUnits: []};
+        if (!projectInvestmentPriorities[investmentPriority]) {
+            projectInvestmentPriorities[investmentPriority] = {projects: [], programs: [], managementUnits: []};
         }
 
-        allInvestmentPriorities[investmentPriority].projects.push(project.projectId);
+        projectInvestmentPriorities[investmentPriority].projects.push(project.projectId);
         let program = db.program.findOne({programId: project.programId});
         let category = '';
         if (!program) {
@@ -66,24 +83,52 @@ function addInvestmentPriorities(project, investmentPriorities) {
                 }
             }
         }
-        if (allInvestmentPriorities[investmentPriority].programs.indexOf(project.programId) < 0) {
-            allInvestmentPriorities[investmentPriority].programs.push({programId:project.programId, name:program.name, category:category});
+        let found = false;
+        for (let p=0; p<projectInvestmentPriorities[investmentPriority].programs.length; p++) {
+            let programObj = projectInvestmentPriorities[investmentPriority].programs[p];
+            if (programObj.programId == project.programId) {
+                // Already have this program
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            projectInvestmentPriorities[investmentPriority].programs.push({programId:project.programId, name:program.name, category:category});
         }
 
-        let mu = db.managementUnit.findOne({managementUnitId: project.managementUnitId});
-        category = '';
-        if (mu && mu.priorities && mu.priorities.length > 0) {
-            for (let j=0; j<mu.priorities.length; j++) {
-                let programPriority = mu.priorities[j];
-                if (programPriority.priority == investmentPriority) {
-                    category = programPriority.category;
+
+
+        if (project.managementUnitId) {
+
+            let mu = db.managementUnit.findOne({managementUnitId: project.managementUnitId});
+            category = '';
+            if (mu && mu.priorities && mu.priorities.length > 0) {
+                for (let j=0; j<mu.priorities.length; j++) {
+                    let muPriority = mu.priorities[j];
+                    if (muPriority.priority == investmentPriority) {
+                        category = muPriority.category;
+                        break;
+                    }
+                }
+            }
+
+            found = false;
+            for (let p = 0; p < projectInvestmentPriorities[investmentPriority].managementUnits.length; p++) {
+                let muObj = projectInvestmentPriorities[investmentPriority].managementUnits[p];
+                if (muObj.managementUnitId == project.managementUnitId) {
+                    // Already have this management unit
+                    found = true;
                     break;
                 }
             }
-        }
+            if (!found) {
+                projectInvestmentPriorities[investmentPriority].managementUnits.push({
+                    managementUnitId: project.managementUnitId,
+                    name: mu.name,
+                    category: category
+                });
 
-        if (project.managementUnitId && !allInvestmentPriorities[investmentPriority].managementUnits.indexOf(project.managementUnitId) < 0) {
-            allInvestmentPriorities[investmentPriority].managementUnits.push({managementUnitId:project.managementUnitId, category:category});
+            }
         }
     }
 }
