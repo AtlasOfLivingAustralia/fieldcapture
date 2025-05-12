@@ -42,6 +42,7 @@ describe("Facet filter component unit tests", function () {
 
     afterAll(function() {
         jasmine.clock().uninstall();
+        document.body.removeChild(mockElement);
     });
 
     beforeEach(function() {

@@ -8,6 +8,7 @@ import grails.util.Environment
 import grails.util.GrailsNameUtils
 import grails.web.http.HttpHeaders
 import groovy.util.logging.Slf4j
+import org.apache.http.HttpStatus
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Workbook
@@ -22,7 +23,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest
 @PreAuthorise(accessLevel = 'officer', redirectController = "home")
 @Slf4j
 class AdminController {
-    static allowedMethods = [ searchUserDetails: "GET", removeUserDetails:"POST"]
+    static allowedMethods = [ searchUserDetails: "GET", removeUserDetails:"POST", updateTag: "POST", addTag: "POST", deleteTag: "POST"]
+    static responseFormats = ['json', 'xml']
 
     BlogService blogService
     GrailsCacheManager grailsCacheManager
@@ -596,6 +598,43 @@ class AdminController {
     def checkForRisksAndThreatsChanges() {
         risksService.checkAndSendEmail()
         render 'ok'
+    }
+
+    def manageTags() {
+        [tags:projectService.getProjectTags()]
+    }
+
+    def updateTag() {
+        Map tag = request.JSON
+        Map result
+        if (!tag.termId) {
+            respond([status: HttpStatus.SC_BAD_REQUEST], [error:"Missing property termId"])
+            return
+        }
+
+        result = projectService.updateProjectTag(tag)
+        respond result
+    }
+
+    def addTag() {
+        Map tag = request.JSON
+        if (!tag.term) {
+            respond([status: HttpStatus.SC_BAD_REQUEST], [text:'{"error":"Tag name is required"}'])
+            return
+        }
+        Map result = projectService.addProjectTag(tag)
+        respond result
+    }
+
+    def deleteTag() {
+        Map tag = request.JSON
+        if (!tag.termId) {
+            respond([status: HttpStatus.SC_BAD_REQUEST], [text:'{"error":"Missing required field termId"}'])
+            return
+        }
+
+        Map result = projectService.deleteProjectTag(tag)
+        respond result
     }
 
     def organisationModifications() {

@@ -130,4 +130,16 @@
     margin-left: -14px;
 }
 
+table.tags-table .admin-actions {
+    width: 120px;
+    min-width: 120px;
+}
+
+table.tags-table .tag {
+    width: 50%;
+}
+table.tags-table .description {
+    width: 50%;
+}
+
 
