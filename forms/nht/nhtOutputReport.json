@@ -5552,13 +5552,13 @@
                     "validate": "required,maxSize[100]"
                   },
                   {
-                    "validated": "required,min[0]",
+                    "validate": "required,min[0]",
                     "dataType": "number",
                     "name": "weightOfDebrisTonnes",
                     "units": "tonnes"
                   },
                   {
-                    "validated": "required,min[0]",
+                    "validate": "required,min[0]",
                     "dataType": "number",
                     "name": "volumeRemovedM3",
                     "units": "m3"
