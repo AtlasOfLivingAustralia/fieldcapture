@@ -44,7 +44,7 @@ cd $ECODATA_LOCAL_DIR
 echo "Starting ecodata from `pwd`"
 ls -la
 GRADLE_OPTS="-Xmx1g" ./gradlew bootRun "-Dorg.gradle.jvmargs=-Xmx1g" -Dgrails.env=meritfunctionaltest &
-sleep 240
+sleep 360
 
 
 cd $MERIT_DIR

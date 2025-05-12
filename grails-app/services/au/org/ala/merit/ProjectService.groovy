@@ -1570,7 +1570,7 @@ class ProjectService  {
     List<Map> getProjectServices(Map project, ProgramConfig programConfig) {
         List<Map> supportedServices = programConfig.services
         List serviceIds = project.custom?.details?.serviceIds?.collect{it as Integer}
-        List projectServices = supportedServices?.findAll {it.id in serviceIds }
+        List projectServices = supportedServices?.findAll {it.id in serviceIds || it.mandatory }
 
         projectServices
     }
@@ -1739,7 +1739,21 @@ class ProjectService  {
 
             if (selectedForProject) {
                 List projectOutputs = selectedForProject.collect{it.output}
-                filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs)
+                List mandatoryOutputs = selectedForProject.findAll{it.mandatory}.collect{it.output}
+                // Override the mandatory flag for outputs that are mandatory for the program
+                if (mandatoryOutputs) {
+                    activityModel.outputConfig = new JSONArray(
+                        activityModel.outputConfig.collect { Map outputConfig ->
+                            if (mandatoryOutputs.contains(outputConfig.outputName)) {
+                                outputConfig = new JSONObject(outputConfig)
+                                outputConfig.optional = false
+                            }
+                            outputConfig
+                        })
+
+                }
+
+                filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs, mandatoryOutputs)
             }
         }
         filteredModel
@@ -1779,11 +1793,11 @@ class ProjectService  {
         filterable
     }
 
-    private Map filterActivityModel(Map activityModel, Map existingActivityData, List filterableSections, List sectionsToInclude) {
+    private Map filterActivityModel(Map activityModel, Map existingActivityData, List filterableSections, List sectionsToInclude, List mandatorySections) {
         Map filteredModel = new JSONObject(activityModel)
         List existingOutputs = existingActivityData?.outputs?.collect{it.name}
         filteredModel.outputs = activityModel.outputs.findAll({ String output ->
-            boolean isFilterable = filterableSections.find{it == output}
+            boolean isFilterable = filterableSections.contains(output) && !mandatorySections.contains(output)
 
             // Include this output if it's not associated with a service,
             // Or if it's associated by a service delivered by this project
