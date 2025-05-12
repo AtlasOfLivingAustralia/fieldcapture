@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.ecodata.forms.TermsService
 import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
@@ -41,6 +42,7 @@ class ProjectService  {
     public static final String FLATTEN_BY_SUM = "SUM"
     public static final String FLATTEN_BY_COUNT = "COUNT"
     public static final String DEFAULT_GROUP_BY = 'scientificName,vernacularName,scientificNameID,individualsOrGroups'
+    static final String PROJECT_TAGS_CATEGORY = 'MERIT Project Tags'
 
     // All projects can use the Plot Selection and Layout, Plot Description and Opportune modules, but
     // we don't want users recording data sets for Plot Selection and Layout so it's not included here.
@@ -51,6 +53,7 @@ class ProjectService  {
     def programService
     LockService lockService
     DataSetSummaryService dataSetSummaryService
+    TermsService termsService
 
     def get(id, levelOfDetail = "", includeDeleted = false) {
 
@@ -152,7 +155,7 @@ class ProjectService  {
         [targets:scoresWithTargetsByOutput, other:scoresWithoutTargetsByOutputs]
     }
 
-    def search(params) {
+    Map search(params) {
         webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/search', params)
     }
 
@@ -1570,7 +1573,7 @@ class ProjectService  {
     List<Map> getProjectServices(Map project, ProgramConfig programConfig) {
         List<Map> supportedServices = programConfig.services
         List serviceIds = project.custom?.details?.serviceIds?.collect{it as Integer}
-        List projectServices = supportedServices?.findAll {it.id in serviceIds }
+        List projectServices = supportedServices?.findAll {it.id in serviceIds || it.mandatory }
 
         projectServices
     }
@@ -1739,7 +1742,21 @@ class ProjectService  {
 
             if (selectedForProject) {
                 List projectOutputs = selectedForProject.collect{it.output}
-                filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs)
+                List mandatoryOutputs = selectedForProject.findAll{it.mandatory}.collect{it.output}
+                // Override the mandatory flag for outputs that are mandatory for the program
+                if (mandatoryOutputs) {
+                    activityModel.outputConfig = new JSONArray(
+                        activityModel.outputConfig.collect { Map outputConfig ->
+                            if (mandatoryOutputs.contains(outputConfig.outputName)) {
+                                outputConfig = new JSONObject(outputConfig)
+                                outputConfig.optional = false
+                            }
+                            outputConfig
+                        })
+
+                }
+
+                filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs, mandatoryOutputs)
             }
         }
         filteredModel
@@ -1779,11 +1796,11 @@ class ProjectService  {
         filterable
     }
 
-    private Map filterActivityModel(Map activityModel, Map existingActivityData, List filterableSections, List sectionsToInclude) {
+    private Map filterActivityModel(Map activityModel, Map existingActivityData, List filterableSections, List sectionsToInclude, List mandatorySections) {
         Map filteredModel = new JSONObject(activityModel)
         List existingOutputs = existingActivityData?.outputs?.collect{it.name}
         filteredModel.outputs = activityModel.outputs.findAll({ String output ->
-            boolean isFilterable = filterableSections.find{it == output}
+            boolean isFilterable = filterableSections.contains(output) && !mandatorySections.contains(output)
 
             // Include this output if it's not associated with a service,
             // Or if it's associated by a service delivered by this project
@@ -2310,5 +2327,59 @@ class ProjectService  {
         }
 
         records
+    }
+
+
+    List getProjectTags() {
+        String hubId = SettingService.hubConfig.hubId
+        termsService.getTerms(hubId, PROJECT_TAGS_CATEGORY)
+    }
+
+    Map addProjectTag(Map tag) {
+        tag.category = PROJECT_TAGS_CATEGORY
+        String hubId = SettingService.hubConfig.hubId
+        tag.hubId = hubId
+        termsService.addTerm(hubId, tag)
+    }
+
+    Map updateProjectTag(Map tag) {
+        List existingTags = getProjectTags()
+        Map result = [errors:[]]
+        Map existingTag = existingTags?.find{it.termId == tag.termId}
+        if (existingTag) {
+            Map projectsUsingTag = search([tags:existingTag.term, view:'flat'])
+            projectsUsingTag?.resp?.projects.each {
+                Map projectUpdateResult = update(it.projectId, [tags: it.tags - existingTag.term + tag.term])
+                if (projectUpdateResult.error) {
+                    result.errors << projectUpdateResult.error
+                }
+            }
+        }
+        String hubId = SettingService.hubConfig.hubId
+        tag.hubId = hubId
+        tag.category = PROJECT_TAGS_CATEGORY
+        Map termUpdateResult = termsService.updateTerm(hubId, tag)
+        if (termUpdateResult.error) {
+            result.errors << termUpdateResult.error
+        }
+        result.success = result.errors.size() == 0
+        result
+    }
+
+    Map deleteProjectTag(Map tag) {
+        Map result = [errors:[]]
+        Map results = search([tags:tag.term, view:'flat'])
+        results?.resp?.projects.each {
+            Map projectUpdateResult = update(it.projectId, [tags: it.tags - tag.term])
+            if (projectUpdateResult.error) {
+                result.errors << projectUpdateResult.error
+            }
+        }
+        Map termDeleteResult = termsService.deleteTerm(tag.termId)
+        if (termDeleteResult.error) {
+            result.errors << termUpdateResult.error
+        }
+        result.success = result.errors.size() == 0
+        result
     }
 }

@@ -73,7 +73,8 @@ class ProjectConfigurationService {
                        name: serviceName,
                        service: service,
                        output: output,
-                       scores: scores
+                       scores: scores,
+                       mandatory: serviceConfig.mandatory
                     ]
                 }
             }

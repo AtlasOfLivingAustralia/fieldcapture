@@ -107,14 +107,6 @@
             <g:textField class="form-control form-control-sm input-small" name="manager" data-bind="value:manager"/>
         </div>
     </div>
-
-    <div class="col-sm-4">
-        <label class="control-label" for="tags">Disaster relief categories</label>
-        <div class="controls">
-            <select multiple="multiple" id="tags" data-bind="options:transients.defaultTags, multiSelect2:{value:tags, placeholder:''}" class="select form-control form-control-sm input-small"></select>
-        </div>
-    </div>
-
 </div>
 <g:if test="${!canChangeProjectDates}">
     <div class="alert alert-block">You cannot change the start date for a project with submitted or approved reports or MERI plan.</div>
