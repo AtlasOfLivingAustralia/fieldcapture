@@ -35,6 +35,10 @@ var DatePickerModel = function(fromDate, toDate, isFilterByCompletedProjects, ur
         $location.href = urlWithoutDates;
     };
 
+    self.applyDates = function() {
+        validateAndReloadAndOption(self.fromDate(), self.toDate(), self.isFilterByCompletedProjects());
+    };
+
     var validateAndReloadAndOption = function(newFromDate, newToDate, newIsFilterByCompletedProjects) {
 
         var formattedFromDate = moment(fromDate).format(fromDate);
@@ -74,22 +78,12 @@ var DatePickerModel = function(fromDate, toDate, isFilterByCompletedProjects, ur
         $location.href = urlWithoutDates;
     }
 
-    self.fromDate.subscribe(function(a, b) {
-        validateAndReloadAndOption(self.fromDate(), self.toDate(), self.isFilterByCompletedProjects());
-    });
-    self.toDate.subscribe(function(toDate) {
-        validateAndReloadAndOption(self.fromDate(), self.toDate(), self.isFilterByCompletedProjects());
-    });
-
     self.selectedRange.subscribe(function(value) {
 
         if (value.from) {
             reloadWithDatesAndOption(value.from, value.to, self.isFilterByCompletedProjects());
         }
 
-    });
-    self.isFilterByCompletedProjects.subscribe(function() {
-        validateAndReloadAndOption(self.fromDate(), self.toDate(), self.isFilterByCompletedProjects());
     });
 };
 

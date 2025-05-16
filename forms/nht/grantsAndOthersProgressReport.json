@@ -1756,6 +1756,7 @@
                       "Exhibits/Installations",
                       "Extension materials",
                       "Fact Sheets",
+                      "Maps",
                       "Marketing materials",
                       "Media releases",
                       "Newsletters",
@@ -2505,7 +2506,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total number of events held/attended",
+                        "preLabel": "(i) Total number of engagement events for this reporting period",
                         "source": "totalNumberEngagementHeld",
                         "type": "number"
                       }
@@ -4663,7 +4664,7 @@
                   {
                     "dataType": "text",
                     "name": "otherDebrisType",
-                    "description": "if Other",
+                    "description": "if Other was selected",
                     "behaviour": [
                       {
                         "condition": "debrisType == \"Other\"",
@@ -4673,13 +4674,13 @@
                     "validate": "required,maxSize[100]"
                   },
                   {
-                    "validated": "required,min[0]",
+                    "validate": "required,min[0]",
                     "dataType": "number",
                     "name": "weightOfDebrisTonnes",
                     "units": "tonnes"
                   },
                   {
-                    "validated": "required,min[0]",
+                    "validate": "required,min[0]",
                     "dataType": "number",
                     "name": "volumeRemovedM3",
                     "units": "m3"
@@ -5075,38 +5076,30 @@
                 "columns": [
                   {
                     "width": "20%",
+                    "source": "debrisType",
                     "title": "Type of debris removed",
-                    "type": "col",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "debrisType",
-                            "type": "selectOne"
-                          }
-                        ]
-                      },
-                      {
-                        "source": "otherDebrisType",
-                        "type": "text"
-                      }
-                    ]
+                    "type": "selectOne"
                   },
                   {
                     "width": "20%",
+                    "source": "otherDebrisType",
+                    "title": "Type of debris removed (if Other)",
+                    "type": "textarea"
+                  },
+                  {
+                    "width": "15%",
                     "source": "weightOfDebrisTonnes",
                     "title": "Weight (tonnes) of debris removed",
                     "type": "number"
                   },
                   {
-                    "width": "20%",
+                    "width": "15%",
                     "source": "volumeRemovedM3",
                     "title": "Volume (m3) of debris removed",
                     "type": "number"
                   },
                   {
-                    "width": "40%",
+                    "width": "30%",
                     "source": "teqDebrisRemoval",
                     "title": "Technique used to remove debris",
                     "type": "textarea",
@@ -5447,6 +5440,7 @@
                       "Administrative areas (e.g. LGA)",
                       "Catchments",
                       "Culturally important sites",
+                      "Data management plan",
                       "Farms",
                       "Heritage Sites",
                       "Projects and Project Sites, including project logics",
@@ -7776,6 +7770,7 @@
               {
                 "dataType": "text",
                 "name": "otherInvestmentPriority",
+                "description": "Describe the investment priority (if Other) was selected",
                 "behaviour": [
                   {
                     "type": "enable",
@@ -7890,7 +7885,6 @@
                   {
                     "dataType": "text",
                     "name": "agreementType",
-                    "description": "",
                     "constraints": [
                       "On title in perpetuity (e.g. conservation convenant)",
                       "Binding agreement not on title in perpetuity (e.g. property vegetation plan)",
@@ -8288,30 +8282,16 @@
                   {
                     "columns": [
                       {
-                        "width": "15%",
-                        "title": "Type of agreement",
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "agreementType",
-                                "type": "selectOne"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "row",
-                            "items": [
-                              {
-                                "source": "otherAgreementType",
-                                "title": "Type of Agreement (if other)",
-                                "type": "textarea"
-                              }
-                            ]
-                          }
-                        ]
+                        "width": "10%",
+                        "source": "agreementType",
+                        "type": "selectOne",
+                        "title": "Type of agreement"
+                      },
+                      {
+                        "width": "12%",
+                        "source": "otherAgreementType",
+                        "type": "textarea",
+                        "title": "Type of Agreement (if other)"
                       },
                       {
                         "width": "10%",
@@ -8326,7 +8306,7 @@
                         "title": "Number of days maintaining agreements (if applicable)"
                       },
                       {
-                        "width": "10%",
+                        "width": "8%",
                         "source": "yearsOfTheAgreement",
                         "type": "number",
                         "title": "Length (years of the agreement)"
@@ -8664,7 +8644,7 @@
                 "description": "Manually enter correct figure for this reporting period if different to mapped value.",
                 "units": "ha",
                 "decimalPlaces": 3,
-                "validate": "min[0]"
+                "validate": "required,min[0]"
               },
               {
                 "dataType": "text",
@@ -8744,17 +8724,6 @@
                   },
                   {
                     "dataType": "number",
-                    "name": "numberOfAgreements",
-                    "validate": "required,min[0]"
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "numberOfDaysMaintainingAgreements",
-                    "description": "Number of days should be calculated as number of days by number of people (eg. 4.5 days by 3 people is 13.5 days).",
-                    "validate": "required,min[0]"
-                  },
-                  {
-                    "dataType": "number",
                     "name": "yearsOfTheAgreement",
                     "validate": "required,min[0]"
                   },
@@ -8770,19 +8739,19 @@
                   }
                 ],
                 "dataType": "list",
-                "name": "agreementsTable"
+                "name": "establishingAgreementsTable"
               },
               {
                 "dataType": "number",
                 "name": "rowCount",
                 "decimalPlaces": 0,
                 "computed": {
-                  "expression": "sum(agreementsTable, \"agreementType ? 1 : 0\")"
+                  "expression": "sum(establishingAgreementsTable, \"agreementType ? 1 : 0\")"
                 }
               }
             ],
             "dataType": "list",
-            "name": "conservationAgreementsControlled"
+            "name": "establishingAgreementsControlled"
           },
           {
             "dataType": "number",
@@ -8790,7 +8759,7 @@
             "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(conservationAgreementsControlled, \"rowCount\")"
+              "expression": "sum(establishingAgreementsControlled, \"rowCount\")"
             }
           },
           {
@@ -8909,7 +8878,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total number of agreements established",
+                        "preLabel": "(i) Total number of agreements established for this reporting period",
                         "source": "totalNumberOfAgreements",
                         "type": "number"
                       }
@@ -8925,7 +8894,7 @@
               {
                 "addRowText": "Add a new agreement area",
                 "userAddedRows": true,
-                "source": "conservationAgreementsControlled",
+                "source": "establishingAgreementsControlled",
                 "type": "repeat",
                 "items": [
                   {
@@ -9098,8 +9067,8 @@
                       }
                     ],
                     "userAddedRows": true,
-                    "source": "agreementsTable",
-                    "title": "<b style=\"color:red\">Please report on each agreement in a separate row using the ‘+Add a row’ button’.  Where the agreement relates to an area, please report each agreement and it’s area using the ‘+Add a new agreement area’ button below.</b>",
+                    "source": "establishingAgreementsTable",
+                    "title": "<b>Please report on each agreement in a separate row using the ‘+Add a row’ button’.  Where the agreement relates to an area, please report each agreement and it’s area using the ‘+Add a new agreement area’ button below.</b>",
                     "type": "table"
                   }
                 ]
@@ -11849,7 +11818,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total number of days conducting cultural practices during this reporting period",
+                        "preLabel": "(i) Total number of days conducting cultural practices for this reporting period",
                         "source": "totalNoDaysCulturalPractices",
                         "type": "number"
                       }
@@ -11860,7 +11829,7 @@
             ]
           },
           {
-            "addRowText": "Add new First Nations Cultural Practice",
+            "addRowText": "Add new First Nations Cultural Practice site or outcome",
             "userAddedRows": true,
             "source": "firstNationAreasControlled",
             "type": "repeat",
@@ -12124,7 +12093,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Individuals or groups?",
+                            "preLabel": "Individuals or Groups participating in this activity?",
                             "source": "individualsOrGroups",
                             "type": "selectOne"
                           }
@@ -12140,7 +12109,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Number of participants",
+                            "preLabel": "Number of people participating in this activity?",
                             "source": "noOfParticipants",
                             "type": "number"
                           }
@@ -12165,7 +12134,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "Number of First Nations participants",
+                            "preLabel": "Number of First Nations people participating in this activity?",
                             "source": "noOfFirstNationsParticipants",
                             "type": "number"
                           }
@@ -12251,7 +12220,8 @@
                 ],
                 "userAddedRows": true,
                 "source": "firstNationsDetails",
-                "type": "table"
+                "type": "table",
+                "title": "<b>Please report each activity for this site or outcome as a separate row</b>"
               }
             ]
           },
@@ -14086,41 +14056,28 @@
                     "title": "Activity start date",
                     "source": "activitiesStartDate",
                     "type": "date",
-                    "width": "20%"
+                    "width": "15%"
                   },
                   {
                     "title": "Activity end date",
                     "source": "activitiesEndDate",
                     "type": "date",
-                    "width": "20%"
+                    "width": "15%"
                   },
                   {
-                    "width": "25%",
+                    "width": "20%",
+                    "source": "habitatAugmentationType",
                     "title": "Type of habitat augmentation / installed",
-                    "type": "col",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "habitatAugmentationType",
-                            "type": "select2"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "otherHabitatAugmentationType",
-                            "type": "textarea"
-                          }
-                        ]
-                      }
-                    ]
+                    "type": "selectOne"
                   },
                   {
-                    "width": "35%",
+                    "width": "20%",
+                    "source": "otherHabitatAugmentationType",
+                    "title": "Type of habitat augmentation / installed (if other)",
+                    "type": "textarea"
+                  },
+                  {
+                    "width": "30%",
                     "source": "habitatAugmentationObjective",
                     "title": "Purpose of habitat augmentation",
                     "type": "textarea"
@@ -14526,7 +14483,7 @@
                       {
                         "dataType": "text",
                         "name": "habitatCondition",
-                        "validate": "maxSize[300]"
+                        "validate": "required,maxSize[300]"
                       }
                     ],
                     "dataType": "list",
@@ -15106,16 +15063,16 @@
                       {
                         "columns": [
                           {
-                            "width": "40%",
+                            "width": "30%",
                             "source": "typesOfHabitat",
                             "title": "Types of habitat",
                             "type": "selectOne"
                           },
                           {
-                            "width": "60%",
+                            "width": "70%",
                             "source": "habitatCondition",
                             "title": "Condition of habitat",
-                            "type": "text"
+                            "type": "textarea"
                           }
                         ],
                         "userAddedRows": true,
@@ -19588,7 +19545,7 @@
           }
         ],
         "modelName": "Obtaining approvals",
-        "title": "Obtain Relevant Approvals",
+        "title": "Obtaining Relevant Approvals",
         "viewModel": [
           {
             "type": "row",
@@ -22174,15 +22131,6 @@
                 ]
               },
               {
-                "dataType": "text",
-                "name": "invoicingThisActivity",
-                "constraints": [
-                  "Yes",
-                  "No"
-                ],
-                "validate": "required"
-              },
-              {
                 "dataType": "feature",
                 "name": "sitesResearchAndDevelopment",
                 "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
@@ -22225,7 +22173,7 @@
                 "description": "Manually enter correct figure for this reporting period if different to mapped value.",
                 "units": "ha",
                 "decimalPlaces": 3,
-                "validate": "min[0]"
+                "validate": "required,min[0]"
               },
               {
                 "dataType": "text",
@@ -27780,7 +27728,7 @@
               {
                 "dataType": "text",
                 "name": "conclusionsAndFutureDirections",
-                "validate": "maxSize[400]"
+                "validate": "required,maxSize[400]"
               }
             ],
             "dataType": "list",
@@ -27828,7 +27776,7 @@
             "decimalPlaces": 0,
             "defaultValue": 1,
             "computed": {
-              "expression": "sum(researchAndDevelopmentByOutcome, \"numberOfDaysConducted\")"
+              "expression": "sum(researchAndDevelopmentByOutcome, \"numberOfHoursConducted\")"
             }
           },
           {
@@ -28032,22 +27980,6 @@
                             "source": "investmentPriorities2",
                             "preLabel": "Which investment priority/ies does this activity relate to?",
                             "type": "select2Many"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "css": "span3",
-                    "type": "col",
-                    "items": [
-                      {
-                        "type": "row",
-                        "items": [
-                          {
-                            "source": "invoicingThisActivity",
-                            "preLabel": "Are you invoicing for this activity in this reporting period?",
-                            "type": "selectOne"
                           }
                         ]
                       }
@@ -28297,7 +28229,7 @@
                       {
                         "width": "5%",
                         "source": "willProjectContinue",
-                        "title": "Will this research and development project continue?",
+                        "title": "Will this research and/or development project continue?",
                         "type": "selectOne"
                       }
                     ],
@@ -38949,7 +38881,7 @@
                           {
                             "width": "10%",
                             "source": "estimatedCoverPercent",
-                            "title": "Estimated weed cover (%)",
+                            "title": "Estimated weed cover for area mapped (%)",
                             "type": "number"
                           },
                           {

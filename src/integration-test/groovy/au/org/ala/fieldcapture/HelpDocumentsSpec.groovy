@@ -51,16 +51,11 @@ class HelpDocumentsSpec extends StubbedCasSpec {
 
         when:
         to ManageHelpDocuments
-        addCategory(newCategory)
-
-        then:
-        waitFor {categorySelect == newCategory}
-
-        when:
         openDocumentDialog()
         def dialog = attachDocumentDialog
         dialog.title = "Test doc"
         dialog.attachFile("/testDocument.txt")
+        dialog.addLabel(newCategory)
 
         waitFor 20, {
             //dialog.saveButton.displayed

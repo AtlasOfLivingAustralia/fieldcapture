@@ -4,17 +4,17 @@ load('../../../utils/program.js');
 load("../../../utils/addService.js")
 
 const adminUserId = "system";
-const invoiceScoreId = '12dK3150f-763b-4taf-j49f-60a2dbda4311';
-const scoreId = '1103150k-653q-ubag-s49d-60a2dbda0711';
-var serviceName = "Establishing Agreements"
+const invoiceScoreId = '2d02150f-763b-4baf-b49f-60a2dbda0235';
+var serviceName = "First Nations Delivery Partners Program PS&O"
+var sectionName = "Non-RDP - First Nations Delivery Partners Program PS&O"
 var newOutputs = [
-    {formName: "NHT Output Report", sectionName: serviceName},
-    {formName: "Grants and Others Progress Report", sectionName: serviceName},
-    {formName: "Procurement Output Report", sectionName: serviceName}
+    {formName: "NHT Output Report", sectionName: sectionName},
+    {formName: "Grants and Others Progress Report", sectionName: sectionName},
+    {formName: "Procurement Output Report", sectionName: sectionName}
 ];
 
 
-addService(serviceName, NumberInt(49), undefined, undefined, newOutputs, adminUserId)
+addService(serviceName, NumberInt(50), undefined, undefined, newOutputs, adminUserId)
 
 let scores = [
     {
@@ -27,19 +27,19 @@ let scores = [
         isOutputTarget: false,
         category: "Reporting",
         status: 'active',
-        label: 'Invoiced number of agreements established',
+        label: 'Invoiced PS&O delivered',
         description: '',
         configuration: {
             childAggregations: [
                 {
                     filter: {
                         property: 'name',
-                        filterValue: serviceName,
+                        filterValue: sectionName,
                         type: 'filter'
                     },
                     childAggregations: [
                         {
-                            property: 'data.numberAgreementsEstablishedInvoiced',
+                            property: 'data.psoDeliveredInvoiced',
                             type: 'SUM'
                         }
                     ]
@@ -49,9 +49,9 @@ let scores = [
     }
     ,
     {
-        _id: ObjectId('517cde76a291e30890b60fd8'),
-        scoreId: scoreId,
-        label: 'Number of agreements established',
+        _id: ObjectId('627cde76a291e30890b60fd8'),
+        scoreId: '7d03150f-763b-4baf-b49f-60a2dbda0235',
+        label: 'PS&O delivered',
         status: 'active',
         isOutputTarget: true,
         category: "Natural Heritage Trust",
@@ -61,20 +61,20 @@ let scores = [
                 {
                     filter: {
                         property: 'name',
-                        filterValue: serviceName,
+                        filterValue: sectionName,
                         type: 'filter'
                     },
                     childAggregations: [
                         {
-                            property: 'data.numberAgreementsEstablished',
+                            property: 'data.psoDelivered',
                             type: 'SUM'
                         }
                     ]
                 }
             ]
         },
-        dateCreated: ISODate('2025-03-13T04:40:11.160Z'),
-        lastUpdated: ISODate('2025-03-13T04:40:11.160Z'),
+        dateCreated: ISODate('2025-03-19T04:40:11.160Z'),
+        lastUpdated: ISODate('2025-03-19T04:40:11.160Z'),
         relatedScores: [
             {
                 description: 'Invoiced by',
@@ -101,21 +101,15 @@ for (let i=0; i<scores.length; i+=2) {
     }
 }
 
+var excludedPrograms = []
 var programServices = [
     {
-        serviceTargets: [scoreId],
-        serviceId: NumberInt(49)
+        serviceTargets: ["7d03150f-763b-4baf-b49f-60a2dbda0235"],
+        serviceId: NumberInt(50)
     }
 ];
 
-// RDP panel procurements are excluded
-var excludedPrograms = []
-db.program.find({'config.programServiceConfig.serviceFormName': {"$eq": 'NHT Output Report'}})
-    .forEach(function (program) {
-        excludedPrograms.push(program.name)
-    });
-
-var programs = db.program.find({name: {$nin: excludedPrograms}, 'config.meriPlanContents.template':'extendedKeyThreats'})
+var programs = db.program.find({name: "First Nations Delivery Partner"})
 while (programs.hasNext()) {
     var program = programs.next();
     programServices.forEach(function (programService) {
@@ -123,7 +117,6 @@ while (programs.hasNext()) {
     });
 
     db.program.updateOne({programId: program.programId}, {$set: {config: program.config}});
-    audit(program, program.programId, 'au.org.ala.ecodata.Program', userId, undefined, "Update");
+    audit(program, program.programId, 'au.org.ala.ecodata.Program', adminUserId, undefined, "Update");
     print("Updated "+ program.name);
 }
-

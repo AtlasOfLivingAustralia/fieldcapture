@@ -44,6 +44,7 @@
         <g:if test="${fc.userIsSiteAdmin() || fc.userHasReadOnlyAccess()}">
             <a class="nav-link" href="#organisation-history" id="organisation-history-tab" data-toggle="pill" role="tab" >Organisation history</a>
             <a class="nav-link" href="#project-audit" id="project-audit-tab" data-toggle="pill" role="tab" >Audit</a>
+            <a class="nav-link" href="#project-tags" id="project-tags-tab" data-toggle="pill" role="tab" >Add tags to project</a>
         </g:if>
     </div> <!-- end of side nav -->
     <div class="col-10">
@@ -157,6 +158,10 @@
                 <!-- Audit -->
                 <div id="project-audit" class="pill-pane tab-pane">
                     <g:render template="/project/audit"/>
+                </div>
+
+                <div id="project-tags" class="pill-pane tab-pane">
+                    <g:render template="/project/tags"/>
                 </div>
             </g:if>
         </div>

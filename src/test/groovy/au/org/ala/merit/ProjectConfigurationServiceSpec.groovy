@@ -227,7 +227,7 @@ class ProjectConfigurationServiceSpec extends Specification implements Autowired
         then:
         1 * programService.get(programId) >> programConfig
         1 * metadataService.getProjectServices() >> allServices
-        config.services == programConfig.inheritedConfig.programServiceConfig.programServices.collect{[id: it.serviceId, name: "service "+it.serviceId, service: allServices.find({service -> service.id == it.serviceId}), output:allServices.find({service -> service.id == it.serviceId}).outputs[0].sectionName, scores:[[scoreId:it.serviceTargets[0]]]]}
+        config.services == programConfig.inheritedConfig.programServiceConfig.programServices.collect{[id: it.serviceId, name: "service "+it.serviceId, service: allServices.find({service -> service.id == it.serviceId}), output:allServices.find({service -> service.id == it.serviceId}).outputs[0].sectionName, scores:[[scoreId:it.serviceTargets[0]]], mandatory:null]}
     }
 
     private Map buildServiceConfig() {

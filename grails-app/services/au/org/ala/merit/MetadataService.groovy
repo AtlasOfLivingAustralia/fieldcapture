@@ -14,8 +14,6 @@ class MetadataService {
     static final String PROJECT_SERVICES_CACHE_REGION = 'projectServices'
     static final String PROJECT_SERVICES_KEY = 'projectServices'
 
-
-
     def activitiesModel() {
         return cacheService.get('activity-model',{
             webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') +
@@ -358,6 +356,4 @@ class MetadataService {
 
         result
     }
-
-
 }

@@ -351,6 +351,7 @@ var config = {
     config.organisationViewUrl = fcConfig.organisationLinkBaseUrl;
     config.minutesToIngestDataSet = fcConfig.minutesToIngestDataSet;
     project.mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
+    config.projectTags = <fc:modelAsJavascript model="${projectContent.admin.tags}" default="[]"/>;
     var viewModel = new ProjectPageViewModel(project, project.sites, project.activities || [], userRoles, config);
     viewModel.loadPrograms(programs);
     viewModel.loadStatesAndElectorates();
