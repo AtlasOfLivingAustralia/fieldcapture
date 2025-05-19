@@ -73,7 +73,7 @@ function MERIPlan(project, projectService, config) {
             outputTargets:meriPlan.outputTargets,
             description:meriPlan.description,
             outcomes:project.outcomes,
-            priorities:project.priorities
+            priorities:config.priorities
         };
 
         // Detach the old DetailsViewModel from the autosave / window listener routine.
@@ -297,7 +297,7 @@ function MERIPlan(project, projectService, config) {
      * @returns {Array}
      */
     self.priorityAssets = function(category) {
-        var matchingPriorities = _.filter(project.priorities || [], function (priority) {
+        var matchingPriorities = _.filter(config.priorities || [], function (priority) {
             if (_.isArray(category)) {
                 return _.find(category, function(cat) { return priority.category == cat; });
             } else {
@@ -315,7 +315,7 @@ function MERIPlan(project, projectService, config) {
      * @param filter (optional) if supplied, only categories in this array will be returned.
      */
     self.assetCategories = function(filter) {
-        var categories = _.map(project.priorities || [], function(priority) {
+        var categories = _.map(config.priorities || [], function(priority) {
             return priority.category;
         });
         categories = _.uniq(categories);
@@ -333,7 +333,7 @@ function MERIPlan(project, projectService, config) {
      * @returns {*}
      */
     self.assetCategory = function(asset) {
-        var result = _.find(project.priorities || [], function(priority) {
+        var result = _.find(config.priorities || [], function(priority) {
             return priority.priority == asset;
         });
         return result && result.category;
@@ -981,7 +981,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
     self.objectives = new ObjectiveViewModel(o.objectives, config.programObjectives || []); // Used in original MERI plan template
     var outcomesConfig = {
         outcomes:project.outcomes,
-        priorities:project.priorities,
+        priorities:config.priorities,
         bieUrl: config.bieUrl,
         searchBieUrl: config.searchBieUrl,
         speciesListUrl: config.speciesListUrl,
@@ -1803,14 +1803,17 @@ function OutcomesViewModel(outcomes, config) {
         if (!outcome) {
             return [];
         }
-        var priorities = [];
-        _.each(config.priorities, function (priority) {
-            _.each(outcome.priorities, function (outcomePriority) {
-                if (priority.category == outcomePriority.category) {
-                    priorities.push(priority.priority);
-                }
-            });
 
+        var priorityCategories = [];
+        _.each(outcome.priorities, function (outcomePriority) {
+            priorityCategories.push(outcomePriority.category);
+        });
+        // Return the list of priorities that have at least one category in common with the selected outcome.
+        var priorities = _.filter(config.priorities, function (priority) {
+            console.log(priority);
+            return _.any(priorityCategories, function (category) {
+                return priority.categories.indexOf(category) >= 0;
+            });
         });
         return priorities;
     };

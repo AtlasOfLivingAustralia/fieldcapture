@@ -337,6 +337,7 @@ var config = {
 
     config.programObjectives = <fc:modelAsJavascript model="${config.program?.config?.objectives ?: []}"/>
     config.programActivities = <fc:modelAsJavascript model="${config.program?.config?.activities?.collect { it.name } ?: []}"/>
+    config.priorities = <fc:modelAsJavascript model="${config.priorities ?: []}"/>
     config.excludeFinancialYearData = ${config.program?.config?.excludeFinancialYearData ?: false};
     config.canModifyMeriPlan = ${projectContent.admin.canModifyMeriPlan};
     config.outcomeStartIndex = ${projectContent.admin.outcomeStartIndex};

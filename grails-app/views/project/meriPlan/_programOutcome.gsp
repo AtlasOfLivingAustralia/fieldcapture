@@ -20,7 +20,7 @@
             <!-- ko if:!isAgricultureProject() && !details.outcomes.primaryOutcomeSupportsMultiplePriorities() -->
 
             <!-- ko if:!details.outcomes.supportsSpeciesSearch(details.outcomes.primaryOutcome.description()) -->
-            <select class="form-control form-control-sm asset w-100" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), optionsCaption: 'Please select', value:details.outcomes.primaryOutcome.asset, select2:{preserveColumnWidth:48},  disable: isProjectDetailsLocked()" >
+            <select class="form-control form-control-sm asset w-100" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), optionsText:'name', optionsValue:'investmentPriorityId', optionsCaption: 'Please select', value:details.outcomes.primaryOutcome.asset, select2:{preserveColumnWidth:48},  disable: isProjectDetailsLocked()" >
             </select>
             <!-- /ko -->
             <!-- ko if:details.outcomes.supportsSpeciesSearch(details.outcomes.primaryOutcome.description()) -->
@@ -32,12 +32,12 @@
             <!-- /ko -->
             <!-- ko if:isAgricultureProject() || details.outcomes.primaryOutcomeSupportsMultiplePriorities() -->
             <g:if test="${renderPrioritiesWithSelect2}">
-                <select multiple="multiple" class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), multiSelect2:{preserveColumnWidth:48, value:details.outcomes.primaryOutcome.assets, tags:false}, disable: isProjectDetailsLocked()"></select>
+                <select multiple="multiple" class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description()), optionsText:'name', optionsValue:'investmentPriorityId', multiSelect2:{preserveColumnWidth:48, value:details.outcomes.primaryOutcome.assets, tags:false}, disable: isProjectDetailsLocked()"></select>
             </g:if>
             <g:else>
             <ul class="list-unstyled" data-bind="foreach:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description())">
                 <li class="form-check">
-                    <label class="form-check-label"><input type="checkbox" class="form-check-input" name="secondaryPriority" data-validation-engine="validate[minCheckbox[1],maxCheckbox[${maximumPriorities?:'2'}]" data-bind="value:$data, checked:details.outcomes.primaryOutcome.assets, disable: $parent.isProjectDetailsLocked()"> <!--ko text: $data--><!--/ko--></label>
+                    <label class="form-check-label"><input type="checkbox" class="form-check-input" name="secondaryPriority" data-validation-engine="validate[minCheckbox[1],maxCheckbox[${maximumPriorities?:'2'}]" data-bind="value:$data.investmentPriorityId, checked:details.outcomes.primaryOutcome.assets, disable: $parent.isProjectDetailsLocked()"> <!--ko text: $data.name--><!--/ko--></label>
                 </li>
             </ul>
             </g:else>

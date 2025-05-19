@@ -157,7 +157,6 @@ class ProjectController {
     protected Map projectContent(Map project, user, String template, ProgramConfig config) {
         project.themes = new JSONArray(config.themes ?: [])
         project.assets = config.assets ?: []
-        project.priorities = new JSONArray(config.priorities ?: [])
         project.outcomes = new JSONArray(config.outcomes ?: [])
         project.hasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
         boolean canRegenerateReports = projectService.canRegenerateReports(project)
