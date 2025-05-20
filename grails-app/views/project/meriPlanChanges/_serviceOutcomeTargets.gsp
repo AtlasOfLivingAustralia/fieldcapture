@@ -21,7 +21,7 @@
         <g:set var="changedTarget" value="${(changed.outputTargets ?: []).find{it.scoreId == scoreId}}"/>
 
         <g:set var="changedOutcomesTargets" value="${changedTarget?.outcomeTargets}"/>
-        <g:set var="originalOutcomeTargets" value="${originalTarget.outcomeTargets}"/>
+        <g:set var="originalOutcomeTargets" value="${originalTarget?.outcomeTargets}"/>
 
         <tr class="service-target">
             <td class="index"><span data-bind="text:${i}+1"></span></td>
