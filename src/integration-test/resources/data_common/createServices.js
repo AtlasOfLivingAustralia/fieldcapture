@@ -278,6 +278,14 @@ if (db.service.count() == 0) {
             }],
             "name": "Developing/updating Guidelines/Protocols/Plans",
             "id": 41
+        },
+        {
+            "outputs": [{
+                "formName": "RLP Output Report",
+                "sectionName": "RLP - Output WHS"
+            }],
+            "name": "WHS",
+            "id": 42
         }
     ];
 
