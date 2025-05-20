@@ -76,7 +76,7 @@ class ReportServiceFilteringSpec extends StubbedCasSpec {
 
     }
 
-    def "When no services are selected in the MERI plan all services will be shown on the outputs report"() {
+    def "When no services are selected in the MERI plan only mandatory services will be shown on the outputs report"() {
         setup:
         String projectId = '1'
         loginAsUser('10', browser)
@@ -99,8 +99,9 @@ class ReportServiceFilteringSpec extends StubbedCasSpec {
         then:
         waitFor { at ReportPage }
 
-        and: "All of the output sections are displayed."
-        getFormSections().size() == 37
+        and: "Only the mandatory output sections are displayed."
+        getFormSections().size() == 2
+        getFormSections() == ['koRLP_-_Output_WHS', 'koRLP_-_Change_Management']
 
         when: "We leave the report to release the lock"
         exitReport()
