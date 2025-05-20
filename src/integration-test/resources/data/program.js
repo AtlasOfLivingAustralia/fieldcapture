@@ -109,7 +109,6 @@ var programDefaults = {
               ],
               "programServiceConfig": {
                   "serviceFormName": "RLP Output Report",
-                  "mandatory": true,
                   "programServices": [
                       {
                           "serviceId": 1,
@@ -125,7 +124,8 @@ var programDefaults = {
                       },
                       {
                           "serviceId": 42,
-                          "serviceTargets": []
+                          "serviceTargets": [],
+                          "mandatory": true
                       }
 
                   ]
