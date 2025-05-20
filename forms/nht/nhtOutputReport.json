@@ -159,7 +159,7 @@
       },
       "modelName": null,
       "templateName": "nhtOutputCommunications",
-      "optional": true,
+      "optional": false,
       "optionalQuestionText": null,
       "title": "NHT - Communications",
       "collapsibleHeading": null,
@@ -309,7 +309,7 @@
       },
       "modelName": null,
       "templateName": "nhtProjectEngagements",
-      "optional": true,
+      "optional": false,
       "optionalQuestionText": null,
       "title": "NHT - Project Engagements",
       "collapsibleHeading": null,
@@ -634,7 +634,7 @@
       },
       "modelName": null,
       "templateName": "nhtCoordinate",
-      "optional": true,
+      "optional": false,
       "optionalQuestionText": null,
       "title": "NHT - Coordinate",
       "collapsibleHeading": null,
@@ -661,7 +661,7 @@
       },
       "modelName": null,
       "templateName": "nhtProjectCommencement",
-      "optional": true,
+      "optional": false,
       "optionalQuestionText": null,
       "title": "NHT - Project Commencement",
       "collapsibleHeading": null,
@@ -826,336 +826,11 @@
       },
       "modelName": null,
       "templateName": "nhtProjectWHS",
-      "optional": true,
+      "optional": false,
       "optionalQuestionText": null,
       "title": "NHT - Project WHS",
       "collapsibleHeading": null,
       "name": "NHT - Project WHS",
-      "description": null
-    },
-    {
-      "collapsedByDefault": false,
-      "template": {
-        "dataModel": [
-          {
-            "dataType": "list",
-            "name": "psoCommunicationDetails",
-            "columns": [
-              {
-                "dataType": "text",
-                "name": "communicationMaterialType",
-                "constraints": [
-                  "Advertising",
-                  "Extension materials",
-                  "Event Flyers and Brochures",
-                  "Media release",
-                  "Newsletters",
-                  "Newspaper articles",
-                  "Publishing reports",
-                  "Social media",
-                  "Other"
-                ],
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "communicationTitle",
-                "validate": "required,maxSize[100]"
-              },
-              {
-                "dataType": "text",
-                "name": "communicationPurpose",
-                "validate": "required,maxSize[4000]"
-              },
-              {
-                "dataType": "date",
-                "name": "publishedDate",
-                "validate": "required,past[now]"
-              },
-              {
-                "dataType": "text",
-                "name": "link"
-              }
-            ]
-          },
-          {
-            "name": "hasNotifiableIncident",
-            "dataType": "text",
-            "validate": "required",
-            "constraints": [
-              "Yes",
-              "No",
-              "Not applicable"
-            ]
-          },
-          {
-            "name": "yesHasNotifiableIncident",
-            "dataType": "text",
-            "validate": "required",
-            "constraints": [
-              "Yes",
-              "No",
-              "Not applicable"
-            ],
-            "behaviour": [
-              {
-                "condition": "hasNotifiableIncident == \"Yes\"",
-                "type": "enable"
-              }
-            ]
-          },
-          {
-            "name": "hasVerifiedSubContractors",
-            "dataType": "text",
-            "validate": "required",
-            "constraints": [
-              "Yes",
-              "No",
-              "Not Applicable"
-            ]
-          },
-          {
-            "name": "notVerifiedSubContractors",
-            "dataType": "text",
-            "validate": "required,maxSize[300]",
-            "behaviour": [
-              {
-                "condition": "hasVerifiedSubContractors == \"No\"",
-                "type": "enable"
-              }
-            ]
-          },
-          {
-            "name": "hasAnyManagementActionsUndertaken",
-            "dataType": "text",
-            "validate": "required",
-            "constraints": [
-              "Yes",
-              "No",
-              "Not Applicable"
-            ]
-          },
-          {
-            "columns": [
-              {
-                "columns": [
-                  {
-                    "dataType": "text",
-                    "name": "agreementType",
-                    "description": "",
-                    "constraints": [
-                      "Memorandum of Understanding",
-                      "Employment Agreement",
-                      "Collaboration Agreement (e.g. for research partnerships)",
-                      "Indigenous Cultural and Intellectual Property (ICIP) Agreement",
-                      "Data Sharing Agreements",
-                      "Other agreements as agreed by the department (explanation of the agreement type is required)"
-                    ],
-                    "validate": "required"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "otherAgreementType",
-                    "description": "",
-                    "behaviour": [
-                      {
-                        "condition": "agreementType == \"Other agreements as agreed by the department (explanation of the agreement type is required)\"",
-                        "type": "enable"
-                      }
-                    ],
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "dataType": "number",
-                    "name": "yearsOfTheAgreement",
-                    "validate": "required,min[0]"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "agreementPurpose",
-                    "validate": "required,maxSize[300]"
-                  },
-                  {
-                    "dataType": "text",
-                    "name": "agreementMadeWith",
-                    "validate": "required,maxSize[300]"
-                  }
-                ],
-                "dataType": "list",
-                "name": "psoTable"
-              },
-              {
-                "dataType": "number",
-                "name": "rowCount",
-                "decimalPlaces": 0,
-                "computed": {
-                  "expression": "sum(psoTable, \"agreementType ? 1 : 0\")"
-                }
-              }
-            ],
-            "dataType": "list",
-            "name": "psoControlled"
-          },
-          {
-            "dataType": "number",
-            "name": "fteEquivalent",
-            "decimalPlaces": 0,
-            "validate": "required,min[0]"
-          },
-          {
-            "name": "anyCommunicationPublished",
-            "dataType": "text",
-            "validate": "required",
-            "constraints": [
-              "Yes",
-              "No",
-              "Not Applicable"
-            ]
-          }
-
-        ],
-        "modelName": "First Nations Delivery Partners PSO",
-        "title": "First Nations Delivery Partners Project Support and Overheads",
-        "viewModel": [
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "number",
-                "source": "fteEquivalent",
-                "preLabel": "FTE equivalent supporting and/or delivering the project"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "selectOne",
-                "source": "anyCommunicationPublished",
-                "preLabel": "Was any communication material developed and published during this reporting period"
-              }
-            ]
-          },
-          {
-            "items": [
-              {
-                "type": "table",
-                "source": "psoCommunicationDetails",
-                "title": "<b>Each activity must be reported in a separate row.</b>",
-                "preLabel": "If yes, please provide link or copy of the material.",
-                "userAddedRows": true,
-                "columns": [
-                  {
-                    "source": "communicationMaterialType",
-                    "type": "selectOne",
-                    "width": "15%",
-                    "title": "Type of Communications Material"
-                  },
-                  {
-                    "source": "communicationTitle",
-                    "type": "text",
-                    "width": "25%",
-                    "title": "Title"
-                  },
-                  {
-                    "type": "textarea",
-                    "source": "communicationPurpose",
-                    "width": "35%",
-                    "title": "Purpose",
-                    "rows": 4
-                  },
-                  {
-                    "title": "Date published",
-                    "source": "publishedDate",
-                    "type": "date",
-                    "width": "15%"
-                  },
-                  {
-                    "source": "link",
-                    "type": "text",
-                    "width": "20%",
-                    "title": "URL/link"
-                  }
-                ]
-              }
-            ],
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "anyCommunicationPublished == \"Yes\""
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "items": [
-              {
-                "source": "<h4>Project Workplace Health and Safety (WHS) Risk</h4>",
-                "type": "literal"
-              }
-            ],
-            "type": "row"
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "selectOne",
-                "source": "hasNotifiableIncident",
-                "preLabel": "During this reporting period, have any notifiable incidents or events occurred during the delivery of the project services?"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "selectOne",
-                "source": "yesHasNotifiableIncident",
-                "preLabel": "If yes, has the incident/event been reported to the department and the relevant documentation provided? Please note, the department should be informed of notifiable incidents as soon as practical."
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "selectOne",
-                "source": "hasVerifiedSubContractors",
-                "preLabel": "Have you verified that all subcontractors engaged during the reporting period (existing and new) are meeting WHS requirements \n            under this contract, and that corroborating documentation such as relevant permits, licences etc have been retained?"
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "textarea",
-                "source": "notVerifiedSubContractors",
-                "preLabel": "If no, please outline steps to be undertaken to ensure subcontractors are meeting their contractual WHS obligations."
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "type": "selectOne",
-                "source": "hasAnyManagementActionsUndertaken",
-                "preLabel": "During this period were there any adaptive management actions undertaken that require a change to the MERI plan?"
-              }
-            ]
-          }
-        ]
-      },
-      "modelName": null,
-      "templateName": "firstNationsDeliveryPartnersPso",
-      "optional": true,
-      "optionalQuestionText": null,
-      "title": null,
-      "collapsibleHeading": null,
-      "name": "First Nations Delivery Partners PSO",
       "description": null
     },
     {
