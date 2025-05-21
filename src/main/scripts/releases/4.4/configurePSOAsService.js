@@ -32,7 +32,7 @@ sectionName = "NHT - Project Commencement"
 addService(serviceName, NumberInt(56), formName, sectionName, undefined, adminUserId)
 
 
-let programs = db.program.find({'config.programServiceConfig.serviceFormName':formName, status:{$ne:'deleted'}});
+let programs = db.program.find({'config.programServiceConfig.serviceFormName':formName, status:{$ne:'deleted'}, name:{$ne:'First Nations Delivery Partner'}});
 
 
 while (programs.hasNext()) {
