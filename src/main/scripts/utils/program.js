@@ -117,7 +117,7 @@ function updateProgramServiceConfig(program, legacyId, scoreIds, mandatory){
     program.config.programServiceConfig.programServices = program.config.programServiceConfig.programServices || [];
 
     var service = program.config.programServiceConfig.programServices.find(function (service) {
-        return service.serviceId === legacyId;
+        return service.serviceId == legacyId;
     });
 
     if (!service) {

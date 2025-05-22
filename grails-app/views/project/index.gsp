@@ -112,7 +112,7 @@
                 speciesListUrl:"${createLink(controller:'speciesList', action:'speciesListItems')}",
                 speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
                 speciesProfileUrl:"${createLink(controller:'species', action:'speciesProfile')}",
-                minutesToIngestDataSet: ${grailsApplication.config.getProperty('bdr.api.minutesToIngestDataSet', Integer, 10)},
+                minutesToIngestDataSet: ${grailsApplication.config.getProperty('bdr.api.minutesToIngestDataSet', Integer, 30)},
 
             },
             here = "${createLink(action:'index', id: project.projectId)}";

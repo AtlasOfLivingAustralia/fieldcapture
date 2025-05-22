@@ -6,7 +6,7 @@
         <div class="col-sm-12">
             <div class="form-group form-actions">
                 <button class="btn btn-sm btn-primary" type="button" data-bind="click:newDataSet">New data set summary</button>
-
+                <g:if test="${enableProjectDataSetsDownload}">
                 <!-- ko if: enableProjectDataSetsDownload -->
                 <div class="dropdown" style="display:inline-block">
                     <button class="btn btn-sm btn-info dropdown-toggle" type="button" data-toggle="dropdown">
@@ -19,6 +19,7 @@
                     </div>
                 </div>
                 <!-- /ko -->
+                </g:if>
             </div>
         </div>
     </div>

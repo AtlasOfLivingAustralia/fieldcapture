@@ -16,6 +16,8 @@ class ServiceConfig {
     /** List of scoreIds describing the targets allowed to be selected for this service */
     List<String> serviceTargets
 
+    Boolean mandatory
+
 }
 
 /** Describes how a Program collects and measures data for the set of available Services */
