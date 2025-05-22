@@ -2,12 +2,14 @@ package au.org.ala.fieldcapture
 
 import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.GreenMailUtil
+import org.openqa.selenium.ElementClickInterceptedException
 import pages.ProjectDownloadReport
 import pages.ProjectIndex
 import pages.RlpProjectPage
 import pages.ReportPage
 import pages.ViewReportPage
 import pages.modules.ReportCategory
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -177,39 +179,8 @@ class RlpReportingSpec extends StubbedCasSpec {
                 'koRLP_-_Change_Management',
                 'koRLP_-_Baseline_data',
                 'koRLP_-_Communication_materials',
-                'koRLP_-_Community_engagement',
-                'koRLP_-_Controlling_access',
-                'koRLP_-_Pest_animal_management',
-                'koRLP_-_Management_plan_development',
-                'koRLP_-_Debris_removal',
-                'koRLP_-_Erosion_Management',
-                'koRLP_-_Maintaining_feral_free_enclosures',
-                'koRLP_-_Establishing_ex-situ_breeding_programs',
-                'koRLP_-_Establishing_Agreements',
-                'koRLP_-_Establishing_monitoring_regimes',
-                'koRLP_-_Farm_Management_Survey',
-                'koRLP_-_Fauna_survey',
-                'koRLP_-_Fire_management',
-                'koRLP_-_Flora_survey',
-                'koRLP_-_Habitat_augmentation',
-                'koRLP_-_Identifying_sites',
-                'koRLP_-_Improving_hydrological_regimes',
-                'koRLP_-_Improving_land_management_practices',
-                'koRLP_-_Disease_management',
-                'koRLP_-_Negotiations',
-                'koRLP_-_Obtaining_approvals',
-                'koRLP_-_Pest_animal_survey',
-                'koRLP_-_Plant_survival_survey',
-                'koRLP_-_Project_planning',
-                'koRLP_-_Remediating_riparian_and_aquatic_areas',
-                'koRLP_-_Weed_treatment',
-                'koRLP_-_Revegetating_habitat',
-                'koRLP_-_Site_preparation',
-                'koRLP_-_Skills_and_knowledge_survey',
-                'koRLP_-_Soil_testing',
-                'koRLP_-_Emergency_Interventions',
-                'koRLP_-_Water_quality_survey',
-                'koRLP_-_Weed_distribution_survey']
+                'koRLP_-_Weed_distribution_survey'
+        ]
 
         when: "We complete the form and save, marking optional sections as not applicable"
         hideFloatingToolbar()
@@ -450,39 +421,8 @@ class RlpReportingSpec extends StubbedCasSpec {
                 'koRLP_-_Change_Management',
                 'koRLP_-_Baseline_data',
                 'koRLP_-_Communication_materials',
-                'koRLP_-_Community_engagement',
-                'koRLP_-_Controlling_access',
-                'koRLP_-_Pest_animal_management',
-                'koRLP_-_Management_plan_development',
-                'koRLP_-_Debris_removal',
-                'koRLP_-_Erosion_Management',
-                'koRLP_-_Maintaining_feral_free_enclosures',
-                'koRLP_-_Establishing_ex-situ_breeding_programs',
-                'koRLP_-_Establishing_Agreements',
-                'koRLP_-_Establishing_monitoring_regimes',
-                'koRLP_-_Farm_Management_Survey',
-                'koRLP_-_Fauna_survey',
-                'koRLP_-_Fire_management',
-                'koRLP_-_Flora_survey',
-                'koRLP_-_Habitat_augmentation',
-                'koRLP_-_Identifying_sites',
-                'koRLP_-_Improving_hydrological_regimes',
-                'koRLP_-_Improving_land_management_practices',
-                'koRLP_-_Disease_management',
-                'koRLP_-_Negotiations',
-                'koRLP_-_Obtaining_approvals',
-                'koRLP_-_Pest_animal_survey',
-                'koRLP_-_Plant_survival_survey',
-                'koRLP_-_Project_planning',
-                'koRLP_-_Remediating_riparian_and_aquatic_areas',
-                'koRLP_-_Weed_treatment',
-                'koRLP_-_Revegetating_habitat',
-                'koRLP_-_Site_preparation',
-                'koRLP_-_Skills_and_knowledge_survey',
-                'koRLP_-_Soil_testing',
-                'koRLP_-_Emergency_Interventions',
-                'koRLP_-_Water_quality_survey',
-                'koRLP_-_Weed_distribution_survey']
+                'koRLP_-_Weed_distribution_survey'
+        ]
 
         when: "We complete the form and save, marking optional sections as not applicable"
         hideFloatingToolbar()
@@ -635,46 +575,11 @@ class RlpReportingSpec extends StubbedCasSpec {
         when:
         List formSections = getFormSections()
 
-        then:
+        then: "Only mandatory sections are displayed"
         formSections == [
                 'koRLP_-_Output_WHS',
-                'koRLP_-_Change_Management',
-                'koRLP_-_Baseline_data',
-                'koRLP_-_Communication_materials',
-                'koRLP_-_Community_engagement',
-                'koRLP_-_Controlling_access',
-                'koRLP_-_Pest_animal_management',
-                'koRLP_-_Management_plan_development',
-                'koRLP_-_Debris_removal',
-                'koRLP_-_Erosion_Management',
-                'koRLP_-_Maintaining_feral_free_enclosures',
-                'koRLP_-_Establishing_ex-situ_breeding_programs',
-                'koRLP_-_Establishing_Agreements',
-                'koRLP_-_Establishing_monitoring_regimes',
-                'koRLP_-_Farm_Management_Survey',
-                'koRLP_-_Fauna_survey',
-                'koRLP_-_Fire_management',
-                'koRLP_-_Flora_survey',
-                'koRLP_-_Habitat_augmentation',
-                'koRLP_-_Identifying_sites',
-                'koRLP_-_Improving_hydrological_regimes',
-                'koRLP_-_Improving_land_management_practices',
-                'koRLP_-_Disease_management',
-                'koRLP_-_Negotiations',
-                'koRLP_-_Obtaining_approvals',
-                'koRLP_-_Pest_animal_survey',
-                'koRLP_-_Plant_survival_survey',
-                'koRLP_-_Project_planning',
-                'koRLP_-_Remediating_riparian_and_aquatic_areas',
-                'koRLP_-_Weed_treatment',
-                'koRLP_-_Revegetating_habitat',
-                'koRLP_-_Site_preparation',
-                'koRLP_-_Skills_and_knowledge_survey',
-                'koRLP_-_Soil_testing',
-                'koRLP_-_Emergency_Interventions',
-                'koRLP_-_Water_quality_survey',
-                'koRLP_-_Weed_distribution_survey']
-
+                'koRLP_-_Change_Management'
+        ]
         when: "We complete the form and save, marking optional sections as not applicable"
         hideFloatingToolbar()
         field('whsRequirementsMet').value('Met requirements')
@@ -720,7 +625,18 @@ class RlpReportingSpec extends StubbedCasSpec {
         getFormSections().each {
             // Mark all sections except the Weed Distribution Survey as not applicable
             if (isOptional(it) && it != 'koRLP_-_Weed_distribution_survey') {
-                markAsNotApplicable(it)
+                try {
+                    markAsNotApplicable(it)
+                }
+                catch (ElementClickInterceptedException e) {
+                    println "ElementClickInterceptedException: $it"
+                    String section = it
+                    interact {
+                        moveToElement(notApplicableCheckbox(section))
+                    }
+                    markAsNotApplicable(it)
+                }
+
             }
         }
         def section = $('#koRLP_-_Weed_distribution_survey')

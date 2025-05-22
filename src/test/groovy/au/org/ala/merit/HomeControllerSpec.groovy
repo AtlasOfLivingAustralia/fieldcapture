@@ -16,6 +16,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
     SettingService settingService = Mock(SettingService)
     MetadataService metadataService = Mock(MetadataService)
     ActivityService activityService = Mock(ActivityService)
+    DocumentService documentService = Mock(DocumentService)
 
     def setup() {
         controller.searchService = searchService
@@ -24,6 +25,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         controller.settingService = settingService
         controller.metadataService = metadataService
         controller.activityService = activityService
+        controller.documentService = documentService
     }
 
     def "The geoservice method delegates to SearchService.allProjects if the geo param is absent"() {
@@ -48,7 +50,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         1 * searchService.allProjects(params) >> searchResponse
 
         and: "The query is limited to the data we need to display"
-        params.include == ['name', 'description', 'lastUpdated', 'organisationName', 'managementUnitName','managementUnitId', 'programId', 'associatedProgram', 'associatedSubProgram']
+        params.include == ['name', 'description', 'lastUpdated', 'associatedOrgs', 'managementUnitName','managementUnitId', 'programId', 'associatedProgram', 'associatedSubProgram']
 
         and:
         Map response = response.json
@@ -96,7 +98,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         and: "The query is limited to the data we need to display"
         params.include == ['name', 'managementUnitName', 'managementUnitId', 'programId', 'description', 'associatedProgram', 'associatedSubProgram',
                            'lastUpdated',
-                           'funding', 'organisationName', 'externalId', 'plannedEndDate', 'plannedStartDate',
+                           'funding', 'associatedOrgs', 'externalId', 'plannedEndDate', 'plannedStartDate',
                            'activities.siteId','activities.type','sites.siteId', 'sites.projects', 'sites.extent.geometry']
         and:
         Map response = response.json
@@ -217,7 +219,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         false | true
     }
 
-    def "Users without MERIT admin or read only but with the hub officer role cannot view admin facets but can view officer facets"() {
+    def "Users without MERIT admin or read only but with the hub officer role cannot view admin facets but can view officer facets and downloads"() {
         setup:
         Map resp = [:]
 
@@ -228,7 +230,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         then:
         1 * userService.userIsAlaOrFcAdmin() >> false
         1 * userService.userHasReadOnlyAccess() >> false
-        1 * userService.userIsSiteAdmin() >> true
+        2 * userService.userIsSiteAdmin() >> true
 
         1 * searchService.HomePageFacets(params) >> resp
         1 * settingService.getSettingText(_) >> "Project explorer description"
@@ -241,7 +243,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         model.description == "Project explorer description"
         model.results == resp
         model.projectCount == 0
-        model.includeDownloads == false
+        model.includeDownloads == true
         model.activityTypes == null
 
     }
@@ -257,7 +259,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         then:
         1 * userService.userIsAlaOrFcAdmin() >> false
         2 * userService.userHasReadOnlyAccess() >> false
-        1 * userService.userIsSiteAdmin() >> false
+        2 * userService.userIsSiteAdmin() >> false
         1 * searchService.HomePageFacets(params) >> resp
         1 * settingService.getSettingText(_) >> "Project explorer description"
         0 * metadataService.activityTypesList()
@@ -301,5 +303,24 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         ['a2'] | [[name:'Category 1', list:[[name:'a2']]]]
         ['a5', 'EMSA 1'] | [[name:'Category 2', list:[[name:'a5']]]]
     }
+
+    def "The controller can setup the model for displaying help documents"() {
+        setup:
+        List documents = [[documentId:'1', title:'Test Document', labels:['Test Category']]]
+        HubSettings hubSettings = new HubSettings(hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+        String category = 'Test Category'
+
+        when:
+        Map model = controller.helpDocuments(category)
+
+        then:
+        1 * documentService.findAllHelpDocuments(hubSettings.hubId, category) >> documents
+
+        and:
+        model.documents == documents
+        model.category == category
+    }
+
 
 }

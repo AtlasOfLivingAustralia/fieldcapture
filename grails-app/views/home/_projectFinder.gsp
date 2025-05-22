@@ -13,7 +13,7 @@
 <g:elseif test="${results?.hits?.total?:0 > 0}">
     <div class="row">
         <div id="facetsCol" class="bg-white" style="display:none;">
-            <g:set var="reqParams" value="query,sort,order,max,fq,fromDate,toDate"/>
+            <g:set var="reqParams" value="query,sort,order,max,fq,fromDate,toDate,isFilterByCompletedProjects"/>
             <div class="visible-phone pull-right" style="margin-top: 5px;">
                 <a href="#" id="toggleFacetDisplay" rel="facetsContent" role="button" class="btn btn-sm btn-inverse" style="color:white;">
                     <span>show</span> options&nbsp;
@@ -74,7 +74,9 @@
                                         Project start and end dates are within the selected range.
                                     </label>
                                 </div>
-                                <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn btn-sm clearDates"><i class="fa fa-remove"></i> Clear dates</button></div>
+                                <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn btn-sm clearDates"><i class="fa fa-remove"></i> Clear dates</button>
+                                    <button data-bind="click:applyDates, enable:fromDate() || toDate()" class="btn btn-sm applyDates"><i class="fa fa-check"></i> Apply dates</button>
+                                </div>
 
             </div>
                         </div>
@@ -424,7 +426,16 @@
             $tr.find('.homeLine a').attr("href", "${createLink(controller: 'project')}/" + id);
             $tr.find('a.zoom-in').data("id", id);
             $tr.find('a.zoom-out').data("id", id);
-            $tr.find('.orgLine').text(src.organisationName);
+            var organisations = '';
+            if (src.associatedOrgs) {
+                for (var i=0; i<src.associatedOrgs.length; i++) {
+                    if (organisations.length > 0) {
+                        organisations = organisations + ', ';
+                    }
+                    organisations = organisations + src.associatedOrgs[i].name;
+                }
+            }
+            $tr.find('.orgLine').text(organisations);
             $tr.find('.descLine').text(src.description);
         <g:if test="${fc.userIsSiteAdmin()}">
             $tr.find('.downloadLine a').attr("href", "${createLink(controller: 'project',action: 'downloadProjectData')}" + "?id="+id+"&view=xlsx");

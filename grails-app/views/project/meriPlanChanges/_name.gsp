@@ -2,7 +2,7 @@
 <table class="table">
     <thead>
     <tr>
-        <th>Project</th>
+        <th>${projectNameHeading?:"Project"}</th>
     </tr>
     </thead>
     <tbody>
@@ -15,7 +15,7 @@
 </table>
 </g:if>
 <g:else>
-<h4>Project name</h4>
+<h4>${projectNameHeading?:"Project name"}</h4>
     <span style="display:none" class="original" data-bind="text:details.nameComparison"></span>
     <span style="display:none" class="changed" data-bind="text:detailsChanged.nameComparison"></span>
     <span wrap class="diff1"></span>

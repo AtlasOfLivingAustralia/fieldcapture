@@ -581,7 +581,8 @@ function Documents(options) {
         var lcFilter = (self.documentFilter() || '').trim().toLowerCase();
         var field = self.documentFilterField();
         return ko.utils.arrayFilter(self.documents(), function(doc) {
-            return (doc[field.fun]() || '').toLowerCase().indexOf(lcFilter) !== -1;
+            var docValue = ko.utils.unwrapObservable(doc[field.fun]);
+            return (docValue || '').toLowerCase().indexOf(lcFilter) !== -1;
         });
     });
 

@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.ecodata.forms.TermsService
 import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
@@ -38,6 +39,10 @@ class ProjectService  {
     static final String PLAN_SUBMITTED = 'submitted'
     static final String PLAN_UNLOCKED = 'unlocked for correction'
     public static final String DOCUMENT_ROLE_APPROVAL = 'approval'
+    public static final String FLATTEN_BY_SUM = "SUM"
+    public static final String FLATTEN_BY_COUNT = "COUNT"
+    public static final String DEFAULT_GROUP_BY = 'scientificName,vernacularName,scientificNameID,individualsOrGroups'
+    static final String PROJECT_TAGS_CATEGORY = 'MERIT Project Tags'
 
     // All projects can use the Plot Selection and Layout, Plot Description and Opportune modules, but
     // we don't want users recording data sets for Plot Selection and Layout so it's not included here.
@@ -48,6 +53,7 @@ class ProjectService  {
     def programService
     LockService lockService
     DataSetSummaryService dataSetSummaryService
+    TermsService termsService
 
     def get(id, levelOfDetail = "", includeDeleted = false) {
 
@@ -64,6 +70,15 @@ class ProjectService  {
         }
         project
 
+    }
+
+    Map findStateAndElectorateForProject(String projectId) {
+        Map result = webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/findStateAndElectorateForProject?projectId=' + projectId) as Map
+        if (result.error) {
+            result = [:]
+        }
+
+        result
     }
 
     void filterDataSetSummaries(List dataSetSummaries) {
@@ -140,7 +155,7 @@ class ProjectService  {
         [targets:scoresWithTargetsByOutput, other:scoresWithoutTargetsByOutputs]
     }
 
-    def search(params) {
+    Map search(params) {
         webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/search', params)
     }
 
@@ -1331,7 +1346,7 @@ class ProjectService  {
 
                 stageReportActivityModel.outputs.each { outputType ->
                     def output = activity.outputs?.find { it.name == outputType }
-                    def type = metadataService.annotatedOutputDataModel(outputType)
+                    def type = metadataService.annotatedOutputDataModel(activity.type, outputType, activity.formVersion)
 
                     append(html,"<b> ${outputType}: </b> <br>");
                     type.each { field ->
@@ -1558,7 +1573,7 @@ class ProjectService  {
     List<Map> getProjectServices(Map project, ProgramConfig programConfig) {
         List<Map> supportedServices = programConfig.services
         List serviceIds = project.custom?.details?.serviceIds?.collect{it as Integer}
-        List projectServices = supportedServices?.findAll {it.id in serviceIds }
+        List projectServices = supportedServices?.findAll {it.id in serviceIds || it.mandatory }
 
         projectServices
     }
@@ -1727,7 +1742,21 @@ class ProjectService  {
 
             if (selectedForProject) {
                 List projectOutputs = selectedForProject.collect{it.output}
-                filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs)
+                List mandatoryOutputs = selectedForProject.findAll{it.mandatory}.collect{it.output}
+                // Override the mandatory flag for outputs that are mandatory for the program
+                if (mandatoryOutputs) {
+                    activityModel.outputConfig = new JSONArray(
+                        activityModel.outputConfig.collect { Map outputConfig ->
+                            if (mandatoryOutputs.contains(outputConfig.outputName)) {
+                                outputConfig = new JSONObject(outputConfig)
+                                outputConfig.optional = false
+                            }
+                            outputConfig
+                        })
+
+                }
+
+                filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs, mandatoryOutputs)
             }
         }
         filteredModel
@@ -1767,11 +1796,11 @@ class ProjectService  {
         filterable
     }
 
-    private Map filterActivityModel(Map activityModel, Map existingActivityData, List filterableSections, List sectionsToInclude) {
+    private Map filterActivityModel(Map activityModel, Map existingActivityData, List filterableSections, List sectionsToInclude, List mandatorySections) {
         Map filteredModel = new JSONObject(activityModel)
         List existingOutputs = existingActivityData?.outputs?.collect{it.name}
         filteredModel.outputs = activityModel.outputs.findAll({ String output ->
-            boolean isFilterable = filterableSections.find{it == output}
+            boolean isFilterable = filterableSections.contains(output) && !mandatorySections.contains(output)
 
             // Include this output if it's not associated with a service,
             // Or if it's associated by a service delivered by this project
@@ -2225,12 +2254,12 @@ class ProjectService  {
         result
     }
 
-    List getSpeciesRecordsFromActivity (String activityId) {
+    List getSpeciesRecordsFromActivity (String activityId, String groupBy = DEFAULT_GROUP_BY, String operator = FLATTEN_BY_SUM) {
         if (activityId) {
             String displayFormat = 'SCIENTIFICNAME(COMMONNAME)'
             String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}record/listForActivity/${activityId}"
-            def records = webService.getJson(url)?.records
-
+            List records = webService.getJson(url)?.records
+            records = groupRecords(records, groupBy, operator)
             records?.each { record ->
                 record.species = [
                         scientificName: record.scientificName,
@@ -2244,5 +2273,113 @@ class ProjectService  {
 
             records
         }
+    }
+
+    /**
+     * Groups records by the user defined attributes and applies the operator to the numeric values.
+     * @param records - dwc records
+     * @param groupBy - scientificName, individualsOrGroups, etc.
+     * @param operator - SUM
+     * @return
+     */
+    List groupRecords (List records, String groupBy = DEFAULT_GROUP_BY, String operator = FLATTEN_BY_SUM) {
+        if (records && groupBy) {
+            List groupByAttributes = groupBy.tokenize(',')
+            // Group the records by the user defined attributes such as scientificName, individualsOrGroups, etc.
+            Map recordsByGroup = records.groupBy { dwcRecord ->
+                groupByAttributes.collect { dwcRecord[it] }
+            }
+
+            // For each group, summarize the records by applying the operator
+            Map groupsAndTheirSummary= recordsByGroup.collectEntries { groupKey, groupedRecords ->
+                // iterate over the records in the group and summarize them
+                Map summaryOfGroupedRecords = groupedRecords.inject([:], { newRecord, recordInGroup ->
+                    // iterate over the attributes of the record and apply the operator
+                    recordInGroup.each { dwcAttribute, dwcValue ->
+                        // sum or count all numeric values that are not used for grouping
+                        if (dwcAttribute !in groupByAttributes && dwcValue instanceof Number) {
+                            switch (operator) {
+                                case FLATTEN_BY_COUNT:
+                                    // implement count operator
+                                    break
+
+                                case FLATTEN_BY_SUM:
+                                    newRecord[dwcAttribute] = (newRecord[dwcAttribute] ?: 0) + dwcValue
+                                    break
+                                default:
+                                    log.error "Unsupported operator: ${operator}"
+                            }
+                        }
+                        else {
+                            // if not a numeric value, just copy the value to the new record
+                            newRecord[dwcAttribute] = dwcValue
+                        }
+                    }
+
+                    newRecord
+                })
+
+                // flattens groupedRecords (list) to a map
+                [(groupKey): summaryOfGroupedRecords]
+            }
+
+            return groupsAndTheirSummary.values().toList()
+        }
+
+        records
+    }
+
+
+    List getProjectTags() {
+        String hubId = SettingService.hubConfig.hubId
+        termsService.getTerms(hubId, PROJECT_TAGS_CATEGORY)
+    }
+
+    Map addProjectTag(Map tag) {
+        tag.category = PROJECT_TAGS_CATEGORY
+        String hubId = SettingService.hubConfig.hubId
+        tag.hubId = hubId
+        termsService.addTerm(hubId, tag)
+    }
+
+    Map updateProjectTag(Map tag) {
+        List existingTags = getProjectTags()
+        Map result = [errors:[]]
+        Map existingTag = existingTags?.find{it.termId == tag.termId}
+        if (existingTag) {
+            Map projectsUsingTag = search([tags:existingTag.term, view:'flat'])
+            projectsUsingTag?.resp?.projects.each {
+                Map projectUpdateResult = update(it.projectId, [tags: it.tags - existingTag.term + tag.term])
+                if (projectUpdateResult.error) {
+                    result.errors << projectUpdateResult.error
+                }
+            }
+        }
+        String hubId = SettingService.hubConfig.hubId
+        tag.hubId = hubId
+        tag.category = PROJECT_TAGS_CATEGORY
+        Map termUpdateResult = termsService.updateTerm(hubId, tag)
+        if (termUpdateResult.error) {
+            result.errors << termUpdateResult.error
+        }
+        result.success = result.errors.size() == 0
+        result
+    }
+
+    Map deleteProjectTag(Map tag) {
+        Map result = [errors:[]]
+        Map results = search([tags:tag.term, view:'flat'])
+        results?.resp?.projects.each {
+            Map projectUpdateResult = update(it.projectId, [tags: it.tags - tag.term])
+            if (projectUpdateResult.error) {
+                result.errors << projectUpdateResult.error
+            }
+        }
+        Map termDeleteResult = termsService.deleteTerm(tag.termId)
+        if (termDeleteResult.error) {
+            result.errors << termUpdateResult.error
+        }
+        result.success = result.errors.size() == 0
+        result
     }
 }

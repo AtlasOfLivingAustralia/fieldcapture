@@ -1,0 +1,908 @@
+{
+  "name": "Regional Capacity Services Report",
+  "type": "Report",
+  "sections": [
+    {
+      "name": "Regional capacity services - reporting",
+      "optionalQuestionText": null,
+      "optional": false,
+      "collapsedByDefault": false,
+      "templateName": "regionalCapacityServicesReport",
+      "template": {
+        "pre-populate": [
+          {
+            "source": {
+              "context-path": "owner"
+            },
+            "mapping": [
+              {
+                "target": "targetIndigenousParticipationPercentage",
+                "source-path": "periodTargets.targetIndigenousParticipationPercentage"
+              },
+              {
+                "target": "reportedFundingExcludingThisReport",
+                "source-path": "reportedFundingExcludingThisReport"
+              }
+            ],
+            "merge": {
+              "targetIndigenousParticipationPercentage": {
+                "replaceExisting": true
+              },
+              "reportedFundingExcludingThisReport": {
+                  "replaceExisting": true
+              }
+            }
+          },
+          {
+            "source": {
+              "context-path": "owner"
+            },
+            "mapping": [
+              {
+                "target": "targetIndigenousProcurementPercentage",
+                "source-path": "periodTargets.targetIndigenousProcurementPercentage"
+              }
+            ],
+            "merge": {
+              "targetIndigenousProcurementPercentage": {
+                "replaceExisting": true
+              }
+            }
+          },
+          {
+            "source": {
+              "context-path": "owner"
+            },
+            "mapping": [
+              {
+                "target": "organisationPanelProjectValue",
+                "source-path": "totalContractValue"
+              }
+            ],
+            "merge": {
+              "organisationPanelProjectValue": {
+                "replaceExisting": true
+              }
+            }
+          }
+        ],
+        "dataModel": [
+          {
+            "name": "reportedFundingExcludingThisReport",
+            "dataType": "number"
+          },
+          {
+            "name": "governanceAndFinancialFrameworksOnTrack",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "name": "governanceAndFinancialFrameworksActions",
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "governanceAndFinancialFrameworksOnTrack == \"No\"",
+                "type": "enable_and_clear"
+              }
+            ]
+          },
+          {
+            "name": "whsUndergoneReview",
+            "description": "An RDP must ensure its WHS Plan is up to date and conduct regular reviews to ensure its continuing suitability, adequacy, and effectiveness. Triggers to warrant a review include:<ul><li>In the event of a new Contract or significant change to these scope of an existing Contract</li><li>Change in Executive Staff</li><li>Changes in Legislation</li><li>As a result of an incident or event</li><li>As a result of an internal or external audit or assurance activity.</li></ul>",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "name": "whsChangesDescription",
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "whsUndergoneReview == \"Yes\"",
+                "type": "enable_and_clear"
+              }
+            ]
+          },
+          {
+            "name": "whsRevisedSubmitted",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "behaviour": [
+              {
+                "condition": "whsUndergoneReview == \"Yes\"",
+                "type": "enable_and_clear"
+              }
+            ]
+          },
+          {
+            "name": "whsRevisedPlan",
+            "dataType": "text",
+            "behaviour": [
+              {
+                "condition": "whsRevisedSubmitted == \"No\"",
+                "type": "visible"
+              }
+            ]
+          },
+          {
+            "name": "whsIncidentsOccured",
+            "description": "Refer to Deed of Standing Offer (Clause 42 Work Health and Safety) for further information on these requirements.",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "name": "whsIncidentReported",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "behaviour": [
+              {
+                "condition": "whsIncidentsOccured == \"Yes\"",
+                "type": "enable_and_clear"
+              }
+            ]
+          },
+          {
+            "name": "whsIncidentNotReported",
+            "dataType": "text",
+            "behaviour": [
+              {
+                "condition": "whsIncidentReported == \"No\"",
+                "type": "visible"
+              }
+            ]
+          },
+          {
+            "name": "deedOfStandingOfferActions",
+            "description": "This Schedule relates to additional conditions that apply to your organisation’s Indigenous Participation Plan. If your organisation’s Deed of Standing Offer does not include a Schedule 10, enter ‘Not applicable’.",
+            "dataType": "text",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "name": "indigenousTargetMeasuresOnTrack",
+            "dataType": "text",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "name": "indigenousTargetMeasuresNotOnTrack",
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "indigenousTargetMeasuresOnTrack == \"No\"",
+                "type": "enable_and_clear"
+              }
+            ]
+          },
+          {
+            "dataType": "number",
+            "name": "organisationFteWorkforce",
+            "description": "Enter total RDP staff (full time equivalent) deployed on Services for the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts) during this reporting period.",
+            "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "organisationFteIndigenousWorkforce",
+                  "type": "computed"
+                },
+                "rule": "min",
+                "message": "Numeric value must be higher or equal to the numeric value entered for 'What was your organisation’s full time equivalent Indigenous workforce deployed on the Services this reporting period?'"
+              }
+            ]
+          },
+          {
+            "dataType": "number",
+            "name": "organisationFteIndigenousWorkforce",
+            "description": "Enter total RDP Indigenous staff (full time equivalent) deployed on Services for the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts) during this reporting period.",
+            "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "organisationFteWorkforce",
+                  "type": "computed"
+                },
+                "rule": "max",
+                "message": "Numeric value must be less than or equal to the numeric value entered for 'What was your organisation’s full time equivalent workforce deployed on the Services this reporting period?'"
+              }
+            ]
+          },
+          {
+            "dataType": "number",
+            "name": "servicesContractedValueFirstNations",
+            "description": "Enter total dollar value (GST inclusive) of goods and services contracted to First Nations people/Indigenous enterprises, during this reporting period, for the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts).",
+            "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "organisationPanelProjectValue-reportedFundingExcludingThisReport",
+                  "type": "computed"
+                },
+                "rule": "max",
+                "message": "The sum of the value of Services contracted to First Nations people/Indigenous enterprises for all reporting periods can not exceed the total $ value (GST inclusive) of the Deed and all Contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> Contracts)"
+              }
+            ]
+          },
+          {
+            "dataType": "number",
+            "name": "organisationPanelProjectValue",
+            "description": "Total dollar value (GST inclusive) for the Deed and all active contracts (including <span style='white-space: nowrap;'>non-DCCEEW</span> contracts) as reported on AusTender.",
+            "validate": "required,min[0]"
+          },
+          {
+            "dataType": "number",
+            "name": "supplyChainPerformancePercentage",
+            "description": "Calculated using value of Services contracted to First Nations people/Indigenous enterprises ÷ stored Total Organisation Panel/Project Value $ x 100",
+            "computed": {
+              "expression": "servicesContractedValueFirstNations / organisationPanelProjectValue * 100"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "workforcePerformancePercentage",
+            "description": "Calculated using FTE Indigenous workforce ÷ FTE workforce x 100",
+            "computed": {
+                "expression": "organisationFteIndigenousWorkforce / organisationFteWorkforce * 100"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "targetIndigenousParticipationPercentage",
+            "description": "Target Indigenous Participation Percentage for this reporting period"
+          },
+          {
+            "dataType": "number",
+            "name": "targetIndigenousProcurementPercentage"
+          },
+          {
+            "name": "staffDevelopmentOpportunities",
+            "description": "This includes on-the-job, informal, and formal training. If no activities were undertaken, enter ‘Nil’.",
+            "dataType": "text",
+            "validate": "required,maxSize[5000]"
+          },
+          {
+            "name": "communityTargetMeasuresOnTrack",
+            "dataType": "text",
+            "description": "If the plan is in development select ‘No’ and explain when the plan will be completed.",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "name": "communityTargetMeasuresNotOnTrack",
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "communityTargetMeasuresOnTrack == \"No\"",
+                "type": "enable_and_clear"
+              }
+            ]
+          },
+          {
+            "name": "communityConductWorkshops",
+            "dataType": "text",
+            "description": "This question relates only to RCS 2.3. It does not include engagement activities covered by Project Support and Overhead Services.",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "columns": [
+              {
+                "name": "workshopEventType",
+                "dataType": "text",
+                "validate": "required,maxSize[500]",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "communityConductWorkshops == \"Yes\""
+                  }
+                ]
+              },
+              {
+                "name": "workshopTitle",
+                "dataType": "text",
+                "validate": "required,maxSize[500]",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "communityConductWorkshops == \"Yes\""
+                  }
+                ]
+              },
+              {
+                "name": "workshopPurpose",
+                "dataType": "text",
+                "validate": "required,maxSize[5000]",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "communityConductWorkshops == \"Yes\""
+                  }
+                ]
+              },
+              {
+                "name": "workshopDate",
+                "dataType": "date",
+                "validate": "required,past[now]",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "communityConductWorkshops == \"Yes\""
+                  }
+                ]
+              }
+            ],
+            "dataType": "list",
+            "name": "workshopList"
+          },
+          {
+            "name": "communicationsTargetMeasuresOnTrack",
+            "dataType": "text",
+            "description": "If the plan is in development select ‘No’ and explain when the plan will be completed.",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "name": "communicationsTargetMeasuresNotOnTrack",
+            "dataType": "text",
+            "validate": "required,maxSize[5000]",
+            "behaviour": [
+              {
+                "condition": "communicationsTargetMeasuresOnTrack == \"No\"",
+                "type": "enable_and_clear"
+              }
+            ]
+          },
+          {
+            "name": "communicationMaterialPublished",
+            "dataType": "text",
+            "description": "This does not include communication activities undertaken under the ‘Communication Materials’ Project Service or regional capacity service. All Communication Materials must correctly acknowledge Australian Government funding.",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "columns": [
+              {
+                "name": "communicationMaterialLink",
+                "dataType": "text",
+                "validate": "required,maxSize[500]",
+                "behaviour": [
+                  {
+                    "type": "enable_and_clear",
+                    "condition": "communicationMaterialPublished == \"Yes\""
+                  }
+                ]
+              }
+            ],
+            "dataType": "list",
+            "name": "communicationMaterialLinkList"
+          },
+          {
+            "name": "communicationsMaterialAttachments",
+            "dataType": "list",
+            "columns": [
+              {
+                "name": "communicationsMaterialAttachment",
+                "dataType": "document"
+              }
+            ]
+          },
+          {
+            "dataType": "number",
+            "name": "projectDesignRequested",
+            "validate": "integer"
+          },
+          {
+            "dataType": "number",
+            "name": "workOrderExecuted",
+            "validate": "integer"
+          }
+        ],
+        "modelName": "Regional capacity services - reporting",
+        "title": "Regional Capacity Services – Reporting",
+        "viewModel": [
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h4>Governance</h4>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "type": "selectOne",
+                "source": "governanceAndFinancialFrameworksOnTrack",
+                "preLabel": "Q1. As a Regional Delivery Partner, has your organisation maintained appropriate governance and financial frameworks as per Regional Capacity Services RCS 7?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "rows": 4,
+                "source": "governanceAndFinancialFrameworksActions",
+                "preLabel": "Q1(a). Explain what actions are planned to get back on track."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h4>Work Health and Safety</h4>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "type": "selectOne",
+                "source": "whsUndergoneReview",
+                "preLabel": "Q2. During the reporting period has the WHS Plan undergone a revision or update? (Clause 42.5(b) of the Deed)"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "rows": 4,
+                "source": "whsChangesDescription",
+                "preLabel": "Q2(a). Provide a brief description of the changes to the WHS Plan."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span6",
+                "type": "selectOne",
+                "source": "whsRevisedSubmitted",
+                "preLabel": "Q2(b). Has the revised WHS plan been submitted to the Customer Contract Manager?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "",
+                "source": "whsRevisedPlan",
+                "preLabel": "<i><b style=\"background-color:yellow\">Please submit the revised WHS Plan to the Customer Contract Manager.</b></i>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "type": "selectOne",
+                "source": "whsIncidentsOccured",
+                "preLabel": "Q3. During the reporting period, have any WHS matters that are required to be notified under clause 42.3 of the Deed occurred during the delivery of Regional Capacity Services?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span6",
+                "type": "selectOne",
+                "source": "whsIncidentReported",
+                "preLabel": "Q3(a). Has the incident/event been reported to the Customer Contract Manager and the relevant documentation been provided?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "",
+                "source": "whsIncidentNotReported",
+                "preLabel": "<i><b style=\"background-color:yellow\">Please notify the Customer Contract Manager immediately, as outlined in the Deed of Standing Offer (clause 42.3 Notifying the Customer), to discuss.</b></i>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h4>Indigenous Participation</h4>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "rows": 4,
+                "source": "deedOfStandingOfferActions",
+                "preLabel": "Q4. Outline any actions your organisation has taken to address the requirements in Schedule 10 of the Deed of Standing Offer."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "rows": 4,
+                "type": "selectOne",
+                "source": "indigenousTargetMeasuresOnTrack",
+                "preLabel": "Q5. Is your organisation on track to deliver the target measures identified in the Indigenous Participation Plan?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "rows": 4,
+                "source": "indigenousTargetMeasuresNotOnTrack",
+                "preLabel": "Q5(a). Please outline what actions are planned to get back on track."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<b>Q5(b). Please complete workforce and supply chain data (Deed of Standing Offer Clause 38 Indigenous Procurement Policy). Please do not provide personal or <span style='white-space: nowrap;'>commercial-in-confidence</span> information when answering this question. Please retain documentation as evidence to support assurance activities undertaken to verify the reported information.</b>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "preLabel": "What was your organisation’s full time equivalent workforce deployed on the Services this reporting period?",
+                "source": "organisationFteWorkforce",
+                "type": "number"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "preLabel": "What was your organisation’s full time equivalent Indigenous workforce deployed on the Services this reporting period?",
+                "source": "organisationFteIndigenousWorkforce",
+                "type": "number"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "preLabel": "Workforce Performance % this reporting period",
+                "source": "workforcePerformancePercentage",
+                "type": "number"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "preLabel": "Your total organisation panel/project $ value (GST inclusive).",
+                "source": "organisationPanelProjectValue",
+                "type": "number",
+                "readonly": true
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "preLabel": "What was the dollar value (GST inclusive) of Services contracted to First Nations people/Indigenous enterprises during this reporting period?",
+                "source": "servicesContractedValueFirstNations",
+                "type": "number"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "source": "To check your performance to date against the agreed targets, please click on the dashboard tab after closing the report",
+                "type": "literal"
+              }
+            ]
+          },
+
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h4>Monitoring, Evaluation, Reporting and Improvement (MERI)</h4>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "rows": 4,
+                "source": "staffDevelopmentOpportunities",
+                "preLabel": "Q6. What MERI professional development opportunities (if any) have staff participated in? (RCS 4)"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h4>Community Participation</h4>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "type": "selectOne",
+                "source": "communityTargetMeasuresOnTrack",
+                "preLabel": "Q7. Is your organisation on track to deliver the target measures identified in the Community Participation Plan?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "rows": 4,
+                "source": "communityTargetMeasuresNotOnTrack",
+                "preLabel": "Q7(a). Please outline what actions are planned to get back on track."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "type": "selectOne",
+                "source": "communityConductWorkshops",
+                "preLabel": "Q8. Did your organisation conduct workshops (or equivalent activities) to engage researchers, industry and Community members to define innovative practices and approaches that would improve the condition of natural resources as they relate to the 5-year Outcomes? (RCS 2.3)"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "communityConductWorkshops == \"Yes\""
+              }
+            ],
+            "items": [
+              {
+                "disableTableUpload": true,
+                "fixedWidth": true,
+                "columns": [
+                  {
+                    "width": "25%",
+                    "source": "workshopEventType",
+                    "title": "Event type",
+                    "type": "text"
+                  },
+                  {
+                    "width": "25%",
+                    "source": "workshopTitle",
+                    "title": "Title",
+                    "type": "text"
+                  },
+                  {
+                    "width": "25%",
+                    "source": "workshopPurpose",
+                    "title": "Purpose",
+                    "type": "textarea"
+                  },
+                  {
+                    "width": "25%",
+                    "source": "workshopDate",
+                    "title": "Date",
+                    "type": "date"
+                  }
+                ],
+                "userAddedRows": true,
+                "source": "workshopList",
+                "title": "<b>Q8(a). Please provide details:<b style=\"color:red\">*</b></b>",
+                "type": "table"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h4>Communications</h4>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "type": "selectOne",
+                "source": "communicationsTargetMeasuresOnTrack",
+                "preLabel": "Q9. Is your organisation  on track to deliver the target measures identified in the Communications Plan?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "rows": 4,
+                "source": "communicationsTargetMeasuresNotOnTrack",
+                "preLabel": "Q9(a). Please outline what actions are planned to get back on track."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "type": "selectOne",
+                "source": "communicationMaterialPublished",
+                "preLabel": "Q10. During this reporting period, was any communication material published promoting organisational and project progress and performance, First Nations leadership and engagement, and opportunities for the Community to participate in projects, including through websites and social media, as outlined in RCS 3?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "communicationMaterialPublished == \"Yes\""
+              }
+            ],
+            "items": [
+              {
+                "disableTableUpload": true,
+                "fixedWidth": true,
+                "columns": [
+                  {
+                    "source": "communicationMaterialLink",
+                    "title": "Material",
+                    "type": "text"
+                  }
+                ],
+                "userAddedRows": true,
+                "source": "communicationMaterialLinkList",
+                "title": "<b>Q10(a). Please provide a link to, or a copy of, the material (one row per item)<b style=\"color:red\">*</b></b>",
+                "type": "table"
+              },
+              {
+                "type": "table",
+                "source": "communicationsMaterialAttachments",
+                "userAddedRows": true,
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "title": "Attached communication material",
+                    "source": "communicationsMaterialAttachment",
+                    "type": "document"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "type": "number",
+                "source": "projectDesignRequested",
+                "preLabel": "Q11. How many Requests for Project Design did your organisation receive in the last quarter from Customers other than DCCEEW and DAFF (RCS 9.1(c)(i))?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "css": "span7",
+                "type": "number",
+                "source": "workOrderExecuted",
+                "preLabel": "Q12. How many Work Orders did your organisation execute in the last quarter with Customers other than DCCEEW and DAFF (RCS 9.1(c)(ii))?"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "formVersion": 3,
+  "category": null,
+  "status": "active",
+  "gmsId": null,
+  "supportsSites": false,
+  "supportsPhotoPoints": false,
+  "minOptionalSectionsCompleted": 1
+}

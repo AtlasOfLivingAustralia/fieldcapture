@@ -10,8 +10,10 @@ class SearchControllerSpec extends Specification implements ControllerUnitTest<S
     SearchService searchService = Mock(SearchService)
     WebService webService = Mock(WebService)
     CommonService commonService = Mock(CommonService)
+    UserService userService = Mock(UserService)
 
     void setup() {
+        controller.userService = userService
         controller.searchService = searchService
         controller.webService = webService
         controller.commonService = commonService
@@ -21,6 +23,7 @@ class SearchControllerSpec extends Specification implements ControllerUnitTest<S
         controller.downloadAllData()
 
         then:
+        1 * userService.userIsSiteAdmin() >> true
         1 * searchService.downloadAllData(params) >> [status:HttpStatus.SC_OK]
 
         and:
@@ -37,6 +40,7 @@ class SearchControllerSpec extends Specification implements ControllerUnitTest<S
         controller.downloadShapefile()
 
         then:
+        1 * userService.userIsSiteAdmin() >> true
         1 * searchService.downloadShapefile(params) >> true
 
         and:

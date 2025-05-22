@@ -1,7 +1,8 @@
 package au.org.ala.merit
 
 import au.com.bytecode.opencsv.CSVWriter
-import org.apache.commons.validator.EmailValidator
+import org.apache.commons.lang.WordUtils
+import org.apache.commons.validator.routines.EmailValidator
 
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -25,7 +26,7 @@ class GmsMapper {
     static final REPORTING_THEME_COLUMN = 'PGAT_PRIORITY'
 
     static final FINANCIAL_YEAR_FUNDING_PREFIX = 'FUNDING_'
-
+    static final FINANCIAL_YEAR_FUNDING_DESCRIPTION = "FINANCIAL_YEAR_FUNDING_DESCRIPTION"
     static MERIT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
 
     static final GMS_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy")
@@ -94,10 +95,11 @@ class GmsMapper {
 
     def geographicInfoMapping = [
             NATIONWIDE:[name:'nationwide', type:'boolean', description:'If true, this project does not have a primary state'],
-            PRIMARY_STATE:[name:'primaryState', type:'string', description:''],
-            PRIMARY_ELECTORATE:[name:'primaryElectorate', type:'string', description:''],
-            OTHER_ELECTORATES:[name:'otherElectorates', type:'list', description:''],
-            OTHER_STATES:[name:'otherStates', type:'list', description:'']
+            STATEWIDE:[name:'statewide', type:'boolean', description:'If true, this project does not have a primary electorate'],
+            PRIMARY_STATE:[name:'primaryState', type:'string', description:'The primary state to be manually assigned to this project'],
+            PRIMARY_ELECTORATE:[name:'primaryElectorate', type:'string', description:'The primary electorate to be manually assigned to this project'],
+            OTHER_ELECTORATES:[name:'otherElectorates', type:'list', description:'Other electorates to be manually assigned to this project.  Enter as a comma separated list'],
+            OTHER_STATES:[name:'otherStates', type:'list', description:'Other states to be manually assigned to this project.  Enter as a comma separated list'],
     ]
 
 
@@ -134,6 +136,8 @@ class GmsMapper {
     ]
 
     private boolean includeProgress
+    /** If the mapping is being done to update a project, mandatory fields aren't required as they won't be updated if absent */
+    private boolean mapForUpdate = false
 
     public GmsMapper() {
         this.activitiesModel = []
@@ -143,9 +147,10 @@ class GmsMapper {
         this.programs = [:]
         this.managementUnits = [:]
         includeProgress = false
+        mapForUpdate = false
     }
 
-    GmsMapper(activitiesModel, programModel, organisations, abnLookup, List<Map> scores, Map programs = [:], Map managementUnits = [:], includeProgress = false) {
+    GmsMapper(activitiesModel, programModel, organisations, abnLookup, List<Map> scores, Map programs = [:], Map managementUnits = [:], includeProgress = false, mapForUpdate = false) {
         this.activitiesModel = activitiesModel
         this.programModel = programModel
         this.includeProgress = includeProgress
@@ -154,6 +159,7 @@ class GmsMapper {
         this.programs = programs
         this.managementUnits = managementUnits
         this.abnLookupService = abnLookup
+        this.mapForUpdate = mapForUpdate
     }
 
     /** Creates a CSV file in the format required to import projects into MERIT with additional instructions */
@@ -163,7 +169,7 @@ class GmsMapper {
         List descriptions = []
         List mandatoryFlags = []
         List headers = []
-        projectMapping.each { String key, Map value ->
+        (projectMapping + geographicInfoMapping).each { String key, Map value ->
            // Deliberately omit fields without a description as they are largely deprecated.
             String description = value.description
             if (description) {
@@ -175,6 +181,17 @@ class GmsMapper {
                 descriptions << description
            }
         }
+        // Special case for MERI plan funding mapping
+        headers << FINANCIAL_YEAR_FUNDING_DESCRIPTION
+        descriptions << "Description of the funding for each financial year.  Must be present for financial year funding amounts to be imported"
+        mandatoryFlags << 'Optional'
+
+        for (int i : (18..30)) {
+            headers << FINANCIAL_YEAR_FUNDING_PREFIX+i+"_"+(i+1)
+            descriptions << "Funding amount for the financial year ${i} to ${i+1}"
+            mandatoryFlags << 'Optional'
+        }
+
         csvWriter.writeNext(descriptions as String[])
         csvWriter.writeNext(mandatoryFlags as String[])
         csvWriter.writeNext(headers as String[])
@@ -189,7 +206,7 @@ class GmsMapper {
         mappingKeys.add(DATA_SUB_TYPE_COLUMN)
         mappingKeys.add(REPORTING_THEME_COLUMN)
         mappingKeys.add(FINANCIAL_YEAR_FUNDING_PREFIX)
-        mappingKeys.add("FINANCIAL_YEAR_FUNDING_DESCRIPTION")
+        mappingKeys.add(FINANCIAL_YEAR_FUNDING_DESCRIPTION)
 
         projectRows[0].keySet().each { key ->
             if (!key?.trim() || key == 'index') {
@@ -210,29 +227,21 @@ class GmsMapper {
         return errors
     }
 
-    def mapProject(projectRows) {
+    def mapProject(projectRows, boolean update = false) {
 
         List errors = []
         List messages = []
-        Map result = gmsToMerit(projectRows[0], projectMapping) // All project rows have the project details.
+        Map result = csvToProjectProperties(projectRows[0], projectMapping, update) // All project rows have the project details.
         def project = result.mappedData
-        project.projectType = 'works'
-        project.isMERIT = true
-
-        mapGeographicInfo(projectRows[0], project, errors)
-
-
-        String programName = project.associatedSubProgram ?: project.associatedProgram
-        Map program = programs[programName]
-        String programId = program?.programId
-        if (programId) {
-            project.remove('associatedProgram')
-            project.remove('associatedSubProgram')
-            project.programId = programId
+        if (!update) {
+            // Set some default project properties for the MERIT hub
+            project.projectType = 'works'
+            project.isMERIT = true
         }
-        else {
-            errors << "Program ${programName} doesn't match an existing MERIT programme"
-        }
+
+        mapGeographicInfo(projectRows[0], project, update, errors)
+
+        mapProgram(project, update, errors)
 
         if (project.managementUnitName) {
             String managementUnitName = project.remove('managementUnitName')
@@ -242,10 +251,9 @@ class GmsMapper {
             }
         }
 
-        Map organisation = mapOrganisation(project, program, errors, messages)
+        Map organisation = mapOrganisation(project, update, errors, messages)
 
         errors.addAll(result.errors)
-        project.planStatus = project.planStatus ?: 'not approved'
 
         mapRisks(projectRows, project, errors)
 
@@ -258,8 +266,49 @@ class GmsMapper {
             project.custom = [details:meriPlan]
         }
 
+        if (update) {
+            Map flatProperties = flattenMap(project)
+            Set propertiesToUpdate = flatProperties.keySet()
+            propertiesToUpdate.remove('grantId') // This identifies the project and won't be updated.
+            messages << "Update: ${propertiesToUpdate}"
+
+        }
+
         [project:project, sites:sites, activities:activities, errors:errors, messages:messages, organisation:organisation]
 
+    }
+
+    private Map flattenMap(Map map, String separator = '.') {
+        map.collectEntries { k, v ->
+            if (v instanceof Map) {
+                flattenMap(v, separator).collectEntries { k1, v1 ->
+                    String newKey = k+separator+k1
+                    [(newKey): v1]
+                }
+            } else {
+                [(k): v]
+            }
+        }
+    }
+
+    private Map mapProgram(LinkedHashMap<Object, Object> project, boolean update, ArrayList errors) {
+        String programName = project.associatedSubProgram ?: project.associatedProgram
+        if (!programName) {
+            if (!update) {
+                errors << "Please supply a program name (PROGRAM_NM) or sub-program name (ROUND_NM) for the project"
+            }
+            return
+        }
+        Map program = programs[programName]
+        String programId = program?.programId
+        if (programId) {
+            project.remove('associatedProgram')
+            project.remove('associatedSubProgram')
+            project.programId = programId
+        } else {
+            errors << "Program ${programName} doesn't match an existing MERIT programme"
+        }
+        program
     }
 
     private Map findExistingOrganisation(String organisationId, String abn) {
@@ -269,7 +318,7 @@ class GmsMapper {
 
     }
 
-    private Map mapOrganisation(Map project, Map program, List errors, List messages) {
+    private Map mapOrganisation(Map project, boolean update, List errors, List messages) {
         Map organisation
         Map abnLookup
         String error = null
@@ -285,13 +334,23 @@ class GmsMapper {
                     abnLookup = abnLookupService.lookupOrganisationDetailsByABN(abn)
                     if (abnLookup && !abnLookup.error) {
                         List names = [abnLookup.entityName] + abnLookup.businessNames
-                        organisation = organisations.find { it.name in names }
+                        if (contractName) {
+                            names << contractName
+                        }
+                        organisation = organisations.find { Map org ->
+                            names.find{it && (it.toLowerCase() == org.name?.toLowerCase())}
+                        }
                         if (organisation) {
                             error = "An existing organisation name was matched via the entity/business name ${organisation.name} but the ABN doesn't match the abn of the MERIT organisation (${organisation.abn})"
                         } else {
                             createOrganisation = true
-
-                            String name = abnLookup.businessNames ? abnLookup.businessNames[0] : abnLookup.entityName
+                            String name
+                            if (contractName) {
+                                name = contractName
+                            }
+                            else {
+                                name = WordUtils.capitalizeFully(abnLookup.entityName)
+                            }
                             organisation = abnLookup + [name: name]
                             messages << "An organisation will be created with ABN: ${abn} and name: ${name}"
                         }
@@ -306,7 +365,7 @@ class GmsMapper {
 
             // Validate we can use the contract name
             if (organisation && contractName) {
-                List names = [organisation.name] + organisation.businessNames
+                List names = [organisation.name] + organisation.contractNames
                 if (contractName && !contractName in names) {
                     error = "The organisation name in the contract ${contractName} doesn't match a known organisation name"
                 }
@@ -315,9 +374,9 @@ class GmsMapper {
                 // We are standardising on "Recipient" as the default organisation relationship
                 String description = 'Recipient'
                 project.associatedOrgs = [
-                        [organisationId:organisation.organisationId, name: contractName ?: organisation.name, organisationName:organisation.name, description:description]]
+                        [organisationId:organisation.organisationId, name: contractName ?: organisation.name, description:description]]
             }
-        } else {
+        } else if (!update) {
             error = "Please supply an organisationId (ORG_ID) or ABN (ABN) for the project"
         }
         if (error) {
@@ -373,7 +432,7 @@ class GmsMapper {
         def count = siteRows.size()
         siteRows.eachWithIndex {siteRow, i ->
 
-            def siteResult = gmsToMerit(siteRow, siteMapping)
+            def siteResult = csvToProjectProperties(siteRow, siteMapping)
             def site = siteResult.mappedData
             errors.addAll(siteResult.errors)
 
@@ -410,7 +469,7 @@ class GmsMapper {
         def activityRows = projectRows.findAll{it[DATA_TYPE_COLUMN] == ACTIVITY_DATA_TYPE && it[DATA_SUB_TYPE_COLUMN] == ACTIVITY_DATA_SUB_TYPE}
         def activities = []
         activityRows.eachWithIndex { activityRow, i ->
-            def activityResult = gmsToMerit(activityRow, activityMapping)
+            def activityResult = csvToProjectProperties(activityRow, activityMapping)
             def mappedActivity = activityResult.mappedData
             errors.addAll(activityResult.errors)
 
@@ -504,7 +563,7 @@ class GmsMapper {
         def risks = []
         riskRows.eachWithIndex { riskRow, i ->
 
-            def result = gmsToMerit(riskRow, riskMapping)
+            def result = csvToProjectProperties(riskRow, riskMapping)
             errors.addAll(result.errors)
             def risk = [
                     "threat"  : "",
@@ -524,19 +583,19 @@ class GmsMapper {
         }
     }
 
-    private void mapGeographicInfo(Map rowData, Map project, List errors) {
+    private void mapGeographicInfo(Map rowData, Map project, boolean update, List errors) {
 
-        Map result = gmsToMerit(rowData, geographicInfoMapping)
+        Map result = csvToProjectProperties(rowData, geographicInfoMapping, update)
         if (result.mappedData) {
             project.geographicInfo = result.mappedData
         }
-        errors.addAll(errors)
+        errors.addAll(result.errors)
     }
 
     private def mapTarget(rowMap) {
 
         def errors = []
-        def map = gmsToMerit(rowMap, outputTargetColumnMapping)
+        def map = csvToProjectProperties(rowMap, outputTargetColumnMapping)
         def target = map.mappedData
         errors.addAll(map.errors)
 
@@ -572,7 +631,7 @@ class GmsMapper {
         [mappedData:result, errors: errors]
     }
 
-    private def gmsToMerit(Map rowMap, Map mapping) {
+    private def csvToProjectProperties(Map rowMap, Map mapping, boolean update = false) {
         def result = [:]
         def errors = []
         mapping.each { Map.Entry e ->
@@ -583,16 +642,20 @@ class GmsMapper {
                 String propertyName = columnMapping.name
                 if (columnMapping.multipleColumnsSupported) {
                     List values = findMultiValue(mappingColumnName, rowMap)
-                    if (!result[propertyName]) {
+                    values = values.findAll{it}
+                    if (!result[propertyName] && (values || !update)) {
                         result[propertyName] = []
                     }
-                    values = values.findAll{it}
-                    result[propertyName].addAll(values.collect{convertByType(it, columnMapping)}.findAll{it})
+                    if (values || !update) {
+                        result[propertyName].addAll(values.collect{convertByType(it, columnMapping, update)}.findAll{it})
+                    }
                 }
                 else {
-                    result[propertyName] = convertByType(rowMap[mappingColumnName], columnMapping)
+                    def value = rowMap[mappingColumnName]?.trim()
+                    if (value || !update) { // If we are doing an update, ignore empty values.
+                        result[propertyName] = convertByType(rowMap[mappingColumnName], columnMapping, update)
+                    }
                 }
-
             }
             catch (Exception ex) {
                 errors << "Error converting value: ${rowMap[mappingColumnName]} from row ${rowMap.index} column: ${mappingColumnName}, ${ex.getMessage()}"
@@ -605,22 +668,25 @@ class GmsMapper {
     private List findMultiValue(String mappingColumnName, Map rowMap) {
         rowMap.findAll { String key, def value ->
             key.startsWith(mappingColumnName)
-        }.collect{it.value}
+        }.collect{it.value?.trim()}
     }
 
-    private def convertByType(String value, Map mapping) {
+    private def convertByType(String value, Map mapping, boolean update) {
         String type = mapping.type
         value = value?value.trim():''
         def result = null
         switch (type) {
             case 'date':
-                result = convertDate(value, mapping.mandatory)
+                result = convertDate(value, mapping.mandatory && !update)
                 break
             case 'decimal':
                 result = convertDecimal(value)
                 break
             case 'string':
-                result = value ?: (mapping['default']?:value)
+                result = value
+                if (!result && !update) {
+                    result = mapping['default']?:value
+                }
                 break
             case 'url':
                 URI.create(value) // validation purposes only
@@ -646,6 +712,9 @@ class GmsMapper {
                 break
             case 'list':
                 result = value?.split(',').collect{it.trim()}.findAll{it}
+                break
+            case 'boolean':
+                result = value?.toBoolean() // accept "y"/"true"/"1" as true
                 break
             default:
                 throw new IllegalArgumentException("Unsupported type: ${type}")

@@ -3,6 +3,7 @@ package au.org.ala.merit
 import grails.converters.JSON
 import grails.testing.spring.AutowiredTest
 import org.apache.commons.io.FileUtils
+import org.apache.http.HttpStatus
 import org.grails.web.converters.marshaller.json.CollectionMarshaller
 import org.grails.web.converters.marshaller.json.MapMarshaller
 import spock.lang.Specification
@@ -257,5 +258,26 @@ class DocumentServiceSpec extends Specification implements AutowiredTest{
         then:
         1 * userService.userHasReadOnlyAccess() >> true
         canView
+    }
+
+    def "The document service can return all help documents or just for a specified category"() {
+        setup:
+        List documents = [[documentId:'1', title:'Test Document', labels:['Test Category']]]
+        String category = 'Test Category'
+        String hubId = 'hubId'
+
+        when:
+        List returnedDocuments = service.findAllHelpDocuments(hubId)
+
+        then:
+        1 * webService.doPost({it.endsWith("document/search")}, [hubId:hubId, role:DocumentService.ROLE_HELP_DOCUMENT]) >> [statusCode: HttpStatus.SC_OK, resp: [documents: documents]]
+        returnedDocuments == documents
+
+        when:
+        List categoryDocuments = service.findAllHelpDocuments(hubId, category)
+
+        then:
+        1 * webService.doPost({it.endsWith("document/search")}, [hubId:hubId, role:DocumentService.ROLE_HELP_DOCUMENT, labels: category]) >> [statusCode: HttpStatus.SC_OK, resp: [documents: documents]]
+        categoryDocuments == documents
     }
 }

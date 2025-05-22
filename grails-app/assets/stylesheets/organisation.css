@@ -4,6 +4,7 @@
 *= require associated-orgs.css
 *= require_self
 *= require jquery-ui/1.13.2/jquery-ui
+*= require jquery-ui/1.13.2/juery-ui.theme
 */
 
 #projectList th {
@@ -108,3 +109,42 @@ ul.ui-autocomplete {
     background: red;
     color: white;
 }
+
+.service {
+    width: 25%
+}
+
+.service input {
+    width: 100%;
+}
+
+.service-targets td.service {
+    width: 30%;
+}
+.service-targets td.score {
+    width: 40%;
+}
+.service-targets td.target {
+    width: 10%;
+}
+
+.service-targets td.target-date {
+    width:7em;
+}
+.service-targets-view .target-date {
+    min-width:6em;
+}
+.service-targets td.target-date input {
+    width:7em;
+}
+
+#organisation-details th {
+    white-space: normal;
+    word-wrap: normal;
+    min-width: 7em;
+}
+
+ul.ui-menu {
+    list-style: none;
+}
+

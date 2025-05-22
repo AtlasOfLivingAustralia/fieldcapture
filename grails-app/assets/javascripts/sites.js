@@ -359,10 +359,10 @@ var PidLocation = function (l, options) {
 
     // These layers are treated specially.
     var USER_UPLOAD_FID = 'c11083';
-    var OLD_NRM_LAYER_FIDS = ['cl916', 'cl2111', 'cl2120'];
 
 
-    var self = this;
+    var self = this,
+        OLD_LAYER_FIDS_NAME = getOldLayers(options.knownShapeConfig);
     self.source = ko.observable('pid');
     self.geometry = ko.observable({
         type : "pid",
@@ -412,8 +412,8 @@ var PidLocation = function (l, options) {
     if (l.fid == USER_UPLOAD_FID) {
         self.layers().push({id:USER_UPLOAD_FID, name:'User Uploaded'});
     }
-    else if (_.contains(OLD_NRM_LAYER_FIDS, l.fid)) {
-        self.layers().push({id: l.fid, name:'NRM Regions - pre 2023'});
+    else if (OLD_LAYER_FIDS_NAME[l.fid]) {
+        self.layers().push({id: l.fid, name: OLD_LAYER_FIDS_NAME[l.fid]});
     }
 
     self.chosenLayer = ko.observable(exists(l,'fid'));
@@ -469,6 +469,15 @@ var PidLocation = function (l, options) {
             self.chosenLayer(USER_UPLOAD_FID);
 
         }
+    }
+
+    function getOldLayers (knownShapeConfig) {
+        var result  = {};
+        (knownShapeConfig || []).forEach(function(layer) {
+            layer.previousLayers && _.extend(result, layer.previousLayers);
+        });
+
+        return result;
     }
 };
 

@@ -135,8 +135,9 @@ class DateUtils {
         dateTime.format(ISO_DATE_FORMATTER)
     }
 
-    static String format(DateTime date, String formatString) {
-        DateTimeFormatter formatter = DateTimeFormat.forPattern(formatString).withZone(date.getZone())
+    static String format(DateTime date, String formatString, DateTimeZone zone = null) {
+        zone = zone ?: date.getZone()
+        DateTimeFormatter formatter = DateTimeFormat.forPattern(formatString).withZone(zone)
         return formatter.print(date)
     }
 

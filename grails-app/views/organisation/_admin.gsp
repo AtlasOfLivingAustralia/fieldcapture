@@ -9,8 +9,9 @@
             <a class="nav-link" data-toggle="pill" href="#reporting-config" id="reporting-config-tab" role="tab">Reporting</a>
             <a class="nav-link" data-toggle="pill" href="#config" id="config-tab" role="tab">Configuration</a>
         </g:if>
-
-
+        <g:if test="${showTargets}">
+        <a class="nav-link" data-toggle="pill" href="#organisation-details" id="organisation-details-tab" role="tab">Targets</a>
+        </g:if>
     </div>
 
     <div class="tab-content col-9">
@@ -153,5 +154,13 @@
             </div>
             <!-- /ko -->
         </g:else>
+        <g:if test="${showTargets}">
+        <div id="organisation-details" class="tab-pane validationEngineContainer">
+            <h3>Total funding</h3>
+            <g:render template="/organisation/funding"/>
+            <h3>Service Targets</h3>
+            <g:render template="/organisation/serviceTargets" model="[services:organisation.services, periods:organisation.periods, showTargetDate:organisation.showTargetDate]"/>
+        </div>
+        </g:if>
     </div>
 </div>

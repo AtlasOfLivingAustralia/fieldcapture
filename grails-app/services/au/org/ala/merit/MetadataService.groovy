@@ -14,8 +14,6 @@ class MetadataService {
     static final String PROJECT_SERVICES_CACHE_REGION = 'projectServices'
     static final String PROJECT_SERVICES_KEY = 'projectServices'
 
-
-
     def activitiesModel() {
         return cacheService.get('activity-model',{
             webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') +
@@ -23,10 +21,14 @@ class MetadataService {
         })
     }
 
-    def annotatedOutputDataModel(type) {
-        return cacheService.get('annotated-output-model'+type,{
-            Collections.unmodifiableList(webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') +
-                    'metadata/annotatedOutputDataModel?type='+type.encodeAsURL()))
+    def annotatedOutputDataModel(String activityForm, String formSection, Integer formVersion) {
+        return cacheService.get('annotated-output-model'+activityForm+'_'+formSection,{
+            String url = grailsApplication.config.getProperty('ecodata.baseUrl') +
+                    'metadata/annotatedOutputDataModel?type='+formSection.encodeAsURL()+"&activityForm="+activityForm.encodeAsURL()
+            if (formVersion) {
+                url += "&formVersion="+formVersion
+            }
+            Collections.unmodifiableList(webService.getJson(url))
         })
     }
 
@@ -273,6 +275,16 @@ class MetadataService {
         })
     }
 
+    /**
+     * Returns a Map cantaining the properties of a Score identified by a supplied name.
+     * A score name is a unique identifier that is human readable and stable between test/staging/production
+     * environments.
+     * @param name  The name of the Score of interest.
+     */
+    Map findScoreByName(String name) {
+        getScores(false).find { it.name == name }
+    }
+
     List<Map> getScores(boolean includeConfig) {
         cacheService.get("scores-${includeConfig}", {
             String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/scores"
@@ -344,6 +356,4 @@ class MetadataService {
 
         result
     }
-
-
 }

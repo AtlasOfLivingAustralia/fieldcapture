@@ -105,8 +105,9 @@ function useNhtServiceLabels(programName, programNameToCopy) {
  * @param program
  * @param legacyId
  * @param scoreIds
+ * @param mandatory
  */
-function updateProgramServiceConfig(program, legacyId, scoreIds){
+function updateProgramServiceConfig(program, legacyId, scoreIds, mandatory){
     if (!program || !program.config) {
         print("Program not found ");
         return;
@@ -116,11 +117,14 @@ function updateProgramServiceConfig(program, legacyId, scoreIds){
     program.config.programServiceConfig.programServices = program.config.programServiceConfig.programServices || [];
 
     var service = program.config.programServiceConfig.programServices.find(function (service) {
-        return service.serviceId === legacyId;
+        return service.serviceId == legacyId;
     });
 
     if (!service) {
         service = {serviceId: legacyId, serviceTargets: scoreIds};
+        if (mandatory) {
+            service.mandatory = true;
+        }
         program.config.programServiceConfig.programServices.push(service);
     }
     else {
@@ -129,6 +133,9 @@ function updateProgramServiceConfig(program, legacyId, scoreIds){
             if (service.serviceTargets.indexOf(scoreId) === -1)
                 service.serviceTargets.push(scoreId);
         });
+        if (mandatory && !service.mandatory) {
+            service.mandatory = true;
+        }
     }
 
     return program;

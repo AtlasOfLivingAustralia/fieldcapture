@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.ProgramConfig
 import grails.converters.JSON
 import net.sf.json.JSONNull
 import org.apache.http.HttpStatus
@@ -13,12 +14,14 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
     UserService userService = Mock(UserService)
     ProjectService projectService = Mock(ProjectService)
     SettingService settingService = Mock(SettingService)
+    ProjectConfigurationService projectConfigurationService = Mock(ProjectConfigurationService)
 
     def setup() {
         controller.siteService = siteService
         controller.userService = userService
         controller.projectService = projectService
         controller.settingService = settingService
+        controller.projectConfigurationService = projectConfigurationService
 
         // From Bootstrap.groovy
         JSON.createNamedConfig("nullSafe", { cfg ->
@@ -259,5 +262,27 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
 
         and:
         model.siteTypes.collect{it.value} == ['worksArea', 'surveyArea', 'projectArea']
+    }
+
+    def "A user can view a site if they can view any of the projects associated with that site"() {
+        setup:
+        Map project = [projectId:'p1', name:'project', sites:[[name:'name', externalId:'e1', type:'projectArea']]]
+        String siteId = 's1'
+        Map site = [siteId:siteId, name:"Site 1", projects:[project]]
+
+        when:
+        Map model = controller.index(siteId)
+
+        then:
+        1 * siteService.get(siteId) >> site
+        1 * userService.getUser() >> [userId:"u1"]
+        1 * projectService.canUserViewProject("u1", "p1") >> true
+        1 * projectService.get("p1") >> project
+        1 * projectConfigurationService.getProjectConfiguration(project) >> [projectTemplate:ProjectController.RLP_TEMPLATE]
+
+        and:
+        model.site == site
+        model.project == project
+
     }
 }

@@ -297,7 +297,7 @@ class ImportService {
         organisations += metadataService.organisationList()?.list
     }
 
-    Map gmsImport(InputStream csv, List status, Boolean preview, Boolean update, String charEncoding = 'Cp1252') {
+    Map projectImport(InputStream csv, List status, Boolean preview, Boolean update, String charEncoding = 'Cp1252') {
 
         Map programs = [:].withDefault{name ->
             programService.getByName(name)
@@ -307,8 +307,7 @@ class ImportService {
             mu?.managementUnitId
         }
         refreshOrganisationList()
-        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), organisations, abnLookupService, metadataService.getOutputTargetScores(), programs, managementUnits)
-
+        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), organisations, abnLookupService, metadataService.getOutputTargetScores(), programs, managementUnits, false, update)
         def action = preview?{rows -> mapProjectRows(rows, status, mapper, update)}:{rows -> importAll(rows, status, mapper, update)}
 
         Map result = [:]
@@ -360,7 +359,7 @@ class ImportService {
 
     def mapProjectRows(projectRows, List status, GmsMapper mapper, Boolean update) {
 
-        Map mappingResults = mapper.mapProject(projectRows)
+        Map mappingResults = mapper.mapProject(projectRows, update)
 
         String grantId = mappingResults.project.grantId
         String externalId = mappingResults.project.externalId
@@ -380,7 +379,7 @@ class ImportService {
 
     void importAll(projectRows, List status, GmsMapper mapper, Boolean update) {
 
-        def projectDetails = mapper.mapProject(projectRows)
+        def projectDetails = mapper.mapProject(projectRows, update)
 
         def grantId = projectDetails.project.grantId?:'<not mapped>'
         def externalId = projectDetails.project.externalId?:'<not mapped>'
@@ -394,9 +393,6 @@ class ImportService {
             def editorEmail = projectDetails.project.remove('editorEmail')
             def editorEmail2 = projectDetails.project.remove('editorEmail2')
 
-            //When projects are loaded into MERIT via CSV upload, they are given a status of "Application".
-            projectDetails.project.status ?: 'application'
-
             // Create the organisation first so we can link it to the project.
             if (projectDetails.organisation) {
                 Map orgCreationResult = organisationService.update(null, projectDetails.organisation)
@@ -405,11 +401,11 @@ class ImportService {
                 }
                 else {
                     refreshOrganisationList()
-                    projectDetails.associatedOrgs[0].organisationId = orgCreationResult.resp.organisationId
+                    projectDetails.project.associatedOrgs[0].organisationId = orgCreationResult.resp.organisationId
                 }
             }
 
-            def result = importProject(projectDetails.project, update) // Do not overwrite existing projects because of the impacts to sites / activities etc.
+            def result = importProject(projectDetails.project, update)
 
             if (result.project == 'existing' && !update) {
                 status << [grantId:grantId, externalId:externalId, success:false, errors:['Project already exists in MERIT, skipping']]

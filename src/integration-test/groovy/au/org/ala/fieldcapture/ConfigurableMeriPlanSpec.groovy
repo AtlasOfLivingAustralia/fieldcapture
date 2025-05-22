@@ -4,6 +4,7 @@ import pages.AdminClearCachePage
 import pages.AdminTools
 import pages.MeriPlanPDFPage
 import pages.RlpProjectPage
+import spock.lang.Ignore
 import spock.lang.Stepwise
 import geb.module.FormElement
 
@@ -15,7 +16,9 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         loginAsAlaAdmin(browser)
         to AdminClearCachePage
         clearProgramListCache()
+        at AdminClearCachePage // reset at check time.
         clearServiceListCache()
+        at AdminClearCachePage // reset at check time.
         clearProtocolListCache()
     }
 
@@ -52,6 +55,11 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         at RlpProjectPage // reset at check time.
 
         meriPlan = openMeriPlanEditTab()
+
+        waitFor{meriPlan.projectName.displayed}
+        interact {
+            moveToElement(meriPlan.projectName)
+        }
 
         meriPlan.projectName = "MERI plan edited name"
         meriPlan.projectDescription = "MERI plan edited description"
@@ -167,25 +175,26 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         then: "Wait for the listener to update the available target measures and ensure they are correct"
         waitFor {
             meriPlan.serviceOutcomeTargets.serviceAndTargets.size() == 3
-            meriPlan.serviceOutcomeTargets.serviceAndTargets[0].service == "Communication materials"
-            meriPlan.serviceOutcomeTargets.serviceAndTargets[0].targetMeasure == "Number of communication materials published"
-            meriPlan.serviceOutcomeTargets.serviceAndTargets[1].service == "Weed distribution survey"
-            meriPlan.serviceOutcomeTargets.serviceAndTargets[1].targetMeasure == "Area (ha) surveyed for weeds"
-            meriPlan.serviceOutcomeTargets.serviceAndTargets[2].service == "Collecting, or synthesising baseline data"
-            meriPlan.serviceOutcomeTargets.serviceAndTargets[2].targetMeasure == "Number of baseline data sets collected and/or synthesised"
 
-            meriPlan.serviceOutcomeTargets.outcomeTargets[0].outcomes == ["ST1"]
-            meriPlan.serviceOutcomeTargets.outcomeTargets[1].outcomes == ["MT1"]
+            meriPlan.serviceOutcomeTargets.serviceAndTargets[0].service == "Collecting, or synthesising baseline data"
+            meriPlan.serviceOutcomeTargets.serviceAndTargets[0].targetMeasure == "Number of baseline data sets collected and/or synthesised"
+            meriPlan.serviceOutcomeTargets.serviceAndTargets[1].service == "Communication materials"
+            meriPlan.serviceOutcomeTargets.serviceAndTargets[1].targetMeasure == "Number of communication materials published"
+            meriPlan.serviceOutcomeTargets.serviceAndTargets[2].service == "Weed distribution survey"
+            meriPlan.serviceOutcomeTargets.serviceAndTargets[2].targetMeasure == "Area (ha) surveyed for weeds"
+
+            meriPlan.serviceOutcomeTargets.outcomeTargets[0].outcomes == ["MT1"]
+            meriPlan.serviceOutcomeTargets.outcomeTargets[1].outcomes == ["ST1"]
             meriPlan.serviceOutcomeTargets.outcomeTargets[2].outcomes == ["MT1"]
         }
 
         meriPlan.serviceForecasts.forecasts.size() == 3
-        meriPlan.serviceForecasts.forecasts[0].service == "Communication materials"
-        meriPlan.serviceForecasts.forecasts[0].score == "Number of communication materials published"
-        meriPlan.serviceForecasts.forecasts[1].service == "Weed distribution survey"
-        meriPlan.serviceForecasts.forecasts[1].score == "Area (ha) surveyed for weeds"
-        meriPlan.serviceForecasts.forecasts[2].service == "Collecting, or synthesising baseline data"
-        meriPlan.serviceForecasts.forecasts[2].score == "Number of baseline data sets collected and/or synthesised"
+        meriPlan.serviceForecasts.forecasts[0].service == "Collecting, or synthesising baseline data"
+        meriPlan.serviceForecasts.forecasts[0].score == "Number of baseline data sets collected and/or synthesised"
+        meriPlan.serviceForecasts.forecasts[1].service == "Communication materials"
+        meriPlan.serviceForecasts.forecasts[1].score == "Number of communication materials published"
+        meriPlan.serviceForecasts.forecasts[2].service == "Weed distribution survey"
+        meriPlan.serviceForecasts.forecasts[2].score == "Area (ha) surveyed for weeds"
 
         when:
         meriPlan.serviceOutcomeTargets.outcomeTargets[0].target = "2"
@@ -342,32 +351,32 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlanView.nationalAndRegionalPlans[0].alignment.text() == "Alignment 1"
         meriPlanView.nationalAndRegionalPlans[0].documentUrl.text() == "http://www.test.org"
 
-
-        meriPlanView.serviceOutcomeTargets.serviceAndTargets[0].service.text() == "Communication materials"
-        meriPlanView.serviceOutcomeTargets.serviceAndTargets[0].targetMeasure.text() == "Number of communication materials published"
-        meriPlanView.serviceOutcomeTargets.outcomeTargets[0].outcomes.text() == "ST1"
+        meriPlanView.serviceOutcomeTargets.serviceAndTargets[0].service.text() == "Collecting, or synthesising baseline data"
+        meriPlanView.serviceOutcomeTargets.serviceAndTargets[0].targetMeasure.text() == "Number of baseline data sets collected and/or synthesised"
+        meriPlanView.serviceOutcomeTargets.outcomeTargets[0].outcomes.text() == "MT1"
         meriPlanView.serviceOutcomeTargets.outcomeTargets[0].target.text() == "2"
-        meriPlanView.serviceOutcomeTargets.serviceAndTargets[1].service.text() == "Weed distribution survey"
-        meriPlanView.serviceOutcomeTargets.serviceAndTargets[1].targetMeasure.text() == "Area (ha) surveyed for weeds"
-        meriPlanView.serviceOutcomeTargets.outcomeTargets[1].outcomes.text() == "MT1"
+        meriPlanView.serviceOutcomeTargets.serviceAndTargets[1].service.text() == "Communication materials"
+        meriPlanView.serviceOutcomeTargets.serviceAndTargets[1].targetMeasure.text() == "Number of communication materials published"
+        meriPlanView.serviceOutcomeTargets.outcomeTargets[1].outcomes.text() == "ST1"
         meriPlanView.serviceOutcomeTargets.outcomeTargets[1].target.text() == "1"
-        meriPlanView.serviceOutcomeTargets.serviceAndTargets[2].service.text() == "Collecting, or synthesising baseline data"
-        meriPlanView.serviceOutcomeTargets.serviceAndTargets[2].targetMeasure.text() == "Number of baseline data sets collected and/or synthesised"
+        meriPlanView.serviceOutcomeTargets.serviceAndTargets[2].service.text() == "Weed distribution survey"
+        meriPlanView.serviceOutcomeTargets.serviceAndTargets[2].targetMeasure.text() == "Area (ha) surveyed for weeds"
         meriPlanView.serviceOutcomeTargets.outcomeTargets[2].outcomes.text() == "MT1"
         meriPlanView.serviceOutcomeTargets.outcomeTargets[2].target.text() == "3"
 
-        meriPlanView.serviceForecasts.forecasts[0].service.text() == "Communication materials"
-        meriPlanView.serviceForecasts.forecasts[0].score.text() == "Number of communication materials published"
-        meriPlanView.serviceForecasts.forecasts[1].service.text() == "Weed distribution survey"
-        meriPlanView.serviceForecasts.forecasts[1].score.text() == "Area (ha) surveyed for weeds"
-        meriPlanView.serviceForecasts.forecasts[2].service.text() == "Collecting, or synthesising baseline data"
-        meriPlanView.serviceForecasts.forecasts[2].score.text() == "Number of baseline data sets collected and/or synthesised"
+        meriPlanView.serviceForecasts.forecasts[0].service.text() == "Collecting, or synthesising baseline data"
+        meriPlanView.serviceForecasts.forecasts[0].score.text() == "Number of baseline data sets collected and/or synthesised"
+        meriPlanView.serviceForecasts.forecasts[1].service.text() == "Communication materials"
+        meriPlanView.serviceForecasts.forecasts[1].score.text() == "Number of communication materials published"
+        meriPlanView.serviceForecasts.forecasts[2].service.text() == "Weed distribution survey"
+        meriPlanView.serviceForecasts.forecasts[2].score.text() == "Area (ha) surveyed for weeds"
 
         meriPlanView.serviceForecasts.forecasts[0].targets[0].text() == "1"
         meriPlanView.serviceForecasts.forecasts[0].targets[1].text() == "2"
         meriPlanView.serviceForecasts.forecasts[0].targets[2].text() == "3"
         meriPlanView.serviceForecasts.forecasts[0].targets[3].text() == "4"
         meriPlanView.serviceForecasts.forecasts[0].targets[4].text() == "5"
+
         meriPlanView.serviceForecasts.forecasts[1].targets[0].text() == "5"
         meriPlanView.serviceForecasts.forecasts[1].targets[1].text() == "4"
         meriPlanView.serviceForecasts.forecasts[1].targets[2].text() == "3"
@@ -497,7 +506,9 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         at RlpProjectPage // reset at check time.
 
         meriPlan = openMeriPlanEditTab()
+
         meriPlan.checkObjective("objective 2")
+
         meriPlan.monitoringIndicators[0].indicator = "indicator 1"
         meriPlan.monitoringIndicators[0].approach = "approach 1"
         meriPlan.projectImplementation = "project implementation"

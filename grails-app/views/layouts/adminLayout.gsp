@@ -37,6 +37,9 @@
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'importMeritProjects')}" class="loadProject" title="Load new projects into MERIT"/>
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'removeUserPermission')}" class="removeUser" title="Remove User from MERIT"/>
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'createUserHubPermission')}" class="userPermission" title="User Permissions for MERIT"/>
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'organisationModifications')}" class="uploadOrganisations" title="Upload new organisation details for projects"/>
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'manageHelpDocuments')}" class="manageHelpDocuments" title="Manage help documents"/>
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'manageTags')}" class="manageTags" title="Manage project tags"/>
                 </g:if>
                 <g:if test="${fc.userIsAlaAdmin()}">
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'tools')}" class="tools" title="Tools" />

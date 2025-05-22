@@ -4,18 +4,17 @@ import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportOwner
 import org.grails.web.json.JSONArray
-import org.grails.web.json.JSONObject
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Period
-
 /**
  * Extends the plugin OrganisationService to provide Green Army reporting capability.
  */
 class OrganisationService {
 
 
-    def grailsApplication,webService, metadataService, projectService, userService, searchService, activityService, emailService, reportService, documentService
+    public static final String RCS_CONTRACTED_FUNDING = 'rcsContractedFunding'
+    def grailsApplication, webService, metadataService, projectService, userService, searchService, activityService, emailService, reportService, documentService
     AbnLookupService abnLookupService
 
     private static def APPROVAL_STATUS = ['unpublished', 'pendingApproval', 'published']
@@ -128,6 +127,92 @@ class OrganisationService {
 
         regenerateOrganisationReports(organisation, organisationReportCategories)
     }
+
+    List<Map> generateTargetPeriods(String id) {
+        Map organisation = get(id)
+        generateTargetPeriods(organisation)
+    }
+
+    List<Map> generateTargetPeriods(Map organisation) {
+        Map targetsConfig = organisation.config?.targets
+        if (!targetsConfig) {
+            log.info("No target configuration defined for organisation ${organisation.organisationId}")
+            return null
+        }
+        ReportConfig targetsReportConfig = new ReportConfig(targetsConfig.periodGenerationConfig)
+        ReportOwner owner = new ReportOwner(
+                id:[organisationId:organisation.organisationId],
+                name:organisation.name
+        )
+        reportService.generateTargetPeriods(targetsReportConfig, owner, targetsConfig.periodLabelFormat)
+    }
+
+    String getRcsFundingForPeriod(Map organisation, String periodEndDate) {
+
+        int index = findIndexOfPeriod(organisation, periodEndDate)
+        def result = 0
+        if (index >= 0) {
+            Map rcsFunding = getRcsFunding(organisation)
+            result = rcsFunding?.costs[index]?.dollar ?: 0
+        }
+        result
+    }
+
+    private static int findIndexOfPeriod(Map organisation, String periodEndDate) {
+        List fundingHeaders = organisation.custom?.details?.funding?.headers
+        String previousPeriod = ''
+        fundingHeaders.findIndexOf {
+            String period = it.data.value
+            boolean result = previousPeriod < periodEndDate && period >= periodEndDate
+            previousPeriod = period
+            result
+        }
+
+    }
+
+    /** Returns the funding row used to collect RCS funding data */
+    private static Map getRcsFunding(Map organisation) {
+        // The funding recorded for an organisation is specific to RCS reporting.
+        // Instead of being a "funding per financial year" it is a annually revised total funding amount.
+        // This is used in calculations alongside data reported in the RCS report.
+        List fundingRows = organisation.custom?.details?.funding?.rows
+        fundingRows?.find{it.shortLabel == RCS_CONTRACTED_FUNDING }
+
+    }
+
+    void checkAndUpdateFundingTotal(Map organisation) {
+
+        String today = DateUtils.formatAsISOStringNoMillis(new Date())
+
+        Map rcsFunding = getRcsFunding(organisation)
+        if (!rcsFunding) {
+            return
+        }
+        double funding = 0
+        int index = findIndexOfPeriod(organisation, today)
+
+        while (index >= 0 && funding == 0) {
+            def fundingStr = rcsFunding.costs[index]?.dollar
+            if (fundingStr) {
+                try {
+                    funding = Double.parseDouble(fundingStr)
+                } catch (NumberFormatException e) {
+                    log.error("Error parsing funding amount for organisation ${organisation.organisationId} at index $index")
+                }
+            }
+            index--
+
+        }
+
+        if (funding != rcsFunding.rowTotal) {
+            rcsFunding.rowTotal = funding
+            organisation.custom.details.funding.overallTotal = rcsFunding.rowTotal
+            log.info("Updating the funding information for organisation ${organisation.organisationId} to $funding")
+            update(organisation.organisationId, [custom:organisation.custom])
+        }
+
+    }
+
 
     private void regenerateOrganisationReports(Map organisation, List<String> reportCategories = null) {
 
@@ -334,4 +419,39 @@ class OrganisationService {
         scoreIds.collectEntries{ String scoreId ->[(scoreId):result.results?.find{it.scoreId == scoreId}?.result?.result ?: 0]}
     }
 
+    List scoresForOrganisation(Map organisation, List<String> scoreIds, boolean approvedOnly = true) {
+
+        String url =  grailsApplication.config.getProperty('ecodata.baseUrl')+"organisation/organisationMetrics/"+organisation.organisationId
+        Map params = [approvedOnly: approvedOnly, scoreIds: scoreIds]
+
+        Map result = webService.doPost(url, params)
+
+        List scores = result?.resp?.collect { Map score ->
+            Map target = organisation?.custom?.details?.services?.targets?.find { it.scoreId == score.scoreId }
+            score.target = target?.target
+            score
+        }
+
+        scores
+
+    }
+
+
+    /**
+     * Filter services to those supported by organisation.
+     */
+    def findApplicableServices(Map organisation, List allServices) {
+
+        List supportedServices = organisation.config?.organisationReports?.collect{it.activityType}?.findAll{it}
+        List result = []
+        if (supportedServices) {
+            result = allServices.findAll{ supportedServices.intersect(it.outputs.formName) }
+            result.each {
+                List scores = it.scores?.findAll{Map score -> score.isOutputTarget}
+                it.scores = scores
+            }
+        }
+
+        result
+    }
 }

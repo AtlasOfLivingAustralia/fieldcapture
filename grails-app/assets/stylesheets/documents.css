@@ -1,0 +1,21 @@
+.docs-table th.icon, .docs-table td.icon {
+    width: 35px !important; /* data tables overrides this without the !important */
+}
+
+.docs-table th.name, .docs-table td.name {
+    width: 40%;
+}
+
+.docs-table th.info, .docs-table th.info {
+    width: 40%;
+    min-width: 60px;
+}
+
+.docs-table th.last-updated, .docs-table td.last-updated {
+    width: 10%;
+}
+
+.docs-table th.admin-actions, .docs-table td.admin-actions {
+    width: 6em !important; /* data tables overrides this without the !important */
+}
+

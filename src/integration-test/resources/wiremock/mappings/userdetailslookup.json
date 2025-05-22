@@ -1,4 +1,5 @@
 {
+  "priority": 4,
   "request": {
     "urlPath": "/userdetails/userDetails/getUserDetails",
     "method": "ANY"

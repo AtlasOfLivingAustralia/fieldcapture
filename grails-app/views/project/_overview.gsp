@@ -88,7 +88,7 @@
 
 
                     <div class="row mb-2" data-bind="if:(funding() && funding() >0)">
-                        <div class="col-sm-4 header-label">Project Funding</div>
+                        <div class="col-sm-4 header-label">Project Funding (GST Exclusive)</div>
 
                         <div class="col-sm-8 value projectFunding"><span data-bind="text:funding.formattedCurrency"></span></div>
                     </div>
@@ -196,6 +196,7 @@
         </div>
     </div>
 
+    <g:render template="geographicInfo" model="${[project:project]}"/>
 </div>
 <hr/>
 

@@ -486,7 +486,7 @@ class ReportController {
 
     def statisticsReport() {
         int exclude = session.lastGroup?:-1
-        def statistics = statisticsFactory.randomGroup(exclude)
+        def statistics = statisticsFactory.randomGroup(exclude, true)
         session.lastGroup = statistics.group
         render view:'_statistics', layout:'ajax', model:[statistics:statistics.statistics]
     }

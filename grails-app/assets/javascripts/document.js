@@ -448,6 +448,10 @@ function showDocumentAttachInModal(uploadUrl, documentViewModel, modalSelector, 
             },
 
         }, scroll:false, autoPositionUpdate:true, promptPosition:'inline', customFunctions:{validateReportAssociation:validateReportAssociation}});
+        // Select2 doesn't like being initialised while invisible and leaves some components
+        // at 0 size.  This is a workaround.
+        $modal.find('.select2-container input[type="search"]').width('100%');
+
     });
 
     return result;
@@ -490,9 +494,17 @@ var DocModel = function (doc) {
         return imageLocation + "/filetypes/" + iconnameFromFilename(self.filename);
     };
 };
-function DocListViewModel(documents) {
+function DocListViewModel(documents, owner, options) {
     var self = this;
-    this.documents = ko.observableArray($.map(documents, function(doc) { return new DocModel(doc)} ));
+
+    _.extend(self, new Documents());
+    self.loadDocuments = function(documents) {
+        _.each(documents || [], function(document) {
+            self.documents.push(new DocumentViewModel(document, options.owner, options));
+        });
+    };
+    self.loadDocuments(documents);
+
 }
 function iconnameFromFilename(filename) {
     if (filename === undefined) { return "blank.png"; }
@@ -562,25 +574,28 @@ var HelpLinksViewModel = function(helpLinks, options) {
     autoSaveModel(self, options.documentBulkUpdateUrl, {blockUIOnSave:true, healthCheckUrl:options.healthCheckUrl});
 };
 
-function initialiseDocumentTable(containerSelector) {
+function initialiseDocumentTable(containerSelector, excludeReportColumn) {
     var tableSelector = containerSelector + ' .docs-table';
-    var table = $(tableSelector).DataTable(
-        {
-            "columnDefs": [
-                {"type": "alt-string", "targets": 0},
-                {"width":"6em", orderData:[4], "targets": [3]},
-                {"width":"3em", "targets": [2]},
-                {"visible":false, "targets": [4]},
-                {"visible":false, "targets": [5]},
+    var options =  {
+        "columnDefs": [
+            {"type": "alt-string", "targets": 0},
+            {"width":"6em", orderData:[4], "targets": [3]},
+            {"width":"3em", "targets": [2]},
+            {"visible":false, "targets": [4]},
+            {"visible":false, "targets": [5]},
 
-            ],
-            "order":[[2, 'desc'], [3, 'desc']],
-            "dom":
+        ],
+        "order":[[2, 'desc'], [3, 'desc']],
+        "dom":
             "<'row'<'col-sm-5'l><'col-sm-7'f>r>" +
             "<'row'<'col-sm-12't>>" +
             "<'row'<'col-sm-6'i><'col-sm-6'p>>"
 
-        });
+    };
+    if (excludeReportColumn) {
+        options.columnDefs.push({visible:false, "targets": [2]});
+    }
+    var table = $(tableSelector).DataTable(options);
 
     $(tableSelector +" tr").on('click', function(e) {
         $(tableSelector + " tr.info").removeClass('info');
@@ -639,7 +654,7 @@ var EditableDocumentsViewModel = function(options) {
         console.log("Warning - missing setting: documentUpdateUrl");
     }
     if (!settings.documentDeleteUrl) {
-        console.log("Warning - missing setting: documentUpdateUrl");
+        console.log("Warning - missing setting: documentDeleteUrl");
     }
     if (!settings.owner) {
         console.log("Warning - missing setting: owner")
@@ -647,7 +662,9 @@ var EditableDocumentsViewModel = function(options) {
 
     var documentViewModelSettings  = {
         reports: settings.reports,
-        stages: settings.stages
+        stages: settings.stages,
+        labels:settings.labels,
+        labelsLabel: settings.labelsLabel
     };
 
     _.extend(self, new Documents(settings));

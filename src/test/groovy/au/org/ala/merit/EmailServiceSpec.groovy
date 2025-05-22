@@ -54,7 +54,6 @@ class EmailServiceSpec extends Specification implements AutowiredTest{
         List usersAndRoles = [admin1, grantManager1, editor]
         EmailTemplate emailTemplate = EmailTemplate.DEFAULT_PLAN_SUBMITTED_EMAIL_TEMPLATE
         String body = "body"
-        body.metaClass.markdownToHtml = { "Body" }
         EmailParams email
 
         when:
@@ -69,7 +68,7 @@ class EmailServiceSpec extends Specification implements AutowiredTest{
         email.params.from == "merit@ala.org.au"
         email.params.replyTo == "merituser1@test.com"
         email.params.subject == "Subject"
-        email.params.html == "Body"
+        email.params.html == "<p>body</p>\n"
     }
 
 
@@ -88,7 +87,6 @@ class EmailServiceSpec extends Specification implements AutowiredTest{
         List usersAndRoles = [admin1, admin2, editor]
         EmailTemplate emailTemplate = EmailTemplate.DEFAULT_PLAN_APPROVED_EMAIL_TEMPLATE
         String body = "body"
-        body.metaClass.markdownToHtml = { "Body" }
         EmailParams email
 
         when:
@@ -102,7 +100,7 @@ class EmailServiceSpec extends Specification implements AutowiredTest{
         email.params.from == "merit@ala.org.au"
         email.params.replyTo == "merituser1@test.com"
         email.params.subject == "Subject"
-        email.params.html == "Body"
+        email.params.html == "<p>body</p>\n"
 
     }
 

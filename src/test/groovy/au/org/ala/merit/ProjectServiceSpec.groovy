@@ -1,7 +1,9 @@
 package au.org.ala.merit
 
+import au.org.ala.ecodata.forms.TermsService
 import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ProgramConfig
+import au.org.ala.merit.hub.HubSettings
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import grails.testing.services.ServiceUnitTest
@@ -12,9 +14,6 @@ import org.grails.web.converters.marshaller.json.MapMarshaller
 import org.joda.time.Period
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import java.util.concurrent.locks.Lock
-
 /**
  * Tests the ProjectService class.
  */
@@ -33,6 +32,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
     ProgramService programService = Mock(ProgramService)
     CacheService cacheService = Mock(CacheService)
     LockService lockService = Mock(LockService)
+    TermsService termsService = Mock(TermsService)
 
     Map reportConfig = [
             weekDaysToCompleteReport:projectConfig.weekDaysToCompleteReport,
@@ -62,6 +62,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         service.programService = programService
         service.lockService = lockService
         service.speciesService = new SpeciesService()
+        service.termsService = termsService
         userService.userIsAlaOrFcAdmin() >> false
         metadataService.getProgramConfiguration(_,_) >> [reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43]
         projectConfigurationService.getProjectConfiguration(_) >> projectConfig
@@ -1507,14 +1508,130 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
     def "Get species records for an activity id and construct species object" (){
         setup:
         String activityId = 'a1'
-        def record = [scientificName: "sc1", vernacularName: "vn1", guid: "g1", outputSpeciesId: "o1"]
+        def record = [scientificName: "sc1", vernacularName: "vn1", guid: "g1", outputSpeciesId: "o1", individualCount: 1, seedMass: 5]
         when:
         def result = service.getSpeciesRecordsFromActivity(activityId)
 
         then:
-        1 * webService.getJson( {it.contains("record/listForActivity/"+activityId)}) >> [records:[record], statusCode: HttpStatus.SC_OK]
-        result == [record + [species: [scientificName: "sc1", commonName: "vn1", outputSpeciesId: "o1", guid: "g1", name: "sc1 (vn1)"]]]
+        1 * webService.getJson( {it.contains("record/listForActivity/"+activityId)}) >> [records:[record, record], statusCode: HttpStatus.SC_OK]
+        result == [[scientificName: "sc1", vernacularName: "vn1", guid: "g1", outputSpeciesId: "o1", individualCount: 2, seedMass: 10] + [species: [scientificName: "sc1", commonName: "vn1", outputSpeciesId: "o1", guid: "g1", name: "sc1 (vn1)"]]]
 
+        when:
+        result = service.getSpeciesRecordsFromActivity(activityId, null, null)
+
+        then:
+        1 * webService.getJson( {it.contains("record/listForActivity/"+activityId)}) >> [records:[record, record], statusCode: HttpStatus.SC_OK]
+        result.size() == 2
+        result[0] == record + [species: [scientificName: "sc1", commonName: "vn1", outputSpeciesId: "o1", guid: "g1", name: "sc1 (vn1)"]]
+
+    }
+
+    def "getProjectTags should retrieve terms for the correct hub and category"() {
+        given:
+        String hubId = "merit"
+        List expectedTags = [[termId: "1", name: "Tag1"], [termId: "2", name: "Tag2"]]
+        HubSettings hubSettings = new HubSettings(hubId: hubId, urlPath: "merit")
+        SettingService.setHubConfig(hubSettings)
+
+        when:
+        List result = service.getProjectTags()
+
+        then:
+        1 * termsService.getTerms(hubId, ProjectService.PROJECT_TAGS_CATEGORY) >> expectedTags
+        result == expectedTags
+    }
+
+    def "addProjectTag should set category and hubId and call termsService.addTerm"() {
+        given:
+        Map tag = [name: "New Tag"]
+        String hubId = "testHubId"
+        HubSettings hubSettings = new HubSettings(hubId: hubId, urlPath: "merit")
+        SettingService.setHubConfig(hubSettings)
+
+        when:
+        Map result = service.addProjectTag(tag)
+
+        then:
+        tag.category == ProjectService.PROJECT_TAGS_CATEGORY
+        tag.hubId == hubId
+        1 * termsService.addTerm(hubId, tag)
+    }
+
+    def "updateProjectTag should update the tag and associated projects"() {
+        setup:
+        Map tag = [termId: "1", term: "UpdatedTag"]
+        Map existingTag = [termId: "1", term: "OldTag"]
+        List existingTags = [existingTag]
+        Map project1 = [projectId: "p1", tags: ["OldTag"]]
+        Map project2 = [projectId: "p2", tags: ["OldTag", "AnotherTag"]]
+        Map projectsUsingTag = [resp: [projects: [project1, project2]]]
+        String hubId = "testHubId"
+        HubSettings hubSettings = new HubSettings(hubId: hubId, urlPath: "merit")
+        SettingService.setHubConfig(hubSettings)
+
+        and:
+
+        when:
+        Map result = service.updateProjectTag(tag)
+
+        then:
+        1 * termsService.getTerms(hubId, ProjectService.PROJECT_TAGS_CATEGORY) >> existingTags
+        1 * webService.doPost({it.endsWith('project/search')}, [tags: existingTag.term, view: 'flat']) >> projectsUsingTag
+        1 * webService.getJson({it.contains('project/p1')}) >> project1
+        1 * webService.getJson({it.contains('project/p2')}) >> project2
+        1 * webService.doPost({it.endsWith("project/p1")}, [tags: ["UpdatedTag"]]) >> [status: HttpStatus.SC_OK]
+        1 * webService.doPost({it.endsWith("project/p2")}, [tags: ["AnotherTag", "UpdatedTag"]]) >> [status: HttpStatus.SC_OK]
+        1 * termsService.updateTerm(hubId, tag) >> [success: true]
+        result.success == true
+        result.errors.isEmpty()
+    }
+
+    def "updateProjectTag should handle errors during project updates"() {
+        given:
+        Map tag = [termId: "1", term: "UpdatedTag"]
+        Map existingTag = [termId: "1", term: "OldTag"]
+        List existingTags = [existingTag]
+        Map project1 = [projectId: "p1", tags: ["OldTag"]]
+        Map projectsUsingTag = [resp: [projects: [project1]]]
+        String hubId = "testHubId"
+        HubSettings hubSettings = new HubSettings(hubId: hubId, urlPath: "merit")
+        SettingService.setHubConfig(hubSettings)
+
+        when:
+        Map result = service.updateProjectTag(tag)
+
+        then:
+        1 * termsService.getTerms(hubId, ProjectService.PROJECT_TAGS_CATEGORY) >> existingTags
+        1 * webService.doPost({it.endsWith('project/search')}, [tags: existingTag.term, view: 'flat']) >> projectsUsingTag
+        1 * webService.getJson({it.contains('project/p1')}) >> project1
+
+        1 * webService.doPost({it.endsWith("project/p1")}, [tags: ["UpdatedTag"]]) >> [statusCode: HttpStatus.SC_INTERNAL_SERVER_ERROR, error:"An error occurred"]
+        1 * termsService.updateTerm(hubId, tag) >> [success: true]
+        result.success == false
+        result.errors.size() == 1
+    }
+
+    def "deleteProjectTag should delete the tag update projects using the tag"() {
+        setup:
+        Map existingTag = [termId: "1", term: "OldTag"]
+        Map project1 = [projectId: "p1", tags: ["OldTag"]]
+        Map projectsUsingTag = [resp: [projects: [project1]]]
+        String hubId = "testHubId"
+        HubSettings hubSettings = new HubSettings(hubId: hubId, urlPath: "merit")
+        SettingService.setHubConfig(hubSettings)
+
+        and:
+
+        when:
+        Map result = service.deleteProjectTag(existingTag)
+
+        then:
+        1 * webService.doPost({it.endsWith('project/search')}, [tags: existingTag.term, view: 'flat']) >> projectsUsingTag
+        1 * webService.getJson({it.contains('project/p1')}) >> project1
+        1 * webService.doPost({it.endsWith("project/p1")}, [tags: []]) >> [status: HttpStatus.SC_OK]
+        1 * termsService.deleteTerm(existingTag.termId) >> [success: true]
+        result.success == true
+        result.errors.isEmpty()
     }
 
     private Map setupActivityModelForFiltering(List services) {

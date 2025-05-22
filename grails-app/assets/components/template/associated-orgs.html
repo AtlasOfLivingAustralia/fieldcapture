@@ -11,7 +11,7 @@
                 <div>
                 <!-- ko if: $data.organisationId() -->
                     <a href="" data-bind="attr:{href:$parent.organisationViewUrl + '/' + $data.organisationId()}">
-                        <span data-bind="text:name"></span>
+                        <span data-bind="text:label"></span>
                     </a>
                 <!-- /ko -->
 
@@ -52,13 +52,13 @@
                     <label for="searchOrganisation">Search for an existing organisation</label>
                     <div class="input-group input-append">
                         <input type="text" id="searchOrganisation" name="organisation-search" autocomplete="off" class="form-control form-control-sm" placeholder="Search organisations..."
-                               data-bind="enable:!organisationId(), elasticSearchAutocomplete:{url:$parent.organisationSearchUrl, value:'name', label:'name', result:$parent.selectOrganisation}"/>
+                               data-bind="enable:!organisationId(), elasticSearchAutocomplete:{url:$parent.organisationSearchUrl, value:'name', label:$parent.orgSearchLabel, result:$parent.selectOrganisation}"/>
                         <span class="input-group-text"><i class="fa fa-remove" data-bind="click:$parent.clearSelectedOrganisation"></i></span>
                     </div>
                 </div>
                 <!-- ko if:$parent.displayName -->
                 <div class="form-group">
-                    <label for="name-to-use" class="required">Organisation name as it appears on the project page (e.g. name used in contract)</label>
+                    <label for="name-to-use" class="required">Organisation name as it appears on the project page (i.e. The contracted recipient name)</label>
 
                     <select class="form-control" id="name-to-use"  data-bind="enable:organisationId(), value:name, options:$parent.allowedNames"
                             data-validation-engine="validate[required]" data-prompt-position="topLeft"></select>

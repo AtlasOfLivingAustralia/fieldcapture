@@ -125,15 +125,15 @@
 
         $("#createOrgs").change(function() {
             if ($("#createOrgs").val()) {
-                $("#btnCreateOrgs").removeAttr("disabled");
+                $("#btnUpdateProjectOrgs").removeAttr("disabled");
             }
             else {
-                $("#btnCreateOrgs").attr("disabled", "disabled");
+                $("#btnUpdateProjectOrgs").attr("disabled", "disabled");
             }
 
         }).trigger('change');
 
-        $('#btnCreateOrgs').click(function(e) {
+        $('#btnUpdateProjectOrgs').click(function(e) {
             e.preventDefault();
             $('form.createOrgs').submit();
         });
@@ -262,11 +262,11 @@
         </td>
     </tr>
     <tr>
-        <td><button disabled id="btnCreateOrgs" class="btn btn-sm btn-info" title="Bulk create organisations">Bulk create organisations</button>
+        <td><button disabled id="btnUpdateProjectOrgs" class="btn btn-sm btn-info" title="Bulk create organisations">Bulk create organisations</button>
         </td>
         <td>
             Bulk creates organisations and updates projects.
-            <g:uploadForm class="createOrgs" action="createMissingOrganisations">
+            <g:uploadForm class="createOrgs" action="organisationModifications">
                 <div><input id="createOrgs" type="file" name="orgData"/></div>
             </g:uploadForm>
 

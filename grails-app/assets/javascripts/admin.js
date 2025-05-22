@@ -285,3 +285,188 @@ var ProjectImportViewModel = function (config) {
         setTimeout(self.showProgress, 2000);
     }
 };
+
+EditHelpDocumentsViewModel = function(hubId, categories, documents) {
+    let self = this;
+    var options = {
+        roles: ['helpDocument'],
+        owner: {
+            hubId:hubId
+        },
+        documentDefaults: {
+            role: 'helpDocument',
+            public: true
+        },
+        labelsLabel: 'Categories',
+        labels: categories,
+        modalSelector: '#attachDocument',
+        documentUpdateUrl: fcConfig.documentUpdateUrl,
+        documentDeleteUrl: fcConfig.documentDeleteUrl,
+        imageLocation: fcConfig.imageLocation
+    };
+    self.selectedCategory = ko.observable();
+    self.documentCategories = ko.observableArray(categories);
+    self.newCategoryName = ko.observable();
+
+    self.newCategory = function() {
+        let category = self.newCategoryName();
+        self.documentCategories.push(category);
+        self.selectedCategory(category);
+        self.newCategoryName(null);
+    }
+    self.selectedCategory.subscribe(function (category) {
+        options.documentDefaults.labels = [category];
+    });
+
+    _.extend(self, new EditableDocumentsViewModel(options));
+
+    documentRoles = [{id:'helpDocument', name:'Help Document', isPublicRole:true}];
+    self.loadDocuments(documents);
+
+};
+
+ManageTagsViewModel = function(tags, options) {
+    tags = tags || [];
+
+    function Term(term) {
+        var self = this;
+
+        self.editable = ko.observable(false);
+        self.term = ko.observable(term.term);
+        self.description = ko.observable(term.description);
+        self.category = ko.observable(term.category);
+        self.originalTerm = term;
+
+        self.edit = function() {
+            self.editable(true);
+        }
+
+        self.cancelEdit = function() {
+            self.editable(false);
+            self.term(term.term);
+            self.description(term.description);
+        }
+
+        self.saveable = ko.computed(function() {
+            return self.editable() && (self.term() != term.term || self.description() != term.description);
+        });
+
+        self.toJSON = function() {
+            return {
+                termId: term.termId,
+                term: self.term(),
+                description: self.description(),
+                category: self.category()
+            };
+        }
+    }
+
+    let self = this;
+    self.tags = _.map(tags, function(tag) {
+        return new Term(tag);
+    });
+
+    self.filter = ko.observable();
+    self.matchedTags = ko.observable(tags.length);
+    self.table = null;
+
+    self.canAddNewTag = ko.pureComputed(function() {
+        return self.matchedTags() == 0;
+    });
+
+    self.newTag = new Term({});
+
+    // We are doing page reloads as an alternative to manually syncing this model with the
+    // data tables API.
+    self.deleteTag = function(tag) {
+        if (confirm("Are you sure you want to delete this tag?")) {
+            blockUIWithMessage("Deleting tag...");
+
+            $.post({
+                url: fcConfig.deleteTagUrl,
+                data: JSON.stringify(tag),
+                contentType: 'application/json'
+            }).done(function(response) {
+                    if (response.error) {
+                        $.unblockUI();
+                        bootbox.alert('Error deleting tag: ' + response.error);
+                    } else {
+                        blockUIWithMessage("Reloading page...");
+                        window.location.reload();
+                    }
+            }).fail(function() {
+                $.unblockUI();
+                bootbox.alert("An error was encountered deleting the tag. Please try again.");
+            });
+        }
+    };
+    self.updateTag = function(tag) {
+        blockUIWithMessage("Updating tag...");
+
+        $.post({
+            url:fcConfig.updateTagUrl,
+            data: JSON.stringify(tag.toJSON()),
+            contentType: 'application/json'
+        }).done(function(response) {
+            if (!response.error) {
+                tag.editable(false);
+                $.unblockUI();
+                window.location.reload();
+            } else {
+                $.unblockUI();
+                alert('Error updating tag: ' + response.error);
+            }
+        }).fail(
+            function() {
+                $.unblockUI();
+                alert("An error was encountered updating the tag. Please try again.");
+            }
+        );
+    };
+
+    self.addTag = function() {
+        let tag = self.newTag.toJSON();
+
+        if (tag.term) {
+            blockUIWithMessage("Adding tag...");
+            $.post({
+                url: fcConfig.addTagUrl,
+                data: JSON.stringify(tag),
+                contentType: 'application/json'
+            }).done(function(response) {
+                if (!response.error) {
+                    blockUIWithMessage("Reloading page...");
+                    window.location.reload();
+                } else {
+                    $.unblockUI();
+                    alert('Error adding tag: ' + response.error);
+                }
+            }).fail(function() {
+                $.unblockUI();
+                alert("An error was encountered adding the tag. Please try again.");
+            });
+        }
+    }
+
+    self.initialiseDataTable = function(tableSelector) {
+        var table = $(tableSelector).DataTable({
+            columnDefs: [
+                {
+                    targets: 0,
+                    orderable: true
+                },
+                {
+                    targets: 1,
+                    orderable:false
+                }
+            ]
+        });
+        self.table = table;
+        table.on('search.dt', function(e) {
+
+            let pageInfo = table.page.info();
+            self.matchedTags(pageInfo.recordsDisplay);
+            self.newTag.term(table.search());
+        });
+    }
+};

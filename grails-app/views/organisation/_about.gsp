@@ -35,18 +35,12 @@
             </div>
 
             <div class="col-6">
-                <g:if test="${organisation.businessNames}">
-                    <g:each in="${organisation.businessNames}" var="name">
-                        <p>Business name: ${name}</p>
-                    </g:each>
-                </g:if>
-
                 <g:if test="${organisation.orgType}">
                     <p>Organisation type: ${organisation.orgType}</p>
                 </g:if>
                 <g:if test="${organisation.contractNames}">
                     <g:each in="${organisation.contractNames}" var="name">
-                        <p>Contract name: ${name}</p>
+                        <p>Contracted recipient name: ${name}</p>
                     </g:each>
                 </g:if>
 

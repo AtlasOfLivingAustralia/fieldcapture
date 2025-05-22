@@ -1,6 +1,7 @@
 package au.org.ala.merit.command
 
 import au.org.ala.merit.ReportService
+import au.org.ala.merit.reports.ReportLifecycleListener
 import grails.artefact.Controller
 import grails.core.GrailsApplication
 import grails.validation.Validateable
@@ -40,6 +41,11 @@ abstract class EditOrViewReportCommand implements Validateable {
             model.saveReportUrl = linkGenerator.link(controller:entityType, action:'saveReport', id:id)
             model.documentOwner = [activityId:model.activity?.activityId, reportId:reportId]
             model.documentOwner[getEntityIdField()] = id
+
+            ReportLifecycleListener listener = reportService.reportLifeCycleListener(model.report)
+            if (listener) {
+                model.context.putAll(listener.getContextData(entity, model.report, model.activity))
+            }
         }
     }
 

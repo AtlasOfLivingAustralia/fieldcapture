@@ -2,9 +2,9 @@ package au.org.ala.merit
 
 import au.org.ala.cas.util.AuthenticationCookieUtils
 import au.org.ala.merit.config.ProgramConfig
+import au.org.ala.merit.util.MarkdownUtils
 import au.org.ala.web.AuthService
 import bootstrap.Attribute
-import com.naleid.grails.MarkdownService
 import grails.converters.JSON
 import grails.web.servlet.mvc.GrailsParameterMap
 import groovy.util.logging.Slf4j
@@ -12,10 +12,6 @@ import groovy.xml.MarkupBuilder
 import org.apache.commons.lang.WordUtils
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
-import org.owasp.html.HtmlChangeListener
-import org.owasp.html.HtmlPolicyBuilder
-import org.owasp.html.PolicyFactory
-import org.owasp.html.Sanitizers
 
 @Slf4j
 class FCTagLib {
@@ -25,12 +21,7 @@ class FCTagLib {
     def commonService
     def userService
     def settingService
-    MarkdownService markdownService
     AuthService authService
-    MetadataService metadataService
-
-    /** Allow simple formatting, links and text within p and divs by default */
-    def policy = (Sanitizers.FORMATTING & Sanitizers.LINKS & Sanitizers.BLOCKS) & new HtmlPolicyBuilder().allowTextIn("p", "div").toFactory()
 
     def textField = { attrs ->
         def outerClass = attrs.remove 'outerClass'
@@ -140,7 +131,7 @@ class FCTagLib {
                 id:"${attrs.id ?: attrs.name}",
                 type:'text',
                 size:'16',
-                class: attrs.size ?: 'input-xlarge'
+                class: attrs.size() ?: 'input-xlarge'
             ]
 
             def ignoreList = ['name', 'id']
@@ -181,7 +172,7 @@ class FCTagLib {
             def inputAttrs = [
                 name:"${attrs.name}",
                 id:"${attrs.id ?: attrs.name}",
-                class: (attrs.size ?: 'span6') + ' printed-form-field'
+                class: (attrs.size() ?: 'span6') + ' printed-form-field'
             ]
 
             def ignoreList = ['name', 'id']
@@ -1010,6 +1001,29 @@ class FCTagLib {
         out << '<span class="diff"></span>'
     }
 
+    /**
+     * Acts as a customised loop that iterates through the combined targets in original and changed output targets
+     * and renders the body with a scoreId and index (i) variable.
+     * It's required as presenting a sorted version of output targets can't be done with the raw data as it
+     * only references a score id and we want to sort by the associated service then output target
+     */
+    def sortedServiceTargetMeasures = { Map attrs, body ->
+        List original = attrs.originalOutputTargets ?: []
+        List changed = attrs.changedOutputTargets ?: []
+        ProgramConfig config = attrs.programConfig
+
+        List scoreIds = (original.collect{it.scoreId} + changed.collect{it.scoreId}).unique()
+        List scoreLabels = scoreIds.collect{
+            [label:scoreLabel(it, config, true), scoreId:it]}
+
+        scoreLabels.sort{it.label}
+
+        scoreLabels.eachWithIndex { Map it, int i ->
+            out << body([scoreId: it.scoreId, i:i])
+        }
+    }
+
+
     def renderComparisonScoreLabel = { attrs ->
 
         List original = attrs.original
@@ -1170,23 +1184,11 @@ class FCTagLib {
     def markdownToHtml = { Map attrs, body ->
         String text = attrs.text ?: body()
 
-        out << markdownToHtmlAndSanitise(text)
+        out << MarkdownUtils.markdownToHtmlAndSanitise(text)
     }
 
     private String markdownToHtmlAndSanitise(String text) {
-        String html = markdownService.markdown(text)
-        internalSanitise(policy, html)
-    }
-
-    private static String internalSanitise(PolicyFactory policyFactory, String input, String imageId = '', String metadataName = '') {
-        policyFactory.sanitize(input, new HtmlChangeListener<Object>() {
-            void discardedTag(Object context, String elementName) {
-                log.warn("Dropping element $elementName in $imageId.$metadataName")
-            }
-            void discardedAttributes(Object context, String tagName, String... attributeNames) {
-                log.warn("Dropping attributes $attributeNames from $tagName in $imageId.$metadataName")
-            }
-        }, null)
+       MarkdownUtils.markdownToHtmlAndSanitise(text)
     }
 
     private static String getScoreLabels(def scoreIds, ProgramConfig config, Boolean includeService) {

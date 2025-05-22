@@ -21,6 +21,8 @@ plugins {
     id 'jacoco'
     id 'com.williamhill.wiremock' version '0.4.1'
 }
+sourceCompatibility = '11'
+targetCompatibility = '17'
 
 version "$meritVersion"
 group "au.org.ala"
@@ -136,7 +138,6 @@ dependencies {
         exclude module: "xercesImpl"
     }
     implementation 'org.grails.plugins:grails-cookie:2.0.3'
-    implementation 'org.grails.plugins:grails-markdown:3.0.0'
 
     implementation 'org.apache.poi:ooxml-schemas:1.4'
     implementation 'org.apache.poi:poi:4.1.2'
@@ -150,7 +151,19 @@ dependencies {
     implementation "commons-io:commons-io:2.6"
     implementation "org.seleniumhq.selenium:selenium-chrome-driver:3.14.0"
     implementation "com.bertramlabs.plugins:asset-pipeline-grails:$assetPipelineVersion"
-    implementation group: 'com.googlecode.owasp-java-html-sanitizer', name: 'owasp-java-html-sanitizer', version: '20220608.1'
+    implementation "org.commonmark:commonmark:0.24.0"
+    implementation "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20240325.1"
+
+    // Used to get a token that can be used to access the BDR API hosted in Azure
+    implementation platform('com.azure:azure-sdk-bom:1.2.28')
+
+    implementation 'com.azure:azure-identity'
+    implementation 'com.azure:azure-storage-blob'
+
+    // Used to access the Cognito Identity Pool as tokens from the user pool
+    // don't have an audience claim which is required by Azure
+    implementation(platform("software.amazon.awssdk:bom:2.27.21"))
+    implementation 'software.amazon.awssdk:cognitoidentity'
 
     compileOnly "io.micronaut:micronaut-inject-groovy"
     console "org.grails:grails-console"
@@ -188,7 +201,7 @@ dependencies {
     providedCompile "io.methvin:directory-watcher:0.4.0"
 
     if (!Boolean.valueOf(inplace)) {
-        implementation "org.grails.plugins:ecodata-client-plugin:7.0"
+        implementation "org.grails.plugins:ecodata-client-plugin:8.1"
     }
 }
 

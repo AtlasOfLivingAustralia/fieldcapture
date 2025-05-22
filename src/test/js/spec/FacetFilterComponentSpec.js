@@ -20,6 +20,7 @@ describe("Facet filter component unit tests", function () {
     var mockElement = null;
     var facetFilterVM = null;
     beforeAll(function() {
+        jasmine.clock().install();
         vm = {
             facetsList : ["status", "organisationFacet", "facet.test"],
             results: {"facets":{"status":{"terms":[{"term":"Completed","count":2}]},"organisationFacet":{"terms":[{"term":"Rangelands","count":2},{"term":"Rangelands NRM Co-ordinating Group (Inc.) ","count":2}]}, "facet.test":{"terms":[{"term":"Term 1","count":1}, {"term":"Term 2","count":4}]}}},
@@ -34,8 +35,20 @@ describe("Facet filter component unit tests", function () {
         var facetFilter = document.createElement('facet-filter');
         facetFilter.setAttribute('params',"facetsList : facetsList, results:  results, fqLink: fqLink, baseUrl: baseUrl, projectExplorerUrl: projectExplorerUrl, max: max" );
         mockElement.appendChild(facetFilter);
+        $('body').append(mockElement);
         ko.applyBindings(vm, mockElement);
+        jasmine.clock().tick(100);
     });
+
+    afterAll(function() {
+        jasmine.clock().uninstall();
+        document.body.removeChild(mockElement);
+    });
+
+    beforeEach(function() {
+        facetFilterVM = ko.dataFor($(mockElement).find('facet-filter div')[0]);
+        facetFilterVM.filter(null);
+    })
 
 
     it("should map data correctly to component view model", function() {
@@ -52,6 +65,21 @@ describe("Facet filter component unit tests", function () {
     it("should render component template correctly", function () {
         expect($(mockElement).find('.fa.fa-plus').length).toEqual(0);
         expect($(mockElement).find('.moreFacets').length).toEqual(2);
-        expect($(mockElement).find('input').length).toEqual(7);
-    })
+        console.log($(mockElement).find('input[type="checkbox"]'));
+        expect($(mockElement).find('input[type="checkbox"]').length).toEqual(7);
+    });
+
+    it("allows searching for facet terms", function () {
+        facetFilterVM = ko.dataFor($(mockElement).find('facet-filter div')[0]);
+        var orgFacet = $(mockElement).find('#organisationFacetModal');
+        var orgFilter = orgFacet.find('input[name="filter"]');
+        orgFilter[0].value = "Rangelands";
+        $(orgFilter[0]).trigger('change');
+        expect(facetFilterVM.filter()).toEqual("Rangelands");
+        expect(orgFacet.find('ul.facetValues li')).toHaveLength(2);
+        facetFilterVM.filter("NRM");
+        $(orgFilter[0]).trigger('change');
+        expect(orgFacet.find('ul.facetValues li')).toHaveLength(1);
+
+    });
 });

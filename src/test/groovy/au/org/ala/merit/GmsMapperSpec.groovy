@@ -30,7 +30,7 @@ class GmsMapperSpec extends Specification{
         activitiesModel = JSON.parse(new InputStreamReader(getClass().getResourceAsStream('/activities-model.json')))
         Map programModel = [programs:[[name:'Green Army']]]
         List organisations = [[ organisationId: "123", name:'Test org 1', abn:'12345678901'], [organisationId:'2', name:"Org 2", abn:""]]
-        gmsMapper = new GmsMapper(activitiesModel, programModel, organisations, abnLookupService, scores, programs)
+        gmsMapper = new GmsMapper(activitiesModel, programModel, organisations, abnLookupService, scores, programs, [:], false, false)
     }
 
     /**
@@ -54,7 +54,7 @@ class GmsMapperSpec extends Specification{
         'GreenArmy-1234567-1' == project.externalId
         'Test Project Name' == project.name
         'Test Project Description' == project.description
-        [[organisationId:"123", name:"Test org 1", organisationName:"Test org 1", description:"Recipient"]] == project.associatedOrgs
+        [[organisationId:"123", name:"Test org 1", description:"Recipient"]] == project.associatedOrgs
         'gar1' == project.programId
         [[idType:'INTERNAL_ORDER_NUMBER', externalId:'111111']] == project.externalIds
 
@@ -249,8 +249,8 @@ class GmsMapperSpec extends Specification{
         1 * abnLookupService.lookupOrganisationDetailsByABN(abn) >> abnValue
 
         and:
-        result.project.associatedOrgs == [[organisationId:null, name:"Test org 12345678900", organisationName:"Test org 12345678900", description:"Recipient"]]
-        result.messages[0] == "An organisation will be created with ABN: 12345678900 and name: Test org 12345678900"
+        result.project.associatedOrgs == [[organisationId:null, name:"Test Org 12345678900", description:"Recipient"]]
+        result.messages[0] == "An organisation will be created with ABN: 12345678900 and name: Test Org 12345678900"
     }
 
     def "The organisation relationship can be derived from the program"(){
@@ -266,8 +266,8 @@ class GmsMapperSpec extends Specification{
         1 * abnLookupService.lookupOrganisationDetailsByABN(abn) >> abnValue
 
         and:
-        result.project.associatedOrgs == [[organisationId:null, name:"Test org 12345678900", organisationName:"Test org 12345678900", description:"Recipient"]]
-        result.messages[0] == "An organisation will be created with ABN: 12345678900 and name: Test org 12345678900"
+        result.project.associatedOrgs == [[organisationId:null, name:"Test Org 12345678900", description:"Recipient"]]
+        result.messages[0] == "An organisation will be created with ABN: 12345678900 and name: Test Org 12345678900"
     }
 
     def "If an ABN is supplied in the project load, the looked up entity name cannot match another MERIT organisation"(){
@@ -374,8 +374,9 @@ class GmsMapperSpec extends Specification{
 
         then: "We are just checking every value in the spreadsheet is mappable and has a description"
         lines.size() == 4
+        Map mappings = gmsMapper.projectMapping + gmsMapper.geographicInfoMapping
         lines[3].every {String value ->
-            gmsMapper.projectMapping[value].description != null
+            value == GmsMapper.FINANCIAL_YEAR_FUNDING_DESCRIPTION || value.startsWith(GmsMapper.FINANCIAL_YEAR_FUNDING_PREFIX) || mappings[value].description != null
         }
     }
 
@@ -403,6 +404,21 @@ class GmsMapperSpec extends Specification{
         Map idData = [ORDER_NO:'o1', ORDER_NO_2:'o2', WORK_ORDER_ID:'w1', GRANT_AWARD_ID:'g1', GRANT_AWARD_ID_2:'g2', TECH_ONE_ID:'t1', TECH_ONE_ID_2:'t2']
         project += idData
         Map result = gmsMapper.mapProject([project])
+
+        then:
+        result.project.externalIds == [[idType:'INTERNAL_ORDER_NUMBER', externalId: 'o1'], [idType:'INTERNAL_ORDER_NUMBER', externalId: 'o2'],
+                                       [idType:'TECH_ONE_CODE', externalId: 't1'], [idType:'TECH_ONE_CODE', externalId: 't2'],
+                                       [idType:'WORK_ORDER', externalId: 'w1'],
+                                       [idType:'GRANT_AWARD', externalId: 'g1'], [idType:'GRANT_AWARD', externalId: 'g2']]
+        !result.errors
+    }
+
+    def "The GMSMapper can update multi-column values such as the externalIds"() {
+        when:
+        Map project = [APP_ID:'g1', PROGRAM_NM:"Green Army", ORG_TRADING_NAME:'Test org 1', ABN:'12345678901', FUNDING_TYPE:"RLP", START_DT:'2019/07/01', FINISH_DT:'2020/07/01']
+        Map idData = [ORDER_NO:'o1', ORDER_NO_2:'o2', WORK_ORDER_ID:'w1', GRANT_AWARD_ID:'g1', GRANT_AWARD_ID_2:'g2', TECH_ONE_ID:'t1', TECH_ONE_ID_2:'t2']
+        project += idData
+        Map result = gmsMapper.mapProject([project], true)
 
         then:
         result.project.externalIds == [[idType:'INTERNAL_ORDER_NUMBER', externalId: 'o1'], [idType:'INTERNAL_ORDER_NUMBER', externalId: 'o2'],
