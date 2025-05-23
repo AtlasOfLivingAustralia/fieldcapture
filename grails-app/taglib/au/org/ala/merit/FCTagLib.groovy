@@ -944,63 +944,6 @@ class FCTagLib {
 
     }
 
-    def renderComparisonMonitoring = { attrs ->
-
-        String code = attrs.code
-        List original = attrs.original
-        List changed = attrs.changed
-        int i = attrs.i
-        String property = attrs.property
-        ProgramConfig config = attrs.config
-
-        def origMonitoringList = original
-        def resultOrigMonitoringList = []
-        for (def monitoring : origMonitoringList) {
-            if (code && code == monitoring.relatedBaseline) {
-                resultOrigMonitoringList = monitoring
-            }
-        }
-
-        def changedMonitoringList = changed
-        def resultChangedMonitoringList = []
-        for (def monitoring : changedMonitoringList) {
-            if (code && code == monitoring.relatedBaseline) {
-                resultChangedMonitoringList = monitoring
-            }
-        }
-
-        out << '<span class="original hide">'
-        if (resultOrigMonitoringList && resultOrigMonitoringList.size() > i) {
-            if (property == 'relatedTargetMeasures') {
-                out << getScoreLabels(resultOrigMonitoringList[property], config, true)
-            } else {
-                if (resultOrigMonitoringList[property] instanceof List) {
-                    out << resultOrigMonitoringList[property].collect{it == 'Other' ? 'Other: ' + resultOrigMonitoringList['data2'] : it}.join(',')
-                } else {
-                    out << resultOrigMonitoringList[property]
-                }
-            }
-
-        }
-        out << '</span>'
-
-        out << '<span class="changed hide">'
-        if (resultChangedMonitoringList && resultChangedMonitoringList.size() > i) {
-            if (property == 'relatedTargetMeasures') {
-                out << getScoreLabels(resultChangedMonitoringList[property], config, true)
-            } else {
-                if (resultChangedMonitoringList[property] instanceof List) {
-                    out << resultChangedMonitoringList[property].collect{it == 'Other' ? 'Other: ' + resultChangedMonitoringList['data2'] : it}.join(',')
-                } else {
-                    out << resultChangedMonitoringList[property]
-                }
-            }
-
-        }
-        out << '</span>'
-        out << '<span class="diff"></span>'
-    }
-
     /**
      * Acts as a customised loop that iterates through the combined targets in original and changed output targets
      * and renders the body with a scoreId and index (i) variable.
