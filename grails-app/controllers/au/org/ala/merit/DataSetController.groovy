@@ -134,6 +134,19 @@ class DataSetController {
 
     }
 
+    @PreAuthorise(accessLevel = 'siteAdmin')
+    def resync(String id, String dataSetId) {
+        Map projectData = projectData(id)
+        Map dataSet = projectData.project?.custom?.dataSets?.find{it.dataSetId == dataSetId}
+        if (!dataSet) {
+            render status: HttpStatus.NOT_FOUND
+            return
+        }
+        Map response = dataSetSummaryService.resyncDataSet(id, dataSetId)
+        render response as JSON
+
+    }
+
     @PreAuthorise(accessLevel = 'readOnly')
     def view(String id, String dataSetId) {
 

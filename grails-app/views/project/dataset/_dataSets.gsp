@@ -83,6 +83,11 @@
                         </g:each>
                     </div>
                 </div>
+                <g:if test="${fc.userIsAlaOrFcAdmin()}">
+                    <a class="btn btn-container btn-sm" href="#" data-bind="visible:canResync,click:resyncDataSet">
+                        <i class="fa fa-refresh" title="Re-sync this dataset"></i>
+                    </a>
+                </g:if>
 
             </td>
             <td class="dataset-name" data-bind="text:name"></td>

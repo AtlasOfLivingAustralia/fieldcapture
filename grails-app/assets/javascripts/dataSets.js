@@ -95,6 +95,21 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
             });
         };
 
+        this.canResync = this.createdIn == MONITOR_APP && // Resyncing only makes sense for Monitor data sets
+                        !this.isReadOnly && // Once data has been published we shouldn't change it
+                        !dataSet.reportId && // Once data has been copied into a report we shouldn't change it
+                         dataSet.surveyId && dataSet.surveyId.coreSubmitTime;  // If we don't have a coreSubmitTime Monitor core doesn't have any data to resync
+
+        this.resyncDataSet = function() {
+            bootbox.confirm("After resyncing you will need to check any data you entered and mark the data set as finished again.\n Re-syncing a data set can take up to a minute to complete.\n  Are you sure?", function (yes) {
+                if (yes) {
+                    projectService.resyncDataSet(dataSet.dataSetId).done(function () {
+                        blockUIWithMessage("Refreshing page...");
+                        window.location.href = config.returnToUrl;
+                    });
+                }
+            })
+        };
         this.downloadUrl = null;
         if (isDownloadableMonitorDataSet(dataSet)) {
             this.downloadUrl = config.downloadDataSetUrl + '/' + dataSet.dataSetId;

@@ -99,6 +99,7 @@
                 deleteDataSetUrl: "${createLink(controller:'dataSet', action:'delete', id:project.projectId)}",
                 viewDataSetUrl: "${createLink(controller:'dataSet', action:'view', id:project.projectId)}",
                 downloadDataSetUrl: "${createLink(controller:'dataSet', action:'download', id:project.projectId)}",
+                resyncDataSetUrl: "${createLink(controller:'dataSet', action:'resync', id:project.projectId)}",
                 downloadProjectDataSetsUrl: "${createLink(controller:'dataSet', action:'downloadProjectDataSets', id:project.projectId)}",
                 unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}",
                 projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:project.projectId)}",

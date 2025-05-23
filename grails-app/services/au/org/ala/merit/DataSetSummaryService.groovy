@@ -7,6 +7,7 @@ class DataSetSummaryService {
 
     static String DATA_SET_PATH_PREFIX = 'dataSetSummary/'
     static String BULK_UPDATE_PATH = 'bulkUpdate/'
+    static String RESYNC_DATA_SET_PATH = 'resync/'
     WebService webService
     GrailsApplication grailsApplication
 
@@ -45,5 +46,11 @@ class DataSetSummaryService {
         else {
             return [statusCode:status, error: 'Error deleting data set summary with id '+dataSetId]
         }
+    }
+
+    Map resyncDataSet(String projectId, String dataSetId) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl')+DATA_SET_PATH_PREFIX+RESYNC_DATA_SET_PATH+projectId+'/'+dataSetId
+        Map resp = webService.doPost(url, [:])
+        resp
     }
 }
