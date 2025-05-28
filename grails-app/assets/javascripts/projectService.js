@@ -167,7 +167,7 @@ function ProjectService(project, options) {
 
     self.resyncDataSet = function(dataSetId) {
         var json = JSON.stringify({dataSetId:dataSetId});
-        return self.save(options.resyncDataSetUrl, json, "Deleting data set....")
+        return self.save(options.resyncDataSetUrl, json, "Re-syncing the data set....")
             .done(function(data) {
                 if (data.error) {
                     $.unblockUI();

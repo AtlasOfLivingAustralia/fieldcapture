@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus
 
 class DataSetController {
 
-    static allowedMethods = [create:'GET', edit:'GET', save:'POST', delete:'POST']
+    static allowedMethods = [create:'GET', edit:'GET', save:'POST', delete:'POST', resync: 'POST']
     private static final Integer DEFAULT_BDR_QUERY_LIMIT = 5000
     ProjectService projectService
     DataSetSummaryService dataSetSummaryService
@@ -135,7 +135,10 @@ class DataSetController {
     }
 
     @PreAuthorise(accessLevel = 'siteAdmin')
-    def resync(String id, String dataSetId) {
+    def resync(String id) {
+        Map dataSetParam = request.JSON
+        String dataSetId = dataSetParam.dataSetId
+
         Map projectData = projectData(id)
         Map dataSet = projectData.project?.custom?.dataSets?.find{it.dataSetId == dataSetId}
         if (!dataSet) {

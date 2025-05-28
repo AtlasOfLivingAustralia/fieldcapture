@@ -306,6 +306,7 @@ var config = {
             deleteDataSetUrl: fcConfig.deleteDataSetUrl,
             viewDataSetUrl: fcConfig.viewDataSetUrl,
             downloadDataSetUrl: fcConfig.downloadDataSetUrl,
+            resyncDataSetUrl: fcConfig.resyncDataSetUrl,
             downloadProjectDataSetsUrl: fcConfig.downloadProjectDataSetsUrl,
             downloadableProtocols: <fc:modelAsJavascript model="${projectContent.datasets.downloadableProtocols}" default="[]"/>,
             returnToUrl: fcConfig.returnTo
