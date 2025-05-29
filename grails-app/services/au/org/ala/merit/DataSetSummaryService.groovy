@@ -50,7 +50,7 @@ class DataSetSummaryService {
 
     Map resyncDataSet(String projectId, String dataSetId) {
         String url = grailsApplication.config.getProperty('ecodata.baseUrl')+DATA_SET_PATH_PREFIX+RESYNC_DATA_SET_PATH+projectId+'/'+dataSetId
-        Map resp = webService.doPost(url, [:])
+        Map resp = webService.doPost(url, [:], true, true)
         resp
     }
 }
