@@ -20,6 +20,9 @@
                 </div>
                 <!-- /ko -->
                 </g:if>
+                <g:if test="${fc.userIsAlaOrFcAdmin()}">
+                    <a class="btn btn-sm btn-warning" type="button" data-bind="attr:{href:manageEMSASiteDataSetsUrl}" title="The page will reload and data set summaries associated with the creation of Plot Layouts and Plot Selection will be displayed so they can be deleted or re-synced">Delete or re-sync EMSA sites</a>
+                </g:if>
             </div>
         </div>
     </div>

@@ -101,6 +101,7 @@
                 downloadDataSetUrl: "${createLink(controller:'dataSet', action:'download', id:project.projectId)}",
                 resyncDataSetUrl: "${createLink(controller:'dataSet', action:'resync', id:project.projectId)}",
                 downloadProjectDataSetsUrl: "${createLink(controller:'dataSet', action:'downloadProjectDataSets', id:project.projectId)}",
+                manageEMSASiteDataSetsUrl: "${createLink(controller:'project', action:'index', id:project.projectId, params:[manageEMSASiteDataSets:true])}",
                 unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}",
                 projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:project.projectId)}",
                 i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
@@ -308,6 +309,7 @@ var config = {
             downloadDataSetUrl: fcConfig.downloadDataSetUrl,
             resyncDataSetUrl: fcConfig.resyncDataSetUrl,
             downloadProjectDataSetsUrl: fcConfig.downloadProjectDataSetsUrl,
+            manageEMSASiteDataSetsUrl: fcConfig.manageEMSASiteDataSetsUrl,
             downloadableProtocols: <fc:modelAsJavascript model="${projectContent.datasets.downloadableProtocols}" default="[]"/>,
             returnToUrl: fcConfig.returnTo
         };

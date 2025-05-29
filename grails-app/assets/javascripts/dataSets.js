@@ -19,6 +19,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
     });
 
     self.downloadProjectDataSetsUrl = config.downloadProjectDataSetsUrl;
+    self.manageEMSASiteDataSetsUrl = config.manageEMSASiteDataSetsUrl;
 
     self.newDataSet = function() {
         window.location.href = config.newDataSetUrl;
@@ -85,8 +86,9 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
 
         this.readOnly = PublicationStatus.isReadOnly(dataSet.publicationStatus);
         this.deleteDataSet = function () {
-            bootbox.confirm("Are you sure?", function (yes) {
+            bootbox.confirm("Deleting a data set summary cannot be undone.  Are you sure?", function (yes) {
                 if (yes) {
+                    blockUIWithMessage("Deleting data set summary...");
                     projectService.deleteDataSet(dataSet.dataSetId).done(function () {
                         blockUIWithMessage("Refreshing page...");
                         window.location.href = config.returnToUrl;

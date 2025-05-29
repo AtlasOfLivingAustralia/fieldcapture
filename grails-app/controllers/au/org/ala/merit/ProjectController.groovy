@@ -119,7 +119,11 @@ class ProjectController {
 
 
                 def programs = projectService.programsModel()
-                def content = projectContent(project, user, template, config)
+                // This parameter will result in EMSA protocols that result in sites being created in MERIT
+                // being displayed in the Data Set Summary tab.  It's intention is to allow EMSA sites to
+                // be deleted or re-synced via the user interface.
+                boolean manageEMSASiteDataSets = userService.userIsAlaOrFcAdmin() && params.getBoolean('manageEMSASiteDataSets', false)
+                def content = projectContent(project, user, template, config, manageEMSASiteDataSets)
 
                 def model = [project               : project,
                              activities            : project.activities,
@@ -154,7 +158,7 @@ class ProjectController {
         organisations
     }
 
-    protected Map projectContent(Map project, user, String template, ProgramConfig config) {
+    protected Map projectContent(Map project, user, String template, ProgramConfig config, boolean manageEMSASiteDataSets) {
         project.themes = new JSONArray(config.themes ?: [])
         project.assets = config.assets ?: []
         project.priorities = new JSONArray(config.priorities ?: [])
@@ -199,7 +203,7 @@ class ProjectController {
         boolean datasetsVisible = config.includesContent(ProgramConfig.ProjectContent.DATA_SETS) && userHasViewAccess
         boolean enableProjectDataSetsDownload = grailsApplication.config.getProperty('bdr.dataSet.projectDownloadEnabled', Boolean, false)
         if (datasetsVisible && project.custom?.dataSets) {
-            projectService.filterDataSetSummaries(project.custom?.dataSets)
+            projectService.filterDataSetSummaries(project.custom?.dataSets, manageEMSASiteDataSets)
         }
         List tags = []
         if (adminTabVisible) {
