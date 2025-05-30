@@ -300,6 +300,9 @@ var DataSetViewModel = function(dataSet, projectService, options) {
 
     self.isAutoCreated = dataSet.surveyId != null;
 
+    self.removeSite = function() {
+        self.siteId(null);
+    }
     self.validate = function() {
         return $(config.validationContainerSelector).validationEngine('validate');
     }

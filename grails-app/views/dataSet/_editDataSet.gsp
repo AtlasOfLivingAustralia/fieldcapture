@@ -198,6 +198,9 @@
             <!-- /ko -->
             <!-- ko if:siteId() -->
             <span class="form-control"> <a data-bind="attr:{href:siteUrl}" target="_blank">Spatial data has been supplied for this data set</a></span>
+            <g:if test="${fc.userIsAlaOrFcAdmin()}">
+                <button class="btn btn-sm btn-danger" data-bind="click:removeSite">Detach site</button><i class="fa fa-question-circle" data-bind="popover:{content:'Only do this if the data set has been recorded against the wrong plot AND you intend to re-sync this data set.'}"></i>
+            </g:if>
             <!-- /ko -->
         </div>
     </div>
