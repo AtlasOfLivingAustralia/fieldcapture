@@ -8,8 +8,8 @@
     <tbody>
     <g:set var="max" value="${Math.max(project.custom.details.baseline?.rows.size(), changed.custom.details.baseline?.rows?.size()?:0)}"/>
     <g:each in="${(0..<max)}" var="i">
-    <g:set var="code" value="${project.custom.details.baseline.rows.code.get([i])}"/>
-    <g:set var="monitoringModel" value="${changed.custom.details.monitoring?.rows.find {it.relatedBaseline == code}}"/>
+%{--    <g:set var="code" value="${project.custom.details.baseline.rows.code.get([i])}"/>--}%
+%{--    <g:set var="monitoringModel" value="${changed.custom.details.monitoring?.rows.find {it.relatedBaseline == code}}"/>--}%
     <tr class="header">
         <th class="code"></th>
         <th class="outcome required">${outcomeStatementHeading ?: 'Outcome statement/s'}</th>
@@ -32,11 +32,13 @@
     <tr><td class="code"></td><th colspan="7"> Monitoring indicators </th></tr>
     <tr>
         <td class="code"><fc:renderComparison changed="${changed.custom.details.baseline.rows ?: []}" i="${i}" original="${project.custom.details.baseline.rows ?: []}" property="code"/> </td>
+        <g:set var="codeForMonitoring" value="${project.custom.details.baseline.rows.size() > i ? project.custom.details.baseline.rows[i].code : changed.custom.details.baseline.rows[i].code}"/>
+
         <td colspan="8" class="embedded-monitoring">
             <g:render template="/project/meriPlanChanges/monitoringIndicators"
-                      model="${[monitoringValidation:true,
-                                indictorSelectorExpression:monitoringModel,
-                                code:code,
+                      model="${[originalMonitoring:project.custom.details.monitoring.rows.findAll{it.relatedBaseline == codeForMonitoring} ?: [],
+                                changedMonitoring:changed.custom.details.monitoring.rows.findAll{it.relatedBaseline == codeForMonitoring} ?: [],
+                                code:codeForMonitoring,
                                 extendedMonitoring:true]}"/>
 
         </td>

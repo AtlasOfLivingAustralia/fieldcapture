@@ -15,7 +15,7 @@ var rlpOutputReport = {
       "collapsedByDefault": false,
       "modelName": null,
       "name": "RLP - Output WHS",
-      "optional": false,
+      "optional": true,
       "optionalQuestionText": null,
       "template": {
         "name": "RLP - Output WHS",

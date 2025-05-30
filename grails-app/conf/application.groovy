@@ -253,6 +253,7 @@ security {
 }
 bdr.api.url="https://changeMe.org.au/api"
 bdr.api.readTimeout=60000
+bdr.api.minutesToIngestDataSet=30
 bdr['client-id']="changeMe"
 bdr['client-secret']="changeMe"
 bdr.discoveryUri="https://changeMe.org.au/.well-known"
@@ -262,7 +263,7 @@ bdr.azure.tenantId='changeMe'
 bdr.azure.apiScope='api://changeme/.default'
 //bdr.dataSet.formats=["application/geo+json","application/rdf+xml", "text/turtle", "application/ld+json", "application/n-triples"]
 bdr.dataSet.formats=["application/geo+json", "text/turtle"]
-
+bdr.dataSet.projectDownloadEnabled = false
 webservice.jwt = true
 webservice['jwt-scopes'] = "ala/internal users/read ala/attrs ecodata/read_test ecodata/write_test"
 webservice['client-id']='changeMe'
@@ -289,7 +290,7 @@ sites.known_shapes = [
         [id:'cl11194', name:'Australian Marine Parks (2024)']
 ]
 
-layers.elect = 'cl11163'
+layers.elect = 'cl11225'
 layers.states = 'cl927'
 
 environments {

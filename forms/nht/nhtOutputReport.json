@@ -936,6 +936,17 @@
             ]
           },
           {
+            "name": "meriPlanChangesRequired",
+            "dataType": "text",
+            "validate": "required,maxSize[400]",
+            "behaviour": [
+              {
+                "condition": "hasAnyManagementActionsUndertaken == \"Yes\"",
+                "type": "enable"
+              }
+            ]
+          },
+          {
             "columns": [
               {
                 "columns": [
@@ -1144,6 +1155,16 @@
                 "type": "selectOne",
                 "source": "hasAnyManagementActionsUndertaken",
                 "preLabel": "During this period were there any adaptive management actions undertaken that require a change to the MERI plan?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "textarea",
+                "source": "meriPlanChangesRequired",
+                "preLabel": "If yes, please outline the changes required."
               }
             ]
           }

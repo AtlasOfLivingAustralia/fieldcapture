@@ -56,9 +56,31 @@ db.userPermission.insert({
     accessLevel: 'admin'
 });
 
+var outputTargets = [
+    {
+        scoreId:'score_42',
+        target:'10',
+        outcomeTargets:[{relatedOutcomes:['ST1'], target:'10'}]
+    },
+    {
+        scoreId: "score_44",
+        target: NumberDecimal("1"),
+        periodTargets:[{period:"2018/2019", target: NumberDecimal("1")}]
+    },
+    {
+        scoreId: 'score_43',
+        target: '1'
+    }
+];
+
+var serviceIds = [1, 2, 33];
+
 for (var i = 1; i < 10; i++) {
     var id = '' + i;
-    createProject({name: 'Project ' + id, projectId: id, outputTargets: [{scoreId: "score_44", target: NumberDecimal("1"), periodTargets:[{period:"2018/2019", target: NumberDecimal("1")}] }]});
+
+    let projectServiceIds = i == 3 ? [] :serviceIds;
+    let projectOutputTargets = i == 3 ? [] : outputTargets;
+    createProject({name: 'Project ' + id, projectId: id, outputTargets: projectOutputTargets, custom:{details:{serviceIds:projectServiceIds}}});
 
 
     createSite({name: "Test site " + id, siteId: 'test_site_' + id, projects: [id]});
