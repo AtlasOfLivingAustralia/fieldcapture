@@ -67,3 +67,17 @@ if (site) {
     audit(site, site.siteId, 'au.org.ala.ecodata.Site', systemUserId, project.projectId, "Update");
     print("Updated site name to " + newSiteName + " for siteId " + toKeepSiteId);
 }
+
+// And the related plot selection
+let plotSelectionId = '785b8b60-066e-4def-aa23-f6d8a6bda0c3';
+site = db.site.findOne({siteId: plotSelectionId});
+if (site) {
+    let newName = site.name.replace(oldSiteName, newSiteName);
+    let newDescription = site.description.replace(oldSiteName, newSiteName);
+    print("Renaming site " + plotSelectionId + " from " + site.name + " to " + newName);
+    site.name = newName;
+    site.description = newDescription;
+    site.lastUpdated = ISODate();
+    db.site.replaceOne({siteId: plotSelectionId}, site);
+    audit(site, site.siteId, 'au.org.ala.ecodata.Site', systemUserId, project.projectId, "Update");
+}
