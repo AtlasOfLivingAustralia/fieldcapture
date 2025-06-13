@@ -699,7 +699,7 @@
             "name": "hasNotifiableIncident",
             "dataType": "text",
             "validate": "required",
-            "description": "Refer to Deed of Standing Offer clause 42 Work Health and Safety for further information on these requirements.",
+            "description": "A WHS Notifiable incident is defined within Work Health and Safety Act (Cth) 2011 Part 3 – Incident Notification. (https://www.legislation.gov.au/Details/C2018C00293). Refer to Deed of Standing offer clause 42 Work Health and Safety for further information on these requirements.",
             "constraints": [
               "Yes",
               "No"
@@ -723,7 +723,7 @@
             "name": "hasVerifiedSubContractors",
             "dataType": "text",
             "validate": "required",
-            "description": "Refer to Deed of Standing Offer clause 42 Work Health and Safety for further information on these requirements.",
+            "description": "If there have been no current or new subcontracting arrangement during this reporting period, please report as Not Applicable. Refer to Deed of standing offer clause 20 Subcontracting and 42 Work Health and Safety for further information on these requirements.",
             "constraints": [
               "Yes",
               "No",
@@ -903,7 +903,7 @@
             "name": "hasNotifiableIncident",
             "dataType": "text",
             "validate": "required",
-            "description": "A WHS Notifiable incident is defined within Work Health and Safety Act (Cth) 2011 Part 3 – Incident Notification. (https://www.legislation.gov.au/Details/C2018C00293). Refer to Deed of Standing offer clause 42 Work Health and Safety for further information on these requirements.",
+            "description": "A WHS Notifiable incident is defined within Work Health and Safety Act (Cth) 2011 Part 3 – Incident Notification. (https://www.legislation.gov.au/Details/C2018C00293).",
             "constraints": [
               "Yes",
               "No"
@@ -928,7 +928,7 @@
             "name": "hasVerifiedSubContractors",
             "dataType": "text",
             "validate": "required",
-            "description": "If there have been no current or new subcontracting arrangement during this reporting period, please report as Not Applicable. Refer to Deed of standing offer clause 20 Subcontracting and 42 Work Health and Safety for further information on these requirements.",
+            "description": "If there have been no current or new subcontracting arrangement during this reporting period, please report as Not Applicable.",
             "constraints": [
               "Yes",
               "No",
