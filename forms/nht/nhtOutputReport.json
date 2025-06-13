@@ -699,7 +699,7 @@
             "name": "hasNotifiableIncident",
             "dataType": "text",
             "validate": "required",
-            "description": "A WHS Notifiable incident is defined within Work Health and Safety Act (Cth) 2011 Part 3 – Incident Notification. (https://www.legislation.gov.au/Details/C2018C00293). Refer to Deed of Standing offer clause 42 Work Health and Safety for further information on these requirements.",
+            "description": "Refer to Deed of Standing Offer clause 42 Work Health and Safety for further information on these requirements.",
             "constraints": [
               "Yes",
               "No"
@@ -723,7 +723,7 @@
             "name": "hasVerifiedSubContractors",
             "dataType": "text",
             "validate": "required",
-            "description": "If there have been no current or new subcontracting arrangement during this reporting period, please report as Not Applicable. Refer to Deed of standing offer clause 20 Subcontracting and 42 Work Health and Safety for further information on these requirements.",
+            "description": "Refer to Deed of Standing Offer clause 42 Work Health and Safety for further information on these requirements.",
             "constraints": [
               "Yes",
               "No",
@@ -1032,12 +1032,14 @@
             "dataType": "number",
             "name": "fteEquivalent",
             "decimalPlaces": 2,
-            "validate": "required,min[0]"
+            "validate": "required,min[0]",
+            "description": "Full-Time Equivalent (FTE) includes the total number of full-time hours worked by an organization's employees, regardless of whether they are full-time or part-time, to facilitate the delivery of the project."
           },
           {
             "name": "anyCommunicationPublished",
             "dataType": "text",
             "validate": "required",
+            "description": "This includes any social media, newsletters, media release, flyers. This section does not include the education and awareness materials included in the Communication Material project service.",
             "constraints": [
               "Yes",
               "No",
@@ -1064,7 +1066,7 @@
               {
                 "type": "number",
                 "source": "fteEquivalent",
-                "preLabel": "Total number of FTE (including full-time and/or part-time) supporting and/or delivering the project"
+                "preLabel": "Total FTE supporting and/or delivering the project for this reporting period."
               }
             ]
           },
@@ -1083,7 +1085,7 @@
               {
                 "type": "selectOne",
                 "source": "anyCommunicationPublished",
-                "preLabel": "Was any communication material developed and published during this reporting period"
+                "preLabel": "Was any communication material developed and published during this reporting period?"
               }
             ]
           },
