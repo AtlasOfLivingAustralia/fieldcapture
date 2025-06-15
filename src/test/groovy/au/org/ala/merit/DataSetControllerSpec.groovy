@@ -235,4 +235,40 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         response.status == HttpStatus.SC_OK
         1 * webService.proxyGetRequest(response, 'http://example.com/dataset', false)
     }
+
+    void "The resync method returns 404 if the data set is not found"() {
+        setup:
+        Map project = [projectId: 'p1', custom: [dataSets: [[dataSetId: 'd1', name: 'DataSet 1']]]]
+        Map programConfig = [program: [name: "program 1"]]
+
+        when:
+        request.method = "POST"
+        request.json = [dataSetId: 'd2']
+        controller.resync('p1')
+
+        then:
+        1 * projectService.get('p1') >> project
+        1 * projectService.getProgramConfiguration(project) >> programConfig
+        response.status == HttpStatus.SC_NOT_FOUND
+    }
+
+    void "The resync method delegates to the dataSetSummaryService and returns the response as JSON"() {
+        setup:
+        Map dataSet = [dataSetId: 'd1', name: 'DataSet 1']
+        Map project = [projectId: 'p1', custom: [dataSets: [dataSet]]]
+        Map programConfig = [program: [name: "program 1"]]
+        Map resyncResponse = [status: HttpStatus.SC_OK, message: "Resynced"]
+
+        when:
+        request.method = "POST"
+        request.json = [dataSetId: 'd1']
+        controller.resync('p1')
+
+        then:
+        1 * projectService.get('p1') >> project
+        1 * projectService.getProgramConfiguration(project) >> programConfig
+        1 * dataSetSummaryService.resyncDataSet('p1', 'd1') >> resyncResponse
+        response.json == resyncResponse
+    }
+
 }

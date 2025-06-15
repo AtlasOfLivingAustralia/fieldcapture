@@ -210,7 +210,7 @@ class ProjectController {
             tags = projectService.getProjectTags()
         }
         List downloadableProtocols = downloadableProtocols()
-        boolean resyncEnabled = userService.userIsSiteAdmin() && user?.isCaseManager
+        boolean resyncEnabled = userService.userIsAlaOrFcAdmin() && user?.isCaseManager
         boolean showExternalIds = userService.userHasReadOnlyAccess() || userService.userIsSiteAdmin()
         def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates, outcomes:project.outcomes, objectives:config.program?.config?.objectives, showExternalIds:showExternalIds],
                      documents      : [label: 'Documents', visible: config.includesContent(ProgramConfig.ProjectContent.DOCUMENTS), type: 'tab', user:user, template:'docs', activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
