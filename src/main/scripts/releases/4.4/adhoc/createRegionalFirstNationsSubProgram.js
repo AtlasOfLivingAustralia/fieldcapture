@@ -211,7 +211,9 @@ var config =
                 {
                     "serviceTargets": [
                         "0e2f8d61-b7b4-4d2d-b07c-4fc20bbe326a",
-                        "bb506258-e907-43d3-99bd-0fe0400f654e"
+                        "bb506258-e907-43d3-99bd-0fe0400f654e",
+                        "a30e7b28-b986-456c-a209-14fc6af38cd9",
+                        "3751ae6f-b0a2-4ec0-935f-1da14b334f38"
                     ],
                     "serviceId": 10
                 },
@@ -398,6 +400,11 @@ var config =
                         "b8304577-afd8-45e0-8ef4-b71ae10998f5"
                     ],
                     "serviceId": 44
+                },
+                {
+                    "serviceTargets": [],
+                    "serviceId": 50,
+                    "mandatory": true
                 }
             ]
         },
@@ -664,11 +671,27 @@ var outcomes = [
 var priorities = [
     {
         "category": "Farmer Sector",
+        "priority": "Carbon and biodiversity market information"
+    },
+    {
+        "category": "Farmer Sector",
+        "priority": "Climate change adaptation"
+    },
+    {
+        "category": "Farmer Sector",
+        "priority": "Market access and traceability"
+    },
+    {
+        "category": "Farmer Sector",
         "priority": "Native vegetation and biodiversity on-farm"
     },
     {
         "category": "Farmer Sector",
         "priority": "On-farm emissions reduction practices"
+    },
+    {
+        "category": "Farmer Sector",
+        "priority": "Soil acidification"
     },
     {
         "category": "Farmer Sector",
@@ -680,27 +703,11 @@ var priorities = [
     },
     {
         "category": "Farmer Sector",
-        "priority": "Soil acidification"
-    },
-    {
-        "category": "Farmer Sector",
         "priority": "Sustainable agriculture practices, including natural resource management"
     },
     {
         "category": "Farmer Sector",
-        "priority": "Climate change adaptation"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Carbon and biodiversity market information"
-    },
-    {
-        "category": "Farmer Sector",
         "priority": "Sustainability framework engagement"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Market access and traceability"
     }
 ];
 
