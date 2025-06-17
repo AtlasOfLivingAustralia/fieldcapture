@@ -29,6 +29,7 @@ class ProjectService  {
 
     static final String OTHER_EMSA_MODULE = 'Other'
     static final String PARATOO_FORM_TAG_SURVEY = 'survey'
+    static final String PARATOO_FORM_TAG_SITE = 'site'
 
     static dateWithTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
     static dateWithTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
@@ -81,12 +82,17 @@ class ProjectService  {
         result
     }
 
-    void filterDataSetSummaries(List dataSetSummaries) {
+    void filterDataSetSummaries(List dataSetSummaries, boolean includeSiteProtocols = false) {
         List<Map> forms = activityService.monitoringProtocolForms()
+
+        // If the user is an ALA or FC admin, they can see survey data sets and also data sets that are
+        // associated with sites.  This is to enable the use of the delete/resync data set functionality for these
+        // data sets.
+        List supportedTags = includeSiteProtocols ? [PARATOO_FORM_TAG_SURVEY, PARATOO_FORM_TAG_SITE] : [PARATOO_FORM_TAG_SURVEY]
 
         dataSetSummaries.removeAll { Map dataSetSummary ->
             Map protocolForm = forms.find{it.externalId == dataSetSummary.protocol}
-            (protocolForm != null) && (!protocolForm.tags.contains(PARATOO_FORM_TAG_SURVEY))
+            (protocolForm != null) && (!protocolForm.tags?.find{supportedTags.contains(it)})
         }
     }
 

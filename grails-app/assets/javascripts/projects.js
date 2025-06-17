@@ -1290,6 +1290,7 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             viewDataSetUrl: config.viewDataSetUrl,
             downloadDataSetUrl: config.downloadDataSetUrl,
             downloadProjectDataSetsUrl: config.downloadProjectDataSetsUrl,
+            manageEMSASiteDataSetsUrl: config.manageEMSASiteDataSetsUrl,
             returnToUrl: config.returnToUrl,
             reports: project.reports || [],
             downloadableProtocols: config.downloadableProtocols,

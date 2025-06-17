@@ -119,7 +119,11 @@ class ProjectController {
 
 
                 def programs = projectService.programsModel()
-                def content = projectContent(project, user, template, config)
+                // This parameter will result in EMSA protocols that result in sites being created in MERIT
+                // being displayed in the Data Set Summary tab.  It's intention is to allow EMSA sites to
+                // be deleted or re-synced via the user interface.
+                boolean manageEMSASiteDataSets = userService.userIsAlaOrFcAdmin() && params.getBoolean('manageEMSASiteDataSets', false)
+                def content = projectContent(project, user, template, config, manageEMSASiteDataSets)
 
                 def model = [project               : project,
                              activities            : project.activities,
@@ -154,7 +158,7 @@ class ProjectController {
         organisations
     }
 
-    protected Map projectContent(Map project, user, String template, ProgramConfig config) {
+    protected Map projectContent(Map project, user, String template, ProgramConfig config, boolean manageEMSASiteDataSets) {
         project.themes = new JSONArray(config.themes ?: [])
         project.assets = config.assets ?: []
         project.priorities = new JSONArray(config.priorities ?: [])
@@ -199,14 +203,14 @@ class ProjectController {
         boolean datasetsVisible = config.includesContent(ProgramConfig.ProjectContent.DATA_SETS) && userHasViewAccess
         boolean enableProjectDataSetsDownload = grailsApplication.config.getProperty('bdr.dataSet.projectDownloadEnabled', Boolean, false)
         if (datasetsVisible && project.custom?.dataSets) {
-            projectService.filterDataSetSummaries(project.custom?.dataSets)
+            projectService.filterDataSetSummaries(project.custom?.dataSets, manageEMSASiteDataSets)
         }
         List tags = []
         if (adminTabVisible) {
             tags = projectService.getProjectTags()
         }
         List downloadableProtocols = downloadableProtocols()
-
+        boolean resyncEnabled = userService.userIsAlaOrFcAdmin() && user?.isCaseManager
         boolean showExternalIds = userService.userHasReadOnlyAccess() || userService.userIsSiteAdmin()
         def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates, outcomes:project.outcomes, objectives:config.program?.config?.objectives, showExternalIds:showExternalIds],
                      documents      : [label: 'Documents', visible: config.includesContent(ProgramConfig.ProjectContent.DOCUMENTS), type: 'tab', user:user, template:'docs', activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
@@ -214,7 +218,7 @@ class ProjectController {
                      plan           : [label: 'Activities', visible: true, disabled: !user?.hasViewAccess, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:user?.isCaseManager, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: risksAndThreatsVisible],
                      site           : [label: 'Sites', visible: config.includesContent(ProgramConfig.ProjectContent.SITES), disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
                      dashboard      : [label: 'Dashboard', visible: config.includesContent(ProgramConfig.ProjectContent.DASHBOARD), disabled: !user?.hasViewAccess, type: 'tab'],
-                     datasets       : [label: 'Data set summary', visible: datasetsVisible, template: '/project/dataset/dataSets', downloadableProtocols: downloadableProtocols, supportedFormats:bdrDataSetSupportedFormats(), enableProjectDataSetsDownload:enableProjectDataSetsDownload, type:'tab'],
+                     datasets       : [label: 'Data set summary', visible: datasetsVisible, template: '/project/dataset/dataSets', downloadableProtocols: downloadableProtocols, supportedFormats:bdrDataSetSupportedFormats(), enableProjectDataSetsDownload:enableProjectDataSetsDownload, resyncEnabled: resyncEnabled, type:'tab'],
                      admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage', canRegenerateReports: canRegenerateReports, hasSubmittedOrApprovedFinalReportInCategory: hasSubmittedOrApprovedFinalReportInCategory, canModifyMeriPlan: canModifyMeriPlan, showRequestLabels:config.supportsParatoo, outcomeStartIndex:outcomeStartIndex, tags:tags]]
 
         if (template == MERI_ONLY_TEMPLATE) {
