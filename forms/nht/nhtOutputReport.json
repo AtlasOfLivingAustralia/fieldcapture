@@ -1457,7 +1457,7 @@
                 "name": "numberOfCaptiveBreeding",
                 "behaviour": [
                   {
-                    "condition": "+totalNumberOfMonthsSpentMaintainingCaptiveBreedingPrograms == 0 and +totalNumberOfDaysSpentMaintainingCaptiveBreedingPrograms == 0",
+                    "condition": "(newOrMaintained == \"Newly established\" or newOrMaintained == \"Maintained\") and +totalNumberOfMonthsSpentMaintainingCaptiveBreedingPrograms == 0 and +totalNumberOfDaysSpentMaintainingCaptiveBreedingPrograms == 0",
                     "type": "enable"
                   }
                 ],
@@ -1466,12 +1466,24 @@
               {
                 "dataType": "number",
                 "name": "numberOfMonthsSpentMaintainingCaptiveBreedingPrograms",
-                "validate": "required"
+                "behaviour": [
+                  {
+                    "condition": "+totalCaptiveBreedingMaintained == 0 and +totalNumberOfDaysSpentMaintainingCaptiveBreedingPrograms == 0",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
               },
               {
                 "dataType": "number",
                 "name": "numberOfDaysSpentMaintainingCaptiveBreedingPrograms",
-                "validate": "required"
+                "behaviour": [
+                  {
+                    "condition": "+totalNumberOfMonthsSpentMaintainingCaptiveBreedingPrograms == 0 and +totalCaptiveBreedingMaintained == 0",
+                    "type": "enable"
+                  }
+                ],
+                "validate": "required,min[0]"
               },
               {
                 "dataType": "feature",
@@ -1717,26 +1729,6 @@
           },
           {
             "dataType": "number",
-            "name": "totalCaptiveBreedingEstablishedInvoiced",
-            "validate": [
-              {
-                "rule": "required"
-              },
-              {
-                "rule": "min[0]"
-              },
-              {
-                "param": {
-                  "expression": "totalCaptiveBreedingEstablished",
-                  "type": "computed"
-                },
-                "rule": "max"
-              }
-            ],
-            "defaultValue": ""
-          },
-          {
-            "dataType": "number",
             "name": "totalCaptiveBreedingMaintained",
             "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
@@ -1747,27 +1739,6 @@
           },
           {
             "dataType": "number",
-            "name": "totalCaptiveBreedingMaintainedInvoiced",
-            "validate": [
-              {
-                "rule": "required"
-              },
-              {
-                "rule": "min[0]"
-              },
-              {
-                "param": {
-                  "expression": "totalCaptiveBreedingMaintained",
-                  "type": "computed"
-                },
-                "rule": "max"
-              }
-            ],
-            "defaultValue": ""
-          },
-
-          {
-            "dataType": "number",
             "name": "totalNumberOfMonthsSpentMaintainingCaptiveBreedingPrograms",
             "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
@@ -1776,27 +1747,6 @@
               "expression": "sum(breedingProgramDetails, \"numberOfMonthsSpentMaintainingCaptiveBreedingPrograms\")"
             }
           },
-          {
-            "dataType": "number",
-            "name": "totalNumberOfMonthsSpentMaintainingCaptiveBreedingProgramsInvoiced",
-            "validate": [
-              {
-                "rule": "required"
-              },
-              {
-                "rule": "min[0]"
-              },
-              {
-                "param": {
-                  "expression": "totalNumberOfMonthsSpentMaintainingCaptiveBreedingPrograms",
-                  "type": "computed"
-                },
-                "rule": "max"
-              }
-            ],
-            "defaultValue": ""
-          },
-
           {
             "dataType": "number",
             "name": "totalNumberOfDaysSpentMaintainingCaptiveBreedingPrograms",
@@ -1825,9 +1775,92 @@
                 "rule": "max"
               }
             ],
+            "behaviour": [
+              {
+                "condition": "+totalNumberOfMonthsSpentMaintainingCaptiveBreedingPrograms == 0 and +totalCaptiveBreedingMaintained == 0 and +totalCaptiveBreedingEstablished == 0",
+                "type": "enable_and_clear"
+              }
+            ],
             "defaultValue": ""
           },
-
+          {
+            "dataType": "number",
+            "name": "totalCaptiveBreedingEstablishedInvoiced",
+            "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "totalCaptiveBreedingEstablished",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "behaviour": [
+              {
+                "condition": "+totalNumberOfMonthsSpentMaintainingCaptiveBreedingPrograms == 0 and +totalNumberOfDaysSpentMaintainingCaptiveBreedingPrograms == 0",
+                "type": "enable_and_clear"
+              }
+            ],
+            "defaultValue": ""
+          },
+          {
+            "dataType": "number",
+            "name": "totalCaptiveBreedingMaintainedInvoiced",
+            "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "totalCaptiveBreedingMaintained",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "behaviour": [
+              {
+                "condition": "+totalNumberOfMonthsSpentMaintainingCaptiveBreedingPrograms == 0 and +totalNumberOfDaysSpentMaintainingCaptiveBreedingPrograms == 0",
+                "type": "enable_and_clear"
+              }
+            ],
+            "defaultValue": ""
+          },
+          {
+            "dataType": "number",
+            "name": "totalNumberOfMonthsSpentMaintainingCaptiveBreedingProgramsInvoiced",
+            "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "totalNumberOfMonthsSpentMaintainingCaptiveBreedingPrograms",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "behaviour": [
+              {
+                "condition": "+totalCaptiveBreedingMaintained == 0 and +totalCaptiveBreedingEstablished == 0 and +totalNumberOfDaysSpentMaintainingCaptiveBreedingPrograms == 0",
+                "type": "enable_and_clear"
+              }
+            ],
+            "defaultValue": ""
+          },
           {
             "dataType": "text",
             "name": "totalInvoicedCaptiveBreedingMismatched",
@@ -1835,8 +1868,8 @@
             "validate": "maxSize[400],required",
             "behaviour": [
               {
-                "condition": "+totalCaptiveBreedingEstablishedInvoiced < +totalCaptiveBreedingEstablished or +totalCaptiveBreedingMaintainedInvoiced < +totalCaptiveBreedingMaintained",
-                "type": "enable"
+                "condition": "+totalCaptiveBreedingEstablishedInvoiced < +totalCaptiveBreedingEstablished or +totalCaptiveBreedingMaintainedInvoiced < +totalCaptiveBreedingMaintained or +totalNumberOfMonthsSpentMaintainingCaptiveBreedingProgramsInvoiced < +totalNumberOfMonthsSpentMaintainingCaptiveBreedingPrograms or +totalNumberOfDaysSpentMaintainingCaptiveBreedingProgramsInvoiced < +totalNumberOfDaysSpentMaintainingCaptiveBreedingPrograms",
+                "type": "enable_and_clear"
               }
             ]
           },
@@ -2009,7 +2042,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(v) Total number of months captive breeding and release, translocation, or re-introduction programs are maintained for this reporting period",
+                        "preLabel": "(v) Total number of <u>months</u> captive breeding and release, translocation, or re-introduction programs are maintained for this reporting period",
                         "source": "totalNumberOfMonthsSpentMaintainingCaptiveBreedingPrograms",
                         "type": "number"
                       }
@@ -2019,7 +2052,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vi) Total umber of months captive breeding and release, translocation, or re-introduction programs are maintained <u><i>invoiced</i></u> for this reporting period",
+                        "preLabel": "(vi) Total number of <u>months</u> captive breeding and release, translocation, or re-introduction programs are maintained <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalNumberOfMonthsSpentMaintainingCaptiveBreedingProgramsInvoiced",
                         "type": "number"
                       }
@@ -2035,7 +2068,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(vii) Total number of days captive breeding and release, translocation, or re-introduction programs are maintained for this reporting period",
+                        "preLabel": "(vii) Total number of <u>days</u> captive breeding and release, translocation, or re-introduction programs are maintained for this reporting period",
                         "source": "totalNumberOfDaysSpentMaintainingCaptiveBreedingPrograms",
                         "type": "number"
                       }
@@ -2045,7 +2078,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(viii) Total number of days captive breeding and release, translocation, or re-introduction programs are maintained <u><i>invoiced</i></u> for this reporting period",
+                        "preLabel": "(viii) Total number of <u>days</u> captive breeding and release, translocation, or re-introduction programs are maintained <u><i>invoiced</i></u> for this reporting period",
                         "source": "totalNumberOfDaysSpentMaintainingCaptiveBreedingProgramsInvoiced",
                         "type": "number"
                       }
@@ -2354,16 +2387,28 @@
                             ]
                           }
                         ]
-                      },
+                      }]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "type": "literal",
+                        "source": "You should only use the field below that corresponds to the target measure used for the Captive Breeding, Translocation or Re-introduction Program in the project MERI plan"
+                      }]
+                  },
+                  {
+                    "type":"row",
+                    "items": [
                       {
                         "type": "col",
-                        "css": "span3 col-border-right",
+                        "css": "span4 col-border-right",
                         "items": [
                           {
                             "type": "row",
                             "items": [
                               {
-                                "preLabel": "Number of captive breeding, release, translocation, or re-introduction sites established/ maintained",
+                                "preLabel": "Number of captive breeding, release, translocation, or re-introduction <u>sites</u> established/ maintained",
                                 "source": "numberOfCaptiveBreeding",
                                 "type": "number"
                               }
@@ -2373,13 +2418,13 @@
                       },
                       {
                         "type": "col",
-                        "css": "span3 col-border-right",
+                        "css": "span4 col-border-right",
                         "items": [
                           {
                             "type": "row",
                             "items": [
                               {
-                                "preLabel": "Number of months captive breeding and release, translocation, or re-introduction programs are maintained",
+                                "preLabel": "Number of <u>months</u> captive breeding and release, translocation, or re-introduction programs are maintained",
                                 "source": "numberOfMonthsSpentMaintainingCaptiveBreedingPrograms",
                                 "type": "number"
                               }
@@ -2389,13 +2434,13 @@
                       },
                       {
                         "type": "col",
-                        "css": "span3 col-border-right",
+                        "css": "span4 col-border-right",
                         "items": [
                           {
                             "type": "row",
                             "items": [
                               {
-                                "preLabel": "Number of days captive breeding and release, translocation, or re-introduction programs are maintained",
+                                "preLabel": "Number of <u>days</u> captive breeding and release, translocation, or re-introduction programs are maintained",
                                 "source": "numberOfDaysSpentMaintainingCaptiveBreedingPrograms",
                                 "type": "number"
                               }
