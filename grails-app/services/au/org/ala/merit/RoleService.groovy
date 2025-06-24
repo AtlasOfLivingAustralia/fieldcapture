@@ -31,6 +31,7 @@ class RoleService {
     public static final String PROJECT_FC_OFFICER_ROLE = 'ROLE_FC_OFFICER'
     public static final String PROJECT_FC_ADMIN_ROLE = 'ROLE_FC_ADMIN'
     public static final String PROJECT_SURVEYOR_ROLE = 'projectParticipant'
+    public static final String PROJECT_MODERATOR_ROLE = 'moderator'
 
     /**
      * A check against this role will pass if the user has any hub or any Project role.  This is more of a permission
@@ -55,9 +56,11 @@ class RoleService {
      */
     public static final String HUB_READ_ONLY_ROLE = 'siteReadOnly'
 
+    public static final String HUB_SUPPORT_OFFICER_ROLE = 'supportOfficer'
+
     /** MERIT only uses a subset of the roles that ecodata supports */
     private static final List MERIT_PROJECT_ROLES = [GRANT_MANAGER_ROLE, PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE, PROJECT_READ_ONLY_ROLE]
-    public static final List MERIT_HUB_ROLES = [HUB_ADMIN_ROLE, HUB_OFFICER_ROLE, HUB_READ_ONLY_ROLE]
+    public static final List MERIT_HUB_ROLES = [HUB_ADMIN_ROLE, HUB_SUPPORT_OFFICER_ROLE, HUB_OFFICER_ROLE, HUB_READ_ONLY_ROLE]
 
     /** Granted to ALA developers, gives access to all functions in MERIT */
     public static final String ALA_ADMIN_ROLE = "alaAdmin"
@@ -106,10 +109,6 @@ class RoleService {
 
     Set getAllowedUserRoles() {
         return new HashSet([PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE, PROJECT_SURVEYOR_ROLE])
-    }
-
-    public Set getHubRoles() {
-        return new HashSet([PROJECT_FC_READ_ONLY_ROLE, PROJECT_FC_OFFICER_ROLE, PROJECT_FC_ADMIN_ROLE])
     }
 
 }

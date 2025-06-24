@@ -103,11 +103,15 @@ class UserService {
      * user is used.
      */
     boolean userIsSiteAdmin(String userId = null) {
-        userIsFcOfficer(userId) || userIsFcAdmin(userId) || userIsAlaAdmin(userId)
+        userIsFcOfficer(userId) || userIsSupportOfficerOrAdmin(userId)
     }
 
     boolean userIsFcAdmin(String userId = null) {
         doesUserHaveHubRole(RoleService.HUB_ADMIN_ROLE, userId)
+    }
+
+    boolean userIsSupportOfficerOrAdmin(String userId = null) {
+        userIsAlaOrFcAdmin(userId) || userIsSupportOfficer(userId)
     }
 
     /**
@@ -153,6 +157,11 @@ class UserService {
     boolean userIsFcOfficer(String userId) {
         doesUserHaveHubRole(RoleService.HUB_OFFICER_ROLE, userId)
     }
+
+    boolean userIsSupportOfficer(String userId) {
+        doesUserHaveHubRole(RoleService.HUB_SUPPORT_OFFICER_ROLE, userId)
+    }
+
 
     def getRecentEditsForUserId(userId) {
         def url = auditBaseUrl + "/getRecentEditsForUserId/${userId}"
@@ -715,7 +724,11 @@ class UserService {
      * @return the accessLevel used to represent the supplied role
      */
     private String convertHubRoleToAccessLevel(String role) {
-        Map map = [siteAdmin: "admin", officer: "caseManager", siteReadOnly: "readOnly"]
+        Map map = [
+                siteAdmin: RoleService.PROJECT_ADMIN_ROLE,
+                supportOfficer: RoleService.PROJECT_MODERATOR_ROLE,
+                officer: RoleService.GRANT_MANAGER_ROLE,
+                siteReadOnly: RoleService.PROJECT_READ_ONLY_ROLE]
         return map[role]
     }
 
