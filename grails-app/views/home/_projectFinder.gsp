@@ -149,7 +149,7 @@
                                                     <div class="card mb-0 border-0 p-0">
                                                         <div>
                                                             <a class="projectTitle collapsed" id="proj_" href="#a_" data-toggle="collapse" title="click to show/hide details">
-                                                                <span class="showHideCaret">&#9658; </span><span class="projectTitleName">$name</span>
+                                                                <span class="showHideCaret">&#9658; </span><span class="projectTitleName">$name</span> (<b class="meritProjectID"></b>)
                                                             </a>
                                                             <a href="#" class="managementUnitLine pull-right">
                                                                 <small><i class="managementUnitName"></i></small>
@@ -404,6 +404,7 @@
             $tr.find(".projectInfo").attr("aria-labelledby", "proj_"+id)
             $tr.find('.projectInfo').attr("id", "a_" + id)
             $tr.find('.td1 .projectTitleName').text(src.name); // projectTitleName
+            $tr.find(".td1 .meritProjectID").text(src.grantId)
             if(src.managementUnitName){
                 $tr.find('.td1 .managementUnitName').text(src.managementUnitName);
                 $tr.find('.td1 a.managementUnitLine').attr("href", "${createLink(controller: 'managementUnit')}/" + src.managementUnitId);
