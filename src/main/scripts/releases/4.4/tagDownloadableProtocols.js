@@ -14,7 +14,12 @@ const downloadableProtocols = [
     'Photo Points - Device Panorama',
     'Opportune',
     'Fauna Ground Counts Vantage Point',
-    'Fauna Ground Counts Transects'
+    'Fauna Ground Counts Transects',
+    'Sign-based Fauna Surveys - Off-plot Belt Transect',
+    'Sign-based Fauna Surveys - Within-plot Belt Transect',
+    'Herbivory and Physical Damage - Active Plot Search',
+    'Herbivory and Physical Damage - Off-plot Transect',
+    'Herbivory and Physical Damage - Within-plot Belt Transect'
 
 ];
 
