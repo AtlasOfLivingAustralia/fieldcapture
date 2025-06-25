@@ -14,6 +14,7 @@ import org.joda.time.DateTimeUtils
 import org.springframework.web.context.request.RequestContextHolder
 import spock.lang.Specification
 
+import javax.management.relation.Role
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -643,6 +644,48 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         user2.getUserId() == user.getUserId()
         user2.displayName == user.displayName
         user2.userName == user.userName
+    }
+
+    def "userIsSupportOfficerOrAdmin returns true for ALA admins, MERIT hub admins and MERIT hub support officers"(String hubAccessLevel, boolean expectedResult) {
+        setup:
+        String userId = 'u1'
+        HubSettings hubSettings = new HubSettings(userPermissions:[])
+        hubSettings.userPermissions << [userId:userId, role:hubAccessLevel]
+
+        SettingService.setHubConfig(hubSettings)
+
+        expect:
+        service.userIsSupportOfficerOrAdmin(userId) == expectedResult
+
+        where:
+        hubAccessLevel | expectedResult
+        null | false
+        RoleService.PROJECT_READ_ONLY_ROLE  | false
+        RoleService.GRANT_MANAGER_ROLE      | false
+        RoleService.PROJECT_MODERATOR_ROLE  | true
+        RoleService.PROJECT_ADMIN_ROLE      | true
+
+    }
+
+    def "userIsSiteAdmin returns true for ALA admins, MERIT hub admins, MERIT hub support officers and MERIT hub officers"(String hubAccessLevel, boolean expectedResult) {
+        setup:
+        String userId = 'u1'
+        HubSettings hubSettings = new HubSettings(userPermissions:[])
+        hubSettings.userPermissions << [userId:userId, role:hubAccessLevel]
+
+        SettingService.setHubConfig(hubSettings)
+
+        expect:
+        service.userIsSiteAdmin(userId) == expectedResult
+
+        where:
+        hubAccessLevel | expectedResult
+        null | false
+        RoleService.PROJECT_READ_ONLY_ROLE  | false
+        RoleService.GRANT_MANAGER_ROLE      | true
+        RoleService.PROJECT_MODERATOR_ROLE  | true
+        RoleService.PROJECT_ADMIN_ROLE      | true
+
     }
 
 }
