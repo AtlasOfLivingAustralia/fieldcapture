@@ -35,6 +35,21 @@ class UserService {
 
     def auditBaseUrl = ""
 
+    /**
+     * This map defines the relationship between how a hub role is stored in ecodata as an accessLevel
+     * and how it is named/treated in MERIT.
+     */
+    final Map hubRoleToAccessLevelMap = [
+            (RoleService.HUB_ADMIN_ROLE): RoleService.PROJECT_ADMIN_ROLE,
+            (RoleService.HUB_SUPPORT_OFFICER_ROLE): RoleService.PROJECT_MODERATOR_ROLE,
+            (RoleService.HUB_OFFICER_ROLE): RoleService.GRANT_MANAGER_ROLE,
+            (RoleService.HUB_READ_ONLY_ROLE): RoleService.PROJECT_READ_ONLY_ROLE
+    ]
+
+    final Map accessLevelToHubRoleMap = hubRoleToAccessLevelMap.collectEntries { k, v ->
+        [(v): k]
+    }
+
     @PostConstruct
     private void init() {
         auditBaseUrl = grailsApplication.config.getProperty('ecodata.baseUrl') + 'audit'
@@ -691,17 +706,7 @@ class UserService {
         return resp
     }
 
-    /**
-     *
-     * @param results
-     * @return the Hub Role to be displayed in the UI (user permission table)
-     */
-    private List convertAccessLevelToHubRole(results) {
-        def map = [admin: "siteAdmin", caseManager: "officer", readOnly: "siteReadOnly"]
-        results.data.each { it ->
-            it.role = map[it.role]
-        }
-    }
+
 
     def addUserToHub(Map params) {
         String ecodataAclAccessLevel = convertHubRoleToAccessLevel(params.role)
@@ -724,12 +729,19 @@ class UserService {
      * @return the accessLevel used to represent the supplied role
      */
     private String convertHubRoleToAccessLevel(String role) {
-        Map map = [
-                siteAdmin: RoleService.PROJECT_ADMIN_ROLE,
-                supportOfficer: RoleService.PROJECT_MODERATOR_ROLE,
-                officer: RoleService.GRANT_MANAGER_ROLE,
-                siteReadOnly: RoleService.PROJECT_READ_ONLY_ROLE]
-        return map[role]
+        return hubRoleToAccessLevelMap[role]
+    }
+
+    /**
+     *
+     * @param results
+     * @return the Hub Role to be displayed in the UI (user permission table)
+     */
+    private List convertAccessLevelToHubRole(results) {
+
+        results.data.each { it ->
+            it.role = accessLevelToHubRoleMap[it.role]
+        }
     }
 
     def removeHubUser(Map params) {
