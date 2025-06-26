@@ -71,7 +71,7 @@
     </div>
 
     <div class="form-group row">
-        <label class="col-form-label col-sm-3" for="totalFunding">Total funding amount: <fc:iconHelp><g:message
+        <label class="col-form-label col-sm-3" for="totalFunding">Total funding amount (GST Exclusive): <fc:iconHelp><g:message
                 code="program.funding.help"/></fc:iconHelp></label>
 
         <div class="col-sm-3 input-group currency-input">
