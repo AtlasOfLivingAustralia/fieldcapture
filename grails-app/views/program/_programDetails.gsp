@@ -71,6 +71,23 @@
     </div>
 
     <div class="form-group row">
+        <label class="col-form-label col-sm-3" for="totalFunding">Total funding amount: <fc:iconHelp><g:message
+                code="program.funding.help"/></fc:iconHelp></label>
+
+        <div class="col-sm-3 input-group currency-input">
+            <div class="input-group-prepend customAddOn">
+                <span class="input-group-text">$</span>
+            </div>
+            <input type="number" step="0" id="totalFunding" class="form-control " data-bind="value:totalFunding"
+                   placeholder="${g.message(code: 'program.funding.placeholder')}">
+            <div class="input-group-append customAddOn">
+                <span class="input-group-text">.00</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-group row">
         <label class="col-form-label col-sm-3" for="url">Web Site URL: <fc:iconHelp><g:message
                 code="program.webUrl.help"/></fc:iconHelp></label>
 
