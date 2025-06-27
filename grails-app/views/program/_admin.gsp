@@ -17,7 +17,7 @@
     <div class="tab-content col-9">
         <div class="tab-pane active" id="edit-program-details">
 
-            <!-- ko if: fundingType || totalFunding -->
+            <!-- ko if: fundingType() || totalFunding() -->
             <h4>Program funding details</h4>
             <!-- ko if: fundingType -->
             <label>Funding type:</label> <span data-bind="text: fundingType"></span><br/>
