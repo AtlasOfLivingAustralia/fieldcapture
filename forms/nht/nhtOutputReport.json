@@ -16,6 +16,86 @@
     {
       "collapsedByDefault": false,
       "template": {
+        "title": "Sustainable Agriculture",
+        "modelName": "Sustainable Agriculture - Farms and Community Groups",
+        "dataModel": [
+          {
+            "dataType": "text",
+            "name": "supportedSustainableAgriculturalPractices",
+            "constraints": ["Yes", "No", "Not applicable"],
+            "validate": "required"
+          },
+          {
+            "dataType": "number",
+            "name": "numberOfCommunityGroupsSupported",
+            "validate": "integer"
+          },
+          {
+            "dataType": "number",
+            "name": "numberOfFarmsAdoptingSustainablePractices",
+            "validate": "integer"
+          }
+        ],
+        "viewModel": [
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "literal",
+                "source": "<h3>Sustainable agricultural practices</h3>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "selectOne",
+                "source": "supportedSustainableAgriculturalPractices",
+                "preLabel": "During this reporting period has the project supported the introduction of sustainable agricultural practices?"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "supportedSustainableAgriculturalPractices == \"Yes\""
+              }
+            ],
+            "items": [
+              {
+                "type": "col",
+                "items": [
+                  {
+                    "type": "number",
+                    "source": "numberOfCommunityGroupsSupported",
+                    "preLabel": "Number of community groups supported through the project"
+                  },
+                  {
+                    "type": "number",
+                    "source": "numberOfFarmsAdoptingSustainablePractices",
+                    "preLabel": "How many farms have adopted sustainable agriculture practices through the project?"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "modelName": null,
+      "templateName": "sustainableAgricultureFarmsAndCommunityGroups",
+      "optional": true,
+      "optionalQuestionText": null,
+      "title": "Sustainable Agriculture",
+      "collapsibleHeading": null,
+      "name": "Sustainable Agriculture - Farms and Community Groups",
+      "description": null
+    },
+    {
+      "collapsedByDefault": false,
+      "template": {
         "title": "Communications",
         "modelName": "NHT - Communications",
         "dataModel": [
