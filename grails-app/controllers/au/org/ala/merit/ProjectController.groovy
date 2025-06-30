@@ -579,7 +579,7 @@ class ProjectController {
         render result as JSON
     }
 
-    // we are using officer here rather than caseMansager to allow "Support Officers" to be able to\
+    // we are using accessLevel=officer here rather than accessLevel=caseManager to allow "Support Officers" to be able to\
     // return reports without adding themselves to the project as a grant manager.
     @PreAuthorise(accessLevel = 'officer')
     def ajaxRejectReport(String id) {
