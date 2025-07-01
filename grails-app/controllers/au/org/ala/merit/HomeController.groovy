@@ -231,10 +231,10 @@ class HomeController {
         } else {
 
             if (userService.userIsAlaOrFcAdmin()){
-                params.include = ['name', 'managementUnitName', 'managementUnitId', 'programId', 'description', 'associatedProgram', 'associatedSubProgram','lastUpdated',
+                params.include = ['name', 'grantId', 'managementUnitName', 'managementUnitId', 'programId', 'description', 'associatedProgram', 'associatedSubProgram','lastUpdated',
                                   'funding', 'associatedOrgs', 'externalId', 'plannedEndDate', 'plannedStartDate', 'activities.siteId','activities.type','sites.siteId', 'sites.projects', 'sites.extent.geometry']
             } else {
-                params.include = ['name', 'description', 'lastUpdated', 'associatedOrgs', 'managementUnitName','managementUnitId', 'programId', 'associatedProgram', 'associatedSubProgram']
+                params.include = ['name', 'grantId', 'description', 'lastUpdated', 'associatedOrgs', 'managementUnitName','managementUnitId', 'programId', 'associatedProgram', 'associatedSubProgram']
             }
             Map resp = searchService.allProjects(params)
             render resp as JSON

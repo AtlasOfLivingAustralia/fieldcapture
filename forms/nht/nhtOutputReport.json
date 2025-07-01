@@ -846,7 +846,6 @@
                 "name": "communicationMaterialType",
                 "constraints": [
                   "Advertising",
-                  "Extension materials",
                   "Event Flyers and Brochures",
                   "Media release",
                   "Newsletters",
