@@ -40,7 +40,7 @@ ProgramViewModel = function (props, options) {
     }));
     self.externalIdTypes = ['GRANT_OPPORTUNITY'];
     self.fundingType = ko.observable(props.fundingType);
-
+    self.totalFunding = ko.observable(props.totalFunding);
     self.deleteProgram = function () {
         if (window.confirm("Delete this program?  Are you sure?")) {
             $.post(config.programDeleteUrl).complete(function () {

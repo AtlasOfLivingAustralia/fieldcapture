@@ -408,7 +408,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         Map project = [projectId: projectId, planStatus: ProjectService.PLAN_APPROVED]
         webService.getJson(_) >> project
         String reportId = 'r1'
-        Map report = [reportId: reportId]
+        Map report = [reportId: reportId, publicationStatus: PublicationStatus.SUBMITTED]
         Map reportDetails = [reportId: reportId, activityIds: ['a1', 'a2'], reason:'Testing', categories:['Other']]
         reportService.getReportsForProject(_) >> [report]
 
@@ -418,10 +418,63 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
 
         then:
         result.success == true
+        1 * reportService.isApproved(report) >> false
+        1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
+        1 * webService.getJson({ it.endsWith("permissions/getMembersForProject/" + projectId) }) >> projectRoles
+        1 * reportService.rejectReport(reportId, reportDetails.activityIds, reportDetails.reason, reportDetails.categories, project, projectRoles, EmailTemplate.DEFAULT_REPORT_RETURNED_EMAIL_TEMPLATE) >> [success:true]
+    }
+
+    def "An approved report can be returned by a site support officer or site admin"() {
+        given:
+        def projectId = 'project1'
+        List projectRoles = []
+        Map project = [projectId: projectId, planStatus: ProjectService.PLAN_APPROVED]
+        webService.getJson(_) >> project
+        String reportId = 'r1'
+        Map report = [reportId: reportId, publicationStatus: PublicationStatus.APPROVED]
+        Map reportDetails = [reportId: reportId, activityIds: ['a1', 'a2'], reason:'Testing', categories:['Other']]
+        reportService.getReportsForProject(_) >> [report]
+
+
+        when:
+        def result = service.rejectReport(projectId, reportDetails)
+
+        then:
+        1 * reportService.isApproved(report) >> true
+        userService.userIsSupportOfficerOrAdmin() >> true
+        result.success == true
 
         1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
         1 * webService.getJson({ it.endsWith("permissions/getMembersForProject/" + projectId) }) >> projectRoles
         1 * reportService.rejectReport(reportId, reportDetails.activityIds, reportDetails.reason, reportDetails.categories, project, projectRoles, EmailTemplate.DEFAULT_REPORT_RETURNED_EMAIL_TEMPLATE) >> [success:true]
+
+    }
+
+    def "An approved report cannot be returned by a MERIT officer"() {
+        given:
+        def projectId = 'project1'
+        List projectRoles = []
+        Map project = [projectId: projectId, planStatus: ProjectService.PLAN_APPROVED]
+        webService.getJson(_) >> project
+        String reportId = 'r1'
+        Map report = [reportId: reportId, publicationStatus: PublicationStatus.APPROVED]
+        Map reportDetails = [reportId: reportId, activityIds: ['a1', 'a2'], reason:'Testing', categories:['Other']]
+        reportService.getReportsForProject(_) >> [report]
+
+
+        when:
+        def result = service.rejectReport(projectId, reportDetails)
+
+        then:
+        1 * reportService.isApproved(report) >> true
+        userService.userIsSupportOfficerOrAdmin() >> false
+        result.success == false
+        result.error != null
+
+        1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
+        1 * webService.getJson({ it.endsWith("permissions/getMembersForProject/" + projectId) }) >> projectRoles
+        0 * reportService.rejectReport(reportId, reportDetails.activityIds, reportDetails.reason, reportDetails.categories, project, projectRoles, EmailTemplate.DEFAULT_REPORT_RETURNED_EMAIL_TEMPLATE) >> [success:true]
+
     }
 
     def "the project service should delegate to the report service to cancel a report"() {

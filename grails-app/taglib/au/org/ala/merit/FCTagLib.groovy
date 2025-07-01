@@ -488,6 +488,12 @@ class FCTagLib {
         }
     }
 
+    def userIsSupportOfficerOrAdmin = { attrs ->
+        if (userService.userIsSupportOfficerOrAdmin()) {
+            out << true
+        }
+    }
+
     def userIsAlaOrFcAdmin = { attrs ->
         if (userService.userIsAlaOrFcAdmin()) {
             out << true

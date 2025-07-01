@@ -13,10 +13,10 @@ class AddSubProgramSpec extends StubbedCasSpec {
         logout(browser)
     }
 
-    def "I can create a Sub program as a MERIT administrator"() {
+    def "I can create a Sub program as an ALA administrator"() {
 
         setup: "log in as userId=1 who is a program admin for the program with programId=test_program"
-        loginAsMeritAdmin(browser)
+        loginAsAlaAdmin(browser)
 
         when:
         to ProgramPage, 'test_program'
