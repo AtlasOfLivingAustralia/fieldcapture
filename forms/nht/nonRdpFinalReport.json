@@ -1,15 +1,15 @@
 {
-  "name": "Grants and Others Final Report",
+  "name": "Non RDP Final Report",
   "type": "Report",
   "sections": [
     {
-      "name": "Grants and Others Final Report",
+      "name": "Non RDP Final Report",
       "optionalQuestionText": null,
       "optional": false,
       "collapsedByDefault": false,
-      "templateName": "grants_and_others_final_report",
+      "templateName": "non_rdp_final_report",
       "template": {
-        "modelName": "Grants and Others Final Report",
+        "modelName": "Non RDP Final Report",
         "dataModel": [
           {
             "dataType": "list",
