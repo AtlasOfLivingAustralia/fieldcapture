@@ -15,7 +15,7 @@
       "description": null,
       "template": {
         "modelName": "NHT SAF Annual Report",
-        "title": "Annual Progress Report",
+        "title": "Annual Report",
         "dataModel": [
           {
             "dataType": "text",
@@ -901,13 +901,11 @@
                 "type": "col",
                 "items": [
                   {
-                    "readonly": true,
                     "type": "number",
                     "source": "numberOfCommunityGroupsSupported",
                     "preLabel": "9.a Number of community groups supported through the project"
                   },
                   {
-                    "readonly": true,
                     "type": "number",
                     "source": "numberOfFarmsAdoptingSustainablePractices",
                     "preLabel": "9.b How many farms have adopted sustainable agriculture practices through the project?"
@@ -1012,9 +1010,7 @@
                     "f474c538-c8d7-4431-86c3-741163a50a35",
                     "06c401d9-1370-48d1-9c30-9a6846128f71",
                     "c6b2f62b-06c7-4ea6-9cb3-61ce26ab8200",
-                    "3117521e-a801-45ef-838f-519c31ca59a2",
-                    "81db2acb-e2ec-4f9a-9e99-de4533fc8d8c",
-                    "8cfaf8f3-21ed-48b4-b247-d6772ecbac41"
+                    "3117521e-a801-45ef-838f-519c31ca59a2"
                   ]
                 }
               ]
@@ -1124,14 +1120,6 @@
               {
                 "source-path": "c6b2f62b-06c7-4ea6-9cb3-61ce26ab8200",
                 "target": "planningMeetings"
-              },
-              {
-                "source-path": "81db2acb-e2ec-4f9a-9e99-de4533fc8d8c",
-                "target": "numberOfCommunityGroupsSupported"
-              },
-              {
-                "source-path": "8cfaf8f3-21ed-48b4-b247-d6772ecbac41",
-                "target": "numberOfFarmsAdoptingSustainablePractices"
               }
             ]
           }
