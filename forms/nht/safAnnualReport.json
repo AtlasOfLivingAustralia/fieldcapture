@@ -21,11 +21,20 @@
             "dataType": "text",
             "name": "activitiesCarriedForward",
             "description": "Carried forward is planned activities not fully delivered.",
-            "constraints": [
-              "Yes",
-              "No",
-              "Not applicable"
-            ],
+            "defaultValue": "Not applicable",
+            "constraints": {
+              "type": "computed",
+              "default": ["Not applicable"],
+              "options": [
+                {
+                  "condition": "owner.associatedSubProgram == \"Climate-Smart Agriculture Program - Sustainable Agriculture Facilitators\"",
+                  "value":[
+                    "Yes",
+                    "No"
+                  ]
+                }
+              ]
+            },
             "validate": "required"
           },
           {
