@@ -633,7 +633,7 @@ var priorities = [
 ];
 
 //Create the parent program
-let programName = "High Pathogenicity Avian Influenza (HPAI) Preparedness Fund";
+let programName = "High Pathogenicity Avian Influenza (HPAI) Preparedness Program";
 var parent = createOrFindProgram(programName);
 var subprograms = ["HPAI Preparedness and Planning activities"]
 
