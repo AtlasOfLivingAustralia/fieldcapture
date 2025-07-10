@@ -201,7 +201,7 @@ if(!app.default.hub) {
 if (!pdfgen.baseURL){
     pdfgen.baseURL="http://pdfgen.ala.org.au/"
 }
-
+app.http.header.hostName = "X-ALA-hostName"
 abn.abnLookupToken = "Insert abn Token here"
 abn.abnUrl= "https://abr.business.gov.au/json/AbnDetails.aspx?abn="
 lists.baseURL = "https://lists-ws.test.ala.org.au"
