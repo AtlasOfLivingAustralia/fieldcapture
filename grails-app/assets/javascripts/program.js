@@ -350,28 +350,6 @@ var ProgramPageViewModel = function(props, options) {
         });
     };
 
-    function popupContent(managementUnitFeature) {
-        return "<a href="+options.viewManagementUnitUrl +"/" +managementUnitFeature.properties.managementUnitId+">"+ managementUnitFeature.properties.name + "</a>";
-    }
-
-    self.loadManagementUnits = function(map) {
-        //find sites of related projects.
-        var searchUrl = options.managementUnitFeaturesUrl;
-        $.getJSON(searchUrl, function(data) {
-            if (data.resp) {
-                $.each(data.resp.features, function(j, feature) {
-
-                    if (!feature.properties) {
-                        feature.properties = {};
-                    }
-                    feature.properties.popupContent = popupContent(feature);
-                    map.addFeature(feature);
-                });
-            }
-
-        });
-    };
-
     var tabs = {
         'about': {
             initialiser: function () {
@@ -391,31 +369,6 @@ var ProgramPageViewModel = function(props, options) {
                 }
                 $.fn.dataTable.moment( 'dd-MM-yyyy' );
                 $('#projectOverviewList').DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
-
-                var colours = ['#e41a1c',
-                    '#377eb8',
-                    '#4daf4a',
-                    '#984ea3',
-                    '#ff7f00'];
-                var styles = {};
-                for (var i=0 ; i<colours.length; i++) {
-                    styles[i+1] = {
-                        color:colours[i],
-                        fillOpacity:0.8,
-                        weight: 1
-                    }
-                }
-
-                //create a empty map.
-                var map = createMap({
-                    useAlaMap:true,
-                    mapContainerId:'muMap',
-                    width: '100%',
-                    styles: styles,
-                    fullscreenControl:false
-                });
-
-                self.loadManagementUnits(map);
             }
         },
         'projects': {
