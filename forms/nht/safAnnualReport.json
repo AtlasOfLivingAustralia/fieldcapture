@@ -15,16 +15,26 @@
       "description": null,
       "template": {
         "modelName": "NHT SAF Annual Report",
-        "title": "Sustainable Agriculture Facilitators (SAF) Annual Report",
+        "title": "Annual Report",
         "dataModel": [
           {
             "dataType": "text",
             "name": "activitiesCarriedForward",
             "description": "Carried forward is planned activities not fully delivered.",
-            "constraints": [
-              "Yes",
-              "No"
-            ],
+            "defaultValue": "Not applicable",
+            "constraints": {
+              "type": "computed",
+              "default": ["Not applicable"],
+              "options": [
+                {
+                  "condition": "owner.associatedSubProgram == \"Climate-Smart Agriculture Program - Sustainable Agriculture Facilitators\"",
+                  "value":[
+                    "Yes",
+                    "No"
+                  ]
+                }
+              ]
+            },
             "validate": "required"
           },
           {
