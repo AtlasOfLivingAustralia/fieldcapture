@@ -22,12 +22,6 @@ class ProgramSpec extends StubbedCasSpec {
         and:
         //force to overview tab
         overviewTab().click()
-        //MUST show hidden div first, otherwise WebBrowser selector cannot find hidden elements
-        interact {
-            moveToElement(showAllStatesMuButton.first())
-            showAllStatesMuButton.click()
-        }
-
 
         then:
         waitFor(10d,{at ProgramPage})
@@ -39,9 +33,9 @@ class ProgramSpec extends StubbedCasSpec {
         then:
 
         projectNames().size() == 4
-        //grantIds().containsAll(['RLP-Test-Program-Project-1','RLP-Test-Program-Project-2','RLP-Test-Program-Project-3'])
+        grantIds().containsAll(['RLP-Test-Program-Project-1','RLP-Test-Program-Project-2','RLP-Test-Program-Project-3'])
         grantIds().size()==4
-        //muInStates().containsAll(['test mu', 'test mu 2'])
+
     }
 
 }
