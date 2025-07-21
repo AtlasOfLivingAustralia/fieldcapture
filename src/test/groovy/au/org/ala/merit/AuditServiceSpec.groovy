@@ -22,13 +22,14 @@ class AuditServiceSpec extends Specification implements ServiceUnitTest<AuditSer
         String baselineDate = '2024-06-10T00:00:00Z'
         String beforeDate = '2024-06-01T00:00:00Z'
 
-        def messages = [
-            buildProjectAuditMessage('2024-06-12T00:00:00Z', [risk: 'high']),
-            buildProjectAuditMessage('2024-06-10T00:00:00Z', [risk: 'medium']),
-            buildProjectAuditMessage('2024-06-05T00:00:00Z', [risk: 'low']),
-            buildProjectAuditMessage('2024-05-30T00:00:00Z', [risk: 'none']),
-            buildProjectAuditMessage('2024-05-20T00:00:00Z', [risk: 'none'])
+        Map expectedPaginationOptions = [offset: 0, max: 1, sort: 'date', orderBy: 'desc']
+        Map expectedCriteria = [
+            entityId: projectId,
+            entityType: 'au.org.ala.ecodata.Project'
         ]
+        Map message1 = buildProjectAuditMessage('2024-06-12T00:00:00Z', [risk: 'high'])
+        Map message2 = buildProjectAuditMessage('2024-03-11T00:00:00Z', [risk: 'medium'])
+
 
         webService.getJson2(_, _) >> { String url, int timeout ->
             [resp: [data: messages, recordsTotal: messages.size()]]
@@ -38,59 +39,25 @@ class AuditServiceSpec extends Specification implements ServiceUnitTest<AuditSer
         def result = service.compareProjectEntity(projectId, baselineDate, beforeDate, entityPath)
 
         then:
-        result.baseline.date == '2024-06-10T00:00:00Z'
-        result.comparison.date == '2024-05-30T00:00:00Z'
-        result.mostRecentEditBeforeOrOnBaselineDate.date == '2024-06-10T00:00:00Z'
-        result.baseline.entity[entityPath].risk == 'medium'
-        result.comparison.entity[entityPath].risk == 'none'
-        result.mostRecentEditBeforeOrOnBaselineDate.entity[entityPath].risk == 'medium'
+        1 * webService.doPost({ it.contains('audit/search') },
+                [criteria:expectedCriteria, paginationOptions:expectedPaginationOptions, endDate:baselineDate]) >>
+                [resp: [messages: [message1], totalCount: 10]]
+
+        1 * webService.doPost({ it.contains('audit/search') },
+                [criteria:expectedCriteria, paginationOptions:expectedPaginationOptions, endDate:beforeDate]) >>
+                [resp: [messages: [message2], totalCount: 10]]
+
+
+
+        result.baseline.date == '2024-06-12T00:00:00Z'
+        result.comparison.date == '2024-03-11T00:00:00Z'
+        result.mostRecentEditBeforeOrOnBaselineDate.date == '2024-06-12T00:00:00Z'
+        result.baseline.entity[entityPath].risk == 'high'
+        result.comparison.entity[entityPath].risk == 'medium'
+        result.mostRecentEditBeforeOrOnBaselineDate.entity[entityPath].risk == 'high'
     }
 
-    def "compareProjectEntity returns correct baseline, comparison, and mostRecentEditBeforeOrOnBaselineDate when multiple pages of data is required"() {
-        given:
-        String projectId = 'p1'
-        String entityPath = 'risks'
-        String baselineDate = '2024-06-10T00:00:00Z'
-        String beforeDate = '2024-02-04T00:00:00Z'
 
-        def page1 = [
-                buildProjectAuditMessage('2024-06-12T00:00:00Z', [risk: 'high']),
-                buildProjectAuditMessage('2024-06-10T00:00:00Z', [risk: 'medium']),
-                buildProjectAuditMessage('2024-06-05T00:00:00Z', [risk: 'low']),
-                buildProjectAuditMessage('2024-05-30T00:00:00Z', [risk: 'none']),
-                buildProjectAuditMessage('2024-05-20T00:00:00Z', [risk: 'none']),
-                buildProjectAuditMessage('2024-04-12T00:00:00Z', [risk: 'high']),
-                buildProjectAuditMessage('2024-04-10T00:00:00Z', [risk: 'medium']),
-                buildProjectAuditMessage('2024-04-05T00:00:00Z', [risk: 'low']),
-                buildProjectAuditMessage('2024-03-30T00:00:00Z', [risk: 'none']),
-                buildProjectAuditMessage('2024-03-20T00:00:00Z', [risk: 'none'])
-                ]
-        def page2 = [
-                buildProjectAuditMessage('2024-02-12T00:00:00Z', [risk: 'high']),
-                buildProjectAuditMessage('2024-02-10T00:00:00Z', [risk: 'medium']),
-                buildProjectAuditMessage('2024-02-05T00:00:00Z', [risk: 'low']),
-                buildProjectAuditMessage('2024-01-30T00:00:00Z', [risk: 'none']),
-                buildProjectAuditMessage('2024-01-20T00:00:00Z', [risk: 'none'])
-                ]
-
-
-        when:
-        def result = service.compareProjectEntity(projectId, baselineDate, beforeDate, entityPath)
-
-        then:
-        1 * webService.getJson2({it.contains("start=0")}, _) >> { String url, int timeout ->
-            [resp: [data: page1, recordsTotal: page1.size()+page2.size()]]
-        }
-        1 * webService.getJson2({ it.contains("start=10")}, _) >> { String url, int timeout ->
-            [resp: [data: page2, recordsTotal: page1.size()+page2.size()]]
-        }
-        result.baseline.date == '2024-06-10T00:00:00Z'
-        result.comparison.date == '2024-01-30T00:00:00Z'
-        result.mostRecentEditBeforeOrOnBaselineDate.date == '2024-06-10T00:00:00Z'
-        result.baseline.entity[entityPath].risk == 'medium'
-        result.comparison.entity[entityPath].risk == 'none'
-        result.mostRecentEditBeforeOrOnBaselineDate.entity[entityPath].risk == 'medium'
-    }
 
     private int auditMessageId = 1;
     private Map buildProjectAuditMessage(String date, Map risks) {
