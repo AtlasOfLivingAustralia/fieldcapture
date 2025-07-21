@@ -14,7 +14,8 @@ class AuditService {
 
         String paramString = commonService.buildUrlParamsFromMap(id:projectId, start:offset, size:pageSize, q:q, sort:sort, orderBy:orderBy)
         String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'audit/getAuditMessagesForProjectPerPage' + paramString
-        return webService.getJson(url, 60000)
+        Map resp = webService.getJson2(url, 60000)
+        resp?.resp
     }
 
     def getAuditMessagesForOrganisation(String organisationId) {
@@ -45,17 +46,7 @@ class AuditService {
     Map compareProjectEntity(String projectId, String baselineDate, String beforeDate, String entityPath) {
 
         int offset = 0
-        int pageSize = 100
-        List auditMessages = []
-
-        // Retrieve audit messages in batches until we have all the messages for the project.
-        Map auditResult = getAuditMessagesForProject(projectId, offset, pageSize)
-        auditMessages.addAll(auditResult.data ?: [])
-        while (auditMessages.size() < auditResult.recordsTotal) {
-            offset += pageSize
-            auditResult = getAuditMessagesForProject(projectId, offset, pageSize)
-            auditMessages.addAll(auditResult.data)
-        }
+        int pageSize = 10
 
         // Holder for the most recent version of the entity recorded in the audit trail during the selected period.
         Map baselineEdit = null
@@ -64,30 +55,43 @@ class AuditService {
         // Holder for the most recent copy of the entity that was made before or on the baseline date.
         Map mostRecentEditBeforeOrOnBaselineDate = null
 
+        Closure findEdits = { List messages ->
 
-        boolean finished = false
-        int i = 0
-        while (i < auditMessages.size() && !finished) {
-            Map message = auditMessages[i]
-            if (message.entityType == "au.org.ala.ecodata.Project") {
+            messages.each { Map message ->
 
-                if (!baselineEdit && (message.date <= baselineDate && message.date >= beforeDate) && message.entity[entityPath]) {
-                    // This is the most recent version of the project entity that falls inside the selected date range.
-                    baselineEdit = message
-                    mostRecentEditBeforeOrOnBaselineDate = message
-                }
-                else if (baselineEdit && !comparisonEdit && (message.date < beforeDate) && message.entity[entityPath]) {
-                    // This is the most recent version of the project entity before the start of the selected date range.
-                    comparisonEdit = message
-                }
-                else if (!mostRecentEditBeforeOrOnBaselineDate && message.date < beforeDate && message.entity[entityPath]) {
-                    mostRecentEditBeforeOrOnBaselineDate = message
+                if (message.entityType == "au.org.ala.ecodata.Project") {
+
+                    if (!baselineEdit && (message.date <= baselineDate && message.date >= beforeDate) && message.entity[entityPath]) {
+                        // This is the most recent version of the project entity that falls inside the selected date range.
+                        baselineEdit = message
+                        mostRecentEditBeforeOrOnBaselineDate = message
+                    }
+                    else if (baselineEdit && !comparisonEdit && (message.date < beforeDate) && message.entity[entityPath]) {
+                        // This is the most recent version of the project entity before the start of the selected date range.
+                        comparisonEdit = message
+                    }
+                    else if (!mostRecentEditBeforeOrOnBaselineDate && message.date < beforeDate && message.entity[entityPath]) {
+                        // This is a catch-all in case the baseline edit is not found (i.e no edits were made during the selected period)
+                        // but we still want the most recent edit before the baseline date.
+                        mostRecentEditBeforeOrOnBaselineDate = message
+                    }
                 }
             }
-            if (baselineEdit != null && comparisonEdit != null && mostRecentEditBeforeOrOnBaselineDate != null) {
-                finished = true
-            }
-            i++
+
+            return (baselineEdit != null && comparisonEdit != null && mostRecentEditBeforeOrOnBaselineDate != null)
+        }
+
+        // Retrieve audit messages in batches until we have all the messages for the project.
+        Map auditResult = getAuditMessagesForProject(projectId, offset, pageSize)
+        boolean finished = findEdits(auditResult.data)
+        int count = auditResult.data?.size() ?: 0
+        while (count < auditResult.recordsTotal && !finished) {
+            offset += pageSize
+            auditResult = getAuditMessagesForProject(projectId, offset, pageSize)
+
+            finished = findEdits(auditResult.data)
+
+            count += auditResult.data?.size() ?: 0
         }
 
         [baseline: baselineEdit, comparison:comparisonEdit, mostRecentEditBeforeOrOnBaselineDate:mostRecentEditBeforeOrOnBaselineDate]
