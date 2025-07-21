@@ -18,6 +18,18 @@ class AuditService {
         resp?.resp
     }
 
+    Map searchAuditMessages(Map criteria, Map paginationOptions, String startDate = null, String endDate = null) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'audit/search'
+        Map params = [criteria: criteria, paginationOptions: paginationOptions]
+        if (startDate) {
+            params.startDate = startDate
+        }
+        if (endDate) {
+            params.endDate = endDate
+        }
+        return webService.doPost(url, params)
+    }
+
     def getAuditMessagesForOrganisation(String organisationId) {
         String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'audit/getAuditMessagesForOrganisation?organisationId=' + organisationId
         return webService.getJson(url, 60000)
@@ -46,7 +58,7 @@ class AuditService {
     Map compareProjectEntity(String projectId, String baselineDate, String beforeDate, String entityPath) {
 
         int offset = 0
-        int pageSize = 10
+        int pageSize = 1
 
         // Holder for the most recent version of the entity recorded in the audit trail during the selected period.
         Map baselineEdit = null
@@ -55,46 +67,38 @@ class AuditService {
         // Holder for the most recent copy of the entity that was made before or on the baseline date.
         Map mostRecentEditBeforeOrOnBaselineDate = null
 
-        Closure findEdits = { List messages ->
+        Map criteria = [entityId: projectId, entityType: 'au.org.ala.ecodata.Project']
+        Map paginationOptions = [max: pageSize, offset: offset, sort: 'date', orderBy: 'desc']
 
-            messages.each { Map message ->
-
-                if (message.entityType == "au.org.ala.ecodata.Project") {
-
-                    if (!baselineEdit && (message.date <= baselineDate && message.date >= beforeDate) && message.entity[entityPath]) {
-                        // This is the most recent version of the project entity that falls inside the selected date range.
-                        baselineEdit = message
-                        mostRecentEditBeforeOrOnBaselineDate = message
-                    }
-                    else if (baselineEdit && !comparisonEdit && (message.date < beforeDate) && message.entity[entityPath]) {
-                        // This is the most recent version of the project entity before the start of the selected date range.
-                        comparisonEdit = message
-                    }
-                    else if (!mostRecentEditBeforeOrOnBaselineDate && message.date < beforeDate && message.entity[entityPath]) {
-                        // This is a catch-all in case the baseline edit is not found (i.e no edits were made during the selected period)
-                        // but we still want the most recent edit before the baseline date.
-                        mostRecentEditBeforeOrOnBaselineDate = message
-                    }
-                }
-            }
-
-            return (baselineEdit != null && comparisonEdit != null && mostRecentEditBeforeOrOnBaselineDate != null)
+        // Find the most recent version of the project entity that was recorded in the audit trail before the to date.
+        Map results = searchAuditMessages(criteria, paginationOptions, null, baselineDate)
+        if (!results || results.error) {
+            log.error("Error searching for audit messages: ${results?.error}")
+            return [error: results?.error, baseline: null, comparison: null, mostRecentEditBeforeOrOnBaselineDate: null]
         }
 
-        // Retrieve audit messages in batches until we have all the messages for the project.
-        Map auditResult = getAuditMessagesForProject(projectId, offset, pageSize)
-        boolean finished = findEdits(auditResult.data)
-        int count = auditResult.data?.size() ?: 0
-        while (count < auditResult.recordsTotal && !finished) {
-            offset += pageSize
-            auditResult = getAuditMessagesForProject(projectId, offset, pageSize)
+        if (results.resp.messages && results.resp.messages.size() > 0) {
 
-            finished = findEdits(auditResult.data)
+            Map message = results.resp.messages[0]
+            mostRecentEditBeforeOrOnBaselineDate = message
+            if (message.date >= beforeDate) {
+                baselineEdit = message
+            }
+            else {
+                comparisonEdit = message
+            }
+        }
 
-            count += auditResult.data?.size() ?: 0
+        if (!comparisonEdit) {
+            results = searchAuditMessages(criteria, paginationOptions, null, beforeDate)
+            if (results.resp.messages && results.resp.messages.size() > 0) {
+                comparisonEdit = results.resp.messages[0]
+            }
         }
 
         [baseline: baselineEdit, comparison:comparisonEdit, mostRecentEditBeforeOrOnBaselineDate:mostRecentEditBeforeOrOnBaselineDate]
     }
+
+
 
 }
