@@ -146,7 +146,7 @@ var config =
         ],
         "excludes": [],
         "programServiceConfig": {
-            "serviceFormName": "NHT Output Report",
+            "serviceFormName": "Grants and Others Progress Report",
             "programServices": [
                 {
                     "serviceTargets": [
@@ -211,9 +211,7 @@ var config =
                 {
                     "serviceTargets": [
                         "0e2f8d61-b7b4-4d2d-b07c-4fc20bbe326a",
-                        "bb506258-e907-43d3-99bd-0fe0400f654e",
-                        "a30e7b28-b986-456c-a209-14fc6af38cd9",
-                        "3751ae6f-b0a2-4ec0-935f-1da14b334f38"
+                        "bb506258-e907-43d3-99bd-0fe0400f654e"
                     ],
                     "serviceId": 10
                 },
@@ -402,9 +400,16 @@ var config =
                     "serviceId": 44
                 },
                 {
-                    "serviceTargets": [],
-                    "serviceId": 50,
-                    "mandatory": true
+                    "serviceTargets": [
+                        "8113ab8a-17e6-43c9-be32-9ca72dd01454"
+                    ],
+                    "serviceId": 6
+                },
+                {
+                    "serviceTargets": [
+                        "0e887410-a3c5-49ca-a6f5-0f2f6fae30db"
+                    ],
+                    "serviceId": 46
                 }
             ]
         },
@@ -434,40 +439,30 @@ var config =
         "projectReports": [
             {
                 "reportType": "Activity",
-                "reportDescriptionFormat": "Year %5$s - %6$s %7$d Outputs Report",
-                "reportNameFormat": "Year %5$s - %6$s %7$d Outputs Report",
-                "reportingPeriodInMonths": 3,
-                "description": "",
-                "minimumReportDurationInDays": 1,
-                "label": "Quarter",
+                "firstReportingPeriodEnd": "",
+                "reportDescriptionFormat": "Progress Report %1d",
+                "reportNameFormat": "Progress Report %1d",
+                "reportingPeriodInMonths": 6,
+                "description": "Priority Places Grants Progress Report",
+                "minimumReportDurationInDays": 3,
+                "label": "Semester",
+                "category": "Progress Reports",
+                "activityType": "Grants and Others Progress Report",
                 "reportsAlignedToCalendar": true,
-                "category": "Outputs Reporting",
-                "activityType": "NHT Output Report",
                 "canSubmitDuringReportingPeriod": true
             },
             {
-                "firstReportingPeriodEnd": "2025-06-30T14:00:00Z",
-                "reportType": "Administrative",
-                "reportDescriptionFormat": "Annual Progress Report %2$tY - %3$tY for %4$s",
-                "reportNameFormat": "Annual Progress Report %2$tY - %3$tY",
-                "reportingPeriodInMonths": 12,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
-                "minimumReportDurationInDays": 1,
-                "label": "Annual",
-                "category": "Annual Progress Reporting",
-                "activityType": "NHT Annual Report"
-            },
-            {
                 "reportType": "Single",
-                "reportDescriptionFormat": "Outcomes Report 2 for %4$s",
-                "minimumOwnerDurationInMonths": 36,
-                "reportNameFormat": "Outcomes Report 2",
+                "reportDescriptionFormat": "Final Report",
+                "reportNameFormat": "Final Report",
+                "reportingPeriodInMonths": 0,
                 "multiple": false,
+                "description": "",
                 "alignToOwnerEnd": true,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
-                "label": "Outcomes Report 2",
-                "category": "Outcomes Report 2",
-                "activityType": "NHT Outcomes 2 Report",
+                "label": "Final Report",
+                "category": "Final Report",
+                "reportsAlignedToCalendar": false,
+                "activityType": "Priority Places Final Report",
                 "alignToOwnerStart": true
             }
         ],
@@ -476,13 +471,13 @@ var config =
             "Climate Change - Changed rainfall patterns",
             "Climate Change - Sea level rises",
             "Climate Change - Unexpected seasonal/temperature extremes",
-            "Disconnection from Country - Altered/disrupted connection with land and sea country",
             "Disconnection from Country - Altered or disrupted First Nations engagement/leadership in caring for land and sea country",
             "Disconnection from Country - Altered or disrupted transfer of First Nations knowledge systems",
+            "Disconnection from Country - Altered/disrupted connection with land and sea country",
             "Disconnection from Country - Inadequate recognition of Traditional knowledge and practices",
-            "Disengagement of community - Community are not informed and are not engaged in managing the environment",
             "Disease/pathogens - Areas that are infected",
             "Disease/pathogens - Possible infection of disease free areas",
+            "Disengagement of community - Community are not informed and are not engaged in managing the environment",
             "Fire - Inappropriate fire regime",
             "Fire - Lack of protection for ecological assets during fire control activities",
             "Genetics - Bottleneck/inbreeding",
@@ -500,6 +495,8 @@ var config =
             "Human interference - Recreational fishing",
             "Human interference - Recreational pressures",
             "Human interference - Road/vehicle strike",
+            "Knowledge/Capacity - Inadequate scientific and/or technological capacity",
+            "Knowledge/Capacity - Insufficient knowledge to inform appropriate management or intervention actions",
             "Land management practices - Changes to hydrology and aquatic systems",
             "Land management practices - Domestic grazing/stock impacts",
             "Land management practices - Excess recharge of groundwater",
@@ -556,165 +553,89 @@ var outcomes = [
     {
         "priorities": [
             {
-                "category": "Farmer Sector"
+                "category": "Influenza Sector"
             }
         ],
         "targeted": true,
-        "shortDescription": "Skills and Knowledge",
-        "category": "Farmer Sector",
-        "outcome": "1: Farmers and land holders have increased awareness, knowledge, and skills of best practice climate-smart sustainable agriculture approaches"
-    },
-    {
-        "priorities": [
-            {
-                "category": "Farmer Sector"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "Capacity and Capability",
-        "category": "Farmer Sector",
-        "outcome": "2: Community, Landcare groups, First Nations peoples and industry have increased capacity and capability to assist farmers and land holders to adopt climate-smart and sustainable agriculture practices"
-    },
-    {
-        "priorities": [
-            {
-                "category": "Farmer Sector"
-            }
-        ],
-        "targeted": true,
-        "shortDescription": "Agricultural Practices",
-        "category": "Farmer Sector",
-        "outcome": "3: The agriculture sector is utilising proven climate-smart and sustainable agriculture practices, initiatives, and information sources to increase adoption at scale"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "1. Farmers are trialing and/or adopting CSSA practices"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "2. Farmers are adopting innovative tools, technologies or practices"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "3. Farmers are demonstrating sustainability credentials and traceability"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "4. Farmers are implementing sustainability frameworks"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "5. Farmers understand how and why to adopt CSSA practices (knowledge)"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "6. Farmers are aware of CSSA practices, and their value and opportunities"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "7. Farmers have the skills to adopt CSSA practices"
-    },
-    {
-        "category": "Farmer Sector",
-        "type": "medium",
-        "outcome": "8. Farmers accept and value CSSA practices"
+        "shortDescription": "High Pathogenicity Avian Influenza",
+        "category": "Influenza Sector",
+        "outcome": "To boost and accelerate H5 bird flu preparedness and protective action for Australia’s most at-risk species"
     },
     {
         "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "1. Farmers understand how and why to adopt CSSA practices (Knowledge)"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "2. Farmers are aware of CSSA practices, and their value and opportunities"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "3. Farmers have the skills to adopt CSSA practices"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "4. Farmers accept and value CSSA practices (attitude/culture)"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "5. Farmers are accessing demonstrations of innovative and effective practices"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "6. Farmers are accessing relevant information resources and products"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "7. Farmers are accessing advice and support"
-    },
-    {
-        "type": "short",
-        "category": "Farmer Sector",
-        "outcome": "8. Farmers are connecting to peer networks"
+        "category": "Influenza Sector",
+        "outcome": "To safeguard and build resilience for Australia’s most at-risk species in nature by mitigating other threats"
     }
 ];
 
 var priorities = [
     {
-        "category": "Farmer Sector",
-        "priority": "Carbon and biodiversity market information"
+        "category": "Influenza Sector",
+        "priority": "Pterodroma solandri (Providence Petrel)"
     },
     {
-        "category": "Farmer Sector",
-        "priority": "Climate change adaptation"
+        "category": "Influenza Sector",
+        "priority": "Pterodroma neglecta (Kermadec Petrel)"
     },
     {
-        "category": "Farmer Sector",
-        "priority": "Market access and traceability"
+        "category": "Influenza Sector",
+        "priority": "Pterodroma cervicalis (White-necked Petrel)"
     },
     {
-        "category": "Farmer Sector",
-        "priority": "Native vegetation and biodiversity on-farm"
+        "category": "Influenza Sector",
+        "priority": "Pterodroma externa (Juan Fernández Petrel)"
     },
     {
-        "category": "Farmer Sector",
-        "priority": "On-farm emissions reduction practices"
+        "category": "Influenza Sector",
+        "priority": "Pterodroma nigripennis (Black-winged Petrel)"
     },
     {
-        "category": "Farmer Sector",
-        "priority": "Soil acidification"
+        "category": "Influenza Sector",
+        "priority": "Fregetta grallaria (White-bellied Storm-Petrel)"
     },
     {
-        "category": "Farmer Sector",
-        "priority": "Soil carbon"
+        "category": "Influenza Sector",
+        "priority": "Ardenna pacifica (Wedge-tailed Shearwater)"
     },
     {
-        "category": "Farmer Sector",
-        "priority": "Soil erosion"
+        "category": "Influenza Sector",
+        "priority": "Ardenna carneipes (Flesh-footed Shearwater)"
     },
     {
-        "category": "Farmer Sector",
-        "priority": "Sustainable agriculture practices, including natural resource management"
+        "category": "Influenza Sector",
+        "priority": "Puffinus assimilis (Little Shearwater)"
     },
     {
-        "category": "Farmer Sector",
-        "priority": "Sustainability framework engagement"
+        "category": "Influenza Sector",
+        "priority": "Phaethon rubricauda (Red-tailed Tropicbird)"
+    },
+    {
+        "category": "Influenza Sector",
+        "priority": "Sula dactylatra (Masked Booby)"
+    },
+    {
+        "category": "Influenza Sector",
+        "priority": "Onychoprion fuscatus (Sooty Tern)"
+    },
+    {
+        "category": "Influenza Sector",
+        "priority": "Anous stolidus (Common Noddy)"
+    },
+    {
+        "category": "Influenza Sector",
+        "priority": "Anous minutus (Black Noddy)"
+    },
+    {
+        "category": "Influenza Sector",
+        "priority": "Anous albivitta (Grey Noddy)"
     }
+
 ];
 
 //Create the parent program
-let programName = "Natural Heritage Trust";
+let programName = "High Pathogenicity Avian Influenza (HPAI) Preparedness Fund";
 var parent = createOrFindProgram(programName);
-var subprograms = ["Climate-Smart Agriculture Program - Regional Landscape Priority Projects - First Nations Delivery Partners"]
+var subprograms = ["HPAI Island eradication programs"]
 
 subprograms.forEach(function (subProgram){
     createOrFindProgram(subProgram, parent._id);

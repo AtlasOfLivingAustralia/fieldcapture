@@ -725,6 +725,14 @@ class ProjectService  {
      */
     def rejectReport(String projectId, Map reportDetails) {
         Map reportInformation = prepareReport(projectId, reportDetails)
+
+        // Perform an additional check - project managers can only return submitted reports, they
+        // need an extra role to return approved reports.
+        if (reportService.isApproved(reportInformation.report)) {
+            if (!userService.userIsSupportOfficerOrAdmin()) {
+                reportInformation.error = "Only MERIT Support Officers can return approved reports"
+            }
+        }
         if (reportInformation.error) {
             return [success:false, error:reportInformation.error]
         }

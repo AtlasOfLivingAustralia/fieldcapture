@@ -2,6 +2,7 @@ package au.org.ala.fieldcapture
 
 
 import pages.AddProgram
+import pages.AdminTools
 import pages.ProgramPage
 
 class CreateProgramSpec extends StubbedCasSpec {
@@ -12,7 +13,12 @@ class CreateProgramSpec extends StubbedCasSpec {
     }
     def "I can create a program as a MERIT Admin"() {
 
+
         setup:
+        loginAsAlaAdmin(browser)
+        to AdminTools
+        clearCache()
+
         loginAsMeritAdmin(browser)
 
         when:
@@ -34,7 +40,12 @@ class CreateProgramSpec extends StubbedCasSpec {
 
         then:
         name.text() == "A test program"
-        waitFor {description.text().contains('A test description')} // markdowntohtml wrap this in <p> tags
+        waitFor {
+//            interact {
+//                moveToElement(description)
+//            }
+            description.text().contains('A test description')
+        } // markdowntohtml wrap this in <p> tags
     }
 
 }

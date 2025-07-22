@@ -182,7 +182,7 @@ class SiteController {
 
     /** Returns geojon for a site */
     def geojson(String id) {
-        Map site = siteService.get(id)
+        Map site = siteService.get(id, [view:SiteService.SITE_VIEW_RAW])
         if (!site) {
             Map resp = [status:HttpStatus.SC_NOT_FOUND]
             render resp as JSON

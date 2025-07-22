@@ -7,6 +7,7 @@ import au.org.ala.merit.command.ViewOrganisationReportCommand
 import au.org.ala.merit.util.ProjectGroupingHelper
 import grails.converters.JSON
 import org.apache.http.HttpStatus
+
 /**
  * Extends the plugin OrganisationController to support Green Army project reporting.
  */
@@ -53,21 +54,36 @@ class OrganisationController {
              user:user,
              isAdmin:orgRole?.role == RoleService.PROJECT_ADMIN_ROLE,
              isGrantManager:orgRole?.role == RoleService.GRANT_MANAGER_ROLE,
-             content:content(organisation)]
+             content:content(organisation, orgRole)]
         }
     }
 
+    private boolean canViewOrganisationTargets() {
+        userService.userIsSiteAdmin() || userService.userHasReadOnlyAccess()
+    }
+
+    private boolean canEditOrganisationTargets() {
+        userService.userIsSupportOfficerOrAdmin()
+    }
+
+    private boolean canViewAdminTab(Map userOrganisationRole) {
+        userService.userIsSiteAdmin() || userOrganisationRole?.role == RoleService.PROJECT_ADMIN_ROLE || userService.userHasReadOnlyAccess()
+    }
+
+    private boolean hasEditorAccess(Map userOrganisationRole) {
+        userOrganisationRole?.role == RoleService.PROJECT_EDITOR_ROLE
+    }
+
+    private boolean hasReadOnlyRole() {
+        userService.userHasReadOnlyAccess()
+    }
 
 
-    protected Map content(Map organisation) {
+    protected Map content(Map organisation, Map userOrganisationRole) {
 
-        def user = userService.getUser()
-        def members = userService.getMembersOfOrganisation(organisation.organisationId)
-        def orgRole = members.find { it.userId == user?.userId } ?: [:]
-        def adminVisible = userService.userIsSiteAdmin() || orgRole.role == RoleService.PROJECT_ADMIN_ROLE || userService.userHasReadOnlyAccess()
-        def hasEditorAccess =  adminVisible || orgRole.role == RoleService.PROJECT_EDITOR_ROLE
-
-        def reportingVisible = hasEditorAccess || userService.userHasReadOnlyAccess()
+        def adminVisible = canViewAdminTab(userOrganisationRole)
+        def hasEditorAccess =  adminVisible || hasEditorAccess(userOrganisationRole)
+        def reportingVisible = hasEditorAccess || hasReadOnlyRole()
 
         def dashboardReports = [[name:'dashboard', label:'Activity Outputs']]
 
@@ -84,14 +100,15 @@ class OrganisationController {
             dashboardData = organisationService.scoresForOrganisation(organisation, scores?.collect{it.scoreId}, !hasEditorAccess)
         }
         boolean hasTargets = services && targetPeriods
-        boolean showTargets = hasTargets && userService.userIsSiteAdmin()
+        boolean showTargets = hasTargets && canViewOrganisationTargets()
+        boolean targetsEditable = canEditOrganisationTargets()
+
         // This call is used to ensure the organisation funding total is kept up to date as the algorithm
         // for selecting the current total is based on the current date.  The funding total is used when
         // calculating data for the dashboard.
         if (hasTargets) {
             organisationService.checkAndUpdateFundingTotal(organisation)
         }
-        boolean targetsEditable = userService.userIsAlaOrFcAdmin()
         List reportOrder = null
         if (reportingVisible) {
             // TODO change me to use the configuration once it's been decided how that

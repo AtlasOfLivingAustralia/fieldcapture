@@ -704,12 +704,12 @@ class ReportService {
         if (filters) {
             reportParams.fq = filters
         }
-        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'search/targetsReportForScoreIds' + commonService.buildUrlParamsFromMap(reportParams)
-        Map results = webService.getJson(url, 300000)
-        if (!results || !results.targets || results.error) {
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'search/targetsReportForScoreIds'
+        Map results = webService.doPost(url, reportParams)
+        if (!results?.resp || !results?.resp?.targets || results.error) {
             return [scores:scoreIds.collect{[scoreId:it]}, metadata:[:]]
         }
-        List scoresWithTargets = mergeScoresAndTargets(scoreIds, results)
+        List scoresWithTargets = mergeScoresAndTargets(scoreIds, results.resp)
         return [scores:scoresWithTargets, metadata:results.metadata]
     }
 

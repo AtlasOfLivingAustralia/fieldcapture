@@ -211,9 +211,7 @@ var config =
                 {
                     "serviceTargets": [
                         "0e2f8d61-b7b4-4d2d-b07c-4fc20bbe326a",
-                        "bb506258-e907-43d3-99bd-0fe0400f654e",
-                        "a30e7b28-b986-456c-a209-14fc6af38cd9",
-                        "3751ae6f-b0a2-4ec0-935f-1da14b334f38"
+                        "bb506258-e907-43d3-99bd-0fe0400f654e"
                     ],
                     "serviceId": 10
                 },
@@ -402,9 +400,16 @@ var config =
                     "serviceId": 44
                 },
                 {
-                    "serviceTargets": [],
-                    "serviceId": 50,
-                    "mandatory": true
+                    "serviceTargets": [
+                        "8113ab8a-17e6-43c9-be32-9ca72dd01454"
+                    ],
+                    "serviceId": 6
+                },
+                {
+                    "serviceTargets": [
+                        "0e887410-a3c5-49ca-a6f5-0f2f6fae30db"
+                    ],
+                    "serviceId": 46
                 }
             ]
         },
@@ -434,15 +439,16 @@ var config =
         "projectReports": [
             {
                 "reportType": "Activity",
-                "reportDescriptionFormat": "Year %5$s - %6$s %7$d Outputs Report",
-                "reportNameFormat": "Year %5$s - %6$s %7$d Outputs Report",
-                "reportingPeriodInMonths": 3,
-                "description": "",
-                "minimumReportDurationInDays": 1,
-                "label": "Quarter",
+                "firstReportingPeriodEnd": "",
+                "reportDescriptionFormat": "Progress Report %1d",
+                "reportNameFormat": "Progress Report %1d",
+                "reportingPeriodInMonths": 6,
+                "description": "Priority Places Grants Progress Report",
+                "minimumReportDurationInDays": 3,
+                "label": "Semester",
+                "category": "Progress Reports",
+                "activityType": "Grants and Others Progress Report",
                 "reportsAlignedToCalendar": true,
-                "category": "Outputs Reporting",
-                "activityType": "NHT Output Report",
                 "canSubmitDuringReportingPeriod": true
             },
             {
@@ -459,15 +465,16 @@ var config =
             },
             {
                 "reportType": "Single",
-                "reportDescriptionFormat": "Outcomes Report 2 for %4$s",
-                "minimumOwnerDurationInMonths": 36,
-                "reportNameFormat": "Outcomes Report 2",
+                "reportDescriptionFormat": "Final Report",
+                "reportNameFormat": "Final Report",
+                "reportingPeriodInMonths": 0,
                 "multiple": false,
+                "description": "",
                 "alignToOwnerEnd": true,
-                "description": "This report is still being developed.  _Please do not commence reporting until the new report is ready for use._",
-                "label": "Outcomes Report 2",
-                "category": "Outcomes Report 2",
-                "activityType": "NHT Outcomes 2 Report",
+                "label": "Final Report",
+                "category": "Final Report",
+                "reportsAlignedToCalendar": false,
+                "activityType": "Priority Places Final Report",
                 "alignToOwnerStart": true
             }
         ],
@@ -476,13 +483,13 @@ var config =
             "Climate Change - Changed rainfall patterns",
             "Climate Change - Sea level rises",
             "Climate Change - Unexpected seasonal/temperature extremes",
-            "Disconnection from Country - Altered/disrupted connection with land and sea country",
             "Disconnection from Country - Altered or disrupted First Nations engagement/leadership in caring for land and sea country",
             "Disconnection from Country - Altered or disrupted transfer of First Nations knowledge systems",
+            "Disconnection from Country - Altered/disrupted connection with land and sea country",
             "Disconnection from Country - Inadequate recognition of Traditional knowledge and practices",
-            "Disengagement of community - Community are not informed and are not engaged in managing the environment",
             "Disease/pathogens - Areas that are infected",
             "Disease/pathogens - Possible infection of disease free areas",
+            "Disengagement of community - Community are not informed and are not engaged in managing the environment",
             "Fire - Inappropriate fire regime",
             "Fire - Lack of protection for ecological assets during fire control activities",
             "Genetics - Bottleneck/inbreeding",
@@ -500,6 +507,8 @@ var config =
             "Human interference - Recreational fishing",
             "Human interference - Recreational pressures",
             "Human interference - Road/vehicle strike",
+            "Knowledge/Capacity - Inadequate scientific and/or technological capacity",
+            "Knowledge/Capacity - Insufficient knowledge to inform appropriate management or intervention actions",
             "Land management practices - Changes to hydrology and aquatic systems",
             "Land management practices - Domestic grazing/stock impacts",
             "Land management practices - Excess recharge of groundwater",
@@ -671,27 +680,11 @@ var outcomes = [
 var priorities = [
     {
         "category": "Farmer Sector",
-        "priority": "Carbon and biodiversity market information"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Climate change adaptation"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Market access and traceability"
-    },
-    {
-        "category": "Farmer Sector",
         "priority": "Native vegetation and biodiversity on-farm"
     },
     {
         "category": "Farmer Sector",
         "priority": "On-farm emissions reduction practices"
-    },
-    {
-        "category": "Farmer Sector",
-        "priority": "Soil acidification"
     },
     {
         "category": "Farmer Sector",
@@ -703,18 +696,34 @@ var priorities = [
     },
     {
         "category": "Farmer Sector",
+        "priority": "Soil acidification"
+    },
+    {
+        "category": "Farmer Sector",
         "priority": "Sustainable agriculture practices, including natural resource management"
     },
     {
         "category": "Farmer Sector",
+        "priority": "Climate change adaptation"
+    },
+    {
+        "category": "Farmer Sector",
+        "priority": "Carbon and biodiversity market information"
+    },
+    {
+        "category": "Farmer Sector",
         "priority": "Sustainability framework engagement"
+    },
+    {
+        "category": "Farmer Sector",
+        "priority": "Market access and traceability"
     }
 ];
 
 //Create the parent program
 let programName = "Natural Heritage Trust";
 var parent = createOrFindProgram(programName);
-var subprograms = ["Climate-Smart Agriculture Program - Regional Landscape Priority Projects - First Nations Delivery Partners"]
+var subprograms = ["Climate-Smart Agriculture Program - Regional Landscape Priority Projects – Climate-Smart Agriculture Program - Capacity Building Grants - Round 2"]
 
 subprograms.forEach(function (subProgram){
     createOrFindProgram(subProgram, parent._id);
