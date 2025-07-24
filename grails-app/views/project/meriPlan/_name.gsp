@@ -5,7 +5,7 @@
                 <tbody>
 
                 <tr class="header required">
-                    <th class="required">Project name (${maxSize ?: 150} characters) <fc:iconHelp>The project name will be visible on project overview page in MERIT</fc:iconHelp></th>
+                    <th class="required">${projectNameHeading?:"Project name"} (${maxSize ?: 150} characters) <fc:iconHelp>${projectHelp ?: 'The project name will be visible on project overview page in MERIT'}</fc:iconHelp></th>
                 </tr>
                 <tr>
                     <td>
@@ -19,7 +19,7 @@
     </div>
 </g:if>
 <g:else>
-    <h4 class="header-with-help">Project name</h4><fc:iconHelp>The project name will be visible on project overview page in MERIT</fc:iconHelp>
+    <h4 class="header-with-help"${projectNameHeading?:"Project name"}</h4><fc:iconHelp>${projectHelp ?: 'The project name will be visible on project overview page in MERIT'}</fc:iconHelp>
     <g:if test="${explanation}">
         ${explanation}
     </g:if>

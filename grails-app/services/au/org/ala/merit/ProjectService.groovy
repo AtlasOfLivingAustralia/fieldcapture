@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.ecodata.forms.TermsService
 import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
@@ -28,6 +29,7 @@ class ProjectService  {
 
     static final String OTHER_EMSA_MODULE = 'Other'
     static final String PARATOO_FORM_TAG_SURVEY = 'survey'
+    static final String PARATOO_FORM_TAG_SITE = 'site'
 
     static dateWithTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
     static dateWithTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
@@ -41,6 +43,7 @@ class ProjectService  {
     public static final String FLATTEN_BY_SUM = "SUM"
     public static final String FLATTEN_BY_COUNT = "COUNT"
     public static final String DEFAULT_GROUP_BY = 'scientificName,vernacularName,scientificNameID,individualsOrGroups'
+    static final String PROJECT_TAGS_CATEGORY = 'MERIT Project Tags'
 
     // All projects can use the Plot Selection and Layout, Plot Description and Opportune modules, but
     // we don't want users recording data sets for Plot Selection and Layout so it's not included here.
@@ -51,6 +54,7 @@ class ProjectService  {
     def programService
     LockService lockService
     DataSetSummaryService dataSetSummaryService
+    TermsService termsService
 
     def get(id, levelOfDetail = "", includeDeleted = false) {
 
@@ -81,12 +85,17 @@ class ProjectService  {
         result
     }
 
-    void filterDataSetSummaries(List dataSetSummaries) {
+    void filterDataSetSummaries(List dataSetSummaries, boolean includeSiteProtocols = false) {
         List<Map> forms = activityService.monitoringProtocolForms()
+
+        // If the user is an ALA or FC admin, they can see survey data sets and also data sets that are
+        // associated with sites.  This is to enable the use of the delete/resync data set functionality for these
+        // data sets.
+        List supportedTags = includeSiteProtocols ? [PARATOO_FORM_TAG_SURVEY, PARATOO_FORM_TAG_SITE] : [PARATOO_FORM_TAG_SURVEY]
 
         dataSetSummaries.removeAll { Map dataSetSummary ->
             Map protocolForm = forms.find{it.externalId == dataSetSummary.protocol}
-            (protocolForm != null) && (!protocolForm.tags.contains(PARATOO_FORM_TAG_SURVEY))
+            (protocolForm != null) && (!protocolForm.tags?.find{supportedTags.contains(it)})
         }
     }
 
@@ -155,7 +164,7 @@ class ProjectService  {
         [targets:scoresWithTargetsByOutput, other:scoresWithoutTargetsByOutputs]
     }
 
-    def search(params) {
+    Map search(params) {
         webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/search', params)
     }
 
@@ -719,6 +728,14 @@ class ProjectService  {
      */
     def rejectReport(String projectId, Map reportDetails) {
         Map reportInformation = prepareReport(projectId, reportDetails)
+
+        // Perform an additional check - project managers can only return submitted reports, they
+        // need an extra role to return approved reports.
+        if (reportService.isApproved(reportInformation.report)) {
+            if (!userService.userIsSupportOfficerOrAdmin()) {
+                reportInformation.error = "Only MERIT Support Officers can return approved reports"
+            }
+        }
         if (reportInformation.error) {
             return [success:false, error:reportInformation.error]
         }
@@ -1573,7 +1590,7 @@ class ProjectService  {
     List<Map> getProjectServices(Map project, ProgramConfig programConfig) {
         List<Map> supportedServices = programConfig.services
         List serviceIds = project.custom?.details?.serviceIds?.collect{it as Integer}
-        List projectServices = supportedServices?.findAll {it.id in serviceIds }
+        List projectServices = supportedServices?.findAll {it.id in serviceIds || it.mandatory }
 
         projectServices
     }
@@ -1742,7 +1759,21 @@ class ProjectService  {
 
             if (selectedForProject) {
                 List projectOutputs = selectedForProject.collect{it.output}
-                filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs)
+                List mandatoryOutputs = selectedForProject.findAll{it.mandatory}.collect{it.output}
+                // Override the mandatory flag for outputs that are mandatory for the program
+                if (mandatoryOutputs) {
+                    activityModel.outputConfig = new JSONArray(
+                        activityModel.outputConfig.collect { Map outputConfig ->
+                            if (mandatoryOutputs.contains(outputConfig.outputName)) {
+                                outputConfig = new JSONObject(outputConfig)
+                                outputConfig.optional = false
+                            }
+                            outputConfig
+                        })
+
+                }
+
+                filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs, mandatoryOutputs)
             }
         }
         filteredModel
@@ -1782,11 +1813,11 @@ class ProjectService  {
         filterable
     }
 
-    private Map filterActivityModel(Map activityModel, Map existingActivityData, List filterableSections, List sectionsToInclude) {
+    private Map filterActivityModel(Map activityModel, Map existingActivityData, List filterableSections, List sectionsToInclude, List mandatorySections) {
         Map filteredModel = new JSONObject(activityModel)
         List existingOutputs = existingActivityData?.outputs?.collect{it.name}
         filteredModel.outputs = activityModel.outputs.findAll({ String output ->
-            boolean isFilterable = filterableSections.find{it == output}
+            boolean isFilterable = filterableSections.contains(output) && !mandatorySections.contains(output)
 
             // Include this output if it's not associated with a service,
             // Or if it's associated by a service delivered by this project
@@ -2313,5 +2344,59 @@ class ProjectService  {
         }
 
         records
+    }
+
+
+    List getProjectTags() {
+        String hubId = SettingService.hubConfig.hubId
+        termsService.getTerms(hubId, PROJECT_TAGS_CATEGORY)
+    }
+
+    Map addProjectTag(Map tag) {
+        tag.category = PROJECT_TAGS_CATEGORY
+        String hubId = SettingService.hubConfig.hubId
+        tag.hubId = hubId
+        termsService.addTerm(hubId, tag)
+    }
+
+    Map updateProjectTag(Map tag) {
+        List existingTags = getProjectTags()
+        Map result = [errors:[]]
+        Map existingTag = existingTags?.find{it.termId == tag.termId}
+        if (existingTag) {
+            Map projectsUsingTag = search([tags:existingTag.term, view:'flat'])
+            projectsUsingTag?.resp?.projects.each {
+                Map projectUpdateResult = update(it.projectId, [tags: it.tags - existingTag.term + tag.term])
+                if (projectUpdateResult.error) {
+                    result.errors << projectUpdateResult.error
+                }
+            }
+        }
+        String hubId = SettingService.hubConfig.hubId
+        tag.hubId = hubId
+        tag.category = PROJECT_TAGS_CATEGORY
+        Map termUpdateResult = termsService.updateTerm(hubId, tag)
+        if (termUpdateResult.error) {
+            result.errors << termUpdateResult.error
+        }
+        result.success = result.errors.size() == 0
+        result
+    }
+
+    Map deleteProjectTag(Map tag) {
+        Map result = [errors:[]]
+        Map results = search([tags:tag.term, view:'flat'])
+        results?.resp?.projects.each {
+            Map projectUpdateResult = update(it.projectId, [tags: it.tags - tag.term])
+            if (projectUpdateResult.error) {
+                result.errors << projectUpdateResult.error
+            }
+        }
+        Map termDeleteResult = termsService.deleteTerm(tag.termId)
+        if (termDeleteResult.error) {
+            result.errors << termUpdateResult.error
+        }
+        result.success = result.errors.size() == 0
+        result
     }
 }

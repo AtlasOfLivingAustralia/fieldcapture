@@ -119,7 +119,11 @@ class ProjectController {
 
 
                 def programs = projectService.programsModel()
-                def content = projectContent(project, user, template, config)
+                // This parameter will result in EMSA protocols that result in sites being created in MERIT
+                // being displayed in the Data Set Summary tab.  It's intention is to allow EMSA sites to
+                // be deleted or re-synced via the user interface.
+                boolean manageEMSASiteDataSets = userService.userIsAlaOrFcAdmin() && params.getBoolean('manageEMSASiteDataSets', false)
+                def content = projectContent(project, user, template, config, manageEMSASiteDataSets)
 
                 def model = [project               : project,
                              activities            : project.activities,
@@ -154,7 +158,7 @@ class ProjectController {
         organisations
     }
 
-    protected Map projectContent(Map project, user, String template, ProgramConfig config) {
+    protected Map projectContent(Map project, user, String template, ProgramConfig config, boolean manageEMSASiteDataSets) {
         project.themes = new JSONArray(config.themes ?: [])
         project.assets = config.assets ?: []
         project.priorities = new JSONArray(config.priorities ?: [])
@@ -197,9 +201,16 @@ class ProjectController {
         boolean adminTabVisible = user?.isEditor || user?.isAdmin || user?.isCaseManager || user?.hasViewAccess
         boolean showMeriPlanHistory = config.supportsMeriPlanHistory && userService.userIsSiteAdmin()
         boolean datasetsVisible = config.includesContent(ProgramConfig.ProjectContent.DATA_SETS) && userHasViewAccess
+        boolean enableProjectDataSetsDownload = grailsApplication.config.getProperty('bdr.dataSet.projectDownloadEnabled', Boolean, false)
         if (datasetsVisible && project.custom?.dataSets) {
-            projectService.filterDataSetSummaries(project.custom?.dataSets)
+            projectService.filterDataSetSummaries(project.custom?.dataSets, manageEMSASiteDataSets)
         }
+        List tags = []
+        if (adminTabVisible) {
+            tags = projectService.getProjectTags()
+        }
+        List downloadableProtocols = downloadableProtocols()
+        boolean resyncEnabled = userService.userIsAlaOrFcAdmin() && user?.isCaseManager
         boolean showExternalIds = userService.userHasReadOnlyAccess() || userService.userIsSiteAdmin()
         def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates, outcomes:project.outcomes, objectives:config.program?.config?.objectives, showExternalIds:showExternalIds],
                      documents      : [label: 'Documents', visible: config.includesContent(ProgramConfig.ProjectContent.DOCUMENTS), type: 'tab', user:user, template:'docs', activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
@@ -207,8 +218,8 @@ class ProjectController {
                      plan           : [label: 'Activities', visible: true, disabled: !user?.hasViewAccess, type: 'tab', template:'projectActivities', grantManagerSettingsVisible:user?.isCaseManager, project:project, reports: project.reports, scores: scores, risksAndThreatsVisible: risksAndThreatsVisible],
                      site           : [label: 'Sites', visible: config.includesContent(ProgramConfig.ProjectContent.SITES), disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
                      dashboard      : [label: 'Dashboard', visible: config.includesContent(ProgramConfig.ProjectContent.DASHBOARD), disabled: !user?.hasViewAccess, type: 'tab'],
-                     datasets       : [label: 'Data set summary', visible: datasetsVisible, template: '/project/dataset/dataSets', type:'tab'],
-                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage', canRegenerateReports: canRegenerateReports, hasSubmittedOrApprovedFinalReportInCategory: hasSubmittedOrApprovedFinalReportInCategory, canModifyMeriPlan: canModifyMeriPlan, showRequestLabels:config.supportsParatoo, outcomeStartIndex:outcomeStartIndex]]
+                     datasets       : [label: 'Data set summary', visible: datasetsVisible, template: '/project/dataset/dataSets', downloadableProtocols: downloadableProtocols, supportedFormats:bdrDataSetSupportedFormats(), enableProjectDataSetsDownload:enableProjectDataSetsDownload, resyncEnabled: resyncEnabled, type:'tab'],
+                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage', canRegenerateReports: canRegenerateReports, hasSubmittedOrApprovedFinalReportInCategory: hasSubmittedOrApprovedFinalReportInCategory, canModifyMeriPlan: canModifyMeriPlan, showRequestLabels:config.supportsParatoo, outcomeStartIndex:outcomeStartIndex, tags:tags]]
 
         if (template == MERI_ONLY_TEMPLATE) {
             model = [details:model.details]
@@ -274,6 +285,17 @@ class ProjectController {
             model.dashboard.metrics = metrics
         }
         return [view: 'index', model: model]
+    }
+
+    private List<String> downloadableProtocols() {
+        String BDR_DOWNLOAD_SUPPORTED_TAG = 'bdr_download_supported'
+        List<Map> forms = activityService.monitoringProtocolForms()
+        forms = forms.findAll{BDR_DOWNLOAD_SUPPORTED_TAG in it.tags}
+        forms.collect{it.externalId }
+    }
+
+    private List bdrDataSetSupportedFormats() {
+        grailsApplication.config.getProperty("bdr.dataSet.formats", List.class)
     }
 
     private Map buildRLPTargetsModel(Map model, project){
@@ -559,7 +581,9 @@ class ProjectController {
         render result as JSON
     }
 
-    @PreAuthorise(accessLevel = 'caseManager')
+    // we are using accessLevel=officer here rather than accessLevel=caseManager to allow "Support Officers" to be able to\
+    // return reports without adding themselves to the project as a grant manager.
+    @PreAuthorise(accessLevel = 'officer')
     def ajaxRejectReport(String id) {
 
         def reportDetails = request.JSON
@@ -975,7 +999,7 @@ class ProjectController {
         render results as JSON
     }
 
-    @PreAuthorise
+    @PreAuthorise(accessLevel = 'readOnly')
     def scoresForReport(String id) {
         List scoreIds = params.getList('scoreIds')
         String reportId = params.get('reportId')
@@ -985,7 +1009,7 @@ class ProjectController {
         render result as JSON
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly')
     def projectTargetsAndScores(String id) {
         boolean approvedDataOnly = params.getBoolean("approvedDataOnly", true)
         Map result = projectService.getServiceDashboardData(id, approvedDataOnly)
@@ -1015,7 +1039,7 @@ class ProjectController {
         render response as JSON
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly')
     def targetsAndScoresForActivity(String id, String activityId) {
         if (!id || !activityId || !projectService.doesActivityBelongToProject(id, activityId)) {
             error('An invalid activity was selected', id)
@@ -1117,19 +1141,19 @@ class ProjectController {
      * @param id the project id of the project of interest
      * @return a List of outcomes selected in the project MERI plan
      */
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly')
     def listProjectInvestmentPriorities(String id) {
         List investmentPriorities = projectService.listProjectInvestmentPriorities(id)
         investmentPriorities <<  "Other"
         render investmentPriorities as JSON
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly')
     def projectPrioritiesByOutcomeType(String id) {
         render projectService.projectPrioritiesByOutcomeType(id) as JSON
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly')
     def monitoringProtocolFormCategories() {
         String MONITORING_TAG = 'survey'
         List<Map> forms = activityService.monitoringProtocolForms()
@@ -1139,7 +1163,7 @@ class ProjectController {
         render categories as JSON
     }
 
-    @PreAuthorise(accessLevel = 'editor')
+    @PreAuthorise(accessLevel = 'readOnly')
     def outcomesByScores(String id) {
         List scoreIds = params.getList('scoreIds')
         if (!scoreIds) {

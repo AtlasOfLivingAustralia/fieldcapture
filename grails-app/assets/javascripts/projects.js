@@ -110,7 +110,6 @@ function ProjectViewModel(project) {
     self.externalIdTypes = PROJECT_EXTERNAL_ID_TYPES;
 
     self.transients = self.transients || {};
-    self.transients.defaultTags = ["Fires", "Flood", "Cyclone", "Drought", "Storm", "Wind"];
 
     self.name = ko.observable(project.name);
     self.programId = ko.observable(project.programId);
@@ -957,6 +956,13 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
         }
     });
 
+    self.transients.projectTags = _.map(config.projectTags, function(tag) {
+       return {
+           id:tag.term,
+           text:tag.term,
+           description:tag.description
+       };
+    });
 
     self.transients.startDateInvalid = ko.observable(false);
     self.transients.disableSave = ko.pureComputed(function() {
@@ -1080,7 +1086,6 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             fundingVerificationDate: self.fundingVerificationDate() || null, // Convert empty string to null
             status: self.status(),
             terminationReason: self.terminationReason(),
-            tags: self.tags(),
             promoteOnHomepage: self.promoteOnHomepage(),
             externalIds: ko.mapping.toJS(self.externalIds),
             geographicInfo: ko.mapping.toJS(self.geographicInfo),
@@ -1094,6 +1099,18 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
         projectService.saveProjectData(jsData);
 
     };
+
+    self.tagsChanged = ko.computed(function() {
+        return !_.isEqual(self.tags(), project.tags);
+    });
+    self.formatTag = function(tag) {
+
+        return $("<span>"+tag.text + '</span><i class="pull-right">'+tag.description+"</i>");
+    };
+
+    self.saveTags = function() {
+        projectService.saveProjectDataWithoutValidation({tags:self.tags()});
+    }
 
     self.initialiseSitesTab = function(options) {
         var defaults = {
@@ -1271,9 +1288,15 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             editDataSetUrl: config.editDataSetUrl,
             deleteDataSetUrl: config.deleteDataSetUrl,
             viewDataSetUrl: config.viewDataSetUrl,
+            downloadDataSetUrl: config.downloadDataSetUrl,
+            downloadProjectDataSetsUrl: config.downloadProjectDataSetsUrl,
+            manageEMSASiteDataSetsUrl: config.manageEMSASiteDataSetsUrl,
             returnToUrl: config.returnToUrl,
             reports: project.reports || [],
-            viewReportUrl: config.viewReportUrl
+            downloadableProtocols: config.downloadableProtocols,
+            viewReportUrl: config.viewReportUrl,
+            minutesToIngestDataSet: config.minutesToIngestDataSet
+
         };
         var projectService = new ProjectService({}, config);
         var viewModel = new DataSetsViewModel(project.custom && project.custom.dataSets, projectService, dataSetsConfig);

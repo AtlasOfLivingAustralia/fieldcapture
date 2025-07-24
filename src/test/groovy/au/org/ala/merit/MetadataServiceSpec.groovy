@@ -10,7 +10,7 @@ class MetadataServiceSpec extends Specification implements AutowiredTest{
     }}
 
     MetadataService service
-
+    SettingService settingService
     WebService webService = Mock(WebService)
     CacheService cacheService = new CacheService()
 
@@ -33,6 +33,5 @@ class MetadataServiceSpec extends Specification implements AutowiredTest{
         and:
         categories == ['Category 1', 'Category 2'] as LinkedHashSet
     }
-
 
 }

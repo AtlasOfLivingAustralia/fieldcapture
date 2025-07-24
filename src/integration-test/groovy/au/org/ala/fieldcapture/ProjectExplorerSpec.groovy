@@ -73,6 +73,10 @@ class ProjectExplorerSpec extends StubbedCasSpec {
         when:
         at ProjectExplorer // reset timer
         setFromDate("01/06/2015")
+        waitFor 10, {
+            applyDatesBtn.displayed
+        }
+        applyDatesBtn.click()
 
         then:
         waitFor {hasBeenReloaded()}
@@ -86,6 +90,10 @@ class ProjectExplorerSpec extends StubbedCasSpec {
         when: "We filter project by dates"
         at ProjectExplorer // reset timer
         setToDate("02/07/2018")
+        waitFor 10, {
+            applyDatesBtn.displayed
+        }
+        applyDatesBtn.click()
 
         then:
         waitFor {hasBeenReloaded()}
@@ -99,6 +107,10 @@ class ProjectExplorerSpec extends StubbedCasSpec {
         when: "We filter project by dates"
         at ProjectExplorer
         dateOption.click()
+        waitFor 10, {
+            applyDatesBtn.displayed
+        }
+        applyDatesBtn.click()
 
         then:
         waitFor {hasBeenReloaded()}
@@ -109,8 +121,22 @@ class ProjectExplorerSpec extends StubbedCasSpec {
             projects.size() == 1
         }
 
+        when: "We organisation facet is selected, date option selection should remain checked"
+        at ProjectExplorer
+        organisationFacet.click()
+        waitFor {
+            organisationFacetItems.displayed
+        }
+        organisationFacetItems[0].click()
+
+        then:
+        dateOption.value() == "true"
+
         when: "We clear dates"
         at ProjectExplorer
+        waitFor {
+            clearDatesBtn.displayed
+        }
         clearDatesBtn.click()
 
         then:

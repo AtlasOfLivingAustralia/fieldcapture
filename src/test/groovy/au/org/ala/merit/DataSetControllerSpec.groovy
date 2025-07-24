@@ -6,11 +6,15 @@ import grails.testing.web.controllers.ControllerUnitTest
 
 class DataSetControllerSpec extends Specification implements ControllerUnitTest<DataSetController>{
 
+    BdrService bdrService = Mock(BdrService)
     ProjectService projectService = Mock(ProjectService)
     DataSetSummaryService dataSetSummaryService = Mock(DataSetSummaryService)
+    WebService webService = Mock(WebService)
     def setup() {
         controller.projectService = projectService
         controller.dataSetSummaryService = dataSetSummaryService
+        controller.bdrService = bdrService
+        controller.webService = webService
     }
 
     def cleanup() {
@@ -159,4 +163,112 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
                   projectBaselines:[[label:"b1 - a baseline", value:"b1"]],
                   projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']], dataSetNames: ['data set 1', 'data set 2', 'data set 3'], serviceBaselineIndicatorOptions:[:]]
     }
+
+    void "The downloadProjectDataSets method handles valid and invalid inputs correctly"() {
+        setup:
+        Map project = [projectId: 'p1', name: 'Project 1']
+        Map programConfig = [program: [name: "program 1"]]
+        String format = 'application/geo+json'
+
+        when: "No project ID is provided"
+        controller.downloadProjectDataSets(null, format, 10)
+
+        then:
+        response.status == HttpStatus.SC_NOT_FOUND
+
+        when: "An unsupported format is provided"
+        response.reset()
+        controller.downloadProjectDataSets('p1', 'xml', 10)
+
+        then:
+        response.status == HttpStatus.SC_BAD_REQUEST
+
+        when: "A valid request is made"
+        response.reset()
+        controller.downloadProjectDataSets('p1', format, 10)
+
+        then:
+        1 * projectService.get('p1') >> project
+        1 * projectService.getProgramConfiguration(project) >> programConfig
+        response.status == HttpStatus.SC_OK
+        1 * bdrService.downloadProjectDataSet('p1', format, 'Project 1', response, 10)
+    }
+
+    void "The download method can validate input and download data for a data set from the BDR"() {
+        setup:
+        Map project = [projectId: 'p1', name: 'Project 1', custom: [dataSets: [[dataSetId: 'd1', name: 'DataSet 1', protocol: true]]]]
+        Map programConfig = [program: [name: "program 1"]]
+        String format = 'application/geo+json'
+
+        when: "No project ID is provided"
+        controller.download(null, 'd1', format, 10)
+
+        then:
+        response.status == HttpStatus.SC_NOT_FOUND
+
+        when: "An unsupported format is provided"
+        response.reset()
+        controller.download('p1', 'd1', 'xml', 10)
+
+        then:
+        response.status == HttpStatus.SC_BAD_REQUEST
+
+        when: "A valid request is made for a monitor data set"
+        response.reset()
+        controller.download('p1', 'd1', format, 10)
+
+        then:
+        1 * projectService.get('p1') >> project
+        1 * projectService.getProgramConfiguration(project) >> programConfig
+        response.status == HttpStatus.SC_OK
+        1 * bdrService.downloadDataSet('p1', 'd1', 'DataSet 1', format, response, 10)
+
+        when: "A valid request is made for a non-monitor data set with a URL"
+        response.reset()
+        project.custom.dataSets[0].protocol = false
+        project.custom.dataSets[0].url = 'http://example.com/dataset'
+        controller.download('p1', 'd1', format, 10)
+
+        then:
+        1 * projectService.get('p1') >> project
+        1 * projectService.getProgramConfiguration(project) >> programConfig
+        response.status == HttpStatus.SC_OK
+        1 * webService.proxyGetRequest(response, 'http://example.com/dataset', false)
+    }
+
+    void "The resync method returns 404 if the data set is not found"() {
+        setup:
+        Map project = [projectId: 'p1', custom: [dataSets: [[dataSetId: 'd1', name: 'DataSet 1']]]]
+        Map programConfig = [program: [name: "program 1"]]
+
+        when:
+        request.method = "POST"
+        request.json = [dataSetId: 'd2']
+        controller.resync('p1')
+
+        then:
+        1 * projectService.get('p1') >> project
+        1 * projectService.getProgramConfiguration(project) >> programConfig
+        response.status == HttpStatus.SC_NOT_FOUND
+    }
+
+    void "The resync method delegates to the dataSetSummaryService and returns the response as JSON"() {
+        setup:
+        Map dataSet = [dataSetId: 'd1', name: 'DataSet 1']
+        Map project = [projectId: 'p1', custom: [dataSets: [dataSet]]]
+        Map programConfig = [program: [name: "program 1"]]
+        Map resyncResponse = [status: HttpStatus.SC_OK, message: "Resynced"]
+
+        when:
+        request.method = "POST"
+        request.json = [dataSetId: 'd1']
+        controller.resync('p1')
+
+        then:
+        1 * projectService.get('p1') >> project
+        1 * projectService.getProgramConfiguration(project) >> programConfig
+        1 * dataSetSummaryService.resyncDataSet('p1', 'd1') >> resyncResponse
+        response.json == resyncResponse
+    }
+
 }

@@ -16,6 +16,8 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
     SettingService settingService = Mock(SettingService)
     UserService userService = Mock(UserService)
     RoleService roleService = Mock(RoleService)
+    DocumentService documentService = Mock(DocumentService)
+    ProjectService projectService = Mock(ProjectService)
 
     def setup(){
         controller.adminService = adminService
@@ -23,6 +25,8 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
         controller.settingService = settingService
         controller.userService = userService
         controller.roleService = roleService
+        controller.documentService = documentService
+        controller.projectService = projectService
     }
 
     void "Search User Details using email Address"(){
@@ -189,4 +193,117 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
         model.hubFlg == true
 
     }
+
+    void "The controller can setup the model for managing help documents"() {
+        setup:
+        List documents = [[documentId:'1', title:'Test Document', labels:['Test Category']]]
+        HubSettings hubSettings = new HubSettings(hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        SettingService.setHubConfig(hubSettings)
+
+        when:
+        Map model = controller.manageHelpDocuments()
+
+        then:
+        1 * documentService.findAllHelpDocuments(hubSettings.hubId, null) >> documents
+        model.categories == ['Test Category']
+        model.documents == documents
+        model.hubId == hubSettings.hubId
+        model.category == null
+
+    }
+
+    void "manageTags should return a list of tags"() {
+        given:
+        List tags = [[termId: "1", name: "Tag1"], [termId: "2", name: "Tag2"]]
+        projectService.getProjectTags() >> tags
+
+        when:
+        def model = controller.manageTags()
+
+        then:
+        model.tags == tags
+    }
+
+    void "updateTag should return an error if termId is missing"() {
+        given:
+        request.JSON = [:]
+
+        when:
+        request.method = "POST"
+        controller.updateTag()
+
+        then:
+        response.status == HttpStatus.SC_BAD_REQUEST
+    }
+
+    void "updateTag should call projectService.updateProjectTag with valid input"() {
+        given:
+        Map tag = [termId: "1", term: "UpdatedTag"]
+        request.JSON = tag
+
+        when:
+        request.method = "POST"
+        controller.updateTag()
+        def response = response.json
+
+        then:
+        1 * projectService.updateProjectTag(tag) >> [success: true]
+        response.success == true
+    }
+
+    void "addTag should return an error if term is missing"() {
+        given:
+        request.JSON = [:]
+
+        when:
+        request.method = "POST"
+        controller.addTag()
+
+        then:
+        response.status == HttpStatus.SC_BAD_REQUEST
+    }
+
+    void "addTag should call projectService.addProjectTag with valid input"() {
+        given:
+        Map tag = [term: "NewTag"]
+        request.JSON = tag
+
+        when:
+        request.method = "POST"
+        controller.addTag()
+        def response = response.json
+
+        then:
+        1 * projectService.addProjectTag(tag) >> [success: true]
+        response.success == true
+    }
+
+    void "deleteTag should return an error if termId is missing"() {
+        given:
+        request.JSON = [:]
+
+        when:
+        request.method = "POST"
+        controller.deleteTag()
+
+        then:
+        response.status == HttpStatus.SC_BAD_REQUEST
+    }
+
+    void "deleteTag should call projectService.deleteProjectTag with valid input"() {
+        given:
+        Map tag = [termId: "1"]
+        request.JSON = tag
+
+        when:
+        request.method = "POST"
+        controller.deleteTag()
+        def response = response.json
+
+        then:
+        1 * projectService.deleteProjectTag(tag) >> [success: true]
+        response.success == true
+    }
+
 }
+

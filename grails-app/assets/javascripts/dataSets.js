@@ -18,6 +18,9 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         return new DataSetSummary(dataSet);
     });
 
+    self.downloadProjectDataSetsUrl = config.downloadProjectDataSetsUrl;
+    self.manageEMSASiteDataSetsUrl = config.manageEMSASiteDataSetsUrl;
+
     self.newDataSet = function() {
         window.location.href = config.newDataSetUrl;
     };
@@ -40,6 +43,30 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         return (report && report.name);
     }
 
+    function isDownloadableMonitorDataSet(dataSet) {
+
+        if (dataSet.collectionApp !== MONITOR_APP) {
+            return false;
+        }
+        var protocolId = dataSet.protocol;
+        var downloadableProtocols = config.downloadableProtocols || [];
+
+        var isDownloadable = downloadableProtocols.indexOf(protocolId) >= 0;
+        if (isDownloadable) {
+            var now = moment();
+            var creationDate = moment(dataSet.dateCreated);
+            var minutesToIngestDataSet = config.minutesToIngestDataSet || 1;
+            if (dataSet.progress !== ActivityProgress.planned) {
+                if (creationDate.add(minutesToIngestDataSet, 'minutes').isBefore(now)) {
+                    isDownloadable = true;
+                }
+            }
+        }
+        return isDownloadable;
+    }
+
+    self.enableProjectDataSetsDownload = _.find(dataSets, isDownloadableMonitorDataSet) != null;
+
     /** View model backing for a single row in the data set summary table */
     function DataSetSummary(dataSet) {
 
@@ -59,8 +86,9 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
 
         this.readOnly = PublicationStatus.isReadOnly(dataSet.publicationStatus);
         this.deleteDataSet = function () {
-            bootbox.confirm("Are you sure?", function (yes) {
+            bootbox.confirm("Deleting a data set summary cannot be undone.  Are you sure?", function (yes) {
                 if (yes) {
+                    blockUIWithMessage("Deleting data set summary...");
                     projectService.deleteDataSet(dataSet.dataSetId).done(function () {
                         blockUIWithMessage("Refreshing page...");
                         window.location.href = config.returnToUrl;
@@ -69,20 +97,50 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
             });
         };
 
+        /** Returns true if the data set was created in the Monitor app and is a plot selection data set */
+        function isPlotSelection(dataSet) {
+            var plotSelectionModelName = 'plot-selection-survey';
+            return dataSet.surveyId &&
+                   dataSet.surveyId.survey_metadata &&
+                   dataSet.surveyId.survey_metadata.survey_details &&
+                   dataSet.surveyId.survey_metadata.survey_details.survey_model === plotSelectionModelName;
+        }
+
+        this.canResync = this.createdIn == MONITOR_APP && // Resyncing only makes sense for Monitor data sets
+                        !this.isReadOnly && // Once data has been published we shouldn't change it
+                        !dataSet.reportId && // Once data has been copied into a report we shouldn't change it
+                         dataSet.surveyId &&
+                         dataSet.surveyId.coreSubmitTime &&  // If we don't have a coreSubmitTime Monitor core doesn't have any data to resync
+                         !isPlotSelection(dataSet); // We don't currently support resyncing plot selection data sets
+
+        this.resyncDataSet = function() {
+            bootbox.confirm("After resyncing you will need to check any data you entered and mark the data set as finished again.\n Re-syncing a data set can take up to a minute to complete.\n  Are you sure?", function (yes) {
+                if (yes) {
+                    projectService.resyncDataSet(dataSet.dataSetId).done(function () {
+                        blockUIWithMessage("Refreshing page...");
+                        window.location.href = config.returnToUrl;
+                    });
+                }
+            })
+        };
+        this.downloadUrl = null;
+        if (isDownloadableMonitorDataSet(dataSet)) {
+            this.downloadUrl = config.downloadDataSetUrl + '/' + dataSet.dataSetId;
+        }
+
         if (this.createdIn === MONITOR_APP) {
             if (this.progress == ActivityProgress.planned) {
                 var now = moment();
                 var creationDate = moment(dataSet.dateCreated);
+
                 if (creationDate.add(1, 'minutes').isBefore(now)) {
                     this.progress = 'sync error';
                 }
                 else {
                     this.progress = 'sync in progress';
                 }
-
             }
         }
-
     }
 };
 
@@ -253,6 +311,9 @@ var DataSetViewModel = function(dataSet, projectService, options) {
 
     self.isAutoCreated = dataSet.surveyId != null;
 
+    self.removeSite = function() {
+        self.siteId(null);
+    }
     self.validate = function() {
         return $(config.validationContainerSelector).validationEngine('validate');
     }

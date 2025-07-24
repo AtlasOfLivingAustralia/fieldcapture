@@ -71,7 +71,7 @@
 
     <p><span class="badge p-1 text-white badge-success">Report approved</span></p>
     <p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white badge-danger">Report adjusted</span></p>
-    <g:if test="${fc.userIsAlaOrFcAdmin()}">
+    <g:if test="${fc.userIsSupportOfficerOrAdmin()}">
         <p>
             <button type="button" data-bind="click:rejectReport" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Withdraw approval</button>
         </p>

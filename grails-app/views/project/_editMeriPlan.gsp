@@ -187,7 +187,7 @@
 			<div class="col-sm-12 pl-3 pr-3">
 				<div class="alert alert-danger report-locked">
 					<p class="text-dark">You must unlock the plan to edit it, and when finished you must save your work by pressing the "Save changes and finish editing" or the "Submit for approval" button below otherwise your work will not be saved. Do not close or press back on your browser to exit or your work will be lost.</p>
-					<a id="lockMeriPlan" href="${createLink(action:'lockMeriPlan', id:project.projectId)}"><button type="button" class="btn btn-sm btn-danger"><i class="fa fa-edit"></i> Lock for Editing</button></a>
+					<a id="lockMeriPlan" href="${createLink(action:'lockMeriPlan', id:project.projectId)}"><button type="button" class="btn btn-sm btn-danger"><i class="fa fa-edit"></i> Unlock for Editing</button></a>
 				</div>
 			</div>
 		</div>

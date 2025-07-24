@@ -32,7 +32,7 @@
                 tabbedActivityUrl: "${createLink(controller: 'activity', action:'ajaxLoadActivityForm')}",
                 dashboardUrl:"${createLink(action:'projectDashboard', id:project.projectId)}",
                 searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
-                speciesListUrl:"${createLink(controller:'proxy', action:'speciesItemsForList')}",
+                speciesListUrl:"${createLink(controller:'speciesList', action:'speciesListItems')}",
                 speciesSearchUrl:"${createLink(controller:'project', action:'searchSpecies', id:project.projectId)}",
                 speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
                 speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}", imageUploadUrl: "${createLink(controller: 'image', action: 'upload')}",

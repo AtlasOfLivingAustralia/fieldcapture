@@ -131,7 +131,7 @@ class FCTagLib {
                 id:"${attrs.id ?: attrs.name}",
                 type:'text',
                 size:'16',
-                class: attrs.size ?: 'input-xlarge'
+                class: attrs.size() ?: 'input-xlarge'
             ]
 
             def ignoreList = ['name', 'id']
@@ -172,7 +172,7 @@ class FCTagLib {
             def inputAttrs = [
                 name:"${attrs.name}",
                 id:"${attrs.id ?: attrs.name}",
-                class: (attrs.size ?: 'span6') + ' printed-form-field'
+                class: (attrs.size() ?: 'span6') + ' printed-form-field'
             ]
 
             def ignoreList = ['name', 'id']
@@ -484,6 +484,12 @@ class FCTagLib {
      */
     def userIsSiteAdmin = { attrs ->
         if (userService.userIsSiteAdmin()) {
+            out << true
+        }
+    }
+
+    def userIsSupportOfficerOrAdmin = { attrs ->
+        if (userService.userIsSupportOfficerOrAdmin()) {
             out << true
         }
     }
@@ -944,62 +950,28 @@ class FCTagLib {
 
     }
 
-    def renderComparisonMonitoring = { attrs ->
+    /**
+     * Acts as a customised loop that iterates through the combined targets in original and changed output targets
+     * and renders the body with a scoreId and index (i) variable.
+     * It's required as presenting a sorted version of output targets can't be done with the raw data as it
+     * only references a score id and we want to sort by the associated service then output target
+     */
+    def sortedServiceTargetMeasures = { Map attrs, body ->
+        List original = attrs.originalOutputTargets ?: []
+        List changed = attrs.changedOutputTargets ?: []
+        ProgramConfig config = attrs.programConfig
 
-        String code = attrs.code
-        List original = attrs.original
-        List changed = attrs.changed
-        int i = attrs.i
-        String property = attrs.property
-        ProgramConfig config = attrs.config
+        List scoreIds = (original.collect{it.scoreId} + changed.collect{it.scoreId}).unique()
+        List scoreLabels = scoreIds.collect{
+            [label:scoreLabel(it, config, true), scoreId:it]}
 
-        def origMonitoringList = original
-        def resultOrigMonitoringList = []
-        for (def monitoring : origMonitoringList) {
-            if (code && code == monitoring.relatedBaseline) {
-                resultOrigMonitoringList = monitoring
-            }
+        scoreLabels.sort{it.label}
+
+        scoreLabels.eachWithIndex { Map it, int i ->
+            out << body([scoreId: it.scoreId, i:i])
         }
-
-        def changedMonitoringList = changed
-        def resultChangedMonitoringList = []
-        for (def monitoring : changedMonitoringList) {
-            if (code && code == monitoring.relatedBaseline) {
-                resultChangedMonitoringList = monitoring
-            }
-        }
-
-        out << '<span class="original hide">'
-        if (resultOrigMonitoringList && resultOrigMonitoringList.size() > i) {
-            if (property == 'relatedTargetMeasures') {
-                out << getScoreLabels(resultOrigMonitoringList[property], config, true)
-            } else {
-                if (resultOrigMonitoringList[property] instanceof List) {
-                    out << resultOrigMonitoringList[property].collect{it == 'Other' ? 'Other: ' + resultOrigMonitoringList['data2'] : it}.join(',')
-                } else {
-                    out << resultOrigMonitoringList[property]
-                }
-            }
-
-        }
-        out << '</span>'
-
-        out << '<span class="changed hide">'
-        if (resultChangedMonitoringList && resultChangedMonitoringList.size() > i) {
-            if (property == 'relatedTargetMeasures') {
-                out << getScoreLabels(resultChangedMonitoringList[property], config, true)
-            } else {
-                if (resultChangedMonitoringList[property] instanceof List) {
-                    out << resultChangedMonitoringList[property].collect{it == 'Other' ? 'Other: ' + resultChangedMonitoringList['data2'] : it}.join(',')
-                } else {
-                    out << resultChangedMonitoringList[property]
-                }
-            }
-
-        }
-        out << '</span>'
-        out << '<span class="diff"></span>'
     }
+
 
     def renderComparisonScoreLabel = { attrs ->
 

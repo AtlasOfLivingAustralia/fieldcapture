@@ -313,3 +313,27 @@ button.btn.facets-toggle {
 .searchError {
     overflow-wrap: break-word;
 }
+
+.all-facets .form-group {
+    position: relative;
+    margin-bottom: 0;
+}
+.all-facets .form-group .form-control {
+    padding-left: 2rem;
+}
+
+.all-facets .form-group .form-control-icon {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2rem;
+    line-height: 2rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
+
+.meritProjectID {
+    font-size: small;
+    font-weight: 550;
+}

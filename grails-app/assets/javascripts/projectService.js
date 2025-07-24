@@ -118,6 +118,16 @@ function ProjectService(project, options) {
         });
     }}
 
+    function handleFail(data) {
+        $.unblockUI();
+        if (data.status == 401) {
+            alert('You do not have permission to resync the data set.');
+        }
+        else {
+            alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
+        }
+    }
+
     self.saveDataSet = function(dataSet) {
         var json = JSON.stringify(dataSet);
         return self.save(options.dataSetUpdateUrl, json, "Saving data set....")
@@ -132,8 +142,7 @@ function ProjectService(project, options) {
     
                 }
             }).fail(function(data) {
-                $.unblockUI();
-                alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
+                handleFail(data);
             });
     };
 
@@ -151,16 +160,27 @@ function ProjectService(project, options) {
 
                 }
             }).fail(function(data) {
-                $.unblockUI();
-                if (data.status == 401) {
-                    alert('You do not have permission to delete this record.');
-                }
-                else {
-                    alert('An unhandled error occurred: ' + data.status + " Please refresh the page and try again");
-                }
+                handleFail(data);
             });
 
     };
+
+    self.resyncDataSet = function(dataSetId) {
+        var json = JSON.stringify({dataSetId:dataSetId});
+        return self.save(options.resyncDataSetUrl, json, "Re-syncing the data set....")
+            .done(function(data) {
+                if (data.error) {
+                    $.unblockUI();
+                    showAlert("An error occurred while re-syncing the data set: " + data.detail + ' \n' + data.error,
+                        "alert-error","save-result-placeholder");
+                } else {
+                    blockUIWithMessage("Refreshing page...");
+
+                }
+            }).fail(function(data) {
+                handleFail(data);
+            });
+    }
 
     self.uploadVariationDoc = function(doc){
         var json = JSON.stringify(doc, function (key, value) {

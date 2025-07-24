@@ -23,6 +23,16 @@
                             <select id="documentRole" class="form-control form-control-sm" data-bind="options:roles, optionsText: 'name', optionsValue: 'id', value:role, event: {change: onRoleChange}"></select>
                         </div>
                     </div>
+
+                <!-- ko if:settings.labels && settings.labels.length || settings.labelsLabel-->
+                   <div class="form-group row labels">
+                       <label class="col-form-label col-sm-4" for="documentLabels" data-bind="text:settings.labelsLabel || 'Labels'"></label>
+                          <div class="col-sm-8">
+                            <select id="documentLabels" multiple="multiple" class="form-control form-control-sm" style="width:100%" data-bind="options:settings.labels, multiSelect2:{value:labels}"></select>
+                          </div>
+                   </div>
+                    <!-- /ko -->
+
                     <!-- ko if:settings.reports && settings.reports.length -->
                     <div class="form-group row">
                         <label class="col-form-label col-sm-4" for="associatedReport">Associate to report</label>

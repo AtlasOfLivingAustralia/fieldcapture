@@ -13,7 +13,7 @@
 <g:elseif test="${results?.hits?.total?:0 > 0}">
     <div class="row">
         <div id="facetsCol" class="bg-white" style="display:none;">
-            <g:set var="reqParams" value="query,sort,order,max,fq,fromDate,toDate"/>
+            <g:set var="reqParams" value="query,sort,order,max,fq,fromDate,toDate,isFilterByCompletedProjects"/>
             <div class="visible-phone pull-right" style="margin-top: 5px;">
                 <a href="#" id="toggleFacetDisplay" rel="facetsContent" role="button" class="btn btn-sm btn-inverse" style="color:white;">
                     <span>show</span> options&nbsp;
@@ -74,7 +74,9 @@
                                         Project start and end dates are within the selected range.
                                     </label>
                                 </div>
-                                <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn btn-sm clearDates"><i class="fa fa-remove"></i> Clear dates</button></div>
+                                <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn btn-sm clearDates"><i class="fa fa-remove"></i> Clear dates</button>
+                                    <button data-bind="click:applyDates, enable:fromDate() || toDate()" class="btn btn-sm applyDates"><i class="fa fa-check"></i> Apply dates</button>
+                                </div>
 
             </div>
                         </div>
@@ -147,7 +149,7 @@
                                                     <div class="card mb-0 border-0 p-0">
                                                         <div>
                                                             <a class="projectTitle collapsed" id="proj_" href="#a_" data-toggle="collapse" title="click to show/hide details">
-                                                                <span class="showHideCaret">&#9658; </span><span class="projectTitleName">$name</span>
+                                                                <span class="showHideCaret">&#9658; </span><span class="projectTitleName">$name</span> (<b class="meritProjectID"></b>)
                                                             </a>
                                                             <a href="#" class="managementUnitLine pull-right">
                                                                 <small><i class="managementUnitName"></i></small>
@@ -402,6 +404,7 @@
             $tr.find(".projectInfo").attr("aria-labelledby", "proj_"+id)
             $tr.find('.projectInfo').attr("id", "a_" + id)
             $tr.find('.td1 .projectTitleName').text(src.name); // projectTitleName
+            $tr.find(".td1 .meritProjectID").text(src.grantId)
             if(src.managementUnitName){
                 $tr.find('.td1 .managementUnitName').text(src.managementUnitName);
                 $tr.find('.td1 a.managementUnitLine').attr("href", "${createLink(controller: 'managementUnit')}/" + src.managementUnitId);

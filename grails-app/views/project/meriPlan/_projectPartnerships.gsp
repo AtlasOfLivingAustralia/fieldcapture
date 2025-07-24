@@ -1,14 +1,14 @@
 <div id="project-partnership" class="well well-small">
-    <label><b>Project partnerships</b><g:if test="${helpTextHeading}"> <fc:iconHelp html="true" container="body">${helpTextHeading}</fc:iconHelp></g:if></label>
+    <label><b>${title?:'Project partnerships'}</b><g:if test="${helpTextHeading}"> <fc:iconHelp html="true" container="body">${helpTextHeading}</fc:iconHelp></g:if></label>
     <p>${explanation?: "Provide details on all project partners and the nature and scope of their participation in the project."}</p>
     <table class="table">
         <thead>
         <tr>
             <th class="index"></th>
-            <th class="partner-name">Partner name
+            <th class="partner-name">${partnerNameHeading ?: 'Partner name'}
                 <fc:iconHelp title="Partner name">${helpTextPartnerName ?:'Name of project partner, to be a project partner they need to be actively involved in the planning or delivery of the project.'}</fc:iconHelp></th>
-            <th class="partnership-nature">Nature of partnership<fc:iconHelp title="Nature of partnership">${helpTextPartnerNature ?: 'Very briefly indicate how the partner is contributing to the project.'}</fc:iconHelp></th>
-            <th class="partner-organisation-type">Type of organisation<fc:iconHelp title="Type of organisation">${helpTextPartnerOrg ?: 'Select the most appropriate partner type from the list provided.'}</fc:iconHelp></th>
+            <th class="partnership-nature">${naturePartnershipHeading ?: 'Nature of partnership'}<fc:iconHelp title="Nature of partnership">${helpTextPartnerNature ?: 'Very briefly indicate how the partner is contributing to the project.'}</fc:iconHelp></th>
+            <th class="partner-organisation-type">${typeOrganisationHeading ?: 'Type of organisation'}<fc:iconHelp title="Type of organisation">${helpTextPartnerOrg ?: 'Select the most appropriate partner type from the list provided.'}</fc:iconHelp></th>
             <th class="remove"></th>
         </tr>
         </thead>

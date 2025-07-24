@@ -27,6 +27,7 @@ class AdminTabContent extends Module {
         loadProject { $(".loadProject") }
         removeUser { $(".removeUser") }
         userPermission { $(".userPermission") }
+        manageHelpDocuments { $(".manageHelpDocuments") }
         tools { $(".tools") }
         settings { $(".settings") }
         caches { $(".caches") }

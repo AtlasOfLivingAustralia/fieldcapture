@@ -34,9 +34,7 @@
         </p>
         <div data-bind="if:update">
         <p class="alert alert-warning" >
-            Please note this function will replace all project information for each project. <br/>
-            It is designed for use with grants hub data and to fix newly loaded projects.  Please test changes
-            to existing MERIT projects in the staging system before running the update in production.
+            Please test changes to existing MERIT projects in the staging system before running the update in production.
         </p>
         </div>
         <div class="form-check">

@@ -39,14 +39,15 @@ class SiteController {
 
             def user = userService.getUser()
 
-            // permissions check - can't use annotation as we have to know the projectId in order to lookup access right
-            if (!isUserMemberOfSiteProjects(site)) {
+            List userProjects = site.projects?.findAll { projectService.canUserViewProject(user?.userId, it.projectId) }
+            // permissions check - can't use an annotation as we have to know the projectId.
+            // The rule applied here is if the user can view any project they are allowed to view the sites associated with
+            // that project as they are already displayed on the Sites tab anyway.
+            if (!userProjects) {
                 flash.message = "Access denied: User does not have permission to view site: ${id}"
                 redirect(controller:'home', action:'index')
                 return
             }
-
-            List userProjects = site.projects?.findAll { projectService.canUserViewProject(user?.userId, it.projectId) }
 
             // Tracks navigation and provides context to the "create activity" feature on the site page.
             Map selectedProject = null
@@ -181,7 +182,7 @@ class SiteController {
 
     /** Returns geojon for a site */
     def geojson(String id) {
-        Map site = siteService.get(id)
+        Map site = siteService.get(id, [view:SiteService.SITE_VIEW_RAW])
         if (!site) {
             Map resp = [status:HttpStatus.SC_NOT_FOUND]
             render resp as JSON

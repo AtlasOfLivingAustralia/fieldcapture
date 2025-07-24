@@ -6,36 +6,48 @@
     <tr>
         <th class="index"></th>
         <th class="service required">${serviceName ?: "Project Service"}</th>
-        <th class="score required">Target measure</th>
+        <th class="score required">${targetMeasureHeading ?: 'Target measure'}</th>
     </tr>
     </thead>
     <tbody>
-    <g:set var="max" value="${Math.max(changed.outputTargets.size(), project.outputTargets.size()?:0)}"/>
-    <g:each in="${(0..<max)}" var="i">
 
-    <tr class="service-target">
-        <td class="index"><span data-bind="text:${i}+1"></span></td>
-        <td class="service">
-            <fc:renderComparisonService programConfig="${config}"  changed="${changed.outputTargets ?: []}" i="${i}" original="${project.outputTargets ?: []}"/>
-        </td>
-        <td class="score">
-            <fc:renderComparisonScoreLabel config="${config}" changed="${changed.outputTargets ?: []}" i="${i}" original="${project.outputTargets ?: []}" property="scoreId"/>
-        </td>
-    </tr>
-    <tr>
-        <td class="index"></td>
-        <th>Project Outcome/s</th>
-        <th>Target</th>
-    </tr>
-    <tr class="outcome-target">
-        <td class="index"></td>
-        <td class="service">
-            <fc:renderComparisonOutputTargets changed="${changed.outputTargets.outcomeTargets ?: []}" i="${i}" original="${project.outputTargets.outcomeTargets ?: []}" property="relatedOutcomes"/>
-        </td>
-        <td class="score">
-            <fc:renderComparisonOutputTargets changed="${changed.outputTargets.outcomeTargets ?: []}" i="${i}" original="${project.outputTargets.outcomeTargets ?: []}" property="target"/>
-        </td>
-    </tr>
-    </g:each>
+    <fc:sortedServiceTargetMeasures
+            originalOutputTargets="${project.outputTargets}"
+            changedOutputTargets="${changed.outputTargets}"
+            programConfig="${config}">
+
+
+        <g:set var="originalTarget" value="${(project.outputTargets ?: []).find{it.scoreId == scoreId}}"/>
+        <g:set var="changedTarget" value="${(changed.outputTargets ?: []).find{it.scoreId == scoreId}}"/>
+
+        <g:set var="changedOutcomesTargets" value="${changedTarget?.outcomeTargets}"/>
+        <g:set var="originalOutcomeTargets" value="${originalTarget?.outcomeTargets}"/>
+
+        <tr class="service-target">
+            <td class="index"><span data-bind="text:${i}+1"></span></td>
+            <td class="service">
+
+                <fc:renderComparisonService programConfig="${config}"  changed="${changedTarget?[changedTarget]:[]}" i="${0}" original="${originalTarget?[originalTarget]:[]}"/>
+            </td>
+            <td class="score">
+
+                <fc:renderComparisonScoreLabel config="${config}" changed="${changedTarget?[changedTarget]:[]}" i="${0}" original="${originalTarget?[originalTarget]:[]}" property="scoreId"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="index"></td>
+            <th>${projectOutcomesHeading ?: 'Project Outcome/s'}</th>
+            <th>${targetHeading ?: 'Target'}</th>
+        </tr>
+        <tr class="outcome-target">
+            <td class="index"></td>
+            <td class="service">
+                <fc:renderComparisonOutputTargets changed="${changedOutcomesTargets?[changedOutcomesTargets]:[]}" i="${0}" original="${originalOutcomeTargets ? [originalOutcomeTargets]: []}" property="relatedOutcomes"/>
+            </td>
+            <td class="score">
+                <fc:renderComparisonOutputTargets changed="${changedOutcomesTargets?[changedOutcomesTargets]:[] ?: []}" i="${0}" original="${originalOutcomeTargets ? [originalOutcomeTargets]: []}" property="target"/>
+            </td>
+        </tr>
+    </fc:sortedServiceTargetMeasures>
     </tbody>
 </table>
