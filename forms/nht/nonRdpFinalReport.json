@@ -13,7 +13,39 @@
         "dataModel": [
           {
             "dataType": "list",
-            "name": "projectOutcomes",
+            "name": "shortTermProjectOutcomes",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "code"
+              },
+              {
+                "dataType": "text",
+                "name": "outcomeStatement",
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "achievement",
+                "validate": "required,maxSize[500]"
+              },
+              {
+                "dataType": "text",
+                "name": "basedRating",
+                "constraints": [
+                  "Fully Achieved",
+                  "Mostly Achieved",
+                  "Partially Achieved",
+                  "Not achieved"
+                ],
+                "validate": "required"
+              }
+            ]
+          },
+          {
+            "dataType": "list",
+            "name": "midTermProjectOutcomes",
             "allowRowDelete": "false",
             "columns": [
               {
@@ -63,6 +95,96 @@
           {
             "dataType": "list",
             "name": "projectImpacts",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "code"
+              },
+              {
+                "dataType": "text",
+                "name": "outcomeStatement",
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "outcomeAssets",
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "nominatedPriorityAchievements",
+                "validate": "required,maxSize[1000]"
+              },
+              {
+                "dataType": "stringList",
+                "name": "keyAspectsEnabler",
+                "validate": "required",
+                "constraints": [
+                  "Stakeholder Engagement",
+                  "Community involvement",
+                  "Partnerships with local groups",
+                  "Collaboration with Indigenous groups",
+                  "Adequate Funding and Resources",
+                  "In-kind contributions",
+                  "Governance and accountability with well-defined roles and responsibilities",
+                  "Regulatory or policy requirements",
+                  "Project planning",
+                  "Regular Monitoring and evaluation",
+                  "Time and capacity",
+                  "Resource use or economic priorities",
+                  "Data and knowledge",
+                  "IT infrastructure",
+                  "Site access/location",
+                  "Access to expertise and skilled personnel",
+                  "Other"
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "otherKeyAspectsEnabler",
+                "description": "",
+                "validate": "maxSize[1000]"
+              },
+              {
+                "dataType": "stringList",
+                "name": "keyAspectsBarriers",
+                "validate": "required",
+                "constraints": [
+                  "Inadequate Stakeholder Engagement",
+                  "Inadequate Community involvement",
+                  "Inadequate Partnerships with local groups",
+                  "Inadequate Collaboration with Indigenous groups",
+                  "Insufficient Funding and Resources",
+                  "In-kind contributions not realised",
+                  "Inadequate Governance and accountability with well-defined roles and responsibilities",
+                  "Inadequate Project planning",
+                  "Inadequate Regular monitoring and evaluation",
+                  "Lack of stakeholder buy-in",
+                  "Regulatory or policy requirements",
+                  "Unpredictable weather conditions",
+                  "Natural disasters or extreme weather events",
+                  "Disease/Pandemic",
+                  "Time and capacity constraints",
+                  "Conflicting resource use or economic priorities",
+                  "Inadequate data and knowledge",
+                  "Inadequate IT infrastructure",
+                  "Inadequate Site Access/Remote site location",
+                  "Inadequate access to expertise and skilled personnel",
+                  "Other"
+
+                ]
+              },
+              {
+                "dataType": "text",
+                "name": "otherKeyAspectsBarriers",
+                "validate": "maxSize[1000]"
+              }
+            ]
+          },
+          {
+            "dataType": "list",
+            "name": "midTermProjectImpacts",
             "allowRowDelete": "false",
             "columns": [
               {
@@ -650,7 +772,7 @@
             "type": "row"
           },
           {
-            "source": "projectOutcomes",
+            "source": "shortTermProjectOutcomes",
             "title": "",
             "type": "table",
             "disableTableUpload": true,
@@ -683,6 +805,52 @@
               }
             ]
           },
+          {
+            "type":"row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "length(midTermProjectOutcomes) > 0"
+              }
+            ],
+            "items": [
+
+
+          {
+
+            "source": "midTermProjectOutcomes",
+            "title": "",
+            "type": "table",
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "source": "code",
+                "type": "readonlyText",
+                "title": "Outcome Statement Number"
+              },
+              {
+                "type": "textarea",
+                "readonly": true,
+                "source": "outcomeStatement",
+                "title": "Outcome Statement",
+                "rows": 5,
+                "width": "35%"
+              },
+              {
+                "type": "textarea",
+                "source": "achievement",
+                "title": "What did the project achieve against this outcome statement?",
+                "rows": 5,
+                "width": "35%"
+              },
+              {
+                "width": "25%",
+                "source": "basedRating",
+                "title": "The degree to which the project outcome was achieved",
+                "type": "select2"
+              }
+            ]
+          }]},
 
           {
             "items": [
@@ -782,6 +950,83 @@
               }
             ]
           },
+          {
+            "type": "row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "length(midTermProjectImpacts) > 0"
+              }
+            ],
+            "items": [
+          {
+            "source": "midTermProjectImpacts",
+            "title": "",
+            "type": "table",
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "source": "code",
+                "type": "readonlyText",
+                "title": "Outcome No."
+              },
+              {
+                "type": "textarea",
+                "readonly": true,
+                "source": "outcomeStatement",
+                "title": "Outcome",
+                "rows": 5,
+                "width": "20%"
+              },
+              {
+                "type": "textarea",
+                "readonly": true,
+                "source": "outcomeAssets",
+                "title": "Investment Priority",
+                "rows": 5,
+                "width": "20%"
+              },
+              {
+                "type": "textarea",
+                "source": "nominatedPriorityAchievements",
+                "title": "Achievements for the nominated investment priority/priorities",
+                "rows": 5,
+                "width": "20%"
+              },
+              {
+                "width": "20%",
+                "type": "col",
+                "title": "What key aspects helped (enabled) to achieve the outcomes for the investment priorities?<b style=\"color:red\">*</b>",
+                "items": [
+                  {
+                    "source": "keyAspectsEnabler",
+                    "type": "select2Many"
+                  },
+                  {
+                    "source": "otherKeyAspectsEnabler",
+                    "placeholder": "If ‘Other’ was selected, please describe here ",
+                    "type": "textarea"
+                  }
+                ]
+              },
+              {
+                "width": "20%",
+                "type": "col",
+                "title": "What key aspects made it difficult (was a barrier) to achieve the outcomes for the investment priorities?<b style=\"color:red\">*</b>",
+                "items": [
+                  {
+                    "source": "keyAspectsBarriers",
+                    "type": "select2Many"
+                  },
+                  {
+                    "source": "otherKeyAspectsBarriers",
+                    "placeholder": "If ‘Other’ was selected, please describe here ",
+                    "type": "textarea"
+                  }
+                ]
+              }
+            ]
+          }]},
           {
             "items": [
               {
@@ -1294,7 +1539,14 @@
               "context-path": "owner"
             },
             "merge": {
-              "projectOutcomes": {
+              "shortTermProjectOutcomes": {
+                "deleteUnmatchedExistingRows": true,
+                "addUnmatchedNewRows": true,
+                "keys": [
+                  "outcomeStatement"
+                ]
+              },
+              "midTermProjectOutcomes": {
                 "deleteUnmatchedExistingRows": true,
                 "addUnmatchedNewRows": true,
                 "keys": [
@@ -1304,7 +1556,7 @@
             },
             "mapping": [
               {
-                "target": "projectOutcomes",
+                "target": "shortTermProjectOutcomes",
                 "mapping": [
                   {
                     "target": "code",
@@ -1316,6 +1568,20 @@
                   }
                 ],
                 "source-path": "custom.details.outcomes.shortTermOutcomes"
+              },
+              {
+                "target": "midTermProjectOutcomes",
+                "mapping": [
+                  {
+                    "target": "code",
+                    "source-path": "code"
+                  },
+                  {
+                    "target": "outcomeStatement",
+                    "source-path": "description"
+                  }
+                ],
+                "source-path": "custom.details.outcomes.midTermOutcomes"
               }
             ]
           },
@@ -1325,6 +1591,13 @@
             },
             "merge": {
               "projectImpacts": {
+                "deleteUnmatchedExistingRows": true,
+                "addUnmatchedNewRows": true,
+                "keys": [
+                  "outcomeStatement"
+                ]
+              },
+              "midTermProjectImpacts": {
                 "deleteUnmatchedExistingRows": true,
                 "addUnmatchedNewRows": true,
                 "keys": [
@@ -1350,6 +1623,24 @@
                   }
                 ],
                 "source-path": "custom.details.outcomes.shortTermOutcomes"
+              },
+              {
+                "target": "midTermProjectImpacts",
+                "mapping": [
+                  {
+                    "target": "code",
+                    "source-path": "code"
+                  },
+                  {
+                    "target": "outcomeStatement",
+                    "source-path": "description"
+                  },
+                  {
+                    "target": "outcomeAssets",
+                    "source-path": "assets"
+                  }
+                ],
+                "source-path": "custom.details.outcomes.midTermOutcomes"
               }
             ]
           },
