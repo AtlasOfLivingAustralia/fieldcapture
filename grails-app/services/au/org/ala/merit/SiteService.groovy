@@ -387,7 +387,8 @@ class SiteService {
     }
 
     Map getSiteGeoJson(String siteId) {
-        webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + 'site/' + siteId+'.geojson', [view:SITE_VIEW_RAW])
+        Map resp = webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + 'site/' + siteId+'.geojson', [view:SITE_VIEW_RAW])
+        resp?.resp
     }
 
     def lookupLocationMetadataForSite(Map site) {
