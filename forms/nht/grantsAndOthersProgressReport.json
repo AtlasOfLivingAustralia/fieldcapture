@@ -231,7 +231,7 @@
           {
             "name": "goodNewsLink",
             "dataType": "text",
-            "validate": "required,maxSize[300]",
+            "validate": "required,maxSize[1000]",
             "behaviour": [
               {
                 "condition": "anyGoodNews == \"Yes\"",
@@ -2651,7 +2651,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
+                    "source": "<p><b>Available Evidence</b></p>Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -5853,7 +5853,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
+                "source": "<p><b>Available Evidence</b></p>Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
               },
               {
                 "preLabel": "Data have been uploaded",
@@ -9106,7 +9106,7 @@
                 "items": [
                   {
                     "type": "literal",
-                    "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
+                    "source": "<p><b>Available Evidence</b></p>Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
                   },
                   {
                     "preLabel": "Data have been uploaded",
@@ -19787,7 +19787,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
+                "source": "<p><b>Available Evidence</b></p>Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
               },
               {
                 "preLabel": "Data have been uploaded",
@@ -28283,7 +28283,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<p><b>Available Evidence</b></p>This field is mandatory for all projects as part of the invoicing process. Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
+                "source": "<p><b>Available Evidence</b></p>Please list evidence you have retained for this service and provide information to where the evidence is stored (links/file location data). Refer to the Project Service Evidence Guide and the Project Service Summaries for information on the evidence requirements.<b style=\"color:red\">*</b>"
               },
               {
                 "preLabel": "Data have been uploaded",
