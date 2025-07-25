@@ -110,7 +110,7 @@ let scores = [
                         property: 'data.plansDeveloped'
                     },
                     childAggregations: [
-                        {property: 'data', type: 'SET'}]
+                        {property: 'data.planDetails', type: 'SET'}]
                 }]
         }
     },
