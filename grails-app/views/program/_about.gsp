@@ -16,35 +16,11 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4" >
+    <div class="col-md-8" >
         <h3>Description</h3>
         <span data-bind="html:description.markdownToHtml()"></span>
     </div>
-    <div class="col-md-8">
-        <m:map id="muMap" width="100%" height="500px"></m:map>
-    </div>
 
-    <div class="col-md-12" id="state-mu">
-        <div class="well">Click on a heading or <a id="showAllStatesMu" href="#">Show all</a>  | <a id="hideAllStatesMu"  href="#">Hide all</a> management units</div>
-        <div class="panel panel-default">
-            <g:set var="states" value="${['Australia Capital Territory','New South Wales', 'Northern Territory', 'Queensland', 'South Australia', 'Tasmania', 'Victoria', 'Western Australia']}"></g:set>
-            <g:set var="statesAcronyms" value="${['ACT','NSW', 'NT', 'Queensland', 'SA', 'Tasmania', 'Victoria', 'WA']}"></g:set>
-            <g:each in="${states}" status="i" var="state" >
-                <div class="card">
-                    <div class="card-header">
-                        <a class="state-mu-toggle collapsed" data-toggle="collapse" data-parent="#state-mu" href="#state-mu-${i}">
-                            ${state}
-                        </a>
-                    </div>
-                    <div id="state-mu-${i}" class="collapse col-md-offset-1 col-md-11 card-body">
-                        <g:findAll in="${program.managementUnits}" expr="it.state?.startsWith(state) || it.state?.startsWith(statesAcronyms[i])">
-                            <li><a href="${g.createLink(controller: 'managementUnit', action: 'index',id:it.managementUnitId)}">${it.name}</a></li>
-                        </g:findAll>
-                    </div>
-                </div>
-            </g:each>
-        </div>
-    </div>
 </div>
 
 <g:if test="${program.subPrograms}">

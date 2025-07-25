@@ -42,13 +42,11 @@ class ProgramPage extends Page {
         name {$('h2')}
         grantIdsTable{$('td.grantId')}
         projectNameTable{$('td.projectName')}
-        muInStatesTable{$('div[id^=state-mu-] li a')}
-        showAllStatesMuButton {$('#showAllStatesMu')}
         overviewTab{$('a#about-tab',0)}
         adminTab { $('a#admin-tab') }
         adminTabContent { module ProgramAdminTab }
         visitUs {$('#weburl span')}
-        description {$('.row .col-md-4 span[data-bind*="html:description"] p')}
+        description {$('.row span[data-bind*="html:description"] p')}
         subProgramTabContent(required:false) {$("div#subProgramWrapper").moduleList(subProgramContent)}
         projectRows(required:false) { $('#projectOverviewList tbody tr').moduleList(ProjectRow) }
         projectTable { $('#projectOverviewList')}

@@ -32,6 +32,9 @@ class SiteService {
 /** A site representing an area in which one or more project surveys will take place */
     public static final String SITE_TYPE_SURVEY_AREA = 'surveyArea'
 
+    /** Used to request the raw site data only */
+    public static final String SITE_VIEW_RAW = 'raw'
+
 
     static isReadOnly(Map site) {
         site?.type == SITE_TYPE_COMPOUND || PublicationStatus.isReadOnly(site.publicationStatus)
@@ -180,7 +183,7 @@ class SiteService {
     }
 
     def getRaw(id) {
-        def site = get(id, [raw:'true'])
+        def site = get(id, [view:SITE_VIEW_RAW])
         if (!site || site.error) return [:]
         def documents = documentService.getDocumentsForSite(site.siteId).resp?.documents?:[]
         [site: site, documents:documents as JSON]
@@ -384,7 +387,8 @@ class SiteService {
     }
 
     Map getSiteGeoJson(String siteId) {
-        webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + 'site/' + siteId+'.geojson')
+        Map resp = webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + 'site/' + siteId+'.geojson', [view:SITE_VIEW_RAW])
+        resp?.resp
     }
 
     def lookupLocationMetadataForSite(Map site) {
