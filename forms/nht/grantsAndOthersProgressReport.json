@@ -231,7 +231,7 @@
           {
             "name": "goodNewsLink",
             "dataType": "text",
-            "validate": "required,maxSize[300]",
+            "validate": "required,maxSize[1000]",
             "behaviour": [
               {
                 "condition": "anyGoodNews == \"Yes\"",
