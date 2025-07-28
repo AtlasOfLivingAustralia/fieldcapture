@@ -6851,6 +6851,12 @@
               },
               {
                 "dataType": "number",
+                "name": "numberOfPeopleEmployed",
+                "decimalPlaces": 0,
+                "validate": "min[0]"
+              },
+              {
+                "dataType": "number",
                 "name": "fteOfThisPosition",
                 "decimalPlaces": 3,
                 "description": "Note: This must be reported in the context of this reporting period only. For example, a full time Reefwise Farming Facilitator = 1, and a half time Reefwise Farming Facilitator = 0.5",
@@ -7350,6 +7356,21 @@
                     ]
                   }
                 ]
+              },
+              {
+                "type": "row",
+                "items":  [{
+                  "type": "col",
+                  "css": "span3",
+                  "items": [{
+                    "type": "row",
+                    "items":  [{
+                      "source": "numberOfPeopleEmployed",
+                      "preLabel": "Number of people employed to perform the role of this position",
+                      "type": "number"
+                    }]
+                  }]
+                }]
               },
               {
                 "type": "row",
