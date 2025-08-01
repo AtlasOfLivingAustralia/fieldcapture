@@ -63,10 +63,6 @@ class ProgramController {
         boolean canViewNonPublicTabs = userService.canUserViewNonPublicProgramInformation(userService.getUser()?.userId, program.programId)
         Map result = programService.getProgramProjects(program.programId)
         List projects = result?.projects
-        println projects?.collect{it.projectId}
-        println projects?.collect{it.grantId}
-        println projects?.collect{it.name}
-
 
         List blogs = blogService.getBlog(program)
         def hasNewsAndEvents = blogs.find { it.type == 'News and Events' }
@@ -90,20 +86,19 @@ class ProgramController {
             program.managementUnits = managementUnits
         }
 
-        //Aggregate all targeted outcomes of projects
-        for(Map project in projects){
-            //Verify project.outcomes (from program config) with primaryOutcome and secondaryOutcomes in project.custom.details.outcomes
-            Map primaryOutcome = project.custom?.details?.outcomes?.primaryOutcome
-            if (primaryOutcome){
-                Map oc =  program.outcomes.find {oc -> oc.outcome == primaryOutcome.description}
-                if (oc) {
-                    oc['targeted'] = true //set program outcomes
-                    primaryOutcome.shortDescription = oc['shortDescription']
-                }
+        // Go through all of the projects and mark each program outcome that is the primary outcome of at least
+        // one project
+        List primaryOutcomes = program.outcomes?.findAll{ it && (!it.type || it.type == 'primary') } ?: []
+        primaryOutcomes.each {
+            it.targeted = projects?.find{ project-> project.custom?.details?.outcomes?.primaryOutcome?.description == it.outcome }
+            if (!it.shortDescription) {
+                it.shortDescription = it.outcome?.take(50) ?: ''
             }
         }
+
         [about   : [label: 'Overview',visible: true, stopBinding: false, type: 'tab',
                     program: program,
+                    primaryOutcomes: primaryOutcomes,
                     blog: [blogs: blogs?:[], editable: hasEditAccessOfBlog,
                            hasNewsAndEvents: hasNewsAndEvents,
                            hasProgramStories:  hasProgramStories,
