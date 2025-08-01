@@ -73,4 +73,13 @@
         </resources>
     </cache>
 
+    <cache alias="programDashboard">
+        <expiry>
+            <ttl unit="days">1</ttl>
+        </expiry>
+        <resources>
+            <heap unit="entries">10</heap>
+        </resources>
+    </cache>
+
 </config>

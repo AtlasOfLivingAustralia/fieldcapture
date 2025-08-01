@@ -114,6 +114,7 @@ class ProgramService {
 
     }
 
+    @Cacheable("programDashboard")
     List serviceScores(String programId, boolean approvedActivitiesOnly = true) {
         List<Map> allServices = metadataService.getProjectServices()
         List scoreIds = allServices.collect{it.scores?.collect{score -> score.scoreId}}.flatten()
