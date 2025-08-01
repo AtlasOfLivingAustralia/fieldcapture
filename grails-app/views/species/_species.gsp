@@ -64,7 +64,7 @@
         var druid = "${project.listId}";
         if (druid) {
             // populate the textarea with saved list of species
-            $.getJSON("${g.createLink(controller: 'proxy', action: 'speciesItemsForList')}?druid=" + druid, function(data) {
+            $.getJSON("${g.createLink(controller: 'speciesList', action: 'speciesListItems')}?druid=" + druid, function(data) {
                 if (data && data.length > 0) {
                     var speciesHtml = "";
                     $.each(data, function(i, el) {
