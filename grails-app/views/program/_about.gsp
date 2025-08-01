@@ -56,11 +56,11 @@
 </g:if>
 
 
-<g:if test="${program.outcomes}">
+<g:if test="${content.about.primaryOutcomes}">
     <div class="well">
-        <div class="well-title">The following outcomes are being addressed by this program</div>
+        <div class="well-title">The following primary outcomes are being addressed by this program</div>
         <div class="row outcomes no-gutters">
-            <g:each in="${program.outcomes}" var="outcome" >
+            <g:each in="${content.about.primaryOutcomes}" var="outcome" >
                 <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' : 'disabled'}"/>
                 <div class="col-md">
                     <div class="outcome-wrapper h-100">
@@ -86,7 +86,7 @@
             <th class="grantId"><g:message code="label.merit.projectID"/></th>
             <th class="name">Name</th>
             <th class="description">Description</th>
-            <th class="outcomes">Outcome</th>
+            <th class="outcomes">Primary Outcome</th>
             <th class="priority">Investment Priority</th>
             <th class="startDate">Start Date</th>
             <th class="endDate">End Date</th>
@@ -99,8 +99,9 @@
                     <td class="description">${project.description}</td>
                     <g:if test="${project.custom?.details?.outcomes?.primaryOutcome}">
                         <g:set var="primaryOutcome" value="${project.custom.details.outcomes.primaryOutcome}" />
-                        <td class="outcomes">${primaryOutcome.shortDescription}</td>
-                        <g:set var="primaryOutcomePriorities" value="${primaryOutcome.assets}"></g:set>
+                        <g:set var="primaryOutcomeShortDescription" value="${content.about.primaryOutcomes?.find{it.outcome == primaryOutcome.description}?.shortDescription}" />
+                        <td class="outcomes">${primaryOutcomeShortDescription}</td>
+                        <g:set var="primaryOutcomePriorities" value="${primaryOutcome.assets}"/>
                         <td class="priority">
                             <g:each var="priority" in="${primaryOutcomePriorities}">
                                 ${priority}
