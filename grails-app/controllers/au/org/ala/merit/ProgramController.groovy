@@ -79,13 +79,6 @@ class ProgramController {
             servicesWithScores = programService.serviceScores(program.programId, !hasAdminAccess)
         }
 
-        // Find the management units that contain projects for this program.
-        String[] muIds = projects.collect{it.managementUnitId}.unique()
-        if (muIds) {
-            List managementUnits = managementUnitService.get(muIds)
-            program.managementUnits = managementUnits
-        }
-
         // Go through all of the projects and mark each program outcome that is the primary outcome of at least
         // one project
         List primaryOutcomes = program.outcomes?.findAll{ it && (!it.type || it.type == 'primary') } ?: []
