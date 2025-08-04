@@ -1609,6 +1609,10 @@ class ProjectService  {
         activityNames.collect { String activityName ->  programActivities.find{it.name == activityName} }
     }
 
+    List<Map> getProjectServicesWithTargets(String projectId) {
+        Map project = get(projectId, 'flat')
+        getProjectServicesWithTargets(project)
+    }
 
     /**
      * Returns a the List of services being delivered by this project with target information for each score.
@@ -1634,8 +1638,7 @@ class ProjectService  {
      * ]
      *
      */
-    List<Map> getProjectServicesWithTargets(String projectId) {
-        Map project = get(projectId, 'flat')
+    List<Map> getProjectServicesWithTargets(Map project) {
 
         List serviceIds = project.custom?.details?.serviceIds?.collect{it as Integer}
 
@@ -1897,6 +1900,10 @@ class ProjectService  {
         scoreIds.collectEntries{ String scoreId ->[(scoreId):result.results?.find{it.scoreId == scoreId}?.result?.result ?: 0]}
     }
 
+    Map getServiceDashboardData(String projectId, boolean approvedDataOnly) {
+        Map project = get(projectId, 'flat')
+        getServiceDashboardData(project, approvedDataOnly)
+    }
     /**
      * Returns a map of the form:
      * [
@@ -1904,9 +1911,9 @@ class ProjectService  {
      *     services: [ <list of scores and targets for each of the project services> ]
      * ]
      */
-    Map getServiceDashboardData(String projectId, boolean approvedDataOnly) {
+    Map getServiceDashboardData(Map project, boolean approvedDataOnly) {
 
-        List<Score> projectServices = getProjectServicesWithTargets(projectId)
+        List<Score> projectServices = getProjectServicesWithTargets(project)
         List scoreIds = projectServices.collect{it.scores?.collect{ score ->
 
             if (score.relatedScores) {
@@ -1918,7 +1925,7 @@ class ProjectService  {
 
         }}.flatten()
 
-        Map scoreSummary = projectSummary(projectId, approvedDataOnly, scoreIds)
+        Map scoreSummary = projectSummary(project.projectId, approvedDataOnly, scoreIds)
 
         Map dashboard = [services:[], planning:false]
         int deliveredAgainstTargets = 0

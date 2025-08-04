@@ -239,7 +239,7 @@ class ProjectController {
             model.serviceDelivery = [label: 'Dashboard', visible: serviceDeliveryVisible, type: 'tab', template: 'rlpServiceDashboard', includeInvoiced:showDashboardInvoiceField]
             if (model.serviceDelivery.visible) {
                 // This can be a slow call so don't make it if the data won't be displayed
-                model.serviceDelivery.servicesDashboard = projectService.getServiceDashboardData(project.projectId, false)
+                model.serviceDelivery.servicesDashboard = projectService.getServiceDashboardData(project, false)
             }
 
             model.site.useAlaMap = true
