@@ -17011,6 +17011,11 @@
                 "validate": "required,past[now]"
               },
               {
+                "dataType": "time",
+                "name": "imageTimeCollected",
+                "validate": "required"
+              },
+              {
                 "dataType": "text",
                 "name": "georeferenced",
                 "validate": "required,max[100]"
@@ -17444,6 +17449,22 @@
                             "source": "imageDateCollected",
                             "preLabel": "Date of images or imagery collected",
                             "type": "date"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "imageTimeCollected",
+                            "preLabel": "Time of images or imagery collected",
+                            "type": "time"
                           }
                         ]
                       }
