@@ -10,5 +10,3 @@
 //= require geojson2svg/1.2.3/geojson2svg
 //= require feature.js
 //= require activity.js
-//= require jquery.timeentry.package-2.0.1/jquery.plugin.min.js
-//= require jquery.timeentry.package-2.0.1/jquery.timeentry.min.js
