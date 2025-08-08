@@ -72,7 +72,9 @@
                     });
                     $('#speciesList').val(speciesHtml);
                 }
-            }).fail(function(j,t,e){ alert(t + ":" + e);}).done();
+            }).fail(function(j,t,e) {
+                console.log("Failed to get species list - is the list marked as private?");
+            });
         }
 
     });
