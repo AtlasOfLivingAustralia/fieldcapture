@@ -16301,7 +16301,7 @@
               {
                 "defaultValue": {
                   "type": "computed",
-                  "expression": "calculatedLengthCollectedKm"
+                  "expression": "calculatedLengthTreatedKm"
                 },
                 "dataType": "number",
                 "name": "lengthTreatedKm",
