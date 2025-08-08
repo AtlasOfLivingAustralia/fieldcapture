@@ -20156,7 +20156,7 @@
                   "expression": "$geom.areaHa(imageCollectedLocation)"
                 },
                 "dataType": "number",
-                "name": "calculatedAreaTreatedHa",
+                "name": "calculatedAreaCollectedHa",
                 "units": "ha",
                 "decimalPlaces": 3
               },
@@ -20165,12 +20165,12 @@
                   "expression": "$geom.lengthKm(imageCollectedLocation)"
                 },
                 "dataType": "number",
-                "name": "calculatedLengthTreatedKm",
+                "name": "calculatedLengthCollectedKm",
                 "units": "km",
                 "decimalPlaces": 3,
                 "behaviour": [
                   {
-                    "condition": "lengthTreatedKm > 0",
+                    "condition": "lengthCollectedKm > 0",
                     "type": "conditional_validation",
                     "value": {
                       "message": "The managed length must be mapped",
@@ -20182,10 +20182,10 @@
               {
                 "defaultValue": {
                   "type": "computed",
-                  "expression": "calculatedAreaTreatedHa"
+                  "expression": "calculatedAreaCollectedHa"
                 },
                 "dataType": "number",
-                "name": "areaTreatedHa",
+                "name": "areaCollectedHa",
                 "description": "Manually enter correct figure for this reporting period if different to mapped value.",
                 "units": "ha",
                 "decimalPlaces": 3,
@@ -20201,7 +20201,7 @@
                 "validate": "required",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "condition": "not (within(areaCollectedHa, calculatedAreaCollectedHa, 0.1) and within(lengthCollectedKm, calculatedLengthCollectedKm, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -20224,7 +20224,7 @@
                 "description": "Please fill in the Mapped/Actual/Invoice fields before attaching a document here. If those fields match this field will be void. <br/>If any of these fields differ please attach your organisation's detailed map for the area, covered by this project service - during reporting period (include the scale measure for each map).",
                 "behaviour": [
                   {
-                    "condition": "not (within(areaTreatedHa, calculatedAreaTreatedHa, 0.1) and within(lengthTreatedKm, calculatedLengthTreatedKm, 0.1))",
+                    "condition": "not (within(areaCollectedHa, calculatedAreaCollectedHa, 0.1) and within(lengthCollectedKm, calculatedLengthCollectedKm, 0.1))",
                     "type": "if"
                   }
                 ]
@@ -20232,10 +20232,10 @@
               {
                 "defaultValue": {
                   "type": "computed",
-                  "expression": "calculatedLengthTreatedKm"
+                  "expression": "calculatedLengthCollectedKm"
                 },
                 "dataType": "number",
-                "name": "lengthTreatedKm",
+                "name": "lengthCollectedKm",
                 "units": "km",
                 "decimalPlaces": 3
               },
@@ -20256,7 +20256,7 @@
                 }
               },
               {
-                "name": "investmentPriorities2",
+                "name": "investmentPriorities",
                 "dataType": "text",
                 "description": "",
                 "validate": "required",
@@ -20277,13 +20277,13 @@
                 "behaviour": [
                   {
                     "type": "enable",
-                    "condition": "\"Other\" in investmentPriorities2"
+                    "condition": "\"Other\" in investmentPriorities"
                   }
                 ]
               }
             ],
             "dataType": "list",
-            "name": "imagePairingAreasControlled"
+            "name": "imagePairingAreasCollected"
           },
           {
             "dataType": "number",
@@ -20292,7 +20292,7 @@
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(imagePairingAreasControlled, \"initialOrFollowup == 'Initial' ? numberImagesCollected : 0\")"
+              "expression": "sum(imagePairingAreasCollected, \"initialOrFollowup == 'Initial' ? numberImagesCollected : 0\")"
             }
           },
           {
@@ -20325,7 +20325,7 @@
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(imagePairingAreasControlled, \"initialOrFollowup == 'Follow-up' ? numberImagesCollected : 0\")"
+              "expression": "sum(imagePairingAreasCollected, \"initialOrFollowup == 'Follow-up' ? numberImagesCollected : 0\")"
             }
           },
           {
@@ -20540,7 +20540,7 @@
           {
             "addRowText": "Add a new area",
             "userAddedRows": true,
-            "source": "imagePairingAreasControlled",
+            "source": "imagePairingAreasCollected",
             "type": "repeat",
             "items": [
               {
@@ -20570,7 +20570,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "investmentPriorities2",
+                            "source": "investmentPriorities",
                             "preLabel": "Which investment priority does this activity relate to?",
                             "type": "select2Many"
                           }
@@ -20714,7 +20714,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "calculatedAreaTreatedHa",
+                            "source": "calculatedAreaCollectedHa",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
@@ -20744,7 +20744,7 @@
                         "items": [
                           {
                             "preLabel": "Actual area (ha) where images or imagery collected",
-                            "source": "areaTreatedHa",
+                            "source": "areaCollectedHa",
                             "type": "number",
                             "displayOptions": {
                               "displayUnits": true
