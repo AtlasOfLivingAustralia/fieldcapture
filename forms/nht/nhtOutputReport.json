@@ -6771,7 +6771,7 @@
               }
             ],
             "dataType": "list",
-            "name": "participationInformationTableSaf"
+            "name": "participationInformationTableReef"
           },
           {
             "columns": [
@@ -6804,7 +6804,7 @@
                 }
               },
               {
-                "name": "investmentPriorities2",
+                "name": "investmentPriorities",
                 "dataType": "text",
                 "description": "",
                 "validate": "required",
@@ -6826,7 +6826,7 @@
                 "behaviour": [
                   {
                     "type": "enable",
-                    "condition": "\"Other\" in investmentPriorities2"
+                    "condition": "\"Other\" in investmentPriorities"
                   }
                 ]
               },
@@ -7029,7 +7029,7 @@
               }
             ],
             "dataType": "list",
-            "name": "rffAreasControlled"
+            "name": "reefPositionDetails"
           },
           {
             "dataType": "number",
@@ -7038,7 +7038,7 @@
             "validate": "min[0]",
             "decimalPlaces": 3,
             "computed": {
-              "expression": "sum(rffAreasControlled, \"fteOfThisPosition\")/4"
+              "expression": "sum(reefPositionDetails, \"fteOfThisPosition\")/4"
             }
           },
           {
@@ -7065,7 +7065,7 @@
           },
           {
             "dataType": "text",
-            "name": "totalInvoicedRffMismatched",
+            "name": "totalInvoicedFteMismatched",
             "description": "Please provide the reason/s why you are not invoicing for the same number that have been completed and delivered, e.g. the personnel and equipment were available to deliver more than was contracted.",
             "validate": "maxSize[400],required",
             "behaviour": [
@@ -7168,7 +7168,7 @@
                 "type": "textarea"
               }
             ],
-            "source": "participationInformationTableSaf",
+            "source": "participationInformationTableReef",
             "type": "table"
           },
           {
@@ -7228,7 +7228,7 @@
             "items": [
               {
                 "preLabel": "If the total invoiced is different to the total completed, please provide the reason",
-                "source": "totalInvoicedRffMismatched",
+                "source": "totalInvoicedFteMismatched",
                 "type": "textarea",
                 "rows": 4,
                 "placeholder": ""
@@ -7238,7 +7238,7 @@
           {
             "addRowText": "Add a new position",
             "userAddedRows": true,
-            "source": "rffAreasControlled",
+            "source": "reefPositionDetails",
             "type": "repeat",
             "items": [
               {
@@ -7277,7 +7277,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "investmentPriorities2",
+                            "source": "investmentPriorities",
                             "preLabel": "Which investment priority does this activity relate to?",
                             "type": "select2Many"
                           }
