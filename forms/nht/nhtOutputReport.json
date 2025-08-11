@@ -1660,7 +1660,6 @@
                     "name": "projectBaseline",
                     "dataType": "text",
                     "description": "Select the relevant Project Baseline as listed in the Monitoring Methodology section of the MERI Plan.",
-                    "validate": "required",
                     "constraints": {
                       "textProperty": "baseline",
                       "valueProperty": "code",

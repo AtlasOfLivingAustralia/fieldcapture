@@ -146,7 +146,7 @@ var config =
         ],
         "excludes": [],
         "programServiceConfig": {
-            "serviceFormName": "NHT Output Report",
+            "serviceFormName": "Grants and Others Progress Report",
             "programServices": [
                 {
                     "serviceTargets": [
@@ -443,7 +443,7 @@ var config =
                 "reportDescriptionFormat": "Progress Report %1d",
                 "reportNameFormat": "Progress Report %1d",
                 "reportingPeriodInMonths": 6,
-                "description": "Priority Places Grants Progress Report",
+                "description": "Progress Report",
                 "minimumReportDurationInDays": 3,
                 "label": "Semester",
                 "category": "Progress Reports",
