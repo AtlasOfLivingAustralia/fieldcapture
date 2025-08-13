@@ -123,7 +123,7 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         controller.geojson(siteId)
 
         then:
-        1 * siteService.get(siteId) >> site
+        1 * siteService.get(siteId, [view:SiteService.SITE_VIEW_RAW]) >> site
         1 * userService.getCurrentUserId() >> 'u1'
         1 * projectService.canUserEditProject('u1', 'p1') >> true
         1 * siteService.getSiteGeoJson(siteId) >> [status:200, resp:siteGeoJson]
