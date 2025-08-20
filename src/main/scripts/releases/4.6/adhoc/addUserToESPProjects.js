@@ -16,8 +16,9 @@ for (let i=0; i<subProgramIds.length; i++) {
         if (project.status == 'active') {
             let permission = {userId: userToInsert, entityType:'au.org.ala.ecodata.Project', entityId:project.projectId, accessLevel:'caseManager', status:'active'}
             db.userPermission.insert(permission);
+        
             permission = db.userPermission.findOne({userId: userToInsert, entityType:'au.org.ala.ecodata.Project', entityId:project.projectId});
-            audit(permission, permission._id, 'au.org.ala.ecodata.UserPermission', adminUserId, project.projectId, 'Insert');
+            audit(permission, permission._id.toString(), 'au.org.ala.ecodata.UserPermission', adminUserId, project.projectId, 'Insert');
         }
 
 

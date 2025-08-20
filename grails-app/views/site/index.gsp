@@ -189,7 +189,7 @@
                 document.location.href = url;
             });
 
-            var mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
+            var mapFeatures = <fc:modelAsJavascript model="${mapFeatures}"/>;
             if (!mapFeatures) {
                 bootBox.showAlert("There was a problem obtaining site data");
             }
