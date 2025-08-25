@@ -375,6 +375,15 @@
           },
           {
             "dataType": "text",
+            "name": "hasMaintainedInsurancePolicies",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
             "name": "hasInsurance",
             "constraints": [
               "Yes",
