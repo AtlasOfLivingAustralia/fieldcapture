@@ -97,22 +97,7 @@ jobs:
           GPR_USER: ${{env.GITHUB_ACTOR}}
           GPR_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-
-      - name: Read the MERIT version from the gradle.properties file
-        id: read_property
-        uses: christian-draeger/read-properties@908f99d3334be3802ec7cb528395a69d19914e7b # v1.1.1
-        with:
-          path: './gradle.properties'
-          properties: 'meritVersion'
-
-      - uses: castlabs/get-package-version-id-action@7ef2d7bb74506a5ee3ff5412d4c977ba5c88e73f
-        id: versions
-        with:
-          version: ${{steps.read_property.outputs.meritVersion}}
-          token: ${{ secrets.GITHUB_TOKEN }}
-
       - uses: actions/delete-package-versions@v5
-        if: ${{ steps.versions.outputs.ids != '' }}
         with:
           package-name: "au.org.ala.fieldcapture"
           package-type: "maven"
