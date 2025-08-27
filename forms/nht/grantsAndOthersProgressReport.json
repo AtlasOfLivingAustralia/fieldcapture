@@ -90,12 +90,13 @@
             "dataType": "text",
             "name": "shortTermOutcomesAchieved",
             "constraints": ["Yes", "No"],
-            "defaultValue": "No"
+            "validate": "required"
           },
           {
             "dataType": "text",
             "name": "reportOnMediumTermOutcomes",
-            "constraints": ["Yes", "No"]
+            "constraints": ["Yes", "No"],
+            "validate": "required"
           },
           {
             "dataType": "list",
