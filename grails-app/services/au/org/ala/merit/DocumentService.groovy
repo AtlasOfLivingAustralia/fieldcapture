@@ -5,6 +5,7 @@ import grails.plugin.cache.Cacheable
 import org.apache.commons.io.FilenameUtils
 import org.apache.http.HttpStatus
 import grails.core.GrailsApplication
+import org.springframework.web.util.UriUtils
 
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST
 import static org.apache.http.HttpStatus.SC_OK
@@ -24,6 +25,7 @@ class DocumentService {
 
 
     public static final List PUBLIC_ROLES = [ROLE_MAIN_IMAGE, ROLE_LOGO]
+    static final String DOCUMENT_DOWNLOAD_PATH = 'document/download/'
 
     WebService webService
     GrailsApplication grailsApplication
@@ -224,5 +226,21 @@ class DocumentService {
      */
     boolean canDelete(String documentId) {
         canEdit([documentId:documentId])
+    }
+
+    /** Returns a URL that can be used to download the document with the supplied path and filename.
+     * If path is null or empty, it is assumed the document is stored in the root of the document store.
+     * @param path the path to the document within the document store
+     * @param filename the name of the file
+     * @return the download URL
+     */
+    String buildDownloadUrl(String path, String filename) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + DOCUMENT_DOWNLOAD_PATH
+        if (path) {
+            url += path + '/'
+        }
+        url += UriUtils.encodePath(filename, "UTF-8")
+
+        url
     }
 }

@@ -20104,7 +20104,7 @@
               {
                 "dataType": "number",
                 "name": "numberImagesCollected",
-                "validate": "required"
+                "defaultValue": 1
               },
               {
                 "dataType": "text",
@@ -20144,6 +20144,10 @@
                 "dataType": "text",
                 "name": "responsibleOrg",
                 "validate": "required,max[100]"
+              },
+              {
+                "dataType": "image",
+                "name": "photographicEvidence"
               },
               {
                 "dataType": "feature",
@@ -20292,7 +20296,7 @@
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(imagePairingAreasCollected, \"initialOrFollowup == 'Initial' ? numberImagesCollected : 0\")"
+              "expression": "sum(imagePairingAreasCollected, \"initialOrFollowup == 'Initial' ? 1 : 0\")"
             }
           },
           {
@@ -20325,7 +20329,7 @@
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(imagePairingAreasCollected, \"initialOrFollowup == 'Follow-up' ? numberImagesCollected : 0\")"
+              "expression": "sum(imagePairingAreasCollected, \"initialOrFollowup == 'Follow-up' ? 1 : 0\")"
             }
           },
           {
@@ -20367,10 +20371,6 @@
             "dataType": "text",
             "name": "comments",
             "validate": "maxSize[1500]"
-          },
-          {
-            "dataType": "image",
-            "name": "photographicEvidence"
           },
           {
             "dataType": "boolean",
@@ -20473,7 +20473,7 @@
             "items": [
               {
                 "type": "col",
-                "css": "span4 col-border-right",
+                "css": "span4",
                 "items": [
                   {
                     "type": "row",
@@ -20499,7 +20499,7 @@
               },
               {
                 "type": "col",
-                "css": "span4 col-border-right",
+                "css": "span4",
                 "items": [
                   {
                     "type": "row",
@@ -20564,7 +20564,7 @@
                   },
                   {
                     "type": "col",
-                    "css": "span3 col-border-right",
+                    "css": "span3",
                     "items": [
                       {
                         "type": "row",
@@ -20582,7 +20582,6 @@
               },
               {
                 "type": "row",
-                "css": "border-bottom",
                 "items": [
                   {
                     "type": "col",
@@ -20610,7 +20609,9 @@
                           {
                             "source": "numberImagesCollected",
                             "preLabel": "Number of images or imagery collected this reporting period",
-                            "type": "number"
+                            "type": "number",
+                            "readOnly": true,
+                            "noEdit": true
                           }
                         ]
                       }
@@ -20704,6 +20705,27 @@
                         "type": "row",
                         "items": [
                           {
+                            "source": "responsibleOrg",
+                            "preLabel": "Organisation responsible for storing and curating images or imagery",
+                            "type": "textarea"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
+                  {
+                    "type": "col",
+                    "css": "span3",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
                             "preLabel": "Location/s where images or imagery collected (mapping)",
                             "source": "imageCollectedLocation",
                             "type": "feature"
@@ -20737,7 +20759,7 @@
                   },
                   {
                     "type": "col",
-                    "css": "span3 col-border-right",
+                    "css": "span3",
                     "items": [
                       {
                         "type": "row",
@@ -20774,34 +20796,29 @@
                         ]
                       }
                     ]
-                  },
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "items": [
                   {
+                    "css": "span3",
                     "type": "col",
-                    "css": "span3 col-border-right",
                     "items": [
                       {
                         "type": "row",
                         "items": [
                           {
-                            "source": "responsibleOrg",
-                            "preLabel": "Organisation responsible for storing and curating images or imagery",
-                            "type": "textarea"
+                            "preLabel": "Optionally attach photos",
+                            "source": "photographicEvidence",
+                            "type": "image"
                           }
                         ]
                       }
                     ]
                   }
                 ]
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "preLabel": "Optionally attach photos",
-                "source": "photographicEvidence",
-                "type": "image"
               }
             ]
           },
