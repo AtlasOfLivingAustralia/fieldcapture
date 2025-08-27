@@ -116,7 +116,8 @@ jobs:
         with:
           package-name: "au.org.ala.fieldcapture"
           package-type: "maven"
-          package-version-ids: "${{ steps.versions.outputs.ids }}"
+          delete-only-untagged-versions: true
+          delete-only-pre-release-versions: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish the JAR to the repository
