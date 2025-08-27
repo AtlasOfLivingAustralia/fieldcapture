@@ -1543,14 +1543,14 @@
                 "deleteUnmatchedExistingRows": true,
                 "addUnmatchedNewRows": true,
                 "keys": [
-                  "outcomeStatement"
+                  "code"
                 ]
               },
               "midTermProjectOutcomes": {
                 "deleteUnmatchedExistingRows": true,
                 "addUnmatchedNewRows": true,
                 "keys": [
-                  "outcomeStatement"
+                  "code"
                 ]
               }
             },
