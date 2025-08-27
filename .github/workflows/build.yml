@@ -114,6 +114,8 @@ jobs:
       - uses: actions/delete-package-versions@v5
         if: ${{ steps.versions.outputs.ids != '' }}
         with:
+          package-name: "au.org.ala.fieldcapture"
+          package-type: "maven"
           package-version-ids: "${{ steps.versions.outputs.ids }}"
           token: ${{ secrets.GITHUB_TOKEN }}
 
