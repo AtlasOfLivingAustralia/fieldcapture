@@ -603,4 +603,31 @@ class MeriPlanSpec extends StubbedCasSpec {
         then:
         overview.projectStatus[1].text() == 'ACTIVE'
     }
+
+    def "Some programs support producing a report of changes to the MERI plan"() {
+
+        setup:
+        loginAsGrantManager(browser)
+
+        when:
+        to ProjectIndex, 'project_active'
+        openAdminTab()
+        def meriplan = admin.openMeriPlan()
+        meriplan.unapprovePlan()
+
+        then:
+        waitFor {
+            hasBeenReloaded()
+        }
+
+        when:
+        openAdminTab()
+        meriplan = admin.openMeriPlan()
+        meriplan.compareMeriPlanChanges()
+
+        then:
+        withWindow([close:true],"meri-planchanges-report") {
+            at MeriPlanPDFPage
+        }
+    }
 }

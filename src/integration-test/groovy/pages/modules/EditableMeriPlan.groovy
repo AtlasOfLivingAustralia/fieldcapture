@@ -319,6 +319,7 @@ class EditableMeriPlan extends Module {
 
         toggleMeriPlanHistory(required:false){ $('[data-bind*="toggleMeriPlanHistory"]') }
         meriPlanHistory {module HistoryApprovedMeriPlansModule}
+        compareMeriPlanChanges(required:false){ $('[data-bind*=meriPlanChanges]') }
         lockMeriPlanButton (required:false) { $('#lockMeriPlan') }
 
     }
@@ -384,6 +385,10 @@ class EditableMeriPlan extends Module {
         else {
             throw new RuntimeException("Submit button is disabled")
         }
+    }
+
+    void unapprovePlan() {
+        modifyApprovedPlanButton.click()
     }
 
     List selectablePrimaryOutcomes() {
