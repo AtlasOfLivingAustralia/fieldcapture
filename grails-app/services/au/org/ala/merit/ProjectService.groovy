@@ -2007,36 +2007,30 @@ class ProjectService  {
      */
     List<Map> approvedMeriPlanHistory(String projectId) {
 
-        Map result = documentService.search(projectId:projectId, role:'approval', labels:'MERI')
-        List documents = result?.documents ?: []
-        if (documents) {
-            documents = documents.collect {
-                String url = grailsApplication.config.getProperty('ecodata.baseUrl') + it.url
-                Map response = webService.getJson2(url)
-                Map doc = null
-                if (response?.statusCode == HttpStatus.SC_OK) {
-                    Map content = response.resp
-                    String displayName = userService.lookupUser(content.approvedBy)?.displayName ?: 'Unknown'
-                    doc = [
-                            documentId:it.documentId,
-                            date:content.dateApproved,
-                            userDisplayName:displayName,
-                            referenceDocument:content.referenceDocument,
-                            reason:content.reason
-                    ]
-                }else{
-                   doc = [
-                       documentId:it.documentId,
-                       date: it.lastUpdated,
-                       referenceDocument: it.filename,
-                       reason: "Error: "+it.name +" document is missing or damaged!"
-                   ]
-                }
-                doc
-            }
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/meriPlanHistory/' + projectId
+        Map result = webService.getJson2(url)
+
+        List<Map> meriPlanHistory = null
+        if (result && !result.error) {
+            meriPlanHistory = result.resp?.collect{ mapStatusChange(it) }
         }
-        documents.sort({it.date})
-        documents.findAll().reverse()
+        meriPlanHistory
+    }
+
+    /**
+     * The data is returned by ecodata in the format of a StatusChange object for consistency with Reports.
+     * This maps it to what the UI expects for MERI plan history.
+     * @param statusChange the status change object from ecodata
+
+     */
+    private static Map mapStatusChange(Map statusChange) {
+        [
+                documentId:statusChange.documentId,
+                date:statusChange.dateChanged,
+                userDisplayName:statusChange.changedBy,
+                referenceDocument:statusChange.reference,
+                reason:statusChange.comment
+        ]
     }
 
     /**
