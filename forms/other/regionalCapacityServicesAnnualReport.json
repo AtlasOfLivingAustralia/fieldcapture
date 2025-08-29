@@ -64,7 +64,7 @@
           {
             "dataType": "text",
             "name": "governanceFinancialManagementQ3e",
-            "description": "The Subcontractor register should include subcontractor name, ABN (where it exists), description of the subcontracting agreement, start and finish dates, value of the subcontract, and whether the subcontractor is an Indigenous owned and/or operated organisation.",
+            "description": "The Subcontracting register, due annually, should include subcontractor name, ABN (where it exists), description of the subcontracting agreement, start and finish dates, value of the subcontract, and whether the subcontractor is an Indigenous owned and/or operated organisation.",
             "constraints": [
               "Yes",
               "No"
@@ -363,6 +363,33 @@
                 "type": "visible"
               }
             ]
+          },
+          {
+            "dataType": "text",
+            "name": "hasSubmittedCurrentInsurance",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "hasMaintainedInsurancePolicies",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "hasInsurance",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
           },
           {
             "dataType": "text",
@@ -984,7 +1011,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "Q13. Please confirm that your organisation holds the insurance required as per clause 33 of the Deed.",
+                "preLabel": "Q13a. Please confirm that your organisation holds the insurance required as per clause 33 of the Deed.",
                 "source": "hasInsurance",
                 "type": "selectOne"
               }
@@ -997,6 +1024,26 @@
                 "type": "",
                 "source": "noInsurance",
                 "preLabel": "<i><b style=\"background-color:yellow\">Please notify the Customer Contract Manager immediately to discuss.</b></i>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q13(b) Please confirm your organisation has submitted current insurance certificates to your Customer Contract Manager?",
+                "source": "hasSubmittedCurrentInsurance",
+                "type": "selectOne"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Q13(c) Please confirm each Subcontractor with your organisation has, and is maintaining, the required insurance policies or coverage.",
+                "source": "hasMaintainedInsurancePolicies",
+                "type": "selectOne"
               }
             ]
           },

@@ -81,9 +81,12 @@ class ProgramController {
 
         // Go through all of the projects and mark each program outcome that is the primary outcome of at least
         // one project
-        List primaryOutcomes = program.outcomes?.findAll{ it && (!it.type || it.type == 'primary') } ?: []
+        List primaryOutcomes = (program.outcomes?.findAll{ it && (!it.type || it.type == 'primary') } ?: []).collect{
+            [outcome: it.outcome, targeted: false, shortDescription: it.shortDescription]
+        }
+
         primaryOutcomes.each {
-            it.targeted = projects?.find{ project-> project.custom?.details?.outcomes?.primaryOutcome?.description == it.outcome }
+            it.targeted = projects?.any{ project-> project.custom?.details?.outcomes?.primaryOutcome?.description == it.outcome }
             if (!it.shortDescription) {
                 it.shortDescription = it.outcome?.take(50) ?: ''
             }

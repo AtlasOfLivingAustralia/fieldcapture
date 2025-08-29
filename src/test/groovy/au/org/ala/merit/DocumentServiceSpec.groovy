@@ -1,7 +1,7 @@
 package au.org.ala.merit
 
 import grails.converters.JSON
-import grails.testing.spring.AutowiredTest
+import grails.testing.services.ServiceUnitTest
 import org.apache.commons.io.FileUtils
 import org.apache.http.HttpStatus
 import org.grails.web.converters.marshaller.json.CollectionMarshaller
@@ -11,12 +11,7 @@ import spock.lang.Specification
 /**
  * Tests the document service.
  */
-class DocumentServiceSpec extends Specification implements AutowiredTest{
-    Closure doWithSpring() {{ ->
-        service DocumentService
-    }}
-
-    DocumentService service
+class DocumentServiceSpec extends Specification implements ServiceUnitTest<DocumentService> {
 
     UserService userService = Mock(UserService)
     WebService webService = Mock(WebService)
@@ -279,5 +274,13 @@ class DocumentServiceSpec extends Specification implements AutowiredTest{
         then:
         1 * webService.doPost({it.endsWith("document/search")}, [hubId:hubId, role:DocumentService.ROLE_HELP_DOCUMENT, labels: category]) >> [statusCode: HttpStatus.SC_OK, resp: [documents: documents]]
         categoryDocuments == documents
+    }
+
+    def "The DocumentService encodes filenames used in URLs as required"() {
+        expect:
+        service.buildDownloadUrl("2018-01", "Test with spaces").endsWith("document/download/2018-01/Test%20with%20spaces")
+        service.buildDownloadUrl(null, "test").endsWith("document/download/test")
+        service.buildDownloadUrl(null, "a&test").endsWith("document/download/a&test")
+
     }
 }
