@@ -1,0 +1,972 @@
+{
+  "name": "NHT Outcomes 1 Report",
+  "type": "Report",
+  "sections": [
+    {
+      "name": "NHT Outcomes 1 Report",
+      "optionalQuestionText": null,
+      "optional": false,
+      "collapsedByDefault": false,
+      "templateName": "nht_outcomes1_report",
+      "template": {
+        "modelName": "NHT Outcomes 1 Report",
+        "dataModel": [
+          {
+            "dataType": "text",
+            "name": "primaryOutcomeDescription"
+          },
+          {
+            "dataType": "text",
+            "name": "primaryOutcomeAssets"
+          },
+          {
+            "dataType": "list",
+            "name": "programPrimaryOutcome",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "outcomeStatement",
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "outcomeAssets",
+                "validate": "required"
+              }
+            ]
+          },
+          {
+            "dataType": "list",
+            "name": "programSecondaryOutcomes",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "secondaryOutcomeStatement"
+              },
+              {
+                "dataType": "text",
+                "name": "secondaryOutcomeAssets"
+              }
+            ]
+          },
+          {
+            "dataType": "list",
+            "name": "projectOutcomes",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "code"
+              },
+              {
+                "dataType": "text",
+                "name": "outcomeStatement",
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "outcomeAssets",
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "relatedProgramOutcome",
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "supplementaryQuestions1"
+              },
+              {
+                "dataType": "text",
+                "name": "supplementaryQuestions2"
+              },
+              {
+                "dataType": "text",
+                "name": "projAchievementAgainstOutcome",
+                "validate": "required,maxSize[500]",
+                "description": "Where applicable, refer to the 'Key Threat(s)' and 'Monitoring Methodology' sections of the MERI Plan and Project Services to show how your activities support the stated outcome and align with the identified investment priority. Include any adaptive management actions planned for the project outcome at mid-term."
+              },
+              {
+                "dataType": "text",
+                "name": "programLogicAssumptions",
+                "validate": "required,maxSize[300]",
+                "description": "This question asks you to reflect on how well the assumptions outlined in the Project Logic - whether previously tested through evidence or still unverified—contributed to achieving the intended outcomes. Consider both the relevance and accuracy of these assumptions in practice."
+              },
+              {
+                "dataType": "stringList",
+                "name": "projOutcomeAchievement",
+                "validate": "required",
+                "description": "<ul><li>Fully Achieved = Outcome measure achieved,</li><li>Mostly Achieved = half or more of the outcome measure achieved,</li><li>Partially Achieved = Less than half of the outcome measure achieved,</li><li>Not Achieved = Outcome measure not achieved.</li></ul>",
+                "constraints": [
+                  "Fully achieved",
+                  "Mostly achieved",
+                  "Partially achieved",
+                  "Not achieved"
+                ]
+              }
+            ]
+          },
+          {
+            "dataType": "stringList",
+            "name": "outcomeProgress",
+            "validate": "required",
+            "constraints": [
+              "Significant progression",
+              "Satisfactory progression",
+              "Partial progression",
+              "No progression"
+            ],
+            "description": "<ul><li>Fully Achieved = all MERI plan outcome statements were met as planned,</li> <li> Mostly Achieved = at least half of all MERI plan outcome statements were met as planned,</li> <li> Partially Achieved = less than half of all MERI plan outcome statements were met as planned,</li> <li> Not Achieved = none of the MERI plan outcome statements were met as planned</li></ul>"
+          },
+          {
+            "dataType": "text",
+            "name": "additionalProgressComments",
+            "validate": "maxSize[300]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "keq1",
+            "validate": "required",
+            "constraints": [
+              "Significantly",
+              "Satisfactorily",
+              "Partially",
+              "Not at all"
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "keq1How",
+            "validate": "required,maxSize[250]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "keq2",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "stringList",
+            "description": "",
+            "name": "keq3",
+            "validate": "required",
+            "constraints": [
+              "Stakeholder Engagement",
+              "Community involvement",
+              "Partnerships with local groups",
+              "Collaboration with Indigenous groups",
+              "Adequate Funding and Resources",
+              "In-kind contributions",
+              "Governance and accountability with well-defined roles and responsibilities",
+              "Regulatory or policy requirements",
+              "Project planning",
+              "Conservation advice",
+              "Management plans and strategies"
+            ]
+          },
+          {
+            "dataType": "stringList",
+            "description": "",
+            "name": "keq4",
+            "validate": "required",
+            "constraints": [
+              "Stakeholder Engagement",
+              "Community involvement",
+              "Partnerships with local groups",
+              "Collaboration with Indigenous groups",
+              "Insufficient Funding and Resources",
+              "In-kind contributions not realised",
+              "Governance and accountability with well-defined roles and responsibilities",
+              "Regulatory or policy requirements",
+              "Project planning",
+              "Inadequate conservation advice",
+              "Management plans and strategies"
+            ]
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "keq5",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "keq5Why",
+            "validate": "required,maxSize[250]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "keq6",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No",
+              "N/A"
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "keq6How",
+            "validate": "required,maxSize[250]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "keq7",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "keq7What",
+            "validate": "required,maxSize[250]"
+          },
+          {
+            "dataType": "text",
+            "description": "",
+            "name": "keq8",
+            "validate": "required",
+            "constraints": [
+              "Yes",
+              "No"
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "keq8Specify",
+            "validate": "required,maxSize[250]"
+          }
+        ],
+        "viewModel": [
+          {
+            "items": [
+              {
+                "source": "<h4>1. PROJECT OUTCOMES</h4>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "A final outcomes report (designed for RDP Panel projects) to assess a projects short or medium term outcomes (dependant on duration) at project finalisation.",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "items": [
+              {
+                "source": "<h5>Program Outcome</h5>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "table",
+            "columns": [
+              {
+                "type": "textarea",
+                "readonly": true,
+                "source": "primaryOutcomeDescription",
+                "title": "Primary Outcome",
+                "rows": 5,
+                "width": "50%"
+              },
+              {
+                "type": "textarea",
+                "readonly": true,
+                "source": "primaryOutcomeAssets",
+                "title": "Primary Investment Priority",
+                "rows": 5,
+                "width": "50%"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<h5>Additional Benefits</h5>",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "source": "programSecondaryOutcomes",
+            "title": "",
+            "type": "table",
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "type": "textarea",
+                "readonly": true,
+                "source": "secondaryOutcomeStatement",
+                "title": "Additional Outcome/s",
+                "rows": 5,
+                "width": "50%"
+              },
+              {
+                "type": "textarea",
+                "readonly": true,
+                "source": "secondaryOutcomeAssets",
+                "title": "Additional Investment Priorities",
+                "rows": 5,
+                "width": "50%"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "<b>1.1 To what extent did you achieve the MERI plan outcomes for your project?</b><b style=\"color:red\">*</b><br>Reflecting on each of the project outcome statements in your MERI plan, please specify what your project achieved over the reporting period, as well as the degree to which the planned outcome(s) for this period were or were not achieved.",
+                "type": "literal"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "source": "projectOutcomes",
+            "title": "",
+            "type": "table",
+            "disableTableUpload": true,
+            "columns": [
+              {
+                "source": "code",
+                "type": "readonlyText",
+                "title": "Outcome No."
+              },
+              {
+                "type": "textarea",
+                "readonly": true,
+                "source": "outcomeStatement",
+                "title": "Outcome Statement",
+                "rows": 5,
+                "width": "10%"
+              },
+              {
+                "type": "textarea",
+                "readonly": true,
+                "source": "outcomeAssets",
+                "title": "Investment Priority",
+                "rows": 5,
+                "width": "10%"
+              },
+              {
+                "type": "textarea",
+                "readonly": true,
+                "source": "relatedProgramOutcome",
+                "title": "Related Program Outcome",
+                "rows": 5,
+                "width": "10%"
+              },
+              {
+                "width": "20%",
+                "type": "col",
+                "title": "Supplementary Questions",
+                "helpText": "Additional  questions to support outcomes at the program level",
+                "items": [
+                  {
+                    "type": "row",
+                    "behaviour": [
+                      {
+                        "type": "if_expression",
+                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Managing Threats - Pest predator an competitor species have been controlled or are under active, long-term control programs\""
+                      }
+                    ],
+                    "items": [
+                      {
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "textarea",
+                            "width": "10%",
+                            "source": "supplementaryQuestions1",
+                            "preLabel": "Q1. Over the project area, what is the reduction in pest/competitor species that were effectively controlled (0-100) %",
+                            "rows": 4,
+                            "fullWidthLabelAbove": true
+                          },
+                          {
+                            "type": "textarea",
+                            "source": "supplementaryQuestions1",
+                            "preLabel": "Q2. What pest/competitor species have been controlled?",
+                            "rows": 4,
+                            "fullWidthLabelAbove": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "behaviour": [
+                      {
+                        "type": "if_expression",
+                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Managing Threats - Threats from disease have been contained, reduced or excluded\""
+                      }
+                    ],
+                    "items": [
+                      {
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "textarea",
+                            "width": "10%",
+                            "source": "supplementaryQuestions1",
+                            "preLabel": "Q1. Threats from disease have been contained?",
+                            "rows": 4,
+                            "fullWidthLabelAbove": true
+                          },
+                          {
+                            "type": "textarea",
+                            "source": "supplementaryQuestions1",
+                            "preLabel": "Q2. Managing Threats?",
+                            "rows": 4,
+                            "fullWidthLabelAbove": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "behaviour": [
+                      {
+                        "type": "if_expression",
+                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Improving habitat - Land management practices have improved\""
+                      }
+                    ],
+                    "items": [
+                      {
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "textarea",
+                            "width": "10%",
+                            "source": "supplementaryQuestions1",
+                            "preLabel": "Q1. Land management practices have improved?",
+                            "rows": 4,
+                            "fullWidthLabelAbove": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "behaviour": [
+                      {
+                        "type": "if_expression",
+                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Improving habitat - Quality of (TS/TECs) habitat has improved\""
+                      }
+                    ],
+                    "items": [
+                      {
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "textarea",
+                            "width": "10%",
+                            "source": "supplementaryQuestions1",
+                            "preLabel": "Q1. Over the project area, what is the reduction in pest/competitor species that were effectively controlled (0-100) %",
+                            "rows": 4,
+                            "fullWidthLabelAbove": true
+                          },
+                          {
+                            "type": "textarea",
+                            "source": "supplementaryQuestions1",
+                            "preLabel": "Q2. What pest/competitor species have been controlled?",
+                            "rows": 4,
+                            "fullWidthLabelAbove": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "behaviour": [
+                      {
+                        "type": "if_expression",
+                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Improving habitat - Area/Extent of (TS/TECs) habitat has increased\""
+                      }
+                    ],
+                    "items": [
+                      {
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "textarea",
+                            "width": "10%",
+                            "source": "supplementaryQuestions1",
+                            "preLabel": "Q1. Area/Extent of (TS/TECs) habitat has increased?",
+                            "rows": 4,
+                            "fullWidthLabelAbove": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "behaviour": [
+                      {
+                        "type": "if_expression",
+                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Improving habitat - Increased connectivity between patches\""
+                      }
+                    ],
+                    "items": [
+                      {
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "textarea",
+                            "width": "10%",
+                            "source": "supplementaryQuestions1",
+                            "preLabel": "Q1. Increased connectivity between patches?",
+                            "rows": 4,
+                            "fullWidthLabelAbove": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "behaviour": [
+                      {
+                        "type": "if_expression",
+                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Improving habitat - Quality of breeding and foraging habitat is improved\""
+                      }
+                    ],
+                    "items": [
+                      {
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "textarea",
+                            "width": "10%",
+                            "source": "supplementaryQuestions1",
+                            "preLabel": "Q1. Quality of breeding and foraging habitat is improved?",
+                            "rows": 4,
+                            "fullWidthLabelAbove": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "behaviour": [
+                      {
+                        "type": "if_expression",
+                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Creating insurance populations - Existing populations have been protected\""
+                      }
+                    ],
+                    "items": [
+                      {
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "textarea",
+                            "width": "10%",
+                            "source": "supplementaryQuestions1",
+                            "preLabel": "Q1. Existing populations have been protected?",
+                            "rows": 4,
+                            "fullWidthLabelAbove": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "behaviour": [
+                      {
+                        "type": "if_expression",
+                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Creating insurance populations - Re-introductions have enhanced wild populations\""
+                      }
+                    ],
+                    "items": [
+                      {
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "textarea",
+                            "width": "10%",
+                            "source": "supplementaryQuestions1",
+                            "preLabel": "Q1. Re-introductions have enhanced wild populations?",
+                            "rows": 4,
+                            "fullWidthLabelAbove": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "behaviour": [
+                      {
+                        "type": "if_expression",
+                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway\""
+                      }
+                    ],
+                    "items": [
+                      {
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "textarea",
+                            "width": "10%",
+                            "source": "supplementaryQuestions1",
+                            "preLabel": "Q1. Climate change resilience and adaptive capacity actions underway?",
+                            "rows": 4,
+                            "fullWidthLabelAbove": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "behaviour": [
+                      {
+                        "type": "if_expression",
+                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in recovery activities\""
+                      }
+                    ],
+                    "items": [
+                      {
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "textarea",
+                            "width": "10%",
+                            "source": "supplementaryQuestions1",
+                            "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
+                            "rows": 4,
+                            "fullWidthLabelAbove": true
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "textarea",
+                "source": "projAchievementAgainstOutcome",
+                "title": "What did the project achieve against this outcome statement?",
+                "rows": 5,
+                "width": "20%"
+              },
+              {
+                "type": "textarea",
+                "source": "programLogicAssumptions",
+                "title": "To what extent were the Program Logic assumptions, both tested and untested, accurate in supporting the outcome statement?",
+                "rows": 5,
+                "width": "20%"
+              },
+              {
+                "type": "selectOne",
+                "source": "projOutcomeAchievement",
+                "title": "The degree to which the project outcome was achieved",
+                "rows": 5,
+                "width": "20%"
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "source": "outcomeProgress",
+                "preLabel": "1.2 Considered collectively (based on previous responses in table 1.1), to what extent are you progressing towards the short-term project outcomes?",
+                "type": "selectOne"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "additionalProgressComments",
+                "type": "textarea",
+                "rows": 5,
+                "preLabel": "Provide any additional comments about the projects progress to date here."
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "computed": null,
+                "type": "literal",
+                "source": "<h3>Key Evaluation Questions</h3>"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ1. To what extent has the project increased knowledge of best practice NRM for the investment priority(ies)?",
+                "type": "selectOne",
+                "rows": 5,
+                "source": "keq1"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ1.1 How?",
+                "type": "textarea",
+                "rows": 5,
+                "source": "keq1How"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ2. Were the methods/strategies used the best way to achieve/maximise project outcomes at mid term?",
+                "type": "selectOne",
+                "rows": 5,
+                "source": "keq2"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ3. What factors contributed (enablers) to the achievement of outcomes for the investment priority(ies)?",
+                "type": "select2Many",
+                "rows": 5,
+                "source": "keq3"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ4. What factors limited or prevented (barriers) the successful delivery of outcomes for the investment priority(ies)?",
+                "type": "select2Many",
+                "rows": 5,
+                "source": "keq4"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ5. Has the project’s risk assessment and risk management remained appropriate and effective at project mid point?",
+                "type": "selectOne",
+                "rows": 5,
+                "source": "keq5"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ5.1 Why?",
+                "type": "textarea",
+                "rows": 5,
+                "source": "keq5Why"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ6. Did your project engage with traditional owners?",
+                "type": "selectOne",
+                "rows": 5,
+                "source": "keq6"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ6.1 Why?",
+                "type": "textarea",
+                "rows": 5,
+                "source": "keq6How"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ7. Have there been any unexpected or unintended (positive or negative) changes or other outcomes delivered by this project?",
+                "type": "selectOne",
+                "rows": 5,
+                "source": "keq6"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ7.1 If yes, what are they?",
+                "type": "textarea",
+                "rows": 5,
+                "source": "keq7What"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ8. Did this project receive funding and/or in-kind services from any other sources apart from the Australian Government  program?",
+                "type": "selectOne",
+                "rows": 5,
+                "source": "keq8"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ8.1 If yes, please specify source and the proportion of funding and/or the type and quantity of in-kind services contributed to the project.",
+                "type": "textarea",
+                "rows": 5,
+                "source": "keq8Specify"
+              }
+            ]
+          }
+        ],
+        "pre-populate": [
+          {
+            "source": {
+              "context-path": "owner"
+            },
+            "mapping": [
+              {
+                "source-path": "custom.details.outcomes.primaryOutcome.description",
+                "target": "primaryOutcomeDescription"
+
+              },
+              {
+                "source-path": "custom.details.outcomes.primaryOutcome.assets",
+                "target": "primaryOutcomeAssets"
+
+              }
+            ]
+          },
+          {
+            "source": {
+              "context-path": "owner"
+            },
+            "merge": {
+              "programSecondaryOutcomes": {
+                "deleteUnmatchedExistingRows": true,
+                "addUnmatchedNewRows": true,
+                "keys": [
+                  "outcomeStatement"
+                ]
+              }
+            },
+            "mapping": [
+              {
+                "target": "programSecondaryOutcomes",
+                "mapping": [
+                  {
+                    "source-path": "description",
+                    "target": "secondaryOutcomeStatement"
+
+                  },
+                  {
+                    "source-path": "assets",
+                    "target": "secondaryOutcomeAssets"
+                  }
+                ],
+                "source-path": "custom.details.outcomes.secondaryOutcomes"
+              }
+            ]
+          },
+          {
+            "source": {
+              "context-path": "owner"
+            },
+            "merge": {
+              "projectOutcomes": {
+                "deleteUnmatchedExistingRows": true,
+                "addUnmatchedNewRows": true,
+                "keys": [
+                  "outcomeStatement"
+                ]
+              }
+            },
+            "mapping": [
+              {
+                "target": "projectOutcomes",
+                "mapping": [
+                  {
+                    "target": "code",
+                    "source-path": "code"
+                  },
+                  {
+                    "target": "outcomeStatement",
+                    "source-path": "description"
+                  },
+                  {
+                    "target": "outcomeAssets",
+                    "source-path": "assets"
+                  },
+                  {
+                    "target": "relatedProgramOutcome",
+                    "source-path": "relatedOutcome"
+                  }
+                ],
+                "source-path": "custom.details.outcomes.midTermOutcomes"
+              }
+            ]
+          }
+        ],
+        "title": "Outcomes 1 Report"
+      }
+    }
+  ],
+  "formVersion": 1,
+  "category": null,
+  "status": "active",
+  "gmsId": null,
+  "supportsSites": false,
+  "supportsPhotoPoints": false,
+  "minOptionalSectionsCompleted": 1
+}
