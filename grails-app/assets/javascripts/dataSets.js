@@ -51,8 +51,8 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         var protocolId = dataSet.protocol;
         var downloadableProtocols = config.downloadableProtocols || [];
 
-        var isDownloadable = downloadableProtocols.indexOf(protocolId) >= 0;
-        if (isDownloadable) {
+        var isDownloadable = false;
+        if (downloadableProtocols.indexOf(protocolId) >= 0) {
             var now = moment();
             var creationDate = moment(dataSet.dateCreated);
             var minutesToIngestDataSet = config.minutesToIngestDataSet || 1;
