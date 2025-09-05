@@ -77,11 +77,91 @@
               },
               {
                 "dataType": "text",
-                "name": "supplementaryQuestions1"
+                "name": "st1SupplementaryQuestions1"
               },
               {
                 "dataType": "text",
-                "name": "supplementaryQuestions2"
+                "name": "st1SupplementaryQuestions2"
+              },
+              {
+                "dataType": "text",
+                "name": "st2SupplementaryQuestions1"
+              },
+              {
+                "dataType": "text",
+                "name": "st2SupplementaryQuestions2"
+              },
+              {
+                "dataType": "text",
+                "name": "st3SupplementaryQuestions1"
+              },
+              {
+                "dataType": "text",
+                "name": "st3SupplementaryQuestions2"
+              },
+              {
+                "dataType": "text",
+                "name": "st4SupplementaryQuestions1"
+              },
+              {
+                "dataType": "text",
+                "name": "st4SupplementaryQuestions2"
+              },
+              {
+                "dataType": "text",
+                "name": "st5SupplementaryQuestions1"
+              },
+              {
+                "dataType": "text",
+                "name": "st5SupplementaryQuestions2"
+              },
+              {
+                "dataType": "text",
+                "name": "st6SupplementaryQuestions1"
+              },
+              {
+                "dataType": "text",
+                "name": "st6SupplementaryQuestions2"
+              },
+              {
+                "dataType": "text",
+                "name": "st7SupplementaryQuestions1"
+              },
+              {
+                "dataType": "text",
+                "name": "st7SupplementaryQuestions2"
+              },
+              {
+                "dataType": "text",
+                "name": "st8SupplementaryQuestions1"
+              },
+              {
+                "dataType": "text",
+                "name": "st8SupplementaryQuestions2"
+              },
+              {
+                "dataType": "text",
+                "name": "st9SupplementaryQuestions1"
+              },
+              {
+                "dataType": "text",
+                "name": "st9SupplementaryQuestions2"
+              },
+              {
+                "dataType": "text",
+                "name": "st10SupplementaryQuestions1"
+              },
+              {
+                "dataType": "text",
+                "name": "st10SupplementaryQuestions2"
+              },
+              {
+                "dataType": "text",
+                "name": "st11SupplementaryQuestions1"
+              },
+              {
+                "dataType": "text",
+                "name": "st11SupplementaryQuestions2"
               },
               {
                 "dataType": "text",
@@ -154,6 +234,17 @@
             ]
           },
           {
+            "dataType": "text",
+            "name": "keq2What",
+            "validate": "required,maxSize[250]",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "\"No\" == keq2"
+              }
+            ]
+          },
+          {
             "dataType": "stringList",
             "description": "",
             "name": "keq3",
@@ -220,7 +311,13 @@
           {
             "dataType": "text",
             "name": "keq6How",
-            "validate": "required,maxSize[250]"
+            "validate": "required,maxSize[250]",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "\"Yes\" == keq6"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -235,7 +332,13 @@
           {
             "dataType": "text",
             "name": "keq7What",
-            "validate": "required,maxSize[250]"
+            "validate": "required,maxSize[250]",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "\"Yes\" == keq7"
+              }
+            ]
           },
           {
             "dataType": "text",
@@ -250,7 +353,13 @@
           {
             "dataType": "text",
             "name": "keq8Specify",
-            "validate": "required,maxSize[250]"
+            "validate": "required,maxSize[250]",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "\"Yes\" == keq8"
+              }
+            ]
           }
         ],
         "viewModel": [
@@ -400,14 +509,14 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "st1SupplementaryQuestions1",
                             "preLabel": "Q1. Over the project area, what is the reduction in pest/competitor species that were effectively controlled (0-100) %",
                             "rows": 4,
                             "fullWidthLabelAbove": true
                           },
                           {
                             "type": "textarea",
-                            "source": "supplementaryQuestions1",
+                            "source": "st1SupplementaryQuestions1",
                             "preLabel": "Q2. What pest/competitor species have been controlled?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -431,14 +540,14 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "st2SupplementaryQuestions1",
                             "preLabel": "Q1. Threats from disease have been contained?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
                           },
                           {
                             "type": "textarea",
-                            "source": "supplementaryQuestions1",
+                            "source": "st2SupplementaryQuestions2",
                             "preLabel": "Q2. Managing Threats?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -462,7 +571,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "st3SupplementaryQuestions1",
                             "preLabel": "Q1. Land management practices have improved?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -486,14 +595,14 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "st4SupplementaryQuestions1",
                             "preLabel": "Q1. Over the project area, what is the reduction in pest/competitor species that were effectively controlled (0-100) %",
                             "rows": 4,
                             "fullWidthLabelAbove": true
                           },
                           {
                             "type": "textarea",
-                            "source": "supplementaryQuestions1",
+                            "source": "st4SupplementaryQuestions2",
                             "preLabel": "Q2. What pest/competitor species have been controlled?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -517,7 +626,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "st5SupplementaryQuestions1",
                             "preLabel": "Q1. Area/Extent of (TS/TECs) habitat has increased?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -541,7 +650,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "st6SupplementaryQuestions1",
                             "preLabel": "Q1. Increased connectivity between patches?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -565,7 +674,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "st7SupplementaryQuestions1",
                             "preLabel": "Q1. Quality of breeding and foraging habitat is improved?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -589,7 +698,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "st8SupplementaryQuestions1",
                             "preLabel": "Q1. Existing populations have been protected?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -613,7 +722,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "st9SupplementaryQuestions1",
                             "preLabel": "Q1. Re-introductions have enhanced wild populations?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -637,7 +746,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "st10SupplementaryQuestions1",
                             "preLabel": "Q1. Climate change resilience and adaptive capacity actions underway?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -661,7 +770,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "st11SupplementaryQuestions1",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -763,6 +872,17 @@
             "type": "row",
             "items": [
               {
+                "preLabel": "KEQ2.1 If no, what other methods/strategies might have been more effective?",
+                "type": "textarea",
+                "rows": 5,
+                "source": "keq2What"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
                 "preLabel": "KEQ3. What factors contributed (enablers) to the achievement of outcomes for the investment priority(ies)?",
                 "type": "select2Many",
                 "rows": 5,
@@ -818,7 +938,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "KEQ6.1 Why?",
+                "preLabel": "KEQ6.1 If yes, how?",
                 "type": "textarea",
                 "rows": 5,
                 "source": "keq6How"
@@ -832,7 +952,7 @@
                 "preLabel": "KEQ7. Have there been any unexpected or unintended (positive or negative) changes or other outcomes delivered by this project?",
                 "type": "selectOne",
                 "rows": 5,
-                "source": "keq6"
+                "source": "keq7"
               }
             ]
           },
@@ -851,7 +971,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "KEQ8. Did this project receive funding and/or in-kind services from any other sources apart from the Australian Government  program?",
+                "preLabel": "KEQ8. Did this project receive funding and/or in-kind services from any other sources apart from the Australian Government program?",
                 "type": "selectOne",
                 "rows": 5,
                 "source": "keq8"
