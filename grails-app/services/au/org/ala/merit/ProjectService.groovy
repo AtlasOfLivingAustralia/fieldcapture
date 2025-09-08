@@ -2044,21 +2044,13 @@ class ProjectService  {
      */
     Map getApprovedMeriPlanProject(String documentId) {
         Map result = documentService.get(documentId)
-        if (!result || !result.url) {
+        if (!result) {
             return null
         }
+        String downloadUrl = documentService.buildDownloadUrl(result.filepath, result.filename)
 
-        Map content = webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + result.url)
+        Map content = webService.getJson(downloadUrl)
         content
-    }
-
-    private Score findScore(String scoreId, Map scoresWithTargets) {
-        Score score = null
-        scoresWithTargets?.find { String key, List outputScores ->
-            score = outputScores?.find{it.scoreId == scoreId}
-        }
-
-        score
     }
 
     /**

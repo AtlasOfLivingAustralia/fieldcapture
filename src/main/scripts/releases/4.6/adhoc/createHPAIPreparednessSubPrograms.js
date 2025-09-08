@@ -194,33 +194,12 @@ var config =
                 },
                 {
                     "serviceTargets": [
-                        "e0b4cc3e-e94a-4c97-81dc-a4cb868c2cc3",
-                        "b0bcfc54-76fa-4659-accf-276c18b50c31"
-                    ],
-                    "serviceId": 8
-                },
-                {
-                    "serviceTargets": [
                         "9416c9f4-48ca-4bd1-8822-cd45ebb56c58",
                         "2409e649-2ee2-47fd-9e76-ef2ffa07a5e7",
                         "d58f8dba-109d-4179-b130-a888cd3d303c",
                         "01686d38-9165-4497-9648-627ef81945a7"
                     ],
                     "serviceId": 9
-                },
-                {
-                    "serviceTargets": [
-                        "0e2f8d61-b7b4-4d2d-b07c-4fc20bbe326a",
-                        "bb506258-e907-43d3-99bd-0fe0400f654e"
-                    ],
-                    "serviceId": 10
-                },
-                {
-                    "serviceTargets": [
-                        "3c83e639-9c19-4b31-a86f-9d2d5e78123b",
-                        "e901be5e-8336-432e-b164-f278abd7430b"
-                    ],
-                    "serviceId": 12
                 },
                 {
                     "serviceTargets": [
@@ -254,13 +233,6 @@ var config =
                 },
                 {
                     "serviceTargets": [
-                        "5c6db4c1-7fde-452e-8735-e52842fe6217",
-                        "41cb1e2c-59bc-4639-8bf7-fe0f528e006e"
-                    ],
-                    "serviceId": 18
-                },
-                {
-                    "serviceTargets": [
                         "4f71e00a-2d80-488d-9ce4-947e60589149",
                         "69a2ffba-41e9-406e-8ea4-5bdeee92cbde"
                     ],
@@ -271,13 +243,6 @@ var config =
                         "26ea592f-ee39-4e6e-b6af-5b53fb1a5675"
                     ],
                     "serviceId": 17
-                },
-                {
-                    "serviceTargets": [
-                        "3587a984-68f9-4db3-b5af-49f265d853e0",
-                        "9d2d01be-b517-4be2-a225-8b1c887e016e"
-                    ],
-                    "serviceId": 19
                 },
                 {
                     "serviceTargets": [
@@ -294,12 +259,6 @@ var config =
                         "36410625-05f3-42d3-b04f-a3b268498ee1"
                     ],
                     "serviceId": 23
-                },
-                {
-                    "serviceTargets": [
-                        "0162246b-13fd-40c9-ae26-fb767eee76f8"
-                    ],
-                    "serviceId": 24
                 },
                 {
                     "serviceTargets": [
@@ -326,27 +285,6 @@ var config =
                         "91e90861-3ba7-4257-a765-6cab24c6f58a"
                     ],
                     "serviceId": 28
-                },
-                {
-                    "serviceTargets": [
-                        "96be68cf-783d-452a-b8fd-3832163f95db",
-                        "e70c70fd-4f31-41dc-a4b4-07f79efc3055"
-                    ],
-                    "serviceId": 29
-                },
-                {
-                    "serviceTargets": [
-                        "598bd978-0907-4cad-a7a6-ec5a8a8bbdc4",
-                        "d29bd931-1dd1-47c4-b456-c175099ff1df"
-                    ],
-                    "serviceId": 30
-                },
-                {
-                    "serviceTargets": [
-                        "6db1ebd7-92c5-49f2-98b7-2faa700fd752",
-                        "524d93b4-5cd1-4d0d-b1f8-d393028220ad"
-                    ],
-                    "serviceId": 31
                 },
                 {
                     "serviceTargets": [
@@ -380,15 +318,6 @@ var config =
                 },
                 {
                     "serviceTargets": [
-                        "3ec07754-4a7a-46fb-a76d-553921781716",
-                        "fbc2dab8-7454-40f9-94f6-6bf258fcefff",
-                        "7186e284-0cb2-418e-a8cc-4343eb618140",
-                        "c7d0963e-2847-4f5f-8a1c-e149dfa4c9d1"
-                    ],
-                    "serviceId": 36
-                },
-                {
-                    "serviceTargets": [
                         "3d06b150-bb86-47dc-8ad8-c33a51c3e3b3"
                     ],
                     "serviceId": 43
@@ -398,18 +327,6 @@ var config =
                         "b8304577-afd8-45e0-8ef4-b71ae10998f5"
                     ],
                     "serviceId": 44
-                },
-                {
-                    "serviceTargets": [
-                        "8113ab8a-17e6-43c9-be32-9ca72dd01454"
-                    ],
-                    "serviceId": 6
-                },
-                {
-                    "serviceTargets": [
-                        "0e887410-a3c5-49ca-a6f5-0f2f6fae30db"
-                    ],
-                    "serviceId": 46
                 }
             ]
         },
@@ -571,11 +488,43 @@ var outcomes = [
 var priorities = [
     {
         "category": "Influenza Sector",
-        "priority": "Pterodroma solandri (Providence Petrel)"
+        "priority": "Anous albivitta (Grey Noddy)"
     },
     {
         "category": "Influenza Sector",
-        "priority": "Pterodroma neglecta (Kermadec Petrel)"
+        "priority": "Anous minutus (Black Noddy)"
+    },
+    {
+        "category": "Influenza Sector",
+        "priority": "Anous stolidus (Common Noddy)"
+    },
+    {
+        "category": "Influenza Sector",
+        "priority": "Ardenna carneipes (Flesh-footed Shearwater)"
+    },
+    {
+        "category": "Influenza Sector",
+        "priority": "Ardenna pacifica (Wedge-tailed Shearwater)"
+    },
+    {
+        "category": "Influenza Sector",
+        "priority": "Fregetta grallaria (White-bellied Storm-Petrel)"
+    },
+    {
+        "category": "Influenza Sector",
+        "priority": "Neophoca cinerea (Australian Sea-lion)"
+    },
+    {
+        "category": "Influenza Sector",
+        "priority": "Onychoprion fuscatus (Sooty Tern)"
+    },
+    {
+        "category": "Influenza Sector",
+        "priority": "Phaethon rubricauda (Red-tailed Tropicbird)"
+    },
+    {
+        "category": "Influenza Sector",
+        "priority": "Pterodroma solandri (Providence Petrel)"
     },
     {
         "category": "Influenza Sector",
@@ -587,19 +536,15 @@ var priorities = [
     },
     {
         "category": "Influenza Sector",
+        "priority": "Pterodroma neglecta (Kermadec Petrel)"
+    },
+    {
+        "category": "Influenza Sector",
         "priority": "Pterodroma nigripennis (Black-winged Petrel)"
     },
     {
         "category": "Influenza Sector",
-        "priority": "Fregetta grallaria (White-bellied Storm-Petrel)"
-    },
-    {
-        "category": "Influenza Sector",
-        "priority": "Ardenna pacifica (Wedge-tailed Shearwater)"
-    },
-    {
-        "category": "Influenza Sector",
-        "priority": "Ardenna carneipes (Flesh-footed Shearwater)"
+        "priority": "Pterodroma solandri (Providence Petrel)"
     },
     {
         "category": "Influenza Sector",
@@ -607,35 +552,14 @@ var priorities = [
     },
     {
         "category": "Influenza Sector",
-        "priority": "Phaethon rubricauda (Red-tailed Tropicbird)"
-    },
-    {
-        "category": "Influenza Sector",
         "priority": "Sula dactylatra (Masked Booby)"
-    },
-    {
-        "category": "Influenza Sector",
-        "priority": "Onychoprion fuscatus (Sooty Tern)"
-    },
-    {
-        "category": "Influenza Sector",
-        "priority": "Anous stolidus (Common Noddy)"
-    },
-    {
-        "category": "Influenza Sector",
-        "priority": "Anous minutus (Black Noddy)"
-    },
-    {
-        "category": "Influenza Sector",
-        "priority": "Anous albivitta (Grey Noddy)"
     }
-
 ];
 
 //Create the parent program
 let programName = "High Pathogenicity Avian Influenza (HPAI) Preparedness Program";
 var parent = createOrFindProgram(programName);
-var subprograms = ["HPAI Preparedness and Planning activities"]
+var subprograms = ["High Pathogenicity Avian Influenza (HPAI) Preparedness Activities"]
 
 subprograms.forEach(function (subProgram){
     createOrFindProgram(subProgram, parent._id);
