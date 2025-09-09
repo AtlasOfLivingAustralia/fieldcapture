@@ -209,7 +209,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
     def "A simple graphQL query will return the correct number of projects"() {
 
         setup:
-        Map query = [query: searchMERITProjectsQuery("status:[\"Active\"]")]
+        Map query = [query: searchMERITProjectsQuery("status:[ACTIVE]")]
         String token = tokenForUser('1000')
 
         when:
