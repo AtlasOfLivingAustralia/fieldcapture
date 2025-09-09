@@ -410,7 +410,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         waitFor {hasBeenReloaded()}
 
         when:
-        Map query = [query: searchMERITProjectsQuery("projectId:\"outcomeMeriPlanProject\"")]
+        Map query = [query: searchMERITProjectsQuery("meritProjectID:\"outcomeMeriPlanProject\"")]
         String token = tokenForUser('1000')
         String url = testConfig.ecodata.baseUrl + 'graphql/merit'
         Map headers = ["Authorization": "Bearer ${token}"]

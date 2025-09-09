@@ -1508,7 +1508,7 @@ config.priorityPlaces = [
 config.excludeFinancialYearData = false;
 config.supportsParatoo = true;
 createProgram({programId: "outcomeMeriPlan", name: "Outcome MERI Plan", description: "", config: config});
-createProject({projectId: "outcomeMeriPlanProject", name: "Outcome MERI Plan project", programId: "outcomeMeriPlan"});
+createProject({projectId: "outcomeMeriPlanProject", grantId:"outcomeMeriPlanProject", name: "Outcome MERI Plan project", programId: "outcomeMeriPlan"});
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
     entityId: "outcomeMeriPlanProject",
