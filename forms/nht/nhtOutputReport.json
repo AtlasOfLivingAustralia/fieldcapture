@@ -1755,12 +1755,6 @@
                 "rule": "max"
               }
             ],
-            "behaviour": [
-              {
-                "condition": "+totalNumberOfMonthsSpentMaintainingCaptiveBreedingProgramsInvoiced == 0 and +totalNumberOfDaysSpentMaintainingCaptiveBreedingProgramsInvoiced == 0",
-                "type": "enable_and_clear"
-              }
-            ],
             "defaultValue": ""
           },
           {
@@ -1779,12 +1773,6 @@
                   "type": "computed"
                 },
                 "rule": "max"
-              }
-            ],
-            "behaviour": [
-              {
-                "condition": "+totalNumberOfMonthsSpentMaintainingCaptiveBreedingProgramsInvoiced == 0 and +totalNumberOfDaysSpentMaintainingCaptiveBreedingProgramsInvoiced == 0",
-                "type": "enable_and_clear"
               }
             ],
             "defaultValue": ""
@@ -1807,12 +1795,6 @@
                 "rule": "max"
               }
             ],
-            "behaviour": [
-              {
-                "condition": "+totalCaptiveBreedingMaintainedInvoiced == 0 and +totalCaptiveBreedingEstablishedInvoiced == 0 and +totalNumberOfDaysSpentMaintainingCaptiveBreedingProgramsInvoiced == 0",
-                "type": "enable_and_clear"
-              }
-            ],
             "defaultValue": ""
           },
           {
@@ -1831,12 +1813,6 @@
                   "type": "computed"
                 },
                 "rule": "max"
-              }
-            ],
-            "behaviour": [
-              {
-                "condition": "+totalNumberOfMonthsSpentMaintainingCaptiveBreedingProgramsInvoiced == 0 and +totalCaptiveBreedingMaintainedInvoiced == 0 and +totalCaptiveBreedingEstablishedInvoiced == 0",
-                "type": "enable_and_clear"
               }
             ],
             "defaultValue": ""
