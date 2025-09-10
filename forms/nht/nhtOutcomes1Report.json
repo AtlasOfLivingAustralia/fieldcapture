@@ -165,19 +165,19 @@
               },
               {
                 "dataType": "text",
-                "name": "projAchievementAgainstOutcome",
-                "validate": "required,maxSize[500]",
+                "name": "projectAchievementAgainstOutcome",
+                "validate": "required,maxSize[2500]",
                 "description": "Where applicable, refer to the 'Key Threat(s)' and 'Monitoring Methodology' sections of the MERI Plan and Project Services to show how your activities support the stated outcome and align with the identified investment priority. Include any adaptive management actions planned for the project outcome at mid-term."
               },
               {
                 "dataType": "text",
                 "name": "programLogicAssumptions",
-                "validate": "required,maxSize[300]",
+                "validate": "required,maxSize[1500]",
                 "description": "This question asks you to reflect on how well the assumptions outlined in the Project Logic - whether previously tested through evidence or still unverified—contributed to achieving the intended outcomes. Consider both the relevance and accuracy of these assumptions in practice."
               },
               {
                 "dataType": "stringList",
-                "name": "projOutcomeAchievement",
+                "name": "projectOutcomeAchievementDegree",
                 "validate": "required",
                 "description": "<ul><li>Fully Achieved = Outcome measure achieved,</li><li>Mostly Achieved = half or more of the outcome measure achieved,</li><li>Partially Achieved = Less than half of the outcome measure achieved,</li><li>Not Achieved = Outcome measure not achieved.</li></ul>",
                 "constraints": [
@@ -204,7 +204,7 @@
           {
             "dataType": "text",
             "name": "additionalProgressComments",
-            "validate": "maxSize[300]"
+            "validate": "maxSize[2500]"
           },
           {
             "dataType": "text",
@@ -221,7 +221,7 @@
           {
             "dataType": "text",
             "name": "keq1How",
-            "validate": "required,maxSize[250]"
+            "validate": "required,maxSize[1500]"
           },
           {
             "dataType": "text",
@@ -236,7 +236,7 @@
           {
             "dataType": "text",
             "name": "keq2What",
-            "validate": "required,maxSize[250]",
+            "validate": "required,maxSize[1500]",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -260,7 +260,26 @@
               "Regulatory or policy requirements",
               "Project planning",
               "Conservation advice",
-              "Management plans and strategies"
+              "Management plans and strategies",
+              "Regular Monitoring and evaluation",
+              "Time and capacity",
+              "Resource use or economic priorities",
+              "Data and knowledge",
+              "IT infrastructure",
+              "Site access/location",
+              "Access to expertise and skilled personnel",
+              "Other"
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "keq3Other",
+            "validate": "required,maxSize[1500]",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "\"Other\" in keq3"
+              }
             ]
           },
           {
@@ -279,7 +298,30 @@
               "Regulatory or policy requirements",
               "Project planning",
               "Inadequate conservation advice",
-              "Management plans and strategies"
+              "Management plans and strategies",
+              "Regular monitoring and evaluation",
+              "Lack of stakeholder buy-in",
+              "Unpredictable/adverse weather conditions",
+              "Natural disasters or extreme weather events",
+              "Disease/Pandemic",
+              "Time and capacity constraints",
+              "Conflicting resource use or economic priorities",
+              "Inadequate data and knowledge",
+              "Inadequate IT infrastructure",
+              "Issues with Site Access/Remote site location",
+              "Access to expertise and skilled personnel",
+              "Other"
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "keq4Other",
+            "validate": "required,maxSize[1500]",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "\"Other\" in keq4"
+              }
             ]
           },
           {
@@ -295,7 +337,7 @@
           {
             "dataType": "text",
             "name": "keq5Why",
-            "validate": "required,maxSize[250]"
+            "validate": "required,maxSize[1500]"
           },
           {
             "dataType": "text",
@@ -311,7 +353,7 @@
           {
             "dataType": "text",
             "name": "keq6How",
-            "validate": "required,maxSize[250]",
+            "validate": "required,maxSize[1500]",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -332,7 +374,7 @@
           {
             "dataType": "text",
             "name": "keq7What",
-            "validate": "required,maxSize[250]",
+            "validate": "required,maxSize[1500]",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -353,7 +395,7 @@
           {
             "dataType": "text",
             "name": "keq8Specify",
-            "validate": "required,maxSize[250]",
+            "validate": "required,maxSize[1500]",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -465,7 +507,7 @@
                 "title": "Outcome No."
               },
               {
-                "type": "textarea",
+                "type": "readonlyText",
                 "readonly": true,
                 "source": "outcomeStatement",
                 "title": "Short Term Outcome Statement",
@@ -473,7 +515,7 @@
                 "width": "10%"
               },
               {
-                "type": "textarea",
+                "type": "readonlyText",
                 "readonly": true,
                 "source": "outcomeAssets",
                 "title": "Investment Priority",
@@ -481,7 +523,7 @@
                 "width": "10%"
               },
               {
-                "type": "textarea",
+                "type": "readonlyText",
                 "readonly": true,
                 "source": "relatedProgramOutcome",
                 "title": "Related Program Outcome",
@@ -783,7 +825,7 @@
               },
               {
                 "type": "textarea",
-                "source": "projAchievementAgainstOutcome",
+                "source": "projectAchievementAgainstOutcome",
                 "title": "What did the project achieve against this outcome statement?",
                 "rows": 5,
                 "width": "20%"
@@ -797,7 +839,7 @@
               },
               {
                 "type": "selectOne",
-                "source": "projOutcomeAchievement",
+                "source": "projectOutcomeAchievementDegree",
                 "title": "The degree to which the project outcome was achieved",
                 "rows": 5,
                 "width": "20%"
@@ -894,10 +936,44 @@
             "type": "row",
             "items": [
               {
+                "preLabel": "Please specify the other enablers",
+                "type": "textarea",
+                "rows": 2,
+                "source": "keq3Other"
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "\"Other\" in keq3"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
                 "preLabel": "KEQ4. What factors limited or prevented (barriers) the successful delivery of outcomes for the investment priority(ies)?",
                 "type": "select2Many",
                 "rows": 5,
                 "source": "keq4"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Please specify the other limiting factors and or barriers",
+                "type": "textarea",
+                "rows": 2,
+                "source": "keq4Other"
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "\"Other\" in keq4"
               }
             ]
           },

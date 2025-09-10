@@ -85,19 +85,19 @@
               },
               {
                 "dataType": "text",
-                "name": "projAchievementAgainstOutcome",
+                "name": "projectAchievementAgainstOutcome",
                 "validate": "required,maxSize[500]",
                 "description": "Where applicable, refer to the 'Key Threat(s)' and 'Monitoring Methodology' sections of the MERI Plan and Project Services to show how your activities support the stated outcome and align with the identified investment priority. Include any adaptive management actions planned for the project outcome at mid-term."
               },
               {
                 "dataType": "text",
                 "name": "programLogicAssumptions",
-                "validate": "required,maxSize[300]",
+                "validate": "required,maxSize[1500]",
                 "description": "This question asks you to reflect on how well the assumptions outlined in the Project Logic - whether previously tested through evidence or still unverified—contributed to achieving the intended outcomes. Consider both the relevance and accuracy of these assumptions in practice."
               },
               {
                 "dataType": "stringList",
-                "name": "projOutcomeAchievement",
+                "name": "projectOutcomeAchievementDegree",
                 "validate": "required",
                 "description": "<ul><li>Fully Achieved = Outcome measure achieved,</li><li>Mostly Achieved = half or more of the outcome measure achieved,</li><li>Partially Achieved = Less than half of the outcome measure achieved,</li><li>Not Achieved = Outcome measure not achieved.</li></ul>",
                 "constraints": [
@@ -111,20 +111,20 @@
           },
           {
             "dataType": "stringList",
-            "name": "outcomeProgress",
+            "name": "overallOutcomesAchievement",
             "validate": "required",
             "constraints": [
-              "Significant progression",
-              "Satisfactory progression",
-              "Partial progression",
-              "No progression"
+              "Fully achieved",
+              "Mostly achieved",
+              "Partially achieved",
+              "Not achieved"
             ],
             "description": "<ul><li>Fully Achieved = all MERI plan outcome statements were met as planned,</li> <li> Mostly Achieved = at least half of all MERI plan outcome statements were met as planned,</li> <li> Partially Achieved = less than half of all MERI plan outcome statements were met as planned,</li> <li> Not Achieved = none of the MERI plan outcome statements were met as planned</li></ul>"
           },
           {
             "dataType": "text",
-            "name": "additionalProgressComments",
-            "validate": "maxSize[300]"
+            "name": "additionalAchievementComments",
+            "validate": "maxSize[1500]"
           },
           {
             "dataType": "text",
@@ -141,7 +141,7 @@
           {
             "dataType": "text",
             "name": "keq1How",
-            "validate": "required,maxSize[250]"
+            "validate": "required,maxSize[1500]"
           },
           {
             "dataType": "text",
@@ -156,7 +156,7 @@
           {
             "dataType": "text",
             "name": "keq2What",
-            "validate": "required,maxSize[250]",
+            "validate": "required,maxSize[1500]",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -180,7 +180,27 @@
               "Regulatory or policy requirements",
               "Project planning",
               "Conservation advice",
-              "Management plans and strategies"
+              "Management plans and strategies",
+              "Management plans and strategies",
+              "Regular Monitoring and evaluation",
+              "Time and capacity",
+              "Resource use or economic priorities",
+              "Data and knowledge",
+              "IT infrastructure",
+              "Site access/location",
+              "Access to expertise and skilled personnel",
+              "Other"
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "keq3Other",
+            "validate": "required,maxSize[1500]",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "\"Other\" in keq3"
+              }
             ]
           },
           {
@@ -199,7 +219,30 @@
               "Regulatory or policy requirements",
               "Project planning",
               "Inadequate conservation advice",
-              "Management plans and strategies"
+              "Management plans and strategies",
+              "Regular monitoring and evaluation",
+              "Lack of stakeholder buy-in",
+              "Unpredictable/adverse weather conditions",
+              "Natural disasters or extreme weather events",
+              "Disease/Pandemic",
+              "Time and capacity constraints",
+              "Conflicting resource use or economic priorities",
+              "Inadequate data and knowledge",
+              "Inadequate IT infrastructure",
+              "Issues with Site Access/Remote site location",
+              "Access to expertise and skilled personnel",
+              "Other"
+            ]
+          },
+          {
+            "dataType": "text",
+            "name": "keq4Other",
+            "validate": "required,maxSize[1500]",
+            "behaviour": [
+              {
+                "type": "enable_and_clear",
+                "condition": "\"Other\" in keq4"
+              }
             ]
           },
           {
@@ -215,7 +258,7 @@
           {
             "dataType": "text",
             "name": "keq5Why",
-            "validate": "required,maxSize[250]"
+            "validate": "required,maxSize[1500]"
           },
           {
             "dataType": "text",
@@ -231,7 +274,7 @@
           {
             "dataType": "text",
             "name": "keq6How",
-            "validate": "required,maxSize[250]",
+            "validate": "required,maxSize[1500]",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -252,7 +295,7 @@
           {
             "dataType": "text",
             "name": "keq7What",
-            "validate": "required,maxSize[250]",
+            "validate": "required,maxSize[1500]",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -273,7 +316,7 @@
           {
             "dataType": "text",
             "name": "keq8Specify",
-            "validate": "required,maxSize[250]",
+            "validate": "required,maxSize[1500]",
             "behaviour": [
               {
                 "type": "enable_and_clear",
@@ -297,12 +340,12 @@
           {
             "dataType": "text",
             "name": "keq9How",
-            "validate": "required,maxSize[250]"
+            "validate": "required,maxSize[1500]"
           },
           {
             "dataType": "text",
             "name": "keq10",
-            "validate": "required,maxSize[250]"
+            "validate": "required,maxSize[1500]"
           }
         ],
         "viewModel": [
@@ -337,7 +380,7 @@
             "type": "table",
             "columns": [
               {
-                "type": "textarea",
+                "type": "readonlyText",
                 "readonly": true,
                 "source": "primaryOutcomeDescription",
                 "title": "Primary Outcome",
@@ -345,7 +388,7 @@
                 "width": "50%"
               },
               {
-                "type": "textarea",
+                "type": "readonlyText",
                 "readonly": true,
                 "source": "primaryOutcomeAssets",
                 "title": "Primary Investment Priority",
@@ -408,7 +451,7 @@
                 "title": "Outcome No."
               },
               {
-                "type": "textarea",
+                "type": "readonlyText",
                 "readonly": true,
                 "source": "outcomeStatement",
                 "title": "Outcome Statement",
@@ -416,7 +459,7 @@
                 "width": "10%"
               },
               {
-                "type": "textarea",
+                "type": "readonlyText",
                 "readonly": true,
                 "source": "outcomeAssets",
                 "title": "Investment Priority",
@@ -424,7 +467,7 @@
                 "width": "10%"
               },
               {
-                "type": "textarea",
+                "type": "readonlyText",
                 "readonly": true,
                 "source": "relatedProgramOutcome",
                 "title": "Related Program Outcome",
@@ -454,15 +497,13 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. Over the project area, what is the reduction in pest/competitor species that were effectively controlled (0-100) %",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           },
                           {
                             "type": "textarea",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q2. What pest/competitor species have been controlled?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -485,15 +526,13 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. Threats from disease have been contained?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           },
                           {
                             "type": "textarea",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q2. Managing Threats?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -516,8 +555,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. Land management practices have improved?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -540,15 +578,13 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. Over the project area, what is the reduction in pest/competitor species that were effectively controlled (0-100) %",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           },
                           {
                             "type": "textarea",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q2. What pest/competitor species have been controlled?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -571,8 +607,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. Area/Extent of (TS/TECs) habitat has increased?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -595,8 +630,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. Increased connectivity between patches?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -619,8 +653,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. Quality of breeding and foraging habitat is improved?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -643,8 +676,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. Existing populations have been protected?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -667,8 +699,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. Re-introductions have enhanced wild populations?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -691,8 +722,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. Climate change resilience and adaptive capacity actions underway?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -715,8 +745,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -739,8 +768,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -763,8 +791,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -787,8 +814,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -811,8 +837,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -835,8 +860,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -859,8 +883,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -883,8 +906,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -907,8 +929,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -931,8 +952,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -955,8 +975,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -979,8 +998,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -1003,8 +1021,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -1027,8 +1044,7 @@
                             "width": "10%",
                             "source": "supplementaryQuestions1",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
+                            "rows": 4
                           }
                         ]
                       }
@@ -1038,7 +1054,7 @@
               },
               {
                 "type": "textarea",
-                "source": "projAchievementAgainstOutcome",
+                "source": "projectAchievementAgainstOutcome",
                 "title": "What did the project achieve against this outcome statement?",
                 "rows": 5,
                 "width": "20%"
@@ -1052,7 +1068,7 @@
               },
               {
                 "type": "selectOne",
-                "source": "projOutcomeAchievement",
+                "source": "projectOutcomeAchievementDegree",
                 "title": "The degree to which the project outcome was achieved",
                 "rows": 5,
                 "width": "20%"
@@ -1062,8 +1078,8 @@
           {
             "items": [
               {
-                "source": "outcomeProgress",
-                "preLabel": "1.2 Considered collectively (based on previous responses in table 1.1), to what extent are you progressing towards the short-term project outcomes?",
+                "source": "overallOutcomesAchievement",
+                "preLabel": "1.2 Considered collectively (based on previous responses in table 1.1), to what extent were the MERI plan outcomes achieved for your project?",
                 "type": "selectOne"
               }
             ],
@@ -1073,10 +1089,10 @@
             "type": "row",
             "items": [
               {
-                "source": "additionalProgressComments",
+                "source": "additionalAchievementComments",
                 "type": "textarea",
                 "rows": 5,
-                "preLabel": "Provide any additional comments about the projects progress to date here."
+                "preLabel": "If you have any other comments about the achievements against outcomes outlined in your MERI plan, provide details here."
               }
             ]
           },
@@ -1116,7 +1132,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "KEQ2. Were the methods/strategies used the best way to achieve/maximise project outcomes at mid term?",
+                "preLabel": "KEQ2. Were the methods/strategies used the best way to achieve/maximise project outcomes?",
                 "type": "selectOne",
                 "rows": 5,
                 "source": "keq2"
@@ -1131,6 +1147,12 @@
                 "type": "select2Many",
                 "rows": 5,
                 "source": "keq3"
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "\"Other\" in keq3"
               }
             ]
           },
@@ -1149,7 +1171,24 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "KEQ5. Has the project’s risk assessment and risk management remained appropriate and effective at project mid point?",
+                "preLabel": "Please specify the other limiting factors and or barriers",
+                "type": "textarea",
+                "rows": 2,
+                "source": "keq4Other"
+              }
+            ],
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "\"Other\" in keq4"
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "KEQ5. Has the project’s risk assessment and risk management remained appropriate and effective throughout the life of the project?",
                 "type": "selectOne",
                 "rows": 5,
                 "source": "keq5"
@@ -1350,7 +1389,7 @@
                     "source-path": "relatedOutcome"
                   }
                 ],
-                "source-path": "custom.details.outcomes.midTermOutcomes"
+                "source-path": "projectOutcomes"
               }
             ]
           }
