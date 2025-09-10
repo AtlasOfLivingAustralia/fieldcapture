@@ -26,7 +26,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
     WebService webService
 
     def setupSpec() {
-        useDataSet("dataset3")
+        useDataSet("dataset_graphql")
         loginAsAlaAdmin(browser)
         to AdminTools
         reindex()
@@ -229,7 +229,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
 
     def "MERI data can be returned via the Graphql API"() {
         setup:
-        String projectId = 'outcomeMeriPlanProject'
+        String projectId = '55555555-2222-3333-4444-555555555555'
         loginAsMeritAdmin(browser)
 
         when:
