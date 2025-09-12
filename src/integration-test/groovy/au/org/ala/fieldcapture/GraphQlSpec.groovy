@@ -297,7 +297,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         then:
         waitFor {
             meriPlan.keyThreats[0].relatedOutcomes.find('option').collect{it.value()} == ["MT1", "MT2", "ST1"]
-            meriPlan.keyThreats[0].targetMeasures.find('option').collect{it.value()} == ["score_42", "score_43", "score_44"]
+            meriPlan.keyThreats[0].targetMeasures.find('option').collect{it.value()}.containsAll(["score_42", "score_43", "score_44"])
         }
 
         when:
@@ -518,4 +518,118 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
 
     }
 
+    private Map runGraphQLQuery(String query, String user, String hubPath = "merit") {
+        Map q = [query: query]
+        String url = testConfig.ecodata.baseUrl + "graphql/$hubPath"
+        String token = tokenForUser(user)
+        Map headers = ["Authorization": "Bearer ${token}"]
+        return webService.post(url, q, null, ContentType.APPLICATION_JSON, false, false, headers)
+    }
+
+    private String GRAPHQL_TEST_PROJECT_ID = "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+
+    void "Project data can be returned via the Graphql API"() {
+        setup:
+        String userId = '1000'
+        String hubPath = 'merit'
+        String query = """
+          {
+            meritProject(projectId:\"${GRAPHQL_TEST_PROJECT_ID}\") { 
+              dateCreated
+              lastUpdated
+              status
+              meritProjectID
+              description
+              externalId
+              grantId             
+              name
+              projectId
+              funding
+              fundingType
+              portfolio
+              manager
+            }  
+          }  
+        """
+
+        when:
+        Map resp = runGraphQLQuery(query, userId, hubPath)
+        println resp.resp.data
+
+        then:
+        resp.statusCode == HttpStatus.SC_OK
+        !resp.resp?.errors
+
+        resp.resp.data.meritProject.projectId == GRAPHQL_TEST_PROJECT_ID
+        def meritProject = resp.resp.data.meritProject
+        meritProject.dateCreated == "2023-11-13T03:59:41Z"
+        meritProject.lastUpdated == "2025-09-11T06:15:31Z"
+        meritProject.status == "ACTIVE"
+        meritProject.meritProjectID == "GRAPHQL-1"
+        meritProject.description == "Test data for the GraphQL API"
+        meritProject.externalId == ""
+        meritProject.grantId == "GRAPHQL-1"
+        meritProject.name == "GraphQL Test Project"
+        meritProject.projectId == "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+        meritProject.funding == 0
+        meritProject.fundingType == ""
+        meritProject.portfolio == ""
+        meritProject.manager == ""
+
+
+    }
+
+    void "Risk data can be returned via the Graphql API"() {
+        setup:
+        String userId = '1000'
+        String hubPath = 'merit'
+        String query = """
+          {
+            meritProject(projectId:\"${GRAPHQL_TEST_PROJECT_ID}\") { 
+              projectId
+              risks { 
+                lastUpdated
+                overallRisk 
+                risks { 
+                  description 
+                  likelihood 
+                  consequence 
+                  residualRisk
+                  currentControl
+                } 
+              }
+            }  
+          }  
+        """
+
+        when:
+        Map resp = runGraphQLQuery(query, userId, hubPath)
+        println resp.resp.data
+
+        then:
+        resp.statusCode == HttpStatus.SC_OK
+        !resp.resp?.errors
+
+        resp.resp.data.meritProject.projectId == GRAPHQL_TEST_PROJECT_ID
+        def risks = resp.resp.data.meritProject.risks
+        risks != null
+        risks.overallRisk == "Severe"
+        risks.lastUpdated == "2025-09-12T00:33:11Z"
+
+        risks.risks.size() == 2
+
+        risks.risks[0].description == "Description 1"
+        risks.risks[0].likelihood == "Highly Likely"
+        risks.risks[0].consequence == "Minor"
+        risks.risks[0].residualRisk == "Severe"
+        risks.risks[0].currentControl == "Control 1"
+
+        risks.risks[1].description == "Description 2"
+        risks.risks[1].likelihood == "Rare"
+        risks.risks[1].consequence == "Critical"
+        risks.risks[1].residualRisk == "Severe"
+        risks.risks[1].currentControl == "Control 2"
+
+
+    }
 }

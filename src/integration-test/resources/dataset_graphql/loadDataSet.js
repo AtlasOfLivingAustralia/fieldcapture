@@ -6,85 +6,6 @@ load('../data/settingDefaults.js');
 load('../data_common/createServices.js');
 loadActivityForms();
 
-var config = {
-    optionalProjectContent: ["Risks and Threats", "MERI Plan"],
-    requiresActivityLocking: true
-};
-createProgram({programId: 'original', config: config});
-
-var config = {
-    projectTemplate: 'rlp'
-};
-createProgram({programId: 'rlp', config: config});
-
-var config = {
-    projectTemplate: "rlp",
-    meriPlanTemplate: "configurableMeriPlan",
-    meriPlanContents: [
-        {
-            "template": "objectivesList"
-        },
-        {
-            "template": "monitoringIndicators"
-        },
-        {
-            "template": "projectImplementation"
-        },
-        {
-            "template": "projectPartnerships"
-        },
-        {
-            "template": "keq"
-        },
-        {
-            "template": "meriBudget",
-            "model": {
-                "showThemeColumn": true
-            }
-        }
-    ],
-    objectives: [
-        "objective 1",
-        "objective 2",
-        "objective 3"
-    ],
-    "projectReports": [
-        {
-            "reportType": "Activity",
-            "firstReportingPeriodEnd": "2020-09-30T14:00:00Z",
-            "reportDescriptionFormat": "Progress Report %1d",
-            "reportNameFormat": "Progress Report %1d",
-            "reportingPeriodInMonths": 3,
-            "reportsAlignedToCalendar": true,
-            "skipFinalPeriod": true,
-            "description": "",
-            "category": "Progress Reports",
-            "activityType": "State Intervention Progress Report",
-            "canSubmitDuringReportingPeriod": true
-        },
-        {
-            "reportType": "Single",
-            "alignToOwnerStart": false,
-            "alignToOwnerEnd": true,
-            "reportDescriptionFormat": "Final Report",
-            "reportNameFormat": "Final Report",
-            "reportingPeriodInMonths": 3,
-            "reportsAlignedToCalendar": true,
-            "description": "",
-            "category": "Final Report",
-            "activityType": "Final Report",
-            "canSubmitDuringReportingPeriod": true,
-            "multiple": false
-        }
-    ]
-};
-createProgram({
-    programId: "configurable_meri_plan",
-    name: "Configurable MERI Plan Program",
-    description: "",
-    config: config
-});
-
 createMu({});
 
 db.userPermission.insert({
@@ -251,7 +172,29 @@ config = {
             "canSubmitDuringReportingPeriod": true
         },
     ],
-    programServiceConfig: {serviceFormName: 'Progress Report'}
+    programServiceConfig: {
+        serviceFormName: 'RLP Output Report',
+        programServices: [
+            {
+                "serviceTargets": [
+                    "score_42"
+                ],
+                "serviceId": 1
+            },
+            {
+                "serviceTargets": [
+                    "score_43"
+                ],
+                "serviceId": 2
+            },
+            {
+                "serviceTargets": [
+                    "score_44"
+                ],
+                "serviceId": 33
+            }
+        ]
+    }
 };
 createProgram({programId: "state_intervention", name: "State Intervention", description: "", config: config});
 
