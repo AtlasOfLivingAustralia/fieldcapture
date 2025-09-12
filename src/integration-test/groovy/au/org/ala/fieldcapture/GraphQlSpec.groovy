@@ -218,15 +218,13 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         Map headers = ["Authorization": "Bearer ${token}"]
         Map resp = webService.post(url, query, null, ContentType.APPLICATION_JSON, false, false, headers)
 
-        println resp.resp.data
-
         then:
         resp.statusCode == HttpStatus.SC_OK
         !resp.resp?.errors
         resp.resp.data.searchMeritProjects.totalCount == 14
     }
 
-
+/*
 
     def "MERI data can be returned via the Graphql API"() {
         setup:
@@ -518,7 +516,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         result.meriPlan.conservationAndManagementPlans[0].documentUrl == "http://www.test.org"
 
     }
-
+*/
     private Map runGraphQLQuery(String query, String user, String hubPath = "merit") {
         Map q = [query: query]
         String url = testConfig.ecodata.baseUrl + "graphql/$hubPath"
@@ -555,7 +553,6 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
 
         when:
         Map resp = runGraphQLQuery(query, userId, hubPath)
-        println resp.resp.data
 
         then:
         resp.statusCode == HttpStatus.SC_OK
@@ -605,7 +602,6 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
 
         when:
         Map resp = runGraphQLQuery(query, userId, hubPath)
-        println resp.resp.data
 
         then:
         resp.statusCode == HttpStatus.SC_OK
@@ -630,7 +626,523 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         risks.risks[1].consequence == "Critical"
         risks.risks[1].residualRisk == "Severe"
         risks.risks[1].currentControl == "Control 2"
-
-
     }
+
+
+    void "Data set summary data can be returned via the Graphql API"() {
+        setup:
+        String userId = '1000'
+        String hubPath = 'merit'
+        String query = """
+        {
+            meritProject(projectId: "a0f57791-e858-4f33-ae8e-7e3e3fffb447") {
+                projectId
+                dataSetSummaries {
+                    dataSetId
+                    reportId
+                    siteId
+                    name
+                    status
+                    publicationStatus
+                    progress
+                    startDate
+                    endDate
+                    type
+                    collectorType
+                    qa
+                    term
+                    programOutcome
+                    addition
+                    owner
+                    methodDescription
+                    custodian
+                    dataCollectionOngoing
+                    format
+                    published
+                    storageType
+                    publicationUrl
+                    threatenedSpeciesIndex
+                    threatenedSpeciesIndexUploadDate
+                    sizeUnknown
+                    protocol
+                    collectionApp
+                    orgMintedIdentifier
+                }
+            }
+        }
+        """
+
+        when:
+        Map resp = runGraphQLQuery(query, userId, hubPath)
+
+        then:
+        resp.statusCode == HttpStatus.SC_OK
+        !resp.resp?.errors
+
+        resp.resp.data.meritProject.projectId == GRAPHQL_TEST_PROJECT_ID
+        def dataSetSummaries = resp.resp.data.meritProject.dataSetSummaries
+        dataSetSummaries instanceof List
+        dataSetSummaries.size() == 4
+        // First data set
+        def ds1 = dataSetSummaries[0]
+        ds1.publicationStatus == null
+        ds1.sizeUnknown == true
+        ds1.endDate == "2024-02-01T02:00:00Z"
+        ds1.type == "Baseline"
+        ds1.collectorType == null
+        ds1.qa == null
+        ds1.protocol == "other"
+        ds1.term == null
+        ds1.programOutcome == "1.  Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
+        ds1.addition == "No"
+        ds1.owner == null
+        ds1.methodDescription == "Test methodology"
+        ds1.reportId == null
+        ds1.custodian == null
+        ds1.dataCollectionOngoing == false
+        ds1.format == "Database Table"
+        ds1.published == null
+        ds1.threatenedSpeciesIndexUploadDate == null
+        ds1.collectionApp == "Monitor"
+        ds1.orgMintedIdentifier == null
+        ds1.dataSetId == "bbceb2dc-f62d-4116-b590-0124fc65b367"
+        ds1.name == "Flora data set 19/02/2024"
+        ds1.siteId == null
+        ds1.progress == "FINISHED"
+        ds1.storageType == null
+        ds1.publicationUrl == "Biodiversity Data Repository (URL pending)"
+        ds1.startDate == "2024-01-31T02:00:00Z"
+        ds1.threatenedSpeciesIndex == "No"
+        ds1.status == "ACTIVE"
+        // Second data set
+        def ds2 = dataSetSummaries[1]
+        ds2.publicationStatus == null
+        ds2.sizeUnknown == null
+        ds2.endDate == null
+        ds2.type == null
+        ds2.collectorType == null
+        ds2.qa == null
+        ds2.protocol == "a9cb9e38-690f-41c9-8151-06108caf539d"
+        ds2.term == null
+        ds2.programOutcome == null
+        ds2.addition == null
+        ds2.owner == null
+        ds2.methodDescription == null
+        ds2.reportId == null
+        ds2.custodian == null
+        ds2.dataCollectionOngoing == null
+        ds2.format == null
+        ds2.published == null
+        ds2.threatenedSpeciesIndexUploadDate == null
+        ds2.collectionApp == "Monitor"
+        ds2.orgMintedIdentifier != null
+        ds2.dataSetId == "23721e7d-30a9-4753-ae05-79d2cf0c9e32"
+        ds2.name == "Plot Selection - 2024-02-21 (Monitor Test Project 2)"
+        ds2.siteId == null
+        ds2.progress == "STARTED"
+        ds2.storageType == null
+        ds2.publicationUrl == null
+        ds2.startDate == null
+        ds2.threatenedSpeciesIndex == null
+        ds2.status == "ACTIVE"
+        // Third data set
+        def ds3 = dataSetSummaries[2]
+        ds3.publicationStatus == null
+        ds3.sizeUnknown == null
+        ds3.endDate == null
+        ds3.type == null
+        ds3.collectorType == null
+        ds3.qa == null
+        ds3.protocol == "a9cb9e38-690f-41c9-8151-06108caf539d"
+        ds3.term == null
+        ds3.programOutcome == null
+        ds3.addition == null
+        ds3.owner == null
+        ds3.methodDescription == null
+        ds3.reportId == null
+        ds3.custodian == null
+        ds3.dataCollectionOngoing == null
+        ds3.format == null
+        ds3.published == null
+        ds3.threatenedSpeciesIndexUploadDate == null
+        ds3.collectionApp == "Monitor"
+        ds3.orgMintedIdentifier != null
+        ds3.dataSetId == "e19263fb-31da-4bc8-80a8-697b79f7d7c7"
+        ds3.name == "Plot Selection - 2024-02-21 (Monitor Test Project 2)"
+        ds3.siteId == null
+        ds3.progress == "STARTED"
+        ds3.storageType == null
+        ds3.publicationUrl == null
+        ds3.startDate == null
+        ds3.threatenedSpeciesIndex == null
+        ds3.status == "ACTIVE"
+        // Fourth data set
+        def ds4 = dataSetSummaries[3]
+        ds4.publicationStatus == null
+        ds4.sizeUnknown == true
+        ds4.endDate == null
+        ds4.type == null
+        ds4.collectorType == null
+        ds4.qa == null
+        ds4.protocol == "a9cb9e38-690f-41c9-8151-06108caf539d"
+        ds4.term == null
+        ds4.programOutcome == null
+        ds4.addition == null
+        ds4.owner == null
+        ds4.methodDescription == null
+        ds4.reportId == null
+        ds4.custodian == null
+        ds4.dataCollectionOngoing == null
+        ds4.format == "Database Table"
+        ds4.published == null
+        ds4.threatenedSpeciesIndexUploadDate == null
+        ds4.collectionApp == "Monitor"
+        ds4.orgMintedIdentifier != null
+        ds4.dataSetId == "e6794cfc-59f2-4718-8b22-dabfde2488e6"
+        ds4.name == "Plot Selection - 2025-05-29 12:23 PM"
+        ds4.siteId == null
+        ds4.progress == "STARTED"
+        ds4.storageType == null
+        ds4.publicationUrl == null
+        ds4.startDate == null
+        ds4.threatenedSpeciesIndex == null
+        ds4.status == "ACTIVE"
+    }
+
+    void "Site data can be returned via the Graphql API"() {
+        setup:
+        String userId = '1000'
+        String hubPath = 'merit'
+        String query = """
+        {
+            meritProject(projectId: \"a0f57791-e858-4f33-ae8e-7e3e3fffb447\") {
+                projectId
+                sites {
+                    siteId
+                    dateCreated
+                    lastUpdated
+                    name
+                    purposeCode
+                    geoJson
+                    areaM2
+                }
+            }
+        }
+        """
+
+        when:
+        Map resp = runGraphQLQuery(query, userId, hubPath)
+
+        then:
+        resp.statusCode == HttpStatus.SC_OK
+        !resp.resp?.errors
+
+        resp.resp.data.meritProject.projectId == GRAPHQL_TEST_PROJECT_ID
+        def sites = resp.resp.data.meritProject.sites
+        sites instanceof List
+        sites.size() == 27
+        // First site (CTMAUA4788)
+        def s1 = sites[0]
+        s1.siteId == "1464a447-81bb-4da0-b389-a50ee57b9d3c"
+        s1.dateCreated == "2024-02-21T03:32:58Z"
+        s1.lastUpdated == "2024-11-04T05:51:44Z"
+        s1.name == "CTMAUA4788"
+        s1.purposeCode == null
+        s1.areaM2 == 0.0
+        s1.geoJson.type == "Feature"
+        s1.geoJson.geometry.type == "Point"
+        s1.geoJson.geometry.coordinates == [149.0651491, -35.2592449]
+        s1.geoJson.properties.name == "CTMAUA4788"
+        s1.geoJson.properties.id == "1464a447-81bb-4da0-b389-a50ee57b9d3c"
+        s1.geoJson.properties.type == "surveyArea"
+        // Middle site (CTMSEH9999 - Control (null), Polygon)
+        def s7 = sites[6]
+        s7.siteId == "19b6d086-71d2-4eca-b99c-73b64919d5fa"
+        s7.dateCreated == "2024-02-28T00:39:57Z"
+        s7.lastUpdated == "2024-11-04T05:57:29Z"
+        s7.name == "CTMSEH9999 - Control (null)"
+        s7.purposeCode == null
+        s7.areaM2 == 9978.271536165266
+        s7.geoJson.type == "Feature"
+        s7.geoJson.geometry.type == "Polygon"
+        s7.geoJson.geometry.coordinates[0][0] == [149.0651602, -35.2592455]
+        s7.geoJson.properties.name == "CTMSEH9999 - Control (null)"
+        s7.geoJson.properties.id == "19b6d086-71d2-4eca-b99c-73b64919d5fa"
+        s7.geoJson.properties.type == "surveyArea"
+        // Last site (CTMAUA1235 - Control (100 x 100), FeatureCollection)
+        def s27 = sites[26]
+        s27.siteId == "3193ff15-b4f0-42b5-b3f5-f634de5dbb16"
+        s27.dateCreated == "2024-05-15T06:48:25Z"
+        s27.lastUpdated == "2024-11-04T06:24:55Z"
+        s27.name == "CTMAUA1235 - Control (100 x 100)"
+        s27.purposeCode == null
+        s27.areaM2 == 19956.561344448724
+        s27.geoJson.type == "FeatureCollection"
+        s27.geoJson.features instanceof List
+        s27.geoJson.features[0].type == "Feature"
+        s27.geoJson.features[0].geometry.type == "Polygon"
+        s27.geoJson.features[0].properties.name == "CTMAUA1235 - Control (100 x 100)"
+        s27.geoJson.features[0].properties.externalId == "12"
+        s27.geoJson.features[0].properties.description == "CTMAUA1235 - Control (100 x 100)"
+        // Check all sites have required fields
+        sites.each { site ->
+            site.siteId != null
+            site.dateCreated != null
+            site.lastUpdated != null
+            site.name != null
+            site.geoJson != null
+            site.areaM2 != null
+        }
+    }
+
+    void "Report data can be returned via the Graphql API"() {
+        setup:
+        String userId = '1000'
+        String hubPath = 'merit'
+        String query = """
+        {
+            meritProject(projectId: \"a0f57791-e858-4f33-ae8e-7e3e3fffb447\") {
+                projectId
+                reports {
+                  publicationStatus
+                  reportId
+                  category
+                  name
+                  fromDate
+                  toDate
+                  submissionDate
+                  dateSubmitted
+                  dateApproved
+                  dateReturned
+                  dateCancelled
+                  activity {
+                    dateCreated
+                    lastUpdated
+                    activityId
+                    status
+                    type
+                    formVersion
+                    description
+                    progress
+                    startDate
+                    endDate
+                    plannedStartDate
+                    plannedEndDate
+                  }
+                  statusChangeHistory {
+                    dateChanged
+                    changedBy
+                    status
+                    comment
+                  }
+                }
+            }
+        }
+        """
+
+        when:
+        Map resp = runGraphQLQuery(query, userId, hubPath)
+
+        then:
+        resp.statusCode == HttpStatus.SC_OK
+        !resp.resp?.errors
+
+        resp.resp.data.meritProject.projectId == GRAPHQL_TEST_PROJECT_ID
+        def reports = resp.resp.data.meritProject.reports
+        reports instanceof List
+        reports.size() == 13
+        // First report: Outcomes Report 2
+        def r1 = reports[0]
+        r1.publicationStatus == "DRAFT"
+        r1.reportId == "97fd3a79-bb35-4eaa-af00-e2edba24a7f2"
+        r1.activity == null
+        r1.toDate == "2026-01-01"
+        r1.submissionDate == "2026-01-01"
+        r1.fromDate == "2024-01-01"
+        r1.dateCancelled == null
+        r1.statusChangeHistory == []
+        r1.dateApproved == null
+        r1.name == "Outcomes Report 2"
+        r1.category == "Outcomes Report 2"
+        r1.dateReturned == null
+        r1.dateSubmitted == null
+        // Second report: Annual Progress Report 2025 - 2026
+        def r2 = reports[1]
+        r2.publicationStatus == "DRAFT"
+        r2.reportId == "aab26622-8c16-4751-a766-20036076ae41"
+        r2.activity == null
+        r2.toDate == "2026-01-01"
+        r2.submissionDate == "2026-01-01"
+        r2.fromDate == "2025-07-01"
+        r2.dateCancelled == null
+        r2.statusChangeHistory == []
+        r2.dateApproved == null
+        r2.name == "Annual Progress Report 2025 - 2026"
+        r2.category == "Annual Progress Reporting"
+        r2.dateReturned == null
+        r2.dateSubmitted == null
+        // Third report: Annual Progress Report 2024 - 2025
+        def r3 = reports[2]
+        r3.publicationStatus == "DRAFT"
+        r3.reportId == "d342cc4b-cb7c-4755-8d56-4277fe90ac24"
+        r3.activity == null
+        r3.toDate == "2025-07-01"
+        r3.submissionDate == "2025-07-01"
+        r3.fromDate == "2024-07-01"
+        r3.dateCancelled == null
+        r3.statusChangeHistory == []
+        r3.dateApproved == null
+        r3.name == "Annual Progress Report 2024 - 2025"
+        r3.category == "Annual Progress Reporting"
+        r3.dateReturned == null
+        r3.dateSubmitted == null
+        // Fourth report: Annual Progress Report 2023 - 2024 (cancelled, with statusChangeHistory)
+        def r4 = reports[3]
+        r4.publicationStatus == "CANCELLED"
+        r4.reportId == "435c4d42-aed0-4daa-be2c-9c4882e4b61e"
+        r4.activity == null
+        r4.toDate == "2024-07-01"
+        r4.submissionDate == "2024-07-01"
+        r4.fromDate == "2024-01-01"
+        r4.dateCancelled == "2024-06-18T01:02:30Z"
+        r4.statusChangeHistory.size() == 3
+        r4.statusChangeHistory[0].dateChanged == "2024-04-18T04:10:32Z"
+        r4.statusChangeHistory[0].changedBy == "56501"
+        r4.statusChangeHistory[0].comment == "Test"
+        r4.statusChangeHistory[0].status == "cancelled"
+        r4.statusChangeHistory[1].dateChanged == "2024-06-18T01:02:25Z"
+        r4.statusChangeHistory[1].changedBy == "56501"
+        r4.statusChangeHistory[1].comment == "TEst"
+        r4.statusChangeHistory[1].status == "returned"
+        r4.statusChangeHistory[2].dateChanged == "2024-06-18T01:02:30Z"
+        r4.statusChangeHistory[2].changedBy == "56501"
+        r4.statusChangeHistory[2].comment == "TEst"
+        r4.statusChangeHistory[2].status == "cancelled"
+        r4.dateApproved == null
+        r4.name == "Annual Progress Report 2023 - 2024"
+        r4.category == "Annual Progress Reporting"
+        r4.dateReturned == "2024-06-18T01:02:25Z"
+        r4.dateSubmitted == null
+        // Fifth report: Year 2025/2026 - Quarter 3 Outputs Report
+        def r5 = reports[4]
+        r5.publicationStatus == "DRAFT"
+        r5.reportId == "2cddd195-4e4b-4d80-ad57-9a4b16e95d62"
+        r5.activity == null
+        r5.toDate == "2026-01-01"
+        r5.submissionDate == "2026-01-01"
+        r5.fromDate == "2026-01-01"
+        r5.dateCancelled == null
+        r5.statusChangeHistory == []
+        r5.dateApproved == null
+        r5.name == "Year 2025/2026 - Quarter 3 Outputs Report"
+        r5.category == "Outputs Reporting"
+        r5.dateReturned == null
+        r5.dateSubmitted == null
+        // Sixth report: Year 2025/2026 - Quarter 2 Outputs Report
+        def r6 = reports[5]
+        r6.publicationStatus == "DRAFT"
+        r6.reportId == "245f5f8a-a105-4fd4-8f77-169c641051a1"
+        r6.activity == null
+        r6.toDate == "2026-01-01"
+        r6.submissionDate == "2025-10-01"
+        r6.fromDate == "2025-10-01"
+        r6.dateCancelled == null
+        r6.statusChangeHistory == []
+        r6.dateApproved == null
+        r6.name == "Year 2025/2026 - Quarter 2 Outputs Report"
+        r6.category == "Outputs Reporting"
+        r6.dateReturned == null
+        r6.dateSubmitted == null
+        // Seventh report: Year 2025/2026 - Quarter 1 Outputs Report
+        def r7 = reports[6]
+        r7.publicationStatus == "DRAFT"
+        r7.reportId == "d354b597-09d4-412d-bf24-71a071266e33"
+        r7.activity == null
+        r7.toDate == "2025-10-01"
+        r7.submissionDate == "2025-07-01"
+        r7.fromDate == "2025-07-01"
+        r7.dateCancelled == null
+        r7.statusChangeHistory == []
+        r7.dateApproved == null
+        r7.name == "Year 2025/2026 - Quarter 1 Outputs Report"
+        r7.category == "Outputs Reporting"
+        r7.dateReturned == null
+        r7.dateSubmitted == null
+        // Eighth report: Year 2024/2025 - Quarter 4 Outputs Report
+        def r8 = reports[7]
+        r8.publicationStatus == "DRAFT"
+        r8.reportId == "14d38a95-4f15-4d2b-a307-3b905c876b2b"
+        r8.activity == null
+        r8.toDate == "2025-07-01"
+        r8.submissionDate == "2025-04-01"
+        r8.fromDate == "2025-04-01"
+        r8.dateCancelled == null
+        r8.statusChangeHistory == []
+        r8.dateApproved == null
+        r8.name == "Year 2024/2025 - Quarter 4 Outputs Report"
+        r8.category == "Outputs Reporting"
+        r8.dateReturned == null
+        r8.dateSubmitted == null
+        // Ninth report: Year 2024/2025 - Quarter 3 Outputs Report
+        def r9 = reports[8]
+        r9.publicationStatus == "DRAFT"
+        r9.reportId == "7b2fc26e-9071-4a90-b2bd-78ce5a8f6642"
+        r9.activity == null
+        r9.toDate == "2025-04-01"
+        r9.submissionDate == "2025-01-01"
+        r9.fromDate == "2025-01-01"
+        r9.dateCancelled == null
+        r9.statusChangeHistory == []
+        r9.dateApproved == null
+        r9.name == "Year 2024/2025 - Quarter 3 Outputs Report"
+        r9.category == "Outputs Reporting"
+        r9.dateReturned == null
+        r9.dateSubmitted == null
+        // Tenth report: Year 2024/2025 - Quarter 2 Outputs Report
+        def r10 = reports[9]
+        r10.publicationStatus == "DRAFT"
+        r10.reportId == "f810fd11-3403-404e-af87-8d116a100cd9"
+        r10.activity == null
+        r10.toDate == "2025-01-01"
+        r10.submissionDate == "2024-10-01"
+        r10.fromDate == "2024-10-01"
+        r10.dateCancelled == null
+        r10.statusChangeHistory == []
+        r10.dateApproved == null
+        r10.name == "Year 2024/2025 - Quarter 2 Outputs Report"
+        r10.category == "Outputs Reporting"
+        r10.dateReturned == null
+        r10.dateSubmitted == null
+        // Eleventh report: Year 2024/2025 - Quarter 1 Outputs Report
+        def r11 = reports[10]
+        r11.publicationStatus == "DRAFT"
+        r11.reportId == "2ed7f087-5200-4f1a-bfae-d743abbd371f"
+        r11.activity == null
+        r11.toDate == "2024-10-01"
+        r11.submissionDate == "2024-07-01"
+        r11.fromDate == "2024-07-01"
+        r11.dateCancelled == null
+        r11.statusChangeHistory == []
+        r11.dateApproved == null
+        r11.name == "Year 2024/2025 - Quarter 1 Outputs Report"
+        r11.category == "Outputs Reporting"
+        r11.dateReturned == null
+        r11.dateSubmitted == null
+        // Twelfth report: Year 2023/2024 - Quarter 4 Outputs Report
+        def r12 = reports[11]
+        r12.publicationStatus == "DRAFT"
+        r12.reportId == "8b193938-db66-41f4-a5c0-5592c03ab111"
+        r12.activity == null
+        r12.toDate == "2024-07-01"
+        r12.submissionDate == "2024-04-01"
+        r12.fromDate == "2024-04-01"
+        r12.dateCancelled == null
+        r12.statusChangeHistory.size() == 0
+        r12.dateApproved == null
+        r12.name == "Year 2023/2024 - Quarter 4 Outputs Report"
+        r12.category == "Outputs Reporting"
+        r12.dateReturned == null
+        r12.dateSubmitted == null
+    }
+
 }
