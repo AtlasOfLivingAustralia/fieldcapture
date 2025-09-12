@@ -29,7 +29,8 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         useDataSet("dataset_graphql")
         loginAsAlaAdmin(browser)
         to AdminTools
-        reindex()
+        clearMetadata()
+        clearCache()
         Thread.sleep(5000) // Give the reindex time to happen
 
         to AdminClearCachePage

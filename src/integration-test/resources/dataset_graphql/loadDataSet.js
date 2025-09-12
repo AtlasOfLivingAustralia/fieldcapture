@@ -401,10 +401,10 @@ config.meriPlanContents = [
 
 createProgram({programId: "fhr", name: "FHR", description: "", config: config});
 
-createProject({projectId: "fhr1", name: "FHR project", programId: "fhr"});
+createProject({projectId: "aaaaaaaa-bbbb-bbbb-bbbb-cccccccccccc", name: "FHR project", programId: "fhr"});
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
-    entityId: "fhr1",
+    entityId: "aaaaaaaa-bbbb-bbbb-bbbb-cccccccccccc",
     userId: '1',
     accessLevel: 'admin'
 });
