@@ -950,7 +950,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         resp.resp.data.meritProject.projectId == GRAPHQL_TEST_PROJECT_ID
         def reports = resp.resp.data.meritProject.reports
         reports instanceof List
-        reports.size() == 13
+        reports.size() == 14
         // First report: Outcomes Report 2
         def r1 = reports[0]
         r1.publicationStatus == "DRAFT"
