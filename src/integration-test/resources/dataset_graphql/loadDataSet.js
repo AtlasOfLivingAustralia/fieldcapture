@@ -311,7 +311,7 @@ config.meriPlanContents = [
 
 createProgram({programId: "grants", name: "Competitive Grants", description: "", config: config});
 
-createProject({projectId: "grants1", name: "Excluded content project", programId: "grants"});
+createProject({projectId: "aaaaaaaa-bbbb-aaaa-cccc-000000000000", name: "Excluded content project", programId: "grants"});
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
     entityId: "grants1",
