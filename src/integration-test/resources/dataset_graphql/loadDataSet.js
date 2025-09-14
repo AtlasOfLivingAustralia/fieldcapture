@@ -1064,7 +1064,7 @@ var projectESP = {
     "planStatus": "approved",
     "plannedEndDate": ISODate("2026-06-29T14:00:00.000Z"),
     "plannedStartDate": ISODate("2017-03-31T13:00:00.000Z"),
-    "projectId": "123456789",
+    "projectId": "dddddddd-eeee-eeee-eeee-ffffffffffff",
     "projectType": "works",
     "promoteOnHomepage": "no",
     "scienceType": [],
@@ -1086,7 +1086,7 @@ var activity1 = {
     "plannedEndDate": ISODate("2020-03-30T13:00:00.000Z"),
     "plannedStartDate": ISODate("2019-03-31T13:00:00.000Z"),
     "progress": "finished",
-    "projectId": "123456789",
+    "projectId": "ffffffff-eeee-eeee-eeee-ffffffffffff",
     "startDate": ISODate("2019-03-31T13:00:00.000Z"),
     "status": "active",
     "type": "ESP PMU or Zone reporting",
@@ -1129,7 +1129,7 @@ var report1 = {
     "fromDate": ISODate("2019-03-31T13:00:00.000Z"),
     "lastUpdated": ISODate("2020-12-16T01:31:34.623Z"),
     "name": "Stage 3",
-    "projectId": "123456789",
+    "projectId": "77777777-2222-3333-4444-555555555555",
     "publicationStatus": "published",
     "reportId": "d5874c66-ee8c-440c-b0f3-76af14a6cdaf",
     "status": "active",
@@ -1459,7 +1459,7 @@ db.userPermission.insert({
     accessLevel: 'admin'
 });
 const monitorProject = {
-    projectId: "monitorProject",
+    projectId: "00000000-2222-3333-4444-555555555556",
     name: "Testing monitor integration",
     programId: "outcomeMeriPlan",
     custom: {
