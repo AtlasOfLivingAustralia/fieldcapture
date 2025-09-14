@@ -39,11 +39,9 @@
 # others
 /.slcache
 /node_modules
-grails-app/assets/vendor-ext
 /out/
 /build/
 /.gradle/
 /grails-app/assets/components/compile/templates.js
-/ehcache/.lock
-/ehcache/file/homePageStatistics_c96622e3da276e1ccd3532e6f1f975756232b01a/offheap-disk-store/ehcache-disk-store.data
-/ehcache/file/homePageStatistics_c96622e3da276e1ccd3532e6f1f975756232b01a/offheap-disk-store/ehcache-disk-store.meta
+/grails-app/assets/vendor-ext
+/ehcache/
