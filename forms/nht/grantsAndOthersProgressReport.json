@@ -29,6 +29,13 @@
                 "keys": [
                   "code"
                 ]
+              },
+              "midTermProjectOutcomes": {
+                "deleteUnmatchedExistingRows": true,
+                "addUnmatchedNewRows": true,
+                "keys": [
+                  "code"
+                ]
               }
             },
             "mapping": [
@@ -45,6 +52,20 @@
                   }
                 ],
                 "source-path": "custom.details.outcomes.shortTermOutcomes"
+              },
+              {
+                "target": "midTermProjectOutcomes",
+                "mapping": [
+                  {
+                    "target": "code",
+                    "source-path": "code"
+                  },
+                  {
+                    "target": "outcomeStatement",
+                    "source-path": "description"
+                  }
+                ],
+                "source-path": "custom.details.outcomes.midTermOutcomes"
               }
             ]
           }
@@ -66,8 +87,41 @@
             "validate": "required,maxSize[5000]"
           },
           {
+            "dataType": "text",
+            "name": "shortTermOutcomesAchieved",
+            "constraints": ["Yes", "No"],
+            "validate": "required"
+          },
+          {
+            "dataType": "text",
+            "name": "reportOnMediumTermOutcomes",
+            "constraints": ["Yes", "No"],
+            "validate": "required"
+          },
+          {
             "dataType": "list",
             "name": "projectOutcomes",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "code"
+              },
+              {
+                "dataType": "text",
+                "name": "outcomeStatement",
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "achievement",
+                "validate": "required,maxSize[1000]"
+              }
+            ]
+          },
+          {
+            "dataType": "list",
+            "name": "midTermProjectOutcomes",
             "allowRowDelete": "false",
             "columns": [
               {
@@ -295,30 +349,112 @@
             "type": "row"
           },
           {
-            "source": "projectOutcomes",
-            "type": "table",
-            "userAddedRows": false,
-            "disableTableUpload": true,
-            "columns": [
+            "type":"row",
+            "behaviour": [
               {
-                "source": "code",
-                "type": "readonlyText",
-                "title": "Outcome No."
-              },
+                "type": "if_expression",
+                "condition": "length(midTermProjectOutcomes) > 0"
+              }
+            ],
+            "items": [
               {
-                "type": "textarea",
-                "source": "outcomeStatement",
-                "title": "Outcome",
-                "readonly": true,
-                "rows": 5,
-                "width": "45%"
-              },
+                "type": "selectOne",
+                "preLabel": "Have all of the short term outcomes of the project been achieved?",
+                "source": "shortTermOutcomesAchieved"
+              }
+            ]
+          },
+          {
+            "type":"row",
+            "behaviour": [
               {
-                "type": "textarea",
-                "source": "achievement",
-                "title": "Achievement against the outcome",
-                "rows": 5,
-                "width": "50%"
+                "type": "if_expression",
+                "condition": "length(midTermProjectOutcomes) == 0 or shortTermOutcomesAchieved != \"Yes\""
+              }
+            ],
+            "items": [
+              {
+                "source": "projectOutcomes",
+                "type": "table",
+                "userAddedRows": false,
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "source": "code",
+                    "type": "readonlyText",
+                    "title": "Outcome No."
+                  },
+                  {
+                    "type": "textarea",
+                    "source": "outcomeStatement",
+                    "title": "Outcome",
+                    "readonly": true,
+                    "rows": 5,
+                    "width": "45%"
+                  },
+                  {
+                    "type": "textarea",
+                    "source": "achievement",
+                    "title": "Achievement against the outcome",
+                    "rows": 5,
+                    "width": "50%"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type":"row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "length(midTermProjectOutcomes) > 0 and shortTermOutcomesAchieved != \"Yes\""
+              }
+            ],
+            "items": [
+              {
+                "type": "selectOne",
+                "preLabel": "Would you like to report on your medium term outcomes?",
+                "source": "reportOnMediumTermOutcomes"
+              }
+            ]
+          },
+          {
+            "type":"row",
+            "behaviour": [
+              {
+                "type": "if_expression",
+                "condition": "length(midTermProjectOutcomes) > 0 and (reportOnMediumTermOutcomes == \"Yes\" or shortTermOutcomesAchieved == \"Yes\")"
+              }
+            ],
+            "items": [
+              {
+                "source": "midTermProjectOutcomes",
+                "type": "table",
+                "userAddedRows": false,
+                "disableTableUpload": true,
+                "columns": [
+                  {
+                    "source": "code",
+                    "type": "readonlyText",
+                    "title": "Outcome No."
+                  },
+                  {
+                    "type": "textarea",
+                    "source": "outcomeStatement",
+                    "title": "Outcome",
+                    "readonly": true,
+                    "rows": 5,
+                    "width": "45%"
+                  },
+                  {
+                    "type": "textarea",
+                    "source": "achievement",
+                    "title": "Achievement against the outcome",
+                    "rows": 5,
+                    "width": "50%"
+                  }
+                ]
               }
             ]
           },
