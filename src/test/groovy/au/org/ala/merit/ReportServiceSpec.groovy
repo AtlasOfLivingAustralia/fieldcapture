@@ -522,4 +522,31 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         then:
         1 * webService.getJson({it.endsWith('/report/generateReportsInPeriod?startDate=2020-07-02T00:00:00Z&endDate=2021-01-01T00:00:00Z&test=test&entity=managementUnit')})
     }
+
+    def "The targetsForScoreIds method delegates to ecodata"() {
+        setup:
+        List<String> scoreIds = ['s1', 's2']
+        List<String> filters = ["programId:testProgram"]
+
+        Map expectedParams = [
+            scoreIds: scoreIds,
+            fq: filters,
+            approvedActivitiesOnly: true
+        ]
+
+        Map targetsData = [
+                scores:[outputData:[
+                    [scoreId:'s1']]],
+                targets: [testProgram:["score 1":[
+                    total:100,
+                    scoreId:'s1'
+                ]]]]
+
+        when:
+        Map results = service.targetsForScoreIds(scoreIds, filters)
+
+        then:
+        1 * webService.doPost({it.endsWith('search/targetsReportForScoreIds')}, expectedParams) >> [statusCode:200, resp:targetsData]
+        results.scores[0].target == 100
+    }
 }

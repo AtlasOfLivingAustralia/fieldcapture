@@ -118,6 +118,7 @@ var programWithDefaultOutcome = programDefaults.create();
 programWithDefaultOutcome.outcomes[2].default = true;
 programWithDefaultOutcome.programId  = 'default_outcome';
 programWithDefaultOutcome.name =  "Default outcome";
+programWithDefaultOutcome.config.supportsMeriPlanComparison = true;
 
 db.program.insert(programWithDefaultOutcome);
 

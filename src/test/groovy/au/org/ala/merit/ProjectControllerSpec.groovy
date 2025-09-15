@@ -216,6 +216,57 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         !model.showAlternateTemplate
     }
 
+    def "Only FC admins who are also assigned the grant manager role on project can resync data set summaries"() {
+        setup:
+        String projectId = '1234'
+        userServiceStub.userIsAlaOrFcAdmin() >> true
+        Map project = project(projectId)
+        Map readOnlyUser = stubReadOnly('1234', projectId)
+
+        when:
+        controller.index(projectId)
+
+        then:
+        1 * projectService.get(projectId, readOnlyUser, _) >> project
+        1 * projectService.getProgramConfiguration(project) >> new ProgramConfig()
+        model.projectContent.datasets.resyncEnabled == false
+    }
+
+    def "Only FC admins who are also assigned the grant manager role on project can resync data set summaries"() {
+        setup:
+        String projectId = '1234'
+        userServiceStub.userIsAlaOrFcAdmin() >> false
+        userServiceStub.user
+        Map project = project(projectId)
+        Map grantManagerUser = stubGrantManager('1234', projectId)
+
+        when:
+        controller.index(projectId)
+
+        then:
+        1 * projectService.get(projectId, grantManagerUser, _) >> project
+        1 * projectService.getProgramConfiguration(project) >> new ProgramConfig()
+        model.projectContent.datasets.resyncEnabled == false
+    }
+
+
+    def "FC Admins who have the grant manager role for the project can resync data set summaries"() {
+        setup:
+        String projectId = '1234'
+        userServiceStub.userIsAlaOrFcAdmin() >> true
+        Map project = project(projectId)
+        Map grantManagerUser = stubGrantManager('1234', projectId)
+
+        when:
+        controller.index(projectId)
+
+        then:
+        1 *  projectService.get(projectId, grantManagerUser, _) >> project
+        1 * projectService.getProgramConfiguration(project) >> new ProgramConfig()
+        model.projectContent.datasets.resyncEnabled == true
+
+    }
+
     def "if a template is requested that is different to the project default, provide navigation back to the default template view"() {
         setup:
         String projectId = '1234'

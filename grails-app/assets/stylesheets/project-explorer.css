@@ -332,3 +332,8 @@ button.btn.facets-toggle {
     pointer-events: none;
     color: #aaa;
 }
+
+.meritProjectID {
+    font-size: small;
+    font-weight: 550;
+}

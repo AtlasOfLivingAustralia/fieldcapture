@@ -16,14 +16,14 @@
     </tr>
     </thead>
     <tbody>
-    <g:set var="max" value="${Math.max(project.custom.details.monitoring?.rows.size(), changed.custom.details.monitoring?.rows?.size()?:0)}"/>
-    <g:each in="${(0..<1)}" var="i">
+    <g:set var="max" value="${Math.max(originalMonitoring.size(), changedMonitoring.size()?:0)}"/>
+    <g:each in="${(0..<max)}" var="i">
     <tr>
         <td class="index"><span data-bind="text: ${i}+1"></span></td>
-        <td class="baseline"><fc:renderComparisonMonitoring config="${config}" changed="${changed.custom.details.monitoring.rows ?: []}" i="${i}" code="${code}" original="${project.custom.details.monitoring.rows ?: []}" property="data1"/></td>
-        <td class="monitoring-service"><fc:renderComparisonMonitoring config="${config}" changed="${changed.custom.details.monitoring.rows ?: []}" i="${i}" code="${code}" original="${project.custom.details.monitoring.rows ?: []}" property="relatedTargetMeasures"/></td>
-        <td class="monitoring-method"><fc:renderComparisonMonitoring config="${config}" changed="${changed.custom.details.monitoring.rows ?: []}" i="${i}" code="${code}" original="${project.custom.details.monitoring.rows ?: []}" property="protocols"/></td>
-        <td class="monitoring-evidence"><fc:renderComparisonMonitoring config="${config}" changed="${changed.custom.details.monitoring.rows ?: []}" i="${i}" code="${code}" original="${project.custom.details.monitoring.rows ?: []}" property="evidence"/></td>
+        <td class="baseline"><fc:renderComparisonList config="${config}" changed="${changedMonitoring ?: []}" i="${i}" code="${code}" original="${originalMonitoring ?: []}" property="data1"/></td>
+        <td class="monitoring-service"><fc:renderComparisonList config="${config}" changed="${changedMonitoring ?: []}" i="${i}" code="${code}" original="${originalMonitoring ?: []}" property="relatedTargetMeasures"/></td>
+        <td class="monitoring-method"><fc:renderComparisonList config="${config}" changed="${changedMonitoring ?: []}" i="${i}" code="${code}" original="${originalMonitoring ?: []}" property="protocols"/></td>
+        <td class="monitoring-evidence"><fc:renderComparisonList config="${config}" changed="${changedMonitoring ?: []}" i="${i}" code="${code}" original="${originalMonitoring ?: []}" property="evidence"/></td>
     </tr>
     </g:each>
     </tbody>

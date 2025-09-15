@@ -16,8 +16,6 @@ class DocumentController {
 
     static allowedMethods = [bulkUpdate: 'POST', documentUpdate: 'POST', deleteDocument: 'POST', download: 'GET']
 
-    static final String DOCUMENT_DOWNLOAD_PATH = 'document/download/'
-
     DocumentService documentService
     WebService webService
     GrailsApplication grailsApplication
@@ -125,23 +123,13 @@ class DocumentController {
                 Map document = results.documents[0]
 
                 if (documentService.canView(document)) {
-                    String url = buildDownloadUrl(path, filename)
+                    String url = documentService.buildDownloadUrl(path, filename)
                     webService.proxyGetRequest(response, url, false, true)
                     return null
                 }
             }
         }
         response.status = HttpStatus.SC_NOT_FOUND
-    }
-
-    protected String buildDownloadUrl(String path, String filename) {
-        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + DOCUMENT_DOWNLOAD_PATH
-        if (path) {
-            url += path + '/'
-        }
-        url += UriUtils.encodePath(filename, "UTF-8")
-
-        url
     }
 
     protected Tuple2 parsePathAndFilenameFromURL(String uri, String encoding) {

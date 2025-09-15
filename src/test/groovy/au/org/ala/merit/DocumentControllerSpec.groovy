@@ -62,6 +62,7 @@ class DocumentControllerSpec extends Specification implements ControllerUnitTest
         then:
         1 * documentService.search(filepath:"path", filename:"file.txt") >> [count: 1, documents:[document]]
         1 * documentService.canView(document) >> true
+        1 * documentService.buildDownloadUrl("path", "file.txt") >> "http://ecodata-base-url.com/document/download/path/file.txt"
         1 * webService.proxyGetRequest(response, {it.endsWith('document/download/path/file.txt')}, false, true)
         resp == null
     }
@@ -77,6 +78,8 @@ class DocumentControllerSpec extends Specification implements ControllerUnitTest
         then:
         1 * documentService.search(filepath:"path", filename:"file.png") >> [count: 1, documents:[document]]
         1 * documentService.canView(document) >> true
+        1 * documentService.buildDownloadUrl("path", "thumb_file.png") >> "http://ecodata-base-url.com/document/download/path/thumb_file.png"
+
         1 * webService.proxyGetRequest(response, {it.endsWith('document/download/path/thumb_file.png')}, false, true)
         resp == null
     }
@@ -109,13 +112,7 @@ class DocumentControllerSpec extends Specification implements ControllerUnitTest
         response.status == HttpStatus.SC_NOT_FOUND
     }
 
-    def "The DocumentController encodes filenames used in URLs as required"() {
-        expect:
-        controller.buildDownloadUrl("2018-01", "Test with spaces").endsWith("/document/download/2018-01/Test%20with%20spaces")
-        controller.buildDownloadUrl(null, "test").endsWith("/document/download/test")
-        controller.buildDownloadUrl(null, "a&test").endsWith("/document/download/a&test")
 
-    }
 
     def "The DocumentController can extract the path and filename from the URL"(String path, String filename, String expectedPath, String expectedFilename) {
         setup:

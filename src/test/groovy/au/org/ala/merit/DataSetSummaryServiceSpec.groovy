@@ -78,4 +78,18 @@ class DataSetSummaryServiceSpec extends Specification implements ServiceUnitTest
         result == [status:'ok']
     }
 
+    def "The resync method delegates to the web service"() {
+        setup:
+        String projectId = 'p1'
+        String datasetId = 'd1'
+
+        when:
+        Map result = service.resyncDataSet(projectId, datasetId)
+
+        then:
+        1 * webService.doPost({it.endsWith('dataSetSummary/resync/'+projectId+'/'+datasetId)}, [:], true, true) >> [status: HttpStatus.SC_OK]
+
+        result == [status: HttpStatus.SC_OK]
+    }
+
 }

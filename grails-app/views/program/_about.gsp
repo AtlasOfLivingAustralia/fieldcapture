@@ -16,35 +16,11 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4" >
+    <div class="col-md-8" >
         <h3>Description</h3>
         <span data-bind="html:description.markdownToHtml()"></span>
     </div>
-    <div class="col-md-8">
-        <m:map id="muMap" width="100%" height="500px"></m:map>
-    </div>
 
-    <div class="col-md-12" id="state-mu">
-        <div class="well">Click on a heading or <a id="showAllStatesMu" href="#">Show all</a>  | <a id="hideAllStatesMu"  href="#">Hide all</a> management units</div>
-        <div class="panel panel-default">
-            <g:set var="states" value="${['Australia Capital Territory','New South Wales', 'Northern Territory', 'Queensland', 'South Australia', 'Tasmania', 'Victoria', 'Western Australia']}"></g:set>
-            <g:set var="statesAcronyms" value="${['ACT','NSW', 'NT', 'Queensland', 'SA', 'Tasmania', 'Victoria', 'WA']}"></g:set>
-            <g:each in="${states}" status="i" var="state" >
-                <div class="card">
-                    <div class="card-header">
-                        <a class="state-mu-toggle collapsed" data-toggle="collapse" data-parent="#state-mu" href="#state-mu-${i}">
-                            ${state}
-                        </a>
-                    </div>
-                    <div id="state-mu-${i}" class="collapse col-md-offset-1 col-md-11 card-body">
-                        <g:findAll in="${program.managementUnits}" expr="it.state?.startsWith(state) || it.state?.startsWith(statesAcronyms[i])">
-                            <li><a href="${g.createLink(controller: 'managementUnit', action: 'index',id:it.managementUnitId)}">${it.name}</a></li>
-                        </g:findAll>
-                    </div>
-                </div>
-            </g:each>
-        </div>
-    </div>
 </div>
 
 <g:if test="${program.subPrograms}">
@@ -80,11 +56,11 @@
 </g:if>
 
 
-<g:if test="${program.outcomes}">
+<g:if test="${content.about.primaryOutcomes}">
     <div class="well">
-        <div class="well-title">The following outcomes are being addressed by this program</div>
+        <div class="well-title">The following primary outcomes are being addressed by this program</div>
         <div class="row outcomes no-gutters">
-            <g:each in="${program.outcomes}" var="outcome" >
+            <g:each in="${content.about.primaryOutcomes}" var="outcome" >
                 <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' : 'disabled'}"/>
                 <div class="col-md">
                     <div class="outcome-wrapper h-100">
@@ -110,7 +86,7 @@
             <th class="grantId"><g:message code="label.merit.projectID"/></th>
             <th class="name">Name</th>
             <th class="description">Description</th>
-            <th class="outcomes">Outcome</th>
+            <th class="outcomes">Primary Outcome</th>
             <th class="priority">Investment Priority</th>
             <th class="startDate">Start Date</th>
             <th class="endDate">End Date</th>
@@ -123,8 +99,9 @@
                     <td class="description">${project.description}</td>
                     <g:if test="${project.custom?.details?.outcomes?.primaryOutcome}">
                         <g:set var="primaryOutcome" value="${project.custom.details.outcomes.primaryOutcome}" />
-                        <td class="outcomes">${primaryOutcome.shortDescription}</td>
-                        <g:set var="primaryOutcomePriorities" value="${primaryOutcome.assets}"></g:set>
+                        <g:set var="primaryOutcomeShortDescription" value="${content.about.primaryOutcomes?.find{it.outcome == primaryOutcome.description}?.shortDescription}" />
+                        <td class="outcomes">${primaryOutcomeShortDescription}</td>
+                        <g:set var="primaryOutcomePriorities" value="${primaryOutcome.assets}"/>
                         <td class="priority">
                             <g:each var="priority" in="${primaryOutcomePriorities}">
                                 ${priority}

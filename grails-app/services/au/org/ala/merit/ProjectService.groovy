@@ -29,6 +29,7 @@ class ProjectService  {
 
     static final String OTHER_EMSA_MODULE = 'Other'
     static final String PARATOO_FORM_TAG_SURVEY = 'survey'
+    static final String PARATOO_FORM_TAG_SITE = 'site'
 
     static dateWithTime = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
     static dateWithTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
@@ -81,12 +82,17 @@ class ProjectService  {
         result
     }
 
-    void filterDataSetSummaries(List dataSetSummaries) {
+    void filterDataSetSummaries(List dataSetSummaries, boolean includeSiteProtocols = false) {
         List<Map> forms = activityService.monitoringProtocolForms()
+
+        // If the user is an ALA or FC admin, they can see survey data sets and also data sets that are
+        // associated with sites.  This is to enable the use of the delete/resync data set functionality for these
+        // data sets.
+        List supportedTags = includeSiteProtocols ? [PARATOO_FORM_TAG_SURVEY, PARATOO_FORM_TAG_SITE] : [PARATOO_FORM_TAG_SURVEY]
 
         dataSetSummaries.removeAll { Map dataSetSummary ->
             Map protocolForm = forms.find{it.externalId == dataSetSummary.protocol}
-            (protocolForm != null) && (!protocolForm.tags.contains(PARATOO_FORM_TAG_SURVEY))
+            (protocolForm != null) && (!protocolForm.tags?.find{supportedTags.contains(it)})
         }
     }
 
@@ -719,6 +725,14 @@ class ProjectService  {
      */
     def rejectReport(String projectId, Map reportDetails) {
         Map reportInformation = prepareReport(projectId, reportDetails)
+
+        // Perform an additional check - project managers can only return submitted reports, they
+        // need an extra role to return approved reports.
+        if (reportService.isApproved(reportInformation.report)) {
+            if (!userService.userIsSupportOfficerOrAdmin()) {
+                reportInformation.error = "Only MERIT Support Officers can return approved reports"
+            }
+        }
         if (reportInformation.error) {
             return [success:false, error:reportInformation.error]
         }
@@ -2030,21 +2044,13 @@ class ProjectService  {
      */
     Map getApprovedMeriPlanProject(String documentId) {
         Map result = documentService.get(documentId)
-        if (!result || !result.url) {
+        if (!result) {
             return null
         }
+        String downloadUrl = documentService.buildDownloadUrl(result.filepath, result.filename)
 
-        Map content = webService.getJson(grailsApplication.config.getProperty('ecodata.baseUrl') + result.url)
+        Map content = webService.getJson(downloadUrl)
         content
-    }
-
-    private Score findScore(String scoreId, Map scoresWithTargets) {
-        Score score = null
-        scoresWithTargets?.find { String key, List outputScores ->
-            score = outputScores?.find{it.scoreId == scoreId}
-        }
-
-        score
     }
 
     /**
