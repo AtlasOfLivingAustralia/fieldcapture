@@ -28,7 +28,7 @@
         "149.0651491",
         "-35.2592449"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "state": [
         "Australian Capital Territory"
       ],
@@ -114,7 +114,7 @@
         "149.0651453",
         "-35.2592572"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "state": [
         "Australian Capital Territory"
       ],
@@ -200,7 +200,7 @@
         "149.0651487",
         "-35.259254"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "state": [
         "Australian Capital Territory"
       ],
@@ -286,7 +286,7 @@
         "149.0651597",
         "-35.259233"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "state": [
         "Australian Capital Territory"
       ],
@@ -372,7 +372,7 @@
         "149.04887846965235",
         "-35.26356186215208"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "state": [
         "Australian Capital Territory"
       ],
@@ -458,7 +458,7 @@
         "149.0651602",
         "-35.2592455"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "state": [
         "Australian Capital Territory"
       ],
@@ -1280,7 +1280,7 @@
         "149.0651453",
         "-35.2592498"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "state": [
         "Australian Capital Territory"
       ],
@@ -1366,7 +1366,7 @@
         "149.065144",
         "-35.2592424"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "state": [
         "Australian Capital Territory"
       ],
@@ -1452,7 +1452,7 @@
         "149.0425061168956",
         "-35.26061839914875"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "state": [
         "Australian Capital Territory"
       ],
@@ -1539,7 +1539,7 @@
         "149.0651513",
         "-35.2592579"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "state": [
         "Australian Capital Territory"
       ],
@@ -1625,7 +1625,7 @@
         "149.0651502",
         "-35.2592561"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "state": [
         "Australian Capital Territory"
       ],
@@ -1711,7 +1711,7 @@
         "149.0651641",
         "-35.2592456"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "state": [
         "Australian Capital Territory"
       ],
@@ -1982,7 +1982,7 @@
         "149.0652",
         "-35.2592"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "decimalLatitude": -35.2592,
       "type": "Point",
       "state": [
@@ -2081,7 +2081,7 @@
         "149.0651693",
         "-35.2592493"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "state": [
         "Australian Capital Territory"
       ],
@@ -2168,7 +2168,7 @@
         "149.0651721",
         "-35.2592427"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "state": [
         "Australian Capital Territory"
       ],
@@ -2253,7 +2253,7 @@
         "149.0652",
         "-35.2592"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "decimalLatitude": -35.2592,
       "type": "Point",
       "state": [
@@ -2350,7 +2350,7 @@
         "149.0652",
         "-35.2592"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "decimalLatitude": -35.2592,
       "type": "Point",
       "state": [
@@ -2447,7 +2447,7 @@
         "149.0652",
         "-35.2592"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "decimalLatitude": -35.2592,
       "type": "Point",
       "state": [
@@ -2544,7 +2544,7 @@
         "149.0652",
         "-35.2592"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "decimalLatitude": -35.2592,
       "type": "Point",
       "state": [
@@ -2643,7 +2643,7 @@
         "149.0651644",
         "-35.2592406"
       ],
-      "aream2": 0,
+      "aream2": 0.0,
       "state": [
         "Australian Capital Territory"
       ],

@@ -29,6 +29,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         useDataSet("dataset_graphql")
         loginAsAlaAdmin(browser)
         to AdminTools
+        reindex()
         clearMetadata()
         clearCache()
         Thread.sleep(5000) // Give the reindex time to happen
@@ -210,21 +211,26 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
     def "A simple graphQL query will return the correct number of projects"() {
 
         setup:
-        Map query = [query: searchMERITProjectsQuery("status:[ACTIVE]")]
-        String token = tokenForUser('1000')
+        String userId = '1000'
+        String query = """
+        {
+          searchMeritProjects(page:1, max:10, status:[ACTIVE]) {
+            results {
+              projectId
+            }
+            totalCount
+          }
+        }
+        """
 
         when:
-        String url = testConfig.ecodata.baseUrl + 'graphql/merit'
-        Map headers = ["Authorization": "Bearer ${token}"]
-        Map resp = webService.post(url, query, null, ContentType.APPLICATION_JSON, false, false, headers)
+        Map resp = runGraphQLQuery(query, userId)
 
         then:
         resp.statusCode == HttpStatus.SC_OK
         !resp.resp?.errors
-        resp.resp.data.searchMeritProjects.totalCount == 14
+        resp.resp.data.searchMeritProjects.totalCount == 15
     }
-
-/*
 
     def "MERI data can be returned via the Graphql API"() {
         setup:
@@ -409,11 +415,8 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         waitFor {hasBeenReloaded()}
 
         when:
-        Map query = [query: searchMERITProjectsQuery("meritProjectID:\"outcomeMeriPlanProject\"")]
-        String token = tokenForUser('1000')
-        String url = testConfig.ecodata.baseUrl + 'graphql/merit'
-        Map headers = ["Authorization": "Bearer ${token}"]
-        Map resp = webService.post(url, query, null, ContentType.APPLICATION_JSON, false, false, headers)
+        String query = searchMERITProjectsQuery("meritProjectID:\"outcomeMeriPlanProject\"")
+        Map resp = runGraphQLQuery(query, '1000', 'merit')
 
         then:
         resp.statusCode == HttpStatus.SC_OK
@@ -516,7 +519,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         result.meriPlan.conservationAndManagementPlans[0].documentUrl == "http://www.test.org"
 
     }
-*/
+
     private Map runGraphQLQuery(String query, String user, String hubPath = "merit") {
         Map q = [query: query]
         String url = testConfig.ecodata.baseUrl + "graphql/$hubPath"
@@ -950,7 +953,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         resp.resp.data.meritProject.projectId == GRAPHQL_TEST_PROJECT_ID
         def reports = resp.resp.data.meritProject.reports
         reports instanceof List
-        reports.size() == 14
+        reports.size() == 13 // One report is deleted, so not returned
         // First report: Outcomes Report 2
         def r1 = reports[0]
         r1.publicationStatus == "DRAFT"
