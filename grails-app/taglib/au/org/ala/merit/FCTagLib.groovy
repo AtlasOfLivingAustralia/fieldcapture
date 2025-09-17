@@ -908,12 +908,12 @@ class FCTagLib {
 
         out << '<span class="original hide">'
         if (original && original.size() > i) {
-            (attrs.property) ? out << original[i][property][0].collect{it}.join(',') : out << original[i][0]
+            (attrs.property) ? out << original[i][property].collect{it}.join(',') : out << original[i]
         }
         out << '</span>'
         out << '<span class="changed hide">'
         if (changed && changed.size() > i) {
-            (attrs.property) ? out << changed[i][property][0].collect{it}.join(',') : out << changed[i][0]
+            (attrs.property) ? out << changed[i][property].collect{it}.join(',') : out << changed[i]
         }
         out << '</span>'
         out << '<span class="diff"></span>'
