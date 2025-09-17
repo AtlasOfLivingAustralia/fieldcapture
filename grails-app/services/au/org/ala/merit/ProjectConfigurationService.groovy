@@ -92,9 +92,7 @@ class ProjectConfigurationService {
         // Outcomes are defined by the program (optionally replaced by the project)
         programConfig.outcomes = projectConfig.outcomes ?: (program.outcomes ?: [])
 
-
-
-        programConfig.priorities = getInvestmentPrioritiesForOutcomes( programConfig.outcomes) // projectConfig.priorities ?: (program.priorities ?: [])
+        programConfig.priorities = getInvestmentPrioritiesForOutcomes( programConfig.outcomes) ?: []
         programConfig.themes = program.themes ?: []
         programConfig.program = program
 
@@ -104,6 +102,7 @@ class ProjectConfigurationService {
         if (project.managementUnitId) {
             Map managementUnit = managementUnitService.get(project.managementUnitId)
             Map config = managementUnit.config
+            programConfig.priorities = projectConfig.priorities.findAll{!it.managementUnits || project.managementUnitId in it.managementUnits}
 
             // There may be only a subset of the program assets/priorities that
             // actually exist within the boundary of the management unit.
