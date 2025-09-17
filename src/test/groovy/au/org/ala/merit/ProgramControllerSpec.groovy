@@ -15,6 +15,7 @@ class ProgramControllerSpec extends Specification implements ControllerUnitTest<
     ActivityService activityService = Mock(ActivityService)
     RoleService roleService = Mock(RoleService)
     BlogService blogService = Mock(BlogService)
+    MetadataService metadataService = Mock(MetadataService)
 
 
     String adminUserId = 'admin'
@@ -29,6 +30,7 @@ class ProgramControllerSpec extends Specification implements ControllerUnitTest<
         controller.userService = userService
         controller.blogService = blogService
         controller.managementUnitService = managementUnitService
+        controller.metadataService = metadataService
 
         roleService.getRoles() >> []
     }
