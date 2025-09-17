@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="nav flex-column nav-pills col-3">
+    <div class="nav flex-column nav-pills col-2">
         <a class="nav-link active" data-toggle="pill" href="#edit-program-details" id="edit-program-details-tab" role="tab">Edit</a>
         <a class="nav-link" data-toggle="pill" href="#program-permissions" role="tab">Permissions</a>
         <a class="nav-link" data-toggle="pill" href="#editProgramBlog" id="editProgramBlog-tab" role="tab">Edit Blog</a>
@@ -8,13 +8,12 @@
             <a class="nav-link" data-toggle="pill" href="#reporting" role="tab">Reporting</a>
             <a class="nav-link" data-toggle="pill" href="#config" role="tab">Configuration</a>
             <a class="nav-link" data-toggle="pill" href="#outcomes" role="tab">Outcomes</a>
-            <a class="nav-link" data-toggle="pill" href="#priorities" role="tab">Priorities</a>
             <a class="nav-link" data-toggle="pill" href="#themes" role="tab">Priority Areas / Themes</a>
 
         </g:if>
     </div>
 
-    <div class="tab-content col-9">
+    <div class="tab-content col-10">
         <div class="tab-pane active" id="edit-program-details">
 
             <!-- ko if: fundingType() || totalFunding() -->
@@ -111,17 +110,7 @@
         <div class="tab-pane" id="outcomes">
             <h4 style="display:inline-block">Program outcomes</h4> <button class="btn btn-success float-right" data-bind="click:saveProgramOutcomes">Save Outcomes</button>
 
-            <textarea rows="80" style="width:100%" data-bind="value:outcomes">
-
-            </textarea>
-        </div>
-
-        <div class="tab-pane" id="priorities">
-            <h4 style="display:inline-block">Program priorities</h4> <button class="btn btn-success float-right" data-bind="click:saveProgramPriorities">Save Priorities</button>
-
-            <textarea rows="80" style="width:100%" data-bind="value:priorities">
-
-            </textarea>
+            <g:render template="programOutcomes"/>
         </div>
 
         <div class="tab-pane" id="themes">

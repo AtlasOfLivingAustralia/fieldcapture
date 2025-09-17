@@ -288,4 +288,37 @@ class ProgramService {
          resp
     }
 
+    /** Searches all projects in the specified program and returns a set of all the program outcomes
+     * that have been used in any project MERI plan..
+     *
+     * @param programId the program to search within.
+     * @return a Set of Strings representing the descriptions of all the outcomes in use by projects in the specified program.
+     */
+    Set<String> findAllProgramOutcomesInUse(String programId) {
+        List outcomeFields = [
+                'custom.details.outcomes.primaryOutcome.description',
+                'custom.details.outcomes.secondaryOutcomes.description',
+                'custom.details.outcomes.midTermOutcomes.description',
+                'custom.details.outcomes.shortTermOutcomes.description',
+        ]
+        Map params = [fq: 'programId:' + programId, include: outcomeFields]
+        Map result = searchService.allProjects(params)
+        Set outcomesInUse = new HashSet<String>()
+        result?.hits?.hits?.each { hit ->
+            Map outcomes = hit._source?.custom?.details?.outcomes ?: [:]
+
+            outcomes.each { k, v ->
+                if (v?.description) {
+                    // Projects have a single primary outcome but can have multiple secondary, midTerm and shortTerm outcomes
+                    if (k == 'primaryOutcome') {
+                        outcomesInUse << v.description
+                    } else {
+                        outcomesInUse.addAll(v.description)
+                    }
+                }
+            }
+        }
+        outcomesInUse
+    }
+
 }

@@ -154,3 +154,22 @@ span.select2-selection.select2-selection--single {
 input#totalFunding {
     width: 10em;
 }
+
+table .outcome-actions {
+    width: 1%;
+}
+table .outcome-description {
+    width: 35%;
+}
+table .outcome-type {
+    width: 10%;
+}
+table .outcome-short-description {
+    width: 15%;
+}
+table .outcome-category {
+    width: 15%;
+}
+table .outcome-priorities {
+    width: 15%;
+}

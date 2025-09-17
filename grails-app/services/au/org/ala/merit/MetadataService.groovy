@@ -364,4 +364,12 @@ class MetadataService {
 
         result.resp ?: []
     }
+
+    @Cacheable("investmentPriorityCategories")
+    List<String> getInvestmentPriorityCategories() {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/investmentPriorities"
+        Map result = webService.getJson2(url)
+
+        result.resp.collect{it.category}
+    }
 }
