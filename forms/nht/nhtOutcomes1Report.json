@@ -164,6 +164,24 @@
                 "name": "st11SupplementaryQuestions2"
               },
               {
+                "dataType": "stringList",
+                "name": "csapOutcomes",
+                "constraints": [
+                  "Farmers accept and value CSSA practices (Attitude/Culture)",
+                  "Farmers are accessing advice and support",
+                  "Farmers are accessing demonstrations of innovative and effective practices",
+                  "Farmers are accessing relevant information resources and products",
+                  "Farmers are adopting innovative tools, technologies or practices",
+                  "Farmers are aware of CSSA practices, and their value and opportunities",
+                  "Farmers are connecting to peer networks",
+                  "Farmers are trialling and/or adopting CSSA practices",
+                  "Farmers have the skills to adopt CSSA practices",
+                  "Farmers understand how and why to adopt CSSA practices (Knowledge)",
+                  "Farmers are demonstrating sustainability credentials and traceability",
+                  "Farmers are implementing sustainability frameworks"
+                ]
+              },
+              {
                 "dataType": "text",
                 "name": "projectAchievementAgainstOutcome",
                 "validate": "required,maxSize[2500]",
@@ -816,6 +834,27 @@
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "behaviour": [
+                      {
+                        "type": "if_expression",
+                        "condition": "relatedProgramOutcome == \"1. The agriculture sector is adopting practices to reduce emissions and build resilience to climate change (Medium term)\" or relatedProgramOutcome == \"1. The agriculture sector is supported to harness carbon and biodiversity incentives and implement industry sustainability frameworks (Medium term)\" or relatedProgramOutcome == \"1. Farmers are supported to drive agricultural growth, while adopting sustainable natural resource management practices that protect and conserve natural capital and biodiversity (Medium term)\" or relatedProgramOutcome == \"1. The agriculture sector is adopting practices to reduce emissions and build resilience to climate change (Short term)\" or relatedProgramOutcome == \"1. The agriculture sector is supported to harness carbon and biodiversity incentives and implement industry sustainability frameworks (Short term)\" or relatedProgramOutcome == \"1. Farmers are supported to drive agricultural growth, while adopting sustainable natural resource management practices that protect and conserve natural capital and biodiversity (Short term)\""
+                      }
+                    ],
+                    "items": [
+                      {
+                        "type": "col",
+                        "items": [
+                          {
+                            "type": "select2Many",
+                            "source": "csapOutcomes",
+                            "preLabel": "Which CSAP Outcomes support this project outcome?"
                           }
                         ]
                       }
