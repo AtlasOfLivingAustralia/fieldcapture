@@ -1,0 +1,1030 @@
+{
+  "_id": {
+    "$oid": "65519f2db186d711a8f38836"
+  },
+  "bushfireCategories": [],
+  "origin": "merit",
+  "dateCreated": {
+    "$date": "2023-11-13T03:59:41.551Z"
+  },
+  "promoteOnHomepage": "no",
+  "ecoScienceType": [],
+  "countries": [],
+  "name": "GraphQL Test Project",
+  "funding": 0.0,
+  "isCitizenScience": false,
+  "uNRegions": [],
+  "industries": [],
+  "tags": [
+    "Tag 1"
+  ],
+  "lastUpdated": {
+    "$date": "2025-09-11T06:15:31.324Z"
+  },
+  "isBushfire": false,
+  "alaHarvest": false,
+  "scienceType": [],
+  "isMERIT": true,
+  "status": "active",
+  "isSciStarter": false,
+  "isExternal": false,
+  "projectId": "a0f57791-e858-4f33-ae8e-7e3e3fffb447",
+  "abn": "",
+  "description": "Test data for the GraphQL API",
+  "electionCommitmentYear": "",
+  "externalId": "",
+  "externalIds": [
+    {
+      "idType": "TECH_ONE_CODE",
+      "externalId": "T02"
+    }
+  ],
+  "fundingType": "",
+  "geographicInfo": {
+    "nationwide": false,
+    "otherElectorates": [
+      "Bennelong",
+      "Blaxland"
+    ],
+    "otherStates": [
+      "New South Wales"
+    ],
+    "primaryElectorate": "Banks",
+    "primaryState": "New South Wales",
+    "isDefault": false,
+    "otherExcludedElectorates": [],
+    "otherExcludedStates": [],
+    "overridePrimaryElectorate": false,
+    "overridePrimaryState": false,
+    "statewide": false
+  },
+  "grantId": "GRAPHQL-1",
+  "hubId": "merit",
+  "managementUnitId": "6878a5f3-df7e-43fc-ac44-6927a6fcb091",
+  "manager": "",
+  "organisationId": "1bddb1f7-790d-4145-b919-c9e687d6b105",
+  "organisationName": "A test org",
+  "planStatus": "not approved",
+  "plannedEndDate": {
+    "$date": "2025-12-31T13:00:00Z"
+  },
+  "plannedStartDate": {
+    "$date": "2023-12-31T13:00:00Z"
+  },
+  "portfolio": "",
+  "programId": "8ff647eb-a719-42d9-8830-98ba7f51d178",
+  "projectType": "works",
+  "serviceProviderName": "CSIRO",
+  "associatedProgram": "Natural Heritage Trust",
+  "associatedSubProgram": "RASL - Recovery Actions for Species and Landscapes",
+  "comment": "",
+  "orgIdSvcProvider": "",
+  "terminationReason": "",
+  "custom": {
+    "dataSets": [
+      {
+        "sizeUnknown": true,
+        "endDate": "2024-02-01T13:00:00Z",
+        "methods": [
+          "Active searching",
+          "Call playback"
+        ],
+        "projectOutcomes": [
+          "ST1"
+        ],
+        "type": "Baseline",
+        "lastUpdated": "2024-02-19T04:36:16Z",
+        "protocol": "other",
+        "dateCreated": "2024-02-19T04:36:16Z",
+        "measurementTypes": [
+          "Recruitment - Fauna, flora",
+          "Targeted - weeds"
+        ],
+        "markedAsFinished": true,
+        "programOutcome": "1.  Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved",
+        "serviceId": 15,
+        "addition": "No",
+        "methodDescription": "Test methodology",
+        "baselines": [
+          "B1"
+        ],
+        "dataCollectionOngoing": false,
+        "format": "Database Table",
+        "threatenedSpeciesIndexUploadDate": "",
+        "sensitivities": [
+          "No"
+        ],
+        "collectionApp": "Monitor",
+        "investmentPriorities": [
+          "Anthochaera phrygia (Regent Honeyeater)"
+        ],
+        "dataSetId": "bbceb2dc-f62d-4116-b590-0124fc65b367",
+        "name": "Flora data set 19/02/2024",
+        "progress": "finished",
+        "location": "1,2",
+        "publicationUrl": "Biodiversity Data Repository (URL pending)",
+        "startDate": "2024-01-31T13:00:00Z",
+        "threatenedSpeciesIndex": "No"
+      },
+      {
+        "surveyId": {
+          "surveyType": "plot-selection-survey",
+          "protocol": {
+            "id": "a9cb9e38-690f-41c9-8151-06108caf539d",
+            "version": 1
+          },
+          "time": "2024-02-21T03:32:46.761Z",
+          "uuid": "9e212405-d48b-4879-83a6-2a03ec96cfe9",
+          "projectId": "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+        },
+        "grantId": "MONITOR-02",
+        "endDate": null,
+        "collectionApp": "Monitor",
+        "lastUpdated": "2024-02-21T03:32:47Z",
+        "orgMintedIdentifier": "eyJzdXJ2ZXlJZCI6eyJzdXJ2ZXlUeXBlIjoicGxvdC1zZWxlY3Rpb24tc3VydmV5IiwidGltZSI6IjIwMjQtMDItMjFUMDM6MzI6NDYuNzYxWiIsInV1aWQiOiI5ZTIxMjQwNS1kNDhiLTQ4NzktODNhNi0yYTAzZWM5NmNmZTkiLCJwcm9qZWN0SWQiOiJhMGY1Nzc5MS1lODU4LTRmMzMtYWU4ZS03ZTNlM2ZmZmI0NDciLCJwcm90b2NvbCI6eyJpZCI6ImE5Y2I5ZTM4LTY5MGYtNDFjOS04MTUxLTA2MTA4Y2FmNTM5ZCIsInZlcnNpb24iOjF9fSwiZXZlbnRUaW1lIjoiMjAyNC0wMi0yMVQwMzozMjo0Ny42MzhaIiwidXNlcklkIjoiNTY1MDEiLCJwcm9qZWN0SWQiOiJhMGY1Nzc5MS1lODU4LTRmMzMtYWU4ZS03ZTNlM2ZmZmI0NDciLCJwcm90b2NvbElkIjoiYTljYjllMzgtNjkwZi00MWM5LTgxNTEtMDYxMDhjYWY1MzlkIiwicHJvdG9jb2xWZXJzaW9uIjoxLCJzeXN0ZW0iOiJNRVJJVCIsInZlcnNpb24iOm51bGx9",
+        "protocol": "a9cb9e38-690f-41c9-8151-06108caf539d",
+        "dateCreated": "2024-02-21T03:32:47Z",
+        "dataSetId": "23721e7d-30a9-4753-ae05-79d2cf0c9e32",
+        "name": "Plot Selection - 2024-02-21 (Monitor Test Project 2)",
+        "progress": "started",
+        "siteId": null,
+        "startDate": null
+      },
+      {
+        "surveyId": {
+          "surveyType": "plot-selection-survey",
+          "protocol": {
+            "id": "a9cb9e38-690f-41c9-8151-06108caf539d",
+            "version": 1
+          },
+          "time": "2024-02-21T03:35:11.971Z",
+          "uuid": "f9ea76f8-e8ce-493f-bc24-8ef8234e2459",
+          "projectId": "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+        },
+        "grantId": "MONITOR-02",
+        "endDate": null,
+        "collectionApp": "Monitor",
+        "lastUpdated": "2024-02-21T03:35:13Z",
+        "orgMintedIdentifier": "eyJzdXJ2ZXlJZCI6eyJzdXJ2ZXlUeXBlIjoicGxvdC1zZWxlY3Rpb24tc3VydmV5IiwidGltZSI6IjIwMjQtMDItMjFUMDM6MzU6MTEuOTcxWiIsInV1aWQiOiJmOWVhNzZmOC1lOGNlLTQ5M2YtYmMyNC04ZWY4MjM0ZTI0NTkiLCJwcm9qZWN0SWQiOiJhMGY1Nzc5MS1lODU4LTRmMzMtYWU4ZS03ZTNlM2ZmZmI0NDciLCJwcm90b2NvbCI6eyJpZCI6ImE5Y2I5ZTM4LTY5MGYtNDFjOS04MTUxLTA2MTA4Y2FmNTM5ZCIsInZlcnNpb24iOjF9fSwiZXZlbnRUaW1lIjoiMjAyNC0wMi0yMVQwMzozNToxMy4xOTZaIiwidXNlcklkIjoiNTY1MDEiLCJwcm9qZWN0SWQiOiJhMGY1Nzc5MS1lODU4LTRmMzMtYWU4ZS03ZTNlM2ZmZmI0NDciLCJwcm90b2NvbElkIjoiYTljYjllMzgtNjkwZi00MWM5LTgxNTEtMDYxMDhjYWY1MzlkIiwicHJvdG9jb2xWZXJzaW9uIjoxLCJzeXN0ZW0iOiJNRVJJVCIsInZlcnNpb24iOm51bGx9",
+        "protocol": "a9cb9e38-690f-41c9-8151-06108caf539d",
+        "dateCreated": "2024-02-21T03:35:13Z",
+        "dataSetId": "e19263fb-31da-4bc8-80a8-697b79f7d7c7",
+        "name": "Plot Selection - 2024-02-21 (Monitor Test Project 2)",
+        "progress": "started",
+        "siteId": null,
+        "startDate": null
+      },
+      {
+        "dataSetId": "e6794cfc-59f2-4718-8b22-dabfde2488e6",
+        "protocol": "a9cb9e38-690f-41c9-8151-06108caf539d",
+        "grantId": "BONITOR-02",
+        "collectionApp": "Monitor",
+        "dateCreated": "2025-05-29T02:23:52Z",
+        "lastUpdated": "2025-05-29T02:23:52Z",
+        "progress": "started",
+        "name": "Plot Selection - 2025-05-29 12:23 PM",
+        "surveyId": {
+          "survey_metadata": {
+            "survey_details": {
+              "survey_model": "plot-selection-survey",
+              "time": "2025-05-29T02:23:06.646Z",
+              "uuid": "14a953e3-5411-4ab5-ab90-84ae8731f26a",
+              "project_id": "a0f57791-e858-4f33-ae8e-7e3e3fffb447",
+              "protocol_id": "a9cb9e38-690f-41c9-8151-06108caf539d",
+              "protocol_version": 1
+            },
+            "provenance": {
+              "version_app": "1.0.7-ec81577e",
+              "version_core_documentation": "1.0.7-ec81577e",
+              "system_app": "Atlas of Living Australia-beta testing-2405:b000:600:b0::2eb-Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+              "system_org": null,
+              "version_org": null,
+              "system_core": "Monitor FDCP API-production",
+              "version_core": "1.0.7-ec81577e"
+            },
+            "orgMintedUUID": "e6794cfc-59f2-4718-8b22-dabfde2488e6"
+          },
+          "userId": "1bddb1f7-790d-4145-b919-c9e687d6b105",
+          "eventTime": "2025-05-29T02:23:52.220Z",
+          "coreSubmitTime": {
+            "$date": "2025-05-29T02:23:56.701Z"
+          }
+        },
+        "orgMintedIdentifier": "eyJzdXJ2ZXlfbWV0YWRhdGEiOnsic3VydmV5X2RldGFpbHMiOnsic3VydmV5X21vZGVsIjoicGxvdC1zZWxlY3Rpb24tc3VydmV5IiwidGltZSI6IjIwMjUtMDUtMjlUMDI6MjM6MDYuNjQ2WiIsInV1aWQiOiIxNGE5NTNlMy01NDExLTRhYjUtYWI5MC04NGFlODczMWYyNmEiLCJwcm9qZWN0X2lkIjoiYTBmNTc3OTEtZTg1OC00ZjMzLWFlOGUtN2UzZTNmZmZiNDQ3IiwicHJvdG9jb2xfaWQiOiJhOWNiOWUzOC02OTBmLTQxYzktODE1MS0wNjEwOGNhZjUzOWQiLCJwcm90b2NvbF92ZXJzaW9uIjoxfSwicHJvdmVuYW5jZSI6eyJ2ZXJzaW9uX2FwcCI6IjEuMC43LWVjODE1NzdlIiwidmVyc2lvbl9jb3JlX2RvY3VtZW50YXRpb24iOiIxLjAuNy1lYzgxNTc3ZSIsInN5c3RlbV9hcHAiOiJBdGxhcyBvZiBMaXZpbmcgQXVzdHJhbGlhLWJldGEgdGVzdGluZy0yNDA1OmIwMDA6NjAwOmIwOjoyZWItTW96aWxsYS81LjAgKE1hY2ludG9zaDsgSW50ZWwgTWFjIE9TIFggMTBfMTVfNykgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEzNy4wLjAuMCBTYWZhcmkvNTM3LjM2Iiwic3lzdGVtX29yZyI6bnVsbCwidmVyc2lvbl9vcmciOm51bGwsInN5c3RlbV9jb3JlIjpudWxsLCJ2ZXJzaW9uX2NvcmUiOm51bGx9LCJvcmdNaW50ZWRVVUlEIjoiZTY3OTRjZmMtNTlmMi00NzE4LThiMjItZGFiZmRlMjQ4OGU2In0sInVzZXJJZCI6IjFiZGRiMWY3LTc5MGQtNDE0NS1iOTE5LWM5ZTY4N2Q2YjEwNSIsImV2ZW50VGltZSI6IjIwMjUtMDUtMjlUMDI6MjM6NTIuMjIwWiJ9",
+        "siteId": null,
+        "startDate": null,
+        "endDate": null,
+        "format": "Database Table",
+        "sizeUnknown": true,
+        "areSpeciesRecorded": false,
+        "activityId": "7d301453-5fe1-410f-936d-b45cb53b1022"
+      }
+    ],
+    "details": {
+      "communityEngagement": "",
+      "indigenousInvolvementType": "Leading",
+      "obligations": "",
+      "policies": "",
+      "description": "Monitor Test Project 2 df afadfdas",
+      "threatToNativeSpecies": {
+        "description": "",
+        "rows": [
+          {
+            "couldBethreatToSpecies": "",
+            "details": ""
+          }
+        ]
+      },
+      "lastUpdated": "2025-08-18T01:37:59Z",
+      "priorities": {
+        "description": "",
+        "rows": [
+          {
+            "data3": "Test",
+            "data2": "Test",
+            "documentUrl": "Test",
+            "data1": "Test"
+          }
+        ]
+      },
+      "assets": [
+        {
+          "description": "",
+          "category": ""
+        }
+      ],
+      "outcomes": {
+        "secondaryOutcomes": [
+          {
+            "code": "",
+            "assets": [
+              "Bettongia gaimardi (Tasmanian Bettong, Eastern Bettong)"
+            ],
+            "relatedOutcome": "",
+            "description": "1.  Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
+          }
+        ],
+        "otherOutcomes": [],
+        "shortTermOutcomes": [
+          {
+            "code": "ST1",
+            "assets": [
+              "Anthochaera phrygia (Regent Honeyeater)"
+            ],
+            "relatedOutcome": "1.  Species and Landscapes (Short term): Managing Threats - Pest predator an competitor species have been controlled or are under active, long-term control programs",
+            "description": "Test"
+          }
+        ],
+        "midTermOutcomes": [],
+        "primaryOutcome": {
+          "code": "",
+          "assets": [
+            "Anthochaera phrygia (Regent Honeyeater)"
+          ],
+          "relatedOutcome": "",
+          "description": "1.  Species and Landscapes (Long term): Threatened Species (TS) - The trajectory of species targeted under the Threatened Species Action Plan 2022-2032 and other EPBC Act listed Species is improved"
+        }
+      },
+      "programName": "RASL - Recovery Actions for Species and Landscapes",
+      "keq": {
+        "description": "",
+        "rows": [
+          {
+            "data3": "",
+            "data2": "",
+            "data1": ""
+          },
+          {
+            "data3": "",
+            "data2": "",
+            "data1": ""
+          }
+        ]
+      },
+      "threats": {
+        "description": "",
+        "rows": [
+          {
+            "relatedTargetMeasures": [
+              "0e2f8d61-b7b4-4d2d-b07c-4fc20bbe326a",
+              "69deaaf9-cdc2-439a-b684-4cffdc7f224e",
+              "f9c85612-602e-465c-89e0-e155b34b1f31",
+              "d8dc153b-da23-4f7b-947a-89bc98338d6d",
+              "01686d38-9165-4497-9648-627ef81945a7",
+              "3c83e639-9c19-4b31-a86f-9d2d5e78123b",
+              "5557288b-190e-4a3f-a60b-4bdff6ca8fe8",
+              "7c30bc26-829e-4080-8059-27af9285113b",
+              "4f71e00a-2d80-488d-9ce4-947e60589149",
+              "3ec07754-4a7a-46fb-a76d-553921781716",
+              "fbc2dab8-7454-40f9-94f6-6bf258fcefff",
+              "dea1ff8b-f4eb-4987-8073-500bbbf97fcd",
+              "c3276929-b8a9-4985-a329-49b86f14018c"
+            ],
+            "evidence": "Test",
+            "threat": "Test",
+            "intervention": "Testasdfa sdfasf",
+            "relatedOutcomes": [
+              "ST1"
+            ],
+            "threatCode": "Disease/pathogens - Areas that are infected TEST 25 March 2025"
+          }
+        ]
+      },
+      "indigenousInvolved": "Yes",
+      "adaptiveManagement": "",
+      "events": [
+        {
+          "funding": "0",
+          "name": "",
+          "description": "",
+          "scheduledDate": "",
+          "media": "",
+          "grantAnnouncementDate": "",
+          "type": ""
+        }
+      ],
+      "budget": {
+        "overallTotal": 0,
+        "headers": [
+          {
+            "data": "2023/2024"
+          },
+          {
+            "data": "2024/2025"
+          },
+          {
+            "data": "2025/2026"
+          }
+        ],
+        "rows": [
+          {
+            "costs": [
+              {
+                "dollar": "0"
+              },
+              {
+                "dollar": "0"
+              },
+              {
+                "dollar": "0"
+              }
+            ],
+            "rowTotal": 0,
+            "activities": [],
+            "description": "",
+            "shortLabel": "",
+            "type": "perPeriodBreakdown"
+          }
+        ],
+        "columnTotal": [
+          {
+            "data": 0
+          },
+          {
+            "data": 0
+          },
+          {
+            "data": 0
+          }
+        ]
+      },
+      "indigenousInvolvementComment": null,
+      "partnership": {
+        "description": "",
+        "rows": [
+          {
+            "otherOrganisationType": "",
+            "data3": "Australian Government Department",
+            "data2": "Test",
+            "data1": "Test"
+          }
+        ]
+      },
+      "projectEvaluationApproach": "asdfasdf",
+      "implementation": {
+        "description": "Tes"
+      },
+      "baseline": {
+        "description": "",
+        "rows": [
+          {
+            "relatedTargetMeasures": [
+              "7c30bc26-829e-4080-8059-27af9285113b"
+            ],
+            "code": "B1",
+            "method": "",
+            "evidence": "Test",
+            "monitoringDataStatus": "Needs to be collected",
+            "baseline": "Test",
+            "protocols": [
+              "Basal Area",
+              "Camera Trapping",
+              "Fauna Aerial Surveys",
+              "Fauna Ground Counts",
+              "Floristics",
+              "Sign-based Fauna Surveys",
+              "Soils",
+              "Vertebrate Fauna"
+            ],
+            "relatedOutcomes": [
+              "ST1"
+            ]
+          },
+          {
+            "relatedTargetMeasures": [],
+            "code": "B2",
+            "method": "",
+            "evidence": "",
+            "monitoringDataStatus": "Data exists",
+            "baseline": "terstesrtsd",
+            "protocols": [],
+            "relatedOutcomes": [
+              "ST1"
+            ]
+          }
+        ]
+      },
+      "markAsFinished": true,
+      "monitoring": {
+        "description": "",
+        "rows": [
+          {
+            "relatedTargetMeasures": [],
+            "evidence": "",
+            "data2": "",
+            "data1": "",
+            "relatedBaseline": "",
+            "protocols": []
+          }
+        ]
+      },
+      "rationale": "",
+      "caseStudy": false,
+      "descriptionComparison": "Monitor Test Project 2 df",
+      "relatedProjects": "",
+      "serviceIds": [
+        15,
+        10,
+        2,
+        3,
+        1,
+        34,
+        9,
+        12,
+        13,
+        42,
+        36,
+        35
+      ],
+      "threatControlMethod": {
+        "description": "",
+        "rows": [
+          {
+            "methodType": "",
+            "hasBeenSuccessful": "",
+            "details": "",
+            "currentControlMethod": ""
+          }
+        ]
+      },
+      "activities": {
+        "activities": []
+      },
+      "name": "Monitor Test Project 2",
+      "nameComparison": "Monitor Test Project 2",
+      "progress": "finished",
+      "objectives": {
+        "rows1": [],
+        "rows": [
+          {
+            "data3": "",
+            "data2": "",
+            "data1": ""
+          }
+        ]
+      },
+      "consultation": "",
+      "supportsPriorityPlace": "No",
+      "supportedPriorityPlaces": null,
+      "status": "active"
+    }
+  },
+  "outputTargets": [
+    {
+      "outcomeTargets": [
+        {
+          "target": {
+            "$numberDecimal": "1"
+          },
+          "relatedOutcomes": [
+            "ST1"
+          ]
+        }
+      ],
+      "periodTargets": [
+        {
+          "target": {
+            "$numberDecimal": "1"
+          },
+          "period": "2023/2024"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2024/2025"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2025/2026"
+        }
+      ],
+      "scoreId": "7c30bc26-829e-4080-8059-27af9285113b",
+      "target": {
+        "$numberDecimal": "1"
+      }
+    },
+    {
+      "outcomeTargets": [
+        {
+          "target": {
+            "$numberDecimal": "1"
+          },
+          "relatedOutcomes": [
+            "ST1"
+          ]
+        }
+      ],
+      "periodTargets": [
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2023/2024"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2024/2025"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2025/2026"
+        }
+      ],
+      "scoreId": "0e2f8d61-b7b4-4d2d-b07c-4fc20bbe326a",
+      "target": {
+        "$numberDecimal": "1"
+      }
+    },
+    {
+      "outcomeTargets": [
+        {
+          "target": {
+            "$numberDecimal": "1"
+          },
+          "relatedOutcomes": [
+            "ST1"
+          ]
+        }
+      ],
+      "periodTargets": [
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2023/2024"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2024/2025"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2025/2026"
+        }
+      ],
+      "scoreId": "69deaaf9-cdc2-439a-b684-4cffdc7f224e",
+      "target": {
+        "$numberDecimal": "1"
+      }
+    },
+    {
+      "outcomeTargets": [
+        {
+          "target": {
+            "$numberDecimal": "1"
+          },
+          "relatedOutcomes": [
+            "ST1"
+          ]
+        }
+      ],
+      "periodTargets": [
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2023/2024"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2024/2025"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2025/2026"
+        }
+      ],
+      "scoreId": "f9c85612-602e-465c-89e0-e155b34b1f31",
+      "target": {
+        "$numberDecimal": "1"
+      }
+    },
+    {
+      "outcomeTargets": [
+        {
+          "target": {
+            "$numberDecimal": "1"
+          },
+          "relatedOutcomes": [
+            "ST1"
+          ]
+        }
+      ],
+      "periodTargets": [
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2023/2024"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2024/2025"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2025/2026"
+        }
+      ],
+      "scoreId": "c3276929-b8a9-4985-a329-49b86f14018c",
+      "target": {
+        "$numberDecimal": "1"
+      }
+    },
+    {
+      "outcomeTargets": [
+        {
+          "target": {
+            "$numberDecimal": "1"
+          },
+          "relatedOutcomes": [
+            "ST1"
+          ]
+        }
+      ],
+      "periodTargets": [
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2023/2024"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2024/2025"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2025/2026"
+        }
+      ],
+      "scoreId": "d8dc153b-da23-4f7b-947a-89bc98338d6d",
+      "target": {
+        "$numberDecimal": "1"
+      }
+    },
+    {
+      "outcomeTargets": [
+        {
+          "target": {
+            "$numberDecimal": "1"
+          },
+          "relatedOutcomes": [
+            "ST1"
+          ]
+        }
+      ],
+      "periodTargets": [
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2023/2024"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2024/2025"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2025/2026"
+        }
+      ],
+      "scoreId": "01686d38-9165-4497-9648-627ef81945a7",
+      "target": {
+        "$numberDecimal": "1"
+      }
+    },
+    {
+      "outcomeTargets": [
+        {
+          "target": {
+            "$numberDecimal": "1"
+          },
+          "relatedOutcomes": [
+            "ST1"
+          ]
+        }
+      ],
+      "periodTargets": [
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2023/2024"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2024/2025"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2025/2026"
+        }
+      ],
+      "scoreId": "3c83e639-9c19-4b31-a86f-9d2d5e78123b",
+      "target": {
+        "$numberDecimal": "1"
+      }
+    },
+    {
+      "outcomeTargets": [
+        {
+          "target": {
+            "$numberDecimal": "2"
+          },
+          "relatedOutcomes": [
+            "ST1"
+          ]
+        }
+      ],
+      "periodTargets": [
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2023/2024"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2024/2025"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2025/2026"
+        }
+      ],
+      "scoreId": "5557288b-190e-4a3f-a60b-4bdff6ca8fe8",
+      "target": {
+        "$numberDecimal": "2"
+      }
+    },
+    {
+      "outcomeTargets": [
+        {
+          "target": {
+            "$numberDecimal": "1"
+          },
+          "relatedOutcomes": [
+            "ST1"
+          ]
+        }
+      ],
+      "periodTargets": [
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2023/2024"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2024/2025"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2025/2026"
+        }
+      ],
+      "scoreId": "4f71e00a-2d80-488d-9ce4-947e60589149",
+      "target": {
+        "$numberDecimal": "1"
+      }
+    },
+    {
+      "outcomeTargets": [
+        {
+          "target": {
+            "$numberDecimal": "1"
+          },
+          "relatedOutcomes": [
+            "ST1"
+          ]
+        }
+      ],
+      "periodTargets": [
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2023/2024"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2024/2025"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2025/2026"
+        }
+      ],
+      "scoreId": "3ec07754-4a7a-46fb-a76d-553921781716",
+      "target": {
+        "$numberDecimal": "1"
+      }
+    },
+    {
+      "outcomeTargets": [
+        {
+          "target": {
+            "$numberDecimal": "1"
+          },
+          "relatedOutcomes": [
+            "ST1"
+          ]
+        }
+      ],
+      "periodTargets": [
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2023/2024"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2024/2025"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2025/2026"
+        }
+      ],
+      "scoreId": "fbc2dab8-7454-40f9-94f6-6bf258fcefff",
+      "target": {
+        "$numberDecimal": "1"
+      }
+    },
+    {
+      "outcomeTargets": [
+        {
+          "target": {
+            "$numberDecimal": "1"
+          },
+          "relatedOutcomes": [
+            "ST1"
+          ]
+        }
+      ],
+      "periodTargets": [
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2023/2024"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2024/2025"
+        },
+        {
+          "target": {
+            "$numberDecimal": "0"
+          },
+          "period": "2025/2026"
+        }
+      ],
+      "scoreId": "dea1ff8b-f4eb-4987-8073-500bbbf97fcd",
+      "target": {
+        "$numberDecimal": "1"
+      }
+    }
+  ],
+  "blog": [
+    {
+      "date": "2024-05-15T14:00:00Z",
+      "keepOnTop": false,
+      "imageId": "10d6964c-40d4-4c6b-9f9b-754566c2536c",
+      "blogEntryId": "0",
+      "title": "Test",
+      "type": "News and Events",
+      "projectId": "a0f57791-e858-4f33-ae8e-7e3e3fffb447",
+      "content": "Test",
+      "imageThumbnailUrl": "https://fieldcapture-test.ala.org.au/image?id=Monitor_header-thumb.png",
+      "stockIcon": ""
+    }
+  ],
+  "associatedOrgs": [
+    {
+      "organisationId": "1bddb1f7-790d-4145-b919-c9e687d6b105",
+      "name": "A test org",
+      "description": "Recipient"
+    }
+  ],
+  "risks": {
+    "dateUpdated": {
+        "$date": "2025-09-12T00:33:11.000Z"
+    },
+    "overallRisk": "Severe",
+    "rows": [
+        {
+          "currentControl": "Control 1",
+          "consequence": "Minor",
+          "threat": "Performance",
+          "residualRisk": "Severe",
+          "riskRating": "Medium",
+          "description": "Description 1",
+          "likelihood": "Highly Likely"
+        },
+        {
+          "currentControl": "Control 2",
+          "consequence": "Critical",
+          "threat": "Financial",
+          "residualRisk": "Severe",
+          "riskRating": "High",
+          "description": "Description 2",
+          "likelihood": "Rare"
+        }
+    ]
+  }
+
+}

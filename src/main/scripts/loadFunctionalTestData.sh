@@ -6,7 +6,6 @@ if [ -z "$1" ]
     exit 1
 fi
 
-echo "$2" > /tmp/blah
 AUTH_OPTS=
 if [ "$2" ]
   then
@@ -21,6 +20,12 @@ cd $DATA_PATH
 echo $PWD
 
 mongosh $DATABASE_NAME $AUTH_OPTS --eval "db.dropDatabase()"
+
+# loop over each time of collection and import it if it exists
+for collection in project site activity output document program organisation score service report record userPermission; do
+  if [ -f "$collection.json" ]; then
+    mongoimport --db $DATABASE_NAME  $AUTH_OPTS --collection $collection --file "$collection.json"
+  fi
+done
+
 mongosh $DATABASE_NAME $AUTH_OPTS loadDataSet.js
-
-

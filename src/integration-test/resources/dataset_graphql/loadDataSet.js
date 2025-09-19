@@ -6,85 +6,6 @@ load('../data/settingDefaults.js');
 load('../data_common/createServices.js');
 loadActivityForms();
 
-var config = {
-    optionalProjectContent: ["Risks and Threats", "MERI Plan"],
-    requiresActivityLocking: true
-};
-createProgram({programId: 'original', config: config});
-
-var config = {
-    projectTemplate: 'rlp'
-};
-createProgram({programId: 'rlp', config: config});
-
-var config = {
-    projectTemplate: "rlp",
-    meriPlanTemplate: "configurableMeriPlan",
-    meriPlanContents: [
-        {
-            "template": "objectivesList"
-        },
-        {
-            "template": "monitoringIndicators"
-        },
-        {
-            "template": "projectImplementation"
-        },
-        {
-            "template": "projectPartnerships"
-        },
-        {
-            "template": "keq"
-        },
-        {
-            "template": "meriBudget",
-            "model": {
-                "showThemeColumn": true
-            }
-        }
-    ],
-    objectives: [
-        "objective 1",
-        "objective 2",
-        "objective 3"
-    ],
-    "projectReports": [
-        {
-            "reportType": "Activity",
-            "firstReportingPeriodEnd": "2020-09-30T14:00:00Z",
-            "reportDescriptionFormat": "Progress Report %1d",
-            "reportNameFormat": "Progress Report %1d",
-            "reportingPeriodInMonths": 3,
-            "reportsAlignedToCalendar": true,
-            "skipFinalPeriod": true,
-            "description": "",
-            "category": "Progress Reports",
-            "activityType": "State Intervention Progress Report",
-            "canSubmitDuringReportingPeriod": true
-        },
-        {
-            "reportType": "Single",
-            "alignToOwnerStart": false,
-            "alignToOwnerEnd": true,
-            "reportDescriptionFormat": "Final Report",
-            "reportNameFormat": "Final Report",
-            "reportingPeriodInMonths": 3,
-            "reportsAlignedToCalendar": true,
-            "description": "",
-            "category": "Final Report",
-            "activityType": "Final Report",
-            "canSubmitDuringReportingPeriod": true,
-            "multiple": false
-        }
-    ]
-};
-createProgram({
-    programId: "configurable_meri_plan",
-    name: "Configurable MERI Plan Program",
-    description: "",
-    config: config
-});
-
 createMu({});
 
 db.userPermission.insert({
@@ -101,17 +22,17 @@ db.userPermission.insert({
 });
 
 var originalProject = createProject({
-    projectId: "p1",
+    projectId: "11111111-2222-3333-4444-555555555555",
     name: "Original project",
     programId: "original",
     planStatus: 'approved'
 });
-db.userPermission.insert({entityType: 'au.org.ala.ecodata.Project', entityId: "p1", userId: '1', accessLevel: 'admin'});
-db.userPermission.insert({entityType: 'au.org.ala.ecodata.Project', entityId: "p1", userId: '2', accessLevel: 'admin'});
+db.userPermission.insert({entityType: 'au.org.ala.ecodata.Project', entityId: "11111111-2222-3333-4444-555555555555", userId: '1', accessLevel: 'admin'});
+db.userPermission.insert({entityType: 'au.org.ala.ecodata.Project', entityId: "11111111-2222-3333-4444-555555555555", userId: '2', accessLevel: 'admin'});
 
 var report = {
     name: "Stage 1",
-    projectId: "p1",
+    projectId: "11111111-2222-3333-4444-555555555555",
     fromDate: originalProject.plannedStartDate,
     toDate: originalProject.plannedEndDate
 };
@@ -128,17 +49,17 @@ var activity = {
 };
 db.activity.insert(activity);
 
-createProject({projectId: "p2", name: "RLP project", programId: "rlp"});
-db.userPermission.insert({entityType: 'au.org.ala.ecodata.Project', entityId: "p2", userId: '1', accessLevel: 'admin'});
+createProject({projectId: "22222222-2222-3333-4444-555555555555", name: "RLP project", programId: "rlp"});
+db.userPermission.insert({entityType: 'au.org.ala.ecodata.Project', entityId: "22222222-2222-3333-4444-555555555555", userId: '1', accessLevel: 'admin'});
 
 createProject({
-    projectId: "p3",
+    projectId: "33333333-2222-3333-4444-555555555555",
     name: "Configurable MERI project",
     programId: "configurable_meri_plan",
     plannedEndDate: ISODate("2023-06-29T14:00:00Z"),
     plannedStartDate: ISODate("2020-06-30T14:00Z")
 });
-db.userPermission.insert({entityType: 'au.org.ala.ecodata.Project', entityId: "p3", userId: '1', accessLevel: 'admin'});
+db.userPermission.insert({entityType: 'au.org.ala.ecodata.Project', entityId: "33333333-2222-3333-4444-555555555555", userId: '1', accessLevel: 'admin'});
 
 config = {
     projectTemplate: "rlp",
@@ -251,19 +172,41 @@ config = {
             "canSubmitDuringReportingPeriod": true
         },
     ],
-    programServiceConfig: {serviceFormName: 'Progress Report'}
+    programServiceConfig: {
+        serviceFormName: 'RLP Output Report',
+        programServices: [
+            {
+                "serviceTargets": [
+                    "score_42"
+                ],
+                "serviceId": 1
+            },
+            {
+                "serviceTargets": [
+                    "score_43"
+                ],
+                "serviceId": 2
+            },
+            {
+                "serviceTargets": [
+                    "score_44"
+                ],
+                "serviceId": 33
+            }
+        ]
+    }
 };
 createProgram({programId: "state_intervention", name: "State Intervention", description: "", config: config});
 
 createProject({
-    projectId: "meri2",
+    projectId: "44444444-2222-3333-4444-555555555555",
     name: "State intervention project",
     programId: "state_intervention",
     managementUnitId: null
 });
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
-    entityId: "meri2",
+    entityId: "44444444-2222-3333-4444-555555555555",
     userId: '1',
     accessLevel: 'admin'
 });
@@ -271,10 +214,10 @@ db.userPermission.insert({
 
 config.excludes = ["DASHBOARD", "SITES", "MERI_PLAN", "RISKS_AND_THREATS", "DOCUMENTS"];
 createProgram({programId: "excluded_content", name: "Excluded content program", description: "", config: config});
-createProject({projectId: "excludedContent", name: "Excluded content project", programId: "excluded_content"});
+createProject({projectId: "99999999-2222-3333-4444-555555555555", name: "Excluded content project", programId: "excluded_content"});
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
-    entityId: "meri2",
+    entityId: "44444444-2222-3333-4444-555555555555",
     userId: '1',
     accessLevel: 'admin'
 });
@@ -368,7 +311,7 @@ config.meriPlanContents = [
 
 createProgram({programId: "grants", name: "Competitive Grants", description: "", config: config});
 
-createProject({projectId: "grants1", name: "Excluded content project", programId: "grants"});
+createProject({projectId: "aaaaaaaa-bbbb-aaaa-cccc-000000000000", name: "Excluded content project", programId: "grants"});
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
     entityId: "grants1",
@@ -458,10 +401,10 @@ config.meriPlanContents = [
 
 createProgram({programId: "fhr", name: "FHR", description: "", config: config});
 
-createProject({projectId: "fhr1", name: "FHR project", programId: "fhr"});
+createProject({projectId: "aaaaaaaa-bbbb-bbbb-bbbb-cccccccccccc", name: "FHR project", programId: "fhr"});
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
-    entityId: "fhr1",
+    entityId: "aaaaaaaa-bbbb-bbbb-bbbb-cccccccccccc",
     userId: '1',
     accessLevel: 'admin'
 });
@@ -643,7 +586,7 @@ db.managementUnit.insert({
     status: "active"
 });
 createProject({
-    projectId: "bushfireProject",
+    projectId: "77777777-2222-3333-4444-555555555555",
     name: "New Bushfire Project",
     description: "",
     programId: "bushfireProgram",
@@ -651,7 +594,7 @@ createProject({
 })
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
-    entityId: "bushfireProject",
+    entityId: "77777777-2222-3333-4444-555555555555",
     userId: '1',
     accessLevel: 'admin'
 });
@@ -863,14 +806,14 @@ createProgram({
     outcomes: outcomes
 });
 createProject({
-    projectId: "bushfireProjectNRM",
+    projectId: "88888888-2222-3333-4444-555555555555",
     name: "New Bushfire Project NRM",
     programId: "bushfireProgramNRM",
     managementUnitId: "bushfireManagement1"
 });
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
-    entityId: "bushfireProjectNRM",
+    entityId: "88888888-2222-3333-4444-555555555555",
     userId: '1',
     accessLevel: 'admin'
 });
@@ -1044,7 +987,7 @@ createProgram({
     outcomes: outcomes
 });
 createProject({
-    projectId: "fdFundProject",
+    projectId: "00000000-2222-3333-4444-555555555555",
     name: "fdFund Projects",
     programId: "fdFundProgram",
     managementUnitId: "bushfireManagement1",
@@ -1092,7 +1035,7 @@ createProject({
 
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
-    entityId: "fdFundProject",
+    entityId: "00000000-2222-3333-4444-555555555555",
     userId: '1',
     accessLevel: 'admin'
 });
@@ -1121,7 +1064,7 @@ var projectESP = {
     "planStatus": "approved",
     "plannedEndDate": ISODate("2026-06-29T14:00:00.000Z"),
     "plannedStartDate": ISODate("2017-03-31T13:00:00.000Z"),
-    "projectId": "123456789",
+    "projectId": "dddddddd-eeee-eeee-eeee-ffffffffffff",
     "projectType": "works",
     "promoteOnHomepage": "no",
     "scienceType": [],
@@ -1143,7 +1086,7 @@ var activity1 = {
     "plannedEndDate": ISODate("2020-03-30T13:00:00.000Z"),
     "plannedStartDate": ISODate("2019-03-31T13:00:00.000Z"),
     "progress": "finished",
-    "projectId": "123456789",
+    "projectId": "ffffffff-eeee-eeee-eeee-ffffffffffff",
     "startDate": ISODate("2019-03-31T13:00:00.000Z"),
     "status": "active",
     "type": "ESP PMU or Zone reporting",
@@ -1186,7 +1129,7 @@ var report1 = {
     "fromDate": ISODate("2019-03-31T13:00:00.000Z"),
     "lastUpdated": ISODate("2020-12-16T01:31:34.623Z"),
     "name": "Stage 3",
-    "projectId": "123456789",
+    "projectId": "77777777-2222-3333-4444-555555555555",
     "publicationStatus": "published",
     "reportId": "d5874c66-ee8c-440c-b0f3-76af14a6cdaf",
     "status": "active",
@@ -1376,10 +1319,10 @@ config.meriPlanContents = [
 
 createProgram({programId: "cg2022", name: "Competitive Grants 2022 - Round 1", description: "", config: config});
 
-createProject({projectId: "cg2022proj", name: "Competitive Grants 2022 project", programId: "cg2022"});
+createProject({projectId: "66666666-2222-3333-4444-555555555555", name: "Competitive Grants 2022 project", programId: "cg2022"});
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
-    entityId: "cg2022proj",
+    entityId: "66666666-2222-3333-4444-555555555555",
     userId: '1',
     accessLevel: 'admin'
 });
@@ -1508,15 +1451,15 @@ config.priorityPlaces = [
 config.excludeFinancialYearData = false;
 config.supportsParatoo = true;
 createProgram({programId: "outcomeMeriPlan", name: "Outcome MERI Plan", description: "", config: config});
-createProject({projectId: "outcomeMeriPlanProject", grantId:"outcomeMeriPlanProject", name: "Outcome MERI Plan project", programId: "outcomeMeriPlan"});
+createProject({projectId: "55555555-2222-3333-4444-555555555555", grantId:"outcomeMeriPlanProject", name: "Outcome MERI Plan project", programId: "outcomeMeriPlan"});
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
-    entityId: "outcomeMeriPlanProject",
+    entityId: "55555555-2222-3333-4444-555555555555",
     userId: '1',
     accessLevel: 'admin'
 });
 const monitorProject = {
-    projectId: "monitorProject",
+    projectId: "00000000-2222-3333-4444-555555555556",
     name: "Testing monitor integration",
     programId: "outcomeMeriPlan",
     custom: {
