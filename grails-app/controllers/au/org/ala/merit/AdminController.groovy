@@ -604,6 +604,25 @@ class AdminController {
         [tags:projectService.getProjectTags()]
     }
 
+    def investmentPriorities() {
+        List investmentPriorities = metadataService.findInvestmentPrioritiesByCategory()
+        Map<String, List<Map>> investmentPrioritiesByType = investmentPriorities.groupBy{it.type}
+        List availableTypes = new ArrayList(investmentPrioritiesByType.keySet()).sort()
+
+        Map<String, List> categoriesByType = investmentPrioritiesByType?.collectEntries{ String type, List priorities -> [(type): distinctCategories(priorities)]}
+
+        [investmentPriorities:investmentPriorities,
+         availableTypes:availableTypes,
+         categoriesByType:categoriesByType]
+    }
+
+    private List distinctCategories(List<Map> investmentPriorities) {
+        Set categories = new HashSet()
+        investmentPriorities.each{ categories.addAll(it.categories) }
+        List result = new ArrayList(categories).sort()
+        result
+    }
+
     def updateTag() {
         Map tag = request.JSON
         Map result

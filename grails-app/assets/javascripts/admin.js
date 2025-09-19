@@ -470,3 +470,169 @@ ManageTagsViewModel = function(tags, options) {
         });
     }
 };
+
+ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
+    investmentPriorities = investmentPriorities || [];
+
+    function InvestmentPriority(investmentPriority) {
+        var self = this;
+
+        self.editable = ko.observable(false);
+        self.type = ko.observable(investmentPriority.type);
+        self.name = ko.observable(investmentPriority.name);
+        self.description = ko.observable(investmentPriority.description);
+        self.categories = ko.observable(investmentPriority.categories);
+        self.originalTerm = investmentPriority;
+
+        self.edit = function() {
+            self.editable(true);
+        }
+
+        self.cancelEdit = function() {
+            self.editable(false);
+            self.type(investmentPriority.type);
+            self.name(investmentPriority.name);
+            self.description(investmentPriority.description);
+            self.categories(investmentPriority.categories);
+        }
+
+        self.saveable = ko.computed(function() {
+            return self.editable() && (
+                self.name() != investmentPriority.name ||
+                self.type() != investmentPriority.type ||
+                !_.isEqual(self.categories(), investmentPriority.categories)
+            );
+        });
+
+        self.toJSON = function() {
+            return {
+                investmentPriorityId: investmentPriority.investmentPriorityId,
+                type: self.type(),
+                name: self.name(),
+                description: self.description(),
+                categories: self.categories()
+            };
+        }
+    }
+
+    let self = this;
+    self.investmentPriorities = _.map(investmentPriorities, function(investmentPriority) {
+        return new InvestmentPriority(investmentPriority);
+    });
+
+    self.filter = ko.observable();
+    self.matchedInvestmentPriorities = ko.observable(investmentPriorities.length);
+    self.table = null;
+
+    self.canAddNewInvestmentPriority = ko.pureComputed(function() {
+        return self.matchedInvestmentPriorities() == 0;
+    });
+
+    self.newInvestmentPriority = new InvestmentPriority({});
+
+    // We are doing page reloads as an alternative to manually syncing this model with the
+    // data tables API.
+    self.deleteInvestmentPriority = function(investmentPriority) {
+        if (confirm("Are you sure you want to delete this investment priority?")) {
+            blockUIWithMessage("Deleting investment priority...");
+
+            $.post({
+                url: fcConfig.deleteInvestmentPriorityUrl,
+                data: JSON.stringify(investmentPriority),
+                contentType: 'application/json'
+            }).done(function(response) {
+                if (response.error) {
+                    $.unblockUI();
+                    bootbox.alert('Error deleting investment priority: ' + response.error);
+                } else {
+                    blockUIWithMessage("Reloading page...");
+                    window.location.reload();
+                }
+            }).fail(function() {
+                $.unblockUI();
+                bootbox.alert("An error was encountered deleting the investment priority. Please try again.");
+            });
+        }
+    };
+    self.updateInvestmentPriority = function(investmentPriority) {
+        blockUIWithMessage("Updating investment priority...");
+
+        $.post({
+            url:fcConfig.updateInvestmentPriorityUrl,
+            data: JSON.stringify(investmentPriority.toJSON()),
+            contentType: 'application/json'
+        }).done(function(response) {
+            if (!response.error) {
+                tag.editable(false);
+                $.unblockUI();
+                window.location.reload();
+            } else {
+                $.unblockUI();
+                alert('Error updating tag: ' + response.error);
+            }
+        }).fail(
+            function() {
+                $.unblockUI();
+                alert("An error was encountered updating the investment priority. Please try again.");
+            }
+        );
+    };
+
+    self.addInvestmentPriority = function() {
+        let investmentPriority = self.newInvestmentPriority.toJSON();
+
+        if (investmentPriority.name) {
+            blockUIWithMessage("Adding investment priority...");
+            $.post({
+                url: fcConfig.addInvestmentPriorityUrl,
+                data: JSON.stringify(investmentPriority),
+                contentType: 'application/json'
+            }).done(function(response) {
+                if (!response.error) {
+                    blockUIWithMessage("Reloading page...");
+                    window.location.reload();
+                } else {
+                    $.unblockUI();
+                    alert('Error adding tag: ' + response.error);
+                }
+            }).fail(function() {
+                $.unblockUI();
+                alert("An error was encountered adding the investment priority. Please try again.");
+            });
+        }
+    }
+
+    self.initialiseDataTable = function(tableSelector) {
+        var table = $(tableSelector).DataTable({
+            columnDefs: [
+                {
+                    targets: 0,
+                    orderable: true
+                },
+                {
+                    targets: 1,
+                    orderable: true
+                },
+                {
+                    targets: 2,
+                    orderable: true
+                },
+                {
+                    targets: 3,
+                    orderable:false
+                }
+            ],layout: {
+                topStart: {
+                    buttons: ['copy', 'excel', 'csv']
+                }
+            },
+            dom: 'Bfrtip'
+        });
+        self.table = table;
+        table.on('search.dt', function(e) {
+
+            let pageInfo = table.page.info();
+            self.matchedInvestmentPriorities(pageInfo.recordsDisplay);
+        });
+    }
+};

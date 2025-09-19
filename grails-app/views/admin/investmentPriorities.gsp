@@ -2,12 +2,12 @@
 <html>
 <head>
     <meta name="layout" content="adminLayout"/>
-    <title>Manage Tags | MERIT</title>
+    <title>Manage Investment Priorities | MERIT</title>
     <script>
         window.fcConfig = {
-            updateTagUrl: "${g.createLink(action: 'updateTag')}",
-            addTagUrl: "${g.createLink(action: 'addTag')}",
-            deleteTagUrl: "${g.createLink(action: 'deleteTag')}",
+            updateInvestmentPriorityUrl: "${g.createLink(action: 'updateInvestmentPriority')}",
+            addInvestmentPriorityUrl: "${g.createLink(action: 'addInvestmentPriority')}",
+            deleteInvestmentPriorityUrl: "${g.createLink(action: 'deleteInvestmentPriority')}",
         }
     </script>
     <asset:stylesheet src="common-bs4.css"/>
@@ -20,66 +20,73 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><g:link controller="home">Home</g:link></li>
             <li class="breadcrumb-item"><g:link controller="admin">Admin</g:link></li>
-            <li class="breadcrumb-item">Manage tags</li>
+            <li class="breadcrumb-item">Manage investment priorities</li>
         </ol>
     </section>
-    <h3>Manage Tags</h3>
+    <h3>Manage Investment Priorities</h3>
     <p>
-        To add a new tag, first search for the tag you want to add. If it doesn't exist, you can create a new one. You can also edit or delete existing tags.
+        To add a new investment priority, first search for the investment priority you want to add. If it doesn't exist, you can create a new one. You can also edit or delete existing investment priorities.
     </p>
 
     <hr/>
 
-    <div id="tags" class="pill-pane tab-pane">
-        <table class="table w-100 tags-table">
+    <div class="pill-pane tab-pane">
+        <table class="table w-100 investment-priorities">
             <thead>
             <tr>
-                <th class="tag">Tag</th>
-                <th class="description">Description</th>
-                <th class="admin-actions">Actions</th>
+                <th class="type">Type</th>
+                <th class="name">Name</th>
+                <th class="categories">Categories <fc:iconHelp>Program outcomes specify a list of categories that define the investment priority categories associated with that outcome</fc:iconHelp></th>
+                <th class="actions">Actions</th>
             </tr>
             </thead>
-            <tbody data-bind="foreach: tags">
+            <tbody data-bind="foreach: investmentPriorities">
             <tr>
-                <td class="tag">
+                <td class="name">
+                    <span data-bind="text:type"></span>
+                </td>
+                <td class="name">
                     <!-- ko if: editable -->
-                    <input class="form-control form-control-sm" data-bind="value:term"></input>
+                    <input class="form-control form-control-sm" data-bind="value:name"></input>
                     <!-- /ko -->
                     <!-- ko if: !editable() -->
-                    <span data-bind="text:term"></span>
+                    <span data-bind="text:name"></span>
                     <!-- /ko -->
                 </td>
-                <td class="description">
-                    <!-- ko if: editable -->
-                    <textarea class="form-control form-control-sm" rows="4" class="form-control form-control-sm" data-bind="value:description"></textarea>
-                    <!-- /ko -->
+                <td class="categories">
                     <!-- ko if: !editable() -->
-                    <span data-bind="text:description"></span>
+                    <span data-bind="text: categories()"></span>
+                    <!-- /ko -->
+                    <!-- ko if: editable() -->
+                    <select title="Categories allow investment priorities to be associated with an outcome as a group"
+                            multiple="multiple" class="form-control form-control-sm"
+                            style="width:100%"
+                            data-bind="options: $parent.availableCategories, enabled: editable(), multiSelect2:{value: categories}"></select>
                     <!-- /ko -->
                 </td>
 
-                <td class="admin-actions">
-                    <button class="btn btn-mini deleteTag" title="Delete this tag" type="button" data-bind="enable:!editable(), click:$root.deleteTag"><i class="fa fa-trash"></i></button>
+                <td class="actions">
+                    <button class="btn btn-mini deleteTag" title="Delete this investment priority" type="button" data-bind="enable:!editable(), click:$root.deleteInvestmentPriority"><i class="fa fa-trash"></i></button>
                     <!-- ko if:!editable() -->
-                    <button class="btn btn-mini editTag" title="Edit this tag" type="button" data-bind="if:!editable(), click:edit"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-mini editTag" title="Edit this investment priority" type="button" data-bind="if:!editable(), click:edit"><i class="fa fa-edit"></i></button>
                     <!-- /ko -->
                     <!-- ko if:editable() -->
-                    <button class="btn btn-mini cancelEditTag" title="Cancel editing" type="button" data-bind="if:editable(), click:cancelEdit"><i class="fa fa-remove"></i></button>
+                    <button class="btn btn-mini" title="Cancel editing" type="button" data-bind="if:editable(), click:cancelEdit"><i class="fa fa-remove"></i></button>
                     <!-- /ko -->
-                    <button class="btn btn-mini updateTag" title="Save changes made to this tag" type="button" data-bind="enable: saveable, click:$root.updateTag"><i class="fa fa-save"></i></button>
+                    <button class="btn btn-mini" title="Save changes made to this investment priority" type="button" data-bind="enable: saveable, click:$root.updateInvestmentPriority"><i class="fa fa-save"></i></button>
                 </td>
             </tr>
             </tbody>
-            <tfoot data-bind="if: canAddNewTag">
+            <tfoot data-bind="if: canAddNewInvestmentPriority">
             <tr>
-                <td class="tag">
-                    <input class="form-control form-control-sm" data-bind="value:newTag.term"></input>
+                <td class="investment-priority">
+                    <input class="form-control form-control-sm" data-bind="value:newInvestmentPriority.name"></input>
                 </td>
                 <td class="description">
-                    <textarea class="form-control form-control-sm" data-bind="value:newTag.description"></textarea>
+                    <textarea class="form-control form-control-sm" data-bind="value:newInvestmentPriority.description"></textarea>
                 </td>
                 <td class="admin-actions">
-                    <button type="button" class="btn btn-sm btn-success" data-bind="click:addTag, enable:newTag.term()">
+                    <button type="button" class="btn btn-sm btn-success" data-bind="click:addInvestmentPriority, enable:newInvestmentPriority.name()">
                         <i class="fa fa-plus"></i> Add new tag</button>
                 </td>
             </tr>
@@ -94,15 +101,20 @@
 
 <asset:script>
 
-    const tags = <fc:modelAsJavascript model="${tags}"/>;
+    const investmentPriorities = <fc:modelAsJavascript model="${investmentPriorities}"/>;
 
     $(function () {
 
-        const viewModel = new ManageTagsViewModel(tags, fcConfig);
+        let config = _.extend({
+            availableTypes: <fc:modelAsJavascript model="${availableCategories}"/>,
+            categoriesByType: <fc:modelAsJavascript model="${categoriesByType}"/>
+        }, window.fcConfig);
+
+        const viewModel = new ManageInvestmentPrioritiesViewModel(investmentPriorities, config);
         ko.applyBindings(viewModel, document.getElementById('wrapper'));
 
         // This needs to be done after the table is rendered by the applyBindings call.
-        viewModel.initialiseDataTable('#tags .tags-table');
+        viewModel.initialiseDataTable('table.investment-priorities');
 
     });
 

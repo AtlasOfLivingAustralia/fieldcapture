@@ -1,6 +1,62 @@
 load('../../utils/audit.js');
 load('../../utils/uuid.js');
 
+const adminUserId = "system";
+
+const typesForCategory = {
+    "Additional Priority Natural Asset": "Other",
+    "Additional Priority Plants": "Species",
+    "Additional Priority Species": "Species",
+    "Agriculture Sector": "Agricultural Practices",
+    "Agriculture Sector Adopting Practices": "Agricultural Practices",
+    "Birds": "Species",
+    "Bush Blitz Priority": "Other",
+    "Bushfires": "Other",
+    "Drive agricultural growth": "Agricultural Practices",
+    "Ecological Communities": "Ecological Community",
+    "Ecological Health": "Other",
+    "Farmer Sector": "Agricultural Practices",
+    "Fish": "Species",
+    "Frogs": "Species",
+    "Habitat Restoration Grants Secondary": "Other",
+    "Habitat Restoration Threatened Ecological Communities": "Ecological Community",
+    "Habitat Restoration Threatened Species": "Species",
+    "Habitat Restoration Threatened Species Primary": "Species",
+    "Harness carbon and biodiversity incentives": "Agricultural Practices",
+    "High Risk Species": "Species",
+    "Improve the condition for all priority places": "Priority Place",
+    "Invertebrate species": "Species",
+    "Invertebrates": "Species",
+    "Land Management": "Agricultural Practices",
+    "Mammals": "Species",
+    "Marine Park Networks": "Marine Park",
+    "Marine Parks": "Marine Park",
+    "Other natural asset": "Other",
+    "Plant species": "Species",
+    "Plants": "Species",
+    "Plants and animals extinction prevention": "Species",
+    "Primary Marine Park Networks": "Marine Park",
+    "Priority Invertebrate Species": "Species",
+    "Priority Natural Asset": "Other",
+    "Priority Plants": "Species",
+    "Priority Threatened Species Primary": "Species",
+    "Priority Threatened Species Primaryy": "Species",
+    "Priority Vertebrate Animals": "Species",
+    "Ramsar": "Ramsar",
+    "Reduce emissions and build resilience": "Agricultural Practices",
+    "Reptiles": "Species",
+    "Soil Quality": "Agricultural Practices",
+    "Sustainable Agriculture": "Agricultural Practices",
+    "Target 3": "Species",
+    "Threatened Ecological Communities": "Ecological Community",
+    "Threatened Ecological Community": "Ecological Community",
+    "Threatened Species": "Species",
+    "Threatened Species  Wild Hoses Specific": "Species",
+    "Vertebrate species": "Species",
+    "Waterways": "Waterway",
+    "World Heritage": "World Heritage Site",
+    "World Heritage Sites": "World Heritage Site"
+};
 
 let programs = db.program.find({status:{$ne:'deleted'}});
 while (programs.hasNext()) {
@@ -27,12 +83,16 @@ while (mus.hasNext()) {
 
 function addInvestmentPriority(priority, managementUnit) {
 
-    let investementPriority = null;
+    let investmentPriority = null;
     let changed = false;
     let existingPriority = db.investmentPriority.findOne({name:priority.priority});
     if (existingPriority) {
         if (existingPriority.categories.indexOf(priority.category) < 0) {
             existingPriority.categories.push(priority.category);
+            changed = true;
+        }
+        if (existingPriority.type != (typesForCategory[priority.category] || 'Other')) {
+            existingPriority.type = typesForCategory[priority.category] || 'Other';
             changed = true;
         }
         if (managementUnit && (existingPriority.managementUnits.indexOf(managementUnit.managementUnitId) < 0)) {
@@ -51,6 +111,7 @@ function addInvestmentPriority(priority, managementUnit) {
             lastUpdated: ISODate(),
             investmentPriorityId: UUID.generate(),
             status:'active',
+            type: typesForCategory[priority.category] || 'Other',
             name:priority.priority,
             categories: [priority.category],
             managementUnits: [],
@@ -169,8 +230,8 @@ function replaceInvestmentPrioritiesWithIds(project) {
         }
         if (!error && changed) {
             print("Updating project " + project.projectId);
-            //db.project.replaceOne({projectId: project.projectId}, project);
-            //audit(project, project.projectId, 'au.org.ala.ecodata.Project', adminUserId);
+            db.project.replaceOne({projectId: project.projectId}, project);
+            audit(project, project.projectId, 'au.org.ala.ecodata.Project', adminUserId);
         }
         else if (error) {
             print("Error updating project " + project.projectId);
