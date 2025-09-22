@@ -1,0 +1,3256 @@
+{
+  "_id": {
+    "$oid": "65d56ee62772c3011fdff7e7"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-02-21T03:32:58.655Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T05:51:44.973Z"
+  },
+  "siteId": "1464a447-81bb-4da0-b389-a50ee57b9d3c",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMAUA4788",
+  "extent": {
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        149.0651491,
+        -35.2592449
+      ],
+      "decimalLatitude": -35.2592449,
+      "decimalLongitude": 149.0651491,
+      "centre": [
+        "149.0651491",
+        "-35.2592449"
+      ],
+      "aream2": 0.0,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_SELECTION_GUID",
+      "externalId": "9ba8dd90-a36e-42fe-8f05-a3df810d7a4b"
+    }
+  ],
+  "name": "CTMAUA4788",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "65d56f762772c3011fdff7ef"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-02-21T03:35:19.88Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T06:50:03.126Z"
+  },
+  "siteId": "45bca33b-6ada-4249-acfd-848202cca806",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMAUA5430",
+  "extent": {
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        149.0651453,
+        -35.2592572
+      ],
+      "decimalLatitude": -35.2592572,
+      "decimalLongitude": 149.0651453,
+      "centre": [
+        "149.0651453",
+        "-35.2592572"
+      ],
+      "aream2": 0.0,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_SELECTION_GUID",
+      "externalId": "29719144-a27c-4533-a57e-50f1d072b329"
+    }
+  ],
+  "name": "CTMAUA5430",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "65d679dd3627f51cafa3593f"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-02-21T22:32:01.659Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T05:24:58.528Z"
+  },
+  "siteId": "04ed27fb-9e62-49a4-b6bb-a38021e7f5f9",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMAUA8934",
+  "extent": {
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        149.0651487,
+        -35.259254
+      ],
+      "decimalLatitude": -35.259254,
+      "decimalLongitude": 149.0651487,
+      "centre": [
+        "149.0651487",
+        "-35.259254"
+      ],
+      "aream2": 0.0,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_SELECTION_GUID",
+      "externalId": "1d26d33f-d622-4d5e-b25c-037f55b08c21"
+    }
+  ],
+  "name": "CTMAUA8934",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "65de52ca3627f51cafa36507"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-02-27T21:23:24.532Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T11:35:55.694Z"
+  },
+  "siteId": "f8f206a0-ce73-4503-bc0e-8ef755a3c284",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMAUA5387",
+  "extent": {
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        149.0651597,
+        -35.259233
+      ],
+      "decimalLatitude": -35.259233,
+      "decimalLongitude": 149.0651597,
+      "centre": [
+        "149.0651597",
+        "-35.259233"
+      ],
+      "aream2": 0.0,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_SELECTION_GUID",
+      "externalId": "9e5720bb-ae98-46f7-a7d7-16c5b9fca28e"
+    }
+  ],
+  "name": "CTMAUA5387",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "65de7f043627f51cafa3657e"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-02-28T00:32:06.273Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T08:40:03.351Z"
+  },
+  "siteId": "9e623ed8-1d6b-459e-b2cc-f039130f8770",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMAUA5222",
+  "extent": {
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        149.04887846965235,
+        -35.26356186215208
+      ],
+      "decimalLatitude": -35.26356186215208,
+      "decimalLongitude": 149.04887846965235,
+      "centre": [
+        "149.04887846965235",
+        "-35.26356186215208"
+      ],
+      "aream2": 0.0,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_SELECTION_GUID",
+      "externalId": "d4ff069f-1ab6-4841-adb0-770a317a31b5"
+    }
+  ],
+  "name": "CTMAUA5222",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "65de7ff93627f51cafa36584"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-02-28T00:36:11.307Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T10:28:35.626Z"
+  },
+  "siteId": "dd73bde5-1ed4-4a81-95dd-87f71b72e6dd",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMSEH9999",
+  "extent": {
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        149.0651602,
+        -35.2592455
+      ],
+      "decimalLatitude": -35.2592455,
+      "decimalLongitude": 149.0651602,
+      "centre": [
+        "149.0651602",
+        "-35.2592455"
+      ],
+      "aream2": 0.0,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_SELECTION_GUID",
+      "externalId": "77da1905-6ecf-4b56-afb1-7b6540bea205"
+    }
+  ],
+  "name": "CTMSEH9999",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "65de80dc3627f51cafa3658c"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-02-28T00:39:57.765Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T05:57:29.701Z"
+  },
+  "siteId": "19b6d086-71d2-4eca-b99c-73b64919d5fa",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMSEH9999 - Control (null)",
+  "extent": {
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            149.0651602,
+            -35.2592455
+          ],
+          [
+            149.065179303682,
+            -35.2591570332144
+          ],
+          [
+            149.065217511046,
+            -35.2589800996431
+          ],
+          [
+            149.06525571841,
+            -35.2588031660718
+          ],
+          [
+            149.065293925774,
+            -35.2586262325005
+          ],
+          [
+            149.065332133138,
+            -35.2584492989292
+          ],
+          [
+            149.06535123682,
+            -35.2583608321435
+          ],
+          [
+            149.065459579184,
+            -35.2583764312248
+          ],
+          [
+            149.065676263912,
+            -35.2584076293872
+          ],
+          [
+            149.065892948641,
+            -35.2584388275496
+          ],
+          [
+            149.066109633369,
+            -35.258470025712
+          ],
+          [
+            149.066326318098,
+            -35.2585012238744
+          ],
+          [
+            149.066434660462,
+            -35.2585168229556
+          ],
+          [
+            149.06641555678,
+            -35.2586052897413
+          ],
+          [
+            149.066377349416,
+            -35.2587822233125
+          ],
+          [
+            149.066339142052,
+            -35.2589591568838
+          ],
+          [
+            149.066300934688,
+            -35.2591360904551
+          ],
+          [
+            149.066262727324,
+            -35.2593130240264
+          ],
+          [
+            149.066243623642,
+            -35.2594014908121
+          ],
+          [
+            149.066135281278,
+            -35.2593858917309
+          ],
+          [
+            149.065918596549,
+            -35.2593546935684
+          ],
+          [
+            149.065701911821,
+            -35.259323495406
+          ],
+          [
+            149.065485227093,
+            -35.2592922972436
+          ],
+          [
+            149.065268542364,
+            -35.2592610990812
+          ],
+          [
+            149.0651602,
+            -35.2592455
+          ]
+        ]
+      ],
+      "centre": [
+        "149.06579743023096",
+        "-35.25888116147782"
+      ],
+      "aream2": 9978.271536165266,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 9978.271536165266
+          },
+          "cl927": {
+            "Australian Capital Territory": 9978.271536165266
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 9978.271536165266
+          },
+          "cl11163": {
+            "Canberra": 9978.271536165266
+          }
+        }
+      }
+    },
+    "source": "upload"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_GUID",
+      "externalId": "12"
+    }
+  ],
+  "name": "CTMSEH9999 - Control (null)",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "65de80e53627f51cafa36591"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-02-28T00:40:06.636Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T10:12:26.185Z"
+  },
+  "siteId": "d645271f-3c6c-40eb-bd57-ffbc8995b7e8",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMSEH9999 - Control (null)",
+  "extent": {
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            149.0651602,
+            -35.2592455
+          ],
+          [
+            149.065179303682,
+            -35.2591570332144
+          ],
+          [
+            149.065217511046,
+            -35.2589800996431
+          ],
+          [
+            149.06525571841,
+            -35.2588031660718
+          ],
+          [
+            149.065293925774,
+            -35.2586262325005
+          ],
+          [
+            149.065332133138,
+            -35.2584492989292
+          ],
+          [
+            149.06535123682,
+            -35.2583608321435
+          ],
+          [
+            149.065459579184,
+            -35.2583764312248
+          ],
+          [
+            149.065676263912,
+            -35.2584076293872
+          ],
+          [
+            149.065892948641,
+            -35.2584388275496
+          ],
+          [
+            149.066109633369,
+            -35.258470025712
+          ],
+          [
+            149.066326318098,
+            -35.2585012238744
+          ],
+          [
+            149.066434660462,
+            -35.2585168229556
+          ],
+          [
+            149.06641555678,
+            -35.2586052897413
+          ],
+          [
+            149.066377349416,
+            -35.2587822233125
+          ],
+          [
+            149.066339142052,
+            -35.2589591568838
+          ],
+          [
+            149.066300934688,
+            -35.2591360904551
+          ],
+          [
+            149.066262727324,
+            -35.2593130240264
+          ],
+          [
+            149.066243623642,
+            -35.2594014908121
+          ],
+          [
+            149.066135281278,
+            -35.2593858917309
+          ],
+          [
+            149.065918596549,
+            -35.2593546935684
+          ],
+          [
+            149.065701911821,
+            -35.259323495406
+          ],
+          [
+            149.065485227093,
+            -35.2592922972436
+          ],
+          [
+            149.065268542364,
+            -35.2592610990812
+          ],
+          [
+            149.0651602,
+            -35.2592455
+          ]
+        ]
+      ],
+      "centre": [
+        "149.06579743023096",
+        "-35.25888116147782"
+      ],
+      "aream2": 9978.271536165266,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 9978.271536165266
+          },
+          "cl927": {
+            "Australian Capital Territory": 9978.271536165266
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 9978.271536165266
+          },
+          "cl11163": {
+            "Canberra": 9978.271536165266
+          }
+        }
+      }
+    },
+    "source": "upload"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_GUID",
+      "externalId": "12"
+    }
+  ],
+  "name": "CTMSEH9999 - Control (null)",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "65dfabd3c8af2d3ebc0c2794"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-02-28T21:55:35.689Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T07:16:25.097Z"
+  },
+  "siteId": "5b05e770-b63c-4676-8cfe-3d45bf29beae",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMSEH9999 - Control (100 x 100)",
+  "extent": {
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            149.0651602,
+            -35.2592455
+          ],
+          [
+            149.065179303682,
+            -35.2591570332144
+          ],
+          [
+            149.065217511046,
+            -35.2589800996431
+          ],
+          [
+            149.06525571841,
+            -35.2588031660718
+          ],
+          [
+            149.065293925774,
+            -35.2586262325005
+          ],
+          [
+            149.065332133138,
+            -35.2584492989292
+          ],
+          [
+            149.06535123682,
+            -35.2583608321435
+          ],
+          [
+            149.065459579184,
+            -35.2583764312248
+          ],
+          [
+            149.065676263912,
+            -35.2584076293872
+          ],
+          [
+            149.065892948641,
+            -35.2584388275496
+          ],
+          [
+            149.066109633369,
+            -35.258470025712
+          ],
+          [
+            149.066326318098,
+            -35.2585012238744
+          ],
+          [
+            149.066434660462,
+            -35.2585168229556
+          ],
+          [
+            149.06641555678,
+            -35.2586052897413
+          ],
+          [
+            149.066377349416,
+            -35.2587822233125
+          ],
+          [
+            149.066339142052,
+            -35.2589591568838
+          ],
+          [
+            149.066300934688,
+            -35.2591360904551
+          ],
+          [
+            149.066262727324,
+            -35.2593130240264
+          ],
+          [
+            149.066243623642,
+            -35.2594014908121
+          ],
+          [
+            149.066135281278,
+            -35.2593858917309
+          ],
+          [
+            149.065918596549,
+            -35.2593546935684
+          ],
+          [
+            149.065701911821,
+            -35.259323495406
+          ],
+          [
+            149.065485227093,
+            -35.2592922972436
+          ],
+          [
+            149.065268542364,
+            -35.2592610990812
+          ],
+          [
+            149.0651602,
+            -35.2592455
+          ]
+        ]
+      ],
+      "centre": [
+        "149.06579743023096",
+        "-35.25888116147782"
+      ],
+      "aream2": 9978.271536165266,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 9978.271536165266
+          },
+          "cl927": {
+            "Australian Capital Territory": 9978.271536165266
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 9978.271536165266
+          },
+          "cl11163": {
+            "Canberra": 9978.271536165266
+          }
+        }
+      }
+    },
+    "source": "upload"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_GUID",
+      "externalId": "12"
+    }
+  ],
+  "name": "CTMSEH9999 - Control (100 x 100)",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "65dfacc1c8af2d3ebc0c279e"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-02-28T21:59:31.71Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T08:11:57.338Z"
+  },
+  "siteId": "8a3d6b71-1782-4b03-a5fe-cee81ce6e825",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMSEH9999 - Control (100 x 100)",
+  "extent": {
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            149.0651602,
+            -35.2592455
+          ],
+          [
+            149.065179303682,
+            -35.2591570332144
+          ],
+          [
+            149.065217511046,
+            -35.2589800996431
+          ],
+          [
+            149.06525571841,
+            -35.2588031660718
+          ],
+          [
+            149.065293925774,
+            -35.2586262325005
+          ],
+          [
+            149.065332133138,
+            -35.2584492989292
+          ],
+          [
+            149.06535123682,
+            -35.2583608321435
+          ],
+          [
+            149.065459579184,
+            -35.2583764312248
+          ],
+          [
+            149.065676263912,
+            -35.2584076293872
+          ],
+          [
+            149.065892948641,
+            -35.2584388275496
+          ],
+          [
+            149.066109633369,
+            -35.258470025712
+          ],
+          [
+            149.066326318098,
+            -35.2585012238744
+          ],
+          [
+            149.066434660462,
+            -35.2585168229556
+          ],
+          [
+            149.06641555678,
+            -35.2586052897413
+          ],
+          [
+            149.066377349416,
+            -35.2587822233125
+          ],
+          [
+            149.066339142052,
+            -35.2589591568838
+          ],
+          [
+            149.066300934688,
+            -35.2591360904551
+          ],
+          [
+            149.066262727324,
+            -35.2593130240264
+          ],
+          [
+            149.066243623642,
+            -35.2594014908121
+          ],
+          [
+            149.066135281278,
+            -35.2593858917309
+          ],
+          [
+            149.065918596549,
+            -35.2593546935684
+          ],
+          [
+            149.065701911821,
+            -35.259323495406
+          ],
+          [
+            149.065485227093,
+            -35.2592922972436
+          ],
+          [
+            149.065268542364,
+            -35.2592610990812
+          ],
+          [
+            149.0651602,
+            -35.2592455
+          ]
+        ]
+      ],
+      "centre": [
+        "149.06579743023096",
+        "-35.25888116147782"
+      ],
+      "aream2": 9978.271536165266,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 9978.271536165266
+          },
+          "cl927": {
+            "Australian Capital Territory": 9978.271536165266
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 9978.271536165266
+          },
+          "cl11163": {
+            "Canberra": 9978.271536165266
+          }
+        }
+      }
+    },
+    "source": "upload"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_GUID",
+      "externalId": "12"
+    }
+  ],
+  "name": "CTMSEH9999 - Control (100 x 100)",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "65fa07eae2debe53a89c39bb"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-03-19T21:47:26.407Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T09:57:04.733Z"
+  },
+  "siteId": "d2373b6f-2b11-426b-b556-fcb764336df8",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMAUA4533",
+  "extent": {
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        149.0651453,
+        -35.2592498
+      ],
+      "decimalLatitude": -35.2592498,
+      "decimalLongitude": 149.0651453,
+      "centre": [
+        "149.0651453",
+        "-35.2592498"
+      ],
+      "aream2": 0.0,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_SELECTION_GUID",
+      "externalId": "594200c0-3137-4bc9-8956-16c6333b8851"
+    }
+  ],
+  "name": "CTMAUA4533",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "65fa07fde2debe53a89c39c0"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-03-19T21:47:43.203Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T06:45:50.324Z"
+  },
+  "siteId": "43979685-2d4e-4cef-b3df-79a0721938b1",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMAUA4782",
+  "extent": {
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        149.065144,
+        -35.2592424
+      ],
+      "decimalLatitude": -35.2592424,
+      "decimalLongitude": 149.065144,
+      "centre": [
+        "149.065144",
+        "-35.2592424"
+      ],
+      "aream2": 0.0,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_SELECTION_GUID",
+      "externalId": "d8ad408d-ed83-458f-9928-d9320781479c"
+    }
+  ],
+  "name": "CTMAUA4782",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "66020ee0546b9961911ece4e"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-03-25T23:55:14.598Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T06:17:22.871Z"
+  },
+  "siteId": "2a9ef12b-02af-43b7-ba66-3bd38983a9cb",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMAUA3479",
+  "extent": {
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        149.0425061168956,
+        -35.26061839914875
+      ],
+      "decimalLatitude": -35.26061839914875,
+      "decimalLongitude": 149.0425061168956,
+      "centre": [
+        "149.0425061168956",
+        "-35.26061839914875"
+      ],
+      "aream2": 0.0,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "ACT TAMS Reserves",
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_SELECTION_GUID",
+      "externalId": "16afeaf7-9b08-41ce-a5ea-7f151ca99fc2"
+    }
+  ],
+  "name": "CTMAUA3479",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "660239afd3d9ab4cd9a27464"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-03-26T02:57:53.091Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T05:43:27.528Z"
+  },
+  "siteId": "10c12b6f-fc94-4fd9-bf10-647ef19a5fe7",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMAUA3462",
+  "extent": {
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        149.0651513,
+        -35.2592579
+      ],
+      "decimalLatitude": -35.2592579,
+      "decimalLongitude": 149.0651513,
+      "centre": [
+        "149.0651513",
+        "-35.2592579"
+      ],
+      "aream2": 0.0,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_SELECTION_GUID",
+      "externalId": "650f7afb-d476-4734-b2d3-840049635d11"
+    }
+  ],
+  "name": "CTMAUA3462",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "66023aaeb8b51f682602e64c"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-03-26T03:02:08.398Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T10:27:10.869Z"
+  },
+  "siteId": "dbbeaffc-4350-4a23-9106-a80c6ea6a04f",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMSEH4221",
+  "extent": {
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        149.0651502,
+        -35.2592561
+      ],
+      "decimalLatitude": -35.2592561,
+      "decimalLongitude": 149.0651502,
+      "centre": [
+        "149.0651502",
+        "-35.2592561"
+      ],
+      "aream2": 0.0,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_SELECTION_GUID",
+      "externalId": "cf23aacf-1f02-43fb-8a78-559d3261838b"
+    }
+  ],
+  "name": "CTMSEH4221",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "66149849edd220587d4b2d7b"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-04-09T01:22:21.169Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T05:27:24.598Z"
+  },
+  "siteId": "06cbc389-52a3-41f3-a1e4-d5043f80a638",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMAUA4377",
+  "extent": {
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        149.0651641,
+        -35.2592456
+      ],
+      "decimalLatitude": -35.2592456,
+      "decimalLongitude": 149.0651641,
+      "centre": [
+        "149.0651641",
+        "-35.2592456"
+      ],
+      "aream2": 0.0,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_SELECTION_GUID",
+      "externalId": "315f87f3-fa7a-493e-adcd-cdf579a175b6"
+    }
+  ],
+  "name": "CTMAUA4377",
+  "notes": "Chris test - 2024-04-09T11:20+10",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "661498ccedd220587d4b2d89"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-04-09T01:24:30.418Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T11:29:04.604Z"
+  },
+  "siteId": "f676d656-ed09-47e1-b0c6-9b47d6140028",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMAUA3462 - Control (100 x 100)",
+  "extent": {
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            149.0651641,
+            -35.2592456
+          ],
+          [
+            149.0651641,
+            -35.25915576847159
+          ],
+          [
+            149.0651641,
+            -35.25897610541477
+          ],
+          [
+            149.0651641,
+            -35.25879644235794
+          ],
+          [
+            149.0651641,
+            -35.258616779301114
+          ],
+          [
+            149.0651641,
+            -35.258437116244295
+          ],
+          [
+            149.0651641,
+            -35.25834728471588
+          ],
+          [
+            149.06527411371994,
+            -35.25834728471588
+          ],
+          [
+            149.06549414115983,
+            -35.25834728471588
+          ],
+          [
+            149.06571416859973,
+            -35.25834728471588
+          ],
+          [
+            149.06593419603962,
+            -35.25834728471588
+          ],
+          [
+            149.06615422347951,
+            -35.25834728471588
+          ],
+          [
+            149.06626423719948,
+            -35.25834728471588
+          ],
+          [
+            149.06626423719948,
+            -35.258437116244295
+          ],
+          [
+            149.06626423719948,
+            -35.258616779301114
+          ],
+          [
+            149.06626423719948,
+            -35.25879644235794
+          ],
+          [
+            149.06626423719948,
+            -35.25897610541477
+          ],
+          [
+            149.06626423719948,
+            -35.25915576847159
+          ],
+          [
+            149.06626423719948,
+            -35.2592456
+          ],
+          [
+            149.06615422347951,
+            -35.2592456
+          ],
+          [
+            149.06593419603962,
+            -35.2592456
+          ],
+          [
+            149.06571416859973,
+            -35.2592456
+          ],
+          [
+            149.06549414115983,
+            -35.2592456
+          ],
+          [
+            149.06527411371994,
+            -35.2592456
+          ],
+          [
+            149.0651641,
+            -35.2592456
+          ]
+        ]
+      ],
+      "centre": [
+        "149.06571416859975",
+        "-35.25879644235794"
+      ],
+      "aream2": 9978.281111343806,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 9978.281111343806
+          },
+          "cl927": {
+            "Australian Capital Territory": 9978.281111343806
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 9978.281111343806
+          },
+          "cl11163": {
+            "Canberra": 9978.281111343806
+          }
+        }
+      }
+    },
+    "source": "upload"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_GUID",
+      "externalId": "14"
+    }
+  ],
+  "features": [],
+  "name": "CTMAUA3462 - Control (100 x 100)",
+  "notes": "Test 2024-03-26 (test instance of Monitor)",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "6628ac9a024bef3957d2d309"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-04-24T06:54:21.306Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T07:58:46.735Z"
+  },
+  "siteId": "7e92e7df-0100-4109-9005-22478c2ed12f",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "Opportune site - 24/04/2024 16:53:04 +1000 AEST (convex hull of all features)",
+  "extent": {
+    "geometry": {
+      "coordinates": [
+        149.0652,
+        -35.2592
+      ],
+      "decimalLongitude": 149.0652,
+      "centre": [
+        "149.0652",
+        "-35.2592"
+      ],
+      "aream2": 0.0,
+      "decimalLatitude": -35.2592,
+      "type": "Point",
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.0651641,
+          -35.2592425
+        ]
+      },
+      "properties": {
+        "name": "Point Opportune-1",
+        "externalId": 126,
+        "id": "Opportune-1"
+      }
+    }
+  ],
+  "name": "Opportune site - 24/04/2024 16:53:04 +1000 AEST",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "6631ea443b45fe16b1cc0fa1"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-05-01T07:07:51.427Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T07:56:58.226Z"
+  },
+  "siteId": "7d0f4d15-659d-4b8b-a97a-b176efcf335a",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMAUA1235",
+  "extent": {
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        149.0651693,
+        -35.2592493
+      ],
+      "decimalLatitude": -35.2592493,
+      "decimalLongitude": 149.0651693,
+      "centre": [
+        "149.0651693",
+        "-35.2592493"
+      ],
+      "aream2": 0.0,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_SELECTION_GUID",
+      "externalId": "9ab8d1fc-3821-4902-b785-b711717ccbb2"
+    }
+  ],
+  "name": "CTMAUA1235",
+  "notes": "Chris test 2024-05-1",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "6631ec863b45fe16b1cc0fbf"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-05-01T07:17:28.45Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T07:39:55.052Z"
+  },
+  "siteId": "6e7efc58-bd37-48e0-a1ad-dae2ce234b1d",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMAUA4532",
+  "extent": {
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        149.0651721,
+        -35.2592427
+      ],
+      "decimalLatitude": -35.2592427,
+      "decimalLongitude": 149.0651721,
+      "centre": [
+        "149.0651721",
+        "-35.2592427"
+      ],
+      "aream2": 0.0,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_SELECTION_GUID",
+      "externalId": "82f1396a-9416-4f6f-bef4-199252921101"
+    }
+  ],
+  "name": "CTMAUA4532",
+  "notes": "Chris test 2024-05-01",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "6631eca93b45fe16b1cc0fdd"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-05-01T07:18:02.58Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T07:24:48.758Z"
+  },
+  "siteId": "6191dc7c-660a-478e-86c8-c4043a59c97d",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "Opportune site - 01/05/2024 17:16:07 +1000 AEST (convex hull of all features)",
+  "extent": {
+    "geometry": {
+      "coordinates": [
+        149.0652,
+        -35.2592
+      ],
+      "decimalLongitude": 149.0652,
+      "centre": [
+        "149.0652",
+        "-35.2592"
+      ],
+      "aream2": 0.0,
+      "decimalLatitude": -35.2592,
+      "type": "Point",
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.0651731,
+          -35.259151
+        ]
+      },
+      "properties": {
+        "name": "Point Opportune-1",
+        "externalId": 37,
+        "id": "Opportune-1"
+      }
+    }
+  ],
+  "name": "Opportune site - 01/05/2024 17:16:07 +1000 AEST",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "663813e6808b717aca39de87"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-05-05T23:19:04.991Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T06:09:33.464Z"
+  },
+  "siteId": "23a4cf60-cc92-40c3-abde-ef786aebd37e",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "Opportune site - 06/05/2024 09:16:58 +1000 AEST (convex hull of all features)",
+  "extent": {
+    "geometry": {
+      "coordinates": [
+        149.0652,
+        -35.2592
+      ],
+      "decimalLongitude": 149.0652,
+      "centre": [
+        "149.0652",
+        "-35.2592"
+      ],
+      "aream2": 0.0,
+      "decimalLatitude": -35.2592,
+      "type": "Point",
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.0651607,
+          -35.2592464
+        ]
+      },
+      "properties": {
+        "name": "Point Opportune-1",
+        "externalId": 89,
+        "id": "Opportune-1"
+      }
+    }
+  ],
+  "name": "Opportune site - 06/05/2024 09:16:58 +1000 AEST",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "66381497808b717aca39dea4"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-05-05T23:22:01.206Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T09:24:45.405Z"
+  },
+  "siteId": "c47e67ac-09aa-426a-9b86-792327d75fea",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "Opportune site - 06/05/2024 09:21:03 +1000 AEST (convex hull of all features)",
+  "extent": {
+    "geometry": {
+      "coordinates": [
+        149.0652,
+        -35.2592
+      ],
+      "decimalLongitude": 149.0652,
+      "centre": [
+        "149.0652",
+        "-35.2592"
+      ],
+      "aream2": 0.0,
+      "decimalLatitude": -35.2592,
+      "type": "Point",
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.0651622,
+          -35.2592375
+        ]
+      },
+      "properties": {
+        "name": "Point Opportune-1",
+        "externalId": 91,
+        "id": "Opportune-1"
+      }
+    }
+  ],
+  "name": "Opportune site - 06/05/2024 09:21:03 +1000 AEST",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "6638191e808b717aca39deba"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-05-05T23:41:20.704Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T10:59:41.34Z"
+  },
+  "siteId": "e95bb88e-9424-4b9d-a64c-07e962b147b9",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "Opportune site - 06/05/2024 09:40:29 +1000 AEST (convex hull of all features)",
+  "extent": {
+    "geometry": {
+      "coordinates": [
+        149.0652,
+        -35.2592
+      ],
+      "decimalLongitude": 149.0652,
+      "centre": [
+        "149.0652",
+        "-35.2592"
+      ],
+      "aream2": 0.0,
+      "decimalLatitude": -35.2592,
+      "type": "Point",
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          149.0651701,
+          -35.25924
+        ]
+      },
+      "properties": {
+        "name": "Point Opportune-1",
+        "externalId": 92,
+        "id": "Opportune-1"
+      }
+    }
+  ],
+  "name": "Opportune site - 06/05/2024 09:40:29 +1000 AEST",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "6642e78b36533b331a7497cf"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-05-14T04:24:45.357Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T09:01:57.696Z"
+  },
+  "siteId": "b056a62e-bcc7-48c3-9e0c-363076ea9be9",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMAUA1234",
+  "extent": {
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        149.0651644,
+        -35.2592406
+      ],
+      "decimalLatitude": -35.2592406,
+      "decimalLongitude": 149.0651644,
+      "centre": [
+        "149.0651644",
+        "-35.2592406"
+      ],
+      "aream2": 0.0,
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 0
+          },
+          "cl927": {
+            "Australian Capital Territory": 0
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 0
+          },
+          "cl11163": {
+            "Canberra": 0
+          }
+        }
+      }
+    },
+    "source": "point"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_SELECTION_GUID",
+      "externalId": "5cbaed64-8c12-48cc-ac31-77fb3e6ba6e3"
+    }
+  ],
+  "name": "CTMAUA1234",
+  "notes": "Test Chris 14/05/2024",
+  "publicationStatus": "published",
+  "type": "surveyArea"
+}
+{
+  "_id": {
+    "$oid": "664450b40d87a27bd1c0597f"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-05-15T06:05:41.863Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T06:53:33.613Z"
+  },
+  "siteId": "487a0cd3-a63f-47d4-b051-cebbfa1a2c31",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMAUA3462 - Control (100 x 100) (convex hull of all features)",
+  "extent": {
+    "geometry": {
+      "coordinates": [
+        [
+          [
+            149.0663,
+            -35.2592
+          ],
+          [
+            149.0662,
+            -35.2592
+          ],
+          [
+            149.0652,
+            -35.2592
+          ],
+          [
+            149.0652,
+            -35.2589
+          ],
+          [
+            149.0652,
+            -35.2584
+          ],
+          [
+            149.0652,
+            -35.2583
+          ],
+          [
+            149.0653,
+            -35.2583
+          ],
+          [
+            149.0655,
+            -35.2583
+          ],
+          [
+            149.066,
+            -35.2583
+          ],
+          [
+            149.0663,
+            -35.2583
+          ],
+          [
+            149.0663,
+            -35.2592
+          ]
+        ]
+      ],
+      "centre": [
+        "149.06572418464563",
+        "-35.25877584964856"
+      ],
+      "aream2": 19956.560361807937,
+      "type": "Polygon",
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 19956.560361807937
+          },
+          "cl927": {
+            "Australian Capital Territory": 19956.560361807937
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 19956.560361807937
+          },
+          "cl11163": {
+            "Canberra": 19956.560361807937
+          }
+        }
+      }
+    },
+    "source": "upload"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_GUID",
+      "externalId": "199"
+    }
+  ],
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              149.0651646,
+              -35.2592171
+            ],
+            [
+              149.0651665200035,
+              -35.259127282153365
+            ],
+            [
+              149.06517036001043,
+              -35.25894764646009
+            ],
+            [
+              149.0651742000174,
+              -35.25876801076682
+            ],
+            [
+              149.06517804002436,
+              -35.25858837507356
+            ],
+            [
+              149.0651818800313,
+              -35.258408739380286
+            ],
+            [
+              149.0651838000348,
+              -35.25831892153365
+            ],
+            [
+              149.06529379696045,
+              -35.258320489309995
+            ],
+            [
+              149.06551379081174,
+              -35.25832362486268
+            ],
+            [
+              149.065733784663,
+              -35.25832676041537
+            ],
+            [
+              149.06595377851428,
+              -35.25832989596806
+            ],
+            [
+              149.06617377236557,
+              -35.258333031520756
+            ],
+            [
+              149.06628376929123,
+              -35.2583345992971
+            ],
+            [
+              149.06628184928775,
+              -35.25842441714373
+            ],
+            [
+              149.06627800928078,
+              -35.258604052837
+            ],
+            [
+              149.06627416927384,
+              -35.25878368853027
+            ],
+            [
+              149.06627032926687,
+              -35.258963324223544
+            ],
+            [
+              149.0662664892599,
+              -35.259142959916815
+            ],
+            [
+              149.06626456925645,
+              -35.25923277776345
+            ],
+            [
+              149.0661545723308,
+              -35.25923120998711
+            ],
+            [
+              149.0659345784795,
+              -35.25922807443441
+            ],
+            [
+              149.0657145846282,
+              -35.25922493888172
+            ],
+            [
+              149.06549459077692,
+              -35.259221803329034
+            ],
+            [
+              149.06527459692563,
+              -35.259218667776345
+            ],
+            [
+              149.0651646,
+              -35.2592171
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "CTMAUA3462 - Control (100 x 100)",
+        "externalId": "199",
+        "description": "CTMAUA3462 - Control (100 x 100)",
+        "notes": "Core monitoring plot Test 2024-03-26 (test instance of Monitor)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              149.0651646,
+              -35.2592171
+            ],
+            [
+              149.0651838000348,
+              -35.25831892153365
+            ],
+            [
+              149.06628376929123,
+              -35.2583345992971
+            ],
+            [
+              149.06626456925645,
+              -35.25923277776345
+            ],
+            [
+              149.0651646,
+              -35.2592171
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "CTMAUA3462 - Control (100 x 100)",
+        "externalId": "199",
+        "description": "CTMAUA3462 - Control (100 x 100)",
+        "notes": "Fauna plot Test 2024-03-26 (test instance of Monitor)"
+      }
+    }
+  ],
+  "name": "CTMAUA3462 - Control (100 x 100)",
+  "notes": "Core monitoring plot Test 2024-03-26 (test instance of Monitor)",
+  "publicationStatus": "published",
+  "type": "compound"
+}
+{
+  "_id": {
+    "$oid": "66445ab70d87a27bd1c059b0"
+  },
+  "projects": [
+    "a0f57791-e858-4f33-ae8e-7e3e3fffb447"
+  ],
+  "dateCreated": {
+    "$date": "2024-05-15T06:48:25.323Z"
+  },
+  "lastUpdated": {
+    "$date": "2024-11-04T06:24:55.377Z"
+  },
+  "siteId": "3193ff15-b4f0-42b5-b3f5-f634de5dbb16",
+  "status": "active",
+  "isSciStarter": false,
+  "description": "CTMAUA1235 - Control (100 x 100) (convex hull of all features)",
+  "extent": {
+    "geometry": {
+      "coordinates": [
+        [
+          [
+            149.0663,
+            -35.2593
+          ],
+          [
+            149.0662,
+            -35.2593
+          ],
+          [
+            149.0652,
+            -35.2592
+          ],
+          [
+            149.0652,
+            -35.2583
+          ],
+          [
+            149.0663,
+            -35.2583
+          ],
+          [
+            149.0663,
+            -35.2584
+          ],
+          [
+            149.0663,
+            -35.2586
+          ],
+          [
+            149.0663,
+            -35.2593
+          ]
+        ]
+      ],
+      "centre": [
+        "149.0657196766989",
+        "-35.25879714600327"
+      ],
+      "aream2": 19956.561344448724,
+      "type": "Polygon",
+      "state": [
+        "Australian Capital Territory"
+      ],
+      "nrm": [
+        "Act"
+      ],
+      "lga": [
+        "Unincorporated Act"
+      ],
+      "ibra": [
+        "South Eastern Highlands"
+      ],
+      "elect": [
+        "Canberra"
+      ],
+      "cmz": [
+        "South Eastern Australia Mixed Temperate Forests Woodlands And Grasslands"
+      ],
+      "other": [
+        "Great Eastern Ranges Initiative"
+      ],
+      "gerSubRegion": [
+        "GER Kosciuszko to Coast"
+      ],
+      "intersectionAreaByFacets": {
+        "state": {
+          "CURRENT": {
+            "Australian Capital Territory": 19956.561344448724
+          },
+          "cl927": {
+            "Australian Capital Territory": 19956.561344448724
+          }
+        },
+        "elect": {
+          "CURRENT": {
+            "Canberra": 19956.561344448724
+          },
+          "cl11163": {
+            "Canberra": 19956.561344448724
+          }
+        }
+      }
+    },
+    "source": "upload"
+  },
+  "externalIds": [
+    {
+      "idType": "MONITOR_PLOT_GUID",
+      "externalId": "12"
+    }
+  ],
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              149.0651721,
+              -35.2592427
+            ],
+            [
+              149.0651740200041,
+              -35.259152882153366
+            ],
+            [
+              149.06517786001226,
+              -35.258973246460094
+            ],
+            [
+              149.06518170002045,
+              -35.25879361076682
+            ],
+            [
+              149.0651855400286,
+              -35.25861397507356
+            ],
+            [
+              149.06518938003677,
+              -35.25843433938029
+            ],
+            [
+              149.06519130004088,
+              -35.25834452153365
+            ],
+            [
+              149.06530129700127,
+              -35.258346089309995
+            ],
+            [
+              149.06552129092202,
+              -35.258349224862684
+            ],
+            [
+              149.0657412848428,
+              -35.25835236041537
+            ],
+            [
+              149.06596127876358,
+              -35.25835549596806
+            ],
+            [
+              149.06618127268436,
+              -35.25835863152076
+            ],
+            [
+              149.06629126964475,
+              -35.2583601992971
+            ],
+            [
+              149.06628934964067,
+              -35.25845001714373
+            ],
+            [
+              149.0662855096325,
+              -35.258629652837
+            ],
+            [
+              149.06628166962432,
+              -35.25880928853027
+            ],
+            [
+              149.06627782961615,
+              -35.258988924223544
+            ],
+            [
+              149.066273989608,
+              -35.259168559916816
+            ],
+            [
+              149.0662720696039,
+              -35.25925837776345
+            ],
+            [
+              149.06616207264352,
+              -35.25925680998711
+            ],
+            [
+              149.06594207872274,
+              -35.25925367443441
+            ],
+            [
+              149.06572208480196,
+              -35.25925053888172
+            ],
+            [
+              149.06550209088118,
+              -35.259247403329034
+            ],
+            [
+              149.0652820969604,
+              -35.259244267776346
+            ],
+            [
+              149.0651721,
+              -35.2592427
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "CTMAUA1235 - Control (100 x 100)",
+        "externalId": "12",
+        "description": "CTMAUA1235 - Control (100 x 100)",
+        "notes": "Core monitoring plot Chris test 2024-05-1"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              149.0651576,
+              -35.259242
+            ],
+            [
+              149.0651576,
+              -35.25834368471588
+            ],
+            [
+              149.0662577371506,
+              -35.25834368471588
+            ],
+            [
+              149.0662577371506,
+              -35.259242
+            ],
+            [
+              149.0651576,
+              -35.259242
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "CTMAUA1235 - Control (100 x 100)",
+        "externalId": "12",
+        "description": "CTMAUA1235 - Control (100 x 100)",
+        "notes": "Fauna plot Chris test 2024-05-1"
+      }
+    }
+  ],
+  "name": "CTMAUA1235 - Control (100 x 100)",
+  "notes": "Core monitoring plot Chris test 2024-05-1",
+  "publicationStatus": "published",
+  "type": "compound"
+}

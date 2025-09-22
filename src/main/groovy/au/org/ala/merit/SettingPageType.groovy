@@ -112,7 +112,8 @@ enum SettingPageType {
     PLANT_LABEL_INSTRUCTIONS('plantLabelInstructions', 'Instructions for printing plant labels', 'plantLabelInstructions'),
     SESSION_TIMEOUT_WARNING('sessionTimeoutWarning', 'Banner message when a user session has timed out', 'sessionTimeoutWarning'),
     NETWORK_LOST_WARNING('networkLostWarning', 'Banner message when MERIT detects the network connection to the server is unavailable', 'networkLostWarning'),
-    LAYERS_FOR_KNOWN_SHAPES('knownShapes', 'Configuration for the known shapes selection on the sites page', 'sites.knownShapesConfig')
+    LAYERS_FOR_KNOWN_SHAPES('knownShapes', 'Configuration for the known shapes selection on the sites page', 'sites.knownShapesConfig'),
+    ECODATA_API_DOCUMENTATION('ecodataApiDocumentation', 'Link to the EcoData API documentation', 'ecodata.api.documentation')
     String name
     String title
     String key
