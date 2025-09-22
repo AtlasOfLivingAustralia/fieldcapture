@@ -17047,7 +17047,7 @@
                         },
                         "filter": {
                           "namespace": "dataSet",
-                          "expression": "dataSet.serviceId == 42 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == baselineIndicatorMapping.lookupValue(dataSet.type) and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
+                          "expression": "dataSet.serviceId == 42 and dataSet.progress == 'finished' and dataSet.alreadyReported == false and baselineOrIndicatorSurvey == dataSet.type and deepEquals(relatedOutcomes,dataSet.outcomesLabel)"
                         }
                       }
                     },
