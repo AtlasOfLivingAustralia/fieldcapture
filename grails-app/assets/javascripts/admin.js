@@ -626,7 +626,7 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
                     buttons: ['copy', 'excel', 'csv']
                 }
             },
-            dom: 'Bfrtip'
+            dom: 'lBfrtip'
         });
         self.table = table;
         table.on('search.dt', function(e) {
