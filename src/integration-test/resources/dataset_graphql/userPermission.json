@@ -1,0 +1,88 @@
+{
+  "_id": {
+    "$oid": "65519f2eb186d711a8f38837"
+  },
+  "accessLevel": "admin",
+  "entityType": "au.org.ala.ecodata.Project",
+  "entityId": "a0f57791-e858-4f33-ae8e-7e3e3fffb447",
+  "userId": "56760",
+  "permissions": [],
+  "status": "active"
+}
+{
+  "_id": {
+    "$oid": "655aa60c97c0aa591f2d9020"
+  },
+  "accessLevel": "admin",
+  "entityType": "au.org.ala.ecodata.Project",
+  "entityId": "a0f57791-e858-4f33-ae8e-7e3e3fffb447",
+  "userId": "56780",
+  "permissions": [],
+  "status": "active"
+}
+{
+  "_id": {
+    "$oid": "65c93362800eaa1a22bccdb0"
+  },
+  "accessLevel": "caseManager",
+  "entityType": "au.org.ala.ecodata.Project",
+  "entityId": "a0f57791-e858-4f33-ae8e-7e3e3fffb447",
+  "userId": "56501",
+  "permissions": [],
+  "status": "active"
+}
+{
+  "_id": {
+    "$oid": "65f7bf98c4908064dd1020bf"
+  },
+  "accessLevel": "caseManager",
+  "entityType": "au.org.ala.ecodata.Project",
+  "entityId": "a0f57791-e858-4f33-ae8e-7e3e3fffb447",
+  "userId": "6942",
+  "permissions": [],
+  "status": "active"
+}
+{
+  "_id": {
+    "$oid": "66023e68b8b51f682602e656"
+  },
+  "accessLevel": "caseManager",
+  "entityType": "au.org.ala.ecodata.Project",
+  "entityId": "a0f57791-e858-4f33-ae8e-7e3e3fffb447",
+  "userId": "56575",
+  "permissions": [],
+  "status": "active"
+}
+{
+  "_id": {
+    "$oid": "6656816c6208a27ec97980d5"
+  },
+  "accessLevel": "caseManager",
+  "entityType": "au.org.ala.ecodata.Project",
+  "entityId": "a0f57791-e858-4f33-ae8e-7e3e3fffb447",
+  "userId": "4228",
+  "permissions": [],
+  "status": "active"
+}
+{
+  "_id": {
+    "$oid": "688ad08ef77fec5ed7fc98b7"
+  },
+  "accessLevel": "caseManager",
+  "entityType": "au.org.ala.ecodata.Project",
+  "entityId": "a0f57791-e858-4f33-ae8e-7e3e3fffb447",
+  "userId": "56810",
+  "permissions": [],
+  "status": "active"
+}
+{
+  "_id": {
+    "$oid": "68ba77641cd1357a67dec122"
+  },
+  "accessLevel": "caseManager",
+  "entityType": "au.org.ala.ecodata.Project",
+  "entityId": "a0f57791-e858-4f33-ae8e-7e3e3fffb447",
+  "userId": "56562",
+  "permissions": [],
+  "status": "active"
+}
