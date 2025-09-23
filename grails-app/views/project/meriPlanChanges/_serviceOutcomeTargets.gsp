@@ -39,15 +39,19 @@
             <th>${projectOutcomesHeading ?: 'Project Outcome/s'}</th>
             <th>${targetHeading ?: 'Target'}</th>
         </tr>
+        <g:set var="maxOutcomeTargets" value="${Math.max((changedOutcomesTargets?.size() ?: 0), (originalOutcomeTargets?.size() ?: 0))}"/>
+        <g:each in="${0..(maxOutcomeTargets-1)}" var="i">
+
         <tr class="outcome-target">
             <td class="index"></td>
             <td class="service">
-                <fc:renderComparisonOutputTargets changed="${changedOutcomesTargets?[changedOutcomesTargets]:[]}" i="${0}" original="${originalOutcomeTargets ? [originalOutcomeTargets]: []}" property="relatedOutcomes"/>
+                <fc:renderComparisonOutputTargets changed="${changedOutcomesTargets?:[]}" i="${i}" original="${originalOutcomeTargets ?: []}" property="relatedOutcomes"/>
             </td>
             <td class="score">
-                <fc:renderComparisonOutputTargets changed="${changedOutcomesTargets?[changedOutcomesTargets]:[] ?: []}" i="${0}" original="${originalOutcomeTargets ? [originalOutcomeTargets]: []}" property="target"/>
+                <fc:renderComparisonOutputTargets changed="${changedOutcomesTargets?:[] ?: []}" i="${i}" original="${originalOutcomeTargets ?: []}" property="target"/>
             </td>
         </tr>
+        </g:each>
     </fc:sortedServiceTargetMeasures>
     </tbody>
 </table>
