@@ -1871,7 +1871,11 @@ function OutcomesViewModel(outcomes, config) {
 
         }
 
-        return _.uniq(priorities);
+        priorities = _.uniq(priorities);
+        let result = _.filter(config.priorities, function(priority) {
+            return priorities.indexOf(priority.investmentPriorityId) >= 0;
+        });
+        return result;
     }).extend({ rateLimit: 50 });
 
     self.toJSON = function () {

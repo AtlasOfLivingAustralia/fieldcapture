@@ -122,7 +122,7 @@ class ProjectConfigurationServiceSpec extends Specification implements Autowired
         String muId = 'muId'
         Map project = [projectId:'project1', programId:programId, managementUnitId:muId]
         Map program = [inheritedConfig:[projectReports:[[activityType:'1', reportingPeriodInMonths: 6, firstReportingPeriodEnd:'2019-09-30T14:00:00Z', reportType:ReportService.REPORT_TYPE_STAGE_REPORT]], test:'test']]
-        Map mu = [config:[projectReports:[[activityType:'1', reportingPeriodInMonths: 3, firstReportingPeriodEnd:'2019-06-30T14:00:00Z', label:'Quarter']]]]
+        Map mu = [managementUnitId: muId, config:[projectReports:[[activityType:'1', reportingPeriodInMonths: 3, firstReportingPeriodEnd:'2019-06-30T14:00:00Z', label:'Quarter']]]]
         List programPriorities = [
                 [category:"Category 1", priority:"p1", managementUnits:["mu1"]],
                 [category:"Category 2", priority:"p2"],
@@ -166,11 +166,11 @@ class ProjectConfigurationServiceSpec extends Specification implements Autowired
         project.managementUnitId = muId
         config = service.getProjectConfiguration(project)
 
-        then: "The program unit outcomes and management unit priorities are used"
+        then: "The program unit outcomes and priorities that fall into that management unit are used"
         1 * programService.get(programId) >> program
         1 * managementUnitService.get(muId) >> mu
         1 * metadataService.findInvestmentPrioritiesByCategory(["Category 1", "Category 2", "Category 3"]) >> programPriorities
-        config.priorities == []
+        config.priorities == programPriorities.findAll{ it.managementUnits == null || it.managementUnits.contains(muId)}
         config.outcomes == program.outcomes
 
     }

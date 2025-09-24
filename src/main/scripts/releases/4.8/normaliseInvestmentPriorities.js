@@ -198,36 +198,40 @@ function replaceInvestmentPrioritiesWithIds(project) {
                 outcomes.primaryOutcome.assets = assetIds;
             }
         }
-        if (outcomes.secondaryOutcomes) {
-            for (let i = 0; i < outcomes.secondaryOutcomes.length; i++) {
-                let outcome = outcomes.secondaryOutcomes[i];
-                if (outcome.assets) {
-                    let assetIds = [];
-                    for (let j = 0; j < outcome.assets.length; j++) {
-                        let asset = outcome.assets[j];
-                        if (asset) {
-                            let investmentPriority = db.investmentPriority.findOne({name:asset});
-                            if (!investmentPriority) {
-                                print("No investment priority found for " + asset + " in project " + project.projectId);
-                                //investmentPriority = addInvestmentPriority(priority);
-                                error = true;
+        const outcomeTypes = ["secondaryOutcomes", "shortTermOutcomes", "midTermOutcomes"];
+        for (let k = 0; k < outcomeTypes.length; k++) {
+
+            if (outcomes[outcomeTypes[k]]) {
+                for (let i = 0; i < outcomes[outcomeTypes[k]].length; i++) {
+                    let outcome = outcomes[outcomeTypes[k]][i];
+                    if (outcome.assets) {
+                        let assetIds = [];
+                        for (let j = 0; j < outcome.assets.length; j++) {
+                            let asset = outcome.assets[j];
+                            if (asset) {
+                                let investmentPriority = db.investmentPriority.findOne({name: asset});
+                                if (!investmentPriority) {
+                                    print("No investment priority found for " + asset + " in project " + project.projectId);
+                                    //investmentPriority = addInvestmentPriority(priority);
+                                    error = true;
+                                } else {
+                                    assetIds.push(investmentPriority.investmentPriorityId);
+                                    changed = true;
+                                }
                             }
-                            else {
-                                assetIds.push(investmentPriority.investmentPriorityId);
-                                changed = true;
-                            }
+
+
+                        }
+                        if (!error) {
+                            outcomes[outcomeTypes[k]][i].assets = assetIds;
                         }
 
-
                     }
-                    if (!error) {
-                        outcomes.secondaryOutcomes[i].assets = assetIds;
-                    }
-
                 }
-            }
 
+            }
         }
+
         if (!error && changed) {
             print("Updating project " + project.projectId);
             db.project.replaceOne({projectId: project.projectId}, project);
