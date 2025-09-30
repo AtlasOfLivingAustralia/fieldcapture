@@ -327,7 +327,7 @@ var config = {
 
     config.useRlpTemplate = ${config.getProjectTemplate() == au.org.ala.merit.config.ProgramConfig.ProjectTemplate.RLP};
     config.useServiceOutcomesModel = ${config.program?.config?.meriPlanContents?.find{it.template == 'serviceOutcomeTargets'} != null};
-    config.useRlpRisksModel = config.useRlpTemplate;
+    config.riskModel = <fc:modelAsJavascript model="${config.program.config.riskModel}" default="null"/>;
     config.keyThreatCodes  = <fc:modelAsJavascript model="${config.program?.config?.keyThreatCodes ?: []}"/>;
     config.priorityPlaces = <fc:modelAsJavascript model="${config.program?.config?.priorityPlaces ?: []}"/>;
     config.risksStorageKey = PROJECT_RISKS_KEY;
