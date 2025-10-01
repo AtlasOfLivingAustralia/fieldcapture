@@ -127,7 +127,7 @@
     <asset:stylesheet src="leaflet-manifest.css"/>
     <asset:stylesheet src="feature.css"/>
     <asset:stylesheet src="select2/css/select2.css"/>
-    <asset:stylesheet src="select2-theme-bootstrap4/select2-bootstrap.css"/>
+    <asset:stylesheet src="select2-bootstrap-5-theme/select2-bootstrap-4-theme.css"/>
 
 </head>
 

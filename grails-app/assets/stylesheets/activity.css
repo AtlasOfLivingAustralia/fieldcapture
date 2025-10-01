@@ -2,7 +2,7 @@
 *= require forms.css
 *= require fancybox/css/jquery.fancybox.css
 *= require select2/css/select2
-*= require select2-theme-bootstrap4/select2-bootstrap.css
+*= require select2-bootstrap-5-theme/select2-bootstrap-4-theme.css
 *= require jquery-ui/themes/base/all.css
 *= require blueimp/fileupload-9.28.0/jquery.fileupload
 *= require leaflet-manifest.css
@@ -153,10 +153,6 @@
     border: 1px solid #ddd;
     border-bottom: 1px solid grey;
     padding: 10px;
-}
-
-.model-form select, .model-form input, .model-form textarea {
-    margin-bottom: 1rem;
 }
 
 .dateInput {
