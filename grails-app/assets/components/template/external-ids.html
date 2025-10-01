@@ -1,7 +1,7 @@
 
 <div class="row mb-2 externalIds">
     <div class="col-sm-12">
-        <div class="row form-group">
+        <div class="row mb-3">
             <div class="col-sm-4">
                 Type of External ID
             </div>
@@ -10,9 +10,9 @@
             </div>
         </div>
         <ul class="idList unstyled list-group" data-bind="foreach:externalIds">
-            <li class="row form-group">
+            <li class="row mb-3">
                 <div class="col-sm-4">
-                    <select name="idType" class="form-control form-control-sm" data-bind="options:$parent.externalIdTypes, optionsText:'label', optionsValue:'value', value:idType"></select>
+                    <select name="idType" class="form-select form-select-sm" data-bind="options:$parent.externalIdTypes, optionsText:'label', optionsValue:'value', value:idType"></select>
                 </div>
                 <div class="col-sm-7">
                     <input type="text" class="form-control form-control-sm" name="externalId" data-bind="value:externalId" data-validation-engine="validate[required]">

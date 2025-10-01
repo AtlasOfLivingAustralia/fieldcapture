@@ -1,50 +1,50 @@
 <div class="row">
-    <div id="adminNav" class="nav flex-column nav-pills col-sm-2 pl-2 pr-0">
+    <div id="adminNav" class="nav flex-column nav-pills col-sm-2 ps-2 pe-0">
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
-            <a class="nav-link active" data-toggle="pill" href="#settings" id="settings-tab" role="tab">Project Settings</a>
-            <a class="nav-link" data-toggle="pill" href="#configuration" id="configuration-tab" role="tab">Override Program Configuration</a>
+            <a class="nav-link active" data-bs-toggle="pill" href="#settings" id="settings-tab" role="tab">Project Settings</a>
+            <a class="nav-link" data-bs-toggle="pill" href="#configuration" id="configuration-tab" role="tab">Override Program Configuration</a>
         </g:if>
         <g:if test="${user.isAdmin || user.isCaseManager}">
-            <a class="nav-link" data-toggle="pill" href="#projectDetails" id="projectDetails-tab" role="tab" >MERI Plan</a>
+            <a class="nav-link" data-bs-toggle="pill" href="#projectDetails" id="projectDetails-tab" role="tab" >MERI Plan</a>
             <g:if test="${risksAndThreatsVisible}">
-                <a class="nav-link" href="#risks" id="risks-tab" data-toggle="pill" role="tab" >Risks and threats</a>
+                <a class="nav-link" href="#risks" id="risks-tab" data-bs-toggle="pill" role="tab" >Risks and threats</a>
             </g:if>
         </g:if>
         <g:if test="${user.isAdmin || user.isCaseManager || fc.userHasReadOnlyAccess()}">
             <g:if test="${risksAndThreatsVisible}">
-                <a class="nav-link" href="#risks-reporting-section" id="risks-reporting-tab" data-toggle="pill" role="tab" > Risks and threats changes</a>
+                <a class="nav-link" href="#risks-reporting-section" id="risks-reporting-tab" data-bs-toggle="pill" role="tab" > Risks and threats changes</a>
             </g:if>
         </g:if>
         <g:if test="${showAnnouncementsTab}">
-            <a class="nav-link" href="#alternateAnnouncements" id="alternateAnnouncements-tab" data-toggle="pill" role="tab" >Project Announcements</a>
+            <a class="nav-link" href="#alternateAnnouncements" id="alternateAnnouncements-tab" data-bs-toggle="pill" role="tab" >Project Announcements</a>
         </g:if>
         <g:if test="${user.isEditor}">
-            <a class="nav-link" href="#editProjectBlog" id="editProjectBlog-tab" data-toggle="pill" role="tab" >Edit Project Blog</a>
+            <a class="nav-link" href="#editProjectBlog" id="editProjectBlog-tab" data-bs-toggle="pill" role="tab" >Edit Project Blog</a>
         </g:if>
         <g:if test="${project.newsAndEvents}">
-            <a class="nav-link" href="#editNewsAndEvents" id="editNewsAndEvents-tab" data-toggle="pill" role="tab" > News and events</a>
+            <a class="nav-link" href="#editNewsAndEvents" id="editNewsAndEvents-tab" data-bs-toggle="pill" role="tab" > News and events</a>
         </g:if>
         <g:if test="${project.projectStories}">
-            <a class="nav-link" href="#editProjectStories" id="editProjectStories-tab" data-toggle="pill" role="tab" >Project stories</a>
+            <a class="nav-link" href="#editProjectStories" id="editProjectStories-tab" data-bs-toggle="pill" role="tab" >Project stories</a>
         </g:if>
         <g:if test="${user.isAdmin || user.isCaseManager}">
-            <a class="nav-link" href="#permissions" id="permissions-tab" data-toggle="pill" role="tab" >Project access</a>
+            <a class="nav-link" href="#permissions" id="permissions-tab" data-bs-toggle="pill" role="tab" >Project access</a>
             <g:if test="${showSpecies}">
-                <a class="nav-link" href="#species" id="species-tab" data-toggle="pill" role="tab" >Species of interest</a>
+                <a class="nav-link" href="#species" id="species-tab" data-bs-toggle="pill" role="tab" >Species of interest</a>
             </g:if>
-            <a class="nav-link" href="#edit-documents" id="edit-documents-tab" data-toggle="pill" role="tab" >Documents</a>
+            <a class="nav-link" href="#edit-documents" id="edit-documents-tab" data-bs-toggle="pill" role="tab" >Documents</a>
             <g:if test="${showRequestLabels}">
-                <a class="nav-link" href="#request-labels" id="request-labels-tab" data-toggle="pill" role="tab" >Request voucher barcode labels</a>
+                <a class="nav-link" href="#request-labels" id="request-labels-tab" data-bs-toggle="pill" role="tab" >Request voucher barcode labels</a>
             </g:if>
         </g:if>
         <g:elseif test="${fc.userHasReadOnlyAccess()}">
-            <a class="nav-link" href="#permissions" id="permissions-tab" data-toggle="pill" role="tab" >Project access</a>
-            <a class="nav-link" href="#edit-documents" id="edit-documents-tab" data-toggle="pill" role="tab" >Documents</a>
+            <a class="nav-link" href="#permissions" id="permissions-tab" data-bs-toggle="pill" role="tab" >Project access</a>
+            <a class="nav-link" href="#edit-documents" id="edit-documents-tab" data-bs-toggle="pill" role="tab" >Documents</a>
         </g:elseif>
         <g:if test="${fc.userIsSiteAdmin() || fc.userHasReadOnlyAccess()}">
-            <a class="nav-link" href="#organisation-history" id="organisation-history-tab" data-toggle="pill" role="tab" >Organisation history</a>
-            <a class="nav-link" href="#project-audit" id="project-audit-tab" data-toggle="pill" role="tab" >Audit</a>
-            <a class="nav-link" href="#project-tags" id="project-tags-tab" data-toggle="pill" role="tab" >Add tags to project</a>
+            <a class="nav-link" href="#organisation-history" id="organisation-history-tab" data-bs-toggle="pill" role="tab" >Organisation history</a>
+            <a class="nav-link" href="#project-audit" id="project-audit-tab" data-bs-toggle="pill" role="tab" >Audit</a>
+            <a class="nav-link" href="#project-tags" id="project-tags-tab" data-bs-toggle="pill" role="tab" >Add tags to project</a>
         </g:if>
     </div> <!-- end of side nav -->
     <div class="col-10">
@@ -64,7 +64,7 @@
                 </div>
 
                 <div class="tab-pane" id="configuration">
-                    <h4 style="display:inline-block">Override program configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveConfiguration">Save Configuration</button>
+                    <h4 style="display:inline-block">Override program configuration</h4> <button class="btn btn-success float-end" data-bind="click:saveConfiguration">Save Configuration</button>
 
                     <textarea rows="80" style="width:100%" data-bind="value:config">
 

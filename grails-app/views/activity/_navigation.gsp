@@ -18,21 +18,21 @@
 
         <div class="col-sm-4">
             <!-- ko if:hasNext() -->
-            <a class="btn float-right text-right pull-right" data-bind="attr:{href:nextActivityUrl()},  popover:{title:nextActivity().type, placement:'left', content:nextActivity().description, autoShow:true}"><span data-bind="text:nextActivity().type" style="vertical-align: middle;"></span> &nbsp; <i class="fa fa-arrow-right fa-2x text-center" style="vertical-align: middle;"></i></a>
+            <a class="btn float-end text-end pull-right" data-bind="attr:{href:nextActivityUrl()},  popover:{title:nextActivity().type, placement:'left', content:nextActivity().description, autoShow:true}"><span data-bind="text:nextActivity().type" style="vertical-align: middle;"></span> &nbsp; <i class="fa fa-arrow-right fa-2x text-center" style="vertical-align: middle;"></i></a>
             <!-- /ko -->
             <!-- ko if:!hasNext() -->
-            <button class="btn btn-sm float-right text-right pull-right" disabled="disabled"><i class="fa fa-arrow-right fa-2x text-center"></i></button>
+            <button class="btn btn-sm float-end text-end pull-right" disabled="disabled"><i class="fa fa-arrow-right fa-2x text-center"></i></button>
             <!-- /ko -->
         </div>
     </div>
     <hr/>
     <div class="row">
         <div class="col-sm-4">
-            <label for="stages">Stage: </label> <select class="form-control form-control-sm col-sm-2" id="stages" data-bind="value:selectedStage,options:stages"></select>
+            <label for="stages">Stage: </label> <select class="form-select form-select-sm col-sm-2" id="stages" data-bind="value:selectedStage,options:stages"></select>
         </div>
 
         <div class="col-sm-4">
-            <label for="activity">Activity: </label> <select id="activity" class="form-control form-control-sm col-sm-6" data-bind="value:selectedActivity,options:stageActivities,optionsText:function(activity) { return activity.type+' - '+ activity.description }"></select>
+            <label for="activity">Activity: </label> <select id="activity" class="form-select form-select-sm col-sm-6" data-bind="value:selectedActivity,options:stageActivities,optionsText:function(activity) { return activity.type+' - '+ activity.description }"></select>
         </div>
 
         <div class="col-sm-4">

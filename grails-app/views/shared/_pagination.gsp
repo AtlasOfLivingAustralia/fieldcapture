@@ -1,17 +1,17 @@
 <span data-bind="if: pagination.info()">
     <span data-bind="if: pagination.totalResults() >= pagination.rppOptions[0]-1">
         <div class="row">
-                <div class="col-sm-4 text-left">
+                <div class="col-sm-4 text-start">
                     <p class="hidden-xs pull-left nomargin padding20">
                         <span data-bind="text: pagination.info()"></span>
                     </p>
                 </div>
                 <div class="col-sm-4 text-center">
                     <p class="hidden-xs pull-center nomargin padding20">
-                        <select style="width:20%;" class="form-control form-control-sm" data-bind="options: pagination.rppOptions, value: pagination.resultsPerPage" ></select>
+                        <select style="width:20%;" class="form-select form-select-sm" data-bind="options: pagination.rppOptions, value: pagination.resultsPerPage" ></select>
                     </p>
                 </div>
-                <div class="col-sm-4 text-right">
+                <div class="col-sm-4 text-end">
                     <span>
                         <span data-bind="if: pagination.currentPage() > 1"><a class="btn btn-small" href="#" data-bind="click:pagination.first"><i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left"></i></a></span>
                         <span data-bind="if: pagination.currentPage() > 1"><a class="btn btn-small" href="#" data-bind="click:pagination.previous"><i class="fa fa-chevron-left"></i></a></span>

@@ -31,7 +31,7 @@
             <g:each var="displayProgram" in="${program.subPrograms}" status="i">
                 <li class="nav-item">
                     <g:set var="active" value="${i==0?'active':''}"/>
-                    <a class="nav-link ${active}"  id="subProgramTitleTab" data-toggle="tab" href="#${displayProgram.programId}_subPrograms" role="tab">${displayProgram.name}</a>
+                    <a class="nav-link ${active}"  id="subProgramTitleTab" data-bs-toggle="tab" href="#${displayProgram.programId}_subPrograms" role="tab">${displayProgram.name}</a>
                 </li>
             </g:each>
         </ul>
@@ -59,7 +59,7 @@
 <g:if test="${content.about.primaryOutcomes}">
     <div class="well">
         <div class="well-title">The following primary outcomes are being addressed by this program</div>
-        <div class="row outcomes no-gutters">
+        <div class="row outcomes g-0">
             <g:each in="${content.about.primaryOutcomes}" var="outcome" >
                 <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' : 'disabled'}"/>
                 <div class="col-md">
@@ -131,9 +131,9 @@
 <hr/>
 <g:if test="${blog.editable || blog.hasNewsAndEvents || blog.hasProgramStories || blog.hasPhotos}">
     <div class="row program-blog">
-        <div class="well-title ml-2 col-sm-11">Program blog</div>
+        <div class="well-title ms-2 col-sm-11">Program blog</div>
         <g:if test="${blog.editable}">
-            <div class="col-sm-11 ml-2">
+            <div class="col-sm-11 ms-2">
                 <p>
                     <a class="newBlog" href="${g.createLink(controller: 'blog', action: 'create', params:[programId: program.programId, returnTo:g.createLink(controller: 'program', action:'index', id:program.programId)])}">
                         <button class="btn"><i class="fa fa-newspaper-o"></i> New Entry</button></a>
@@ -145,22 +145,22 @@
 
 
         <g:if test="${blog.hasNewsAndEvents}">
-            <div class="well-title ml-2 col-sm-11">News and Events</div>
-            <div class="blog-section  ml-2 col-sm-11">
+            <div class="well-title ms-2 col-sm-11">News and Events</div>
+            <div class="blog-section  ms-2 col-sm-11">
                 <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'News and Events']}"/>
             </div>
         </g:if>
 
         <g:if test="${blog.hasProgramStories}">
-            <div class="well-title ml-2 col-sm-11">Program stories</div>
-            <div class="blog-section ml-2 col-sm-11">
+            <div class="well-title ms-2 col-sm-11">Program stories</div>
+            <div class="blog-section ms-2 col-sm-11">
                 <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'Program Stories']}"/>
             </div>
         </g:if>
 
         <g:if test="${blog.hasPhotos}">
-            <div class="well-title ml-2 col-sm-11">Photos</div>
-            <div class="blog-section ml-2 col-sm-11">
+            <div class="well-title ms-2 col-sm-11">Photos</div>
+            <div class="blog-section ms-2 col-sm-11">
                 <g:render template="/shared/blog" model="${[blog:blog.blogs, type:'Photo']}"/>
             </div>
         </g:if>

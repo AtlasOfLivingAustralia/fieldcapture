@@ -141,7 +141,7 @@ class DashboardTagLib {
 
 
         if (score.overDelivered) {
-            out << " <span class='badge badge-$overDeliveredClass'> ${overDeliveredLabel}</span>"
+            out << " <span class='badge bg-$overDeliveredClass'> ${overDeliveredLabel}</span>"
         }
 
         percentComplete = Math.min(100, percentComplete)

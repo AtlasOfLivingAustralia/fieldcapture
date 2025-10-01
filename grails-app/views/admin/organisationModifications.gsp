@@ -34,11 +34,11 @@
 
 <h4>Bulk creates organisations and updates projects / organisation relationships</h4>
             <g:uploadForm class="createOrgs" action="organisationModifications">
-                <div class="form-group form-check">
+                <div class="mb-3 form-check">
                 <input id="validate-only" type="checkbox" name="validateOnly" class="form-check-input" checked="checked">
                     <label class="form-check-label" for="validate-only">Validate only - don't save any changes</label>
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                 <input class="form-control" id="createOrgs" type="file" name="orgData">
                 </div>
                 <button disabled id="btnUpdateProjectOrgs" class="btn btn-sm btn-info" title="Bulk create organisations">Upload</button>

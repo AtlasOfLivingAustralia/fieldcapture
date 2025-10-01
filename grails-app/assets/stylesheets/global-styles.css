@@ -261,7 +261,7 @@ table thead {
 	background-color: transparent;
 }
 
-table thead th, table.table th.sorting, table.table th.sorting_asc, table.table th.sorting_desc, .table .slick-header, .table .slick-header-column, .table .header-column {
+table thead th, table.table thead th, table.table th.sorting, table.table th.sorting_asc, table.table th.sorting_desc, .table .slick-header, .table .slick-header-column, .table .header-column {
 	border-color: #ddd;
 	background-color: #d9edf7;
 	border: 1px solid #ddd !important;
@@ -281,9 +281,10 @@ table .headerSortUp,table .headerSortDown {
 
 .table-striped tbody > tr:nth-child(2n+1) > td,.table-striped tbody > tr:nth-child(2n+1) > th {
 	background-color: #f9f9f9;
+    --bs-table-bg-type: #f9f9f9;
 }
 
-#reports .accordion-heading {
+#reports .accordion-header {
 	background: transparent;
 }
 
@@ -453,8 +454,9 @@ ul#adminNav li.active a {
 	border-color: #adadad;
 }
 
-.label-success,.badge-success {
+.label-success,.bg-success, .text-bg-success {
 	background-color: #006400;
+    --bs-success-rgb: 0, 100, 0;
 }
 
 .btn-success {
@@ -474,14 +476,14 @@ ul#adminNav li.active a {
 	border-color: #adadad;
 }
 
-.label-info,.badge-info {
+.label-info,.bg-info, .text-bg-info, .btn-info {
 	background-color: #25aed6;
+    --bs-info-rgb: 37, 174, 214;
+    color: #fff;
 }
 
 .btn-info {
-	background-color: #25aed6;
 	border-color: #269abc;
-	color: #fff;
 }
 
 .btn-info:hover {
@@ -490,14 +492,14 @@ ul#adminNav li.active a {
 	color: #fff;
 }
 
-.label-warning,.badge-warning {
+.label-warning,.bg-warning,.text-bg-warning, .btn-warning {
 	background-color: #e87e04;
+    --bs-warning-rgb: 232, 126, 4;
+    color: #fff;
 }
 
 .btn-warning {
-	background-color: #e87e04;
 	border-color: #d58512;
-	color: #fff;
 }
 
 .btn-warning:hover {
@@ -924,19 +926,14 @@ span.status {
 .progress-info .bar,.progress .bar-info {
 	background-image: none;
 	background-color: #02baf2;
+    --bs-info-rgb: 37, 174, 214;
 }
 
-.dashboard-section > .progress > span,
-.outputTargets > .col-sm-4 > .well > .progress > span.progress-label, .progress > .progress-label {
-	margin-top: 0.6rem;
-}
-
-.progress-bar.bg-overdelivered, .badge-overdelivered {
+.progress-bar.bg-overdelivered, .bg-overdelivered {
 	background-color: #ec971f;
 	border-color: #d58512;
 	color: #fff;
 }
-
 
 input.invisibleValidationHolder {
 	height: 1px;

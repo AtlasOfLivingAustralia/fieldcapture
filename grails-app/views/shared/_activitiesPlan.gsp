@@ -26,12 +26,12 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title">Change Project Dates</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"> &times;</button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> &times;</button>
                         </div>
                         <div class="modal-body">
                             <form id="projectDatesForm">
                                 <p>Changing the project dates will also adjust the dates of all project activities and update any administrative reports currently listed against your project.</p>
-                                <div class="form-group row">
+                                <div class="mb-3 row">
                                     <label for="plannedStartDate" class="col-sm-6 col-form-label">New Project Start Date: </label>
                                     <div class="col-sm-6">
                                         <div class="input-group">
@@ -39,7 +39,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group row">
+                                <div class="mb-3 row">
                                     <label for="plannedEndDate" class="col-sm-6 col-form-label">New Project End Date</label>
                                     <div class="col-sm-6">
                                         <div class="input-group">
@@ -47,7 +47,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group row">
+                                <div class="mb-3 row">
                                     <div class="col-sm-10">
                                         <p>Automatically adjust end date to maintain project duration: <input type="checkbox" data-bind="checked:autoUpdateEndDate"></p>
                                     </div>
@@ -62,7 +62,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-sm btn-success" data-bind="click:saveProjectDates">Save</button>
-                            <button class="btn btn-sm btn-danger" type="button" data-dismiss="modal">Cancel</button>
+                            <button class="btn btn-sm btn-danger" type="button" data-bs-dismiss="modal">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -78,20 +78,20 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title"> Project Summary Options</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
                         </div>
                         <div class="modal-body">
                                 <div class="row">
                                     <label for="fromStage" class="col-sm-4 col-form-label">From:</label>
                                     <div class="col-sm-8">
-                                        <select id="fromStage" class="form-control form-control-sm" data-bind="value:reportFromStage, options:reportableStages"></select>
+                                        <select id="fromStage" class="form-select form-select-sm" data-bind="value:reportFromStage, options:reportableStages"></select>
                                     </div>
 
                                 </div>
                                 <div class="row">
                                     <label for="toStage" class="col-sm-4 col-form-label">To: </label>
                                     <div class="col-sm-8">
-                                        <select id="toStage" class="form-control form-control-sm" data-bind="value:reportToStage, options:reportableToStages"></select>
+                                        <select id="toStage" class="form-select form-select-sm" data-bind="value:reportToStage, options:reportableToStages"></select>
                                     </div>
 
                                 </div>
@@ -114,7 +114,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-sm btn-success" data-bind="click:generateProjectReportHTML">Generate Report</button>
-                            <button class="btn btn-sm btn-danger" data-dismiss="modal" aria-label="Cancel">Cancel</button>
+                            <button class="btn btn-sm btn-danger" data-bs-dismiss="modal" aria-label="Cancel">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -162,7 +162,7 @@
 
 <script id="planningTmpl" type="text/html">
 <span class="col-sm-3">
-    <span class="badge badge-warning" style="font-size:13px;">This plan is not yet approved</span>
+    <span class="badge text-bg-warning" style="font-size:13px;">This plan is not yet approved</span>
 </span>
 <g:if test="${user?.isAdmin}">
     <span class="col-sm-9">
@@ -174,7 +174,7 @@
 
 <script id="submittedTmpl" type="text/html">
 <span class="col-sm-4">
-    <span class="badge badge-info" style="font-size:13px;">This plan has been submitted for approval</span>
+    <span class="badge text-bg-info" style="font-size:13px;">This plan has been submitted for approval</span>
 </span>
 <span data-bind="visible:!userIsCaseManager()" class="col-sm-8">
     <span>Your plan is locked until it is approved by your grant manager. Once your plan is approved
@@ -191,7 +191,7 @@
 
 <script id="approvedTmpl" type="text/html">
 <span class="col-sm-3">
-    <span class="badge badge-success" style="font-size:13px;">This plan has been approved</span>
+    <span class="badge text-bg-success" style="font-size:13px;">This plan has been approved</span>
 </span>
 <span data-bind="visible:!userIsCaseManager()" class="col-sm-9">
     <span>Enter information into each activity. When all activities in a stage are finished (or
@@ -208,7 +208,7 @@
 </script>
 
 <script id="stageNotReportableTmpl" type="text/html">
-    <span class="badge badge-danger" data-bind="if:hasReadOnlyStatus"><g:message code="report.status.readonly.badge"/></span>
+    <span class="badge text-bg-danger" data-bind="if:hasReadOnlyStatus"><g:message code="report.status.readonly.badge"/></span>
     <g:if test="${fc.userIsAlaOrFcAdmin()}">
         <button type="button" class="btn btn=sm delete-stage" title="Delete all activities in this stage" data-bind="visible:activities.length > 0, click:deleteStage">Delete stage</button>
         <button type="button" data-bind="enable:canCancelReport, visible:activities.length > 0, click:cancelReport" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Not required</button>
@@ -216,8 +216,8 @@
 </script>
 
 <script id="stageNotApprovedTmpl" type="text/html">
-<span class="badge badge-danger" data-bind="if:hasReadOnlyStatus"><g:message code="report.status.readonly.badge"/></span>
-<span class="badge badge-warning">Report not submitted</span>
+<span class="badge text-bg-danger" data-bind="if:hasReadOnlyStatus"><g:message code="report.status.readonly.badge"/></span>
+<span class="badge text-bg-warning">Report not submitted</span>
 <!-- Disable button for editor with help text -->
 <g:if test="${user?.isAdmin}">
 
@@ -242,13 +242,13 @@
 </script>
 
 <script id="stageCancelledTmpl" type="text/html">
-<span class="badge p-1 text-white badge-danger">Report not required
+<span class="badge p-1 text-white text-bg-danger">Report not required
 </span><fc:iconHelp dynamic-help="cancelledCommentText"></fc:iconHelp>
 </script>
 
 <script id="stageApprovedTmpl" type="text/html">
 
-<span class="badge badge-success">Report Approved</span>
+<span class="badge text-bg-success">Report Approved</span>
 
 <g:if test="${fc.userIsAlaOrFcAdmin()}">
     <button type="button" data-bind="enable:canRejectStage, click:rejectStage" class="btn btn-sm btn-danger"><i class="fa fa-remove icon-white"></i> Withdraw approval</button>
@@ -257,7 +257,7 @@
 </script>
 
 <script id="stageSubmittedTmpl" type="text/html">
-<span class="badge badge-info" style="font-size:13px;">Report submitted</span>
+<span class="badge text-bg-info" style="font-size:13px;">Report submitted</span>
 <g:if test="${user?.isCaseManager}">
 
     <span>Grant manager actions: </span>
@@ -271,7 +271,7 @@
 
 <script id="stageSubmittedVariationTmpl" type="text/html">
 
-<span class="badge badge-info" style="font-size:13px;">Report submitted</span>
+<span class="badge text-bg-info" style="font-size:13px;">Report submitted</span>
 <g:if test="${user?.isCaseManager}">
 
     <span>Grant manager actions: </span>
@@ -295,15 +295,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3><span data-bind="text: title"> reason</span></h3>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
             <div class="modal-body">
                 <p data-bind="text:explanationText"></p>
                 <textarea rows="5" class="form-control form-control-sm" data-bind="textInput:reason"></textarea>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-success" data-bind="click:submit, text:buttonText, enable:reason" data-dismiss="modal" aria-hidden="true"></button>
-                <button class="btn btn-sm btn-danger" type="button" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <button type="button" class="btn btn-sm btn-success" data-bind="click:submit, text:buttonText, enable:reason" data-bs-dismiss="modal" aria-hidden="true"></button>
+                <button class="btn btn-sm btn-danger" type="button" data-bs-dismiss="modal" aria-hidden="true">Cancel</button>
             </div>
         </div>
     </div>

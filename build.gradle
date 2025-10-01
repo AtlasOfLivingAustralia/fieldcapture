@@ -246,7 +246,7 @@ wiremock {
 clientDependencies {
     installDir = "grails-app/assets/vendor-ext"
     npm {
-        'bootstrap'('4.6.0', transitive:false)
+        'bootstrap'('5.3.8', transitive:false)
         'bootbox'('5.5.2') {
             include 'bootbox.all.min.js'
         }

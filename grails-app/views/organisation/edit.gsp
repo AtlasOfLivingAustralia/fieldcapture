@@ -30,7 +30,7 @@
 <div class="${containerType} organisation-header organisation-banner image-box" data-bind="style:{'backgroundImage':asBackgroundImage(bannerUrl())}">
 
     <div class="row">
-        <nav aria-label="breadcrumb" class="ml-3">
+        <nav aria-label="breadcrumb" class="ms-3">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
                     <g:link controller="home">Home</g:link>

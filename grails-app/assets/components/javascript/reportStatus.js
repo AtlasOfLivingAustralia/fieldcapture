@@ -13,13 +13,13 @@ ko.components.register('report-status', {
         self.badgeClass = '';
         switch(params.reportStatus) {
             case PublicationStatus.PUBLISHED:
-                self.badgeClass = 'badge-success';
+                self.badgeClass = 'bg-success';
                 break;
             case PublicationStatus.SUBMITTED:
-                self.badgeClass = 'badge-warning';
+                self.badgeClass = 'bg-warning';
                 break;
             case PublicationStatus.CANCELLED:
-                self.badgeClass = 'badge-danger';
+                self.badgeClass = 'bg-danger';
             default:
                 self.badgeClass = '';
         }

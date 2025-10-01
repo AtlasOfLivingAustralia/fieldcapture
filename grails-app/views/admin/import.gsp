@@ -40,7 +40,7 @@
         <div class="form-check">
             <input id="update" class="form-check-input" type="checkbox" name="update" data-bind="enable:!finished() && !finishedPreview(), checked:update"><label class="form-check-label" for="update">Check here if this upload will replace existing projects</label>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <button class="btn btn-sm btn-primary fileinput-button" data-bind="enable:!finished() && (!finishedPreview() || finishedPreview() && !success())">
                 <input id="fileUpload" class="form-control form-control-sm" type="file" accept="text/csv" data-bind="fileUploadNoImage:uploadOptions">
                 Select file
@@ -61,7 +61,7 @@
     <div class="row">
 
     <span data-bind="text:progressSummary"></span>
-    <button class="ml-1 btn btn-sm mb-3" data-bind="click:doImport, visible:finishedPreview() && !finished(), enable:!importing() && success()">Import Projects</button>
+    <button class="ms-1 btn btn-sm mb-3" data-bind="click:doImport, visible:finishedPreview() && !finished(), enable:!importing() && success()">Import Projects</button>
 
     <table class="table">
         <thead>
