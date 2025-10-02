@@ -217,7 +217,7 @@
 
 <script id="stageNotApprovedTmpl" type="text/html">
 <span class="badge text-bg-danger" data-bind="if:hasReadOnlyStatus"><g:message code="report.status.readonly.badge"/></span>
-<span class="badge text-bg-warning">Report not submitted</span>
+<span class="badge text-bg-warning text-white">Report not submitted</span>
 <!-- Disable button for editor with help text -->
 <g:if test="${user?.isAdmin}">
 
@@ -302,7 +302,7 @@
                 <textarea rows="5" class="form-control form-control-sm" data-bind="textInput:reason"></textarea>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-success" data-bind="click:submit, text:buttonText, enable:reason" data-bs-dismiss="modal" aria-hidden="true"></button>
+                <button type="button" class="btn btn-sm btn-success" data-bind="click:submit, text:buttonText, enable:reason" aria-hidden="true"></button>
                 <button class="btn btn-sm btn-danger" type="button" data-bs-dismiss="modal" aria-hidden="true">Cancel</button>
             </div>
         </div>

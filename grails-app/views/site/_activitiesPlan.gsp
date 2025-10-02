@@ -6,7 +6,7 @@
 
 
 <script id="stageNotApprovedTmpl" type="text/html">
-<span class="badge text-bg-warning">Report not submitted</span>
+<span class="badge text-bg-warning text-white">Report not submitted</span>
 </script>
 
 <script id="stageApprovedTmpl" type="text/html">

@@ -148,10 +148,10 @@
     </div>
 
 <script id="notReportable" type="text/html">
-<span class="badge text-bg-warning">Report not submitted</span><br/>
+<span class="badge text-bg-warning text-white">Report not submitted</span><br/>
 </script>
 <script id="notSubmitted" type="text/html">
-    <p><span class="badge text-bg-warning">Report not submitted</span></p>
+    <p><span class="badge text-bg-warning text-white">Report not submitted</span></p>
 
 <g:if test="${isAdmin || fc.userIsAlaOrFcAdmin()}">
     <p>

@@ -119,10 +119,10 @@ function MERIPlan(project, projectService, config) {
                 }
             };
             ko.applyBindings(declarationViewModel, $declaration[0]);
-            $declaration.modal({backdrop: 'static', keyboard: true, show: true}).on('hidden.bs.modal', function () {
+            $declaration.modal({backdrop: 'static', keyboard: true}).on('hidden.bs.modal', function () {
                 $.unblockUI()
                 ko.cleanNode($declaration[0]);
-            });
+            }).modal('show');
 
         } else {
             self.submitPlan();
@@ -184,7 +184,7 @@ function MERIPlan(project, projectService, config) {
                     }
                 };
                 ko.applyBindings(planApprovalViewModel, $planApprovalModal[0]);
-                $planApprovalModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden.bs.modal', function() {ko.cleanNode($planApprovalModal[0])});
+                $planApprovalModal.modal({backdrop: 'static', keyboard:true}).on('hidden.bs.modal', function() {ko.cleanNode($planApprovalModal[0])}).modal('show');
             }
             else {
                 var data = {
@@ -244,9 +244,9 @@ function MERIPlan(project, projectService, config) {
             }
         };
         ko.applyBindings(declarationViewModel, $declaration[0]);
-        $declaration.modal({backdrop: 'static', keyboard: true, show: true}).on('hidden', function () {
+        $declaration.modal({backdrop: 'static', keyboard: true}).on('hidden', function () {
             ko.cleanNode($declaration[0]);
-        });
+        }).modal('show');
     };
 
     self.isAgricultureProject.subscribe(function () {

@@ -155,6 +155,14 @@
     padding: 10px;
 }
 
+.model-form select, .model-form input, .model-form textarea {
+    margin-bottom: 0.5rem;
+}
+
+.model-form .input-group select, .model-form .input-group input, .model-form .input-group textarea {
+    margin-bottom: 0;
+}
+
 .dateInput {
     padding-right: 0;
     padding-left: 0;
