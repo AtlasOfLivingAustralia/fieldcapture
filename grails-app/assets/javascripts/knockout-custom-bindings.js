@@ -269,35 +269,42 @@ ko.bindingHandlers.warningPopup = {
     });
   },
   update: function(element, valueAccessor) {
+
+    function isPopoverShown(element) {
+      const popoverId = $(element).attr("aria-describedby");
+      return $("#" + popoverId).length > 0;
+    }
     var $element = $(element);
     if ($element.prop("disabled")) {
       return;
     }
     var target = valueAccessor();
     var valid = target();
+
+
     if (!valid) {
-      if (!target.popoverInitialised) {
-        var popoverWarningOptions = {
-          placement:'top',
-          trigger:'manual',
-          template: '<div class="popover warning"><h3 class="popover-header"></h3><div class="popover-body"></div><div class="arrow"></div></div>'
-        };
-        var warning = $element.data('warningmessage');
-        $element.popover(_.extend({content:warning}, popoverWarningOptions));
-
-        var popover = $element.data('bs.popover');
-        $(popover.getTipElement()).click(function() {
-          $element.popover('hide');
-        });
-        target.popoverInitialised = true;
-      }
-      setTimeout(function() {
-        $element.popover('show');
-      }, 1);
-
+        let popover = bootstrap.Popover.getInstance();
+        if (!popover) {
+            var popoverWarningOptions = {
+                placement:'top',
+                trigger:'manual',
+                template: '<div class="popover warning"><h3 class="popover-header"></h3><div class="popover-body"></div><div class="arrow"></div></div>'
+            };
+            var warning = $element.data('warningmessage');
+            let options = _.extend({content:warning}, popoverWarningOptions);
+            popover = new bootstrap.Popover(element, options);
+          }
+          setTimeout(function() {
+              $element.on('shown.bs.popover', function() {
+                  $(popover._getTipElement()).one('click', function() {
+                      popover.hide();
+                  })
+              });
+              popover.show();
+          }, 1);
     }
     else {
-      if (target.popoverInitialised) {
+      if (isPopoverShown(element)) {
         $element.popover('hide');
       }
     }
