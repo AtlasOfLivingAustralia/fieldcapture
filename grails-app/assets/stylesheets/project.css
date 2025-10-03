@@ -176,6 +176,8 @@
 
 .popover.warning {
 	background-color: yellow;
+    --bs-popover-bg: yellow;
+    --bs-popover-border-width: 0;
 	color: black;
 	cursor: pointer;
 }
@@ -184,8 +186,9 @@
 	font-size: 12px;
 }
 
-.popover.warning .arrow:after {
-	border-right-color: yellow;
+.popover.warning .popover-arrow::after, .popover.warning .popover-arrow::before {
+    --bs-popover-bg: yellow;
+    --bs-popover-border-width: 1;
 }
 
 .popover.warning.top .arrow:after {

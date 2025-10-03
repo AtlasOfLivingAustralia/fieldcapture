@@ -247,9 +247,7 @@ clientDependencies {
     installDir = "grails-app/assets/vendor-ext"
     npm {
         'bootstrap'('5.3.8', transitive:false)
-        'bootbox'('5.5.2') {
-            include 'bootbox.all.min.js'
-        }
+        'bootbox'('6.0.4')
         'jquery'('3.6.0')
         'font-awesome'('4.7.0')
         'knockout'('3.5.1', from:'build/output')

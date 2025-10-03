@@ -288,7 +288,7 @@ ko.bindingHandlers.warningPopup = {
             var popoverWarningOptions = {
                 placement:'top',
                 trigger:'manual',
-                template: '<div class="popover warning"><h3 class="popover-header"></h3><div class="popover-body"></div><div class="arrow"></div></div>'
+                template: '<div class="popover warning"><h3 class="popover-header"></h3><div class="popover-body"></div><div class="popover-arrow"></div></div>'
             };
             var warning = $element.data('warningmessage');
             let options = _.extend({content:warning}, popoverWarningOptions);
