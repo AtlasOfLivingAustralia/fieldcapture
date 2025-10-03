@@ -111,7 +111,7 @@ function showAlert(message, alerttype, target) {
 
 function showAlertWithSelector(message, alerttype, targetSelector) {
 
-    $(targetSelector).append('<div class="alert ' +  alerttype + ' auto-close-alert"><a class="btn-close" data-bs-dismiss="alert">×</a><span>'+message+'</span></div>')
+    $(targetSelector).append('<div class="alert ' +  alerttype + ' alert-dismissable auto-close-alert" role="alert"><span>'+message+'</span><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>')
 
     setTimeout(function() { // this will automatically close the alert and remove this if the users doesnt close it in 5 secs
         $(".auto-close-alert").remove();

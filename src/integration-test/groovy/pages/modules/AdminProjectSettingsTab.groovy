@@ -24,6 +24,9 @@ class AdminProjectSettingsTab extends Module {
     }
 
     def saveChanges() {
+        interact {
+            moveToElement(saveChangesButton)
+        }
         saveChangesButton.click()
     }
 
