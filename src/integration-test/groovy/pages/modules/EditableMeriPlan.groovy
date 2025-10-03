@@ -53,6 +53,9 @@ class ExtendedBaseline extends Module {
     }
 
     void addMonitoringIndicator(int baselineIndex) {
+        interact {
+            moveToElement(addMonitoringIndicatorButtons[baselineIndex])
+        }
         addMonitoringIndicatorButtons[baselineIndex].click()
     }
 
@@ -358,6 +361,9 @@ class EditableMeriPlan extends Module {
     }
 
     void save() {
+        interact {
+            moveToElement(saveButton)
+        }
         saveButton.click()
         // There is a chance of a race condition here if the save
         // finishes before this check runs, hence catching the assertion
@@ -405,6 +411,9 @@ class EditableMeriPlan extends Module {
 
     void checkObjective(String value) {
         def checkbox = objectivesList.find("input[value=\"${value}\"]").module(Checkbox)
+        interact {
+            moveToElement(checkbox)
+        }
         checkbox.check()
     }
 
@@ -425,7 +434,11 @@ class EditableMeriPlan extends Module {
     }
 
     void checkActivity(String value) {
-        activities.find("input[value=\"${value}\"]").module(Checkbox).check()
+        def checkbox = activities.find("input[value=\"${value}\"]")
+        interact {
+            moveToElement(checkbox)
+        }
+        checkbox.module(Checkbox).check()
     }
 
     List checkedActivities() {
