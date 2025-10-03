@@ -722,6 +722,39 @@ function MERIPlan(project, projectService, config) {
     };
 }
 
+/**
+ * Program configuration can specify which risk model to use.  This function creates the appropriate
+ * risk model based on the configuration.
+ * @param config
+ * @returns {RiskModel}
+ */
+function createRiskModel(config) {
+    let riskModel = null;
+    if (config.riskModel) {
+        switch (config.riskModel) {
+            case 'merit':
+                riskModel = meritRiskModel();
+                break;
+            case 'ag':
+                riskModel = agRiskModel();
+                break;
+            case 'rlp':
+            default:
+                riskModel = rlpRiskModel();
+                break;
+        }
+    }
+    // Support the legacy configuration option as well.
+    else {
+        if (config.useRlpRisksModel) {
+            riskModel = rlpRiskModel();
+        } else {
+            riskModel = meritRiskModel();
+        }
+    }
+    return riskModel;
+}
+
 function ReadOnlyMeriPlan(project, projectService, config, changed) {
     var self = this;
     if (!project.custom) {
@@ -772,12 +805,7 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
     self.editMeriPlan = function() {
         window.location.href = config.editMeriPlanUrl;
     };
-    var riskModel;
-    if (config.useRlpRisksModel) {
-        riskModel = rlpRiskModel();
-    } else {
-        riskModel = meritRiskModel();
-    }
+    var riskModel = createRiskModel(config);
 
     // List of service / target measure
     self.allTargetMeasures = [];
