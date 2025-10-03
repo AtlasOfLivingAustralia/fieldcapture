@@ -927,7 +927,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.projectServices[0].selectService("Communication materials")
         meriPlan.projectServices[0].selectScore("Number of communication materials published")
         meriPlan.projectServices[0].targets = "5"
-
+        meriPlan.hideFloatingSave()
         meriPlan.save()
 
         def previousLoad = getAtCheckTime()
