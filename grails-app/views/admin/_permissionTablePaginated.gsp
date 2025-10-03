@@ -12,7 +12,7 @@
     </div>
     <div class="row">
         <div class="col-sm-offset-10" id="hub-member-list">
-            <table class="table-collapse-horizontal" id="${containerId}">
+            <table class="table-width" id="${containerId}">
                 <thead>
                 <th>User Id</th>
                 <th>User Name</th>
