@@ -111,6 +111,9 @@ class ReportPage extends Page {
             exitButton.click()
         }
         else if (cancelButton.displayed) {
+            interact {
+                moveToElement(cancelButton)
+            }
             cancelButton.click()
         }
         else {
