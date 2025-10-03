@@ -17,6 +17,9 @@ class AdminProjectSettingsTab extends Module {
     }
 
     def regenerateReports() {
+        interact {
+            moveToElement(regenerateReportsButton)
+        }
         regenerateReportsButton.click()
     }
 

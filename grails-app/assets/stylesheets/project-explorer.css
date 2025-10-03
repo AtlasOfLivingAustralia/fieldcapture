@@ -306,15 +306,15 @@ input.dateControl {
     overflow-wrap: break-word;
 }
 
-.all-facets .form-group {
+.all-facets .search-facets {
     position: relative;
     margin-bottom: 0;
 }
-.all-facets .form-group .form-control {
+.all-facets .search-facets .form-control {
     padding-left: 2rem;
 }
 
-.all-facets .form-group .form-control-icon {
+.all-facets .search-facets .form-control-icon {
     position: absolute;
     z-index: 2;
     display: block;

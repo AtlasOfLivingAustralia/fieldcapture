@@ -34,6 +34,7 @@
 //= require datatables.net-buttons-bs4/js/buttons.bootstrap4.js
 //= require datatables/dataTables.moment.js
 
+bootbox.setDefaults('closeButton', false);
 
 ActivityProgress = {
     planned: 'planned',
