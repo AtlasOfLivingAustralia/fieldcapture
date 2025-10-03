@@ -438,7 +438,9 @@ class EditableMeriPlan extends Module {
         hideFloatingSave()
 
         int midTermOutcomeCount = mediumTermOutcomes.size()
-
+        interact {
+            moveToElement(addMediumTermOutcomeButton)
+        }
         addMediumTermOutcomeButton.click()
         waitFor{ mediumTermOutcomes.size() > midTermOutcomeCount }
 
@@ -457,6 +459,9 @@ class EditableMeriPlan extends Module {
         hideFloatingSave()
         int midTermOutcomeCount = shortTermOutcomes.size()
 
+        interact {
+            moveToElement(addShortTermOutcomeButton)
+        }
         addShortTermOutcomeButton.click()
         waitFor{ shortTermOutcomes.size() > midTermOutcomeCount }
 
