@@ -780,7 +780,12 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan = openMeriPlanEditTab()
 
         then:
-        meriPlan.assets[0].description == "asset 1"
+        waitFor {
+            interact {
+                moveToElement(meriPlan.assets[0].description)
+            }
+            meriPlan.assets[0].description == "asset 1"
+        }
         meriPlan.shortTermOutcomes[0].outcome.value() == "outcome 1"
         meriPlan.projectDescription == 'Project description'
         meriPlan.projectMethodology == 'Project Methodology'
