@@ -183,6 +183,7 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
             moveToElement( meriPlan.secondaryOutcomes[0].outcome)
         }
         meriPlan.secondaryOutcomes[0].outcome = "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
+        meriPlan.hideFloatingSave()
         meriPlan.primaryPriorityUnstyled[0].click()
         meriPlan.secondaryOutcomes[0].click()
         meriPlan.shortTermOutcomes[0].outcome.value("Short term outcome 1")
