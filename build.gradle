@@ -316,7 +316,7 @@ tasks.withType(Test) {
 integrationTest {
     // When tests are failing github actions is producing no log file at all.
     // I'm theorising we are exceeding a log limit so trying to end tests on first failure.
-    failFast = true
+    //failFast = true
 }
 
 
