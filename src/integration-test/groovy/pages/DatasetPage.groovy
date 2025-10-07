@@ -12,10 +12,29 @@ class DatasetPage extends Page {
 
     static content = {
         datasetContent(required: false) {module DatasetPageModule}
+        saveButton { $('#save') }
+        cancelButton { $('#cancel') }
     }
 
     void cancel() {
-        $('#cancel').click()
+        interact {
+            moveToElement(cancelButton)
+        }
+        cancelButton.click()
+    }
+
+    void save() {
+        interact {
+            moveToElement(saveButton)
+        }
+        saveButton.click()
+    }
+
+    void markCompleted() {
+        interact {
+            moveToElement(datasetContent.markCompleted)
+        }
+        datasetContent.markCompleted.click()
     }
 
 }
