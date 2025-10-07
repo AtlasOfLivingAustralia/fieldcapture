@@ -337,7 +337,10 @@ class EditableMeriPlan extends Module {
     }
 
     void addPartnershipRow() {
-        int currentRows = projectPartnerships.size();
+        int currentRows = projectPartnerships.size()
+        interact {
+            moveToElement($('button[data-bind*=addPartnership]'))
+        }
         $('button[data-bind*=addPartnership]').click();
         waitFor {
             projectPartnerships.size() == currentRows + 1
@@ -345,8 +348,11 @@ class EditableMeriPlan extends Module {
     }
 
     void addObjectiveAndAssetRow() {
-        int currentRows = objectivesAndAssets.size();
-        $('button[data-bind*=addOutcome]').click();
+        int currentRows = objectivesAndAssets.size()
+        interact {
+            moveToElement($('button[data-bind*=addOutcome]'))
+        }
+        $('button[data-bind*=addOutcome]').click()
         waitFor {
             objectivesAndAssets.size() == currentRows + 1
         }
@@ -354,10 +360,24 @@ class EditableMeriPlan extends Module {
 
     void hideFloatingSave() {
         js.exec("\$('#floating-save').css('display', 'none');")
+        waitFor {
+            !floatingSaveDisplayed()
+        }
     }
 
     boolean floatingSaveDisplayed() {
         $("#floating-save").size() > 0 && $("#floating-save").displayed
+    }
+
+    boolean selectFirstPriority() {
+        if (primaryPriorityUnstyled.size() > 0) {
+            interact {
+                moveToElement(primaryPriorityUnstyled[0])
+            }
+            primaryPriorityUnstyled[0].click()
+            return true
+        }
+        return false
     }
 
     void save() {

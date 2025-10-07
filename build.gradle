@@ -149,7 +149,6 @@ dependencies {
     implementation "org.grails.plugins:converters"
     implementation "org.grails:grails-plugin-codecs"
     implementation "commons-io:commons-io:2.6"
-    implementation "org.seleniumhq.selenium:selenium-chrome-driver:3.14.0"
     implementation "com.bertramlabs.plugins:asset-pipeline-grails:$assetPipelineVersion"
     implementation "org.commonmark:commonmark:0.24.0"
     implementation "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20240325.1"
@@ -194,6 +193,7 @@ dependencies {
     testImplementation "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
     testRuntimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
     testRuntimeOnly "org.seleniumhq.selenium:selenium-safari-driver:$seleniumSafariDriverVersion"
+    testImplementation "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
     testRuntimeOnly "net.sourceforge.htmlunit:htmlunit:2.18"
 
     assets "com.bertramlabs.plugins:less-asset-pipeline:$assetPipelineVersion"
