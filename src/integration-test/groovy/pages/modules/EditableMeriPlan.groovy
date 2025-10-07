@@ -3,6 +3,8 @@ package pages.modules
 import geb.Module
 import geb.module.Checkbox
 import geb.module.FormElement
+import groovy.util.logging.Slf4j
+import org.openqa.selenium.ElementClickInterceptedException
 import org.openqa.selenium.StaleElementReferenceException
 
 class OutcomeRow extends Module {
@@ -257,6 +259,7 @@ class ForecastRow extends Module {
     }
 }
 
+@Slf4j
 class EditableMeriPlan extends Module {
 
     static content = {
@@ -384,7 +387,16 @@ class EditableMeriPlan extends Module {
         interact {
             moveToElement(saveButton)
         }
-        saveButton.click()
+        try {
+            saveButton.click()
+        }
+        catch (ElementClickInterceptedException e) {
+            log.warn("Click intercepted", e)
+            // Try clicking manually
+
+            js.exec("\$('.form-actions [data-bind*=\"saveProjectDetails\"]').first().click();")
+        }
+
         // There is a chance of a race condition here if the save
         // finishes before this check runs, hence catching the assertion
         try {
