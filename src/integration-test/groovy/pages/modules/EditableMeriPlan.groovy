@@ -171,6 +171,9 @@ class ObjectivesAndAssets extends Module {
         removeButton(required:false) { $('.remove i') }
     }
     void remove() {
+        interact {
+            moveToElement(removeButton)
+        }
         removeButton.click()
     }
 }

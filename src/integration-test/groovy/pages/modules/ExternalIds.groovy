@@ -26,6 +26,9 @@ class ExternalId extends Module {
     }
 
     void remove() {
+        interact {
+            moveToElement(remove)
+        }
         remove.click()
     }
 }
