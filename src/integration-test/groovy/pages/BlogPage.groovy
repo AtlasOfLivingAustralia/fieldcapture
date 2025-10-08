@@ -87,6 +87,9 @@ class NewBlogEntryPage extends Page {
     }
 
     def submit() {
+        interact {
+            moveToElement(blogDetails.saveButton)
+        }
         blogDetails.saveButton.click()
     }
 }

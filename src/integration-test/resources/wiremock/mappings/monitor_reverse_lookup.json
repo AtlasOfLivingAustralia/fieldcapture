@@ -1,6 +1,6 @@
 {
   "request": {
-    "urlPattern": "/ws/intersect/wkt/.+",
+    "urlPattern": "/monitor/protocols/reverse-lookup",
 
     "method": "POST"
   },
@@ -9,7 +9,7 @@
     "headers": {
       "content-Type": "application/json"
     },
-    "body": "[]"
+    "body": "{}"
 
   }
 }
