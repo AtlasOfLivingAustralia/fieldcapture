@@ -370,6 +370,10 @@ function MERIPlan(project, projectService, config) {
         });
     }
 
+    self.validateFloristics = function() {
+        alert("validateFloristics");
+    }
+
     self.addBudget = function () {
         self.meriPlan().budget.rows.push(new BudgetRowViewModel({}, periods));
     };
@@ -674,7 +678,8 @@ function MERIPlan(project, projectService, config) {
     };
 
     self.attachValidation = function() {
-        $('#project-details-validation').validationEngine('attach', {autoPositionUpdate:true});
+        $('#project-details-validation').validationEngine();
+        window.validateFloristics = validateFloristics;
     };
 
     self.meriPlanHistoryVisible = ko.observable(false);
