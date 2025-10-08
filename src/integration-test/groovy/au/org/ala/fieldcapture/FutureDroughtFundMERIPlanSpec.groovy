@@ -34,6 +34,10 @@ class FutureDroughtFundMERIPlanSpec extends StubbedCasSpec {
         meriPlan = openMeriPlanEditTab()
 
         meriPlan.primaryOutcome = "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
+        waitFor {
+            meriPlan.floatingSaveDisplayed()
+        }
+        meriPlan.hideFloatingSave()
         meriPlan.selectFirstPriority()
         meriPlan.shortTermOutcomes[0].outcome.value("Short term outcome 1")
         meriPlan.addMediumTermOutcome("Medium term outcome 1")

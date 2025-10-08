@@ -795,6 +795,9 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.projectPartnerships[0].name == 'partner name'
         meriPlan.projectPartnerships[0].partnership == 'partnership'
         meriPlan.projectPartnerships[0].orgType == 'Trust'
+        interact {
+            moveToElement(meriPlan.consultation)
+        }
         meriPlan.consultation == 'Consultation'
 
     }
