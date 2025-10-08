@@ -127,7 +127,9 @@ class ProjectBlogSpec extends StubbedCasSpec {
         File outputFile = new File(getClass().getResource('/testImage.png').toURI())
         String filename = outputFile.absolutePath
         blogDetails.uploadingFile =(filename)
-        saveBtn.click()
+        waitFor 30, {blogDetails.privacy.displayed}
+        blogDetails.privacy = true
+        submit()
 
         then:
         waitFor {at ProjectBlogPage}
