@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title"><span data-bind="text:title"></span></h3>
-                <button type="button" class="close btn-sm" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="close btn-sm" data-bs-dismiss="modal" aria-hidden="true"></button>
             </div>
             <div class="modal-body">
                 <p data-bind="visible:explanationText, text:explanationText"></p>

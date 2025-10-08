@@ -19,7 +19,7 @@
                 I agree with the above declaration.
                 </label>
                 <button class="btn btn-sm btn-success" data-bind="click:submitReport, enable:termsAccepted"
-                        data-bs-dismiss="modal" aria-hidden="true">Submit</button>
+                        aria-hidden="true">Submit</button>
                     <button class="btn btn-sm btn-danger" data-bs-dismiss="modal" aria-hidden="true">Cancel</button>
             </div>
         </div>

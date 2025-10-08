@@ -1,0 +1,15 @@
+{
+  "request": {
+    "urlPattern": "/ws/intersect/wkt/.+",
+
+    "method": "GET"
+  },
+  "response" : {
+    "status": 200,
+    "headers": {
+      "content-Type": "application/json"
+    },
+    "body": "[]"
+
+  }
+}
