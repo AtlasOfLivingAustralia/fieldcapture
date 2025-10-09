@@ -40,6 +40,16 @@
     <g:if test="${grailsApplication.config.getProperty('analytics.fathom.trackingId')}">
         <script src="https://cdn.usefathom.com/script.js" data-site="${grailsApplication.config.getProperty('analytics.fathom.trackingId')}" defer></script>
     </g:if>
+    <g:if test="${grails.util.Environment.current == grails.util.Environment.TEST}">
+%{--        Bootstrap 5 enables smooth scrolling by default which breaks selenium tests.--}%
+        <style>
+            html {
+                scroll-behavior: auto !important;
+            }
+        </style>
+
+    </g:if>
+
 </head>
 
 <body class="${pageProperty(name: 'body.class')}" id="${pageProperty(name: 'body.id')}"
