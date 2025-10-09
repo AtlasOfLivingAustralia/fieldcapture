@@ -249,7 +249,9 @@ clientDependencies {
         'bootstrap'('5.3.8', transitive:false) {
             include 'js/bootstrap.bundle.js', 'css/bootstrap.css'
         }
-        'bootbox'('6.0.4')
+        'bootbox'('6.0.4', transitive: false) {
+            include 'bootbox.js'
+        }
         'jquery'('3.6.0')
         'font-awesome'('4.7.0')
         'knockout'('3.5.1', from:'build/output')
