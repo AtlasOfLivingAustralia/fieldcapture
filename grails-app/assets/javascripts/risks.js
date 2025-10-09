@@ -167,19 +167,3 @@ var rlpRiskModel = function() {
 
     return new RiskModel(likelihoodOptions, consequenceOptions, ratingOptions, riskRatingMatrix);
 };
-
-var agRiskModel = function() {
-    var likelihoodOptions = ['Highly Likely', 'Likely', 'Possible', 'Unlikely', 'Remote'];
-    var consequenceOptions = ['Insignificant', 'Minor', 'Moderate', 'Major', 'Catastrophic'];
-    var ratingOptions = ['Severe', 'High', 'Medium', 'Low'];
-
-    var riskRatingMatrix = [
-        ["Medium", "High",   "High",   "Severe", "Severe"],
-        ["Low",    "Medium", "High",   "High",   "Severe"],
-        ["Low",    "Medium", "Medium", "High",   "Severe"],
-        ["Low",    "Low",    "Medium", "High",   "High"],
-        ["Low",    "Low",    "Low",    "Medium", "High"]
-    ];
-
-    return new RiskModel(likelihoodOptions, consequenceOptions, ratingOptions, riskRatingMatrix);
-};
