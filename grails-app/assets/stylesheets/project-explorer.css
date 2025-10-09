@@ -266,7 +266,7 @@ table tbody .td1 .accordion .accordion-header.collapsed:after {
     border-bottom-right-radius: 0.25rem !important;
 }
 
-#projectExplorer .card-body {
+#projectExplorer .accordion-body.cardBody {
     padding: 0px;
 }
 

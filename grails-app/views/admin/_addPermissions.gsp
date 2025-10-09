@@ -14,8 +14,8 @@
     <g:if test="${hubFlg}">
         <div class="control-group mb-3 row">
             <label class="control-label col-form-label col-sm-2" for="expiryDate">Permission expiry date</label>
-            <div>
-                <div class="input-group input-small" style="margin-left: 15px;">
+            <div class="controls col-sm-2">
+                <div class="input-group input-small">
                     <input class="form-control dateControl" style="height: 30px;" type="text" id="expiryDate">
                 </div>
             </div>
