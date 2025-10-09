@@ -74,12 +74,11 @@
 .facet-collapse.in.height {
     height: auto;
 }
-.accordion .card {
+.accordion .accordion-item {
     border-color: #ddd;
     padding: 10px 15px;
-    margin-bottom: 5px;
 }
-.accordion .card .card-header {
+.accordion .accordion-header {
     margin-bottom: 0;
     background-color: rgba(0,0,0,0);
     padding: 0;
@@ -88,7 +87,7 @@
 
 
 
-#projectExplorer .accordion .card .card-header a {
+#projectExplorer .accordion .accordion-header a {
 
     display: inline-block;
     font-weight: 600;
@@ -105,16 +104,17 @@
     border-radius: 0.25rem;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     color: #000000;
+    text-decoration: none;
 
 }
-#projectExplorer .accordion .card .card-header button.btn:hover {
+#projectExplorer .accordion .accordion-header button.btn:hover {
     background-color: #FFFFFF;
 }
-#projectExplorer .accordion .card .card-header button:active {
+#projectExplorer .accordion .accordion-header button:active {
     background-color: #fff;
     border: 0 solid #fff;
 }
-#projectExplorer .accordion .card .card-header button:hover {
+#projectExplorer .accordion .accordion-header button:hover {
     background-color: #ffffff;
 }
 
@@ -127,8 +127,8 @@ ol.unstyled {
 #downloadView .checkbox input {
     margin-right: 13px;
 }
-#downloadView .checkbox {
-    margin:4px 0px 0px -40px;
+#downloadView ul {
+    padding-left: 1em;
 }
 
 @media (min-width: 576px) {
@@ -140,25 +140,20 @@ ol.unstyled {
     }
 }
 
-.accordion .card-header:after {
+.accordion .accordion-header:after {
     font-family: 'FontAwesome';
     content: "\f068";
     float: right;
 }
-.accordion .card-header.collapsed:after {
+.accordion .accordion-header.collapsed:after {
     /* symbol for "collapsed" panels */
     content: "\f067";
 }
+.accordion .accordion-body {
+    padding-left: 0;
+    padding-right: 0;
+}
 .visible-phone{display:none !important;}
-
-.card-body .row #facetFilter .col-sm-4 {
-    flex: 0 0 33.333333%;
-    max-width: 100%;
-}
-.card-body .row #facetClear .col-sm-4 {
-    flex: 0 0 33.333333%;
-    max-width: 100%;
-}
 
 div#facetsCol {
     border: 0px solid white;
@@ -191,13 +186,13 @@ select {
     }
 }
 
-table tbody .td1 .accordion .card-header:after {
+table tbody .td1 .accordion .accordion-header:after {
     font-family: 'FontAwesome';
     content: "\f068";
     float: right;
     display: none;
 }
-table tbody .td1 .accordion .card-header.collapsed:after {
+table tbody .td1 .accordion .accordion-header.collapsed:after {
     content: "\f067";
     display: none;
 }
@@ -217,13 +212,13 @@ table tbody .td1 .accordion .card-header.collapsed:after {
     border-bottom-left-radius: 0.25rem;
     border-bottom-right-radius: 0.25rem;
 }
-#reports .card .card-header:after {
+#reports .accordion-header:after {
     font-family: 'FontAwesome';
     content: "\f068";
     float: right;
     display: none;
 }
-#reports .card .card-header.collapse:after {
+#reports .accordion-header.collapse:after {
     /* symbol for "collapsed" panels */
     content: "\f067";
     display: none;
@@ -299,9 +294,6 @@ input.dateControl {
     width: 206px;
 }
 
-button.btn.facets-toggle {
-    margin-left: 10px !important;
-}
 
 #projectName {
     width: 41rem;
@@ -314,15 +306,15 @@ button.btn.facets-toggle {
     overflow-wrap: break-word;
 }
 
-.all-facets .form-group {
+.all-facets .search-facets {
     position: relative;
     margin-bottom: 0;
 }
-.all-facets .form-group .form-control {
+.all-facets .search-facets .form-control {
     padding-left: 2rem;
 }
 
-.all-facets .form-group .form-control-icon {
+.all-facets .search-facets .form-control-icon {
     position: absolute;
     z-index: 2;
     display: block;
@@ -336,4 +328,8 @@ button.btn.facets-toggle {
 .meritProjectID {
     font-size: small;
     font-weight: 550;
+}
+
+#facetsCol .accordion-header::after {
+    margin-top:7px;
 }

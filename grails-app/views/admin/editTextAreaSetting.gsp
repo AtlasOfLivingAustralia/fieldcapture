@@ -33,7 +33,7 @@
                         </div>
                         <g:if test="${!ajax}">
                             <div class="row">
-                                <a href="${returnUrl}"><button type="button" class="btn btn-danger btn-sm ml-3 mr-2">Cancel</button></a>
+                                <a href="${returnUrl}"><button type="button" class="btn btn-danger btn-sm ms-3 me-2">Cancel</button></a>
                                 <button class="btn btn-sm btn-primary">Save</button>
                             </div>
                         </g:if>

@@ -9,7 +9,7 @@
 			<div class="alert alert-info">
 				At least one Tech One Project Code or SAP Internal Order must be provided before the MERI plan can be approved
 			</div>
-			<div class="form-group row">
+			<div class="mb-3 row">
 				<label class="col-form-label col-sm-2">Financial system identifier/s:</label>
 				<div class="col-sm-10">
 					<external-ids params="externalIds:externalIds, externalIdTypes:externalIdTypes, validationNamespace:'meriPlanExternalId', validate:validateExternalIds"></external-ids>
@@ -76,7 +76,7 @@
 			<span data-bind="if:detailsLastUpdated"> <br/>Last update date : <span data-bind="text:detailsLastUpdated.formattedDate"></span></span>
 		</div>
 	</div>
-	<div class="meri-buttons col-sm-9 ml-auto">
+	<div class="meri-buttons col-sm-9 ms-auto">
 		<g:if test="${projectContent.details.visible}">
 		<button type="button" class="btn btn-sm btn-info" data-bind="click: meriPlanPDF">Display Printable MERI Plan</button>
 		</g:if>
@@ -172,7 +172,7 @@
 	<!-- ko if:isPlanEditable() -->
 	<g:if test="${project.lock && (project.lock.userId !=  user.userId)}">
 		<div class="row mb-2">
-			<div class="col-sm-12 pl-3 pr-3">
+			<div class="col-sm-12 ps-3 pe-3">
 				<div class="alert alert-danger meri-locked">
 					<p class="text-dark">This form has been locked for editing by <fc:userDisplayName userId="${project.lock.userId}" defaultValue="an unknown user"/> since ${au.org.ala.merit.DateUtils.displayFormatWithTime(project.lock.dateCreated)}</p>
 					<p class="text-dark">To edit anyway, click the button below.  Note: <b>Any unsaved edits made by the user currently holding the lock will be lost and unable to be recovered</b>.</p>
@@ -184,7 +184,7 @@
 	</g:if>
 	<g:if test="${!project.lock}">
 		<div data-bind="if:isPlanEditable()" class="row mb-2">
-			<div class="col-sm-12 pl-3 pr-3">
+			<div class="col-sm-12 ps-3 pe-3">
 				<div class="alert alert-danger report-locked">
 					<p class="text-dark">You must unlock the plan to edit it, and when finished you must save your work by pressing the "Save changes and finish editing" or the "Submit for approval" button below otherwise your work will not be saved. Do not close or press back on your browser to exit or your work will be lost.</p>
 					<a id="lockMeriPlan" href="${createLink(action:'lockMeriPlan', id:project.projectId)}"><button type="button" class="btn btn-sm btn-danger"><i class="fa fa-edit"></i> Unlock for Editing</button></a>

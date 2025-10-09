@@ -32,7 +32,7 @@ function EntityReportSelectorViewModel(options) {
             }else{
                 var details = data['details']
                 var message = data['message']
-                var detailsIcon = ' <i class="fa fa-info-circle showDownloadDetailsIcon" data-toggle="collapse" href="#downloadDetails"></i>'
+                var detailsIcon = ' <i class="fa fa-info-circle showDownloadDetailsIcon" data-bs-toggle="collapse" href="#downloadDetails"></i>'
                 var detailsPanel = '<div class="collapse" id="downloadDetails"><a id="entityReportDownloadLink" href='+config.downloadUrl +'/' + details+'>Try this link, if you cannot get an email confirmation</a></div>'
                 bootbox.alert(message + detailsIcon + detailsPanel)
             }

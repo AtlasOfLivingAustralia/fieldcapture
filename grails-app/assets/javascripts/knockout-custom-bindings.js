@@ -6,94 +6,6 @@
  * The content and title must be supplied, other popover options have defaults.
  *
  */
-ko.bindingHandlers.popover = {
-
-  init: function(element, valueAccessor) {
-    ko.bindingHandlers.popover.initPopover(element, valueAccessor);
-  },
-  update: function(element, valueAccessor) {
-    var $element = $(element),
-        instance = $element.data('bs.popover'),
-        popOptions = ko.bindingHandlers.popover.getOptions(valueAccessor),
-        combinedOptions = popOptions.combinedOptions,
-        options = popOptions.options;
-
-    if (!instance) {
-      ko.bindingHandlers.popover.initPopover(element, valueAccessor);
-      instance = $element.data('bs.popover');
-    }
-
-    if (!instance)
-      return;
-
-    // if view model has changed, update the popover
-    instance.config.title = combinedOptions.title || "";
-    instance.config.content = combinedOptions.content;
-
-    if (options.autoShow) {
-      if ($element.data('firstPopover') === false) {
-        instance.show();
-        $('body').on('click', function(e) {
-          if (e.target != element && $element.find(e.target).length == 0) {
-            instance.hide();
-          }
-        });
-      }
-
-      $element.data('firstPopover', false);
-    }
-
-    // refresh popover content
-    if(ko.bindingHandlers.popover.isPopoverShown(element)) {
-      instance.show();
-    }
-  },
-
-  defaultOptions: {
-    placement: "right",
-    animation: true,
-    html: true,
-    trigger: "hover"
-  },
-
-  initPopover: function(element, valueAccessor) {
-    var popOptions = ko.bindingHandlers.popover.getOptions(valueAccessor),
-        options = popOptions.options,
-        combinedOptions = popOptions.combinedOptions;
-    $(element).popover(combinedOptions);
-    ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
-      $(element).popover("dispose");
-    });
-
-    return options;
-  },
-  /**
-   * constructs the options object from valueAccessor
-   * @param valueAccessor
-   * @returns {{combinedOptions: any, options: any}}
-   */
-  getOptions: function(valueAccessor) {
-    var options = ko.utils.unwrapObservable(valueAccessor());
-    if (typeof(options.content) === "undefined") {
-      options.content = ""
-    }
-
-    var combinedOptions = ko.utils.extend({}, ko.bindingHandlers.popover.defaultOptions);
-    var content = ko.utils.unwrapObservable(options.content);
-    ko.utils.extend(combinedOptions, options);
-    combinedOptions.description = content;
-    return {combinedOptions: combinedOptions, options: options};
-  },
-  /**
-   * id of the popover is stored in the element's aria-describedby attribute
-   * @param element
-   * @returns {boolean}
-   */
-  isPopoverShown: function isPopoverShown(element) {
-    const popoverId = $(element).attr("aria-describedby");
-    return $("#" + popoverId).length > 0;
-  }
-};
 
 ko.bindingHandlers.independentlyValidated = {
   init: function(element, valueAccessor) {
@@ -312,7 +224,7 @@ ko.bindingHandlers.elasticSearchAutocomplete = {
 
 ko.bindingHandlers.showModal = {
   init: function (element, valueAccessor) {
-    $(element).modal({ backdrop: 'static', keyboard: true, show: false });
+    $(element).modal({ backdrop: 'static', keyboard: true });
   },
   update: function (element, valueAccessor) {
     var value = valueAccessor();
@@ -357,35 +269,42 @@ ko.bindingHandlers.warningPopup = {
     });
   },
   update: function(element, valueAccessor) {
+
+    function isPopoverShown(element) {
+      const popoverId = $(element).attr("aria-describedby");
+      return $("#" + popoverId).length > 0;
+    }
     var $element = $(element);
     if ($element.prop("disabled")) {
       return;
     }
     var target = valueAccessor();
     var valid = target();
+
+
     if (!valid) {
-      if (!target.popoverInitialised) {
-        var popoverWarningOptions = {
-          placement:'top',
-          trigger:'manual',
-          template: '<div class="popover warning"><h3 class="popover-header"></h3><div class="popover-body"></div><div class="arrow"></div></div>'
-        };
-        var warning = $element.data('warningmessage');
-        $element.popover(_.extend({content:warning}, popoverWarningOptions));
-
-        var popover = $element.data('bs.popover');
-        $(popover.getTipElement()).click(function() {
-          $element.popover('hide');
-        });
-        target.popoverInitialised = true;
-      }
-      setTimeout(function() {
-        $element.popover('show');
-      }, 1);
-
+        let popover = bootstrap.Popover.getInstance();
+        if (!popover) {
+            var popoverWarningOptions = {
+                placement:'top',
+                trigger:'manual',
+                template: '<div class="popover warning"><h3 class="popover-header"></h3><div class="popover-body"></div><div class="popover-arrow"></div></div>'
+            };
+            var warning = $element.data('warningmessage');
+            let options = _.extend({content:warning}, popoverWarningOptions);
+            popover = new bootstrap.Popover(element, options);
+          }
+          setTimeout(function() {
+              $element.on('shown.bs.popover', function() {
+                  $(popover._getTipElement()).one('click', function() {
+                      popover.hide();
+                  })
+              });
+              popover.show();
+          }, 1);
     }
     else {
-      if (target.popoverInitialised) {
+      if (isPopoverShown(element)) {
         $element.popover('hide');
       }
     }

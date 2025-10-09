@@ -27,6 +27,9 @@ class ViewReportPage extends Page {
     }
 
     def exitReport() {
+        interact {
+            moveToElement(returnButton)
+        }
         returnButton.click()
     }
 }

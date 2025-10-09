@@ -49,10 +49,10 @@
 
                         <div class="col-sm-8 value">
                             <span data-bind="if: status().toLowerCase() == 'terminated'">
-                                <span style="text-transform:uppercase;" data-bind="text:status" class="badge badge-danger projectStatus"></span>
+                                <span style="text-transform:uppercase;" data-bind="text:status" class="badge text-white text-bg-danger projectStatus"></span>
                             </span>
                             <span data-bind="if: status().toLowerCase() != 'terminated'">
-                                <span  data-bind="text:status" class="badge badge-info projectStatus"></span>
+                                <span  data-bind="text:status" class="badge text-white text-bg-info projectStatus"></span>
                             </span>
                         </div>
                     </div>

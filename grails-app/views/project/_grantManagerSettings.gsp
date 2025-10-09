@@ -28,7 +28,7 @@
 				    <div>
 					    <div id="save-settings-result-placeholder"></div>
 			   			<button type="button" data-bind="click: saveGrantManagerSettings" class="btn btn-sm btn-primary">Save changes</button>
-			   			<button class="btn btn-sm btn-danger" data-dismiss="modal">Cancel</button>
+			   			<button class="btn btn-sm btn-danger" data-bs-dismiss="modal">Cancel</button>
 					</div>
 				</div>
             </div>

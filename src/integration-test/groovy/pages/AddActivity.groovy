@@ -30,6 +30,9 @@ class AddActivityPage extends ActivityPage {
 
     // Pressing submit actually does an ajax call then changes the page using JavaScript.
     def submit() {
+        interact {
+            moveToElement(activityDetails.submitButton)
+        }
         activityDetails.submitButton.click()
     }
 }

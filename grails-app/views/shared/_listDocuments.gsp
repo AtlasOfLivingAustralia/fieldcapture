@@ -4,7 +4,7 @@
         <g:if test="${!excludeReportColumn}">
         <div class="col-sm-5 filterDocumentHolder">
             <div id="filter-by-stage" class="document-filter-group btn-group pull-right dropdown">
-                <a class="btn dropdown-toggle" data-toggle="dropdown" id="filterDropDown" href="#">
+                <a class="btn dropdown-toggle" data-bs-toggle="dropdown" id="filterDropDown" href="#">
                     <i class="fa fa-filter"></i> Filter by report
                     <span class="caret"></span>
                 </a>
@@ -40,7 +40,7 @@
                         <i class="fa fa-file-video-o fa-2x"></i>
                         <!-- /ko -->
                         <!-- ko if:!embeddedVideo() -->
-                        <img class="media-object" data-bind="attr:{src:iconImgUrl(), alt:contentType, title:name}" alt="document icon">
+                        <img class="d-flex-object" data-bind="attr:{src:iconImgUrl(), alt:contentType, title:name}" alt="document icon">
                         <!-- /ko -->
                     </td>
                     <td style="word-wrap:break-word">

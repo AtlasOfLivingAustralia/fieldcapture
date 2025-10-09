@@ -146,24 +146,19 @@ class FCTagLib {
             }
 
             def content = {
-                mb.input(inputAttrs) {
-                }
-                String addOnClass = attrs.bs4 ? "input-group-append" : "input-group-text add-on"
-                String buttonClass = attrs.bs4 ? "fa fa-th input-group-text" : "fa fa-th "
-                def spanDateWrapper = {
-                    mb.span(class: "${addOnClass} open-datepicker", id: "basic-addon2") {
-                        mb.i(class: buttonClass) {
-                            mkp.yieldUnescaped("&nbsp;")
+                mb.div(class:"input-group") {
+                    mb.input(inputAttrs) {
+                    }
+                    String addOnClass = "input-group-text"
+                    String buttonClass = "fa fa-th "
+                    def spanDateWrapper = {
+                        mb.span(class: "${addOnClass} open-datepicker", id: "basic-addon2") {
+                            mb.i(class: buttonClass) {
+                                mkp.yieldUnescaped("&nbsp;")
+                            }
                         }
                     }
-                }
-                //  Bootstrap 4 needs the control to be wrapped in an input-group class
-                if (attrs.bs4){
-                    mb.div(class: "input-group-append") {
-                        spanDateWrapper()
-                    }
-                }else{
-                   spanDateWrapper()
+                    spanDateWrapper()
                 }
             }
             content()
@@ -717,13 +712,13 @@ class FCTagLib {
         attrs.tabs.each { name, details ->
 
             if (details.type == 'tab' && details.visible) {
-                def liClass = details.default ? 'active':''
+                def liClass = ''
                 def linkAttributes = [href:'#'+name, id:name+'-tab']
                 if (!details.disabled) {
-                    linkAttributes << ["data-toggle":"tab", class:'nav-link']
+                    linkAttributes << ["data-bs-toggle":"tab", class:'nav-link']
                 }
                 if(details.label =="Activities" && details.default == true){
-                    linkAttributes << ["data-toggle":"tab", class:'nav-link active show']
+                    linkAttributes << ["data-bs-toggle":"tab", class:'nav-link active show']
                 }
 
                 mb.li(class:'nav-item '+liClass) {
@@ -740,7 +735,7 @@ class FCTagLib {
         attrs.tabs.each { name, details ->
 
             if (details.type == 'tab' && details.visible && !details.disabled) {
-                def divClass = details.default ? "${tabClass} active":tabClass
+                def divClass = tabClass
                 if (details.stopBinding) {
                     out << "<!-- ko stopBinding:true -->"
                 }
@@ -1042,13 +1037,13 @@ class FCTagLib {
         String statusClass
         switch (attrs.status?.toLowerCase()) {
             case 'active':
-                statusClass = 'badge-success'
+                statusClass = 'bg-success'
                 break
             case 'completed':
-                statusClass = 'badge-info'
+                statusClass = 'bg-info'
                 break
             case 'application':
-                statusClass = 'badge-info'
+                statusClass = 'bg-info'
                 break
         }
 

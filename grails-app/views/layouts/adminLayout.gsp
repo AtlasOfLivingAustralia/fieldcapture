@@ -26,7 +26,7 @@
         </div>
 
         <div class="row">
-            <div id="admin" class="nav flex-column nav-pills col-sm-3 pl-2 pr-0">
+            <div id="admin" class="nav flex-column nav-pills col-sm-3 ps-2 pe-0">
                 <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'audit')}"  class="audit" title="Audit" />
                 <g:if test="${fc.userIsAlaOrFcAdmin()}">
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'staticPages')}" class="staticPages" title="Static pages" />
@@ -47,7 +47,7 @@
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'cacheManagement')}" class="caches" title="Caches" />
                 </g:if>
             </div>
-            <div class="col-sm-8 ml-5">
+            <div class="col-sm-8 ms-5">
                 <g:if test="${flash.errorMessage}">
                     <div class="${containerType}">
                         <div class="alert alert-danger">

@@ -14,7 +14,7 @@
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
-    <asset:stylesheet src="select2-theme-bootstrap4/select2-bootstrap.css"/>
+    <asset:stylesheet src="select2-bootstrap-5-theme/select2-bootstrap-5-theme.css"/>
     <asset:stylesheet src="dataSets.css"/>
 
 </head>

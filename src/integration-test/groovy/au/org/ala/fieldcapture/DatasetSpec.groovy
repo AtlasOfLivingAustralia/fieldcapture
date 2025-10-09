@@ -56,7 +56,7 @@ class DatasetSpec extends StubbedCasSpec{
         dataSet.format = "JSON"
         dataSet.sensitivities =["Commercially sensitive", "Ecologically sensitive"]
 
-        dataSet.createButton.click()
+        save()
 
         then:
         waitFor  { at RlpProjectPage }
@@ -155,7 +155,7 @@ class DatasetSpec extends StubbedCasSpec{
         def dataSet = datasetContent
         dataSet.title = "Title"
 
-        dataSet.createButton.click()
+        save()
 
         then:
         waitFor { at RlpProjectPage }
@@ -174,8 +174,8 @@ class DatasetSpec extends StubbedCasSpec{
         !set.dataCollectionOngoing.checked
 
         when:
-        set.markCompleted.click()
-        set.createButton.click()
+        markCompleted()
+        save()
 
         then:
         waitFor {
@@ -201,7 +201,7 @@ class DatasetSpec extends StubbedCasSpec{
         set.dataSetSize = '200'
         set.publicationUrl = "https://www.ala.org.au"
 
-        set.createButton.click()
+        save()
 
         then:
         waitFor {

@@ -19,7 +19,7 @@
         <g:else>
             <div class="row">
                 <div class="col-sm-4">
-                    <select data-bind="options:transients.project.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'" class="form-control form-control-sm"></select>
+                    <select data-bind="options:transients.project.sites,optionsText:'name',optionsValue:'siteId',value:siteId,optionsCaption:'Choose a site...'" class="form-select form-select-sm"></select>
                 </div>
                 <div class="col-sm-3">
                     <p>Leave blank if this activity is not associated with a specific site.</p>
@@ -51,7 +51,7 @@
         <div class="row">
             <div class="col-sm-6">
                 <label for="type">Type of activity</label>
-                <select data-bind="value: type, popover:{title:'', content:transients.activityDescription, trigger:'manual', autoShow:true}" id="type" data-validation-engine="validate[required]" class="form-control form-control-sm">
+                <select data-bind="value: type, popover:{title:'', content:transients.activityDescription, trigger:'manual', autoShow:true}" id="type" data-validation-engine="validate[required]" class="form-select form-select-sm">
                     <g:each in="${activityTypes}" var="t" status="i">
                         <g:if test="${i == 0 && create}">
                             <option></option>
@@ -66,7 +66,7 @@
             </div>
             <div class="col-sm-6">
                 <label for="theme">Major theme</label>
-                <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="form-control form-control-sm"></select>
+                <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="form-select form-select-sm"></select>
             </div>
         </div>
 
@@ -81,7 +81,7 @@
                 <label for="stage">Stage
                 <fc:iconHelp title="Stage" printable="${printView}">The stage the activity falls into</fc:iconHelp>
                 </label>
-                <select id="stage" data-bind="options:transients.stages,value:projectStage" class="form-control form-control-sm"></select>
+                <select id="stage" data-bind="options:transients.stages,value:projectStage" class="form-select form-select-sm"></select>
             </div>
             <div class="col-sm-4">
                 <label for="plannedStartDate">Planned start date

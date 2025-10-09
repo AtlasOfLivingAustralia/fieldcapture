@@ -14,7 +14,7 @@
     </script>
     <asset:stylesheet src="common-bs4.css"/>
     <asset:stylesheet src="select2/css/select2.css"/>
-    <asset:stylesheet src="select2-theme-bootstrap4/select2-bootstrap.css"/>
+    <asset:stylesheet src="select2-bootstrap-5-theme/select2-bootstrap-5-theme.css"/>
     <asset:stylesheet src="documents.css"/>
 </head>
 <body>
@@ -34,7 +34,7 @@
         Adding a new category can be achieved by typing it into the Categories input and pressing Enter/Return.
     </p>
 
-    <form class="form form-inline">
+    <form class="form d-flex align-items-center">
         <button class="btn btn-info" id="doAttach" data-bind="click:attachDocument">New help document</button>
     </form>
 
@@ -60,7 +60,7 @@
                         <i class="fa fa-file-video-o fa-2x"></i>
                         <!-- /ko -->
                         <!-- ko if:!embeddedVideo() -->
-                        <img class="media-object" data-bind="attr:{src:iconImgUrl(), alt:contentType, title:name}" alt="document icon">
+                        <img class="d-flex-object" data-bind="attr:{src:iconImgUrl(), alt:contentType, title:name}" alt="document icon">
                         <!-- /ko -->
 
                     </td>
