@@ -2,6 +2,7 @@ package pages
 
 import geb.Module
 import geb.Page
+import org.openqa.selenium.ElementNotInteractableException
 import pages.modules.DatasetPageModule
 
 class DatasetPage extends Page {
@@ -17,23 +18,24 @@ class DatasetPage extends Page {
     }
 
     void cancel() {
-        interact {
-            moveToElement(cancelButton)
-        }
         cancelButton.click()
     }
 
     void save() {
-        interact {
-            moveToElement(saveButton)
+        try {
+            saveButton.click()
         }
-        saveButton.click()
+        // The edit routine can happen too quickly and the calendars
+        // and validation errors are still closing when we try
+        // and save, preventing the click from landing.
+        // Wait and try again
+        catch (ElementNotInteractableException e) {
+            Thread.sleep(1000)
+            saveButton.click()
+        }
     }
 
     void markCompleted() {
-        interact {
-            moveToElement(datasetContent.markCompleted)
-        }
         datasetContent.markCompleted.click()
     }
 

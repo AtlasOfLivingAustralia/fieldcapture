@@ -49,6 +49,7 @@
 <asset:javascript src="dataSets.js"/>
 <script>
     var project = {};
+    var dataSet = <fc:modelAsJavascript model="${dataSet}" default="{}"/>;
     var projectService = new ProjectService(project, fcConfig);
     var config = _.extend(fcConfig, {endDateSelector:"#endDate"});
     config.projectOutcomes = <fc:modelAsJavascript model="${projectOutcomes}" default="[]"/>;
@@ -56,7 +57,7 @@
     config.projectProtocols = <fc:modelAsJavascript model="${projectProtocols}" default="[]"/>;
     config.invalidNames = <fc:modelAsJavascript model="${dataSetNames}" default="[]"/>;
     config.serviceBaselineIndicatorOptions = <fc:modelAsJavascript model="${serviceBaselineIndicatorOptions}" default="{}"/>;
-    var viewModel = new DataSetViewModel({}, projectService, config);
+    var viewModel = new DataSetViewModel(dataSet, projectService, config);
     $.fn.select2.defaults.set( "theme", "bootstrap" );
     ko.applyBindings(viewModel);
     viewModel.attachValidation();

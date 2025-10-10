@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus
 
 class DataSetController {
 
-    static allowedMethods = [create:'GET', edit:'GET', save:'POST', delete:'POST', resync: 'POST']
+    static allowedMethods = [create:'GET', edit:'GET', copy:'GET', save:'POST', delete:'POST', resync: 'POST']
     private static final Integer DEFAULT_BDR_QUERY_LIMIT = 5000
     ProjectService projectService
     DataSetSummaryService dataSetSummaryService
@@ -132,6 +132,29 @@ class DataSetController {
             projectData
         }
 
+    }
+
+    // Note that authorization is done against a project, so the project id must be supplied to the method.
+    @PreAuthorise(accessLevel = 'editor')
+    def copy(String id, String dataSetId) {
+
+        Map projectData = projectData(id)
+        Map dataSet = projectData.project?.custom?.dataSets?.find{it.dataSetId == dataSetId}
+        if (dataSet) {
+            dataSet.name = "Copy of "+dataSet.name
+            dataSet.startDate = null
+            dataSet.endDate = null
+            dataSet.dataSetId = null
+        }
+
+        if (!dataSet) {
+            render status: HttpStatus.NOT_FOUND
+        }
+        else {
+            projectData.dataSet = dataSet
+            projectData
+        }
+        render view: 'create', model: projectData
     }
 
     @PreAuthorise(accessLevel = 'siteAdmin')
