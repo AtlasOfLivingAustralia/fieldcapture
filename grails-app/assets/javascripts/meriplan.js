@@ -4,6 +4,9 @@
 function MERIPlan(project, projectService, config) {
     var self = this;
 
+    // expose current MERIPlan instance globally, will be used by the validation
+    window.currentMeriPlanVM = self;
+
     if (config.hasAdminPermission && config.meriStorageKey && project.custom && project.custom.details) {
         var savedProjectCustomDetails = amplify.store(config.meriStorageKey);
         if (savedProjectCustomDetails) {
@@ -370,10 +373,6 @@ function MERIPlan(project, projectService, config) {
         });
     }
 
-    self.validateFloristics = function() {
-        alert("validateFloristics");
-    }
-
     self.addBudget = function () {
         self.meriPlan().budget.rows.push(new BudgetRowViewModel({}, periods));
     };
@@ -679,7 +678,6 @@ function MERIPlan(project, projectService, config) {
 
     self.attachValidation = function() {
         $('#project-details-validation').validationEngine();
-        window.validateFloristics = validateFloristics;
     };
 
     self.meriPlanHistoryVisible = ko.observable(false);
@@ -725,6 +723,73 @@ function MERIPlan(project, projectService, config) {
         }
         return canApprove
     };
+
+    setTimeout(function () {
+        var $form = $('#project-details-validation');
+
+        // reattach JQV
+        $form.validationEngine('detach');
+        $form.validationEngine('attach', {
+            validateNonVisibleFields: true,
+            prettySelect: true,
+            usePrefix: 'select2-',
+            useSuffix: '-container',
+            validationEventTrigger: 'change',
+            scroll: false
+        });
+
+        // revalidate whenever the select2 changes
+        $('#monitoringProtocols').on('change select2:select select2:unselect', function () {
+            $form.validationEngine('validate');
+        });
+
+        // initial check (if values are pre-populated)
+        $form.validationEngine('validate');
+    }, 0);
+
+}
+
+function validateFloristics(field) {
+    // get the <select> element
+    var $select = $(field);
+    if (!$select.length) {
+        console.warn('validateFloristics: cannot find original <select>');
+        return;
+    }
+
+    // get selected values
+    var selectedValues = ($select.val() || [])
+        .map(v => String(v).trim())
+        .filter(v => v.length > 0);
+
+    const norm = s => String(s || '').trim().toLowerCase();
+
+    // get protocols from KO context(vm) or global fallback
+    var vm = ko.dataFor($select[0]);
+    var protocols =
+        ko.unwrap(vm?.$root?.monitoringProtocols) ||
+        ko.unwrap(window.currentMeriPlanVM?.monitoringProtocols) ||
+        [];
+
+    if (!Array.isArray(protocols) || !protocols.length) {
+        console.warn('validateFloristics: protocols not loaded yet');
+        return;
+    }
+
+    // find items that depend on floristics
+    var floristicsDeps = new Set(
+        protocols
+            .filter(p => (p.dependsOn || []).map(norm).includes('floristics'))
+            .map(p => norm(p.value))
+    );
+
+    // check if user needs floristics
+    var needingFloristics = selectedValues.filter(v => floristicsDeps.has(norm(v)));
+    var hasFloristics = selectedValues.some(v => norm(v).includes('floristics'));
+
+    if (needingFloristics.length && !hasFloristics) {
+        return `One or more selected modules (${needingFloristics.join(', ')}) depend on Floristics. Please also select a Floristics protocol.`;
+    }
 }
 
 /**
