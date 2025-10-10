@@ -1,10 +1,19 @@
 const floristicsDependentModules = [
-    'Basal area',
-    'Condition',
-    'Cover',
-    'Fire Severity',
-    'Plant tissue vouchering',
-    'Recruitment'
+    'Cover + Fire - Standard',
+    'Cover + Fire - Enhanced',
+    'Fire Survey',
+    'Floristics - Enhanced',
+    'Floristics - Standard',
+    'Plant Tissue Vouchering - Enhanced',
+    'Plant Tissue Vouchering - Standard',
+    'Cover - Standard',
+    'Cover - Enhanced',
+    'Basal Area - Basal Wedge',
+    'Basal Area - DBH',
+    'Recruitment - Survivorship',
+    'Recruitment - Age Structure',
+    ''
+
 ];
 
 db.activityForm.find({name:{'$in':floristicsDependentModules}}).forEach(function(form) {
