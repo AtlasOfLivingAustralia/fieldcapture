@@ -96,6 +96,7 @@
                 riskChangesReportPdfUrl: "${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
                 newDataSetUrl: "${createLink(controller:'dataSet', action:'create', id:project.projectId)}",
                 editDataSetUrl: "${createLink(controller:'dataSet', action:'edit', id:project.projectId)}",
+                copyDataSetUrl: "${createLink(controller:'dataSet', action:'copy', id:project.projectId)}",
                 deleteDataSetUrl: "${createLink(controller:'dataSet', action:'delete', id:project.projectId)}",
                 viewDataSetUrl: "${createLink(controller:'dataSet', action:'view', id:project.projectId)}",
                 downloadDataSetUrl: "${createLink(controller:'dataSet', action:'download', id:project.projectId)}",
@@ -127,7 +128,7 @@
     <asset:stylesheet src="leaflet-manifest.css"/>
     <asset:stylesheet src="feature.css"/>
     <asset:stylesheet src="select2/css/select2.css"/>
-    <asset:stylesheet src="select2-bootstrap-5-theme/select2-bootstrap-5-theme.css"/>
+    <asset:stylesheet src="select2-theme-bootstrap4/select2-bootstrap.css"/>
 
 </head>
 
@@ -304,6 +305,7 @@ var config = {
             riskChangesReportPdfUrl: fcConfig.riskChangesReportPdfUrl,
             newDataSetUrl: fcConfig.newDataSetUrl,
             editDataSetUrl: fcConfig.editDataSetUrl,
+            copyDataSetUrl: fcConfig.copyDataSetUrl,
             deleteDataSetUrl: fcConfig.deleteDataSetUrl,
             viewDataSetUrl: fcConfig.viewDataSetUrl,
             downloadDataSetUrl: fcConfig.downloadDataSetUrl,

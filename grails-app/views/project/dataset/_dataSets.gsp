@@ -73,6 +73,10 @@
                 <a class="btn btn-container btn-sm" data-bind="visible:!readOnly,attr:{href:editUrl}">
                     <i class="fa fa-edit" title="Edit this dataset"></i>
                 </a>
+                <a class="btn btn-container btn-sm" data-bind="if:!isMonitorDataSet,attr:{href:copyUrl}">
+                    <i class="fa fa-copy" title="Make a copy of this dataset"></i>
+                </a>
+
                 <a class="btn btn-container btn-sm" href="#" data-bind="visible:!readOnly,click:deleteDataSet">
                     <i class="fa fa-remove" title="Delete this dataset"></i>
                 </a>

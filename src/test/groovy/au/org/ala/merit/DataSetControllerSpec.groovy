@@ -271,4 +271,42 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
         response.json == resyncResponse
     }
 
+    void "The copy method returns 404 if the data set is not found"() {
+        setup:
+        Map project = [projectId: 'p1', custom: [dataSets: [[dataSetId: 'd1', name: 'DataSet 1']]]]
+        Map programConfig = [program: [name: "program 1"]]
+
+        when:
+        request.method = "GET"
+        controller.copy('p1', 'd2')
+
+        then:
+        1 * projectService.get('p1') >> project
+        1 * projectService.getProgramConfiguration(project) >> programConfig
+        response.status == HttpStatus.SC_NOT_FOUND
+    }
+
+    void "The copy method includes a copy of the nominated data set in the model but clears the dataSetI and dates, and modifies the name"() {
+        setup:
+        Map dataSet = [dataSetId: 'd1', name: 'DataSet 1', startDate: '2020-01-01', endDate: '2020-12-31', collectionApp:'MERIT', format:"CSV"]
+        Map project = [projectId: 'p1', custom: [dataSets: [dataSet]]]
+        Map programConfig = [program: [name: "program 1"]]
+
+        when:
+        request.method = "GET"
+        controller.copy('p1', 'd1')
+
+        then:
+        1 * projectService.get('p1') >> project
+        1 * projectService.getProgramConfiguration(project) >> programConfig
+        model.projectId == 'p1'
+        model.programName == "program 1"
+        model.dataSet.name == 'Copy of DataSet 1'
+        model.dataSet.dataSetId == null
+        model.dataSet.fromDate == null
+        model.dataSet.toDate == null
+        model.dataSet.collectionApp == 'MERIT'
+        model.dataSet.format == "CSV"
+    }
+
 }
