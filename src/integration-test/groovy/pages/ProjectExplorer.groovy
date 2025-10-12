@@ -25,8 +25,8 @@ class FacetItem extends Module {
 class Facet extends Module {
 
     static content = {
-        title { $('.card-header a') }
-        items { $('.card-body li').moduleList(FacetItem) }
+        title { $('.accordion-header a') }
+        items { $('.accordion-body li').moduleList(FacetItem) }
     }
 
     FacetItem findItemByName(String name) {

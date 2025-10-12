@@ -22,13 +22,13 @@
         <td class="code"><span data-bind="text:code"></span></td>
         <td class="outcome">
             <select multiple="true"
-                    class="form-control form-control-sm"
+                    class="form-select form-select-sm"
                     data-validation-engine="validate[required]"
                     data-bind="options:$root.selectedOutcomes, optionsCaption:'Please select...', optionsText:'code', optionsValue:'code', multiSelect2:{tags:false, value:relatedOutcomes, templateResult:$root.renderOutcome, preserveColumnWidth:10}, disable: $root.isProjectDetailsLocked()">
             </select>
         </td>
         <th class="monitoring-data">
-            <select class="form-control form-control-sm" data-validation-engine="validate[required]" placeholder="Please select..." data-bind="value:monitoringDataStatus,disable: $root.isProjectDetailsLocked()">
+            <select class="form-select form-select-sm" data-validation-engine="validate[required]" placeholder="Please select..." data-bind="value:monitoringDataStatus,disable: $root.isProjectDetailsLocked()">
                 <option value="">Please select...</option>
                 <option>Needs to be collected</option>
                 <option>Data exists</option>
@@ -42,13 +42,13 @@
         <td class="service">
             <select
                     multiple="true"
-                    class="form-control form-control-sm"
+                    class="form-select form-select-sm"
                     data-validation-engine="validate[required]"
                     data-bind="options:$root.baselineTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{tags:false, value:relatedTargetMeasures, preserveColumnWidth:20}, disable: monitoringDataStatus() != 'Needs to be collected' || $root.isProjectDetailsLocked()"></select>
         </td>
         <td class="baseline-method">
             <select multiple="multiple"
-                    class="form-control form-control-sm"
+                    class="form-select form-select-sm"
                     data-validation-engine="validate[required, funcCall[validateFloristics]]"
                     data-bind="options:$root.monitoringProtocols, optionsText:'label', optionsValue:'value', multiSelect2:{tags:false, value:protocols, preserveColumnWidth:20}, optionsCaption:'Please select...', disable: monitoringDataStatus() != 'Needs to be collected' || $root.isProjectDetailsLocked()">
             </select>

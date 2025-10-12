@@ -105,13 +105,13 @@ function RisksRowViewModel (risksRow, riskModel) {
 function getClassName(val){
     var className = '';
     if(val == 'High')
-        className = 'badge badge-danger';
+        className = 'badge bg-danger';
     else if (val == 'Significant')
-        className = 'badge badge-warning';
+        className = 'badge bg-warning';
     else if (val == 'Medium')
-        className = 'badge badge-info';
+        className = 'badge bg-info';
     else if (val == 'Low')
-        className = 'badge badge-success';
+        className = 'badge bg-success';
     return className;
 }
 
@@ -155,22 +155,6 @@ var meritRiskModel = function() {
 var rlpRiskModel = function() {
     var likelihoodOptions = ['Highly Likely', 'Likely', 'Possible', 'Unlikely', 'Rare'];
     var consequenceOptions = ['Minor', 'Moderate', 'High', 'Major', 'Critical'];
-    var ratingOptions = ['Severe', 'High', 'Medium', 'Low'];
-
-    var riskRatingMatrix = [
-        ["Medium", "High",   "High",   "Severe", "Severe"],
-        ["Low",    "Medium", "High",   "High",   "Severe"],
-        ["Low",    "Medium", "Medium", "High",   "Severe"],
-        ["Low",    "Low",    "Medium", "High",   "High"],
-        ["Low",    "Low",    "Low",    "Medium", "High"]
-    ];
-
-    return new RiskModel(likelihoodOptions, consequenceOptions, ratingOptions, riskRatingMatrix);
-};
-
-var agRiskModel = function() {
-    var likelihoodOptions = ['Highly Likely', 'Likely', 'Possible', 'Unlikely', 'Remote'];
-    var consequenceOptions = ['Insignificant', 'Minor', 'Moderate', 'Major', 'Catastrophic'];
     var ratingOptions = ['Severe', 'High', 'Medium', 'Low'];
 
     var riskRatingMatrix = [

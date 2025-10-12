@@ -20,8 +20,8 @@
 </div>
 <div class="row">
     <div class="col-sm-12">
-       <form id="request-label-form" class="form-inline">
-           <div class="form-group">
+       <form id="request-label-form" class="d-flex align-items-center">
+           <div class="mb-3">
            <label for="pageCount">Number of pages to request</label>
            <input class="form-control input-small  m-2" id="pageCount" type="number" name="pageCount" data-bind="value:pageCount">
 

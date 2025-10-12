@@ -74,7 +74,7 @@
         <g:render template="map" />
         <div class="row p-2">
             <div class="form-actions col-sm-12">
-                <button type="button" id="save" class="ml-2 btn btn-sm btn-primary">Save changes</button>
+                <button type="button" id="save" class="ms-2 btn btn-sm btn-primary">Save changes</button>
                 <button type="button" id="cancel" class="btn btn-sm btn-danger">Cancel</button>
             </div>
         </div>

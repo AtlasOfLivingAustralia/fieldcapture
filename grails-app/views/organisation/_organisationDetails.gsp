@@ -1,18 +1,18 @@
 <form class="validationEngineContainer">
     <h4 class="block-header"><g:message code="organisation.details.header"/></h4>
 
-    <section class="form-group row">
+    <section class="mb-3 row">
         <label for="abnStatus" class="col-sm-3 form-check-label">ABN Status: <fc:iconHelp><g:message code="organisation.abnStatus.help"/></fc:iconHelp></label>
 
         <div class="col-sm-7">
-            <select type="text" id="abnStatus" class="w-100 form-control form-control-sm" data-bind="value:abnStatus">
+            <select type="text" id="abnStatus" class="w-100 form-select form-select-sm" data-bind="value:abnStatus">
                 <option value="N/A">N/A</option>
                 <option value="Active">Active</option>
                 <option value="Cancelled">Cancelled</option>
             </select>
         </div>
     </section>
-    <section class="form-group row">
+    <section class="mb-3 row">
         <label for="abnSelector" class="col-sm-3 form-check-label">ABN: <fc:iconHelp><g:message code="organisation.abn.help"/></fc:iconHelp></label>
 
             <div class="col-sm-5">
@@ -24,7 +24,7 @@
                 <button type="button" class="btn btn-sm btn-warning" id="clearABN" data-bind="click:clearAbnDetails, enable:entityName()">Clear ABN Details</button>
             </div>
     </section>
-    <section class="form-group row">
+    <section class="mb-3 row">
         <label for="entityName" class="col-sm-3">Entity name: <fc:iconHelp><g:message code="organisation.entityName.help"/></fc:iconHelp></label>
 
         <div class="col-sm-9">
@@ -32,7 +32,7 @@
         </div>
     </section>
 
-    <section class="form-group row">
+    <section class="mb-3 row">
         <label for="businessNames" class="col-sm-3">Business name/s: <fc:iconHelp><g:message code="organisation.businessNames.help"/></fc:iconHelp></label>
 
         <div class="col-sm-9">
@@ -40,15 +40,15 @@
         </div>
     </section>
 
-    <section class="form-group row">
+    <section class="mb-3 row">
         <label for="organisationType" class="col-sm-3">Type of organisation: <fc:iconHelp><g:message code="organisation.type.help"/></fc:iconHelp></label>
 
         <div class="col-sm-9">
-            <select id="organisationType" class="form-control form-control-sm" data-bind="options:entityTypes, optionsCaption:'Please select...', optionsText:'label', optionsValue:'code', value:entityType, enable:abnStatus() == 'N/A'"></select>
+            <select id="organisationType" class="form-select form-select-sm" data-bind="options:entityTypes, optionsCaption:'Please select...', optionsText:'label', optionsValue:'code', value:entityType, enable:abnStatus() == 'N/A'"></select>
         </div>
     </section>
 
-    <section class="form-group row">
+    <section class="mb-3 row">
         <label class="col-sm-3 form-check-label">Indigenous organisation registration: <fc:iconHelp><g:message code="organisation.indigenous.help"/></fc:iconHelp></label>
 
         <div class="col-sm-9">
@@ -62,14 +62,14 @@
         </div>
     </section>
 
-    <section class="form-group row required">
+    <section class="mb-3 row required">
 
         <label for="name" class="col-sm-3 form-check-label">Name: <fc:iconHelp><g:message code="organisation.name.help"/></fc:iconHelp></label>
         <div class="col-sm-9">
             <input type="text" id="name" class="form-control form-control-sm w-100" data-bind="value:name" data-validation-engine="validate[required]" placeholder="Organisation name">
         </div>
     </section>
-    <section class="form-group row">
+    <section class="mb-3 row">
         <label class="col-sm-3 form-check-label">Contracted recipient name/s: <fc:iconHelp><g:message code="organisation.contractNames.help"/></fc:iconHelp></label>
         <div class="col-sm-9">
             <multi-input params="values: contractNames">
@@ -79,7 +79,7 @@
         </div>
     </section>
 
-    <section class="form-group row">
+    <section class="mb-3 row">
 
         <label for="acronym" class="col-sm-3 form-check-label">Acronym: <fc:iconHelp><g:message code="organisation.acronym.help"/></fc:iconHelp></label>
         <div class="col-sm-3">
@@ -87,17 +87,17 @@
         </div>
     </section>
 
-    <section class="form-group row required">
+    <section class="mb-3 row required">
         <label for="description" class="col-sm-3 form-check-label labelModification">Description: <fc:iconHelp><g:message code="organisation.description.help"/></fc:iconHelp></label>
         <div class="col-sm-9">
             <textarea type="text" id="description" placeholder="A description of the organisation" class="form-control form-control-sm w-100" data-validation-engine="validate[required]" data-bind="value:description"></textarea>
             <button class="btn btn-sm popup-edit" data-bind="click:editDescription"><i class="fa fa-edit"></i> Edit with Markdown Editor</button>
         </div>
     </section>
-    <section class="form-group row required">
+    <section class="mb-3 row required">
         <label for="state" class="col-sm-3 form-check-label labelModification">State: <fc:iconHelp><g:message code="organisation.state.help"/></fc:iconHelp></label>
         <div class="col-sm-3">
-            <select id="state" class="form-control form-control-sm w-100" data-validation-engine="validate[required]" data-bind="value:state">
+            <select id="state" class="form-select form-select-sm w-100" data-validation-engine="validate[required]" data-bind="value:state">
                 <option value=""></option>
                 <option value="ACT">ACT</option>
                 <option value="NSW">NSW</option>
@@ -110,14 +110,14 @@
             </select>
         </div>
     </section>
-    <section class="form-group row required">
+    <section class="mb-3 row required">
         <label for="postcode" class="col-sm-3 form-check-label labelModification">Postcode: <fc:iconHelp><g:message code="organisation.postcode.help"/></fc:iconHelp></label>
         <div class="col-sm-3">
             <input type="text" id="postcode" placeholder="The postcode of organisation headquarters" class="form-control form-control-sm" data-validation-engine="validate[required, number,minSize[4],maxSize[4]" data-bind="value:postcode"></input>
         </div>
     </section>
 
-    <section class="form-group row">
+    <section class="mb-3 row">
             <label class="col-form-label col-sm-3" for="url">External ids: <fc:iconHelp><g:message
                     code="organisation.externalIds.help"/></fc:iconHelp></label>
             <div class="controls col-sm-9">
@@ -125,7 +125,7 @@
             </div>
     </section>
 
-    <section class="form-group row">
+    <section class="mb-3 row">
         <label class="col-form-label col-sm-3" for="url">Associated organisations: <fc:iconHelp><g:message
                 code="organisation.associatedOrgs.help"/></fc:iconHelp></label>
         <div class="controls col-sm-9">
@@ -134,7 +134,7 @@
         </div>
     </section>
 
-    <section class="form-group row">
+    <section class="mb-3 row">
         <label for="url" class="col-sm-3 form-check-label labelModification">Web Site URL: <fc:iconHelp><g:message code="organisation.webUrl.help"/></fc:iconHelp></label>
         <div class="col-sm-9">
             <input type="text" class="form-control form-control-sm w-100" id="url" data-bind="value:url" data-validation-engine="validate[custom[url]]" placeholder="link to your organisations website">
@@ -142,7 +142,7 @@
     </section>
     <g:render template="/shared/editSocialMediaLinks" model="${[entity: 'organisation', imageUrl: assetPath(src: 'filetypes')]}"/>
     <h4 class="block-header"><g:message code="organisation.images.header"/></h4>
-    <section class="form-group row">
+    <section class="mb-3 row">
         <label for="logo" class="col-sm-3 form-check-label">Organisation Logo: <fc:iconHelp><g:message code="organisation.logo.help"/></fc:iconHelp></label>
         <div class="col-sm-6" style="text-align:center;background:white">
             <g:message code="organisation.logo.extra"/><br/>
@@ -163,7 +163,7 @@
             <button class="btn main-image-button" data-bind="click:removeLogoImage, visible:logoUrl()"><i class="fa fa-minus"></i> Remove</button>
         </span>
     </section>
-    <section class="form-group row">
+    <section class="mb-3 row">
         <label for="logo" class="col-sm-3 form-check-label">Feature Graphic: <fc:iconHelp><g:message code="organisation.mainImage.help"/></fc:iconHelp></label>
         <div class="col-sm-6" style="text-align:center;background:white">
             <div class="well card" style="padding:0;width:200px;height:150px;line-height:146px;display:inline-block; overflow: hidden">

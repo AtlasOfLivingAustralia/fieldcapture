@@ -162,7 +162,7 @@
             if(siteCount > 0){
                 numSitesHtml = siteCount + " sites";
             } else {
-                numSitesHtml = "0 sites <span class=\"label badge-danger\">No georeferenced points for the selected projects</span>";
+                numSitesHtml = "0 sites <span class=\"label bg-danger\">No georeferenced points for the selected projects</span>";
             }
             $("#numberOfSites").html(numSitesHtml);
 

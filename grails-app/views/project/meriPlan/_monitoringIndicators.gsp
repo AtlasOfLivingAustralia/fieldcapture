@@ -37,13 +37,13 @@
                     <g:if test="${extendedMonitoring}">
                         <td class="monitoring-service">
                             <select multiple="multiple"
-                                    class="form-control form-control-sm"
+                                    class="form-select form-select-sm"
                                     data-validation-engine="validate[required]"
                                     data-bind="options:$root.monitoringTargetMeasures, optionsText:'label', optionsValue:'scoreId', multiSelect2:{tags:false, value:relatedTargetMeasures, preserveColumnWidth:20}, disable: $root.isProjectDetailsLocked()"></select>
                         </td>
                         <td class="monitoring-method">
                             <select multiple="multiple"
-                                    class="form-control form-control-sm"
+                                    class="form-select form-select-sm"
                                     data-validation-engine="validate[required, funcCall[validateFloristics]]"
                                     data-bind="options:$root.monitoringProtocols, optionsText:'label', optionsValue:'value', multiSelect2:{tags:false, value:protocols, preserveColumnWidth:20}, optionsCaption:'Please select...', disable: $root.isProjectDetailsLocked()">
                             </select>

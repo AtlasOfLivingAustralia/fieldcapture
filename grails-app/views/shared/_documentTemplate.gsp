@@ -1,13 +1,13 @@
 <script id="imageDocTmpl" type="text/html">
-<span class="pull-left float-left" style="width:32px;height:32px;">
-    <img class="media-object img-rounded col-sm-1" data-bind="attr:{src:thumbnailUrl, alt:name}" style="width:32px;height:32px;" width="32" height="32" alt="document icon">
+<span class="pull-left float-start" style="width:32px;height:32px;">
+    <img class="d-flex-object img-rounded col-sm-1" data-bind="attr:{src:thumbnailUrl, alt:name}" style="width:32px;height:32px;" width="32" height="32" alt="document icon">
 </span>
-<div class="media-body">
-    <a class="pull-right float-right" data-bind="attr:{href:url}" target="_blank">
+<div class="flex-grow-1">
+    <a class="pull-right float-end" data-bind="attr:{href:url}" target="_blank">
         <i class="fa fa-download"></i>
     </a>
     <span>
-        <small class="media-heading" data-bind="text:name() || filename()"></small>
+        <small class="d-flex-heading" data-bind="text:name() || filename()"></small>
     </span>
     <span class="muted" data-bind="if:$data.attribution">
         <br/><small data-bind="text:attribution"></small>
@@ -16,15 +16,15 @@
 </script>
 
 <script id="objDocTmpl" type="text/html">
-<span class="pull-left float-left">
-    <img class="media-object" data-bind="attr:{src:filetypeImg(), alt:name}" alt="document icon}">
+<span class="pull-left float-start">
+    <img class="d-flex-object" data-bind="attr:{src:filetypeImg(), alt:name}" alt="document icon}">
 </span>
-<div class="media-body">
-    <a class="pull-right float-right" data-bind="attr:{href:url}" target="_blank">
+<div class="flex-grow-1">
+    <a class="pull-right float-end" data-bind="attr:{href:url}" target="_blank">
         <i class="fa fa-download"></i>
     </a>
     <span>
-        <small class="media-heading" data-bind="text:name() || filename()"></small>
+        <small class="d-flex-heading" data-bind="text:name() || filename()"></small>
     </span>
     <span class="muted" data-bind="if:$data.attribution">
         <br/><small data-bind="text:attribution"></small>
@@ -44,7 +44,7 @@
         </g:if>
         <div class="col-sm-1">
             <a data-bind="attr:{href:url}" target="_blank">
-                <img class="media-object img-rounded" data-bind="attr:{src:thumbnailUrl, alt:name}" alt="document icon}">
+                <img class="d-flex-object img-rounded" data-bind="attr:{src:thumbnailUrl, alt:name}" alt="document icon}">
             </a>
             <p class="muted" data-bind="if:$data.attribution">
                 <small data-bind="text:attribution"></small>
@@ -52,7 +52,7 @@
         </div>
         <div class="title-heading col-sm-9">
             <a data-bind="attr:{href:url}" target="_blank" class="downloadDocument">
-                <p class="media-heading" data-bind="text:name() || filename()"></p>
+                <p class="d-flex-heading" data-bind="text:name() || filename()"></p>
             </a>
         </div>
         <div class="col-sm-1">
@@ -75,12 +75,12 @@
         </g:if>
         <div class="col-sm-1">
             <a data-bind="attr:{href:url}">
-                <img class="media-object img-fluid" data-bind="attr:{src:filetypeImg(), alt:name}" alt="document icon}">
+                <img class="d-flex-object img-fluid" data-bind="attr:{src:filetypeImg(), alt:name}" alt="document icon}">
             </a>
         </div>
         <div class="title-heading col-sm-9">
             <a data-bind="attr:{href:url}" target="_blank" class="downloadDocument">
-                <p class="media-heading" data-bind="text:name() || filename()"></p>
+                <p class="d-flex-heading" data-bind="text:name() || filename()"></p>
             </a>
             <p class="muted" data-bind="if:$data.attribution">
                 <small data-bind="text:attribution"></small>
@@ -106,7 +106,7 @@
         </div>
 
         <div class="col-sm-1">
-            <i class="pull-left float-left ml-2 fa fa-file-video-o fa-2x"></i>
+            <i class="pull-left float-start ms-2 fa fa-file-video-o fa-2x"></i>
 
             <p class="muted" data-bind="if:$data.attribution">
                 <small data-bind="text:attribution"></small>

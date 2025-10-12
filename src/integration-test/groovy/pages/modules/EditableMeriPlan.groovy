@@ -3,6 +3,8 @@ package pages.modules
 import geb.Module
 import geb.module.Checkbox
 import geb.module.FormElement
+import groovy.util.logging.Slf4j
+import org.openqa.selenium.ElementClickInterceptedException
 import org.openqa.selenium.StaleElementReferenceException
 
 class OutcomeRow extends Module {
@@ -53,6 +55,9 @@ class ExtendedBaseline extends Module {
     }
 
     void addMonitoringIndicator(int baselineIndex) {
+        interact {
+            moveToElement(addMonitoringIndicatorButtons[baselineIndex])
+        }
         addMonitoringIndicatorButtons[baselineIndex].click()
     }
 
@@ -166,6 +171,9 @@ class ObjectivesAndAssets extends Module {
         removeButton(required:false) { $('.remove i') }
     }
     void remove() {
+        interact {
+            moveToElement(removeButton)
+        }
         removeButton.click()
     }
 }
@@ -254,6 +262,7 @@ class ForecastRow extends Module {
     }
 }
 
+@Slf4j
 class EditableMeriPlan extends Module {
 
     static content = {
@@ -334,7 +343,10 @@ class EditableMeriPlan extends Module {
     }
 
     void addPartnershipRow() {
-        int currentRows = projectPartnerships.size();
+        int currentRows = projectPartnerships.size()
+        interact {
+            moveToElement($('button[data-bind*=addPartnership]'))
+        }
         $('button[data-bind*=addPartnership]').click();
         waitFor {
             projectPartnerships.size() == currentRows + 1
@@ -342,8 +354,11 @@ class EditableMeriPlan extends Module {
     }
 
     void addObjectiveAndAssetRow() {
-        int currentRows = objectivesAndAssets.size();
-        $('button[data-bind*=addOutcome]').click();
+        int currentRows = objectivesAndAssets.size()
+        interact {
+            moveToElement($('button[data-bind*=addOutcome]'))
+        }
+        $('button[data-bind*=addOutcome]').click()
         waitFor {
             objectivesAndAssets.size() == currentRows + 1
         }
@@ -351,14 +366,40 @@ class EditableMeriPlan extends Module {
 
     void hideFloatingSave() {
         js.exec("\$('#floating-save').css('display', 'none');")
+        waitFor {
+            !floatingSaveDisplayed()
+        }
     }
 
     boolean floatingSaveDisplayed() {
         $("#floating-save").size() > 0 && $("#floating-save").displayed
     }
 
+    boolean selectFirstPriority() {
+        if (primaryPriorityUnstyled.size() > 0) {
+            interact {
+                moveToElement(primaryPriorityUnstyled[0])
+            }
+            primaryPriorityUnstyled[0].click()
+            return true
+        }
+        return false
+    }
+
     void save() {
-        saveButton.click()
+        interact {
+            moveToElement(saveButton)
+        }
+        try {
+            saveButton.click()
+        }
+        catch (ElementClickInterceptedException e) {
+            log.warn("Click intercepted", e)
+            // Try clicking manually
+
+            js.exec("\$('.form-actions [data-bind*=\"saveProjectDetails\"]').first().click();")
+        }
+
         // There is a chance of a race condition here if the save
         // finishes before this check runs, hence catching the assertion
         try {
@@ -405,6 +446,9 @@ class EditableMeriPlan extends Module {
 
     void checkObjective(String value) {
         def checkbox = objectivesList.find("input[value=\"${value}\"]").module(Checkbox)
+        interact {
+            moveToElement(checkbox)
+        }
         checkbox.check()
     }
 
@@ -425,7 +469,11 @@ class EditableMeriPlan extends Module {
     }
 
     void checkActivity(String value) {
-        activities.find("input[value=\"${value}\"]").module(Checkbox).check()
+        def checkbox = activities.find("input[value=\"${value}\"]")
+        interact {
+            moveToElement(checkbox)
+        }
+        checkbox.module(Checkbox).check()
     }
 
     List checkedActivities() {
@@ -438,7 +486,9 @@ class EditableMeriPlan extends Module {
         hideFloatingSave()
 
         int midTermOutcomeCount = mediumTermOutcomes.size()
-
+        interact {
+            moveToElement(addMediumTermOutcomeButton)
+        }
         addMediumTermOutcomeButton.click()
         waitFor{ mediumTermOutcomes.size() > midTermOutcomeCount }
 
@@ -457,6 +507,9 @@ class EditableMeriPlan extends Module {
         hideFloatingSave()
         int midTermOutcomeCount = shortTermOutcomes.size()
 
+        interact {
+            moveToElement(addShortTermOutcomeButton)
+        }
         addShortTermOutcomeButton.click()
         waitFor{ shortTermOutcomes.size() > midTermOutcomeCount }
 

@@ -252,7 +252,7 @@ var ReportViewModel = function(report, config) {
         };
         ko.applyBindings(declarationViewModel, declaration);
         var unbind = function() {ko.cleanNode(declaration)};
-        $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden', unbind).on('hidden.bs.modal', unbind);
+        $(declaration).modal({ backdrop: 'static', keyboard: true}).on('hidden', unbind).on('hidden.bs.modal', unbind).modal('show');
 
     };
 
@@ -279,7 +279,7 @@ var ReportViewModel = function(report, config) {
 
         ko.applyBindings(reasonViewModel, $modal[0]);
 
-        var modalOptions = {backdrop: 'static', keyboard:true, show:true};
+        var modalOptions = {backdrop: 'static', keyboard:true};
         $modal.validationEngine({promptPosition:'topLeft'});
 
         $modal.modal(modalOptions).on('hidden.bs.modal', function() {
@@ -287,7 +287,7 @@ var ReportViewModel = function(report, config) {
             $modal.validationEngine('detach');
             ko.cleanNode($modal[0]);
             $modal.remove();
-        });
+        }).modal('show');
 
     }
 

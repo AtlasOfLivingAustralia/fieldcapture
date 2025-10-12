@@ -32,11 +32,11 @@
     <tr>
         <td class="index"><span data-bind="text:$index()+1"></span></td>
         <td class="service">
-            <select class="form-control form-control-sm" data-bind="options: selectableServices, optionsText:'name', optionsValue:'id',  value:serviceId, enable: $parent.areTargetsEditable"
+            <select class="form-select form-select-sm" data-bind="options: selectableServices, optionsText:'name', optionsValue:'id',  value:serviceId, enable: $parent.areTargetsEditable"
                     data-validation-engine="validate[required]"></select>
         </td>
         <td class="score">
-            <select class="form-control form-control-sm" data-bind="options: selectableScores, optionsText:'label', optionsValue:'scoreId',  value:scoreId, enable: $parent.areTargetsEditable"
+            <select class="form-select form-select-sm" data-bind="options: selectableScores, optionsText:'label', optionsValue:'scoreId',  value:scoreId, enable: $parent.areTargetsEditable"
                     data-validation-engine="validate[required]"></select>
         </td>
         <td class="budget-cell">

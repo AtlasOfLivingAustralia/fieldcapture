@@ -96,6 +96,7 @@
                 riskChangesReportPdfUrl: "${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
                 newDataSetUrl: "${createLink(controller:'dataSet', action:'create', id:project.projectId)}",
                 editDataSetUrl: "${createLink(controller:'dataSet', action:'edit', id:project.projectId)}",
+                copyDataSetUrl: "${createLink(controller:'dataSet', action:'copy', id:project.projectId)}",
                 deleteDataSetUrl: "${createLink(controller:'dataSet', action:'delete', id:project.projectId)}",
                 viewDataSetUrl: "${createLink(controller:'dataSet', action:'view', id:project.projectId)}",
                 downloadDataSetUrl: "${createLink(controller:'dataSet', action:'download', id:project.projectId)}",
@@ -170,7 +171,7 @@
             <g:if test="${flash.errorMessage || flash.message}">
                 <div class="col-sm-5">
                     <div class="alert alert-danger">
-                        <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+                        <button class="btn-close" onclick="$('.alert').fadeOut();" href="#">×</button>
                         ${flash.errorMessage ?: flash.message}
                     </div>
                 </div>
@@ -178,7 +179,7 @@
         </div>
 
     <div class="col-sm-2 heading-buttons-container">
-        <div class="float-right pull-right">
+        <div class="float-end pull-right">
             <g:if test="${showAlternateTemplate}">
                 <a href="${createLink(action: 'index', id: project.projectId)}"><button class="btn btn-sm " type="button">User View</button></a>
             </g:if>
@@ -304,6 +305,7 @@ var config = {
             riskChangesReportPdfUrl: fcConfig.riskChangesReportPdfUrl,
             newDataSetUrl: fcConfig.newDataSetUrl,
             editDataSetUrl: fcConfig.editDataSetUrl,
+            copyDataSetUrl: fcConfig.copyDataSetUrl,
             deleteDataSetUrl: fcConfig.deleteDataSetUrl,
             viewDataSetUrl: fcConfig.viewDataSetUrl,
             downloadDataSetUrl: fcConfig.downloadDataSetUrl,
@@ -379,7 +381,7 @@ var config = {
 
             var meriPlanVisible = false;
             var risksVisible = false;
-            $('a[data-toggle="tab"]').on('show', function(e) {
+            $('a[data-bs-toggle="tab"]').on('show', function(e) {
                if (meriPlanVisible && viewModel.meriPlan.meriPlan().dirtyFlag.isDirty()) {
                     e.preventDefault();
                     bootbox.alert($('#meriPlanUnsavedChanges').html());
@@ -509,7 +511,7 @@ var config = {
             });
 
             // Non-editors should get tooltip and popup when trying to click other tabs
-            $('#projectTabs li a').not('[data-toggle="tab"]').css('cursor', 'not-allowed') //.data('placement',"right")
+            $('#projectTabs li a').not('[data-bs-toggle="tab"]').css('cursor', 'not-allowed') //.data('placement',"right")
             .attr('title','Only available to project members').addClass('tooltips nav-link');
 
             // Star button click event

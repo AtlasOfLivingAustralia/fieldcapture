@@ -14,8 +14,8 @@
 </g:if>
 
 <ul class="nav nav-tabs space-before">
-    <li class=" nav-item active"><a href="#tablePlan" data-toggle="tab" class="nav-link active show">Tabular</a></li>
-    <li class=" nav-item"><a href="#ganttPlan" data-toggle="tab" class="nav-link">Gantt chart</a></li>
+    <li class=" nav-item active"><a href="#tablePlan" data-bs-toggle="tab" class="nav-link active show">Tabular</a></li>
+    <li class=" nav-item"><a href="#ganttPlan" data-bs-toggle="tab" class="nav-link">Gantt chart</a></li>
 </ul>
 
 <div class="tab-content" style="padding:0;border:none;overflow:visible">
@@ -31,7 +31,7 @@
 
                 <div class="pull-right">
                     <span data-bind="visible:isCurrentStage"></span>
-                    <span data-bind="visible:isCurrentStage" class="badge badge-info">Current stage</span>
+                    <span data-bind="visible:isCurrentStage" class="badge text-bg-info">Current stage</span>
 
                     <span data-bind="template:stageStatusTemplateName"></span>
                 </div>
@@ -86,7 +86,7 @@
             <div class="modal-content reasonModalForm">
                 <div class="modal-header">
                     <h4 class="modal-title"id="myModalLabel">Reason for deferring or cancelling an activity</h4>
-                    <button type="button" class="close" aria-hidden="true"
+                    <button type="button" class="btn-close" aria-hidden="true"
                             data-bind="click:$parent.displayReasonModal.cancelReasonModal">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -97,7 +97,7 @@
                     <textarea data-bind="value:notes,hasFocus:true" name="reason" rows=4 cols="80" class="form-control form-control-sm validate[required]"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-danger" data-bind="click: $parent.displayReasonModal.cancelReasonModal" data-dismiss="modal" aria-hidden="true">Discard status change</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-bind="click: $parent.displayReasonModal.cancelReasonModal" data-bs-dismiss="modal" aria-hidden="true">Discard status change</button>
                     <button class="btn btn-sm btn-primary" type="button" data-bind="click:$parent.displayReasonModal.saveReasonDocument">Save reason</button>
                 </div>
             </div>
@@ -109,7 +109,7 @@
                 <div class="modal-content reasonModalForm">
                     <div class="modal-header">
                         <h4 class="modal-title">Reason for deferring or cancelling an activity</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"
                                 data-bind="click:function() {$parent.displayReasonModalReadOnly(false);}">&times;</button>
                     </div>
                     <div class="modal-body">
@@ -223,7 +223,7 @@
 
     <script id="updateStatusTmpl" type="text/html">
     <div class="dropdown activity">
-        <button type="button" class="btn btn-sm activity-progress" data-toggle="dropdown"
+        <button type="button" class="btn btn-sm activity-progress" data-bs-toggle="dropdown"
                 data-bind="activityProgress:progress"
                 style="line-height:16px;min-width:86px;text-align:left;">
             <span data-bind="text: progress"></span> <span class="pull-right"> <i class="fa fa-caret-down"></i></span>

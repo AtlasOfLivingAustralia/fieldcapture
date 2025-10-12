@@ -134,6 +134,9 @@ class ReportServiceFilteringSpec extends StubbedCasSpec {
         meriPlan.save()
 
         and: "open the report"
+        interact {
+            moveToElement(reportingTab)
+        }
         reportingTab.click()
         waitFor { projectReports.displayed }
         projectReports.reports[0].edit()

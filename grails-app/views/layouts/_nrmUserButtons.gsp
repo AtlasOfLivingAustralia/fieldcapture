@@ -7,7 +7,7 @@
         </div>
 
         <div class="btn-group ">
-            <button class="btn btn-small btn-sm btn-fc dropdown-toggle" data-toggle="dropdown">
+            <button class="btn btn-small btn-sm btn-fc dropdown-toggle" data-bs-toggle="dropdown">
                 <!--<i class="icon-star icon-white"></i>--> My organisations&nbsp;&nbsp;<span class="caret"></span>
             </button>
             <fc:userOrganisationList />

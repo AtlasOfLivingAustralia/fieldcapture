@@ -122,10 +122,10 @@ function MERIPlan(project, projectService, config) {
                 }
             };
             ko.applyBindings(declarationViewModel, $declaration[0]);
-            $declaration.modal({backdrop: 'static', keyboard: true, show: true}).on('hidden.bs.modal', function () {
+            $declaration.modal({backdrop: 'static', keyboard: true}).on('hidden.bs.modal', function () {
                 $.unblockUI()
                 ko.cleanNode($declaration[0]);
-            });
+            }).modal('show');
 
         } else {
             self.submitPlan();
@@ -187,7 +187,7 @@ function MERIPlan(project, projectService, config) {
                     }
                 };
                 ko.applyBindings(planApprovalViewModel, $planApprovalModal[0]);
-                $planApprovalModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden.bs.modal', function() {ko.cleanNode($planApprovalModal[0])});
+                $planApprovalModal.modal({backdrop: 'static', keyboard:true}).on('hidden.bs.modal', function() {ko.cleanNode($planApprovalModal[0])}).modal('show');
             }
             else {
                 var data = {
@@ -247,9 +247,9 @@ function MERIPlan(project, projectService, config) {
             }
         };
         ko.applyBindings(declarationViewModel, $declaration[0]);
-        $declaration.modal({backdrop: 'static', keyboard: true, show: true}).on('hidden', function () {
+        $declaration.modal({backdrop: 'static', keyboard: true}).on('hidden', function () {
             ko.cleanNode($declaration[0]);
-        });
+        }).modal('show');
     };
 
     self.isAgricultureProject.subscribe(function () {
@@ -805,9 +805,6 @@ function createRiskModel(config) {
             case 'merit':
                 riskModel = meritRiskModel();
                 break;
-            case 'ag':
-                riskModel = agRiskModel();
-                break;
             case 'rlp':
             default:
                 riskModel = rlpRiskModel();
@@ -842,26 +839,26 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
     self.meriPlanStatus = ko.pureComputed(function () {
         var result = {
             text: 'This plan is not yet approved',
-            badgeClass: 'badge-warning'
+            badgeClass: 'bg-warning'
         };
         if (projectService.isCompletedOrTerminated()) {
             if (projectService.isUnlockedForDataCorrection()) {
-                result = {text: 'The plan has been unlocked for data correction', badgeClass: 'badge-warning'};
+                result = {text: 'The plan has been unlocked for data correction', badgeClass: 'bg-warning'};
             } else {
                 if (projectService.isTerminated()){
-                    result = {text: 'This project is ' + project.status.toLowerCase(), badgeClass: 'badge-danger'};
+                    result = {text: 'This project is ' + project.status.toLowerCase(), badgeClass: 'bg-danger'};
                 }else{
-                    result = {text: 'This project is ' + project.status.toLowerCase(), badgeClass: 'badge-info'};
+                    result = {text: 'This project is ' + project.status.toLowerCase(), badgeClass: 'bg-info'};
                 }
             }
         } else {
             if (projectService.isApproved()) {
-                result = {text: 'This plan has been approved', badgeClass: 'badge-success'};
+                result = {text: 'This plan has been approved', badgeClass: 'bg-success'};
             } else if (projectService.isSubmitted()) {
-                result = {text: 'This plan has been submitted for approval', badgeClass: 'badge-info'};
+                result = {text: 'This plan has been submitted for approval', badgeClass: 'bg-info'};
             }
             else if (!projectService.isPlanComplete()) {
-                result = {text: 'This plan has not been completed', badgeClass: 'badge-warning'};
+                result = {text: 'This plan has not been completed', badgeClass: 'bg-warning'};
             }
         }
         return result;

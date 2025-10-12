@@ -3,7 +3,7 @@
     <h4 class="block-header"><g:message code="program.details.header"/></h4>
 
     <g:if test="${fc.userIsAlaOrFcAdmin() && editProgramId != null}">
-        <div class="form-group row">
+        <div class="mb-3 row">
             <label for="parentProgramId" class="col-form-label col-sm-3">
                 Parent Program:
             </label>
@@ -16,19 +16,19 @@
         </div>
     </g:if>
     <g:elseif test="${program.parentProgramId != null}">
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="parentProgramId" class="col-form-label col-sm-3">
             Parent Program:
         </label>
         <div class="col-sm-9">
-            <select name="parentProgramId" id="parentProgramId" data-bind="value:parentProgramId" class="form-control"
+            <select name="parentProgramId" id="parentProgramId" data-bind="value:parentProgramId" class="form-select"
                     data-validation-engine="validate[required]" disabled="disabled">
                 <option value="${program.parentProgramId}">${program.parentProgramName}</option>
             </select>
         </div>
     </div>
 </g:elseif>
-      <div class="form-group row required">
+      <div class="mb-3 row required">
         <label class="col-form-label col-sm-3" for="name">Name: <fc:iconHelp><g:message
                 code="program.name.help"/></fc:iconHelp></label>
 
@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <div class="form-group row required">
+    <div class="mb-3 row required">
         <label class="col-form-label col-sm-3" for="description">Description: <fc:iconHelp><g:message
                 code="program.description.help"/></fc:iconHelp></label>
 
@@ -52,7 +52,7 @@
         </div>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label class="col-form-label col-sm-3" for="url">External ids: <fc:iconHelp><g:message
                 code="program.externalIds.help"/></fc:iconHelp></label>
         <div class="controls col-sm-9">
@@ -60,7 +60,7 @@
         </div>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label class="col-form-label col-sm-3" for="fundingType">Funding type: <fc:iconHelp><g:message
                 code="program.fundingType.help"/></fc:iconHelp></label>
 
@@ -70,24 +70,22 @@
         </div>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label class="col-form-label col-sm-3" for="totalFunding">Total funding amount (GST Exclusive): <fc:iconHelp><g:message
                 code="program.funding.help"/></fc:iconHelp></label>
 
-        <div class="col-sm-3 input-group currency-input">
-            <div class="input-group-prepend customAddOn">
-                <span class="input-group-text">$</span>
-            </div>
+        <div class="col-sm-3 currency-input">
+            <div class="input-group">
+            <span class="input-group-text">$</span>
             <input type="number" step="0" id="totalFunding" class="form-control " data-bind="value:totalFunding"
                    placeholder="${g.message(code: 'program.funding.placeholder')}">
-            <div class="input-group-append customAddOn">
-                <span class="input-group-text">.00</span>
+            <span class="input-group-text">.00</span>
             </div>
         </div>
 
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label class="col-form-label col-sm-3" for="url">Web Site URL: <fc:iconHelp><g:message
                 code="program.webUrl.help"/></fc:iconHelp></label>
 
@@ -104,7 +102,7 @@
 
     <h4 class="block-header"><g:message code="program.images.header"/></h4>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label class="col-form-label col-sm-3" for="logo">Program Logo: <fc:iconHelp><g:message
                 code="program.logo.help"/></fc:iconHelp>:</label>
 
@@ -131,7 +129,7 @@
         </span>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label class="col-form-label col-sm-3" for="mainImage">Feature Graphic<fc:iconHelp><g:message
                 code="program.mainImage.help"/></fc:iconHelp>:</label>
 

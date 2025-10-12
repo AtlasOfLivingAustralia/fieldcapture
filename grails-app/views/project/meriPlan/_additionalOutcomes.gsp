@@ -11,14 +11,14 @@
     </thead>
     <tbody data-bind="foreach:details.outcomes.secondaryOutcomes">
     <tr>
-        <td class="outcome-priority"><select class="form-control form-control-sm" data-validation-engine="validate[required]"
+        <td class="outcome-priority"><select class="form-select form-select-sm" data-validation-engine="validate[required]"
                                              data-bind="value:description, options: details.outcomes.selectableSecondaryOutcomes, optionsCaption: 'Please select', select2:{preserveColumnWidth:48}, disable: $parent.isProjectDetailsLocked()"></select>
         </td>
         <td class="priority">
             <!-- ko if:!details.outcomes.secondaryOutcomeSupportsMultiplePriorities($data.description()) -->
 
             <!-- ko if:!details.outcomes.supportsSpeciesSearch($data.description()) -->
-            <select data-bind="value:asset, options: details.outcomes.outcomePriorities(description()), optionsCaption: 'Please select', select2:{preserveColumnWidth:48}, disable: $parent.isProjectDetailsLocked()" class="form-control form-control-sm asset" <g:if test="!disablePriorityValidation">data-validation-engine="validate[required]"></g:if></select></select>
+            <select data-bind="value:asset, options: details.outcomes.outcomePriorities(description()), optionsCaption: 'Please select', select2:{preserveColumnWidth:48}, disable: $parent.isProjectDetailsLocked()" class="form-select form-select-sm asset" <g:if test="!disablePriorityValidation">data-validation-engine="validate[required]"></g:if></select></select>
         <!-- /ko -->
         <!-- ko if:details.outcomes.supportsSpeciesSearch($data.description()) -->
             <g:render template="/shared/speciesSelect" model="${[bindingProperty:'speciesAsset']}"/>
@@ -27,7 +27,7 @@
         <!-- /ko -->
             <!-- ko if:details.outcomes.secondaryOutcomeSupportsMultiplePriorities($data.description()) -->
             <g:if test="${renderPrioritiesWithSelect2}">
-                <select multiple="multiple" class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(description()), multiSelect2:{preserveColumnWidth:48, value:assets, tags:false}, disable: $parent.isProjectDetailsLocked()"></select>
+                <select multiple="multiple" class="form-select form-select-sm" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(description()), multiSelect2:{preserveColumnWidth:48, value:assets, tags:false}, disable: $parent.isProjectDetailsLocked()"></select>
             </g:if>
             <g:else>
                 <ul class="list-unstyled" data-bind="foreach:details.outcomes.outcomePriorities(description())">

@@ -5,7 +5,7 @@
     <g:set var="error" value="${flash.error?:results.error}"/>
     <div class="row">
         <div class="col-sm-12 p-3 alert alert-danger large-space-before searchError">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert">&times;</button>
             <span>Error: ${error?.encodeAsHTML()}</span>
         </div>
     </div>
@@ -22,18 +22,10 @@
             </div>
             <h3 style="margin-bottom:0;">Filter results</h3>
             <div class="row">
-                <div id="facetFilter">
-                    <div class="col-sm-4" >
-                        <button class="btn btn-sm facetSearch"><i class="fa fa-filter"></i> Refine</button>
-                    </div>
+                <div class="col-md-12" >
+                    <button class="btn btn-sm facetSearch"><i class="fa fa-filter"></i> Refine</button>
+                    <button class="btn btn-sm clearFacet"><i class="fa fa-remove"></i> Clear all</button>
                 </div>
-                <div id="facetClear">
-                    <div class="col-sm-4">
-                        <button class="btn btn-sm clearFacet"><i class="fa fa-remove"></i> Clear all</button>
-
-                    </div>
-                </div>
-
             </div>
 
             <g:if test="${params.fq}">
@@ -58,16 +50,16 @@
                 <g:set var="fqLink" value="${g.createLink(controller: 'home', action: 'projectExplorer') + (baseUrl?:"?")}"/>
             <!-- fqLink = ${fqLink} -->
             <div class="accordion">
-                <div class="card customCard">
-                    <div class="card-header collapsed" data-toggle="collapse" href="#facet-dates" id="projectDates">
+                <div class="accordion-item customCard">
+                    <div class="accordion-header collapsed" data-bs-toggle="collapse" href="#facet-dates" id="projectDates">
                         <a><h4>Project Dates <fc:iconHelp helpTextCode="project.dates.help" container="body"/></h4></a>
                     </div>
 
                         <div id="facet-dates" data-name="projectDates" class="collapse facetItems validationEngineContainer">
-                            <div class="card-body cardBody">
+                            <div class="accordion-body cardBody">
                                 <select style="margin-bottom: 10px" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select>
-                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">From:</label><fc:datePicker targetField="fromDate.date" bs4="bs4" class="dateControl form-control form-control-sm" name="fromDate" data-validation-engine="validate[date]" autocomplete="off"/></div>
-                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">To:</label><fc:datePicker targetField="toDate.date" bs4="bs4" class="dateControl form-control form-control-sm" name="toDate" data-validation-engine="validate[date,future[fromDate]]" autocomplete="off"/></div>
+                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">From:</label><fc:datePicker targetField="fromDate.date" class="dateControl form-control form-control-sm" name="fromDate" data-validation-engine="validate[date]" autocomplete="off"/></div>
+                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">To:</label><fc:datePicker targetField="toDate.date" class="dateControl form-control form-control-sm" name="toDate" data-validation-engine="validate[date,future[fromDate]]" autocomplete="off"/></div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="isFilterByCompletedProjectsOption" data-bind="checked: isFilterByCompletedProjects" value="true">
                                     <label class="form-check-label" for="isFilterByCompletedProjectsOption">
@@ -89,13 +81,13 @@
         </div>
         <div class="col-sm-11">
             <div class="accordion" id="project-display-options">
-                <div class="card cardSection">
-                    <div class="card-header collapsed" id="mapHeading" href="#accordionMapView" data-toggle="collapse">
-                        <a class="text-left text-uppercase">Map</a>
+                <div class="accordion-item">
+                    <div class="accordion-header collapsed" id="mapHeading" data-bs-target="#accordionMapView" data-bs-toggle="collapse">
+                        <a class="text-start text-uppercase">Map</a>
                     </div>
 
-                    <div id="accordionMapView" class="collapseItems collapse" aria-labelledby="mapHeading" data-parent="#project-display-options">
-                        <div class="card-body pt-0">
+                    <div id="accordionMapView" class="collapseItems accordion-collapse collapse" aria-labelledby="mapHeading" data-bs-parent="#project-display-options">
+                        <div class="accordion-body pt-0">
                             <div class="row">
                                 <div class="col-sm-4">
                                     <span class="facet-holder"></span>
@@ -109,12 +101,12 @@
                         </div>
                     </div>
                 </div> <!-- Map Section -->
-                <div class="card cardSection">
-                        <div class="card-header collapsed" id="projectHeading" href="#projectsView" data-toggle="collapse">
-                            <a class="text-left text-uppercase">Projects</a>
-                        </div>
-                    <div id="projectsView" class="collapse collapseItems" aria-labelledby="projectHeading" data-parent="#project-display-options">
-                        <div class="card-body pt-0">
+                <div class="accordion-item">
+                    <div class="accordion-header collapsed" id="projectHeading" data-bs-target="#projectsView" data-bs-toggle="collapse">
+                        <a class="text-start text-uppercase">Projects</a>
+                    </div>
+                    <div id="projectsView" class="accordion-collapse collapse collapseItems" aria-labelledby="projectHeading" data-bs-parent="#project-display-options">
+                        <div class="accordion-body pt-0">
                             <div class="row">
                                 <div class="col-sm-4">
                                     <span class="facet-holder"></span>
@@ -148,24 +140,24 @@
                                                 <div class="accordion mb-0">
                                                     <div class="card mb-0 border-0 p-0">
                                                         <div>
-                                                            <a class="projectTitle collapsed" id="proj_" href="#a_" data-toggle="collapse" title="click to show/hide details">
+                                                            <a class="projectTitle collapsed" id="proj_" href="#a_" data-bs-toggle="collapse" title="click to show/hide details">
                                                                 <span class="showHideCaret">&#9658; </span><span class="projectTitleName">$name</span> (<b class="meritProjectID"></b>)
                                                             </a>
                                                             <a href="#" class="managementUnitLine pull-right">
                                                                 <small><i class="managementUnitName"></i></small>
                                                             </a>
                                                         </div>
-                                                        <div class="projectInfo collapse pl-2 pt-1" id="a_" aria-labelledby="proj_">
-                                                            <div class="card-body pt-0 pl-0 pb-0">
+                                                        <div class="projectInfo collapse ps-2 pt-1" id="a_" aria-labelledby="proj_">
+                                                            <div class="accordion-body pt-0 ps-0 pb-0">
                                                                 <div class="homeLine">
                                                                     <i class="fa fa-home"></i>
                                                                     <a href="">View project page</a>
                                                                 </div>
                                                                 <div class="orgLine">
-                                                                    <i class="fa fa-user" data-toggle="tooltip" title="Organisation"></i>
+                                                                    <i class="fa fa-user" data-bs-toggle="tooltip" title="Organisation"></i>
                                                                 </div>
                                                                 <div class="associatedProgramLine">
-                                                                    <i class="fa fa-bookmark" data-toggle="tooltip" title="Associated program / sub program"></i>
+                                                                    <i class="fa fa-bookmark" data-bs-toggle="tooltip" title="Associated program / sub program"></i>
                                                                     <span></span>
                                                                     <i class="associatedSubProgram"></i>
                                                                 </div>
@@ -195,19 +187,19 @@
                         </div>
                     </div>
                 </div> <!-- Project View -->
-                <div class="card cardSection">
-                <div class="card-header collapsed" id="dashboardHeading" href="#reportView" data-toggle="collapse">
-                    <a class="text-left text-uppercase">Dashboard</a>
-                </div>
-                    <div id="reportView" class="collapse collapseItems" aria-labelledby="dashboardHeading" data-parent="#project-display-options">
-                        <div class="card-body pt-0">
+                <div class="accordion-item">
+                    <div class="accordion-header collapsed" id="dashboardHeading" data-bs-target="#reportView" data-bs-toggle="collapse">
+                        <a class="text-start text-uppercase">Dashboard</a>
+                    </div>
+                    <div id="reportView" class="accordion-collapse collapse collapseItems" aria-labelledby="dashboardHeading" data-bs-parent="#project-display-options">
+                        <div class="accordion-body pt-0">
                             <div class="row">
                                 <div class="col-sm-4 d-none" data-hidden="true">
                                     <span class="facet-holder" data-hidden="true"></span>
                                 </div>
                                 <div class="col-sm-12">
                                     <div>
-                                        <div class="row" style="margin-top:5px;">
+                                        <div style="margin-top:5px;">
                                             <button class="btn facets-toggle" type="button" style="margin-right: 0.7rem;"><i class="fa fa-bars"></i></button>
                                             <span style="margin-top: 0.6em;">
                                             <g:render template="searchResultsSummary"/>
@@ -241,12 +233,12 @@
                         </div>
                     </div> <!-- Dashboard -->
                 <g:if test="${includeDownloads}">
-                    <div class="card cardSection">
-                        <div class="card-header collapsed" id="downloadHeading" href="#downloadView" data-toggle="collapse">
-                            <a class="text-left text-uppercase">Download</a>
+                    <div class="accordion-item">
+                        <div class="accordion-header collapsed" id="downloadHeading" data-bs-target="#downloadView" data-bs-toggle="collapse">
+                            <a class="text-start text-uppercase">Download</a>
                         </div>
-                        <div id="downloadView" class="collapse collapseItems" aria-labelledby="downloadHeading" data-parent="#project-display-options">
-                            <div class="card-body pt-0">
+                        <div id="downloadView" class="accordion-collapse collapse collapseItems" aria-labelledby="downloadHeading" data-bs-parent="#project-display-options">
+                            <div class="accordion-body pt-0">
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <span class="facet-holder"></span>

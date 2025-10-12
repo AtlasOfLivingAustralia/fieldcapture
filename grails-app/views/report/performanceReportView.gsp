@@ -30,7 +30,7 @@
 
     <br/>
     <div class="row">
-        <div class="form-inline col-sm-10">
+        <div class="d-flex align-items-center col-sm-10">
             <label>Who is the authorised person completing this self assessment?</label> &nbsp;${report.data.whoCompletedForm}
         </div>
     </div>

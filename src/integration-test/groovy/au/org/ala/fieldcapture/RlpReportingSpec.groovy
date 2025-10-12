@@ -652,7 +652,11 @@ class RlpReportingSpec extends StubbedCasSpec {
             field("mappingNotAlignedReason", section).value() == "Mapped area simplifies more complex area/s where work was undertaken during this period"
         }
         field("invoicedNotActualReason", section).value("Work was undertaken over a greater area than will be invoiced for")
-        section.find("i.fa-remove").click()
+        def removeButton = section.find("i.fa-remove")
+        interact {
+            moveToElement(removeButton)
+        }
+        removeButton.click()
 
         restoreFloatingToolbar()
         markAsComplete()

@@ -2,7 +2,7 @@
 <div class="associatedOrgs mt-3">
         Associated Organisations
 
-        <div class=" pl-0 associated-org-list" data-bind="foreach:associatedOrgs">
+        <div class=" ps-0 associated-org-list" data-bind="foreach:associatedOrgs">
 
                 <div class="actions">
                     <button class="btn btn-sm btn-container" data-bind="click:$parent.editAssociatedOrg"><i class="fa fa-edit"></i></button>
@@ -48,7 +48,7 @@
 
 
             <form class="modal-body">
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="searchOrganisation">Search for an existing organisation</label>
                     <div class="input-group input-append">
                         <input type="text" id="searchOrganisation" name="organisation-search" autocomplete="off" class="form-control form-control-sm" placeholder="Search organisations..."
@@ -57,30 +57,30 @@
                     </div>
                 </div>
                 <!-- ko if:$parent.displayName -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="name-to-use" class="required">Organisation name as it appears on the project page (i.e. The contracted recipient name)</label>
 
-                    <select class="form-control" id="name-to-use"  data-bind="enable:organisationId(), value:name, options:$parent.allowedNames"
+                    <select class="form-select" id="name-to-use"  data-bind="enable:organisationId(), value:name, options:$parent.allowedNames"
                             data-validation-engine="validate[required]" data-prompt-position="topLeft"></select>
                 </div>
                 <!-- /ko -->
-                <div class="form-group">
+                <div class="mb-3">
                     <label class="required" for="relationship-description">Relationship</label>
                     <!-- ko if:$parent.relationshipTypes -->
-                    <select id="relationship-description" name="description" class="form-control form-control-sm" data-bind="enable:organisationId(), options:$parent.relationshipTypes, value:description"></select>
+                    <select id="relationship-description" name="description" class="form-select form-select-sm" data-bind="enable:organisationId(), options:$parent.relationshipTypes, value:description"></select>
                     <!-- /ko -->
                     <!-- ko if:!$parent.relationshipTypes -->
                     <input type="text" id="relationship-description" name="description" class="form-control form-control-sm" data-bind="enable:organisationId(), value:description"></input>
                     <!-- /ko -->
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="relationship-from-date">From date</label>
                     <div class="input-group input-append">
                         <input id="relationship-from-date" name="relationship-from-date" autocomplete="off" class="form-control" data-bind="enable:organisationId(), datepicker:fromDate.date" type="text">
                         <span class="input-group-text open-datepicker"><i class="fa fa-th"></i></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="relationship-to-date">To date</label>
                     <div class="input-group input-append">
                         <input id="relationship-to-date" class="form-control" autocomplete="off" data-bind="enable:organisationId(), datepicker:toDate.date" name="to-date" type="text"
