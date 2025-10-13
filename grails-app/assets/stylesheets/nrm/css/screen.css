@@ -811,8 +811,6 @@ div.highlight {
 
 #google-map-small{ width: 290px; height: 250px; }
 
-.btn-close { background: url(../images/bg_sprites.png) no-repeat -456px -142px; width: 27px; height: 26px; display: block; position: absolute; text-indent: -999em; line-height: 0;  }
-
 /* LHS column */
 #lhs-column {
     width: 160px;

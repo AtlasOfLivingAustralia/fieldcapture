@@ -7,7 +7,7 @@
             <g:set var="program" value="${programDetails.program}"/>
             <li class="nav-item">
                 <g:set var="active" value="${i==0?'active':''}"/>
-                <a class="nav-link ${active}"  data-toggle="tab" href="#program_${program.programId}_projects" role="tab">${program.name?.encodeAsHTML()}</a>
+                <a class="nav-link ${active}"  data-bs-toggle="tab" href="#program_${program.programId}_projects" role="tab">${program.name?.encodeAsHTML()}</a>
 
             </li>
         </g:each>

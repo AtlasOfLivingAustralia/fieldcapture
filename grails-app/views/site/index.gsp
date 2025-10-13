@@ -48,26 +48,26 @@
             <g:if test="${flash.errorMessage || flash.message}">
                 <div>
                     <div class="alert alert-danger">
-                        <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+                        <button class="btn-close" onclick="$('.alert').fadeOut();" href="#">×</button>
                         ${flash.errorMessage?:flash.message}
                     </div>
                 </div>
             </g:if>
 
-            <div class="row ml-1" style="padding-bottom: 10px;">
+            <div class="row ms-1" style="padding-bottom: 10px;">
                 <div class="col-sm-12">
 
                     Site Actions:
                     <div class="btn-group">
                         <g:if test="${!au.org.ala.merit.SiteService.isReadOnly(site)}">
-                            <g:link action="edit" id="${site.siteId}"><button type="button" class="btn btn-sm mr-1"><i class="fa fa-edit"></i> Edit Site</button></g:link>
+                            <g:link action="edit" id="${site.siteId}"><button type="button" class="btn btn-sm me-1"><i class="fa fa-edit"></i> Edit Site</button></g:link>
                         </g:if>
 
                         <a href="${g.createLink(action:'downloadShapefile', id:site.siteId)}">
                             <button type="button" class="btn btn-sm"><i class="fa fa-download"></i> Download ShapeFile</button>
                         </a>
                         <g:if test="${site?.extent?.geometry?.pid}">
-                            <a href="${grailsApplication.config.getProperty('spatial.baseUrl')}/?pid=${site.extent.geometry.pid}" class=" ml-1 btn btn-sm"><i class="fa fa-external-link"></i> View in Spatial Portal</a>
+                            <a href="${grailsApplication.config.getProperty('spatial.baseUrl')}/?pid=${site.extent.geometry.pid}" class=" ms-1 btn btn-sm"><i class="fa fa-external-link"></i> View in Spatial Portal</a>
                         </g:if>
                     </div>
                 </div>
@@ -140,7 +140,7 @@
     </div>
 
     <g:if test="${site.projects}">
-        <div class="row ml-1">
+        <div class="row ms-1">
             <div class="col-sm-11">
                 <g:if test="${project}">
                     <h3>Project: ${project.name.encodeAsHTML()}</h3>
@@ -165,7 +165,7 @@
         </div>
     </g:if>
 
-    <div class="row ml-1">
+    <div class="row ms-1">
         <div class="col-sm-12 metadata">
             <span class="col-sm-6">
                 <p><span class="label">Created:</span> ${site.dateCreated}</p>

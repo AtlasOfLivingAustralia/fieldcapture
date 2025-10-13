@@ -31,8 +31,8 @@
                 </p>
             </div>
             <g:uploadForm class="form-horizontal" action="uploadUserPermissionsCSV" enctype="multipart/form-data">
-                <div class="form-group row">
-                    <label class="control-label col-sm-2 mr-3" for="userPermissions">
+                <div class="mb-3 row">
+                    <label class="control-label col-sm-2 me-3" for="userPermissions">
                         Select a CSV file to upload
                     </label>
                     <div class="col-sm-4">
@@ -40,7 +40,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="mb-3 row">
                     <div class="col-sm-6 text-center">
                         <g:submitButton name="uploadCSV" value="Load Permissions" class="btn btn-sm text-center btn-primary" />
                     </div>

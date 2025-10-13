@@ -1,5 +1,5 @@
 <form id="searchUser" class="hub-form-search-box">
-    <div class="form-group row required">
+    <div class="mb-3 row required">
         <label for="email" class="control-label col-sm-3">Email Address</label>
         <div class="col-sm-3">
             <input id="email" name="email" type="text" class="form-control form-control-sm" value="" data-bind="value:emailAddress"

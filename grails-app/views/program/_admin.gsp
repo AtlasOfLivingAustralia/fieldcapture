@@ -1,14 +1,14 @@
 <div class="row">
     <div class="nav flex-column nav-pills col-2">
-        <a class="nav-link active" data-toggle="pill" href="#edit-program-details" id="edit-program-details-tab" role="tab">Edit</a>
-        <a class="nav-link" data-toggle="pill" href="#program-permissions" role="tab">Permissions</a>
-        <a class="nav-link" data-toggle="pill" href="#editProgramBlog" id="editProgramBlog-tab" role="tab">Edit Blog</a>
+        <a class="nav-link active" data-bs-toggle="pill" href="#edit-program-details" id="edit-program-details-tab" role="tab">Edit</a>
+        <a class="nav-link" data-bs-toggle="pill" href="#program-permissions" role="tab">Permissions</a>
+        <a class="nav-link" data-bs-toggle="pill" href="#editProgramBlog" id="editProgramBlog-tab" role="tab">Edit Blog</a>
 
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
-            <a class="nav-link" data-toggle="pill" href="#reporting" role="tab">Reporting</a>
-            <a class="nav-link" data-toggle="pill" href="#config" role="tab">Configuration</a>
-            <a class="nav-link" data-toggle="pill" href="#outcomes" role="tab">Outcomes</a>
-            <a class="nav-link" data-toggle="pill" href="#themes" role="tab">Priority Areas / Themes</a>
+            <a class="nav-link" data-bs-toggle="pill" href="#reporting" role="tab">Reporting</a>
+            <a class="nav-link" data-bs-toggle="pill" href="#config" role="tab">Configuration</a>
+            <a class="nav-link" data-bs-toggle="pill" href="#outcomes" role="tab">Outcomes</a>
+            <a class="nav-link" data-bs-toggle="pill" href="#themes" role="tab">Priority Areas / Themes</a>
 
         </g:if>
     </div>
@@ -100,7 +100,7 @@
         </div>
 
         <div class="tab-pane" id="config">
-            <h4 style="display:inline-block">Program configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveProgramConfiguration">Save Configuration</button>
+            <h4 style="display:inline-block">Program configuration</h4> <button class="btn btn-success float-end" data-bind="click:saveProgramConfiguration">Save Configuration</button>
 
             <textarea rows="80" style="width:100%" data-bind="value:config">
 
@@ -108,13 +108,13 @@
         </div>
 
         <div class="tab-pane" id="outcomes">
-            <h4 style="display:inline-block">Program outcomes</h4> <button class="btn btn-success float-right" data-bind="click:saveProgramOutcomes">Save Outcomes</button>
+            <h4 style="display:inline-block">Program outcomes</h4> <button class="btn btn-success float-end" data-bind="click:saveProgramOutcomes">Save Outcomes</button>
 
             <g:render template="programOutcomes"/>
         </div>
 
         <div class="tab-pane" id="themes">
-            <h4 style="display:inline-block">Program priority areas / themes</h4> <button class="btn btn-success float-right" data-bind="click:saveProgramThemes">Save Themes</button>
+            <h4 style="display:inline-block">Program priority areas / themes</h4> <button class="btn btn-success float-end" data-bind="click:saveProgramThemes">Save Themes</button>
 
             <textarea rows="80" style="width:100%" data-bind="value:themes">
 

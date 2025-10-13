@@ -34,7 +34,7 @@
     </div>
     <div class="com-sm-5">
         <div id="formStatus" class="hide d-none alert alert-success">
-            <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+            <button class="btn-close" onclick="$('.alert').fadeOut();" href="#">×</button>
             <span></span>
         </div>
     </div>

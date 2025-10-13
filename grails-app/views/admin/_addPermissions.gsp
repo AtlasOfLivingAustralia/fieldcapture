@@ -1,21 +1,21 @@
 <form class="form-horizontal" id="userAccessForm">
-    <div class="control-group form-group row">
+    <div class="control-group mb-3 row">
         <label class="control-label col-form-label col-sm-2" for="emailAddress">User's email address</label>
         <div class="controls col-sm-2">
             <input class="form-control form-control-sm input-medium validate[required,custom[email]]" id="emailAddress" placeholder="enter a user's email address" type="text"/>
         </div>
     </div>
-    <div class="control-group form-group row">
+    <div class="control-group mb-3 row">
         <label class="control-label col-form-label col-sm-2" for="addUserRole">Permission level</label>
         <div class="controls col-sm-2" id="rolesSelect">
             <g:render id="addUserRole" template="/admin/userRolesSelect" model="[roles:roles, includeEmptyOption: true, selectClass:'input-medium']"/>
         </div>
     </div>
     <g:if test="${hubFlg}">
-        <div class="control-group form-group row">
+        <div class="control-group mb-3 row">
             <label class="control-label col-form-label col-sm-2" for="expiryDate">Permission expiry date</label>
-            <div>
-                <div class="input-group input-small" style="margin-left: 15px;">
+            <div class="controls col-sm-2">
+                <div class="input-group input-small">
                     <input class="form-control dateControl" style="height: 30px;" type="text" id="expiryDate">
                 </div>
             </div>
@@ -36,7 +36,7 @@
     <g:else><div class="alert alert-danger">Missing model - either <code>projectId</code> or <code>projects</code> must be provided</div></g:else>
     <div class="row">
         <div class="col-sm-5">
-            <div class="form-group text-center" >
+            <div class="mb-3 text-center" >
                 <div class="group">
                     <button id="addUserRoleBtn" class="btn btn-sm btn-primary text-center">Submit</button>
                     <asset:image src="spinner.gif" id="spinner1" class="hide d-none spinner" alt="spinner icon"/>
@@ -48,7 +48,7 @@
 
 </form>
 <div id="status" class="offset2 col-sm-7 hide d-none alert alert-success">
-    <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+    <button class="btn-close" onclick="$('.alert').fadeOut();" href="#">×</button>
     <span></span>
 </div>
 <div class="clearfix">&nbsp;</div>

@@ -2,7 +2,7 @@
 
     <h4 class="block-header"><g:message code="managementUnit.details.header"/></h4>
 
-    <div class="form-group row required">
+    <div class="mb-3 row required">
         <label class="col-form-label col-sm-3" for="name">Name: <fc:iconHelp><g:message
                 code="managementUnit.name.help"/></fc:iconHelp></label>
 
@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <div class="form-group row required">
+    <div class="mb-3 row required">
         <label class="col-form-label col-sm-3" for="description">Description: <fc:iconHelp><g:message
                 code="managementUnit.description.help"/></fc:iconHelp></label>
 
@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label class="col-form-label col-sm-3" for="url">Short Name:<fc:iconHelp><g:message
                 code="managementUnit.shortName.help"/></fc:iconHelp> </label>
 
@@ -37,7 +37,7 @@
         </div>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label class="col-form-label col-sm-3" for="url">Web Site URL: <fc:iconHelp><g:message
                 code="managementUnit.webUrl.help"/></fc:iconHelp></label>
 
@@ -54,7 +54,7 @@
 
     <h4 class="block-header"><g:message code="managementUnit.images.header"/></h4>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label class="col-form-label col-sm-3" for="logo">Management Unit Logo: <fc:iconHelp><g:message
                 code="managementUnit.logo.help"/></fc:iconHelp>:</label>
 
@@ -76,12 +76,12 @@
                   data-bind="stagedImageUpload:documents, visible:!logoUrlProvided()"><i class="fa fa-plus"></i> <input
                     id="logo" type="file" name="files"><span>Attach</span></span>
 
-            <button class="btn main-image-button float-right" data-bind="click:removeLogoImage, visible:logoUrlProvided()"><i
+            <button class="btn main-image-button float-end" data-bind="click:removeLogoImage, visible:logoUrlProvided()"><i
                     class="fa fa-minus"></i> Remove</button>
         </span>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label class="col-form-label col-sm-3" for="mainImage">Feature Graphic<fc:iconHelp><g:message
                 code="managementUnit.breadcrumb.create"/></fc:iconHelp>:</label>
 
@@ -99,7 +99,7 @@
                   data-bind="stagedImageUpload:documents, visible:!mainImageUrl()"><i class="fa fa-plus"></i> <input
                     id="mainImage" type="file" name="files"><span>Attach</span></span>
 
-            <button class="btn main-image-button float-right" data-bind="click:removeMainImage,  visible:mainImageUrl()"><i
+            <button class="btn main-image-button float-end" data-bind="click:removeMainImage,  visible:mainImageUrl()"><i
                     class="fa fa-minus"></i> Remove</button>
         </span>
     </div>

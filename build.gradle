@@ -149,7 +149,6 @@ dependencies {
     implementation "org.grails.plugins:converters"
     implementation "org.grails:grails-plugin-codecs"
     implementation "commons-io:commons-io:2.6"
-    implementation "org.seleniumhq.selenium:selenium-chrome-driver:3.14.0"
     implementation "com.bertramlabs.plugins:asset-pipeline-grails:$assetPipelineVersion"
     implementation "org.commonmark:commonmark:0.24.0"
     implementation "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20240325.1"
@@ -194,6 +193,7 @@ dependencies {
     testImplementation "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
     testRuntimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
     testRuntimeOnly "org.seleniumhq.selenium:selenium-safari-driver:$seleniumSafariDriverVersion"
+    testImplementation "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
     testRuntimeOnly "net.sourceforge.htmlunit:htmlunit:2.18"
 
     assets "com.bertramlabs.plugins:less-asset-pipeline:$assetPipelineVersion"
@@ -201,7 +201,7 @@ dependencies {
     providedCompile "io.methvin:directory-watcher:0.4.0"
 
     if (!Boolean.valueOf(inplace)) {
-        implementation "org.grails.plugins:ecodata-client-plugin:8.4"
+        implementation "org.grails.plugins:ecodata-client-plugin:9.0-SNAPSHOT"
     }
 }
 
@@ -246,9 +246,11 @@ wiremock {
 clientDependencies {
     installDir = "grails-app/assets/vendor-ext"
     npm {
-        'bootstrap'('4.6.0', transitive:false)
-        'bootbox'('5.5.2') {
-            include 'bootbox.all.min.js'
+        'bootstrap'('5.3.8', transitive:false) {
+            include 'js/bootstrap.bundle.js', 'css/bootstrap.css'
+        }
+        'bootbox'('6.0.4', transitive: false) {
+            include 'bootbox.js'
         }
         'jquery'('3.6.0')
         'font-awesome'('4.7.0')
@@ -269,7 +271,7 @@ clientDependencies {
         "fuelux"("3.17.2", transitive:false)
         "fuse.js"("6.4.6", transitive:false)
         "leaflet"("0.7.7")
-        "select2-theme-bootstrap4"("1.0.2")
+        "select2-theme-bootstrap4"("1.0.2") // The bootstrap 5 theme overflows containers and this theme still looks OK
         "slickgrid"("2.4.38")
         "slider-pro"("1.6.0", transitive:false)
         "jquery-appear-original"("0.4.1", transitive:false)
@@ -318,7 +320,7 @@ tasks.withType(Test) {
 integrationTest {
     // When tests are failing github actions is producing no log file at all.
     // I'm theorising we are exceeding a log limit so trying to end tests on first failure.
-    failFast = true
+    //failFast = true
 }
 
 
@@ -360,7 +362,7 @@ integrationTest {
     
     // When tests are failing github actions is producing no log file at all.
     // I'm theorising we are exceeding a log limit so trying to end tests on first failure.
-    failFast = true
+    //failFast = true
 }
 
 assetCompile.dependsOn(_Events)

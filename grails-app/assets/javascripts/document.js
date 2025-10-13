@@ -452,7 +452,7 @@ function showDocumentAttachInModal(uploadUrl, documentViewModel, modalSelector, 
         // at 0 size.  This is a workaround.
         $modal.find('.select2-container input[type="search"]').width('100%');
 
-    });
+    }).modal('show');
 
     return result;
 }

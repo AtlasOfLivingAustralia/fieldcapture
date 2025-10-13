@@ -40,7 +40,7 @@
     <span class="span12">
         <ul class="nav nav-tabs" data-tabs="tabs">
             <g:each in="${tabConfig}" var="tab" status="i">
-                <li class="tab"><a id="${tab.name}-tab" data-toggle="tab" href="#${tab.name}">${tab.name}</a></li>
+                <li class="tab"><a id="${tab.name}-tab" data-bs-toggle="tab" href="#${tab.name}">${tab.name}</a></li>
             </g:each>
 
         </ul>

@@ -28,13 +28,13 @@
 <form id="mu-report-selector">
     <label class="control-label">Select reporting period: </label>
     <div class="row mb-2">
-        <div class="col-sm-2 pl-0 pr-1">
+        <div class="col-sm-2 ps-0 pe-1">
             <label for="fromDate">Start date</label>
             <div class="input-group input-append">
                 <fc:datePicker targetField="fromDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="muFromDate"  data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl" autocomplete="off"/>
             </div>
         </div>
-        <div class="col-sm-2 pl-0 pr-1">
+        <div class="col-sm-2 ps-0 pe-1">
             <label for="toDate">End date</label>
             <div class="input-group input-append">
                 <fc:datePicker targetField="toDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="muToDate" data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl" autocomplete="off"/>
@@ -49,13 +49,13 @@
 <form id="org-report-selector">
     <label class="control-label">Select reporting period: </label>
     <div class="row mb-2">
-        <div class="col-sm-2 pl-0 pr-1">
+        <div class="col-sm-2 ps-0 pe-1">
             <label for="orgFromDate">Start date</label>
             <div class="input-group input-append">
                 <fc:datePicker targetField="fromDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="orgFromDate"  data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl" autocomplete="off"/>
             </div>
         </div>
-        <div class="col-sm-2 pl-0 pr-1">
+        <div class="col-sm-2 ps-0 pe-1">
             <label for="orgToDate">End date</label>
             <div class="input-group input-append">
                 <fc:datePicker targetField="toDate.date" bs4="bs4" class="form-control form-control-sm dateControl" name="orgToDate" data-validation-engine="validate[date]"  size="form-control form-control-sm dateControl" autocomplete="off"/>
@@ -78,29 +78,29 @@
         <p>Configure the report options below then press View Report to open the report in a new tab</p>
     </div>
     <form id="reef-report-selector" class="report-selector">
-        <div class="form-group row">
+        <div class="mb-3 row">
             <div class="col-sm-1"></div>
-            <label for="reportPeriods" class="col-sm-3 pl-2 m-0 control-label">Select period: </label>
+            <label for="reportPeriods" class="col-sm-3 ps-2 m-0 control-label">Select period: </label>
             <div class="col-sm-4">
-            <select id="reportPeriods" data-bind="options:reportPeriods, optionsText:'label', value:selectedPeriod" class="form-control form-control-sm input-medium"></select>
+            <select id="reportPeriods" data-bind="options:reportPeriods, optionsText:'label', value:selectedPeriod" class="form-select form-select-sm input-medium"></select>
             </div>
         </div>
-        <div class="form-group row">
+        <div class="mb-3 row">
             <div class="col-sm-1"></div>
-            <label for="reportFormats" class="col-sm-3 pl-2 pr-2 m-0 control-label">Report format:</label>
+            <label for="reportFormats" class="col-sm-3 ps-2 pe-2 m-0 control-label">Report format:</label>
             <div class="col-sm-8">
-                <select id="reportFormats" class="form-control form-control-sm" data-bind="options:formatOptions, value:format"></select>
+                <select id="reportFormats" class="form-select form-select-sm" data-bind="options:formatOptions, value:format"></select>
             </div>
         </div>
-        <div class="form-group row">
-            <div class="col-sm-4 mr-3"></div>
+        <div class="mb-3 row">
+            <div class="col-sm-4 me-3"></div>
             <div class="controls">
                 <input class="checkbox" type="checkbox" data-bind="checked:approvedActivitiesOnly"> Approved reports only?
             </div>
         </div>
 
-        <div class="form-group row">
-            <div class="col-sm-4 mr-3"></div>
+        <div class="mb-3 row">
+            <div class="col-sm-4 me-3"></div>
             <div class="controls">
             <button id="viewReportBtn" class="btn btn-sm btn-success" data-bind="click:go">View Report</button>
             </div>

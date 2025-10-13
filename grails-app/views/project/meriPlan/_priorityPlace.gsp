@@ -8,7 +8,7 @@
         </label>
     </div>
     <div class="col-md-4">
-        <select id="supports-priority-place" class="form-control form-control-sm"
+        <select id="supports-priority-place" class="form-select form-select-sm"
                 data-bind="disable: isProjectDetailsLocked(), value:details.supportsPriorityPlace, optionsCaption:'Please select...'"
                 data-validation-engine="validate[required]">
             <option value="">Please select...</option>
@@ -18,13 +18,13 @@
     </div>
 </div>
 <!-- ko if:details.supportsPriorityPlace() == 'Yes' -->
-<div class="form-group">
+<div class="mb-3">
 
     <label class="required" for="priority-place">Please select the supported priority places</label>
     <br/>
     <select id="priority-place"
             multiple="multiple"
-            class="form-control form-control-sm"
+            class="form-select form-select-sm"
             data-bind="disable: isProjectDetailsLocked(), options:priorityPlaces, multiSelect2:{tags: false, value:details.supportedPriorityPlaces}"
             data-validation-engine="validate[required]">
     </select>

@@ -20,7 +20,7 @@
     <h3>Nominate Images for Display on the Home Page</h3>
     <content tag="pageTitle">Home Page Images</content>
     <div class="col-sm-12">
-        Sort by: <select data-bind="value:sort" class="form-control form-control-sm input-medium"><option value="labels">Thumbs</option><option value="lastUpdated">Date</option></select>
+        Sort by: <select data-bind="value:sort" class="form-select form-select-sm input-medium"><option value="labels">Thumbs</option><option value="lastUpdated">Date</option></select>
     </div>
     <div class="col-sm-12">
         <g:render template="gallery"/>

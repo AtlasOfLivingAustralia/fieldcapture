@@ -25,6 +25,9 @@ class AddOrEditOrganisation extends Module {
     }
 
     def save() {
+        interact {
+            moveToElement(saveButton)
+        }
         saveButton.click()
     }
 

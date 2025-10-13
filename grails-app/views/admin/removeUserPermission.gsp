@@ -20,7 +20,7 @@
 <content tag="pageTitle">Remove User from MERIT</content>
 
 <form id="removeUser" class="validationEngineContainer">
-    <div class="form-group row required">
+    <div class="mb-3 row required">
         <label for="email" class="control-label col-sm-2">Enter User's Email Address</label>
         <div class="col-sm-3">
             <input id="email" name="email" type="text" class="form-control form-control-sm" value="" data-bind="value:emailAddress"

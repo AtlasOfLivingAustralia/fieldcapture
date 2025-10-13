@@ -7,7 +7,7 @@
 
     <div align="right">Overall project risk profile : <span style="color: red;">*</span>
         <span class="ratingStyling">
-            <select class="form-control form-control-sm" data-validation-engine="validate[required]"
+            <select class="form-select form-select-sm" data-validation-engine="validate[required]"
                     data-bind="options: ratingOptions, value:risks.overallRisk, optionsCaption: 'Please select', css: overAllRiskHighlight, disable:risksDisabled"
                     id="overall-risk"></select>
         </span>
@@ -28,7 +28,7 @@
         <tbody data-bind="foreach : risks.rows">
         <tr>
             <td class="risk-type">
-                <select class="form-control form-control-sm" data-validation-engine="validate[required]"
+                <select class="form-select form-select-sm" data-validation-engine="validate[required]"
                         data-bind="options: $parent.threatOptions, value: threat, optionsCaption: 'Please select', disable:$parent.risksDisabled"></select>
             </td>
             <td class="risk-description">
@@ -36,11 +36,11 @@
                           data-bind="value: description, disable:$parent.risksDisabled" rows="5"></textarea>
             </td>
             <td class="risk-likelihood">
-                <select class="form-control form-control-sm" data-validation-engine="validate[required]"
+                <select class="form-select form-select-sm" data-validation-engine="validate[required]"
                         data-bind="options: $parent.likelihoodOptions, value: likelihood, optionsCaption: 'Please select', disable:$parent.risksDisabled"></select>
             </td>
             <td class="risk-consequence">
-                <select class="form-control form-control-sm" data-validation-engine="validate[required]"
+                <select class="form-select form-select-sm" data-validation-engine="validate[required]"
                         data-bind="options: $parent.consequenceOptions, value: consequence,  optionsCaption: 'Please select', disable:$parent.risksDisabled"></select>
             </td>
             <td class="risk-rating">
@@ -52,7 +52,7 @@
             </td>
             <td class="residual-risk">
                 <!-- Residual risk -->
-                <select class="form-control form-control-sm" data-validation-engine="validate[required]"
+                <select class="form-select form-select-sm" data-validation-engine="validate[required]"
                         data-bind="options: $parent.ratingOptions, value: residualRisk, optionsCaption: 'Please select', disable:$parent.risksDisabled"></select>
             </td>
             <td class="risk-actions remove">
