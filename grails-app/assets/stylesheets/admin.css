@@ -158,3 +158,13 @@ table.investment-priorities .actions {
     width: 120px;
 }
 
+table.investment-priorities .management-units {
+    padding: 5px;
+}
+
+table.investment-priorities .management-units textarea {
+    font-size: 14px;
+    border: none;
+}
+
+

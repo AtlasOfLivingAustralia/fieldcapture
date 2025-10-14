@@ -481,12 +481,31 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
         self.type = ko.observable(investmentPriority.type);
         self.name = ko.observable(investmentPriority.name);
         self.description = ko.observable(investmentPriority.description);
-        self.categories = ko.observable(investmentPriority.categories);
+        self.categories = ko.observableArray(investmentPriority.categories);
+        self.managementUnits = ko.observableArray(investmentPriority.managementUnits);
         self.originalTerm = investmentPriority;
+        self.managementUnitLabels = ko.pureComputed(function() {
+            return _.reduce(self.managementUnits(), function (memo, managementUnitId) {
+                var muObj = _.find(options.availableManagementUnits, function (managementUnit) {
+                    return managementUnitId === managementUnit.managementUnitId;
+                });
+                let result = memo;
+                if (result) {
+                    result += ",\n";
+                }
+                result += muObj ? muObj.name : managementUnitId;
+                return result;
 
+            }, "");
+        });
+
+        self.availableCategories = ko.pureComputed(function() {
+            return (options.categoriesByType || {})[self.type()];
+        });
         self.edit = function() {
             self.editable(true);
         }
+
 
         self.cancelEdit = function() {
             self.editable(false);
@@ -494,13 +513,15 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
             self.name(investmentPriority.name);
             self.description(investmentPriority.description);
             self.categories(investmentPriority.categories);
+            self.managementUnits(investmentPriority.managementUnits);
         }
 
         self.saveable = ko.computed(function() {
             return self.editable() && (
                 self.name() != investmentPriority.name ||
                 self.type() != investmentPriority.type ||
-                !_.isEqual(self.categories(), investmentPriority.categories)
+                !_.isEqual(self.categories(), investmentPriority.categories) ||
+                !_.isEqual(self.managementUnits(), investmentPriority.managementUnits)
             );
         });
 
@@ -510,7 +531,8 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
                 type: self.type(),
                 name: self.name(),
                 description: self.description(),
-                categories: self.categories()
+                categories: self.categories(),
+                managementUnits: self.managementUnits()
             };
         }
     }
@@ -523,6 +545,8 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
     self.filter = ko.observable();
     self.matchedInvestmentPriorities = ko.observable(investmentPriorities.length);
     self.table = null;
+    self.availableCategories = options.availableCategories || [];
+    self.availableManagementUnits = options.availableManagementUnits || [];
 
     self.canAddNewInvestmentPriority = ko.pureComputed(function() {
         return self.matchedInvestmentPriorities() == 0;
@@ -633,6 +657,8 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
 
             let pageInfo = table.page.info();
             self.matchedInvestmentPriorities(pageInfo.recordsDisplay);
+        }).on('draw.dt', function() {
+
         });
     }
 };

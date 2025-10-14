@@ -46,6 +46,7 @@ class AdminController {
     RisksService risksService
     ExcelImportService excelImportService
     AbnLookupService abnLookupService
+    ManagementUnitService managementUnitService
 
     def index() {}
 
@@ -610,10 +611,12 @@ class AdminController {
         List availableTypes = new ArrayList(investmentPrioritiesByType.keySet()).sort()
 
         Map<String, List> categoriesByType = investmentPrioritiesByType?.collectEntries{ String type, List priorities -> [(type): distinctCategories(priorities)]}
-
+        List managementUnits = managementUnitService.list().collect{[managementUnitId:it.managementUnitId, name:it.name]}
         [investmentPriorities:investmentPriorities,
          availableTypes:availableTypes,
-         categoriesByType:categoriesByType]
+         categoriesByType:categoriesByType,
+         managementUnits: managementUnits
+        ]
     }
 
     private List distinctCategories(List<Map> investmentPriorities) {

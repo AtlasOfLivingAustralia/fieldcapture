@@ -40,6 +40,8 @@
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'organisationModifications')}" class="uploadOrganisations" title="Upload new organisation details for projects"/>
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'manageHelpDocuments')}" class="manageHelpDocuments" title="Manage help documents"/>
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'manageTags')}" class="manageTags" title="Manage project tags"/>
+                    <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'investmentPriorities')}" class="manageInvestmentPriorities" title="Manage investment priorities"/>
+
                 </g:if>
                 <g:if test="${fc.userIsAlaAdmin()}">
                     <fc:breadcrumbItem href="${createLink(controller: 'admin', action: 'tools')}" class="tools" title="Tools" />

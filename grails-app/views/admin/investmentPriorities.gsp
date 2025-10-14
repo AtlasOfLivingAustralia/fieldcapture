@@ -37,6 +37,7 @@
                 <th class="type">Type</th>
                 <th class="name">Name</th>
                 <th class="categories">Categories <fc:iconHelp>Program outcomes specify a list of categories that define the investment priority categories associated with that outcome</fc:iconHelp></th>
+                <th class="categories">Management units <fc:iconHelp>Management unit/s in which this investment priority occurs</fc:iconHelp></th>
                 <th class="actions">Actions</th>
             </tr>
             </thead>
@@ -55,13 +56,24 @@
                 </td>
                 <td class="categories">
                     <!-- ko if: !editable() -->
-                    <span data-bind="text: categories()"></span>
+                    <span data-bind="text: categories().join(', ')"></span>
                     <!-- /ko -->
                     <!-- ko if: editable() -->
                     <select title="Categories allow investment priorities to be associated with an outcome as a group"
                             multiple="multiple" class="form-control form-control-sm"
                             style="width:100%"
-                            data-bind="options: $parent.availableCategories, enabled: editable(), multiSelect2:{value: categories}"></select>
+                            data-bind="options: availableCategories, enabled: editable(), multiSelect2:{value: categories}"></select>
+                    <!-- /ko -->
+                </td>
+                <td class="management-units">
+                    <!-- ko if: !editable() -->
+                    <textarea class="form-control" readonly data-bind="text: managementUnitLabels()" rows="4"></textarea>
+                    <!-- /ko -->
+                    <!-- ko if: editable() -->
+                    <select title="Management unit/s in which this investment priority occurs"
+                            multiple="multiple" class="form-control form-control-sm"
+                            style="width:100%"
+                            data-bind="options: $parent.availableManagementUnits, optionsValue:'managementUnitId', optionsText:'name', enabled: editable(), multiSelect2:{value: managementUnits}"></select>
                     <!-- /ko -->
                 </td>
 
@@ -107,7 +119,8 @@
 
         let config = _.extend({
             availableTypes: <fc:modelAsJavascript model="${availableCategories}"/>,
-            categoriesByType: <fc:modelAsJavascript model="${categoriesByType}"/>
+            categoriesByType: <fc:modelAsJavascript model="${categoriesByType}"/>,
+            availableManagementUnits: <fc:modelAsJavascript model="${managementUnits}"/>,
         }, window.fcConfig);
 
         const viewModel = new ManageInvestmentPrioritiesViewModel(investmentPriorities, config);
