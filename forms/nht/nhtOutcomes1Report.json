@@ -17,7 +17,7 @@
           },
           {
             "dataType": "text",
-            "name": "primaryOutcomeAssets"
+            "name": "primaryOutcomeInvestmentPriority"
           },
           {
             "dataType": "list",
@@ -31,7 +31,7 @@
               },
               {
                 "dataType": "text",
-                "name": "outcomeAssets",
+                "name": "outcomeInvestmentPriorities",
                 "validate": "required"
               }
             ]
@@ -47,7 +47,7 @@
               },
               {
                 "dataType": "text",
-                "name": "secondaryOutcomeAssets"
+                "name": "secondaryOutcomeInvestmentPriorities"
               }
             ]
           },
@@ -67,7 +67,7 @@
               },
               {
                 "dataType": "text",
-                "name": "outcomeAssets",
+                "name": "outcomeInvestmentPriorities",
                 "validate": "required"
               },
               {
@@ -464,7 +464,7 @@
               {
                 "type": "textarea",
                 "readonly": true,
-                "source": "primaryOutcomeAssets",
+                "source": "primaryOutcomeInvestmentPriority",
                 "title": "Primary Investment Priority",
                 "rows": 5,
                 "width": "50%"
@@ -497,7 +497,7 @@
               {
                 "type": "textarea",
                 "readonly": true,
-                "source": "secondaryOutcomeAssets",
+                "source": "secondaryOutcomeInvestmentPriorities",
                 "title": "Additional Investment Priorities",
                 "rows": 5,
                 "width": "50%"
@@ -535,7 +535,7 @@
               {
                 "type": "readonlyText",
                 "readonly": true,
-                "source": "outcomeAssets",
+                "source": "outcomeInvestmentPriorities",
                 "title": "Investment Priority",
                 "rows": 5,
                 "width": "10%"
@@ -1118,7 +1118,7 @@
               },
               {
                 "source-path": "custom.details.outcomes.primaryOutcome.assets",
-                "target": "primaryOutcomeAssets"
+                "target": "primaryOutcomeInvestmentPriority"
 
               }
             ]
@@ -1147,7 +1147,7 @@
                   },
                   {
                     "source-path": "assets",
-                    "target": "secondaryOutcomeAssets"
+                    "target": "secondaryOutcomeInvestmentPriorities"
                   }
                 ],
                 "source-path": "custom.details.outcomes.secondaryOutcomes"
@@ -1180,7 +1180,7 @@
                     "source-path": "description"
                   },
                   {
-                    "target": "outcomeAssets",
+                    "target": "outcomeInvestmentPriorities",
                     "source-path": "assets"
                   },
                   {
