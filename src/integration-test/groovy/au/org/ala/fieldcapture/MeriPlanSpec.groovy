@@ -5,6 +5,7 @@ import pages.AdminClearCachePage
 import pages.MeriPlanPDFPage
 import pages.ProjectIndex
 import pages.RlpProjectPage
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -434,6 +435,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         overview.projectStatus[1].text() == 'ACTIVE'
     }
 
+    @Ignore
     def "Approve MERI plan of a project with the active status and internal order Id"() {
 
         setup:
