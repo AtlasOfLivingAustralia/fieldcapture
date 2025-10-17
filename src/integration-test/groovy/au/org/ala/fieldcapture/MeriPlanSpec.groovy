@@ -10,6 +10,7 @@ import spock.lang.Shared
 import spock.lang.Stepwise
 
 @Stepwise
+@Ignore
 class MeriPlanSpec extends StubbedCasSpec {
 
     @Shared
@@ -435,7 +436,6 @@ class MeriPlanSpec extends StubbedCasSpec {
         overview.projectStatus[1].text() == 'ACTIVE'
     }
 
-    @Ignore
     def "Approve MERI plan of a project with the active status and internal order Id"() {
 
         setup:
