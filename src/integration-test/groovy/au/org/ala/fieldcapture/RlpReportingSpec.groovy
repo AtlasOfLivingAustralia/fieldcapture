@@ -16,7 +16,6 @@ import spock.lang.Stepwise
 import javax.mail.internet.MimeMessage
 
 @Stepwise
-@Ignore
 class RlpReportingSpec extends StubbedCasSpec {
 
     @Shared

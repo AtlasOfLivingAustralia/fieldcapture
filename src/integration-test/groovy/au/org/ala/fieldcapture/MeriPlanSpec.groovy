@@ -10,7 +10,6 @@ import spock.lang.Shared
 import spock.lang.Stepwise
 
 @Stepwise
-@Ignore
 class MeriPlanSpec extends StubbedCasSpec {
 
     @Shared
