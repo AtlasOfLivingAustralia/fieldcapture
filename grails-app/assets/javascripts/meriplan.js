@@ -724,51 +724,19 @@ function MERIPlan(project, projectService, config) {
         return canApprove
     };
 
-    setTimeout(function () {
-        var $form = $('#project-details-validation');
-
-        // reattach JQV
-        $form.validationEngine('detach');
-        $form.validationEngine('attach', {
-            validateNonVisibleFields: true,
-            prettySelect: true,
-            usePrefix: 'select2-',
-            useSuffix: '-container',
-            validationEventTrigger: 'change',
-            scroll: false
-        });
-
-        // revalidate whenever the select2 changes
-        $('#monitoringProtocols').on('change select2:select select2:unselect', function () {
-            $form.validationEngine('validateField', '#monitoringProtocols');
-        });
-
-    }, 0);
-
 }
-
 function validateFloristics(field) {
-    // get the <select> element
-    var $select = $(field);
-    if (!$select.length) {
-        console.warn('validateFloristics: cannot find original <select>');
-        return;
-    }
+
+    var ctx  = ko.dataFor(field);
+    var root = ctx && (ctx.$root || ctx) || window.currentMeriPlanVM;
 
     // get selected values
-    var selectedValues = ($select.val() || [])
-        .map(v => String(v).trim())
-        .filter(v => v.length > 0);
+    var selectedValues = (ctx && ko.unwrap(ctx.protocols)) || ($(field).val() || []);
 
     const norm = s => String(s || '').trim().toLowerCase();
 
-    // get protocols from KO context(vm) or global fallback
-    var vm = ko.dataFor($select[0]);
-    var protocols =
-        ko.unwrap(vm?.$root?.monitoringProtocols) ||
-        ko.unwrap(window.currentMeriPlanVM?.monitoringProtocols) ||
-        [];
-
+    // get protocols from KO context
+    var protocols = (root && ko.unwrap(root.monitoringProtocols)) || [];
     if (!Array.isArray(protocols) || !protocols.length) {
         console.warn('validateFloristics: protocols not loaded yet');
         return;
