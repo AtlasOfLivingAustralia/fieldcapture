@@ -1151,15 +1151,6 @@ class ProjectController {
         render projectService.projectPrioritiesByOutcomeType(id) as JSON
     }
 
-    def monitoringProtocolFormCategoriesOld() {
-        String MONITORING_TAG = 'survey'
-        List<Map> forms = activityService.monitoringProtocolForms()
-        forms = forms.findAll{MONITORING_TAG in it.tags}
-        List<String> categories = forms?.collect{
-            [label:g.message(code:it.category, default:it.category.capitalize()), value:it.category]}?.unique()?.sort({it.label}) as List<String>
-        render categories as JSON
-    }
-
     @PreAuthorise(accessLevel = 'readOnly')
     def monitoringProtocolFormCategories() {
         String MONITORING_TAG = 'survey'
