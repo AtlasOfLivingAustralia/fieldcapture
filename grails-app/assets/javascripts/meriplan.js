@@ -740,11 +740,9 @@ function MERIPlan(project, projectService, config) {
 
         // revalidate whenever the select2 changes
         $('#monitoringProtocols').on('change select2:select select2:unselect', function () {
-            $form.validationEngine('validate');
+            $form.validationEngine('validateField', '#monitoringProtocols');
         });
 
-        // initial check (if values are pre-populated)
-        $form.validationEngine('validate');
     }, 0);
 
 }
