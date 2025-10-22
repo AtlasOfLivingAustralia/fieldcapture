@@ -4,9 +4,6 @@
 function MERIPlan(project, projectService, config) {
     var self = this;
 
-    // expose current MERIPlan instance globally, will be used by the validation
-    window.currentMeriPlanVM = self;
-
     if (config.hasAdminPermission && config.meriStorageKey && project.custom && project.custom.details) {
         var savedProjectCustomDetails = amplify.store(config.meriStorageKey);
         if (savedProjectCustomDetails) {
@@ -677,7 +674,7 @@ function MERIPlan(project, projectService, config) {
     };
 
     self.attachValidation = function() {
-        $('#project-details-validation').validationEngine();
+        $('#project-details-validation').validationEngine('attach', {autoPositionUpdate:true});
     };
 
     self.meriPlanHistoryVisible = ko.observable(false);
@@ -725,33 +722,35 @@ function MERIPlan(project, projectService, config) {
     };
 
 }
+
 function validateFloristics(field) {
 
-    var ctx  = ko.dataFor(field);
-    var root = ctx && (ctx.$root || ctx) || window.currentMeriPlanVM;
+    const domEl   = field[0];
+    const ctx= ko.contextFor(domEl);
+    const root = ctx && ctx.$root;
 
     // get selected values
-    var selectedValues = (ctx && ko.unwrap(ctx.protocols)) || ($(field).val() || []);
+    let selectedValues = ($(domEl).val() || []);
 
     const norm = s => String(s || '').trim().toLowerCase();
 
     // get protocols from KO context
-    var protocols = (root && ko.unwrap(root.monitoringProtocols)) || [];
+    const protocols = (root && ko.unwrap(root.monitoringProtocols)) || [];
     if (!Array.isArray(protocols) || !protocols.length) {
         console.warn('validateFloristics: protocols not loaded yet');
         return;
     }
 
     // find items that depend on floristics
-    var floristicsDeps = new Set(
+    const floristicsDeps = new Set(
         protocols
             .filter(p => (p.dependsOn || []).map(norm).includes('floristics'))
             .map(p => norm(p.value))
     );
 
     // check if user needs floristics
-    var needingFloristics = selectedValues.filter(v => floristicsDeps.has(norm(v)));
-    var hasFloristics = selectedValues.some(v => norm(v).includes('floristics'));
+    const needingFloristics = selectedValues.filter(v => floristicsDeps.has(norm(v)));
+    const hasFloristics = selectedValues.some(v => norm(v).includes('floristics'));
 
     if (needingFloristics.length && !hasFloristics) {
         return `One or more selected modules (${needingFloristics.join(', ')}) depend on Floristics. Please also select a Floristics protocol.`;
