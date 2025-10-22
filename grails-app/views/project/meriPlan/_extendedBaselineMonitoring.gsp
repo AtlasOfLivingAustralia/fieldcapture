@@ -49,7 +49,7 @@
         <td class="baseline-method">
             <select multiple="multiple"
                     class="form-select form-select-sm"
-                    data-validation-engine="validate[required]"
+                    data-validation-engine="validate[required, funcCall[validateFloristics]]"
                     data-bind="options:$root.monitoringProtocols, optionsText:'label', optionsValue:'value', multiSelect2:{tags:false, value:protocols, preserveColumnWidth:20}, optionsCaption:'Please select...', disable: monitoringDataStatus() != 'Needs to be collected' || $root.isProjectDetailsLocked()">
             </select>
 
