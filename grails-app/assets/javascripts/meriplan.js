@@ -720,6 +720,41 @@ function MERIPlan(project, projectService, config) {
         }
         return canApprove
     };
+
+}
+
+function validateFloristics(field) {
+
+    const domEl   = field[0];
+    const ctx= ko.contextFor(domEl);
+    const root = ctx && ctx.$root;
+
+    // get selected values
+    let selectedValues = ($(domEl).val() || []);
+
+    const norm = s => String(s || '').trim().toLowerCase();
+
+    // get protocols from KO context
+    const protocols = (root && ko.unwrap(root.monitoringProtocols)) || [];
+    if (!Array.isArray(protocols) || !protocols.length) {
+        console.warn('validateFloristics: protocols not loaded yet');
+        return;
+    }
+
+    // find items that depend on floristics
+    const floristicsDeps = new Set(
+        protocols
+            .filter(p => (p.dependsOn || []).map(norm).includes('floristics'))
+            .map(p => norm(p.value))
+    );
+
+    // check if user needs floristics
+    const needingFloristics = selectedValues.filter(v => floristicsDeps.has(norm(v)));
+    const hasFloristics = selectedValues.some(v => norm(v).includes('floristics'));
+
+    if (needingFloristics.length && !hasFloristics) {
+        return `One or more selected modules (${needingFloristics.join(', ')}) depend on Floristics. Please also select a Floristics protocol.`;
+    }
 }
 
 /**

@@ -49,7 +49,7 @@
         <td class="baseline-method">
             <select multiple="multiple"
                     class="form-select form-select-sm"
-                    data-validation-engine="validate[required]"
+                    data-validation-engine="validate[required, funcCall[validateFloristics]]"
                     data-bind="options:$root.monitoringProtocols, optionsText:'label', optionsValue:'value', multiSelect2:{tags:false, value:protocols, preserveColumnWidth:20}, optionsCaption:'Please select...', disable: monitoringDataStatus() != 'Needs to be collected' || $root.isProjectDetailsLocked()">
             </select>
 
@@ -70,7 +70,7 @@
                     data-validation-engine="validate[required,maxSize:4000]"></textarea>
         </td>
         <td class="remove">
-            <span data-bind="if: $index() >= ${numberOfMandatoryRows != null ? numberOfMandatoryRows : 1} && !$root.isProjectDetailsLocked()"><i class="fa fa-remove"
+            <span data-bind="if: $parent.rows().length > ${numberOfMandatoryRows != null ? numberOfMandatoryRows : 1} && !$root.isProjectDetailsLocked()"><i class="fa fa-remove"
                                                                                  data-bind="click: $root.removeBaseline"></i>
             </span>
         </td>

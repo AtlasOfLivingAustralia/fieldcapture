@@ -19,7 +19,15 @@ const downloadableProtocols = [
     'Sign-based Fauna Surveys - Within-plot Belt Transect',
     'Herbivory and Physical Damage - Active Plot Search',
     'Herbivory and Physical Damage - Off-plot Transect',
-    'Herbivory and Physical Damage - Within-plot Belt Transect'
+    'Herbivory and Physical Damage - Within-plot Belt Transect',
+    'Coarse Woody Debris',
+    'Basal Area - DBH',
+    'Basal Area - Basal Wedge',
+    'Recruitment - Age Structure',
+    'Condition - Attributes'
+
+
+
 
 ];
 

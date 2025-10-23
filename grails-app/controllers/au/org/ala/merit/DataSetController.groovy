@@ -145,6 +145,9 @@ class DataSetController {
             dataSet.startDate = null
             dataSet.endDate = null
             dataSet.dataSetId = null
+            dataSet.reportId = null
+            dataSet.progress = ActivityService.PROGRESS_STARTED
+            dataSet.publicationStatus = null
         }
 
         if (!dataSet) {
