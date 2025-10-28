@@ -606,7 +606,7 @@ class AdminController {
     }
 
     def investmentPriorities() {
-        List investmentPriorities = metadataService.findInvestmentPrioritiesByCategory()
+        List investmentPriorities = metadataService.findInvestmentPriorities()
         Map<String, List<Map>> investmentPrioritiesByType = investmentPriorities.groupBy{it.type}
         List availableTypes = new ArrayList(investmentPrioritiesByType.keySet()).sort()
 

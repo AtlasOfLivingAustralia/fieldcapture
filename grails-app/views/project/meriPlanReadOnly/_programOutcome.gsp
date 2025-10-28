@@ -9,15 +9,15 @@
     <tbody>
     <tr>
         <td class="outcome-priority"><span
-                data-bind="text:details.outcomes.primaryOutcome.description"></span>
+                data-bind="text:details.outcomes.priorityLabel(details.outcomes.primaryOutcome.description)"></span>
         </td>
         <td class="priority">
             <!-- ko if:!isAgricultureProject() && !details.outcomes.primaryOutcomeSupportsMultiplePriorities() -->
-            <span data-bind="text:details.outcomes.primaryOutcome.asset"></span>
+            <span data-bind="text:details.outcomes.priorityLabel(details.outcomes.primaryOutcome.asset)"></span>
             <!-- /ko -->
             <!-- ko if:isAgricultureProject() || details.outcomes.primaryOutcomeSupportsMultiplePriorities() -->
             <ul data-bind="foreach:details.outcomes.primaryOutcome.assets">
-                <li data-bind="text:$data"></li>
+                <li data-bind="text:$root.details.outcomes.priorityLabel($data)"></li>
             </ul>
             <!-- /ko -->
 

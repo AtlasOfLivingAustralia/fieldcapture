@@ -357,7 +357,7 @@ class MetadataService {
         result
     }
 
-    List<Map> findInvestmentPrioritiesByCategory(List categories = null) {
+    List<Map> findInvestmentPriorities(List categories = null) {
         String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/investmentPriorities"
         Map params = [:]
         if (categories) {

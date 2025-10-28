@@ -73,23 +73,23 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         meriPlan.primaryOutcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
         waitFor {
-            meriPlan.primaryPriority.find('[value="Ginini Flats Wetland Complex"')
+            meriPlan.primaryPriority.find('[value="ip1"')
         }
-        meriPlan.primaryPriority = "Ginini Flats Wetland Complex"
+        meriPlan.primaryPriority = "ip1"
         meriPlan.secondaryOutcomes[0].outcome = "By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
-        meriPlan.secondaryOutcomes[0].priority = "Swainsona recta"
+        meriPlan.secondaryOutcomes[0].priority = "ip7"
 
         meriPlan.addMediumTermOutcome("")
 
         then: "The Selectable priorities are derived from the selections made in the primary and secondary outcomes"
         waitFor {
-            meriPlan.shortTermOutcomes[0].priority.find('option').collect { it.value() } == ["", "Ginini Flats Wetland Complex", "Swainsona recta"]
+            meriPlan.shortTermOutcomes[0].priority.find('option').collect { it.value() } == ["", "ip1", "ip7"]
         }
         waitFor {
             meriPlan.shortTermOutcomes[0].relatedProgramOutcomes.find('option').collect { it.value() } == ["", "Short term outcome 1", "Short term outcome 2", "Short term outcome 3"]
         }
         waitFor {
-            meriPlan.mediumTermOutcomes[0].priority.find('option').collect { it.value() } == ["", "Ginini Flats Wetland Complex", "Swainsona recta"]
+            meriPlan.mediumTermOutcomes[0].priority.find('option').collect { it.value() } == ["", "ip1", "ip7"]
         }
         waitFor {
             meriPlan.mediumTermOutcomes[0].relatedProgramOutcomes.find('option').collect{it.value()} == ["", "Medium term outcome 1", "Medium term outcome 2", "Medium term outcome 3"]
@@ -100,12 +100,12 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         when:
         meriPlan.shortTermOutcomes[0].outcome = "Short term outcome 1"
-        meriPlan.shortTermOutcomes[0].priority = "Swainsona recta"
+        meriPlan.shortTermOutcomes[0].priority = "ip7"
         meriPlan.shortTermOutcomes[0].relatedProgramOutcomes = "Short term outcome 3"
         meriPlan.mediumTermOutcomes[0].outcome = "Medium term outcome 1"
-        meriPlan.mediumTermOutcomes[0].priority = "Swainsona recta"
+        meriPlan.mediumTermOutcomes[0].priority = "ip7"
         meriPlan.mediumTermOutcomes[0].relatedProgramOutcomes = "Medium term outcome 1"
-        meriPlan.addMediumTermOutcome("Medium term outcome 2", "Ginini Flats Wetland Complex", "Medium term outcome 2")
+        meriPlan.addMediumTermOutcome("Medium term outcome 2", "ip1", "Medium term outcome 2")
 
         then:
         waitFor {
@@ -239,19 +239,19 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.firstNationsPeopleInvolvement.firstNationsPeopleInvolvement == 'Leading'
 
         meriPlan.primaryOutcome == "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
-        meriPlan.primaryPriority == "Ginini Flats Wetland Complex"
+        meriPlan.primaryPriority == "ip1"
         meriPlan.secondaryOutcomes[0].outcome == "By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
-        meriPlan.secondaryOutcomes[0].priority == "Swainsona recta"
+        meriPlan.secondaryOutcomes[0].priority == "ip7"
         meriPlan.mediumTermOutcomes.size() == 2
         meriPlan.mediumTermOutcomes[0].outcome == "Medium term outcome 1"
-        meriPlan.mediumTermOutcomes[0].priority == "Swainsona recta"
+        meriPlan.mediumTermOutcomes[0].priority == "ip7"
         meriPlan.mediumTermOutcomes[0].relatedProgramOutcomes == "Medium term outcome 1"
         meriPlan.mediumTermOutcomes[1].outcome == "Medium term outcome 2"
-        meriPlan.mediumTermOutcomes[1].priority == "Ginini Flats Wetland Complex"
+        meriPlan.mediumTermOutcomes[1].priority == "ip1"
         meriPlan.mediumTermOutcomes[1].relatedProgramOutcomes == "Medium term outcome 2"
         meriPlan.shortTermOutcomes.size() == 1
         meriPlan.shortTermOutcomes[0].outcome == "Short term outcome 1"
-        meriPlan.shortTermOutcomes[0].priority == "Swainsona recta"
+        meriPlan.shortTermOutcomes[0].priority == "ip7"
         meriPlan.shortTermOutcomes[0].relatedProgramOutcomes == "Short term outcome 3"
 
         meriPlan.keyThreats[0].threatCode == "Key threat 2"
@@ -310,19 +310,19 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlanView.firstNationsPeopleInvolvement.firstNationsPeopleInvolvement.text() == 'Leading'
 
         meriPlanView.primaryOutcome.text() == "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
-        meriPlanView.primaryPriority.text() == "Ginini Flats Wetland Complex"
+        meriPlanView.primaryPriority.text() == "ip1"
         meriPlanView.secondaryOutcomes[0].outcome.text() == "By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
-        meriPlanView.secondaryOutcomes[0].priority.text() == "Swainsona recta"
+        meriPlanView.secondaryOutcomes[0].priority.text() == "ip7"
         meriPlanView.mediumTermOutcomes.size() == 2
         meriPlanView.mediumTermOutcomes[0].outcome.text() == "Medium term outcome 1"
-        meriPlanView.mediumTermOutcomes[0].priority.text() == "Swainsona recta"
+        meriPlanView.mediumTermOutcomes[0].priority.text() == "ip7"
         meriPlanView.mediumTermOutcomes[0].relatedProgramOutcomes.text() == "Medium term outcome 1"
         meriPlanView.mediumTermOutcomes[1].outcome.text() == "Medium term outcome 2"
-        meriPlanView.mediumTermOutcomes[1].priority.text() == "Ginini Flats Wetland Complex"
+        meriPlanView.mediumTermOutcomes[1].priority.text() == "ip1"
         meriPlanView.mediumTermOutcomes[1].relatedProgramOutcomes.text() == "Medium term outcome 2"
         meriPlanView.shortTermOutcomes.size() == 1
         meriPlanView.shortTermOutcomes[0].outcome.text() == "Short term outcome 1"
-        meriPlanView.shortTermOutcomes[0].priority.text() == "Swainsona recta"
+        meriPlanView.shortTermOutcomes[0].priority.text() == "ip7"
         meriPlanView.shortTermOutcomes[0].relatedProgramOutcomes.text() == "Short term outcome 3"
 
         meriPlanView.keyThreats[0].threatCode.text() == "Key threat 2"
@@ -404,19 +404,19 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
             page.meriPlan.firstNationsPeopleInvolvement.firstNationsPeopleInvolvement.text() == 'Leading'
 
             page.meriPlan.primaryOutcome.text() == "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
-            page.meriPlan.primaryPriority.text() == "Ginini Flats Wetland Complex"
+            page.meriPlan.primaryPriority.text() == "ip1"
             page.meriPlan.secondaryOutcomes[0].outcome.text() == "By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
-            page.meriPlan.secondaryOutcomes[0].priority.text() == "Swainsona recta"
+            page.meriPlan.secondaryOutcomes[0].priority.text() == "ip7"
             page.meriPlan.mediumTermOutcomes.size() == 2
             page.meriPlan.mediumTermOutcomes[0].outcome.text() == "Medium term outcome 1"
-            page.meriPlan.mediumTermOutcomes[0].priority.text() == "Swainsona recta"
+            page.meriPlan.mediumTermOutcomes[0].priority.text() == "ip7"
             page.meriPlan.mediumTermOutcomes[0].relatedProgramOutcomes.text() == "Medium term outcome 1"
             page.meriPlan.mediumTermOutcomes[1].outcome.text() == "Medium term outcome 2"
-            page.meriPlan.mediumTermOutcomes[1].priority.text() == "Ginini Flats Wetland Complex"
+            page.meriPlan.mediumTermOutcomes[1].priority.text() == "ip1"
             page.meriPlan.mediumTermOutcomes[1].relatedProgramOutcomes.text() == "Medium term outcome 2"
             page.meriPlan.shortTermOutcomes.size() == 1
             page.meriPlan.shortTermOutcomes[0].outcome.text() == "Short term outcome 1"
-            page.meriPlan.shortTermOutcomes[0].priority.text() == "Swainsona recta"
+            page.meriPlan.shortTermOutcomes[0].priority.text() == "ip7"
             page.meriPlan.shortTermOutcomes[0].relatedProgramOutcomes.text() == "Short term outcome 3"
 
             page.meriPlan.keyThreats[0].threatCode.text() == "Key threat 2"
@@ -822,11 +822,11 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         meriPlan.primaryOutcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
         waitFor {
-            meriPlan.primaryPriority.find('[value="Ginini Flats Wetland Complex"')
+            meriPlan.primaryPriority.find('[value="ip1"')
         }
-        meriPlan.primaryPriority = "Ginini Flats Wetland Complex"
+        meriPlan.primaryPriority = "ip1"
         meriPlan.secondaryOutcomes[0].outcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
-        meriPlan.secondaryOutcomes[0].priority = "Ginini Flats Wetland Complex"
+        meriPlan.secondaryOutcomes[0].priority = "ip1"
         meriPlan.shortTermOutcomes[0].outcome.value("Short term outcome 1")
         meriPlan.addMediumTermOutcome("Medium term outcome 1")
         meriPlan.projectName = "MERI plan edited name"
@@ -858,9 +858,9 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         then:
         meriPlan.primaryOutcome.value().contains("Ramsar") // Direct comparison fails due to &nbsp in the HTML due to the length of the options
-        meriPlan.primaryPriority == "Ginini Flats Wetland Complex"
+        meriPlan.primaryPriority == "ip1"
         meriPlan.secondaryOutcomes[0].outcome.value().contains("Ramsar")
-        meriPlan.secondaryOutcomes[0].priority.value() == "Ginini Flats Wetland Complex"
+        meriPlan.secondaryOutcomes[0].priority.value() == "ip1"
         meriPlan.shortTermOutcomes[0].outcome.value() == "Short term outcome 1"
         meriPlan.mediumTermOutcomes[0].outcome.value() == "Medium term outcome 1"
         meriPlan.projectName == "MERI plan edited name"
@@ -905,11 +905,11 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         meriPlan.primaryOutcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
         waitFor {
-            meriPlan.primaryPriority.find('[value="Ginini Flats Wetland Complex"')
+            meriPlan.primaryPriority.find('[value="ip1"')
         }
-        meriPlan.primaryPriority = "Ginini Flats Wetland Complex"
+        meriPlan.primaryPriority = "ip1"
         meriPlan.secondaryOutcomes[0].outcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
-        meriPlan.secondaryOutcomes[0].priority = "Ginini Flats Wetland Complex"
+        meriPlan.secondaryOutcomes[0].priority = "ip1"
         meriPlan.shortTermOutcomes[0].outcome.value("Short term outcome 1")
         meriPlan.addMediumTermOutcome("Medium term outcome 1")
         meriPlan.controlMethods[0].current = 'Pest control method 1'
@@ -946,9 +946,9 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         then:
         meriPlan.primaryOutcome.value().contains("Ramsar")
-        meriPlan.primaryPriority == "Ginini Flats Wetland Complex"
+        meriPlan.primaryPriority == "ip1"
         meriPlan.secondaryOutcomes[0].outcome.value().contains("Ramsar")
-        meriPlan.secondaryOutcomes[0].priority.value() == "Ginini Flats Wetland Complex"
+        meriPlan.secondaryOutcomes[0].priority.value() == "ip1"
         meriPlan.shortTermOutcomes[0].outcome.value() == "Short term outcome 1"
         meriPlan.mediumTermOutcomes[0].outcome.value() == "Medium term outcome 1"
         meriPlan.controlMethods[0].current.value() == 'Pest control method 1'

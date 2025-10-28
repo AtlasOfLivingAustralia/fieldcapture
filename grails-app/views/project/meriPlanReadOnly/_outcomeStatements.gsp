@@ -34,11 +34,11 @@
 
             <g:if test="${multiplePriorities}">
                 <ul data-bind="foreach:assets">
-                    <li data-bind="text:$data"></li>
+                    <li data-bind="text:$root.details.outcomes.priorityLabel($data)"></li>
                 </ul>
             </g:if>
             <g:else>
-                <span data-bind="text:asset"></span>
+                <span data-bind="text:$root.details.outcomes.priorityLabel(asset)"></span>
             </g:else>
             </td>
             <td class="medium-term-outcome">

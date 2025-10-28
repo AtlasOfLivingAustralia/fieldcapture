@@ -89,14 +89,16 @@ function addInvestmentPriority(priority, managementUnit) {
 
     let investmentPriority = null;
     let changed = false;
-    let existingPriority = db.investmentPriority.findOne({name: priority.priority});
+    let priorityName = priority.priority && priority.priority.trim();
+    let category = priority.category && priority.category.trim();
+    let existingPriority = db.investmentPriority.findOne({name: priorityName});
     if (existingPriority) {
-        if (existingPriority.categories.indexOf(priority.category) < 0) {
-            existingPriority.categories.push(priority.category);
+        if (existingPriority.categories.indexOf(category) < 0) {
+            existingPriority.categories.push(category);
             changed = true;
         }
-        if (existingPriority.type != (typesForCategory[priority.category] || 'Other')) {
-            existingPriority.type = typesForCategory[priority.category] || 'Other';
+        if (existingPriority.type != (typesForCategory[category] || 'Other')) {
+            existingPriority.type = typesForCategory[category] || 'Other';
             changed = true;
         }
         if (managementUnit && (existingPriority.managementUnits.indexOf(managementUnit.managementUnitId) < 0)) {
@@ -114,9 +116,9 @@ function addInvestmentPriority(priority, managementUnit) {
             lastUpdated: ISODate(),
             investmentPriorityId: UUID.generate(),
             status: 'active',
-            type: typesForCategory[priority.category] || 'Other',
-            name: priority.priority,
-            categories: [priority.category],
+            type: typesForCategory[category] || 'Other',
+            name: priorityName,
+            categories: [category],
             managementUnits: [],
         }
         if (managementUnit) {
@@ -128,7 +130,7 @@ function addInvestmentPriority(priority, managementUnit) {
     return investmentPriority;
 }
 
-const projects = db.project.find({'custom.details.outcomes': {$exists: true}, status: {$ne: 'deleted'}});
+const projects = db.project.find({$or:[{'custom.details.outcomes': {$exists: true}, 'custom.details.assets':{$exists:true}}], status: {$ne: 'deleted'}});
 const reportPathsByType = findInvestmentPrioritiesInForms();
 while (projects.hasNext()) {
     let project = projects.next();
@@ -139,14 +141,15 @@ while (projects.hasNext()) {
 
 }
 const projectUrl = 'https://fieldcapture.ala.org.au/project/index/';
-print("Project, MERIT Project ID, Activity ID, Activity Type, Output, Old Value, New Value, Error");
+print("Project,MERIT Project ID,Activity ID,Activity Type,Output,Old Value,New Value,Error");
+
 for (let i=0; i<results.length; i++) {
-    print(projectUrl+results[i].projectId + ", " + results[i].meritProjectID + ", " + results[i].activityId + ", " + results[i].activityType + ", " + results[i].output + ", \"" + results[i].oldValue + "\", \"" + results[i].newValue+ "\"");
+    print(projectUrl+results[i].projectId + "," + results[i].meritProjectID + "," + results[i].activityId + "," + results[i].activityType + "," + results[i].output + ",\"" + results[i].oldValue + "\",\"" + results[i].newValue+ "\"");
 }
 
 
 for (let i=0; i<errors.length; i++) {
-    print(projectUrl+errors[i].projectId + ", " + errors[i].meritProjectID + ", " + errors[i].activityId + ", " + errors[i].activityType + ", " + errors[i].output + ", \"" + results[i].oldValue + "\",, " + errors[i].error);
+    print(projectUrl+errors[i].projectId + "," + errors[i].meritProjectID + "," + errors[i].activityId + "," + errors[i].activityType + "," + errors[i].output + ",\"" + results[i].oldValue + "\",," + errors[i].error);
 }
 
 
@@ -159,17 +162,18 @@ function processInvestmentPriority(parentNode, path, project, activity, output) 
     if (Array.isArray(node)) {
         let newValues = [];
         for (let i = 0; i < node.length; i++) {
-            if (!node[i]) {
+            let value = node[i] && node[i].trim();
+            if (!value || value === '') {
                 continue;
             }
-            let ip = db.investmentPriority.findOne({name: node[i]});
+            let ip = db.investmentPriority.findOne({name: value});
             if (!ip) {
                 errors.push({
-                    error:"No investment priority found for " + node[i],
+                    error:"No investment priority found for " + value,
                     projectId: project ? project.projectId : null,
                     meritProjectID: project ? project.grantId : null,
                     activityId: output ? output.activityId : null,
-                    activityType: activity.type,
+                    activityType: activity ? activity.type : null,
                     oldValue: node[i],
                     newValue: '',
                     output: output ? output.name : null
@@ -177,26 +181,27 @@ function processInvestmentPriority(parentNode, path, project, activity, output) 
 
             }
             else {
-                newValues.push(ip.name);
+                newValues.push(ip.investmentPriorityId);
                 changed = true;
             }
 
         }
         parentNode[path] = newValues;
     } else {
-        let ip = db.investmentPriority.findOne({name: node});
+        let value = node && node.trim();
+        let ip = db.investmentPriority.findOne({name: value});
         if (!ip) {
             errors.push({
-                error:"No investment priority found for " + node[i],
+                error:"No investment priority found for " + node,
                 projectId: project ? project.projectId : null,
                 meritProjectID: project ? project.grantId : null,
                 activityId: output ? output.activityId : null,
-                activityType: activity.type,
+                activityType: activity ? activity.type : null,
                 output: output ? output.name : null
             })
         }
         else {
-            parentNode[path] = ip.name;
+            parentNode[path] = ip.investmentPriorityId;
             changed = true;
         }
     }
@@ -205,7 +210,7 @@ function processInvestmentPriority(parentNode, path, project, activity, output) 
             projectId: project ? project.projectId : null,
             meritProjectID: project ? project.grantId : null,
             activityId: output ? output.activityId : null,
-            activityType: activity.type,
+            activityType: activity ? activity.type : null,
             output: output ? output.name : null,
             oldValue: node,
             newValue: parentNode[path]
@@ -215,6 +220,7 @@ function processInvestmentPriority(parentNode, path, project, activity, output) 
 }
 
 function replaceInvestmentPrioritiesInReportsForProject(project, reportPathsByType) {
+
     for (let i = 0; i < reportPathsByType.length; i++) {
         const activityType = reportPathsByType[i].name;
         const formVersion = reportPathsByType[i].formVersion;
@@ -232,6 +238,7 @@ function replaceInvestmentPrioritiesInReportsForProject(project, reportPathsByTy
             let outputs = db.output.find({activityId: activity.activityId});
 
             while (outputs.hasNext()) {
+                let changed = false;
                 let output = outputs.next();
                 let paths = reportPathsByType[i].sections[output.name];
 
@@ -249,12 +256,14 @@ function replaceInvestmentPrioritiesInReportsForProject(project, reportPathsByTy
                             }
                             if (path.length === 1) {
                                 // Pass the parent node and path so it can be modified.
-                                processInvestmentPriority(node, currentPath, project, activity, output);
+                                if (processInvestmentPriority(node, currentPath, project, activity, output)) {
+                                    changed = true;
+                                }
                             } else {
                                 node = node[currentPath];
                                 if (Array.isArray(node)) {
-                                    for (let i = 0; i < node.length; i++) {
-                                        let childNode = node[i];
+                                    for (let j = 0; j < node.length; j++) {
+                                        let childNode = node[j];
                                         if (childNode) {
                                             processNode(path.slice(1), childNode);
                                         }
@@ -269,15 +278,22 @@ function replaceInvestmentPrioritiesInReportsForProject(project, reportPathsByTy
                     }
 
                 }
+                if (changed) {
+                    db.output.replaceOne({outputId: output.outputId}, output);
+                    audit(output, output.outputId, 'au.org.ala.ecodata.Output', adminUserId, project.projectId);
+                }
             }
         }
     }
+
 }
 
 
 function replaceInvestmentPrioritiesWithIds(project) {
-    let investmentPriorities = [];
-    /*let objectives = project.custom.details.objectives && project.custom.details.objectives.rows1;
+    /*
+    // The "assets" in the objectives.rows1.assets field are actually much closer to the "category" or "type"
+    // We are leaving these as they don't add any value to migrate.
+    let objectives = project.custom.details.objectives && project.custom.details.objectives.rows1;
     if (objectives) {
         for (let i = 0; i < objectives.length; i++) {
             let objective = objectives[i];
@@ -301,42 +317,27 @@ function replaceInvestmentPrioritiesWithIds(project) {
             }
         }
     }
-
+    */
+    let changed = false;
     let assets = project.custom.details.assets;
     if (assets) {
         for (let i = 0; i < assets.length; i++) {
-            let assetDescription = assets[i];
-            if (assetDescription.description) {
-                investmentPriorities.push(assetDescription.description);
+            let assetDescription = assets[i].description && assets[i].description.trim();
+            if (assetDescription && assetDescription !== '') {
+                if (processInvestmentPriority(assets[i], 'description', project)) {
+                    changed = true;
+                }
             }
-        }
-    }*/
 
+        }
+    }
     let outcomes = project.custom.details.outcomes;
 
     if (outcomes) {
-        let error = false;
-        let changed = false;
+
+
         if (outcomes.primaryOutcome && outcomes.primaryOutcome.assets) {
-            investmentPriorities = investmentPriorities.concat(outcomes.primaryOutcome.assets);
-            let assetIds = [];
-            for (let j = 0; j < outcomes.primaryOutcome.assets.length; j++) {
-                let asset = outcomes.primaryOutcome.assets[j];
-                if (asset) {
-                    let investmentPriority = db.investmentPriority.findOne({name: asset});
-                    if (!investmentPriority) {
-                        print("No investment priority found for " + asset + " in project " + project.projectId);
-                        //investmentPriority = addInvestmentPriority(priority);
-                        error = true;
-                    } else {
-                        assetIds.push(investmentPriority.investmentPriorityId);
-                        changed = true;
-                    }
-                }
-            }
-            if (!error) {
-                outcomes.primaryOutcome.assets = assetIds;
-            }
+            changed = processInvestmentPriority(outcomes.primaryOutcome, 'assets', project);
         }
         const outcomeTypes = ["secondaryOutcomes", "shortTermOutcomes", "midTermOutcomes"];
         for (let k = 0; k < outcomeTypes.length; k++) {
@@ -345,40 +346,19 @@ function replaceInvestmentPrioritiesWithIds(project) {
                 for (let i = 0; i < outcomes[outcomeTypes[k]].length; i++) {
                     let outcome = outcomes[outcomeTypes[k]][i];
                     if (outcome.assets) {
-                        let assetIds = [];
-                        for (let j = 0; j < outcome.assets.length; j++) {
-                            let asset = outcome.assets[j];
-                            if (asset) {
-                                let investmentPriority = db.investmentPriority.findOne({name: asset});
-                                if (!investmentPriority) {
-                                    print("No investment priority found for " + asset + " in project " + project.projectId);
-                                    //investmentPriority = addInvestmentPriority(priority);
-                                    error = true;
-                                } else {
-                                    assetIds.push(investmentPriority.investmentPriorityId);
-                                    changed = true;
-                                }
-                            }
-
-
+                        if (processInvestmentPriority(outcome, 'assets', project)) {
+                            changed = true;
                         }
-                        if (!error) {
-                            outcomes[outcomeTypes[k]][i].assets = assetIds;
-                        }
-
                     }
                 }
 
             }
         }
 
-        if (!error && changed) {
-            print("Updating project " + project.projectId);
+        if (changed) {
+            //print("Updating project " + project.projectId);
             db.project.replaceOne({projectId: project.projectId}, project);
             audit(project, project.projectId, 'au.org.ala.ecodata.Project', adminUserId);
-        } else if (error) {
-            print("Error updating project " + project.projectId);
         }
     }
-
 }

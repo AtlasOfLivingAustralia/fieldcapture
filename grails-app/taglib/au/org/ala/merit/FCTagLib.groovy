@@ -882,12 +882,14 @@ class FCTagLib {
 
         out << '<span class="original hide">'
         if (original && original.size() > i) {
-            (attrs.property) ? out << original[i][property] : out << original[i]
+            def value = (attrs.property) ? original[i][property] : original[i]
+            out << idToLabel(value, attrs)
         }
         out << '</span>'
         out << '<span class="changed hide">'
         if (changed && changed.size() > i) {
-            (attrs.property) ? out << changed[i][property] : out << changed[i]
+            def value = (attrs.property) ? changed[i][property] : changed[i]
+            out << idToLabel(value, attrs)
         }
         out << '</span>'
         out << '<span class="diff"></span>'
@@ -925,9 +927,9 @@ class FCTagLib {
         out << '<span class="original hide">'
         if (original && original.size() > i) {
             if (original[i][property] instanceof List) {
-                out << fakeBulletedList(original[i][property])
+                out << fakeBulletedList(idToLabel(original[i][property], attrs))
             } else {
-                out << original[i][property]
+                out << idToLabel(original[i][property], attrs)
             }
 
         }
@@ -935,9 +937,9 @@ class FCTagLib {
         out << '<span class="changed hide">'
         if (changed && changed.size() > i) {
             if (changed[i][property] instanceof List) {
-                out << fakeBulletedList(changed[i][property])
+                out << fakeBulletedList(idToLabel(changed[i][property], attrs))
             } else {
-                out << changed[i][property]
+                out << idToLabel(changed[i][property], attrs)
             }
         }
         out << '</span>'
@@ -1129,6 +1131,27 @@ class FCTagLib {
         String text = attrs.text ?: body()
 
         out << MarkdownUtils.markdownToHtmlAndSanitise(text)
+    }
+
+    private static def idToLabel(def toConvert, Map attrs) {
+        List objectList = (List)attrs.objectList
+        String idProperty = attrs.idProperty
+        String labelProperty = attrs.labelProperty
+        String unmatchedValue = attrs.unmatchedValue ?: ''
+
+        if (!objectList || !idProperty || !labelProperty) {
+            return toConvert
+        }
+        if (toConvert instanceof List) {
+            return toConvert.collect{ String id ->
+                def match = objectList.find{it[idProperty] == id}
+                match ? match[labelProperty] : unmatchedValue
+            }
+        }
+        else {
+            def match = objectList.find{it[idProperty] == toConvert}
+            return match ? match[labelProperty] : unmatchedValue
+        }
     }
 
     private String markdownToHtmlAndSanitise(String text) {

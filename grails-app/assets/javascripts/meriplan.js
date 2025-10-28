@@ -1870,12 +1870,18 @@ function OutcomesViewModel(outcomes, config) {
         });
         // Return the list of priorities that have at least one category in common with the selected outcome.
         var priorities = _.filter(config.priorities, function (priority) {
-            console.log(priority);
             return _.any(priorityCategories, function (category) {
                 return priority.categories.indexOf(category) >= 0;
             });
         });
         return priorities;
+    };
+
+    self.priorityLabel = function(investmentPriorityId) {
+        let investmentPriority = _.find(config.priorities, function(priority) {
+            return priority.investmentPriorityId === investmentPriorityId;
+        });
+        return investmentPriority ? investmentPriority.name : '<cannot find investement prioririty>';
     };
 
     var supportsConfiguration = function(outcomeText, configItemName) {

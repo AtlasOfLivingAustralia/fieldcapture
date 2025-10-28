@@ -21,7 +21,7 @@ function findInvestmentPrioritiesInForms() {
     ];
     let pathsByForm = [];
     for (let i=0; i<reportTypes.length; i++) {
-        print("Processing reports of type " + reportTypes[i]);
+        //print("Processing reports of type " + reportTypes[i]);
         const reportType = reportTypes[i];
 
         const activityForms = db.activityForm.find({name:reportType, status:{$ne:'deleted'}});
@@ -36,10 +36,10 @@ function findInvestmentPrioritiesInForms() {
             };
             pathsByForm.push(formPaths);
 
-            print("Processing activity form " + activityForm.name + " v" + activityForm.formVersion);
+            //print("Processing activity form " + activityForm.name + " v" + activityForm.formVersion);
             for (let j=0; j<activityForm.sections.length; j++) {
                 const section = activityForm.sections[j];
-                print("Processing form section " + section.name);
+                //print("Processing form section " + section.name);
                 let paths = [];
                 formPaths.sections[section.name] = paths;
 

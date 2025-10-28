@@ -96,7 +96,7 @@
         $("#primaryOutcome").prettyTextDiff({cleanup: true});
         $("#program-outcome-assets").prettyTextDiff({cleanup: true});
         $("#additional-benefits span").prettyTextDiff({cleanup: true});
-        $("#secondary-assets").prettyTextDiff({cleanup: true});
+        $(".secondary-assets").prettyTextDiff({cleanup: true});
         $("#outcome-statements td").prettyTextDiff({cleanup: true});
         $("#project-partnerships td").prettyTextDiff({cleanup: true});
 
