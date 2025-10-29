@@ -1133,6 +1133,10 @@ class FCTagLib {
         out << MarkdownUtils.markdownToHtmlAndSanitise(text)
     }
 
+    def labelFromId = { Map attrs ->
+        out << idToLabel(attrs.id, attrs)
+    }
+
     private static def idToLabel(def toConvert, Map attrs) {
         List objectList = (List)attrs.objectList
         String idProperty = attrs.idProperty

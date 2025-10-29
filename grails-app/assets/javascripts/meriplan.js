@@ -1878,8 +1878,9 @@ function OutcomesViewModel(outcomes, config) {
     };
 
     self.priorityLabel = function(investmentPriorityId) {
+        const id = ko.utils.unwrapObservable(investmentPriorityId);
         let investmentPriority = _.find(config.priorities, function(priority) {
-            return priority.investmentPriorityId === investmentPriorityId;
+            return priority.investmentPriorityId === id;
         });
         return investmentPriority ? investmentPriority.name : '<cannot find investement prioririty>';
     };

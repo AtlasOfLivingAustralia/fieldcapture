@@ -137,13 +137,23 @@
                                 <g:if test="${p_outcome.assets?.size() > 1}">
                                     <ul>
                                         <g:each in="${p_outcome.assets}" var="p_asset">
-                                            <li>${p_asset}</li>
+                                            <li><fc:labelFromId
+                                                    id="${p_asset}"
+                                                    objectList="${config.priorities}"
+                                                    idProperty="investmentPriorityId"
+                                                    labelProperty="name"/>
+                                                <br/></li>
                                         </g:each>
                                     </ul>
                                 </g:if>
                                 <g:else>
                                     <g:each in="${p_outcome.assets}" var="p_asset">
-                                        ${p_asset}
+                                        <fc:labelFromId
+                                                id="${p_asset}"
+                                                objectList="${config.priorities}"
+                                                idProperty="investmentPriorityId"
+                                                labelProperty="name"/>
+                                        <br/>
                                     </g:each>
                                 </g:else>
                             </td>
@@ -159,7 +169,12 @@
                                     <td class="outcome">${s_outcome.description}</td>
                                     <td class="priority">
                                         <g:each in="${s_outcome.assets}" var="s_asset">
-                                            ${s_asset}<br/>
+                                            <fc:labelFromId
+                                                    id="${s_asset}"
+                                                    objectList="${config.priorities}"
+                                                    idProperty="investmentPriorityId"
+                                                    labelProperty="name"/>
+                                            <br/>
                                         </g:each>
                                     </td>
                                 </tr>

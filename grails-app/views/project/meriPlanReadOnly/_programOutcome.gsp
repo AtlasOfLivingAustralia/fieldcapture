@@ -9,7 +9,7 @@
     <tbody>
     <tr>
         <td class="outcome-priority"><span
-                data-bind="text:details.outcomes.priorityLabel(details.outcomes.primaryOutcome.description)"></span>
+                data-bind="text:details.outcomes.primaryOutcome.description"></span>
         </td>
         <td class="priority">
             <!-- ko if:!isAgricultureProject() && !details.outcomes.primaryOutcomeSupportsMultiplePriorities() -->
