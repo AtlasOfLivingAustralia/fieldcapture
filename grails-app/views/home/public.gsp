@@ -24,7 +24,7 @@
     <asset:stylesheet src="common-bs4.css"/>
 </head>
 <body>
-
+    <h1 class="visually-hidden">Monitoring, Evaluation, Reporting and Information Tool (MERIT)</h1>
     <div class="content container">
         <div id="stats-holder">
             <g:render template="/report/statistics"/>

@@ -83,7 +83,7 @@
             <div class="accordion" id="project-display-options">
                 <div class="accordion-item">
                     <div class="accordion-header collapsed" id="mapHeading" data-bs-target="#accordionMapView" data-bs-toggle="collapse">
-                        <a class="text-start text-uppercase">Map</a>
+                        <a class="text-start text-uppercase"><h2>Map</h2></a>
                     </div>
 
                     <div id="accordionMapView" class="collapseItems accordion-collapse collapse" aria-labelledby="mapHeading" data-bs-parent="#project-display-options">
@@ -103,7 +103,7 @@
                 </div> <!-- Map Section -->
                 <div class="accordion-item">
                     <div class="accordion-header collapsed" id="projectHeading" data-bs-target="#projectsView" data-bs-toggle="collapse">
-                        <a class="text-start text-uppercase">Projects</a>
+                        <a class="text-start text-uppercase"><h2>Projects</h2></a>
                     </div>
                     <div id="projectsView" class="accordion-collapse collapse collapseItems" aria-labelledby="projectHeading" data-bs-parent="#project-display-options">
                         <div class="accordion-body pt-0">
@@ -189,7 +189,7 @@
                 </div> <!-- Project View -->
                 <div class="accordion-item">
                     <div class="accordion-header collapsed" id="dashboardHeading" data-bs-target="#reportView" data-bs-toggle="collapse">
-                        <a class="text-start text-uppercase">Dashboard</a>
+                        <a class="text-start text-uppercase"><h2>Dashboard</h2></a>
                     </div>
                     <div id="reportView" class="accordion-collapse collapse collapseItems" aria-labelledby="dashboardHeading" data-bs-parent="#project-display-options">
                         <div class="accordion-body pt-0">
@@ -235,7 +235,7 @@
                 <g:if test="${includeDownloads}">
                     <div class="accordion-item">
                         <div class="accordion-header collapsed" id="downloadHeading" data-bs-target="#downloadView" data-bs-toggle="collapse">
-                            <a class="text-start text-uppercase">Download</a>
+                            <a class="text-start text-uppercase"><h2>Download</h2></a>
                         </div>
                         <div id="downloadView" class="accordion-collapse collapse collapseItems" aria-labelledby="downloadHeading" data-bs-parent="#project-display-options">
                             <div class="accordion-body pt-0">

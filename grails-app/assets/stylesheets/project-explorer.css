@@ -333,3 +333,9 @@ input.dateControl {
 #facetsCol .accordion-header::after {
     margin-top:7px;
 }
+
+.accordion-header h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 18px;
+}
