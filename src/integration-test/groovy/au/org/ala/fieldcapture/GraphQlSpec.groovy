@@ -265,9 +265,9 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
 
         meriPlan.primaryOutcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
         waitFor {
-            meriPlan.primaryPriority.find('[value="Ginini Flats Wetland Complex"')
+            meriPlan.primaryPriority.find('[value="ip1"')
         }
-        meriPlan.primaryPriority = "Ginini Flats Wetland Complex"
+        meriPlan.primaryPriority = "ip1"
         meriPlan.secondaryOutcomes[0].outcome = "By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
         meriPlan.secondaryOutcomes[0].priority = "Swainsona recta"
 
@@ -275,13 +275,13 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
 
         then: "The Selectable priorities are derived from the selections made in the primary and secondary outcomes"
         waitFor {
-            meriPlan.shortTermOutcomes[0].priority.find('option').collect { it.value() } == ["", "Ginini Flats Wetland Complex", "Swainsona recta"]
+            meriPlan.shortTermOutcomes[0].priority.find('option').collect { it.value() } == ["", "ip1", "ip7"]
         }
         waitFor {
             meriPlan.shortTermOutcomes[0].relatedProgramOutcomes.find('option').collect { it.value() } == ["", "Short term outcome 1", "Short term outcome 2", "Short term outcome 3"]
         }
         waitFor {
-            meriPlan.mediumTermOutcomes[0].priority.find('option').collect { it.value() } == ["", "Ginini Flats Wetland Complex", "Swainsona recta"]
+            meriPlan.mediumTermOutcomes[0].priority.find('option').collect { it.value() } == ["", "ip1", "ip7"]
         }
         waitFor {
             meriPlan.mediumTermOutcomes[0].relatedProgramOutcomes.find('option').collect{it.value()} == ["", "Medium term outcome 1", "Medium term outcome 2", "Medium term outcome 3"]
@@ -292,12 +292,12 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
 
         when:
         meriPlan.shortTermOutcomes[0].outcome = "Short term outcome 1"
-        meriPlan.shortTermOutcomes[0].priority = "Swainsona recta"
+        meriPlan.shortTermOutcomes[0].priority = "ip7"
         meriPlan.shortTermOutcomes[0].relatedProgramOutcomes = "Short term outcome 3"
         meriPlan.mediumTermOutcomes[0].outcome = "Medium term outcome 1"
-        meriPlan.mediumTermOutcomes[0].priority = "Swainsona recta"
+        meriPlan.mediumTermOutcomes[0].priority = "ip7"
         meriPlan.mediumTermOutcomes[0].relatedProgramOutcomes = "Medium term outcome 1"
-        meriPlan.addMediumTermOutcome("Medium term outcome 2", "Ginini Flats Wetland Complex", "Medium term outcome 2")
+        meriPlan.addMediumTermOutcome("Medium term outcome 2", "ip1", "Medium term outcome 2")
 
         then:
         waitFor {
@@ -477,9 +477,9 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         result.meriPlan.supportedPriorityPlaces == ["Priority place 1"]
         result.meriPlan.firstNationsPeopleInvolvement == "Leading"
         result.meriPlan.primaryOutcome.description == "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
-        result.meriPlan.primaryOutcome.assets == ["Ginini Flats Wetland Complex"]
+        result.meriPlan.primaryOutcome.assets == ["ip1"]
         result.meriPlan.secondaryOutcomes[0].description == "By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
-        result.meriPlan.secondaryOutcomes[0].assets == ["Swainsona recta"]
+        result.meriPlan.secondaryOutcomes[0].assets == ["ip7"]
         result.meriPlan.shortTermOutcomes[0].description == "Short term outcome 1"
         result.meriPlan.shortTermOutcomes[0].relatedOutcome == "Short term outcome 3"
         result.meriPlan.midTermOutcomes[0].description == "Medium term outcome 1"

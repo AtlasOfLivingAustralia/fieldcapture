@@ -120,6 +120,12 @@ if (db.investmentPriority.count() == 0) {
             "categories": ["Sustainable Agriculture"],
             "type":"agricultural",
             "name": "Market traceability"
+        },
+        {
+            "investmentPriorityId": "ip22",
+            "categories": ["Threatened Species"],
+            "type":"species",
+            "name": "Euastacus jagara (Freshwater crayfish)"
         }
     ];
 
