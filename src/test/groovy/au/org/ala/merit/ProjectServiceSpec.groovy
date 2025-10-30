@@ -1071,8 +1071,9 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
     def "The project service can return a list of investment priorities from the MERI plan"() {
         setup:
         String projectId = 'p1'
-        List secondaryOutcomes = [ [ "assets" : [ "Investment priority 1" ], "description" : "Outcome 2" ] ]
+        List secondaryOutcomes = [ [ "assets" : [ "ip1" ], "description" : "Outcome 2" ] ]
         Map primaryOutcome = [:]
+        Map programConfig = [priorities:[[investmentPriorityId:"ip1", name: "Investment Priority 1"], [investmentPriorityId:"ip2", name: "Investment Priority 2"], [investmentPriorityId:"ip3", name: "Investment Priority 3"]]]
         Map project = [projectId:projectId, custom:[details:[outcomes:[secondaryOutcomes:secondaryOutcomes, primaryOutcome:primaryOutcome]]]]
 
         when:
@@ -1080,20 +1081,21 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
 
         then:
         1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * projectConfigurationService.getProjectConfiguration(project) >> programConfig
 
         and:
-        priorities == ['Investment priority 1']
+        priorities == [[investmentPriorityId:'ip1', name:'Investment Priority 1']]
 
         when:
-        project.custom.details.outcomes.primaryOutcome = [assets:['Investment Priority 2', 'Investment Priority 3'], description:"Outcome 1"]
+        project.custom.details.outcomes.primaryOutcome = [assets:['ip2', 'ip3'], description:"Outcome 1"]
         priorities = service.listProjectInvestmentPriorities(projectId)
 
         then:
-        then:
         1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * projectConfigurationService.getProjectConfiguration(project) >> programConfig
 
         and:
-        priorities == ['Investment Priority 2', 'Investment Priority 3', 'Investment priority 1']
+        priorities ==  [[investmentPriorityId:'ip2', name:'Investment Priority 2'], [investmentPriorityId:'ip3', name:'Investment Priority 3'], [investmentPriorityId:'ip1', name:'Investment Priority 1']]
 
         when:
         project.custom.details.outcomes = null
@@ -1101,6 +1103,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
 
         then:
         1 * webService.getJson({it.contains("project/"+projectId)}) >> project
+        1 * projectConfigurationService.getProjectConfiguration(project) >> programConfig
 
         and:
         priorities == []
