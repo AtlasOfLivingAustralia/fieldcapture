@@ -40,17 +40,11 @@ class DataSetController {
         if (!outcomes) {
            outcomes = ['n/a']
         }
-        List priorities = projectService.listProjectInvestmentPriorities(project)
-        if (!priorities) {
-            priorities = projectService.listProjectAssets(project)
-        }
-        if (!priorities) {
-            priorities = config.priorities?.collect{it.priority}
-        }
-        if (!priorities) {
-            priorities = ['n/a']
-        }
+        List priorities = projectService.listProjectInvestmentPriorities(project, config)
 
+        if (!priorities) {
+            priorities = config.priorities
+        }
 
         List outcomeGroups = []
         List projectServices = projectService.getProjectServices(project)

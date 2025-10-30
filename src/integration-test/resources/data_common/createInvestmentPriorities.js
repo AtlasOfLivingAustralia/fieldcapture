@@ -63,7 +63,7 @@ if (db.investmentPriority.count() == 0) {
         },
         {
             "investmentPriorityId": "ip11",
-            "categories": ["Soil Quality"],
+            "categories": ["Soil Quality", "Land Management"],
             "type":"agricultural",
             "name": "Soil acidification"
         },
@@ -84,12 +84,6 @@ if (db.investmentPriority.count() == 0) {
             "categories": ["Soil Quality"],
             "type":"agricultural",
             "name": "Wind erosion priority"
-        },
-        {
-            "investmentPriorityId": "ip15",
-            "type":"agricultural",
-            "categories": ["Land Management"],
-            "name": "Soil acidification"
         },
         {
             "investmentPriorityId": "ip16",

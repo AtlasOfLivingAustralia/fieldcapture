@@ -96,7 +96,7 @@ class DatasetSpec extends StubbedCasSpec{
         def set = datasetContent
         set.title == "Title"
         set.programOutcome == "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
-        set.investmentPriorities == ["Soil acidification"]
+        set.investmentPriorities == ["ip11"]
         set.protocol == "other"
         set.type == "Baseline"
         set.measurementTypes == ["Soil erosion"]
@@ -127,7 +127,7 @@ class DatasetSpec extends StubbedCasSpec{
         def copyOfSet = datasetContent
         copyOfSet.title == "Copy of Title"
         copyOfSet.programOutcome == "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
-        copyOfSet.investmentPriorities == ["Soil acidification"]
+        copyOfSet.investmentPriorities == ["ip11"]
         copyOfSet.protocol == "other"
         copyOfSet.type == "Baseline"
         copyOfSet.measurementTypes == ["Soil erosion"]
@@ -227,7 +227,7 @@ class DatasetSpec extends StubbedCasSpec{
         when:
         set.title = "Title 2"
         set.programOutcome = "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
-        set.investmentPriorities = ["Soil acidification"]
+        set.investmentPriorities = ["ip11"]
         set.type = "Baseline"
         set.baselines = ['b1']
         set.protocol = 'guid-1'

@@ -44,7 +44,7 @@
     <div class="mb-3 row">
         <label for="investmentPriority" class="col-sm-5 col-form-label required">6. What primary or secondary investment priorities or assets does this dataset relate to?</label>
         <div class="col-sm-7">
-            <g:select multiple="multiple" from="${priorities}" name="investmentPriority" class="form-control" id="investmentPriority" data-validation-engine="validate[required]" data-bind="multiSelect2:{value:investmentPriorities}"/>
+            <g:select multiple="multiple" from="${priorities}" name="investmentPriority" optionKey="investmentPriorityId" optionValue="name" class="form-control" id="investmentPriority" data-validation-engine="validate[required]" data-bind="multiSelect2:{value:investmentPriorities}"/>
         </div>
 
     </div>

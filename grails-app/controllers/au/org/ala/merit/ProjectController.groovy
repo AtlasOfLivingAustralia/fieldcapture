@@ -1140,7 +1140,10 @@ class ProjectController {
      */
     @PreAuthorise(accessLevel = 'readOnly')
     def listProjectInvestmentPriorities(String id) {
-        List investmentPriorities = projectService.listProjectInvestmentPriorities(id)
+        List investmentPriorities = projectService.listProjectInvestmentPriorities(id)?.collect {
+            it.name
+        }
+
         investmentPriorities <<  "Other"
         render investmentPriorities as JSON
     }

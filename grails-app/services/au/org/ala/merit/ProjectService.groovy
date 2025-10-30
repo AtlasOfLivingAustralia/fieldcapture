@@ -2064,16 +2064,20 @@ class ProjectService  {
      * @param projectId the project of interest
      * @return a List of outcomes selected in the project MERI plan
      */
-    List listProjectInvestmentPriorities(Map project) {
+    List listProjectInvestmentPriorities(Map project, Map programConfig = null) {
+        if (!programConfig) {
+            programConfig = getProgramConfiguration(project)
+        }
         List primaryPriorities = project?.custom?.details?.outcomes?.primaryOutcome?.assets ?: []
         List secondaryPriorities = project?.custom?.details?.outcomes?.secondaryOutcomes?.collect{it.assets}?.flatten() ?: []
-        List allPriorities = primaryPriorities + secondaryPriorities
-        allPriorities.findAll{it}.unique()
-    }
+        List assets = project?.custom?.details?.assets?.collect{it.description}?.findAll{it}
+        List allPriorities = primaryPriorities + secondaryPriorities + assets
 
-    /** Returns all assets identified in the project MERI plan */
-    List listProjectAssets(Map project) {
-        project?.custom?.details?.assets?.collect{it.description}?.findAll{it}
+        List investmentPriorityIds = allPriorities.findAll{it}.unique()
+        investmentPriorityIds.collect { String investmentPriorityId ->
+            programConfig.priorities.find{it.investmentPriorityId == investmentPriorityId}
+        }
+
     }
 
     List listProjectBaselines(Map project) {
