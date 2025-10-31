@@ -17,7 +17,7 @@
             <!-- /ko -->
             <!-- ko if:isAgricultureProject() || details.outcomes.primaryOutcomeSupportsMultiplePriorities() -->
             <ul data-bind="foreach:details.outcomes.primaryOutcome.assets">
-                <li data-bind="text:$root.details.outcomes.priorityLabel($data)"></li>
+                <li data-bind="text:details.outcomes.priorityLabel($data)"></li>
             </ul>
             <!-- /ko -->
 

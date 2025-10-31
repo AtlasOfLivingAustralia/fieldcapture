@@ -299,14 +299,12 @@ function MERIPlan(project, projectService, config) {
     self.priorityAssets = function(category) {
         var matchingPriorities = _.filter(config.priorities || [], function (priority) {
             if (_.isArray(category)) {
-                return _.find(category, function(cat) { return priority.category == cat; });
+                return _.find(category, function(cat) { return _.contains(priority.categories, cat)} );
             } else {
-                return (!category || category == priority.category);
+                return (!category || _.contains(priority.category, category));
             }
         });
-        return _.map(matchingPriorities, function(priority) {
-            return priority.priority;
-        });
+        return matchingPriorities;
     };
 
     /**
@@ -316,8 +314,9 @@ function MERIPlan(project, projectService, config) {
      */
     self.assetCategories = function(filter) {
         var categories = _.map(config.priorities || [], function(priority) {
-            return priority.category;
+            return priority.categories;
         });
+        categories = _.flatten(categories);
         categories = _.uniq(categories);
         if (filter) {
             categories = _.filter(filter, function(category) {
@@ -328,15 +327,20 @@ function MERIPlan(project, projectService, config) {
     }
 
     /**
-     * Returns the asset category assoociated with the supplied asset.
+     * Returns the asset category associated with the supplied asset.
      * @param asset the asset to check.
      * @returns {*}
      */
-    self.assetCategory = function(asset) {
+    self.assetCategory = function(asset, formCategories) {
         var result = _.find(config.priorities || [], function(priority) {
-            return priority.priority == asset;
+            return priority.investmentPriorityId === asset;
         });
-        return result && result.category;
+        if (result && result.categories) {
+            return _.find(formCategories, function(category) {
+                return _.contains(result.categories, category);
+            })
+        }
+        return null;
     };
 
     self.programObjectives = config.programObjectives || [];

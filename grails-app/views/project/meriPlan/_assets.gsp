@@ -33,12 +33,12 @@
         <g:if test="${fromPriorities}">
             <g:if test="${useCategorySelection}">
                 <select class="form-select form-select-sm" data-validation-engine="validate[required]"
-                        data-bind="select2:{}, value:description, optionsCaption:'${placeHolder  ?: "Please select..."}', options: $root.priorityAssets(category()), disable: !category() || $parent.isProjectDetailsLocked()">
+                        data-bind="select2:{}, value:description, optionsCaption:'${placeHolder  ?: "Please select..."}', optionsText:'name',  optionsValue:'investmentPriorityId', options: $root.priorityAssets(category()), disable: !category() || $parent.isProjectDetailsLocked()">
                 </select>
             </g:if>
             <g:else>
                 <select class="form-select form-select-sm" data-validation-engine="validate[required]"
-                        data-bind="select2:{}, value:description, optionsCaption:'${placeHolder  ?: "Please select..."}', options: $root.priorityAssets(<fc:modelAsJavascript model="${priorityCategories}" default=""/>), disable: $parent.isProjectDetailsLocked()">
+                        data-bind="select2:{}, value:description, optionsCaption:'${placeHolder  ?: "Please select..."}', optionsText:'name',  optionsValue:'investmentPriorityId', options: $root.priorityAssets(<fc:modelAsJavascript model="${priorityCategories}" default=""/>), disable: $parent.isProjectDetailsLocked()">
                 </select>
             </g:else>
 
@@ -51,7 +51,7 @@
     <g:if test="${fromPriorities && autoSelectCategory}">
         <td class="asset-category required">
                 <select type="text" class="form-select form-select-sm" readonly="readonly" placeholder="${categoryPlaceholder ?:"Select an asset..."}"
-                        data-bind="value:category, options:[$root.assetCategory(description())], disable: $parent.isProjectDetailsLocked()"></select>
+                        data-bind="value:category, options:[$root.assetCategory(description(), ${priorityCategories})], disable: $parent.isProjectDetailsLocked()"></select>
 
         </td>
     </g:if>

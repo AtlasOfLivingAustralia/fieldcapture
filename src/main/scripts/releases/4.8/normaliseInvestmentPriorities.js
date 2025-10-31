@@ -117,7 +117,7 @@ function addInvestmentPriority(priority, managementUnit) {
             investmentPriorityId: UUID.generate(),
             status: 'active',
             type: typesForCategory[category] || 'Other',
-            name: priorityName,
+            name: priorityName.trim(),
             categories: [category],
             managementUnits: [],
         }

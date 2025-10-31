@@ -20,10 +20,9 @@
 
             <!-- ko if:details.outcomes.secondaryOutcomeSupportsMultiplePriorities($data.description()) -->
             <ul data-bind="foreach:assets">
-                <li data-bind="text:$root.details.outcomes.priorityLabel($data)"></li>
+                <li data-bind="text:details.outcomes.priorityLabel($data)"></li>
             </ul>
             <!-- /ko -->
-        </span>
         </td>
     </tr>
 
