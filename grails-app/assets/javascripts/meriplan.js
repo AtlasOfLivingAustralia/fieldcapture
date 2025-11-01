@@ -301,7 +301,7 @@ function MERIPlan(project, projectService, config) {
             if (_.isArray(category)) {
                 return _.find(category, function(cat) { return _.contains(priority.categories, cat)} );
             } else {
-                return (!category || _.contains(priority.category, category));
+                return (!category || _.contains(priority.categories, category));
             }
         });
         return matchingPriorities;
@@ -329,6 +329,7 @@ function MERIPlan(project, projectService, config) {
     /**
      * Returns the asset category associated with the supplied asset.
      * @param asset the asset to check.
+     * @param formCategories
      * @returns {*}
      */
     self.assetCategory = function(asset, formCategories) {
@@ -336,9 +337,14 @@ function MERIPlan(project, projectService, config) {
             return priority.investmentPriorityId === asset;
         });
         if (result && result.categories) {
-            return _.find(formCategories, function(category) {
-                return _.contains(result.categories, category);
-            })
+            if (formCategories) {
+                return _.find(formCategories, function(category) {
+                    return _.contains(result.categories, category);
+                })
+            }
+            else {
+                return result.categories[0];
+            }
         }
         return null;
     };

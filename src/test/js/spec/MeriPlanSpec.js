@@ -729,19 +729,19 @@ describe("Loading the MERI plan is handled correctly", function () {
             useRlpTemplate:true,
             healthCheckUrl:'testing',
             priorities:[
-                {"category":"Cat 1", "priority":"Priority 1"},
-                {"category":"Cat 1", "priority":"Priority 2"},
-                {"category":"Cat 2", "priority":"Priority 3"}
+                {"investmentPriorityId":"ip1", "categories":["Cat 1"], "name":"Priority 1"},
+                {"investmentPriorityId":"ip2", "categories":["Cat 1"], "name":"Priority 2"},
+                {"investmentPriorityId":"ip3", "categories":["Cat 2"], "name":"Priority 3"}
             ]
         };
         var projectService = new ProjectService(project, {});
 
         var viewModel = new MERIPlan(project, projectService, config);
 
-        expect(viewModel.priorityAssets()).toEqual(["Priority 1", "Priority 2", "Priority 3"]);
-        expect(viewModel.priorityAssets("Cat 1")).toEqual(["Priority 1", "Priority 2"]);
-        expect(viewModel.priorityAssets("Cat 2")).toEqual(["Priority 3"]);
-        expect(viewModel.priorityAssets(["Cat 1", "Cat 2"])).toEqual(["Priority 1", "Priority 2", "Priority 3"]);
+        expect(viewModel.priorityAssets()).toEqual(config.priorities);
+        expect(viewModel.priorityAssets("Cat 1")).toEqual([config.priorities[0], config.priorities[1]]);
+        expect(viewModel.priorityAssets("Cat 2")).toEqual([config.priorities[2]]);
+        expect(viewModel.priorityAssets(["Cat 1", "Cat 2"])).toEqual([config.priorities[0], config.priorities[1], config.priorities[2]]);
 
     });
 
@@ -754,10 +754,10 @@ describe("Loading the MERI plan is handled correctly", function () {
             useRlpTemplate:true,
             healthCheckUrl:'testing',
             priorities:[
-                {"category":"Cat 1", "priority":"Priority 1"},
-                {"category":"Cat 1", "priority":"Priority 2"},
-                {"category":"Cat 2", "priority":"Priority 3"},
-                {"category":"Cat 3", "priority":"Priority 4"}
+                {"investmentPriorityId":"ip1", "categories":["Cat 1"], "name":"Priority 1"},
+                {"investmentPriorityId":"ip2", "categories":["Cat 1"], "name":"Priority 2"},
+                {"investmentPriorityId":"ip3", "categories":["Cat 2"], "name":"Priority 3"},
+                {"investmentPriorityId":"ip4", "categories":["Cat 3"], "name":"Priority 4"}
             ]
         };
         var projectService = new ProjectService(project, {});
@@ -781,22 +781,22 @@ describe("Loading the MERI plan is handled correctly", function () {
             useRlpTemplate:true,
             healthCheckUrl:'testing',
             priorities:[
-                {"category":"Cat 1", "priority":"Priority 1"},
-                {"category":"Cat 1", "priority":"Priority 2"},
-                {"category":"Cat 2", "priority":"Priority 3"},
-                {"category":"Cat 3", "priority":"Priority 4"}
+                {"investmentPriorityId":"ip1", "categories":["Cat 1"], "name":"Priority 1"},
+                {"investmentPriorityId":"ip2", "categories":["Cat 1"], "name":"Priority 2"},
+                {"investmentPriorityId":"ip3", "categories":["Cat 2"], "name":"Priority 3"},
+                {"investmentPriorityId":"ip4", "categories":["Cat 3"], "name":"Priority 4"}
             ]
         };
         var projectService = new ProjectService(project, {});
 
         var viewModel = new MERIPlan(project, projectService, config);
 
-        expect(viewModel.assetCategory()).toBeUndefined();
-        expect(viewModel.assetCategory("Not in list")).toBeUndefined();
-        expect(viewModel.assetCategory("Priority 1")).toEqual("Cat 1");
-        expect(viewModel.assetCategory("Priority 2")).toEqual("Cat 1");
-        expect(viewModel.assetCategory("Priority 3")).toEqual("Cat 2");
-        expect(viewModel.assetCategory("Priority 4")).toEqual("Cat 3");
+        expect(viewModel.assetCategory()).toBeNull();
+        expect(viewModel.assetCategory("Not in list")).toBeNull();
+        expect(viewModel.assetCategory("ip1")).toEqual("Cat 1");
+        expect(viewModel.assetCategory("ip2")).toEqual("Cat 1");
+        expect(viewModel.assetCategory("ip3")).toEqual("Cat 2");
+        expect(viewModel.assetCategory("ip4")).toEqual("Cat 3");
 
     });
 
