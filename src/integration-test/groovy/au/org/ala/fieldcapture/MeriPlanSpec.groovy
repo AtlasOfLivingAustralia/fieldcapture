@@ -74,11 +74,11 @@ class MeriPlanSpec extends StubbedCasSpec {
 
         meriPlan.primaryOutcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
         waitFor {
-            meriPlan.primaryPriority.find('[value="Ginini Flats Wetland Complex"')
+            meriPlan.primaryPriority.find('[value="ip1"')
         }
-        meriPlan.primaryPriority = "Ginini Flats Wetland Complex"
+        meriPlan.primaryPriority = "ip1"
         meriPlan.secondaryOutcomes[0].outcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
-        meriPlan.secondaryOutcomes[0].priority = "Ginini Flats Wetland Complex"
+        meriPlan.secondaryOutcomes[0].priority = "ip1"
         meriPlan.shortTermOutcomes[0].outcome.value("Short term outcome 1")
         meriPlan.addMediumTermOutcome("Medium term outcome 1")
         meriPlan.projectName = "MERI plan edited name"
@@ -113,9 +113,9 @@ class MeriPlanSpec extends StubbedCasSpec {
 
         then:
         meriPlan.primaryOutcome.value().contains("Ramsar") // Direct comparison fails due to &nbsp in the HTML due to the length of the options
-        meriPlan.primaryPriority == "Ginini Flats Wetland Complex"
+        meriPlan.primaryPriority == "ip1"
         meriPlan.secondaryOutcomes[0].outcome.value().contains("Ramsar")
-        meriPlan.secondaryOutcomes[0].priority.value() == "Ginini Flats Wetland Complex"
+        meriPlan.secondaryOutcomes[0].priority.value() == "ip1"
         meriPlan.shortTermOutcomes[0].outcome.value() == "Short term outcome 1"
         meriPlan.mediumTermOutcomes[0].outcome.value() == "Medium term outcome 1"
         meriPlan.projectName == "MERI plan edited name"
