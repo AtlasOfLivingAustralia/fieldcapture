@@ -361,7 +361,7 @@ class MetadataService {
         String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/investmentPriorities"
         Map params = [:]
         if (categories) {
-            params = [category: categories]
+            params = [categories: categories]
         }
 
         Map result = webService.doPost(url, params)
@@ -371,9 +371,6 @@ class MetadataService {
 
     @Cacheable("investmentPriorityCategories")
     List<String> getInvestmentPriorityCategories() {
-        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/investmentPriorities"
-        Map result = webService.getJson2(url)
-
-        result.resp.collect{it.category}
+        findInvestmentPriorities().collect{it.categories}.unique()
     }
 }

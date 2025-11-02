@@ -24,8 +24,15 @@
                 <span data-bind="text:category"></span>
             </td>
         </g:if>
+
         <td class="${assetClass}">
-            <span data-bind="text:description"></span>
+            <g:if test="${fromPriorities}">
+                <span data-bind="text:details.outcomes.priorityLabel(description)"></span>
+            </g:if>
+            <g:else>
+                <span data-bind="text:description"></span>
+            </g:else>
+
         </td>
         <g:if test="${fromPriorities && autoSelectCategory}">
             <td class="asset-category">

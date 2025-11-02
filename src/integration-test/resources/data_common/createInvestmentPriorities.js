@@ -123,9 +123,15 @@ if (db.investmentPriority.count() == 0) {
         },
         {
             "investmentPriorityId": "ip22",
-            "categories": ["Threatened Species"],
+            "categories": ["Threatened Species", "Priority Invertebrate Species"],
             "type":"species",
             "name": "Euastacus jagara (Freshwater crayfish)"
+        },
+        {
+            "investmentPriorityId": "ip23",
+            "categories": ["Threatened Species"],
+            "type":"species",
+            "name": "Numenius madagascariensis (Eastern Curlew, Far Eastern Curlew)"
         }
     ];
 
