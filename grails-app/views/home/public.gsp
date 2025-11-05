@@ -27,17 +27,20 @@
     <h1 class="visually-hidden">Monitoring, Evaluation, Reporting and Information Tool (MERIT)</h1>
     <div class="content container">
         <div id="stats-holder">
+            <h2 class="visually-hidden">Infographics</h2>
             <g:render template="/report/statistics"/>
         </div>
         <div class="row">
+            <h2 class="visually-hidden">MERIT news and featured project images</h2>
             <div class="col-sm-6">
                 <div id="latest-news">
-                    <h4>Latest news</h4>
+                    <h3>Latest news</h3>
                     <g:render template="/shared/blog" />
                 </div>
             </div>
             <div class="col-sm-6">
                 <div id="poi">
+                    <h3 class="visually-hidden">Featured project images</h3>
                     <g:render template="/shared/poi"/>
                 </div>
             </div>

@@ -1,0 +1,2 @@
+db.setting.updateOne({key:'meritfielddata.title.text'}, {$set:{value: 'Use the facets on the left to narrow the selection of projects on the map'}});
+db.setting.updateOne({key:'meritfielddata.helpLinksTitle.text'}, {$set:{value:'<h2>Helpful links</h2>'}});

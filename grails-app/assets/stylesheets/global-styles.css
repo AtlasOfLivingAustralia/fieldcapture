@@ -412,14 +412,14 @@ ul#adminNav li.active a {
 
 
 .page-header-menu .btn-warning {
-	background-color: #ec971f;
-	border-color: #d58512;
+	background-color: #B05F03;
+	border-color: #B05F03;
 	color: #fff;
 }
 
 .page-header-menu .btn-warning:hover {
-	background-color: #f0ad4e;
-	border-color: #eea236;
+	background-color: #824703;
+	border-color: #824703;
 	color: #fff;
 }
 
@@ -441,13 +441,13 @@ ul#adminNav li.active a {
 
 
 .btn-primary {
-	background-color: #44b6ae;
-	border-color: #44b6ae;
+	background-color: #1A8458;
+	border-color: #146141;
 	color: #fff;
 }
 
 .btn-primary:hover {
-	background-color: #36918b;
+	background-color: #296161;
 	border-color: #36918b;
 	color: #fff;
 }
@@ -464,14 +464,14 @@ ul#adminNav li.active a {
 }
 
 .btn-success {
-	background-color: #26c281;
-	border-color: #44b6ae;
+	background-color: #1A8458;
+	border-color: #146141;
 	color: #fff;
 }
 
 .btn-success:hover {
-	background-color: #158f76;
-	border-color: #158f76;
+	background-color: #146141;
+	border-color: #146141;
 	color: #fff;
 }
 .btn-success[disabled]:hover {
@@ -481,8 +481,8 @@ ul#adminNav li.active a {
 }
 
 .label-info,.bg-info, .text-bg-info, .btn-info {
-	background-color: #25aed6;
-    --bs-info-rgb: 37, 174, 214;
+	background-color: #1B7F9D;
+    --bs-info-rgb: 27, 127, 157;
     color: #fff;
 }
 
@@ -496,9 +496,13 @@ ul#adminNav li.active a {
 	color: #fff;
 }
 
+a.btn-info:visited, a.btn-info:link {
+    color: #fff
+}
+
 .label-warning,.bg-warning,.text-bg-warning, .btn-warning {
-	background-color: #e87e04;
-    --bs-warning-rgb: 232, 126, 4;
+	background-color: #B05F03;
+    --bs-warning-rgb: 176, 95, 3;
     color: #fff;
 }
 
@@ -519,7 +523,7 @@ ul#adminNav li.active a {
 }
 
 .btn-danger {
-	background-color: #f26e83;
+	background-color: #dc3545;
 	border-color: #ea5460;
 	color: #fff;
 }
@@ -544,7 +548,7 @@ button#risks-cancel {
 }
 
 button#risks-cancel:hover {
-	background-color: #c9302c;
+	background-color: #dc3545;
 	border-color: #ac2925;
 	color: #fff;
 }
