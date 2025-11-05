@@ -321,3 +321,10 @@ input.dateControl {
     font-weight: 550;
 }
 
+.projectInfo {
+    line-height: 1.5;
+}
+
+.projectInfo .accordion-body {
+    padding: 5px;
+}

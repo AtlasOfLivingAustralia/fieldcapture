@@ -58,7 +58,7 @@
                     </h4>
 
                     <div id="facet-dates" data-name="projectDates" class="collapse facetItems validationEngineContainer">
-                        <div class="accordion-body cardBody">
+                        <div class="accordion-body">
                             <select style="margin-bottom: 10px" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select>
                             <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">From:</label><fc:datePicker targetField="fromDate.date" class="dateControl form-control form-control-sm" name="fromDate" data-validation-engine="validate[date]" autocomplete="off"/></div>
                             <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">To:</label><fc:datePicker targetField="toDate.date" class="dateControl form-control form-control-sm" name="toDate" data-validation-engine="validate[date,future[fromDate]]" autocomplete="off"/></div>
@@ -591,7 +591,7 @@
 
         $('#facet-dates').validationEngine('attach', {scroll:false});
 
-        $('.helphover').popover({animation: true, trigger:'hover', container:'body'});
+        $('.helphover').popover({animation: true, trigger:'hover focus', container:'body'});
 
 
         $("#facetsContent").on("shown.bs.collapse", function(e){

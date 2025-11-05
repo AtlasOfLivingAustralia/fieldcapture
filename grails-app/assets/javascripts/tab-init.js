@@ -8,7 +8,7 @@ function initialiseTabs(tabConfig, options) {
       tabStorageKey:'selected-tab',
       tabShownEvent:'shown.bs.tab',
       initialiser:function() {
-          $('.helphover').popover({trigger:'hover'});
+          $('.helphover').popover({trigger:'hover focus'});
       }
     };
     var config = _.extend({}, defaults, options);
