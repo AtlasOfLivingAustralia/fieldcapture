@@ -4,9 +4,13 @@
         <!-- ko if: fn.facet != 'class' && $component.getFacetTermsLength(fn.facet) > 0 -->
             <div class="accordion">
                 <div class="accordion-item customCard">
-                    <div class="accordion-header collapsed" data-bs-toggle="collapse" data-bind="attr: {id:fn.safeId, href:'#facet-'+fn.safeId}">
-                        <a> <h4 data-bind="attr: {id: 'facet-list-' + fnIndex() + '-header'}, html: fn.displayname" style="display:inline-block;"></h4></a>
-                    </div>
+                    <h4 class="accordion-header">
+                        <button class="accordion-button collapsed"
+                                data-bs-toggle="collapse" aria-expanded="false"
+                                data-bind="attr: {id: 'facet-list-' + fnIndex() + '-header',  href:'#facet-'+fn.safeId, 'aria-controls':'facet-'+fn.safeId}, html: fn.displayname" >
+
+                        </button>
+                    </h4>
                 </div>
                 <div data-bind="attr: {id: 'facet-'+fn.safeId, 'data-name':fn.facet }" class="collapse facetItems">
                     <div class="accordion-body cardBody">

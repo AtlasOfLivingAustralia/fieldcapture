@@ -947,3 +947,7 @@ input.invisibleValidationHolder {
 	border-color: black;
 	background-color: #FAA329;
 }
+
+.accordion {
+    --bs-accordion-active-bg: #d9edf7;
+}

@@ -51,27 +51,29 @@
             <!-- fqLink = ${fqLink} -->
             <div class="accordion">
                 <div class="accordion-item customCard">
-                    <div class="accordion-header collapsed" data-bs-toggle="collapse" href="#facet-dates" id="projectDates">
-                        <a><h4>Project Dates <fc:iconHelp helpTextCode="project.dates.help" container="body"/></h4></a>
-                    </div>
+                    <h4 class="accordion-header">
+                        <button class="accordion-button collapsed" data-bs-toggle="collapse" href="#facet-dates" id="projectDates" aria-expanded="false" aria-controls="facet-dates">
+                        Project Dates  <fc:iconHelp helpTextCode="project.dates.help" container="body"/>
+                        </button>
+                    </h4>
 
-                        <div id="facet-dates" data-name="projectDates" class="collapse facetItems validationEngineContainer">
-                            <div class="accordion-body cardBody">
-                                <select style="margin-bottom: 10px" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select>
-                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">From:</label><fc:datePicker targetField="fromDate.date" class="dateControl form-control form-control-sm" name="fromDate" data-validation-engine="validate[date]" autocomplete="off"/></div>
-                                <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">To:</label><fc:datePicker targetField="toDate.date" class="dateControl form-control form-control-sm" name="toDate" data-validation-engine="validate[date,future[fromDate]]" autocomplete="off"/></div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="isFilterByCompletedProjectsOption" data-bind="checked: isFilterByCompletedProjects" value="true">
-                                    <label class="form-check-label" for="isFilterByCompletedProjectsOption">
-                                        Project start and end dates are within the selected range.
-                                    </label>
-                                </div>
-                                <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn btn-sm clearDates"><i class="fa fa-remove"></i> Clear dates</button>
-                                    <button data-bind="click:applyDates, enable:fromDate() || toDate()" class="btn btn-sm applyDates"><i class="fa fa-check"></i> Apply dates</button>
-                                </div>
+                    <div id="facet-dates" data-name="projectDates" class="collapse facetItems validationEngineContainer">
+                        <div class="accordion-body cardBody">
+                            <select style="margin-bottom: 10px" data-bind="options:ranges, optionsText:'display', value:selectedRange"></select>
+                            <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">From:</label><fc:datePicker targetField="fromDate.date" class="dateControl form-control form-control-sm" name="fromDate" data-validation-engine="validate[date]" autocomplete="off"/></div>
+                            <div class="input-group" style="margin-bottom: 10px"><label for="fromDate" class="dataClass">To:</label><fc:datePicker targetField="toDate.date" class="dateControl form-control form-control-sm" name="toDate" data-validation-engine="validate[date,future[fromDate]]" autocomplete="off"/></div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="isFilterByCompletedProjectsOption" data-bind="checked: isFilterByCompletedProjects" value="true">
+                                <label class="form-check-label" for="isFilterByCompletedProjectsOption">
+                                    Project start and end dates are within the selected range.
+                                </label>
+                            </div>
+                            <div><button data-bind="click:clearDates, enable:fromDate() || toDate()" class="btn btn-sm clearDates"><i class="fa fa-remove"></i> Clear dates</button>
+                                <button data-bind="click:applyDates, enable:fromDate() || toDate()" class="btn btn-sm applyDates"><i class="fa fa-check"></i> Apply dates</button>
+                            </div>
 
-            </div>
                         </div>
+                    </div>
                 </div>
             </div>
                 <div id="facet-list">
@@ -82,12 +84,14 @@
         <div class="col-sm-11">
             <div class="accordion" id="project-display-options">
                 <div class="accordion-item">
-                    <div class="accordion-header collapsed" id="mapHeading" data-bs-target="#accordionMapView" data-bs-toggle="collapse">
-                        <a class="text-start text-uppercase"><h2>Map</h2></a>
-                    </div>
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" id="mapHeading" data-bs-target="#accordionMapView" data-bs-toggle="collapse" aria-expanded="false" aria-controls="accordionMapView">
+                        Map
+                        </button>
+                    </h2>
 
                     <div id="accordionMapView" class="collapseItems accordion-collapse collapse" aria-labelledby="mapHeading" data-bs-parent="#project-display-options">
-                        <div class="accordion-body pt-0">
+                        <div class="accordion-body">
                             <div class="row">
                                 <div class="col-sm-4">
                                     <span class="facet-holder"></span>
@@ -102,11 +106,13 @@
                     </div>
                 </div> <!-- Map Section -->
                 <div class="accordion-item">
-                    <div class="accordion-header collapsed" id="projectHeading" data-bs-target="#projectsView" data-bs-toggle="collapse">
-                        <a class="text-start text-uppercase"><h2>Projects</h2></a>
-                    </div>
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" id="projectHeading" data-bs-target="#projectsView" data-bs-toggle="collapse" aria-expanded="false" aria-controls="projectsView">
+                        Projects
+                        </button>
+                    </h2>
                     <div id="projectsView" class="accordion-collapse collapse collapseItems" aria-labelledby="projectHeading" data-bs-parent="#project-display-options">
-                        <div class="accordion-body pt-0">
+                        <div class="accordion-body">
                             <div class="row">
                                 <div class="col-sm-4">
                                     <span class="facet-holder"></span>
@@ -148,7 +154,7 @@
                                                             </a>
                                                         </div>
                                                         <div class="projectInfo collapse ps-2 pt-1" id="a_" aria-labelledby="proj_">
-                                                            <div class="accordion-body pt-0 ps-0 pb-0">
+                                                            <div class="accordion-body">
                                                                 <div class="homeLine">
                                                                     <i class="fa fa-home"></i>
                                                                     <a href="">View project page</a>
@@ -188,11 +194,13 @@
                     </div>
                 </div> <!-- Project View -->
                 <div class="accordion-item">
-                    <div class="accordion-header collapsed" id="dashboardHeading" data-bs-target="#reportView" data-bs-toggle="collapse">
-                        <a class="text-start text-uppercase"><h2>Dashboard</h2></a>
-                    </div>
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed"  id="dashboardHeading" data-bs-target="#reportView" data-bs-toggle="collapse" aria-expanded="false" aria-controls="accordionMapView">
+                        Dashboard
+                        </button>
+                    </h2>
                     <div id="reportView" class="accordion-collapse collapse collapseItems" aria-labelledby="dashboardHeading" data-bs-parent="#project-display-options">
-                        <div class="accordion-body pt-0">
+                        <div class="accordion-body">
                             <div class="row">
                                 <div class="col-sm-4 d-none" data-hidden="true">
                                     <span class="facet-holder" data-hidden="true"></span>
@@ -234,11 +242,13 @@
                     </div> <!-- Dashboard -->
                 <g:if test="${includeDownloads}">
                     <div class="accordion-item">
-                        <div class="accordion-header collapsed" id="downloadHeading" data-bs-target="#downloadView" data-bs-toggle="collapse">
-                            <a class="text-start text-uppercase"><h2>Download</h2></a>
-                        </div>
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" id="downloadHeading" data-bs-target="#downloadView" data-bs-toggle="collapse" aria-expanded="false" aria-controls="downloadView">
+                            Download
+                            </button>
+                        </h2>
                         <div id="downloadView" class="accordion-collapse collapse collapseItems" aria-labelledby="downloadHeading" data-bs-parent="#project-display-options">
-                            <div class="accordion-body pt-0">
+                            <div class="accordion-body">
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <span class="facet-holder"></span>
