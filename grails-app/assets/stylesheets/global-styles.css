@@ -564,20 +564,10 @@ button#risks-cancel:hover {
 }
 
 
-
-
-
 .modal-body,.modal-footer {
 	color: #333;
 }
 
-.modal-body a {
-	color: #02baf2 !important;
-}
-
-.modal-body a:hover {
-	color: #333 !important;
-}
 
 .lead {
 	font-weight: 400;
