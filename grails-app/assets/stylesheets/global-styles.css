@@ -946,3 +946,8 @@ input.invisibleValidationHolder {
     height: auto;
     color: white;
 }
+
+.nav-link.active {
+    --bs-nav-pills-link-active-bg: #d9edf7;
+    --bs-nav-pills-link-active-color: #000;
+}
