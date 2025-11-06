@@ -1,12 +1,12 @@
 <g:if test="${fc.currentUserDisplayName()}">
 
-        <div class="btn-group">
-            <button class="btn btn-info btn-sm btnProfile" title="My Projects">
+        <div class="btn-group nav-item">
+            <button class=" btn btn-info btn-sm btnProfile" title="My Projects">
                 <i class="icon-user icon-white"></i><span class="">My projects</span>
             </button>
         </div>
 
-        <div class="btn-group ">
+        <div class="btn-group nav-item">
             <button class="btn btn-info btn-sm dropdown-toggle" data-bs-toggle="dropdown">
                 <!--<i class="icon-star icon-white"></i>--> My organisations&nbsp;&nbsp;<span class="caret"></span>
             </button>

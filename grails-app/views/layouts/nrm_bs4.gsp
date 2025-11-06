@@ -124,7 +124,7 @@
         <div id="dcNav" class="clearfix ">
 
             <nav class="navbar navbar-expand-lg text-light">
-                <a href="#" class="navbar-brand hidden-desktop text-light">Home</a>
+                <a href="/" class="navbar-brand hidden-desktop text-light">Home</a>
 
                 <button class="navbar-toggler btn btn-navbar btn-inverse" type="button" data-bs-toggle="collapse" data-bs-target="#nav-items" aria-controls="nav-items" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="text-light fa fa-navicon"></span>

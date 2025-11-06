@@ -167,10 +167,6 @@ span.merit {
 	color: #C5CAD3;
 }
 
-#dcNav .navbar .nav > li:first-child > a {
-	padding-left: 0;
-}
-
 #dcNav .navbar .nav>li>a:hover {
 	color: #fff;
     background-color: transparent;
