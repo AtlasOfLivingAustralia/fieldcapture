@@ -326,25 +326,40 @@ a.show-more-stats {
 
 .carousel-buttons button {
     border: 10px solid transparent;
-    background-color: #fff;
+    background-color: transparent;
     color: #444;
 }
 
 .carousel-buttons button:disabled {
     border: 10px solid transparent;
-    background-color: #fff;
+    background-color: transparent;
     color: #eeee;
 }
 
+#poi-carousel .carousel-item img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    height: 350px;
+    max-width: none;
+    margin: auto;
+}
+#poi-carousel .caption {
+    position: absolute;
+    top: 350px;
+    text-align: center;
+    width:100%;
+}
 
-#poi-carousel .carousel-caption {
-    left: 5%;
-    right: 5%;
-    margin-left: 0;
-    margin-right: 0;
-    bottom: 40px;
+.carousel .caption h3, .carousel .caption p {
+    margin:2px;
 }
 
 #poi-carousel .carousel-caption h3 {
     margin-top: 0;
+}
+
+#poi-carousel .carousel-control-next-icon, #poi-carousel .carousel-control-prev-icon {
+    background-color: #111;
 }

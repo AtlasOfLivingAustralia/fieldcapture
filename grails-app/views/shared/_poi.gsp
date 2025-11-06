@@ -1,4 +1,4 @@
-<div id="poi-carousel" class="carousel carousel-dark slide" data-bs-pause="false" data-bs-ride="carousel">
+<div id="poi-carousel" class="carousel slide" data-bs-theme="dark"  data-bs-pause="false" data-bs-ride="carousel">
     <ol class="list-unstyled carousel-indicators">
         <g:each in="${images}" var="image" status="i">
             <button type="button" data-bs-target="#poi-carousel" data-bs-slide-to="${i}" <g:if test="${i==0}">class="active" aria-current="true"</g:if> aria-label="Image ${i}"></button>
@@ -10,11 +10,9 @@
     </div>
     <div class="carousel-inner">
         <g:each in="${images}" var="image" status="i">
-            <div style="height:470px;" class="carousel-item <g:if test="${i==0}">active</g:if>">
-
-                <img class="d-block w-100" src="${image.url}" alt="${image.name?:"Un-captioned image for project ${image.projectName}"}" title="${image.name?:"Un-captioned image for project ${image.projectName}"}"/>
-
-                <div class="carousel-caption">
+            <div class="carousel-item <g:if test="${i==0}">active</g:if>">
+                <img class="img-fluid" src="${image.url}" alt="${image.name?:"Un-captioned image for project ${image.projectName}"}" title="${image.name?:"Un-captioned image for project ${image.projectName}"}"/>
+                <div class="caption">
                     <g:if test="${image.name}"><h3 class="image-caption"><fc:truncate value="${image.name}" maxLength="45"/></h3></g:if>
                     <a href="${g.createLink(controller: 'project', action:'index', id:image.projectId)}">
                         <p class="image-project"><fc:truncate value="${image.projectName}" maxLength="80"/></p>
@@ -55,6 +53,10 @@
                 $( '#poi-carousel').carousel('pause');
                 $pause.attr('disabled', 'disabled');
                 $play.removeAttr('disabled');
+            });
+            $( '#poi-carousel').carousel().on('slide.bs.carousel', function() {
+                 $pause.removeAttr('disabled');
+                 $play.attr('disabled', 'disabled');
             });
         }
 
