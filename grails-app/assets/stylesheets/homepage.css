@@ -203,8 +203,8 @@ a.show-more-stats {
 }
 
 
-#poi-slider {
-    height: 470px;
+#poi-carousel, #poi-carousel .carousel-item {
+    height: 460px;
 }
 
 #help-links {
@@ -308,4 +308,43 @@ a.show-more-stats {
     margin: 0;
     font-weight: 300;
     width: 100%;
+}
+
+.carousel-buttons {
+    position: absolute;
+    font-size: 16px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: right;
+    margin-right: 5%;
+    margin-bottom: 1rem;
+
+}
+
+.carousel-buttons button {
+    border: 10px solid transparent;
+    background-color: #fff;
+    color: #444;
+}
+
+.carousel-buttons button:disabled {
+    border: 10px solid transparent;
+    background-color: #fff;
+    color: #eeee;
+}
+
+
+#poi-carousel .carousel-caption {
+    left: 5%;
+    right: 5%;
+    margin-left: 0;
+    margin-right: 0;
+    bottom: 40px;
+}
+
+#poi-carousel .carousel-caption h3 {
+    margin-top: 0;
 }
