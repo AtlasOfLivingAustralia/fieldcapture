@@ -470,20 +470,6 @@ OrganisationPageViewModel = function (props, options) {
     var tabs = {
         'about': {
             initialiser: function() {
-                if (self.mainImageUrl()) {
-                    $('#carousel').sliderPro({
-                        width: '100%',
-                        height: 'auto',
-                        autoHeight: true,
-                        arrows: false, // at the moment we only support 1 image
-                        buttons: false,
-                        waitForLayers: true,
-                        fade: true,
-                        autoplay: false,
-                        autoScaleLayers: false,
-                        touchSwipe: false // at the moment we only support 1 image
-                    });
-                }
             }
         },
         'dashboard': {
