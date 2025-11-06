@@ -12,8 +12,11 @@
 </g:if>
 <g:elseif test="${results?.hits?.total?:0 > 0}">
     <div class="row">
-        <div id="facetsCol" class="bg-white" style="display:none;">
-            <g:set var="reqParams" value="query,sort,order,max,fq,fromDate,toDate,isFilterByCompletedProjects"/>
+        <div id="facetsCol" class="bg-white" style="display:none;" role="toolbar" aria-orientation="vertical">
+            <a href="#project-display-options" class="visually-hidden-focusable skip-link">
+                Skip to displayed project information
+            </a>
+                <g:set var="reqParams" value="query,sort,order,max,fq,fromDate,toDate,isFilterByCompletedProjects"/>
             <div class="visible-phone pull-right" style="margin-top: 5px;">
                 <a href="#" id="toggleFacetDisplay" rel="facetsContent" role="button" class="btn btn-sm btn-inverse" style="color:white;">
                     <span>show</span> options&nbsp;
@@ -97,7 +100,7 @@
                                     <span class="facet-holder"></span>
                                 </div>
 
-                                <div class="col-sm-8">
+                                <div id="accordionMapViewContent"  role="region" class="col-sm-8">
                                 <g:render template="searchResultsSummary"/>
                                 <g:render template="/shared/sites" model="${[projectCount:results?.hits?.total?:0]}"/>
                                 </div>
@@ -117,7 +120,7 @@
                                 <div class="col-sm-4">
                                     <span class="facet-holder"></span>
                                 </div>
-                                <div class="col-sm-8">
+                                <div id="projectsViewContent" role="region" class="col-sm-8">
                                     <p><g:render template="searchResultsSummary"/></p>
                                     <div class="scroll-list clearfix" id="projectList">
                                         <table class="table w-100" id="projectTable" data-offset="0" data-max="25">
@@ -205,7 +208,7 @@
                                 <div class="col-sm-4 d-none" data-hidden="true">
                                     <span class="facet-holder" data-hidden="true"></span>
                                 </div>
-                                <div class="col-sm-12">
+                                <div id="reportViewContent" class="col-sm-12" role="region">
                                     <div>
                                         <div style="margin-top:5px;">
                                             <button class="btn facets-toggle" type="button" style="margin-right: 0.7rem;"><i class="fa fa-bars"></i></button>
@@ -248,12 +251,12 @@
                             </button>
                         </h2>
                         <div id="downloadView" class="accordion-collapse collapse collapseItems" aria-labelledby="downloadHeading" data-bs-parent="#project-display-options">
-                            <div class="accordion-body">
+                            <div class="accordion-body" role="region">
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <span class="facet-holder"></span>
                                     </div>
-                                    <div class="col-sm-8">
+                                    <div id="downloadViewContent" class="col-sm-8">
                                         <g:render template="searchResultsSummary"/>
                                         <div class="alert alert-warning" role="alert">Please do not run more than one download at a time as they can place a lot of load on the system</div>
                                         <h3>Download data for a filtered selection of projects</h3>
@@ -647,10 +650,12 @@
                var  section = '#'+targetId
                 amplify.store(VIEW_STATE_KEY, section);
                 initialiseContentSection(section);
+
+                // Because the facets use accordion and are inside the main accordion view we need to filter them out.
+                $('#facetsCol').appendTo($(section).find('.facet-holder'));
+                $('#facetsCol .skip-link').attr('href', section+'Content');
+                $('#facetsCol').show();
             }
-            // Because the facets use accordion and are inside the main accordion view we need to filter them out.
-            $('#facetsCol').appendTo($(section).find('.facet-holder'));
-            $('#facetsCol').show();
             restoreFacetSelections();
         });
 

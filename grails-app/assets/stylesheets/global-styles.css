@@ -375,28 +375,6 @@ ul#adminNav li.active a {
 	border-color: #23527c;
 }
 
-.btn-fc {
-	color: #fff;
-	background-color: #337ab7;
-	border-color: #2e6da4;
-}
-
-.btn-fc:hover,.btn-fc:focus,.btn-fc:active,.btn-fc.active,.btn-fc.disabled,.btn-fc[disabled] {
-	color: #fff;
-	background-color: #286090;
-	border-color: #23527c;
-}
-
-.btn-fc:active,.btn-fc.active {
-	color: #fff;
-	background-color: #286090;
-	border-color: #23527c;
-}
-
-.btn-group.open .btn-fc.dropdown-toggle {
-	background-color: #286090;
-}
-
 .navbar-inverse .btn-navbar {
 	background-image: none;
 	color: #fff;
@@ -481,7 +459,7 @@ ul#adminNav li.active a {
 }
 
 .label-info,.bg-info, .text-bg-info, .btn-info {
-	background-color: #1B7F9D;
+	background-color: #337AB7;
     --bs-info-rgb: 27, 127, 157;
     color: #fff;
 }
@@ -950,4 +928,21 @@ input.invisibleValidationHolder {
 
 .accordion {
     --bs-accordion-active-bg: #d9edf7;
+}
+
+.skip-link {
+    padding: 0.5rem 2rem;
+    font-size: 1.4rem;
+    text-align: center;
+    color: white;
+    background-color: black;
+    border: none;
+    outline: none;
+}
+
+.skip-link:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    color: white;
 }

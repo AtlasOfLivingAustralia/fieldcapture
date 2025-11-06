@@ -54,6 +54,10 @@
 
 <body class="${pageProperty(name: 'body.class')}" id="${pageProperty(name: 'body.id')}"
       onload="${pageProperty(name: 'body.onload')}">
+<a href="#content" class="visually-hidden-focusable skip-link">
+    Skip to main content
+</a>
+
 <g:set var="introText"><fc:getSettingContent settingType="${SettingPageType.INTRO}"/></g:set>
 <g:set var="userLoggedIn"><fc:userIsLoggedIn/></g:set>
 <g:if test="${fc.announcementContent()}">
