@@ -273,7 +273,6 @@ clientDependencies {
         "leaflet"("0.7.7")
         "select2-theme-bootstrap4"("1.0.2") // The bootstrap 5 theme overflows containers and this theme still looks OK
         "slickgrid"("2.4.38")
-        "slider-pro"("1.6.0", transitive:false)
         "jquery-appear-original"("0.4.1", transitive:false)
         "jquery-file-download"("1.4.6", from: "src/Scripts") {
             include "jquery.fileDownload.js"

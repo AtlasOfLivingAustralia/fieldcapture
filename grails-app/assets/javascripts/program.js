@@ -1,5 +1,4 @@
 //= require tab-init.js
-//= require slider-pro/js/jquery.sliderPro.js
 //= require mapWithFeatures.js
 //= require sites
 //= require document
@@ -353,20 +352,6 @@ var ProgramPageViewModel = function(props, options) {
     var tabs = {
         'about': {
             initialiser: function () {
-                if (self.mainImageUrl()) {
-                    $('#carousel').sliderPro({
-                        width: '100%',
-                        height: 'auto',
-                        autoHeight: true,
-                        arrows: false, // at the moment we only support 1 image
-                        buttons: false,
-                        waitForLayers: true,
-                        fade: true,
-                        autoplay: false,
-                        autoScaleLayers: false,
-                        touchSwipe: false // at the moment we only support 1 image
-                    });
-                }
                 $.fn.dataTable.moment( 'dd-MM-yyyy' );
                 $('#projectOverviewList').DataTable({displayLength:25, order:[[2, 'asc'], [3, 'asc']]});
             }

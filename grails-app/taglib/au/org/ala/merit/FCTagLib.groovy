@@ -199,17 +199,17 @@ class FCTagLib {
                 helpText = body()
             }
 
-            Map spanAttrs = [class:'helphover', 'data-original-title':title, 'data-placement':'top', 'data-content':helpText, 'data-trigger':'click']
+            Map spanAttrs = [href:'#', tabindex:0, class:'helphover', 'data-bs-original-title':title, 'data-bs-placement':'top', 'data-bs-content':helpText, 'data-bs-trigger':'hover focus']
             if (attrs['dynamic-help']) {
-                spanAttrs << ['data-bind':"attr:{'data-content':"+attrs['dynamic-help']+"}"]
+                spanAttrs << ['data-bind':"attr:{'data-bs-content':"+attrs['dynamic-help']+"}"]
             }
             if (attrs.container) {
-                spanAttrs << ['data-container':attrs.container]
+                spanAttrs << ['data-bs-container':attrs.container]
             }
             if (attrs.html) {
-                spanAttrs << ['data-html':'true']
+                spanAttrs << ['data-bs-html':'true']
             }
-            mb.span(spanAttrs) {
+            mb.a(spanAttrs) {
                 i(class:'fa fa-question-circle') {
                     mkp.yieldUnescaped("&nbsp;")
                 }
