@@ -172,8 +172,8 @@ class HomeController {
 
         def helpPage = g.createLink([action:'help'])
         def helpLinks = documentService.findAllHelpResources()
-        List copyOfLinks = new ArrayList(helpLinks) // The result of the call is cached so we don't want to add elements to it.
-        copyOfLinks << [name:'MORE RESOURCES', type:'', url:helpPage]
+        List copyOfLinks = helpLinks.collect{it + [isExternal:isExternalLink(it.url)]}
+        copyOfLinks << [name:'MORE RESOURCES', type:'', url:helpPage, isExternal: false]
         def blog = blogService.getSiteBlog()
 
         def model = [statistics:statistics.statistics, helpLinks:copyOfLinks, images:images, blog:blog, expiryDate: expiryDateDisplay]
@@ -182,6 +182,21 @@ class HomeController {
             model.showProjectExplorer = true
         }
         render view:'public', model:model
+    }
+
+    private boolean isExternalLink(String urlString) {
+        boolean isExternal = true
+        try {
+            URL url = new URL(urlString)
+            URL grailsBaseURL = new URL(grailsApplication.config.getProperty('grails.serverURL'))
+
+            isExternal = url.getHost() != grailsBaseURL.getHost()
+        }
+        catch (Exception e) {
+            log.warn("Invalid URL specified for help link: "+urlString, e)
+        }
+        isExternal
+
     }
 
     /**

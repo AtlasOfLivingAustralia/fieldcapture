@@ -245,6 +245,10 @@ a.show-more-stats {
     bottom: -20px;
 }
 
+#help-links .help-link i.fa-external-link {
+    font-size: 16px;
+}
+
 
 #help-links .help-link-1 {
     background-color: #DD7703;
