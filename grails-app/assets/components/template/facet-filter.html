@@ -7,8 +7,8 @@
                     <h4 class="accordion-header">
                         <button class="accordion-button collapsed"
                                 data-bs-toggle="collapse" aria-expanded="false"
-                                data-bind="attr: {id: 'facet-list-' + fnIndex() + '-header',  href:'#facet-'+fn.safeId, 'aria-controls':'facet-'+fn.safeId}, html: fn.displayname" >
-
+                                data-bind="attr: {id: 'facet-list-' + fnIndex() + '-header',  href:'#facet-'+fn.safeId, 'aria-controls':'facet-'+fn.safeId}" >
+                            <span data-bind="text:fn.displayname"></span>  <a href="#" class="helphover" tabindex="0" data-bind="if:fn.facetHelp, popover:{content:fn.facetHelp}"><i class="fa fa-question-circle"></i></a>
                         </button>
                     </h4>
                 </div>

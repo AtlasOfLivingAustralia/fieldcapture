@@ -149,7 +149,9 @@ ko.components.register('facet-filter', {
             this.facet = facet;
             this.safeId = facet.replaceAll('.','-');
             this.displayname = ko.observable(facet);
+            this.facetHelp = ko.observable();
             $i18nAsync('label.' + this.facet, self.capitalise(this.facet), this.displayname);
+            $i18nAsync('help.' + this.facet, null, this.facetHelp);
         }
 
         function filteredTerms(terms) {
