@@ -83,18 +83,17 @@ a.show-more-stats {
     display: block;
     margin-bottom: 30px;
 }
-
-
-
-
-
-
+#stats-holder {
+    height: 500px;
+}
 
 #latest-news {
     border: 2px solid #d6e1e5;
     border-radius: 4px;
     padding: 20px;
     margin-bottom: 30px;
+    height: 400px;
+    overflow-y: scroll;
 }
 
 #latest-news .blog-entry {
@@ -356,7 +355,7 @@ a.show-more-stats {
     width:100%;
 }
 
-.carousel .caption h3, .carousel .caption p {
+#poi-carousel .carousel .caption h3, .carousel .caption p {
     margin:2px;
 }
 
