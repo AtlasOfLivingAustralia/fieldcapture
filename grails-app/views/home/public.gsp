@@ -34,7 +34,7 @@
                         <g:render template="/report/statistics"/>
                     </div>
                     <div class="carousel-item stats-page-2">
-                        <g:render template="/report/statistics"/>
+
                     </div>
                 </div>
             </div>

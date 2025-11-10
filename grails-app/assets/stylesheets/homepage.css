@@ -91,8 +91,8 @@ a.show-more-stats {
     border: 2px solid #d6e1e5;
     border-radius: 4px;
     padding: 20px;
-    margin-bottom: 30px;
-    height: 400px;
+    margin-bottom: 20px;
+    height: 450px;
     overflow-y: scroll;
 }
 
@@ -315,7 +315,7 @@ a.show-more-stats {
 
 .carousel-buttons {
     position: absolute;
-    font-size: 16px;
+    font-size: 1.5rem;
     right: 0;
     bottom: 0;
     left: 0;
@@ -328,9 +328,14 @@ a.show-more-stats {
 }
 
 .carousel-buttons button {
-    border: 10px solid transparent;
+    border: transparent;
     background-color: transparent;
     color: #444;
+    opacity: .7;
+}
+
+.carousel-buttons button:hover, #carousel-buttons button:focus {
+    opacity: 1;
 }
 
 .carousel-buttons button:disabled {
@@ -355,14 +360,18 @@ a.show-more-stats {
     width:100%;
 }
 
-#poi-carousel .carousel .caption h3, .carousel .caption p {
-    margin:2px;
+#poi-carousel .caption h3, #poi-carousel .caption p {
+    margin:5px;
 }
 
-#poi-carousel .carousel-caption h3 {
-    margin-top: 0;
+#poi-carousel .carousel-control-next, #poi-carousel .carousel-control-prev {
+    top: unset;
+    bottom: 30px;
+    align-items: baseline;
+    width: 5%;
 }
 
-#poi-carousel .carousel-control-next-icon, #poi-carousel .carousel-control-prev-icon {
-    background-color: #111;
+
+#poi-carousel .carousel-indicators {
+    margin-bottom: 0;
 }
