@@ -11,6 +11,10 @@ a:link,a:visited {
 	text-decoration: none;
 }
 
+a.btn-warning, a.btn-info, a.btn-danger, a.btn-success {
+    color: #fff;
+}
+
 a:hover,a:active {
 	color: #333;
 	text-decoration: none;
@@ -387,7 +391,7 @@ ul#adminNav li.active a {
 
 .page-header-menu .btn-warning {
 	background-color: #B05F03;
-	border-color: #B05F03;
+	border-color: #c79358;
 	color: #fff;
 }
 
@@ -395,6 +399,10 @@ ul#adminNav li.active a {
 	background-color: #824703;
 	border-color: #824703;
 	color: #fff;
+}
+
+.page-header-menu .btn-info {
+    border-color: #269abc;
 }
 
 .btnProfile i,.btnAdministration i,.btn-login i,#logout-btn i {
@@ -461,7 +469,7 @@ ul#adminNav li.active a {
 }
 
 .btn-info {
-	border-color: #269abc;
+	border-color: #17596c;
 }
 
 .btn-info:hover {
@@ -481,7 +489,7 @@ a.btn-info:visited, a.btn-info:link {
 }
 
 .btn-warning {
-	border-color: #d58512;
+	border-color: #70460a;
 }
 
 .btn-warning:hover {
