@@ -4,10 +4,7 @@
             <button type="button" data-bs-target="#poi-carousel" data-bs-slide-to="${i}" <g:if test="${i==0}">class="active" aria-current="true"</g:if> aria-label="Image ${i}"></button>
         </g:each>
     </ol>
-    <div class="carousel-buttons">
-        <button type="button" class="pause" aria-label="Pause carousel"><i class="fa fa-pause"></i></button>
-        <button type="button" class="play" disabled="disabled" aria-label="Play carousel"><i class="fa fa-play"></i></button>
-    </div>
+
     <div class="carousel-inner">
         <g:each in="${images}" var="image" status="i">
             <div class="carousel-item <g:if test="${i==0}">active</g:if>">
@@ -33,6 +30,8 @@
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
     </button>
+    <button type="button" class="pause carousel-button" aria-label="Pause carousel"><i class="fa fa-pause"></i></button>
+    <button type="button" class="play carousel-button" disabled="disabled" aria-label="Play carousel"><i class="fa fa-play"></i></button>
     <button class="carousel-control-next" type="button" data-bs-target="#poi-carousel" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
