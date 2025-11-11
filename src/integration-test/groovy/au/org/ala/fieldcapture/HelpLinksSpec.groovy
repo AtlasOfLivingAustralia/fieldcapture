@@ -27,7 +27,7 @@ class HelpLinksSpec extends StubbedCasSpec {
         waitFor 30,{ at HomePage}
         helpLinks.size() == 6
         for (int i=0; i<6; i++) {
-            helpLinks[i].title == "Link $i"
+            helpLinks[i].title.trim() == "Link $i"
             helpLinks[i].url == "https://ala.org.au/$i"
         }
     }
@@ -54,12 +54,12 @@ class HelpLinksSpec extends StubbedCasSpec {
         waitFor 30,  {
             to HomePage
             waitFor 30,{ at HomePage }
-            helpLinks[0].title == "Edited Link 1"
+            helpLinks[0].title.trim() == "Edited Link 1"
             helpLinks[0].url  == "https://ala.org.au/edited"
         }
 
         for (int i=1; i<6; i++) {
-            helpLinks[i].title == "Link $i"
+            helpLinks[i].title.trim() == "Link $i"
             helpLinks[i].url == "https://ala.org.au/$i"
         }
     }

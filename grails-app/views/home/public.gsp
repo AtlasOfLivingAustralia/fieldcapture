@@ -24,20 +24,32 @@
     <asset:stylesheet src="common-bs4.css"/>
 </head>
 <body>
-
+    <h1 class="visually-hidden">Monitoring, Evaluation, Reporting and Information Tool (MERIT)</h1>
     <div class="content container">
         <div id="stats-holder">
-            <g:render template="/report/statistics"/>
+            <h2 class="visually-hidden">Infographics</h2>
+            <div id="statistics-carousel" class="carousel slide" >
+                <div class="carousel-inner">
+                    <div class="carousel-item stats-page-1 active">
+                        <g:render template="/report/statistics"/>
+                    </div>
+                    <div class="carousel-item stats-page-2">
+
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row">
+            <h2 class="visually-hidden">MERIT news and featured project images</h2>
             <div class="col-sm-6">
                 <div id="latest-news">
-                    <h4>Latest news</h4>
+                    <h3>Latest news</h3>
                     <g:render template="/shared/blog" />
                 </div>
             </div>
             <div class="col-sm-6">
                 <div id="poi">
+                    <h3 class="visually-hidden">Featured project images</h3>
                     <g:render template="/shared/poi"/>
                 </div>
             </div>
@@ -59,25 +71,37 @@
     <asset:deferredScripts/>
     <script>
                 $(function() {
-                    var working = false;
-                    var url = '${g.createLink(controller:'report', action:'statisticsReport')}';
+                    let working = false;
+                    const url = '${g.createLink(controller:'report', action:'statisticsReport')}';
+
+                    let page1Visible = true;
 
                     function showMoreStats() {
                         if (!working) {
                             working = true;
-                            replaceContentSection('.statistics', url).always(function() { working = false; });
+                            $.get(url).done(function(data) {
+
+                                var offscreenPage = $('.stats-page-'+(page1Visible ? '2' : '1'));
+                                offscreenPage.find('.statistics').remove();
+                                offscreenPage.append($(data));
+                                setTimeout(function() {
+                                    $('#statistics-carousel').carousel('next');
+                                }, 100);
+
+                                page1Visible = !page1Visible;
+
+                            }).always(function() {
+                                working = false;
+                            });
+
                         }
                     }
 
-                    $('#stats-holder').on('click', '.show-more-stats', function() {
-                       showMoreStats();
+                    $('#stats-holder').on('click', '.show-more-stats', function () {
+                        showMoreStats();
                     });
 
-                    if ($('#latest-news').height() > 400) {
-                        $('#latest-news').height(400).css('overflow-y', 'scroll');
-                    }
-
-                    var hasStatistics = ${statistics ? 'true' : 'false'};
+                    const hasStatistics = ${statistics ? 'true' : 'false'};
                     if (!hasStatistics) {
                         showMoreStats();
                     }

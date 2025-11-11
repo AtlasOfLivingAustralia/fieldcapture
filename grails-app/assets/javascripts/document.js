@@ -603,7 +603,7 @@ function initialiseDocumentTable(containerSelector, excludeReportColumn) {
     });
 
     function searchStage(column, searchString) {
-        table.columns(column).search(searchString, true).draw();
+        table.columns(column).search(searchString, true, false).draw();
     }
 
     $(containerSelector + " input[name='doc-filter']").click(function(e) {

@@ -71,36 +71,29 @@ ko.components.register('facet-filter', {
 
         self.intHandlersAfterRender = function () {
             var expandedToggles = amplify.store('facetToggleState') || [];
-            if ($(self.containerId).is(':visible')) {
-                if (expandedToggles) {
-                    for (var i=0; i<expandedToggles.length; i++) {
-                        $('[data-name="'+expandedToggles[i]+'"]').collapse('show');
-                    }
+            if (expandedToggles) {
+                for (var i=0; i<expandedToggles.length; i++) {
+                    $('[data-name="'+expandedToggles[i]+'"]').collapse('show');
                 }
             }
 
             // Remember facet toggle state.
-            $(self.containerId).on('shown', function (e) {
+            $(self.containerId).on('shown.bs.collapse', function (e) {
                 var facetName = $(e.target).data('name');
                 var index = expandedToggles.indexOf(facetName);
                 if (index < 0) {
                     expandedToggles.push(facetName);
                     amplify.store('facetToggleState', expandedToggles);
                 }
-
-                $('[data-target="#'+e.target.id+'"] i').removeClass('fa-plus').addClass('fa-minus');
             });
 
-            $(self.containerId).on('hidden', function (e) {
+            $(self.containerId).on('hidden.bs.collapse', function (e) {
                 var facetName = $(e.target).data('name');
                 var index = expandedToggles.indexOf(facetName);
                 if (index >= 0) {
                     expandedToggles.splice(index, 1);
                     amplify.store('facetToggleState', expandedToggles);
                 }
-
-                $('[data-target="#'+e.target.id+'"] i').removeClass('fa-minus').addClass('fa-plus');
-
             });
 
             $.fn.clicktoggle = function(a, b) {
@@ -156,7 +149,9 @@ ko.components.register('facet-filter', {
             this.facet = facet;
             this.safeId = facet.replaceAll('.','-');
             this.displayname = ko.observable(facet);
+            this.facetHelp = ko.observable();
             $i18nAsync('label.' + this.facet, self.capitalise(this.facet), this.displayname);
+            $i18nAsync('help.' + this.facet, null, this.facetHelp);
         }
 
         function filteredTerms(terms) {

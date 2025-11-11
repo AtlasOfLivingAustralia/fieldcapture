@@ -26,6 +26,7 @@
     font-size: 16px;
     margin-bottom: 10px;
     text-transform: uppercase;
+    color: #eee;
 }
 
 .statistics .stat-value {
@@ -43,35 +44,36 @@
     font-size: 18px;
     text-transform: uppercase;
     padding-left: 120px;
+    color: #eee;
 }
 
 .statistics .stat-1 {
-    background-color: #aa6cc2;
+    background-color: #AD6FC3;
     background-image: url(../images/users6.png);
 }
 
 .statistics .stat-2 {
-    background-color: #26c281;
+    background-color: #1E9966;
     background-image: url(../images/shovel3.png);
 }
 
 .statistics .stat-3 {
-    background-color: #44b6ae;
+    background-color: #37958D;
     background-image: url(../images/plant43.png);
 }
 
 .statistics .stat-4 {
-    background-color: #25aed6;
+    background-color: #0091BD;
     background-image: url(../images/beach57.png);
 }
 
 .statistics .stat-5 {
-    background-color: #f26e83;
+    background-color: #F04C67;
     background-image: url(../images/agreement.png);
 }
 
 .statistics .stat-6 {
-    background-color: #e87e04;
+    background-color: #DD7703;
     background-image: url(../images/forest2.png);
 }
 
@@ -81,18 +83,17 @@ a.show-more-stats {
     display: block;
     margin-bottom: 30px;
 }
-
-
-
-
-
-
+#stats-holder {
+    height: 500px;
+}
 
 #latest-news {
     border: 2px solid #d6e1e5;
     border-radius: 4px;
     padding: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+    height: 450px;
+    overflow-y: scroll;
 }
 
 #latest-news .blog-entry {
@@ -201,8 +202,8 @@ a.show-more-stats {
 }
 
 
-#poi-slider {
-    height: 470px;
+#poi-carousel, #poi-carousel .carousel-item {
+    height: 460px;
 }
 
 #help-links {
@@ -243,36 +244,34 @@ a.show-more-stats {
     bottom: -20px;
 }
 
+#help-links .help-link i.fa-external-link {
+    font-size: 16px;
+}
+
 
 #help-links .help-link-1 {
-    background-color: #f47743;
+    background-color: #DD7703;
 }
 
 #help-links .help-link-2 {
-    background-color: #06a49d;
+    background-color: #37958D;
 }
 
 #help-links .help-link-3 {
-    background-color: #25aed6;
+    background-color: #0091BD;
 }
 
 #help-links .help-link-4 {
-    background-color: #26c281;
+    background-color: #1E9966;
 }
 
 #help-links .help-link-5 {
-    background-color: #f26e83;
+    background-color: #F04C67;
 }
 
 #help-links .help-link-6 {
     background-color: #444d58;
 }
-
-
-
-
-
-
 
 #project-explorer-holder button {
     background-image: url(../images/projectExplorer.jpg);
@@ -306,4 +305,67 @@ a.show-more-stats {
     margin: 0;
     font-weight: 300;
     width: 100%;
+}
+
+.carousel-buttons {
+    position: absolute;
+    font-size: 1.5rem;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: right;
+    margin-right: 5%;
+    margin-bottom: 1rem;
+
+}
+
+.carousel-buttons button {
+    border: transparent;
+    background-color: transparent;
+    color: #444;
+    opacity: .7;
+}
+
+.carousel-buttons button:hover, #carousel-buttons button:focus {
+    opacity: 1;
+}
+
+.carousel-buttons button:disabled {
+    border: 10px solid transparent;
+    background-color: transparent;
+    color: #eeee;
+}
+
+#poi-carousel .carousel-item img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    height: 350px;
+    max-width: none;
+    margin: auto;
+}
+#poi-carousel .caption {
+    position: absolute;
+    top: 350px;
+    text-align: center;
+    width:100%;
+}
+
+#poi-carousel .caption h3, #poi-carousel .caption p {
+    margin:5px;
+}
+
+#poi-carousel .carousel-control-next, #poi-carousel .carousel-control-prev {
+    top: unset;
+    bottom: 30px;
+    align-items: baseline;
+    width: 5%;
+}
+
+
+#poi-carousel .carousel-indicators {
+    margin-bottom: 0;
 }

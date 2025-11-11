@@ -47,7 +47,8 @@
 
     <div class="row">
         <div class="col-sm-12" id="heading">
-            <h1 class="float-start"><fc:homePageTitle/></h1>
+            <h1 >Project Explorer</h1>
+            <fc:homePageTitle/>
         </div>
     </div>
 

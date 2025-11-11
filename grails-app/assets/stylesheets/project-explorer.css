@@ -4,23 +4,28 @@
     margin-bottom: 5px;
 }
 
-.accordian-heading a {
-    color: #333;
-    text-transform: uppercase;
-    font-weight: 600;
-}
-
 #facetsCol h3 {
     font-size: 18px;
     margin-bottom: 10px !important;
-    margin-top: 20px;
+    margin-top: 0;
 }
 
+#facetsContent h4.accordion-header {
+    --bs-accordion-active-bg: white;
+}
 
-#facetsContent h4 {
+#facetsContent h4.accordion-header button {
     font-size: 14px;
+    font-weight: 600;
+    padding:0;
+    margin-top:10px;
+    margin-bottom: 10px;
 }
 
+#reports h3.accordion-header button {
+    font-size: 16px;
+    font-weight: 600;
+}
 
 
 #projectTable td {
@@ -74,18 +79,16 @@
 .facet-collapse.in.height {
     height: auto;
 }
-.accordion .accordion-item {
-    border-color: #ddd;
-    padding: 10px 15px;
-}
-.accordion .accordion-header {
-    margin-bottom: 0;
-    background-color: rgba(0,0,0,0);
-    padding: 0;
-    border-bottom: 0 solid rgba(0,0,0,0);
+
+h2.accordion-header, h3.accordion-header {
+    margin-top: 0;
 }
 
-
+h2.accordion-header .accordion-button {
+    font-size: 18px;
+    font-weight: 600;
+    color: #000;
+}
 
 #projectExplorer .accordion .accordion-header a {
 
@@ -140,32 +143,20 @@ ol.unstyled {
     }
 }
 
-.accordion .accordion-header:after {
-    font-family: 'FontAwesome';
-    content: "\f068";
-    float: right;
-}
-.accordion .accordion-header.collapsed:after {
-    /* symbol for "collapsed" panels */
-    content: "\f067";
-}
-.accordion .accordion-body {
-    padding-left: 0;
-    padding-right: 0;
-}
 .visible-phone{display:none !important;}
 
 div#facetsCol {
-    border: 0px solid white;
+    border: 0 solid white;
 }
 
 .facet-holder #facetsCol {
-    padding-left: 0px;
+    padding-left: 0;
 }
 
 .helphover {
     border: 2px;
     background-clip:content-box;
+    margin-left: 5px;
 }
 select {
     width: 100%;
@@ -330,6 +321,10 @@ input.dateControl {
     font-weight: 550;
 }
 
-#facetsCol .accordion-header::after {
-    margin-top:7px;
+.projectInfo {
+    line-height: 1.5;
+}
+
+.projectInfo .accordion-body {
+    padding: 5px;
 }

@@ -365,3 +365,9 @@ li.select2-search input {
 .ui-autocomplete {
 	z-index:10000;
 }
+
+.project-thumbnails img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover
+}

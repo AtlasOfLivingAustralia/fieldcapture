@@ -443,7 +443,7 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
     self.showAllReports = ko.observable(false);
 
     self.attachHelp = function(element) {
-        $(element).find('.helphover').popover({trigger:'hover'});
+        $(element).find('.helphover').popover();
     };
 
     self.filteredReports = ko.computed(function() {
