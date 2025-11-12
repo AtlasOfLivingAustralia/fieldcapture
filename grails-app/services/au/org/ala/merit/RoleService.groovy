@@ -32,6 +32,10 @@ class RoleService {
     public static final String PROJECT_FC_ADMIN_ROLE = 'ROLE_FC_ADMIN'
     public static final String PROJECT_SURVEYOR_ROLE = 'projectParticipant'
     public static final String PROJECT_MODERATOR_ROLE = 'moderator'
+    // The determiner access level is used to support the Monitor Determiner role (which allows
+    // submitting identifications for previously submitted field observations) but doesn't
+    // provide access to the MERIT project.
+    public static final String PROJECT_DETERMINER_ROLE = 'determiner'
 
     /**
      * A check against this role will pass if the user has any hub or any Project role.  This is more of a permission
@@ -108,7 +112,7 @@ class RoleService {
     }
 
     Set getAllowedUserRoles() {
-        return new HashSet([PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE, PROJECT_SURVEYOR_ROLE])
+        return new HashSet([PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE, PROJECT_SURVEYOR_ROLE, PROJECT_DETERMINER_ROLE])
     }
 
 }
