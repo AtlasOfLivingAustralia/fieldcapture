@@ -7,7 +7,7 @@
       "units": "Projects",
       "type": "projectCount",
       "projectFilter": [
-        "meriPlanAssetFacet:Threatened Species"
+        "meriPlanAssetTypeFacet:Threatened Species"
       ]
     },
     "r1": {
