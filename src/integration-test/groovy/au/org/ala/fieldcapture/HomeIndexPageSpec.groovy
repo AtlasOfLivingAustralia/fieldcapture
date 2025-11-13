@@ -35,7 +35,7 @@ class HomeIndexPageSpec extends StubbedCasSpec {
         }
         and:
         box1[0].statTitle.text() == "THREATENED SPECIES STRATEGY"
-        box1[0].statValue.text() =="0"
+        box1[0].statValue.text() =="3"
         box1[0].statUnit.text() =="Projects"
         box1[0].statLabel.text() =="PROTECTING THREATENED SPECIES"
         box2[0].statTitle.text() == "NATIONAL LANDCARE PROGRAMME"

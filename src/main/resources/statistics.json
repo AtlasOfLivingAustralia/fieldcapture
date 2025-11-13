@@ -89,7 +89,7 @@
       "label": "Using Indigenous ecological knowledge",
       "units": "Projects",
       "type": "projectCount",
-      "searchTerm":"meriPlanAssetFacet:\"Indigenous Cultural Values\" OR meriPlanAssetFacet:\"Indigenous Ecological Knowledge\"",
+      "searchTerm":"meriPlanAssetTypeFacet:\"Indigenous Cultural Values\" OR meriPlanAssetTypeFacet:\"Indigenous Ecological Knowledge\"",
       "projectFilter": [
         "associatedProgramFacet:National Landcare Programme"
       ]
@@ -113,7 +113,7 @@
       "type": "projectCount",
       "projectFilter": [
         "associatedProgramFacet:National Landcare Programme",
-        "meriPlanAssetFacet:World Heritage area"
+        "meriPlanAssetTypeFacet:World Heritage area"
       ]
     },
     "nlp9": {
