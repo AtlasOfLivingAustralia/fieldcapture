@@ -100,13 +100,19 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
                         description
                         relatedOutcome
                         code
-                        assets
+                        assets {
+                            name
+                            investmentPriorityId 
+                        }
                       } 
                       secondaryOutcomes {
                         description
                         code
                         relatedOutcome
-                        assets
+                        assets { 
+                            name 
+                            investmentPriorityId
+                        }
                       }
                       shortTermOutcomes {
                         description
@@ -477,9 +483,9 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         result.meriPlan.supportedPriorityPlaces == ["Priority place 1"]
         result.meriPlan.firstNationsPeopleInvolvement == "Leading"
         result.meriPlan.primaryOutcome.description == "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
-        result.meriPlan.primaryOutcome.assets == ["ip1"]
+        result.meriPlan.primaryOutcome.assets == [[investmentPriorityId:"ip1", name:"Ginini Flats Wetland Complex"]]
         result.meriPlan.secondaryOutcomes[0].description == "By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
-        result.meriPlan.secondaryOutcomes[0].assets == ["ip7"]
+        result.meriPlan.secondaryOutcomes[0].assets == [["investmentPriorityId":"ip7", name:"Swainsona recta"]]
         result.meriPlan.shortTermOutcomes[0].description == "Short term outcome 1"
         result.meriPlan.shortTermOutcomes[0].relatedOutcome == "Short term outcome 3"
         result.meriPlan.midTermOutcomes[0].description == "Medium term outcome 1"
