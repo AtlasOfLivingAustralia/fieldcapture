@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 
 import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
+import au.org.ala.merit.command.SaveInvestmentPriorityCommand
 import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import grails.util.Environment
@@ -617,6 +618,15 @@ class AdminController {
          categoriesByType:categoriesByType,
          managementUnits: managementUnits
         ]
+    }
+
+    def saveInvestmentPriority(SaveInvestmentPriorityCommand command) {
+        if (command.hasErrors()) {
+            respond command.errors
+        }
+        Map result = command.save()
+        respond result
+
     }
 
     private List distinctCategories(List<Map> investmentPriorities) {

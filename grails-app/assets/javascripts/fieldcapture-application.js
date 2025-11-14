@@ -119,7 +119,7 @@ function showAlertWithSelector(message, alerttype, targetSelector) {
 }
 
 function blockUIWithMessage(message) {
-    $.blockUI({ message: message, fadeIn:0,
+    $.blockUI({ message: message, fadeIn:0, baseZ:2000,
         css: {
             border: 'none',
             padding: '15px',

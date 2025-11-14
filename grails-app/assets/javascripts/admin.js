@@ -473,11 +473,11 @@ ManageTagsViewModel = function(tags, options) {
 
 ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
     investmentPriorities = investmentPriorities || [];
+    let investmentPriorityTypes = _.uniq(_.map(investmentPriorities, function(priority) {return priority.type}));
 
-    function InvestmentPriority(investmentPriority) {
+    function InvestmentPriority(investmentPriority, isNew) {
         var self = this;
-
-        self.editable = ko.observable(false);
+        self.isNew = isNew;
         self.type = ko.observable(investmentPriority.type);
         self.name = ko.observable(investmentPriority.name);
         self.description = ko.observable(investmentPriority.description);
@@ -502,27 +502,16 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
         self.availableCategories = ko.pureComputed(function() {
             return (options.categoriesByType || {})[self.type()];
         });
-        self.edit = function() {
-            self.editable(true);
-        }
 
+        self.investmentPriorityTypes = options.availableTypes;
 
-        self.cancelEdit = function() {
-            self.editable(false);
-            self.type(investmentPriority.type);
-            self.name(investmentPriority.name);
-            self.description(investmentPriority.description);
-            self.categories(investmentPriority.categories);
-            self.managementUnits(investmentPriority.managementUnits);
-        }
-
-        self.saveable = ko.computed(function() {
-            return self.editable() && (
+        self.saveable = ko.pureComputed(function() {
+            let saveable = isNew ||
                 self.name() != investmentPriority.name ||
                 self.type() != investmentPriority.type ||
                 !_.isEqual(self.categories(), investmentPriority.categories) ||
-                !_.isEqual(self.managementUnits(), investmentPriority.managementUnits)
-            );
+                !_.isEqual(self.managementUnits(), investmentPriority.managementUnits);
+            return saveable;
         });
 
         self.toJSON = function() {
@@ -551,8 +540,20 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
     self.canAddNewInvestmentPriority = ko.pureComputed(function() {
         return self.matchedInvestmentPriorities() == 0;
     });
+    self.editableInvestmentPriority = ko.observable();
+    self.edit = function(investmentPriority) {
+        self.editableInvestmentPriority(investmentPriority);
+        $(options.modalSelector).modal('show').on('hidden.bs.modal', function () {
+            self.editableInvestmentPriority(undefined);
+        });
+    }
+    self.newInvestmentPriority = function() {
+        let searchTerm = self.table.search();
+        let newInvestmentPriority = new InvestmentPriority({name:searchTerm}, true);
+        self.editableInvestmentPriority(newInvestmentPriority);
 
-    self.newInvestmentPriority = new InvestmentPriority({});
+        $(options.modalSelector).modal('show');
+    }
 
     // We are doing page reloads as an alternative to manually syncing this model with the
     // data tables API.
@@ -579,39 +580,23 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
         }
     };
     self.updateInvestmentPriority = function(investmentPriority) {
-        blockUIWithMessage("Updating investment priority...");
-
-        $.post({
-            url:fcConfig.updateInvestmentPriorityUrl,
-            data: JSON.stringify(investmentPriority.toJSON()),
-            contentType: 'application/json'
-        }).done(function(response) {
-            if (!response.error) {
-                tag.editable(false);
-                $.unblockUI();
-                window.location.reload();
-            } else {
-                $.unblockUI();
-                alert('Error updating tag: ' + response.error);
-            }
-        }).fail(
-            function() {
-                $.unblockUI();
-                alert("An error was encountered updating the investment priority. Please try again.");
-            }
-        );
+        self.saveInvestmentPriority(investmentPriority, "Updating investment priority...");
     };
 
-    self.addInvestmentPriority = function() {
-        let investmentPriority = self.newInvestmentPriority.toJSON();
+    self.addInvestmentPriority = function(newInvestmentPriority) {
+        self.saveInvestmentPriority(newInvestmentPriority, "Adding investment priority...");
+    }
+
+    self.saveInvestmentPriority = function(investmentPriorityToSave, message) {
+        let investmentPriority = investmentPriorityToSave.toJSON();
 
         if (investmentPriority.name) {
-            blockUIWithMessage("Adding investment priority...");
+            blockUIWithMessage(message);
             $.post({
-                url: fcConfig.addInvestmentPriorityUrl,
+                url: fcConfig.saveInvestmentPriorityUrl,
                 data: JSON.stringify(investmentPriority),
                 contentType: 'application/json'
-            }).done(function(response) {
+            }).done(function (response) {
                 if (!response.error) {
                     blockUIWithMessage("Reloading page...");
                     window.location.reload();
@@ -619,9 +604,19 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
                     $.unblockUI();
                     alert('Error adding tag: ' + response.error);
                 }
-            }).fail(function() {
+            }).fail(function (xhr) {
+                let message = "An error was encountered saving the investment priority. Please try again.";
+                if (xhr && xhr.status == 422) {
+                    let response = xhr.responseJSON;
+                    let messages = _.map(response.errors, function (error) {
+                        return error.message;
+                    });
+                    message = _.reduce(messages, function (memo, message) {
+                        return memo + '\n' + message
+                    }, "");
+                }
                 $.unblockUI();
-                alert("An error was encountered adding the investment priority. Please try again.");
+                alert(message);
             });
         }
     }

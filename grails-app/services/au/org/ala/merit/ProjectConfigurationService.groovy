@@ -211,7 +211,7 @@ class ProjectConfigurationService {
         List categories = outcomes.collect{ it.priorities?.collect{it.category} }
         categories = categories.flatten().unique()
 
-        metadataService.findInvestmentPriorities(categories)
+        metadataService.findInvestmentPriorities([categories:categories])
 
     }
 }

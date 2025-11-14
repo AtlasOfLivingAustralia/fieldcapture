@@ -357,12 +357,9 @@ class MetadataService {
         result
     }
 
-    List<Map> findInvestmentPriorities(List categories = null) {
+    List<Map> findInvestmentPriorities(Map criteria) {
         String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/investmentPriorities"
-        Map params = [:]
-        if (categories) {
-            params = [categories: categories]
-        }
+        Map params = criteria
 
         Map result = webService.doPost(url, params)
 
@@ -373,4 +370,16 @@ class MetadataService {
     List<String> getInvestmentPriorityCategories() {
         findInvestmentPriorities().collect{it.categories}.unique()
     }
+
+    Map saveInvestmentPriority(Map investmentPriority) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/updateInvestmentPriority"
+        webService.doPost(url, investmentPriority)
+    }
+
+    int deleteInvestmentPriority(String investmentPriorityId) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/deleteInvestmentPriority/$investmentPriorityId"
+        webService.doDelete(url)
+    }
+
+
 }

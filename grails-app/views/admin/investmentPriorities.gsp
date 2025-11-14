@@ -5,8 +5,7 @@
     <title>Manage Investment Priorities | MERIT</title>
     <script>
         window.fcConfig = {
-            updateInvestmentPriorityUrl: "${g.createLink(action: 'updateInvestmentPriority')}",
-            addInvestmentPriorityUrl: "${g.createLink(action: 'addInvestmentPriority')}",
+            saveInvestmentPriorityUrl: "${g.createLink(action: 'saveInvestmentPriority')}",
             deleteInvestmentPriorityUrl: "${g.createLink(action: 'deleteInvestmentPriority')}",
         }
     </script>
@@ -37,8 +36,8 @@
                 <th class="type">Type</th>
                 <th class="name">Name</th>
                 <th class="categories">Categories <fc:iconHelp>Program outcomes specify a list of categories that define the investment priority categories associated with that outcome</fc:iconHelp></th>
-                <th class="categories">Management units <fc:iconHelp>Management unit/s in which this investment priority occurs</fc:iconHelp></th>
-                <th class="actions">Actions</th>
+                <th id="management-units" class="management-units">Management units <fc:iconHelp>Management unit/s in which this investment priority occurs</fc:iconHelp></th>
+                <th class="actions"><span class="visually-hidden">Actions</span></th>
             </tr>
             </thead>
             <tbody data-bind="foreach: investmentPriorities">
@@ -47,65 +46,74 @@
                     <span data-bind="text:type"></span>
                 </td>
                 <td class="name">
-                    <!-- ko if: editable -->
-                    <input class="form-control form-control-sm" data-bind="value:name"></input>
-                    <!-- /ko -->
-                    <!-- ko if: !editable() -->
                     <span data-bind="text:name"></span>
-                    <!-- /ko -->
                 </td>
                 <td class="categories">
-                    <!-- ko if: !editable() -->
                     <span data-bind="text: categories().join(', ')"></span>
-                    <!-- /ko -->
-                    <!-- ko if: editable() -->
-                    <select title="Categories allow investment priorities to be associated with an outcome as a group"
-                            multiple="multiple" class="form-control form-control-sm"
-                            style="width:100%"
-                            data-bind="options: availableCategories, enabled: editable(), multiSelect2:{value: categories}"></select>
-                    <!-- /ko -->
                 </td>
                 <td class="management-units">
-                    <!-- ko if: !editable() -->
-                    <textarea class="form-control" readonly data-bind="text: managementUnitLabels()" rows="4"></textarea>
-                    <!-- /ko -->
-                    <!-- ko if: editable() -->
-                    <select title="Management unit/s in which this investment priority occurs"
-                            multiple="multiple" class="form-control form-control-sm"
-                            style="width:100%"
-                            data-bind="options: $parent.availableManagementUnits, optionsValue:'managementUnitId', optionsText:'name', enabled: editable(), multiSelect2:{value: managementUnits}"></select>
-                    <!-- /ko -->
+                    <textarea aria-labelledby="management-units" name="management-units" class="form-control" readonly data-bind="text: managementUnitLabels()" rows="4"></textarea>
                 </td>
 
                 <td class="actions">
-                    <button class="btn btn-mini deleteTag" title="Delete this investment priority" type="button" data-bind="enable:!editable(), click:$root.deleteInvestmentPriority"><i class="fa fa-trash"></i></button>
-                    <!-- ko if:!editable() -->
-                    <button class="btn btn-mini editTag" title="Edit this investment priority" type="button" data-bind="if:!editable(), click:edit"><i class="fa fa-edit"></i></button>
-                    <!-- /ko -->
-                    <!-- ko if:editable() -->
-                    <button class="btn btn-mini" title="Cancel editing" type="button" data-bind="if:editable(), click:cancelEdit"><i class="fa fa-remove"></i></button>
-                    <!-- /ko -->
-                    <button class="btn btn-mini" title="Save changes made to this investment priority" type="button" data-bind="enable: saveable, click:$root.updateInvestmentPriority"><i class="fa fa-save"></i></button>
+                    <button class="btn btn-mini editTag" title="Edit this investment priority" type="button" data-bind="click:$parent.edit"><i class="fa fa-edit"></i></button>
                 </td>
             </tr>
             </tbody>
             <tfoot data-bind="if: canAddNewInvestmentPriority">
             <tr>
-                <td class="investment-priority">
-                    <input class="form-control form-control-sm" data-bind="value:newInvestmentPriority.name"></input>
-                </td>
-                <td class="description">
-                    <textarea class="form-control form-control-sm" data-bind="value:newInvestmentPriority.description"></textarea>
-                </td>
-                <td class="admin-actions">
-                    <button type="button" class="btn btn-sm btn-success" data-bind="click:addInvestmentPriority, enable:newInvestmentPriority.name()">
-                        <i class="fa fa-plus"></i> Add new tag</button>
+                <td colspan="5" class="admin-actions">
+                    <button type="button" class="btn btn-sm btn-success" data-bind="click:newInvestmentPriority">
+                        <i class="fa fa-plus"></i> Add new investment priority</button>
                 </td>
             </tr>
             </tfoot>
         </table>
     </div>
+
+<div id="editInvestmentPriority" class="modal" tabindex="-1"  data-bind="with:editableInvestmentPriority">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><span data-bind="text:isNew ? 'Add' : 'Edit'"></span> investment priority</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Type of investment priority <fc:iconHelp>This value is used for the investment priority type facet on the Project Explorer</fc:iconHelp></label>
+                        <select id="type" class="form-select form-select-sm" data-bind="value:type, options:investmentPriorityTypes">
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" id="name" class="form-control form-control-sm" data-bind="value:name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="categories" class="form-label">Categories <fc:iconHelp>Investment priority categories are used to restrict the investment priorities available for selection for a specific program</fc:iconHelp></label>
+                        <select id="categories" multiple="multiple" class="form-select form-select-sm"
+                                style="width:100%" <%-- select 2 needs this hint --%>
+                                data-bind="options: availableCategories, enabled: editable(), multiSelect2:{value: categories}"></select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="management-unit" class="form-label">Management units <fc:iconHelp>If a project is assigned to a Management Unit, only investment priorities in that management unit will be available for selection.  Leave this blank for investment priorities that should be available in all management units</fc:iconHelp></label>
+                        <select title="Management unit/s in which this investment priority occurs"
+                                style="width:100%" <%-- select 2 needs this hint --%>
+                                multiple="multiple" class="form-select form-select-sm"
+                                data-bind="options: $parent.availableManagementUnits, optionsValue:'managementUnitId', optionsText:'name', enabled: editable(), multiSelect2:{value: managementUnits}"></select>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bind="enable:saveable, click:function() { isNew ? $parent.addInvestmentPriority(this) : $parent.updateInvestmentPriority(this) }">Save changes</button>
+            </div>
+        </div>
+    </div>
 </div>
+</div>
+
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="select2/js/select2.full.js"/>
 <asset:javascript src="forms-knockout-bindings.js"/>
@@ -118,9 +126,10 @@
     $(function () {
 
         let config = _.extend({
-            availableTypes: <fc:modelAsJavascript model="${availableCategories}"/>,
+            availableTypes: <fc:modelAsJavascript model="${availableTypes}"/>,
             categoriesByType: <fc:modelAsJavascript model="${categoriesByType}"/>,
             availableManagementUnits: <fc:modelAsJavascript model="${managementUnits}"/>,
+            modalSelector:'#editInvestmentPriority'
         }, window.fcConfig);
 
         const viewModel = new ManageInvestmentPrioritiesViewModel(investmentPriorities, config);

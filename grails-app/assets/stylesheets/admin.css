@@ -152,19 +152,27 @@ table.investment-priorities .names {
 }
 table.investment-priorities .categories {
     width: 19%;
+    line-height: 1.5;
 }
 
 table.investment-priorities .actions {
-    width: 120px;
+    width: 20px;
 }
 
-table.investment-priorities .management-units {
+table.investment-priorities td.management-units {
     padding: 5px;
+    position: relative;
 }
 
 table.investment-priorities .management-units textarea {
     font-size: 14px;
     border: none;
+    width:100%;
+    position:absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
 }
 
 
