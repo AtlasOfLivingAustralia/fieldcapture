@@ -553,6 +553,11 @@ button#risks-cancel:hover {
     --bs-modal-zindex: 1050;
 }
 
+/** There are instances where an error bootbox is shown above the "blockUI" overlay */
+.modal.bootbox {
+    --bs-modal-zindex: 2050;
+}
+
 .modal-body,.modal-footer {
 	color: #333;
 }
