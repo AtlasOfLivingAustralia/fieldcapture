@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest
 @PreAuthorise(accessLevel = 'officer', redirectController = "home")
 @Slf4j
 class AdminController {
-    static allowedMethods = [ searchUserDetails: "GET", removeUserDetails:"POST", updateTag: "POST", addTag: "POST", deleteTag: "POST"]
+    static allowedMethods = [ searchUserDetails: "GET", removeUserDetails:"POST", updateTag: "POST", addTag: "POST", deleteTag: "POST", saveInvestmentPriority: "POST", investmentPriorities: "GET"]
     static responseFormats = ['json', 'xml']
 
     BlogService blogService
@@ -624,9 +624,10 @@ class AdminController {
         if (command.hasErrors()) {
             respond command.errors
         }
-        Map result = command.save()
-        respond result
-
+        else {
+            Map result = command.save()
+            respond result
+        }
     }
 
     private List distinctCategories(List<Map> investmentPriorities) {

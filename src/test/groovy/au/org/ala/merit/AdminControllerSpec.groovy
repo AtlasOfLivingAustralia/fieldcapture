@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.com.bytecode.opencsv.CSVReader
+import au.org.ala.merit.command.SaveInvestmentPriorityCommand
 import au.org.ala.merit.hub.HubSettings
 import au.org.ala.web.AuthService
 import grails.plugins.csv.CSVReaderUtils
@@ -9,17 +10,19 @@ import org.apache.http.HttpStatus
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
 
-class AdminControllerSpec extends Specification implements ControllerUnitTest<AdminController>{
+class AdminControllerSpec extends Specification implements ControllerUnitTest<AdminController> {
 
     AdminService adminService = Mock(AdminService)
-    AuthService authService  = Mock(AuthService)
+    AuthService authService = Mock(AuthService)
     SettingService settingService = Mock(SettingService)
     UserService userService = Mock(UserService)
     RoleService roleService = Mock(RoleService)
     DocumentService documentService = Mock(DocumentService)
     ProjectService projectService = Mock(ProjectService)
+    MetadataService metadataService = Mock(MetadataService)
+    ManagementUnitService managementUnitService = Mock(ManagementUnitService)
 
-    def setup(){
+    def setup() {
         controller.adminService = adminService
         controller.authService = authService
         controller.settingService = settingService
@@ -27,13 +30,15 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
         controller.roleService = roleService
         controller.documentService = documentService
         controller.projectService = projectService
+        controller.metadataService = metadataService
+        controller.managementUnitService = managementUnitService
     }
 
-    void "Search User Details using email Address"(){
+    void "Search User Details using email Address"() {
         setup:
         String email = "test@test.com"
         params.emailAddress = email
-        Map userDetails = [userId: "12345", userName: "userTest", firstName: "Test", lastName: "Testing", email:email]
+        Map userDetails = [userId: "12345", userName: "userTest", firstName: "Test", lastName: "Testing", email: email]
 
         when:
         controller.searchUserDetails()
@@ -51,7 +56,7 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
 
     }
 
-    void "Search User Details using wrong email Address"(){
+    void "Search User Details using wrong email Address"() {
         setup:
         String email = "test@test.com"
         params.emailAddress = email
@@ -70,11 +75,11 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
         results.emailAddress == "test@test.com"
     }
 
-    void "Remove user Details from merit with successfully"(){
+    void "Remove user Details from merit with successfully"() {
         setup:
         String userId = "12345"
         params.userId = userId
-        Map success = [resp: [status:200, error: false]]
+        Map success = [resp: [status: 200, error: false]]
 
         when:
         request.method = "POST"
@@ -89,11 +94,11 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
         results.success == "Success"
     }
 
-    void "Unable to remove user when no user found in the database"(){
+    void "Unable to remove user when no user found in the database"() {
         setup:
         String userId = "12345"
         params.userId = userId
-        Map success = [resp: [ status:400, error: "No UserPermissions found"]]
+        Map success = [resp: [status: 400, error: "No UserPermissions found"]]
 
         when:
         request.method = "POST"
@@ -108,11 +113,11 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
         results.error == "No UserPermissions found"
     }
 
-    void "500 error when there is an issue downloading with db"(){
+    void "500 error when there is an issue downloading with db"() {
         setup:
         String userId = "12345"
         params.userId = userId
-        Map success = [resp: [ status:500, error: "Downloading issue"]]
+        Map success = [resp: [status: 500, error: "Downloading issue"]]
 
         when:
         request.method = "POST"
@@ -130,7 +135,7 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
     def "The AdminController can download an example CSV for MERIT import"() {
         when:
         controller.meritImportCSVTemplate()
-        CSVReader reader = CSVReaderUtils.toCsvReader(response.text,[:])
+        CSVReader reader = CSVReaderUtils.toCsvReader(response.text, [:])
         List<String[]> lines = reader.readAll()
 
         then:
@@ -156,10 +161,10 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
 
         where:
 
-        setting    | returnTo | expectedReturnUrl | expectedReturnLabel
-        'about'    | 'about' | '/home/about'     | 'About'
-        'help'     | 'help' | '/home/help'      | 'Help'
-        'contacts' | 'contacts' | '/home/contacts' | 'Contacts'
+        setting              | returnTo     | expectedReturnUrl    | expectedReturnLabel
+        'about'              | 'about'      | '/home/about'        | 'About'
+        'help'               | 'help'       | '/home/help'         | 'Help'
+        'contacts'           | 'contacts'   | '/home/contacts'     | 'Contacts'
         'rlpMeriDeclaration' | 'staticPage' | '/admin/staticPages' | 'Static pages'
 
     }
@@ -173,9 +178,9 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
         0 * settingService._
     }
 
-    void "Retriever HUB Roles"(){
+    void "Retriever HUB Roles"() {
         setup:
-        HubSettings hubSettings = new HubSettings(hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        HubSettings hubSettings = new HubSettings(hubId: '00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
         SettingService.setHubConfig(hubSettings)
         List roles = RoleService.MERIT_HUB_ROLES
         Boolean hubFlg = true
@@ -184,7 +189,7 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
         def results = controller.createUserHubPermission()
 
         then:
-        1 * userService.getUser() >> [userId:'129333', userName: 'jsalomon']
+        1 * userService.getUser() >> [userId: '129333', userName: 'jsalomon']
 
         and:
         view == '/admin/createUserHubPermission'
@@ -196,8 +201,8 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
 
     void "The controller can setup the model for managing help documents"() {
         setup:
-        List documents = [[documentId:'1', title:'Test Document', labels:['Test Category']]]
-        HubSettings hubSettings = new HubSettings(hubId:'00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
+        List documents = [[documentId: '1', title: 'Test Document', labels: ['Test Category']]]
+        HubSettings hubSettings = new HubSettings(hubId: '00cf9ffd-e30c-45f8-99db-abce8d05c0d8')
         SettingService.setHubConfig(hubSettings)
 
         when:
@@ -305,5 +310,62 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
         response.success == true
     }
 
-}
+    void "investmentPriorities should return grouped priorities, available types, categories by type, and management units"() {
+        setup:
+        List priorities = [
+                [investmentPriorityId:'ip1', type: 'Threatened Species', name:'A', categories: ['cat1', 'cat2']],
+                [investmentPriorityId:'ip2', type: 'Ramsar', name:'B', categories: ['cat3']],
+                [investmentPriorityId:'ip3', type: 'Threatened Species', name:'C', categories: ['cat2', 'cat4']]
+        ]
+        List managementUnits = [
+                [managementUnitId: 'mu1', name: 'MU 1'],
+                [managementUnitId: 'mu2', name: 'MU 2']
+        ]
 
+
+        when:
+        def model = controller.investmentPriorities()
+
+        then:
+        1 * metadataService.findInvestmentPriorities() >> priorities
+        1 * managementUnitService.list() >> managementUnits
+        model.investmentPriorities == priorities
+        model.availableTypes == ['Ramsar', 'Threatened Species']
+        model.categoriesByType['Threatened Species'].sort() == ['cat1', 'cat2', 'cat4']
+        model.categoriesByType['Ramsar'] == ['cat3']
+        model.managementUnits == [[managementUnitId: 'mu1', name: 'MU 1'], [managementUnitId: 'mu2', name: 'MU 2']]
+    }
+
+    void "saveInvestmentPriority should respond with errors if command has errors"() {
+        setup:
+        def command = new SaveInvestmentPriorityCommand()
+        command.validate()
+
+        when:
+        request.method = "POST"
+        controller.saveInvestmentPriority(command)
+
+        then:
+        0 * metadataService.saveInvestmentPriority(_)
+        response.status == HttpStatus.SC_UNPROCESSABLE_ENTITY
+        response.json.errors != null
+    }
+
+    void "saveInvestmentPriority should call command.save and respond with result if no errors"() {
+        setup:
+        Map props = [name:"New ip", type:"Ramsar", investmentPriorityId: null, categories: null, managementUnits: null]
+        def command = new SaveInvestmentPriorityCommand(props)
+        command.metadataService = metadataService
+
+
+        when:
+        request.method = "POST"
+        command.validate()
+        controller.saveInvestmentPriority(command)
+
+        then:
+        1 * metadataService.findInvestmentPriorities([name:"New ip"]) >> []
+        1 * metadataService.saveInvestmentPriority(props) >> [investmentPriorityId: 'newid', name: "New ip", type: "Ramsar"]
+        response.status == HttpStatus.SC_OK
+    }
+}

@@ -24,6 +24,10 @@ class SaveInvestmentPriorityCommand implements Validateable {
     }
 
     String validateName() {
+        if (!name) {
+            // The mandatory check will handle this.
+            return null
+        }
         List<Map> resp = metadataService.findInvestmentPriorities([name:name])
         boolean valid = true
         if (resp) {
