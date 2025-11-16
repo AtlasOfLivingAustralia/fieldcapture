@@ -8,8 +8,8 @@ class SaveInvestmentPriorityCommand implements Validateable {
     String investmentPriorityId
     String type
     String name
-    String categories
-    String managementUnits
+    List categories
+    List managementUnits
 
     MetadataService metadataService
 
