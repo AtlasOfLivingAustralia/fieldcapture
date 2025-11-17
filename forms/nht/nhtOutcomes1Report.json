@@ -272,7 +272,7 @@
               "Community involvement",
               "Partnerships with local groups",
               "Collaboration with Indigenous groups",
-              "Adequate Funding and Resources",
+              "Funding and Resources",
               "In-kind contributions",
               "Governance and accountability with well-defined roles and responsibilities",
               "Regulatory or policy requirements",
@@ -280,13 +280,14 @@
               "Conservation advice",
               "Management plans and strategies",
               "Regular Monitoring and evaluation",
+              "Weather conditions",
               "Time and capacity",
               "Resource use or economic priorities",
               "Data and knowledge",
               "IT infrastructure",
               "Site access/location",
               "Access to expertise and skilled personnel",
-              "Other"
+              "Other (enable mandatory free text to define if ‘other’ selected. ‘Other’ could also be used to provide additional context for the options above.)"
             ]
           },
           {
@@ -296,7 +297,7 @@
             "behaviour": [
               {
                 "type": "enable_and_clear",
-                "condition": "\"Other\" in keq3"
+                "condition": "\"Other (enable mandatory free text to define if ‘other’ selected. ‘Other’ could also be used to provide additional context for the options above.)\" in keq3"
               }
             ]
           },
@@ -310,25 +311,23 @@
               "Community involvement",
               "Partnerships with local groups",
               "Collaboration with Indigenous groups",
-              "Insufficient Funding and Resources",
+              "Funding and Resources",
               "In-kind contributions not realised",
               "Governance and accountability with well-defined roles and responsibilities",
               "Regulatory or policy requirements",
               "Project planning",
-              "Inadequate conservation advice",
+              "Conservation advice",
               "Management plans and strategies",
               "Regular monitoring and evaluation",
-              "Lack of stakeholder buy-in",
-              "Unpredictable/adverse weather conditions",
               "Natural disasters or extreme weather events",
               "Disease/Pandemic",
               "Time and capacity constraints",
-              "Conflicting resource use or economic priorities",
-              "Inadequate data and knowledge",
-              "Inadequate IT infrastructure",
-              "Issues with Site Access/Remote site location",
+              "Resource use or economic priorities",
+              "Data and knowledge",
+              "IT infrastructure",
+              "Site Access/Location",
               "Access to expertise and skilled personnel",
-              "Other"
+              "Other (enable mandatory free text to define if ‘other’ selected. ‘Other’ could also be used to provide additional context for the options above.)"
             ]
           },
           {
@@ -338,7 +337,7 @@
             "behaviour": [
               {
                 "type": "enable_and_clear",
-                "condition": "\"Other\" in keq4"
+                "condition": "\"Other (enable mandatory free text to define if ‘other’ selected. ‘Other’ could also be used to provide additional context for the options above.)\" in keq4"
               }
             ]
           },
@@ -426,7 +425,7 @@
           {
             "items": [
               {
-                "source": "<h4>1. PROJECT OUTCOMES</h4>",
+                "source": "An interim report designed for RDP Panel projects of three or more years in duration. The primary focus of the report is to provide an assessment of the project’s short-term outcomes, progress to date and support any adjustments to project delivery.",
                 "type": "literal"
               }
             ],
@@ -435,7 +434,7 @@
           {
             "items": [
               {
-                "source": "An interim report designed for RDP Panel projects of three or more years in duration. The primary focus of the report is to provide an assessment of the project’s short-term outcomes, progress to date and support any adjustments to project delivery.",
+                "source": "<h4>1. PROJECT OUTCOMES</h4>",
                 "type": "literal"
               }
             ],
@@ -576,7 +575,7 @@
                           },
                           {
                             "type": "textarea",
-                            "source": "st1SupplementaryQuestions1",
+                            "source": "st1SupplementaryQuestions2",
                             "preLabel": "Q2. What pest/competitor species have been controlled?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -854,7 +853,7 @@
                           {
                             "type": "select2Many",
                             "source": "csapOutcomes",
-                            "preLabel": "Which CSAP Outcomes support this project outcome?"
+                            "preLabel": "Which CSAP outcomes are supported by this project outcome?"
                           }
                         ]
                       }
@@ -879,7 +878,7 @@
               {
                 "type": "selectOne",
                 "source": "projectOutcomeAchievementDegree",
-                "title": "The degree to which the project outcome was achieved",
+                "title": "To what degree was the project outcome achieved?",
                 "rows": 5,
                 "width": "20%"
               }
@@ -889,7 +888,7 @@
             "items": [
               {
                 "source": "outcomeProgress",
-                "preLabel": "1.2 Considered collectively (based on previous responses in table 1.1), to what extent are you progressing towards the short-term project outcomes?",
+                "preLabel": "1.2 Considered collectively (based on previous responses in table 1.1), to what extent are you progressing towards the medium-term project outcomes?",
                 "type": "selectOne"
               }
             ],
@@ -984,7 +983,7 @@
             "behaviour": [
               {
                 "type": "if_expression",
-                "condition": "\"Other\" in keq3"
+                "condition": "\"Other (enable mandatory free text to define if ‘other’ selected. ‘Other’ could also be used to provide additional context for the options above.)\" in keq3"
               }
             ]
           },
@@ -1012,7 +1011,7 @@
             "behaviour": [
               {
                 "type": "if_expression",
-                "condition": "\"Other\" in keq4"
+                "condition": "\"Other (enable mandatory free text to define if ‘other’ selected. ‘Other’ could also be used to provide additional context for the options above.)\" in keq4"
               }
             ]
           },
