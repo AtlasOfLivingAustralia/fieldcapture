@@ -545,6 +545,18 @@ button#risks-cancel:hover {
 	text-shadow: none;
 }
 
+/*Select 2 dropdowns use 1051 for the z-index and they are used in modals sometimes so we are reducing the modal defaults*/
+.modal-backdrop {
+    --bs-backdrop-zindex: 1049;
+}
+.modal {
+    --bs-modal-zindex: 1050;
+}
+
+/** There are instances where an error bootbox is shown above the "blockUI" overlay */
+.modal.bootbox {
+    --bs-modal-zindex: 2050;
+}
 
 .modal-body,.modal-footer {
 	color: #333;
