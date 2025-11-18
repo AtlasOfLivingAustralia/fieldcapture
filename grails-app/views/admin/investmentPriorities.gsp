@@ -28,11 +28,26 @@
     </p>
 
     <hr/>
+    <p>
+        To create a new category of investment priorities and bulk assign it to investment priorities for use in a program:
+        <ol>
+        <li>If possible, perform a search of the investment priorities to narrow the values you might want to select</li>
+        <li>Press the "Copy" button above the table below, if you haven't performed a search all investment priorities will be copied</li>
+        <li>Paste into a new Excel spreadsheet</li>
+        <li>Delete the row for any investment priority you don't want in the new category</li>
+        <li>Press add category and attach the Excel spreadsheet</li>
+        </ol>
+        Note that if the category already exists, new investment priorities will be added to the existing category.
+        Investment priorities already in the category but not in the uploaded spreadsheet will not be removed from the category as it could affect existing programs.
+    </p>
+    <button class="btn btn-info" data-bind="click:showUpdateCategory">Add or edit a category</button>
+
 
     <div class="pill-pane tab-pane">
         <table class="table w-100 investment-priorities">
             <thead>
             <tr>
+                <th class="investment-priority-id">Investment Priority ID</th>
                 <th class="type">Type</th>
                 <th class="name">Name</th>
                 <th class="categories">Categories <fc:iconHelp>Program outcomes specify a list of categories that define the investment priority categories associated with that outcome</fc:iconHelp></th>
@@ -42,6 +57,9 @@
             </thead>
             <tbody data-bind="foreach: investmentPriorities">
             <tr>
+                <td class="Customize Toolbar…">
+                    <span data-bind="text:investmentPriorityId"></span>
+                </td>
                 <td class="name">
                     <span data-bind="text:type"></span>
                 </td>
@@ -62,8 +80,8 @@
             </tbody>
             <tfoot data-bind="if: canAddNewInvestmentPriority">
             <tr>
-                <td colspan="5" class="admin-actions">
-                    <button type="button" class="btn btn-sm btn-success" data-bind="click:newInvestmentPriority">
+                <td colspan="6" class="admin-actions">
+                    <button type="button" class="btn btn-sm btn-success" disabled data-bind="enable:canAddNewInvestmentPriority, click:newInvestmentPriority">
                         <i class="fa fa-plus"></i> Add new investment priority</button>
                 </td>
             </tr>
@@ -71,47 +89,76 @@
         </table>
     </div>
 
-<div id="editInvestmentPriority" class="modal" tabindex="-1"  data-bind="with:editableInvestmentPriority">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title"><span data-bind="text:isNew ? 'Add' : 'Edit'"></span> investment priority</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label for="type" class="form-label">Type of investment priority <fc:iconHelp>This value is used for the investment priority type facet on the Project Explorer</fc:iconHelp></label>
-                        <select id="type" class="form-select form-select-sm" data-bind="value:type, options:investmentPriorityTypes">
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" id="name" class="form-control form-control-sm" data-bind="value:name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="categories" class="form-label">Categories <fc:iconHelp>Investment priority categories are used to restrict the investment priorities available for selection for a specific program</fc:iconHelp></label>
-                        <select id="categories" multiple="multiple" class="form-select form-select-sm"
-                                style="width:100%" <%-- select 2 needs this hint --%>
-                                data-bind="options: availableCategories, enabled: editable(), multiSelect2:{value: categories}"></select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="management-unit" class="form-label">Management units <fc:iconHelp>If a project is assigned to a Management Unit, only investment priorities in that management unit will be available for selection.  Leave this blank for investment priorities that should be available in all management units</fc:iconHelp></label>
-                        <select title="Management unit/s in which this investment priority occurs"
-                                style="width:100%" <%-- select 2 needs this hint --%>
-                                multiple="multiple" class="form-select form-select-sm"
-                                data-bind="options: $parent.availableManagementUnits, optionsValue:'managementUnitId', optionsText:'name', enabled: editable(), multiSelect2:{value: managementUnits}"></select>
+    <div id="editInvestmentPriority" class="modal" tabindex="-1"  data-bind="with:editableInvestmentPriority">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title"><span data-bind="text:isNew ? 'Add' : 'Edit'"></span> investment priority</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="type" class="form-label">Type of investment priority <fc:iconHelp>This value is used for the investment priority type facet on the Project Explorer</fc:iconHelp></label>
+                            <select id="type" class="form-select form-select-sm" data-bind="value:type, options:investmentPriorityTypes">
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" id="name" class="form-control form-control-sm" data-bind="value:name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="categories" class="form-label">Categories <fc:iconHelp>Investment priority categories are used to restrict the investment priorities available for selection for a specific program</fc:iconHelp></label>
+                            <select id="categories" multiple="multiple" class="form-select form-select-sm"
+                                    style="width:100%" <%-- select 2 needs this hint --%>
+                                    data-bind="options: availableCategories, enabled: editable(), multiSelect2:{value: categories}"></select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="management-unit" class="form-label">Management units <fc:iconHelp>If a project is assigned to a Management Unit, only investment priorities in that management unit will be available for selection.  Leave this blank for investment priorities that should be available in all management units</fc:iconHelp></label>
+                            <select title="Management unit/s in which this investment priority occurs"
+                                    style="width:100%" <%-- select 2 needs this hint --%>
+                                    multiple="multiple" class="form-select form-select-sm"
+                                    data-bind="options: $parent.availableManagementUnits, optionsValue:'managementUnitId', optionsText:'name', enabled: editable(), multiSelect2:{value: managementUnits}"></select>
 
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-bind="enable:saveable, click:function() { isNew ? $parent.addInvestmentPriority(this) : $parent.updateInvestmentPriority(this) }">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bind="enable:saveable, click:function() { isNew ? $parent.addInvestmentPriority(this) : $parent.updateInvestmentPriority(this) }">Save changes</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    <div id="editCategory" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Bulk add or edit an investment priority category</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <g:uploadForm class="updateCategory" action="updateInvestmentPriorityCategory">
+                <div class="modal-body">
+
+                        <div class="mb-3">
+                            <label class="form-label" for="category">Category</label>
+                            <input id="category" type="text" name="category" class="form-control form-control-sm" required>
+
+                        </div>
+                        <div class="mb-3">
+                            <label for="investmentPriorities">Please attach a spreadsheet containing the list of investment priorities to include in this category</label>
+                            <input class="form-control" id="investmentPriorities" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" name="investmentPriorities">
+                        </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button id="btnUpdateProjectOrgs" class="btn btn-sm btn-info" title="Bulk create organisations">Upload</button>
+                </div>
+                    </g:uploadForm>
+            </div>
+        </div>
 </div>
 
 <asset:javascript src="common-bs4.js"/>
@@ -129,7 +176,8 @@
             availableTypes: <fc:modelAsJavascript model="${availableTypes}"/>,
             categoriesByType: <fc:modelAsJavascript model="${categoriesByType}"/>,
             availableManagementUnits: <fc:modelAsJavascript model="${managementUnits}"/>,
-            modalSelector:'#editInvestmentPriority'
+            modalSelector:'#editInvestmentPriority',
+            categoryUpdateModalSelector:'#editCategory'
         }, window.fcConfig);
 
         const viewModel = new ManageInvestmentPrioritiesViewModel(investmentPriorities, config);

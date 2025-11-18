@@ -473,11 +473,11 @@ ManageTagsViewModel = function(tags, options) {
 
 ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
     investmentPriorities = investmentPriorities || [];
-    let investmentPriorityTypes = _.uniq(_.map(investmentPriorities, function(priority) {return priority.type}));
 
     function InvestmentPriority(investmentPriority, isNew) {
-        var self = this;
+        const self = this;
         self.isNew = isNew;
+        self.investmentPriorityId = investmentPriority.investmentPriorityId;
         self.type = ko.observable(investmentPriority.type);
         self.name = ko.observable(investmentPriority.name);
         self.description = ko.observable(investmentPriority.description);
@@ -546,6 +546,10 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
         $(options.modalSelector).modal('show').on('hidden.bs.modal', function () {
             self.editableInvestmentPriority(undefined);
         });
+    }
+
+    self.showUpdateCategory = function() {
+        $(options.categoryUpdateModalSelector).modal('show');
     }
     self.newInvestmentPriority = function() {
         let searchTerm = self.table.search();
@@ -626,7 +630,9 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
             columnDefs: [
                 {
                     targets: 0,
-                    orderable: true
+                    visible: false,
+                    orderable: false,
+                    searchable: false
                 },
                 {
                     targets: 1,
@@ -638,13 +644,14 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
                 },
                 {
                     targets: 3,
+                    orderable: true
+                },
+                {
+                    targets: 4,
                     orderable:false
                 }
-            ],layout: {
-                topStart: {
-                    buttons: ['copy', 'excel', 'csv']
-                }
-            },
+            ],
+            buttons: ['copy'],
             dom: 'lBfrtip'
         });
         self.table = table;

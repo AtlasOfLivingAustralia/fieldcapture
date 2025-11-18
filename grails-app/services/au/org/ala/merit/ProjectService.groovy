@@ -1631,12 +1631,14 @@ class ProjectService  {
      * ]
      *
      */
-    List<Map> getProjectServicesWithTargets(String projectId) {
+    List<Map> getProjectServicesWithTargets(String projectId, ProgramConfig config = null) {
         Map project = get(projectId, 'flat')
 
         List serviceIds = project.custom?.details?.serviceIds?.collect{it as Integer}
 
-        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+        if (!config) {
+            config = projectConfigurationService.getProjectConfiguration(project)
+        }
         List<Map> supportedServices = config.services
         List projectServices = supportedServices?.findAll {it.id in serviceIds }
         List targets = project.outputTargets
@@ -1901,9 +1903,9 @@ class ProjectService  {
      *     services: [ <list of scores and targets for each of the project services> ]
      * ]
      */
-    Map getServiceDashboardData(String projectId, boolean approvedDataOnly) {
+    Map getServiceDashboardData(String projectId, boolean approvedDataOnly, ProgramConfig config = null) {
 
-        List<Score> projectServices = getProjectServicesWithTargets(projectId)
+        List<Score> projectServices = getProjectServicesWithTargets(projectId, config)
         List scoreIds = projectServices.collect{it.scores?.collect{ score ->
 
             if (score.relatedScores) {

@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest
 @PreAuthorise(accessLevel = 'officer', redirectController = "home")
 @Slf4j
 class AdminController {
-    static allowedMethods = [ searchUserDetails: "GET", removeUserDetails:"POST", updateTag: "POST", addTag: "POST", deleteTag: "POST", saveInvestmentPriority: "POST", investmentPriorities: "GET"]
+    static allowedMethods = [ searchUserDetails: "GET", removeUserDetails:"POST", updateTag: "POST", addTag: "POST", deleteTag: "POST", saveInvestmentPriority: "POST", investmentPriorities: "GET", addCategoryToInvestmentPriorities: "POST"]
     static responseFormats = ['json', 'xml']
 
     BlogService blogService
@@ -628,6 +628,38 @@ class AdminController {
             Map result = command.save()
             respond result
         }
+    }
+
+    def updateInvestmentPriorityCategory() {
+
+        Map results = [:]
+        if (request.respondsTo('getFile')) {
+            def file = request.getFile('investmentPriorities')
+
+            if (file) {
+                def columnMap = [
+                        'A': 'investmentPriorityId'
+                ]
+
+                def config = [
+                        sheet    : "Sheet1",
+                        startRow : 1,
+                        columnMap: columnMap
+                ]
+                Workbook workbook = WorkbookFactory.create(file.inputStream)
+
+                List data = excelImportService.convertColumnMapConfigManyRows(workbook, config)
+
+                results = metadataService.updateInvestmentPriorityCategory(params.category, data.collect{it.investmentPriorityId})
+
+
+            }
+            redirect action:"investmentPriorities", model:[results:results]
+        }
+        else {
+            redirect action:"investmentPriorities"
+        }
+
     }
 
     private List distinctCategories(List<Map> investmentPriorities) {
