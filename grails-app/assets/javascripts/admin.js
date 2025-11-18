@@ -651,7 +651,7 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
                     orderable:false
                 }
             ],
-            buttons: ['copy'],
+            buttons: [{extend:'copy', title:null}],
             dom: 'lBfrtip'
         });
         self.table = table;
