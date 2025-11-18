@@ -223,6 +223,7 @@ class ProjectConfigurationService {
         if (orphanedPriorities) {
             investmentPriorities += metadataService.findInvestmentPriorities([investmentPriorityIds:orphanedPriorities])
         }
+        investmentPriorities
     }
 
     private List<Map> getInvestmentPrioritiesForOutcomes(List outcomes) {
