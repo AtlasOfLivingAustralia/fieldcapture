@@ -1353,6 +1353,15 @@
             "source": {
               "context-path": "owner"
             },
+            "merge": {
+              "programSecondaryOutcomes": {
+                "deleteUnmatchedExistingRows": true,
+                "addUnmatchedNewRows": true,
+                "keys": [
+                  "outcomeStatement"
+                ]
+              }
+            },
             "mapping": [
               {
                 "source-path": "custom.details.outcomes.primaryOutcome.description",
