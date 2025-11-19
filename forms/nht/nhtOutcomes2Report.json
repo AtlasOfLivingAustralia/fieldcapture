@@ -60,11 +60,111 @@
               },
               {
                 "dataType": "text",
-                "name": "supplementaryQuestions1"
+                "name": "effectivePestControlPercentage1"
               },
               {
                 "dataType": "text",
-                "name": "supplementaryQuestions2"
+                "name": "pestCompetitorSpeciesControlled1"
+              },
+              {
+                "dataType": "text",
+                "name": "diseaseThreatsContained"
+              },
+              {
+                "dataType": "text",
+                "name": "managingThreats"
+              },
+              {
+                "dataType": "text",
+                "name": "landManagementImproved"
+              },
+              {
+                "dataType": "text",
+                "name": "effectivePestControlPercentage2"
+              },
+              {
+                "dataType": "text",
+                "name": "pestCompetitorSpeciesControlled2"
+              },
+              {
+                "dataType": "text",
+                "name": "tsTecHabitatIncreased"
+              },
+              {
+                "dataType": "text",
+                "name": "patchConnectivityIncreased"
+              },
+              {
+                "dataType": "text",
+                "name": "breedingForagingHabitatImproved"
+              },
+              {
+                "dataType": "text",
+                "name": "existingPopulationsProtected"
+              },
+              {
+                "dataType": "text",
+                "name": "reintroductionsEnhancedWildPopulations"
+              },
+              {
+                "dataType": "text",
+                "name": "climateResilienceActionsUnderway"
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationsLeadingOrParticipating1"
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationsLeadingOrParticipating2"
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationsLeadingOrParticipating3"
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationsLeadingOrParticipating4"
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationsLeadingOrParticipating5"
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationsLeadingOrParticipating6"
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationsLeadingOrParticipating7"
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationsLeadingOrParticipating8"
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationsLeadingOrParticipating9"
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationsLeadingOrParticipating10"
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationsLeadingOrParticipating11"
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationsLeadingOrParticipating12"
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationsLeadingOrParticipating13"
+              },
+              {
+                "dataType": "text",
+                "name": "firstNationsLeadingOrParticipating14"
               },
               {
                 "dataType": "stringList",
@@ -494,13 +594,13 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "effectivePestControlPercentage1",
                             "preLabel": "Q1. Over the project area, what is the reduction in pest/competitor species that were effectively controlled (0-100) %",
                             "rows": 4
                           },
                           {
                             "type": "textarea",
-                            "source": "supplementaryQuestions2",
+                            "source": "pestCompetitorSpeciesControlled1",
                             "preLabel": "Q2. What pest/competitor species have been controlled?",
                             "rows": 4
                           }
@@ -523,13 +623,13 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "diseaseThreatsContained",
                             "preLabel": "Q1. Threats from disease have been contained?",
                             "rows": 4
                           },
                           {
                             "type": "textarea",
-                            "source": "supplementaryQuestions2",
+                            "source": "managingThreats",
                             "preLabel": "Q2. Managing Threats?",
                             "rows": 4
                           }
@@ -552,7 +652,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "landManagementImproved",
                             "preLabel": "Q1. Land management practices have improved?",
                             "rows": 4
                           }
@@ -575,13 +675,13 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "effectivePestControlPercentage2",
                             "preLabel": "Q1. Over the project area, what is the reduction in pest/competitor species that were effectively controlled (0-100) %",
                             "rows": 4
                           },
                           {
                             "type": "textarea",
-                            "source": "supplementaryQuestions2",
+                            "source": "pestCompetitorSpeciesControlled2",
                             "preLabel": "Q2. What pest/competitor species have been controlled?",
                             "rows": 4
                           }
@@ -604,7 +704,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "tsTecHabitatIncreased",
                             "preLabel": "Q1. Area/Extent of (TS/TECs) habitat has increased?",
                             "rows": 4
                           }
@@ -627,7 +727,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "patchConnectivityIncreased",
                             "preLabel": "Q1. Increased connectivity between patches?",
                             "rows": 4
                           }
@@ -650,7 +750,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "breedingForagingHabitatImproved",
                             "preLabel": "Q1. Quality of breeding and foraging habitat is improved?",
                             "rows": 4
                           }
@@ -673,7 +773,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "existingPopulationsProtected",
                             "preLabel": "Q1. Existing populations have been protected?",
                             "rows": 4
                           }
@@ -696,7 +796,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "reintroductionsEnhancedWildPopulations",
                             "preLabel": "Q1. Re-introductions have enhanced wild populations?",
                             "rows": 4
                           }
@@ -719,7 +819,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "climateResilienceActionsUnderway",
                             "preLabel": "Q1. Climate change resilience and adaptive capacity actions underway?",
                             "rows": 4
                           }
@@ -742,7 +842,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "firstNationsLeadingOrParticipating1",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4
                           }
@@ -765,7 +865,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "firstNationsLeadingOrParticipating2",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4
                           }
@@ -788,7 +888,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "firstNationsLeadingOrParticipating3",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4
                           }
@@ -811,7 +911,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "firstNationsLeadingOrParticipating4",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4
                           }
@@ -834,7 +934,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "firstNationsLeadingOrParticipating5",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4
                           }
@@ -857,7 +957,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "firstNationsLeadingOrParticipating6",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4
                           }
@@ -880,7 +980,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "firstNationsLeadingOrParticipating7",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4
                           }
@@ -903,7 +1003,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "firstNationsLeadingOrParticipating8",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4
                           }
@@ -926,7 +1026,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "firstNationsLeadingOrParticipating9",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4
                           }
@@ -949,7 +1049,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "firstNationsLeadingOrParticipating10",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4
                           }
@@ -972,7 +1072,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "firstNationsLeadingOrParticipating11",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4
                           }
@@ -995,7 +1095,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "firstNationsLeadingOrParticipating12",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4
                           }
@@ -1018,7 +1118,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "firstNationsLeadingOrParticipating13",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4
                           }
@@ -1041,7 +1141,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "supplementaryQuestions1",
+                            "source": "firstNationsLeadingOrParticipating14",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4
                           }
