@@ -642,34 +642,44 @@ var outcomes = [
         "outcome": "Minimise environmental threats and risks, including those caused by natural disasters like flooding, debris accumulation, erosion, and runoff."
     },
     {
-        "category": "Threatened Species",
+        "category": "Habitat restoration",
         "type": "medium",
-        "outcome": "By 30 June 2028, there is measurable repair of waterway habitats (in-stream and terrestrial) to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
+        "outcome": "Protect, enhance, rehabilitate and/or restore threatened and native species and their habitats."
     },
     {
-        "category": "Threatened Species",
+        "category": "River health",
         "type": "medium",
-        "outcome": "By 30 June 2028, there is measurable repair of water quality, hydrology and in stream connectivity to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
+        "outcome": "Protect Australia’s coasts, oceans, and waterways by improving water quality, maintaining natural water flows, and enhancing connectivity between waterways."
     },
     {
-        "category": "Threatened Species",
+        "category": "Urban nature",
         "type": "medium",
-        "outcome": "By June 2028 there is a measurable improvement to the services provided by urban green and blue space to benefit local communities in urban, outer urban /peri-urban and regional centres."
+        "outcome": "Enhance community access to nature by upgrading urban green and blue spaces, including improved water quality to benefit public health."
+    },
+    {
+        "category": "Threat mitigation",
+        "type": "medium",
+        "outcome": "Minimise environmental threats and risks, including those caused by natural disasters like flooding, debris accumulation, erosion, and runoff."
+    },
+    {
+        "category": "Habitat restoration",
+        "type": "short",
+        "outcome": "Protect, enhance, rehabilitate and/or restore threatened and native species and their habitats."
     },
     {
         "category": "River health",
         "type": "short",
-        "outcome": "By 30 June 2025, there is measurable repair of waterway habitats (in-stream and terrestrial) to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
+        "outcome": "Protect Australia’s coasts, oceans, and waterways by improving water quality, maintaining natural water flows, and enhancing connectivity between waterways."
     },
     {
-        "category": "River health",
+        "category": "Urban nature",
         "type": "short",
-        "outcome": " By 30 June 2025, there is measurable repair of water quality, hydrology and in stream connectivity to benefit native plants and animals (including threatened species and ecological communities), and the ecological character of Ramsar sites, in urban, peri-urban and regional centres."
+        "outcome": "Enhance community access to nature by upgrading urban green and blue spaces, including improved water quality to benefit public health."
     },
     {
-        "category": "River health",
+        "category": "Threat mitigation",
         "type": "short",
-        "outcome": "By June 2025 there is a measurable improvement to the services provided by urban green and blue space to benefit local communities in urban, outer urban /peri-urban and regional centres."
+        "outcome": "Minimise environmental threats and risks, including those caused by natural disasters like flooding, debris accumulation, erosion, and runoff."
     }
 ];
 
