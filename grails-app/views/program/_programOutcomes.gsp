@@ -32,7 +32,7 @@
                 <input title="Outcome category" class="form-control form-control-sm" name="category" data-bind="value:category">
             </td>
             <td class="outcome-priorities">
-                <select title="Investment priority categories associated with this outcome" multiple="multiple" class="form-control form-control-sm" style="width:100%" name="priorities" data-bind="enable:!isReadOnly, multiSelect2:{value: priorities}"></select>
+                <select title="Investment priority categories associated with this outcome" multiple="multiple" class="form-control form-control-sm" style="width:100%" name="priorities" data-bind="multiSelect2:{value: priorities}"></select>
             </td>
         </tr>
         <!-- /ko -->
