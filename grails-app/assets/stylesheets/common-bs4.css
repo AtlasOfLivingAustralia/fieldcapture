@@ -37,7 +37,7 @@
 }
 
 .well.fc-resource-preview-well {
-    position: absolute;
+
     height: 100%;
     width: 100%;
     -webkit-box-sizing: border-box;
@@ -47,7 +47,6 @@
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
-    align-items: center;
     justify-content: center;
 }
 
