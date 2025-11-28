@@ -77,39 +77,35 @@
               },
               {
                 "dataType": "text",
-                "name": "st1SupplementaryQuestions1"
+                "name": "effectivePestControlPercentage1"
               },
               {
                 "dataType": "text",
-                "name": "st1SupplementaryQuestions2"
+                "name": "pestCompetitorSpeciesControlled1"
               },
               {
                 "dataType": "text",
-                "name": "st2SupplementaryQuestions1"
+                "name": "diseaseThreatsContained"
               },
               {
                 "dataType": "text",
-                "name": "st2SupplementaryQuestions2"
+                "name": "managingThreats"
               },
               {
                 "dataType": "text",
-                "name": "st3SupplementaryQuestions1"
+                "name": "landManagementImproved"
               },
               {
                 "dataType": "text",
-                "name": "st3SupplementaryQuestions2"
+                "name": "effectivePestControlPercentage2"
               },
               {
                 "dataType": "text",
-                "name": "st4SupplementaryQuestions1"
+                "name": "pestCompetitorSpeciesControlled2"
               },
               {
                 "dataType": "text",
-                "name": "st4SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st5SupplementaryQuestions1"
+                "name": "tsTecHabitatIncreased"
               },
               {
                 "dataType": "text",
@@ -117,7 +113,7 @@
               },
               {
                 "dataType": "text",
-                "name": "st6SupplementaryQuestions1"
+                "name": "patchConnectivityIncreased"
               },
               {
                 "dataType": "text",
@@ -125,7 +121,7 @@
               },
               {
                 "dataType": "text",
-                "name": "st7SupplementaryQuestions1"
+                "name": "breedingForagingHabitatImproved"
               },
               {
                 "dataType": "text",
@@ -133,7 +129,7 @@
               },
               {
                 "dataType": "text",
-                "name": "st8SupplementaryQuestions1"
+                "name": "existingPopulationsProtected"
               },
               {
                 "dataType": "text",
@@ -141,7 +137,7 @@
               },
               {
                 "dataType": "text",
-                "name": "st9SupplementaryQuestions1"
+                "name": "reintroductionsEnhancedWildPopulations"
               },
               {
                 "dataType": "text",
@@ -149,7 +145,7 @@
               },
               {
                 "dataType": "text",
-                "name": "st10SupplementaryQuestions1"
+                "name": "climateResilienceActionsUnderway"
               },
               {
                 "dataType": "text",
@@ -157,7 +153,7 @@
               },
               {
                 "dataType": "text",
-                "name": "st11SupplementaryQuestions1"
+                "name": "firstNationsLeadingOrParticipating"
               },
               {
                 "dataType": "text",
@@ -272,7 +268,7 @@
               "Community involvement",
               "Partnerships with local groups",
               "Collaboration with Indigenous groups",
-              "Adequate Funding and Resources",
+              "Funding and Resources",
               "In-kind contributions",
               "Governance and accountability with well-defined roles and responsibilities",
               "Regulatory or policy requirements",
@@ -280,13 +276,14 @@
               "Conservation advice",
               "Management plans and strategies",
               "Regular Monitoring and evaluation",
+              "Weather conditions",
               "Time and capacity",
               "Resource use or economic priorities",
               "Data and knowledge",
               "IT infrastructure",
               "Site access/location",
               "Access to expertise and skilled personnel",
-              "Other"
+              "Other (enable mandatory free text to define if ‘other’ selected. ‘Other’ could also be used to provide additional context for the options above.)"
             ]
           },
           {
@@ -296,7 +293,7 @@
             "behaviour": [
               {
                 "type": "enable_and_clear",
-                "condition": "\"Other\" in keq3"
+                "condition": "\"Other (enable mandatory free text to define if ‘other’ selected. ‘Other’ could also be used to provide additional context for the options above.)\" in keq3"
               }
             ]
           },
@@ -310,25 +307,23 @@
               "Community involvement",
               "Partnerships with local groups",
               "Collaboration with Indigenous groups",
-              "Insufficient Funding and Resources",
+              "Funding and Resources",
               "In-kind contributions not realised",
               "Governance and accountability with well-defined roles and responsibilities",
               "Regulatory or policy requirements",
               "Project planning",
-              "Inadequate conservation advice",
+              "Conservation advice",
               "Management plans and strategies",
               "Regular monitoring and evaluation",
-              "Lack of stakeholder buy-in",
-              "Unpredictable/adverse weather conditions",
               "Natural disasters or extreme weather events",
               "Disease/Pandemic",
               "Time and capacity constraints",
-              "Conflicting resource use or economic priorities",
-              "Inadequate data and knowledge",
-              "Inadequate IT infrastructure",
-              "Issues with Site Access/Remote site location",
+              "Resource use or economic priorities",
+              "Data and knowledge",
+              "IT infrastructure",
+              "Site Access/Location",
               "Access to expertise and skilled personnel",
-              "Other"
+              "Other (enable mandatory free text to define if ‘other’ selected. ‘Other’ could also be used to provide additional context for the options above.)"
             ]
           },
           {
@@ -338,7 +333,7 @@
             "behaviour": [
               {
                 "type": "enable_and_clear",
-                "condition": "\"Other\" in keq4"
+                "condition": "\"Other (enable mandatory free text to define if ‘other’ selected. ‘Other’ could also be used to provide additional context for the options above.)\" in keq4"
               }
             ]
           },
@@ -426,7 +421,7 @@
           {
             "items": [
               {
-                "source": "<h4>1. PROJECT OUTCOMES</h4>",
+                "source": "An interim report designed for RDP Panel projects of three or more years in duration. The primary focus of the report is to provide an assessment of the project’s short-term outcomes, progress to date and support any adjustments to project delivery.",
                 "type": "literal"
               }
             ],
@@ -435,7 +430,7 @@
           {
             "items": [
               {
-                "source": "An interim report designed for RDP Panel projects of three or more years in duration. The primary focus of the report is to provide an assessment of the project’s short-term outcomes, progress to date and support any adjustments to project delivery.",
+                "source": "<h4>1. PROJECT OUTCOMES</h4>",
                 "type": "literal"
               }
             ],
@@ -569,14 +564,14 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "st1SupplementaryQuestions1",
+                            "source": "effectivePestControlPercentage1",
                             "preLabel": "Q1. Over the project area, what is the reduction in pest/competitor species that were effectively controlled (0-100) %",
                             "rows": 4,
                             "fullWidthLabelAbove": true
                           },
                           {
                             "type": "textarea",
-                            "source": "st1SupplementaryQuestions1",
+                            "source": "pestCompetitorSpeciesControlled1",
                             "preLabel": "Q2. What pest/competitor species have been controlled?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -600,14 +595,14 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "st2SupplementaryQuestions1",
+                            "source": "diseaseThreatsContained",
                             "preLabel": "Q1. Threats from disease have been contained?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
                           },
                           {
                             "type": "textarea",
-                            "source": "st2SupplementaryQuestions2",
+                            "source": "managingThreats",
                             "preLabel": "Q2. Managing Threats?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -631,7 +626,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "st3SupplementaryQuestions1",
+                            "source": "landManagementImproved",
                             "preLabel": "Q1. Land management practices have improved?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -655,14 +650,14 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "st4SupplementaryQuestions1",
+                            "source": "effectivePestControlPercentage2",
                             "preLabel": "Q1. Over the project area, what is the reduction in pest/competitor species that were effectively controlled (0-100) %",
                             "rows": 4,
                             "fullWidthLabelAbove": true
                           },
                           {
                             "type": "textarea",
-                            "source": "st4SupplementaryQuestions2",
+                            "source": "pestCompetitorSpeciesControlled2",
                             "preLabel": "Q2. What pest/competitor species have been controlled?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -686,7 +681,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "st5SupplementaryQuestions1",
+                            "source": "tsTecHabitatIncreased",
                             "preLabel": "Q1. Area/Extent of (TS/TECs) habitat has increased?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -710,7 +705,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "st6SupplementaryQuestions1",
+                            "source": "patchConnectivityIncreased",
                             "preLabel": "Q1. Increased connectivity between patches?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -734,7 +729,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "st7SupplementaryQuestions1",
+                            "source": "breedingForagingHabitatImproved",
                             "preLabel": "Q1. Quality of breeding and foraging habitat is improved?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -758,7 +753,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "st8SupplementaryQuestions1",
+                            "source": "existingPopulationsProtected",
                             "preLabel": "Q1. Existing populations have been protected?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -782,7 +777,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "st9SupplementaryQuestions1",
+                            "source": "reintroductionsEnhancedWildPopulations",
                             "preLabel": "Q1. Re-introductions have enhanced wild populations?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -806,7 +801,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "st10SupplementaryQuestions1",
+                            "source": "climateResilienceActionsUnderway",
                             "preLabel": "Q1. Climate change resilience and adaptive capacity actions underway?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -830,7 +825,7 @@
                           {
                             "type": "textarea",
                             "width": "10%",
-                            "source": "st11SupplementaryQuestions1",
+                            "source": "firstNationsLeadingOrParticipating",
                             "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
@@ -854,7 +849,7 @@
                           {
                             "type": "select2Many",
                             "source": "csapOutcomes",
-                            "preLabel": "Which CSAP Outcomes support this project outcome?"
+                            "preLabel": "Which CSAP outcomes are supported by this project outcome?"
                           }
                         ]
                       }
@@ -879,7 +874,7 @@
               {
                 "type": "selectOne",
                 "source": "projectOutcomeAchievementDegree",
-                "title": "The degree to which the project outcome was achieved",
+                "title": "To what degree was the project outcome achieved?",
                 "rows": 5,
                 "width": "20%"
               }
@@ -889,7 +884,7 @@
             "items": [
               {
                 "source": "outcomeProgress",
-                "preLabel": "1.2 Considered collectively (based on previous responses in table 1.1), to what extent are you progressing towards the short-term project outcomes?",
+                "preLabel": "1.2 Considered collectively (based on previous responses in table 1.1), to what extent are you progressing towards the medium-term project outcomes?",
                 "type": "selectOne"
               }
             ],
@@ -984,7 +979,7 @@
             "behaviour": [
               {
                 "type": "if_expression",
-                "condition": "\"Other\" in keq3"
+                "condition": "\"Other (enable mandatory free text to define if ‘other’ selected. ‘Other’ could also be used to provide additional context for the options above.)\" in keq3"
               }
             ]
           },
@@ -1012,7 +1007,7 @@
             "behaviour": [
               {
                 "type": "if_expression",
-                "condition": "\"Other\" in keq4"
+                "condition": "\"Other (enable mandatory free text to define if ‘other’ selected. ‘Other’ could also be used to provide additional context for the options above.)\" in keq4"
               }
             ]
           },
@@ -1109,6 +1104,15 @@
           {
             "source": {
               "context-path": "owner"
+            },
+            "merge": {
+              "programSecondaryOutcomes": {
+                "deleteUnmatchedExistingRows": true,
+                "addUnmatchedNewRows": true,
+                "keys": [
+                  "outcomeStatement"
+                ]
+              }
             },
             "mapping": [
               {

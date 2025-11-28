@@ -538,7 +538,12 @@ function Documents(options) {
             var embeddedVideo = selectedDoc.embeddedVideo();
             if (embeddedVideo) {
                 val = "xssViewer";
-            } else if (listContains(contentTypes.convert.concat(contentTypes.audio, contentTypes.video, contentTypes.image, contentTypes.pdf), contentType)) {
+            }
+            // We can't convert non-public documents
+            else if (listContains(contentTypes.convert, contentType) && !ko.utils.unwrapObservable(selectedDoc.public)) {
+                val = "noPreviewViewer";
+            }
+            else if (listContains(contentTypes.convert.concat(contentTypes.audio, contentTypes.video, contentTypes.image, contentTypes.pdf), contentType)) {
                 val = "iframeViewer";
             } else {
                 val = "noPreviewViewer";
@@ -555,11 +560,10 @@ function Documents(options) {
         var val;
         if (selectedDoc) {
             var contentType = (selectedDoc.contentType() || 'application/octet-stream').toLowerCase().trim();
-            //return (selectedDoc && selectedDoc.url) ? "https://docs.google.com/viewer?url="+encodeURIComponent(selectedDoc.url)+"&embedded=true" : '';
 
             if (listContains(contentTypes.pdf, contentType)) {
                 val = fcConfig.pdfViewer + '?file=' + encodeURIComponent(selectedDoc.url);
-            } else if (listContains(contentTypes.convert, contentType)) {
+            } else if (listContains(contentTypes.convert, contentType) && ko.utils.unwrapObservable(selectedDoc.public)) {
                 val = fcConfig.pdfgenUrl+'?file='+encodeURIComponent(selectedDoc.url);
             } else if (listContains(contentTypes.image, contentType)) {
                 val = fcConfig.imgViewer + '?file=' + encodeURIComponent(selectedDoc.url);
