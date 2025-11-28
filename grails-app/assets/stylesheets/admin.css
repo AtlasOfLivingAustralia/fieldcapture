@@ -175,4 +175,27 @@ table.investment-priorities .management-units textarea {
     right:0;
 }
 
+.investment-priorities .header {
+    display: flex;
+    margin-top: 10px;
+}
+
+.investment-priorities .dataTables_length {
+    flex-grow: 1;
+}
+
+.investment-priorities .dt-buttons button {
+    --bs-btn-padding-y: 0.25rem;
+    --bs-btn-padding-x: 0.5rem;
+    --bs-btn-font-size: 0.875rem;
+    --bs-btn-border-radius: var(--bs-border-radius-sm);
+    padding-bottom: 2px;
+    margin-left: 5px;
+}
+
+
+.investment-priorities .dataTables_filter {
+    float: none;
+}
+
 

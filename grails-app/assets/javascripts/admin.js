@@ -652,7 +652,7 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
                 }
             ],
             buttons: [{extend:'copy', title:null}],
-            dom: 'lBfrtip'
+            dom: '<"header"lfB>rtip'
         });
         self.table = table;
         table.on('search.dt', function(e) {

@@ -14,7 +14,7 @@
     <asset:stylesheet src="select2-theme-bootstrap4/select2-bootstrap.css"/>
 </head>
 <body>
-<div id="wrapper" class="${containerType}">
+<div id="wrapper" class="${containerType} investment-priorities">
     <section aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><g:link controller="home">Home</g:link></li>
@@ -89,6 +89,7 @@
         </table>
     </div>
 
+
     <div id="editInvestmentPriority" class="modal" tabindex="-1"  data-bind="with:editableInvestmentPriority">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -159,6 +160,7 @@
                     </g:uploadForm>
             </div>
         </div>
+    </div>
 </div>
 
 <asset:javascript src="common-bs4.js"/>
