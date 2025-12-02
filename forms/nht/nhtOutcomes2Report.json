@@ -188,7 +188,7 @@
                 "dataType": "text",
                 "name": "projectAchievementAgainstOutcome",
                 "validate": "required,maxSize[2500]",
-                "description": "Where applicable, refer to the 'Key Threat(s)' and 'Monitoring Methodology' sections of the MERI Plan and Project Services to show how your activities support the stated outcome and align with the identified investment priority. Include any adaptive management actions planned for the project outcome at mid-term."
+                "description": "Where applicable, refer to the 'Key Threat(s)' and 'Monitoring Methodology' sections of the MERI Plan and Project Services to show how your activities support the stated outcome and align with the identified investment priority."
               },
               {
                 "dataType": "text",
@@ -577,7 +577,7 @@
                 "width": "20%",
                 "type": "col",
                 "title": "Supplementary Questions",
-                "helpText": "Additional  questions to support outcomes at the program level",
+                "helpText": "Additional questions to support outcomes at the program level. If blank please disregard.",
                 "items": [
                   {
                     "type": "row",
