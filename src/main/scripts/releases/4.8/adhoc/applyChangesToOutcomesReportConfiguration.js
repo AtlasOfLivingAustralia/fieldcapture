@@ -65,3 +65,18 @@ while (programs.hasNext()) {
     db.program.replaceOne({_id: program._id}, program);
     audit(program, program.programId, 'au.org.ala.ecodata.Program', adminUserId);
 }
+
+// Delete the old reports so they can be recreated with the new config
+let result = db.activity.deleteMany({progress:'planned', type:'NHT Outcomes 1 Report'});
+print("Deleted " + result.deletedCount + " planned NHT Outcomes 1 Report activities");
+result = db.report.deleteMany({progress:'planned', activityType:'NHT Outcomes 1 Report'});
+print("Deleted " + result.deletedCount + " planned NHT Outcomes 1 Report reports");
+result = db.report.deleteMany({progress:{$exists:false}, activityType:'NHT Outcomes 1 Report'});
+print("Deleted " + result.deletedCount + " unstarted NHT Outcomes 1 Report reports");
+
+result = db.activity.deleteMany({progress:'planned', type:'NHT Outcomes 2 Report'});
+print("Deleted " + result.deletedCount + " planned NHT Outcomes 2 Report activities");
+result = db.report.deleteMany({progress:'planned', activityType:'NHT Outcomes 2 Report'});
+print("Deleted " + result.deletedCount + " planned NHT Outcomes 2 Report reports");
+result = db.report.deleteMany({progress:{$exists:false}, activityType:'NHT Outcomes 2 Report'});
+print("Deleted " + result.deletedCount + " unstarted NHT Outcomes 2 Report reports");
