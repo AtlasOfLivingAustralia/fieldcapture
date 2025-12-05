@@ -8,16 +8,12 @@ class InvestmentPriorityRow extends geb.Module {
         name { $('td.name').text() }
         categories { $('td.categories').text() }
         managementUnits{ $('td.management-units textarea').value() }
-        editButton { $('button.edit-investment-priority') }
+        editButton { $('button[data-bind*=edit]') }
 
     }
 
-
     def edit() {
         editButton.click()
-        waitFor {
-            ManageInvestmentPriorities.addOrEditCategory.displayed
-        }
     }
 }
 
@@ -70,7 +66,7 @@ class ManageInvestmentPriorities extends ReloadablePage {
         addInvestmentPriorityButton(required:false) { $("[data-bind*=newInvestmentPriority]") }
         addOrEditCategoryButton { $("[data-bind*=showUpdateCategory]") }
         addOrEditInvestmentPriority { $('#editInvestmentPriority').module AddOrEditInvestmentPriorityModule }
-        addOrEditCategory() { $('#editCategory').module AddOrEditCategoryModule }
+        addOrEditCategory { $('#editCategory').module AddOrEditCategoryModule }
         investmentPriorityRows { investmentPrioritiesTable.$('tbody tr').moduleList{InvestmentPriorityRow} }
     }
 

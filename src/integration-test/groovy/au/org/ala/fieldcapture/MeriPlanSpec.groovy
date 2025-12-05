@@ -74,7 +74,7 @@ class MeriPlanSpec extends StubbedCasSpec {
 
         meriPlan.primaryOutcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
         waitFor {
-            meriPlan.primaryPriority.find('[value="ip1"')
+            meriPlan.primaryPriority.find('[value="ip1"]')
         }
         meriPlan.primaryPriority = "ip1"
         meriPlan.secondaryOutcomes[0].outcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"

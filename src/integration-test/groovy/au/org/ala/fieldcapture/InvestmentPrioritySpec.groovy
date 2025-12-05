@@ -1,6 +1,8 @@
 package au.org.ala.fieldcapture
 
 import pages.ManageInvestmentPriorities
+import pages.MeriPlanPDFPage
+import pages.RlpProjectPage
 
 class InvestmentPrioritySpec extends StubbedCasSpec {
 
@@ -87,5 +89,83 @@ class InvestmentPrioritySpec extends StubbedCasSpec {
         investmentPriorityRows[0].type == "species"
         investmentPriorityRows[0].categories == "Threatened Species"
         investmentPriorityRows[0].managementUnits == "Test management unit"
+    }
+
+    def "An investment priority can be edited without breaking projects that use it"() {
+        setup:
+        loginAsMeritAdmin(browser)
+
+        when: "We select an investment priority in a project MERI plan"
+        to RlpProjectPage, '1'
+        def meriPlan = openMeriPlanEditTab()
+        meriPlan.aquireEditLock()
+        waitFor {
+            hasBeenReloaded()
+        }
+        meriPlan = openMeriPlanEditTab()
+        meriPlan.primaryOutcome = "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+        waitFor {
+            meriPlan.primaryPriority.find('[value="ip1"]')
+        }
+        meriPlan.primaryPriority = "ip1"
+        meriPlan.hideFloatingSave()
+
+        meriPlan.save()
+
+        and: "We go to the Manage Investment Priorities page to edit the investment priority"
+        to ManageInvestmentPriorities
+        investmentPrioritiesTable.search("Ginini Flats", 1)
+        investmentPriorityRows[0].edit()
+
+        then:
+        waitFor{addOrEditInvestmentPriority.displayed}
+        addOrEditInvestmentPriority.name == "Ginini Flats Wetland Complex"
+
+        when:
+        addOrEditInvestmentPriority.name = "Ginini Flats Wetland Complex - EDITED"
+        addOrEditInvestmentPriority.type = "Ramsar"
+        addOrEditInvestmentPriority.categories = ["Ramsar"]
+        addOrEditInvestmentPriority.managementUnits = ["Test management unit"]
+        addOrEditInvestmentPriority.save()
+
+        then:
+        waitFor{hasBeenReloaded()}
+
+        when:
+        investmentPrioritiesTable.search("Ginini", 1)
+
+        then:
+        getInvestmentPrioritiesCount() == 1
+        investmentPriorityRows[0].name == "Ginini Flats Wetland Complex - EDITED"
+        investmentPriorityRows[0].type == "Ramsar"
+        investmentPriorityRows[0].categories == "Ramsar"
+        investmentPriorityRows[0].managementUnits == "Test management unit"
+
+        when:
+        to RlpProjectPage, '1'
+        openMERIPlanTab()
+
+        then:
+        meriPlanTabContent.primaryOutcome().text() == "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+        meriPlanTabContent.primaryPriority().text() == "Ginini Flats Wetland Complex - EDITED"
+
+        when:
+        meriPlan = openMeriPlanEditTab()
+
+        then:
+        meriPlan.primaryOutcome == "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+        meriPlan.primaryPriority == "ip1"
+
+        when:
+        meriPlan.generatePDF()
+
+        then:
+        withWindow([close:true],"meri-plan-report") {
+            at MeriPlanPDFPage
+            page.closePrintInstructions()
+            page.meriPlan.primaryOutcome.text() == "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+            page.meriPlan.primaryPriority.text() == "Ginini Flats Wetland Complex - EDITED"
+        }
+
     }
 }
