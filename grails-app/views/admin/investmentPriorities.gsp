@@ -57,10 +57,10 @@
             </thead>
             <tbody data-bind="foreach: investmentPriorities">
             <tr>
-                <td class="Customize Toolbar…">
+                <td class="investment-priority-id">
                     <span data-bind="text:investmentPriorityId"></span>
                 </td>
-                <td class="name">
+                <td class="type">
                     <span data-bind="text:type"></span>
                 </td>
                 <td class="name">
@@ -74,7 +74,7 @@
                 </td>
 
                 <td class="actions">
-                    <button class="btn btn-mini editTag" title="Edit this investment priority" type="button" data-bind="click:$parent.edit"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-mini edit-investment-priority" title="Edit this investment priority" type="button" data-bind="click:$parent.edit"><i class="fa fa-edit"></i></button>
                 </td>
             </tr>
             </tbody>
@@ -116,7 +116,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="management-unit" class="form-label">Management units <fc:iconHelp>If a project is assigned to a Management Unit, only investment priorities in that management unit will be available for selection.  Leave this blank for investment priorities that should be available in all management units</fc:iconHelp></label>
-                            <select title="Management unit/s in which this investment priority occurs"
+                            <select id="management-unit"
+                                    title="Management unit/s in which this investment priority occurs"
                                     style="width:100%" <%-- select 2 needs this hint --%>
                                     multiple="multiple" class="form-select form-select-sm"
                                     data-bind="options: $parent.availableManagementUnits, optionsValue:'managementUnitId', optionsText:'name', enabled: editable(), multiSelect2:{value: managementUnits}"></select>
@@ -155,7 +156,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button id="btnUpdateProjectOrgs" class="btn btn-sm btn-info" title="Bulk create organisations">Upload</button>
+                    <button id="upload" class="btn btn-sm btn-info" title="Add or update investment priorities">Upload</button>
                 </div>
                     </g:uploadForm>
             </div>
