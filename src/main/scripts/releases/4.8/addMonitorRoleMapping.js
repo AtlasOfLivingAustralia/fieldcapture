@@ -74,7 +74,9 @@ let roleMapping = {
             "f01e0673-a29d-48bb-b6ce-cf1c0f0de345": true,
             "e15db26f-55de-4459-841b-d7ef87dea5cd": true,
             "7a5c91dd-8042-4b4e-bbe0-229bcb490105": true,
-            "bbd550c0-04c5-4a8c-ae39-cc748e920fd4": true
+            "bbd550c0-04c5-4a8c-ae39-cc748e920fd4": true,
+            "58ae091e-d36d-47b2-bbcc-6798077f61bd": true,
+            "29de46fe-d810-4832-a26a-c64ec4a93b14": true
         },
         "write": {
             "a9cb9e38-690f-41c9-8151-06108caf539d": false,
@@ -150,7 +152,9 @@ let roleMapping = {
             "f01e0673-a29d-48bb-b6ce-cf1c0f0de345": true,
             "e15db26f-55de-4459-841b-d7ef87dea5cd": true,
             "7a5c91dd-8042-4b4e-bbe0-229bcb490105": true,
-            "bbd550c0-04c5-4a8c-ae39-cc748e920fd4": true
+            "bbd550c0-04c5-4a8c-ae39-cc748e920fd4": true,
+            "58ae091e-d36d-47b2-bbcc-6798077f61bd": true,
+            "29de46fe-d810-4832-a26a-c64ec4a93b14": true
         }
     },
     "project_admin": {
@@ -228,7 +232,9 @@ let roleMapping = {
             "f01e0673-a29d-48bb-b6ce-cf1c0f0de345": true,
             "e15db26f-55de-4459-841b-d7ef87dea5cd": true,
             "7a5c91dd-8042-4b4e-bbe0-229bcb490105": true,
-            "bbd550c0-04c5-4a8c-ae39-cc748e920fd4": true
+            "bbd550c0-04c5-4a8c-ae39-cc748e920fd4": true,
+            "58ae091e-d36d-47b2-bbcc-6798077f61bd": true,
+            "29de46fe-d810-4832-a26a-c64ec4a93b14": true
         },
         "write": {
             "a9cb9e38-690f-41c9-8151-06108caf539d": true,
@@ -304,7 +310,9 @@ let roleMapping = {
             "f01e0673-a29d-48bb-b6ce-cf1c0f0de345": true,
             "e15db26f-55de-4459-841b-d7ef87dea5cd": true,
             "7a5c91dd-8042-4b4e-bbe0-229bcb490105": true,
-            "bbd550c0-04c5-4a8c-ae39-cc748e920fd4": true
+            "bbd550c0-04c5-4a8c-ae39-cc748e920fd4": true,
+            "58ae091e-d36d-47b2-bbcc-6798077f61bd": true,
+            "29de46fe-d810-4832-a26a-c64ec4a93b14": true
         }
     },
     "determiner": {
@@ -382,7 +390,9 @@ let roleMapping = {
             "aef60217-aad7-4bff-87c5-c0f4d5048f70": false,
             "b92005b0-f418-4208-8671-58993089f587": false,
             "e9dd9bb9-6e65-4f22-8dfd-98d88afedf33": false,
-            "f01e0673-a29d-48bb-b6ce-cf1c0f0de345": false
+            "f01e0673-a29d-48bb-b6ce-cf1c0f0de345": false,
+            "58ae091e-d36d-47b2-bbcc-6798077f61bd": false,
+            "29de46fe-d810-4832-a26a-c64ec4a93b14": false
         },
         "write": {
             "a9cb9e38-690f-41c9-8151-06108caf539d": false,
@@ -458,7 +468,9 @@ let roleMapping = {
             "aef60217-aad7-4bff-87c5-c0f4d5048f70": false,
             "b92005b0-f418-4208-8671-58993089f587": false,
             "e9dd9bb9-6e65-4f22-8dfd-98d88afedf33": false,
-            "f01e0673-a29d-48bb-b6ce-cf1c0f0de345": false
+            "f01e0673-a29d-48bb-b6ce-cf1c0f0de345": false,
+            "58ae091e-d36d-47b2-bbcc-6798077f61bd": false,
+            "29de46fe-d810-4832-a26a-c64ec4a93b14": false
         }
     },
     "curator": {
@@ -536,7 +548,9 @@ let roleMapping = {
             "f01e0673-a29d-48bb-b6ce-cf1c0f0de345": true,
             "e15db26f-55de-4459-841b-d7ef87dea5cd": true,
             "7a5c91dd-8042-4b4e-bbe0-229bcb490105": true,
-            "bbd550c0-04c5-4a8c-ae39-cc748e920fd4": true
+            "bbd550c0-04c5-4a8c-ae39-cc748e920fd4": true,
+            "58ae091e-d36d-47b2-bbcc-6798077f61bd": true,
+            "29de46fe-d810-4832-a26a-c64ec4a93b14": true
         },
         "write": {
             "a9cb9e38-690f-41c9-8151-06108caf539d": true,
@@ -612,7 +626,9 @@ let roleMapping = {
             "f01e0673-a29d-48bb-b6ce-cf1c0f0de345": true,
             "e15db26f-55de-4459-841b-d7ef87dea5cd": true,
             "7a5c91dd-8042-4b4e-bbe0-229bcb490105": true,
-            "bbd550c0-04c5-4a8c-ae39-cc748e920fd4": true
+            "bbd550c0-04c5-4a8c-ae39-cc748e920fd4": true,
+            "58ae091e-d36d-47b2-bbcc-6798077f61bd": true,
+            "29de46fe-d810-4832-a26a-c64ec4a93b14": true
         }
     }
 }
@@ -621,4 +637,12 @@ let roleMappingSetting = {
     key: 'paratoo.roleProtocol.mapping',
     value: JSON.stringify(roleMapping)
 }
-db.setting.insertOne(roleMappingSetting);
+if (db.setting.findOne({ key: roleMappingSetting.key })) {
+    db.setting.replaceOne({ key: roleMappingSetting.key }, roleMappingSetting);
+    print('Updated existing role protocol mapping setting.');
+}
+else {
+    db.setting.insertOne(roleMappingSetting);
+    print('Inserted role protocol mapping setting.');
+}
+
