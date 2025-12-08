@@ -1892,7 +1892,7 @@ function OutcomesViewModel(outcomes, config) {
         let investmentPriority = _.find(config.priorities, function(priority) {
             return priority.investmentPriorityId === id;
         });
-        return investmentPriority ? investmentPriority.name : '<cannot find investement prioririty>';
+        return investmentPriority ? investmentPriority.name : investmentPriority;
     };
 
     var supportsConfiguration = function(outcomeText, configItemName) {
