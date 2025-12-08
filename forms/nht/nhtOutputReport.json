@@ -38376,6 +38376,12 @@
                     "name": "testingObjective",
                     "description": "How will the information obtained from the tests be used?",
                     "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "numberOfSoilTestsConducted",
+                    "description": "Please enter the number of soil tests included in this data set?",
+                    "validate": "required,min[0]"
                   }
                 ],
                 "minSize": 1
@@ -38564,6 +38570,66 @@
             ]
           },
           {
+            "dataType": "number",
+            "name": "totalSoilTestsBaseline",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
+            "validate": "min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(numberOfSoilTestsConducted, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalSoilTestsBaselineInvoiced",
+            "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "totalSoilTestsBaseline",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": ""
+          },
+          {
+            "dataType": "number",
+            "name": "totalSoilTestsIndicator",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
+            "validate": "min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(numberOfSoilTestsConducted, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalSoilTestsIndicatorInvoiced",
+            "validate": [
+              {
+                "rule": "required"
+              },
+              {
+                "rule": "min[0]"
+              },
+              {
+                "param": {
+                  "expression": "totalSoilTestsIndicator",
+                  "type": "computed"
+                },
+                "rule": "max"
+              }
+            ],
+            "defaultValue": ""
+          },
+          {
             "dataType": "text",
             "name": "comments",
             "validate": "maxSize[1500]"
@@ -38686,7 +38752,7 @@
                 "items": [
                   {
                     "type": "col",
-                    "css": "span4 col-border-right",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
                         "type": "row",
@@ -38712,13 +38778,13 @@
                   },
                   {
                     "type": "col",
-                    "css": "span4 col-border-right",
+                    "css": "span3 col-border-right",
                     "items": [
                       {
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "(iii)  Total Number of  indicator soil testing surveys completed for this reporting period",
+                            "preLabel": "(iii)  Total Number of indicator soil testing surveys completed for this reporting period",
                             "source": "totalSurveyIndicator",
                             "type": "number"
                           }
@@ -38730,6 +38796,58 @@
                           {
                             "preLabel": "(iv) Total Number of indicator soil testing surveys <u><i>invoiced</i></u> for this reporting period",
                             "source": "totalSurveyIndicatorInvoiced",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(iii)  Total Number of baseline soil tests completed for this reporting period",
+                            "source": "totalSoilTestsBaseline",
+                            "type": "number"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(iv) Total Number of baseline soil tests <u><i>invoiced</i></u> for this reporting period",
+                            "source": "totalSoilTestsBaselineInvoiced",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(iii)  Total Number of indicator soil tests completed for this reporting period",
+                            "source": "totalSoilTestsIndicator",
+                            "type": "number"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "preLabel": "(iv) Total Number of indicator soil tests <u><i>invoiced</i></u> for this reporting period",
+                            "source": "totalSoilTestsIndicatorInvoiced",
                             "type": "number"
                           }
                         ]
@@ -39073,6 +39191,22 @@
                                     "source": "testingObjective",
                                     "preLabel": "Testing objective",
                                     "type": "textarea"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "col",
+                            "css": "span3 col-border-right",
+                            "items": [
+                              {
+                                "type": "row",
+                                "items": [
+                                  {
+                                    "source": "numberOfSoilTestsConducted",
+                                    "preLabel": "Number of soil tests included in this data set",
+                                    "type": "number"
                                   }
                                 ]
                               }
