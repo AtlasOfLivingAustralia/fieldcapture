@@ -76,92 +76,13 @@
                 "validate": "required"
               },
               {
-                "dataType": "text",
-                "name": "st1SupplementaryQuestions1"
+                "dataType": "number",
+                "name": "effectivePestControlPercentage",
+                "validate": "min[0],max[100]"
               },
               {
                 "dataType": "text",
-                "name": "st1SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st2SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st2SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st3SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st3SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st4SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st4SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st5SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st5SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st6SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st6SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st7SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st7SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st8SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st8SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st9SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st9SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st10SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st10SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st11SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st11SupplementaryQuestions2"
+                "name": "pestCompetitorSpeciesControlled"
               },
               {
                 "dataType": "stringList",
@@ -185,7 +106,7 @@
                 "dataType": "text",
                 "name": "projectAchievementAgainstOutcome",
                 "validate": "required,maxSize[2500]",
-                "description": "Where applicable, refer to the 'Key Threat(s)' and 'Monitoring Methodology' sections of the MERI Plan and Project Services to show how your activities support the stated outcome and align with the identified investment priority. Include any adaptive management actions planned for the project outcome at mid-term."
+                "description": "Where applicable, refer to the 'Key Threat(s)' and 'Monitoring Methodology' sections of the MERI Plan and Project Services to show how your activities support the stated outcome and align with the identified investment priority."
               },
               {
                 "dataType": "text",
@@ -551,14 +472,14 @@
                 "width": "20%",
                 "type": "col",
                 "title": "Supplementary Questions",
-                "helpText": "Additional  questions to support outcomes at the program level",
+                "helpText": "Additional questions to support outcomes at the program level. If blank please disregard.",
                 "items": [
                   {
                     "type": "row",
                     "behaviour": [
                       {
                         "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Managing Threats - Pest predator an competitor species have been controlled or are under active, long-term control programs\""
+                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Managing Threats - Pest predator and competitor species have been controlled or are under active, long-term control programs\" or relatedProgramOutcome == \"2. World Heritage Protection (Short term): Managing threats - Pest predator and competitor species have been controlled\" or relatedProgramOutcome == \"3. Ramsar Wetland Protection (Short term): Managing Threats - Pest predator and competitor species have been controlled \""
                       }
                     ],
                     "items": [
@@ -566,271 +487,17 @@
                         "type": "col",
                         "items": [
                           {
-                            "type": "textarea",
+                            "type": "text",
                             "width": "10%",
-                            "source": "st1SupplementaryQuestions1",
+                            "source": "effectivePestControlPercentage",
                             "preLabel": "Q1. Over the project area, what is the reduction in pest/competitor species that were effectively controlled (0-100) %",
                             "rows": 4,
                             "fullWidthLabelAbove": true
                           },
                           {
                             "type": "textarea",
-                            "source": "st1SupplementaryQuestions2",
+                            "source": "pestCompetitorSpeciesControlled",
                             "preLabel": "Q2. What pest/competitor species have been controlled?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Managing Threats - Threats from disease have been contained, reduced or excluded\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st2SupplementaryQuestions1",
-                            "preLabel": "Q1. Threats from disease have been contained?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          },
-                          {
-                            "type": "textarea",
-                            "source": "st2SupplementaryQuestions2",
-                            "preLabel": "Q2. Managing Threats?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Improving habitat - Land management practices have improved\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st3SupplementaryQuestions1",
-                            "preLabel": "Q1. Land management practices have improved?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Improving habitat - Quality of (TS/TECs) habitat has improved\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st4SupplementaryQuestions1",
-                            "preLabel": "Q1. Over the project area, what is the reduction in pest/competitor species that were effectively controlled (0-100) %",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          },
-                          {
-                            "type": "textarea",
-                            "source": "st4SupplementaryQuestions2",
-                            "preLabel": "Q2. What pest/competitor species have been controlled?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Improving habitat - Area/Extent of (TS/TECs) habitat has increased\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st5SupplementaryQuestions1",
-                            "preLabel": "Q1. Area/Extent of (TS/TECs) habitat has increased?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Improving habitat - Increased connectivity between patches\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st6SupplementaryQuestions1",
-                            "preLabel": "Q1. Increased connectivity between patches?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Improving habitat - Quality of breeding and foraging habitat is improved\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st7SupplementaryQuestions1",
-                            "preLabel": "Q1. Quality of breeding and foraging habitat is improved?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Creating insurance populations - Existing populations have been protected\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st8SupplementaryQuestions1",
-                            "preLabel": "Q1. Existing populations have been protected?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Creating insurance populations - Re-introductions have enhanced wild populations\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st9SupplementaryQuestions1",
-                            "preLabel": "Q1. Re-introductions have enhanced wild populations?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st10SupplementaryQuestions1",
-                            "preLabel": "Q1. Climate change resilience and adaptive capacity actions underway?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in recovery activities\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st11SupplementaryQuestions1",
-                            "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
                           }
@@ -1108,6 +775,15 @@
           {
             "source": {
               "context-path": "owner"
+            },
+            "merge": {
+              "programSecondaryOutcomes": {
+                "deleteUnmatchedExistingRows": true,
+                "addUnmatchedNewRows": true,
+                "keys": [
+                  "outcomeStatement"
+                ]
+              }
             },
             "mapping": [
               {
