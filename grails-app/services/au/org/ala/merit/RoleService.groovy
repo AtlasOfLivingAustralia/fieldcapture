@@ -110,6 +110,11 @@ class RoleService {
         return allRoles
     }
 
+    /** Projects supporting the monitor app need additional roles not available to other projects */
+    List getMonitorRoles() {
+        return [PROJECT_DETERMINER_SURVEYOR_ROLE, PROJECT_MODERATOR_ROLE, PROJECT_DETERMINER_ROLE, PROJECT_SURVEYOR_ROLE]
+    }
+
     List getAugmentedRoles() {
         List rolesCopy = new ArrayList(MERIT_PROJECT_ROLES)
         rolesCopy.add(ALA_ADMIN_ROLE)

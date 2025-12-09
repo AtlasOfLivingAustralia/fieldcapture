@@ -4,6 +4,11 @@
 
 function initialise(roles, currentUserId, hubId, containerId) {
 
+    function roleLabel(role) {
+        var defaultLabel = decodeCamelCase(role).replace('Case', 'Grant');
+        var label = $i18n('label.role'+role, defaultLabel);
+        return label;
+    }
     var tableSelector = "#"+containerId
     $('#alert').hide();
     var col = [
@@ -30,7 +35,7 @@ function initialise(roles, currentUserId, hubId, containerId) {
                 });
                 $.each(roles, function (i, value) {
                     var $option = $("<option></option>", {
-                        "text": decodeCamelCase(value).replace('Case', 'Grant'),
+                        "text": roleLabel(value),
                         "value": value
                     });
                     if (data === value) {
@@ -94,10 +99,11 @@ function initialise(roles, currentUserId, hubId, containerId) {
 
         var message;
         if (userId == currentUserId) {
-            message = "<span class='label label-important'>Important</span><p><b>If you modify your access level you may need assistance to get it back.</b></p><p>Are you sure you want to change your access from " + decodeCamelCase(currentRole) + " to " + decodeCamelCase(role) + "?</p>";
+            message = "<span class='label label-important'>Important</span><p><b>If you modify your access level you may need assistance to get it back.</b></p><p>Are you sure you want to change your access from " + roleLabel(currentRole) + " to " + roleLabel(role) + "?</p>";
         }
         else {
-            message = "Are you sure you want to change this user's access from " + decodeCamelCase(currentRole) + " to " + decodeCamelCase(role) + "?";
+            message = "Are you sure you want to change this user's access from " + roleLabel(currentRole) + " to " + roleLabel(role) + "?";
+            message = "Are you sure you want to change this user's access from " + roleLabel(currentRole) + " to " + roleLabel(role) + "?";
         }
 
         bootbox.confirm(message, function (result) {
