@@ -108,7 +108,7 @@ class ProjectController {
                 project.projectSite = project.sites?.find { it.siteId == project.projectSiteId }
                 List roles = roleService.getRoles()
                 if (config.supportsParatoo) {
-                    roles = roles + [RoleService.PROJECT_SURVEYOR_ROLE, RoleService.PROJECT_DETERMINER_ROLE]
+                    roles = roles + [RoleService.PROJECT_MODERATOR_ROLE, RoleService.PROJECT_DETERMINER_SURVEYOR_ROLE, RoleService.PROJECT_SURVEYOR_ROLE, RoleService.PROJECT_DETERMINER_ROLE]
                 }
 
                 def members = projectService.getMembersForProjectId(id)

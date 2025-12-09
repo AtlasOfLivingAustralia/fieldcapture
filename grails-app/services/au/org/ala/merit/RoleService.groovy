@@ -31,6 +31,13 @@ class RoleService {
     public static final String PROJECT_FC_OFFICER_ROLE = 'ROLE_FC_OFFICER'
     public static final String PROJECT_FC_ADMIN_ROLE = 'ROLE_FC_ADMIN'
     public static final String PROJECT_SURVEYOR_ROLE = 'projectParticipant'
+
+    /**
+     * This role supports the combined permissions of the determiner and project participant roles for
+     * use by the Monitor app.
+     */
+    public static final String PROJECT_DETERMINER_SURVEYOR_ROLE = 'determinerParticipant'
+
     /**
      * The moderator role is used to support the Monitor determiner role when a project
      * admin also needs to be able to access/submit identifications/determinations for field observations.
@@ -67,7 +74,7 @@ class RoleService {
 
     public static final String HUB_SUPPORT_OFFICER_ROLE = 'supportOfficer'
 
-    private static final List MERIT_PROJECT_ROLES = [GRANT_MANAGER_ROLE, PROJECT_MODERATOR_ROLE, PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE, PROJECT_DETERMINER_ROLE, PROJECT_READ_ONLY_ROLE]
+    private static final List MERIT_PROJECT_ROLES = [GRANT_MANAGER_ROLE, PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE, PROJECT_READ_ONLY_ROLE]
     public static final List MERIT_HUB_ROLES = [HUB_ADMIN_ROLE, HUB_SUPPORT_OFFICER_ROLE, HUB_OFFICER_ROLE, HUB_READ_ONLY_ROLE]
 
     /** Granted to ALA developers, gives access to all functions in MERIT */
@@ -116,7 +123,7 @@ class RoleService {
     }
 
     Set getAllowedUserRoles() {
-        return new HashSet([PROJECT_MODERATOR_ROLE, PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE, PROJECT_SURVEYOR_ROLE, PROJECT_DETERMINER_ROLE])
+        return new HashSet([PROJECT_MODERATOR_ROLE, PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE, PROJECT_DETERMINER_SURVEYOR_ROLE, PROJECT_SURVEYOR_ROLE, PROJECT_DETERMINER_ROLE])
     }
 
 }
