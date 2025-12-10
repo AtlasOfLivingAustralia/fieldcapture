@@ -9,7 +9,8 @@
             loadPermissionsUrl: "${createLink(controller:'user', action:'getMembersOfHub')}",
             getMembersForHubPaginatedUrl: "${createLink(controller: 'user', action: 'getMembersForHubPaginated')}",
             removeHubUserUrl: "${createLink(controller: 'user', action: 'removeUserWithHubRole')}",
-            updateHubUser: "${createLink(controller: 'user', action: 'addUserToHub')}"
+            updateHubUser: "${createLink(controller: 'user', action: 'addUserToHub')}",
+            i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
