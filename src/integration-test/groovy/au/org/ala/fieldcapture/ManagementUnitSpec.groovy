@@ -239,8 +239,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
        adminTabPane.adminColumn[1].text() == "Permissions"
        adminTabPane.adminColumn[2].text() == "Documents"
        adminTabPane.adminColumn[3].text() == "Reporting"
-       adminTabPane.adminColumn[4].text() == "Priorities"
-       adminTabPane.adminColumn[5].text() == "Configuration"
+       adminTabPane.adminColumn[4].text() == "Configuration"
     }
 
     def "Permissions and Documents pages in the admin tab is visible to users with Site Read Only Access role"() {
