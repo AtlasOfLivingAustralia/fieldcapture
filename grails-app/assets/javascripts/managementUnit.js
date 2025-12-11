@@ -173,10 +173,7 @@ var ManagementUnitPageViewModel = function(props, options) {
     var reportService = new ReportService(options)
 
     var config = props.config || {};
-    var priorities = props.priorities || [];
-
     self.config = ko.observable(vkbeautify.json(config));
-    self.priorities = ko.observable(vkbeautify.json(priorities));
 
     var projectOutputReportCategory = 'Outputs Reporting';
     /**
@@ -313,20 +310,6 @@ var ManagementUnitPageViewModel = function(props, options) {
             bootbox.alert("Management Unit configuration saved");
         });
 
-    };
-
-    self.saveManagementUnitPriorities = function() {
-        var priorities;
-        try {
-            priorities = JSON.parse(self.priorities());
-        }
-        catch (e) {
-            bootbox.alert("Invalid JSON");
-            return;
-        }
-        saveManagementUnit({priorities:priorities}).done(function() {
-            bootbox.alert("Management Unit priorities saved!");
-        });
     };
 
      self.createHeatmapOfSites = function(map){
