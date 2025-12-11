@@ -108,8 +108,6 @@
         </div>
 
         <div class="tab-pane" id="outcomes">
-            <h4 style="display:inline-block">Program outcomes</h4> <button class="btn btn-success float-end" data-bind="click:saveProgramOutcomes">Save Outcomes</button>
-
             <g:render template="programOutcomes"/>
         </div>
 

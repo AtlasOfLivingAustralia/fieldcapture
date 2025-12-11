@@ -113,7 +113,8 @@ enum SettingPageType {
     SESSION_TIMEOUT_WARNING('sessionTimeoutWarning', 'Banner message when a user session has timed out', 'sessionTimeoutWarning'),
     NETWORK_LOST_WARNING('networkLostWarning', 'Banner message when MERIT detects the network connection to the server is unavailable', 'networkLostWarning'),
     LAYERS_FOR_KNOWN_SHAPES('knownShapes', 'Configuration for the known shapes selection on the sites page', 'sites.knownShapesConfig'),
-    ECODATA_API_DOCUMENTATION('ecodataApiDocumentation', 'Link to the EcoData API documentation', 'ecodata.api.documentation')
+    ECODATA_API_DOCUMENTATION('ecodataApiDocumentation', 'Link to the EcoData API documentation', 'ecodata.api.documentation'),
+    PROGRAM_OUTCOMES_DESCRIPTION('programOutcomesDescription', 'Description for the Program Outcomes section on the project plan page', 'programOutcomes.description')
     String name
     String title
     String key

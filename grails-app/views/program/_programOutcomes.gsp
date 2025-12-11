@@ -1,3 +1,10 @@
+<h4 style="display:inline-block">Program outcomes</h4>
+
+<p>
+    <fc:getSettingContent settingType="au.org.ala.merit.SettingPageType.PROGRAM_OUTCOMES_DESCRIPTION"/>
+</p>
+<button class="btn btn-success float-end" data-bind="click:saveProgramOutcomes">Save Outcomes</button>
+
 <table class="table">
     <thead>
     <tr>
@@ -6,7 +13,7 @@
         <th class="outcome-type">Type <fc:iconHelp>Whether this can be selected as a project primary, secondary, medium term or short term outcome</fc:iconHelp></th>
         <th class="outcome-short-description">Short description <fc:iconHelp>This description represents this outcome on the program and management unit page overview tab</fc:iconHelp></th>
         <th class="outcome-category">Category <fc:iconHelp>Used to group outcomes into categories that can be used for data aggregation and reporting</fc:iconHelp></th>
-        <th class="outcome-priorities">Investment priorities <fc:iconHelp>The categories of investment priorities that are related to this outcome.  Projects using the outcome will only be able to select investment priorities from these categories.</fc:iconHelp></th>
+        <th class="outcome-priorities">Investment priority categories <fc:iconHelp>The categories of investment priorities that are related to this outcome.  Projects using the outcome will only be able to select investment priorities from these categories.</fc:iconHelp></th>
     </tr>
     </thead>
     <tbody>
