@@ -3,7 +3,7 @@
     <table id="projectList" class="table table-striped table-bordered">
         <thead class="thead-light">
         <th class="projectId">${g.message(code:'label.merit.projectID')}</th>
-        <th class="internalOrderId"><g:message code="label.externalId.INTERNAL_ORDER_NUMBER"/> / <g:message code="label.externalId.TECH_ONE_CODE"/></th>
+        <th class="internalOrderId"><g:message code="label.externalId.INTERNAL_ORDER_NUMBER"/> / <br/><g:message code="label.externalId.TECH_ONE_CODE"/> / <br/><g:message code="label.externalId.GRANT_AWARD"/></th>
         <th class="name">Name</th>
         <th class="startDate">Start Date</th>
         <th class="endDate">End Date</th>
@@ -16,6 +16,7 @@
                 <td class="internalOrderId">
                     <fc:externalIds externalIds="${project.externalIds}" idType="INTERNAL_ORDER_NUMBER"/>
                     <fc:externalIds externalIds="${project.externalIds}" idType="TECH_ONE_CODE"/>
+                    <fc:externalIds externalIds="${project.externalIds}" idType="GRANT_AWARD"/>
                 </td>
                 <td class="name">${project.name?.encodeAsHTML()}</td>
                 <td class="startDate">${au.org.ala.merit.DateUtils.isoToDisplayFormat(project.plannedStartDate)}</td>

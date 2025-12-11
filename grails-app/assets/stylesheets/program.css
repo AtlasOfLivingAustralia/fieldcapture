@@ -11,21 +11,21 @@ table#projectList .projectId {
     width: 10%;
 }
 table#projectList .internalOrderId {
-    width: 10%;
+    width: 15%;
 }
 table#projectList .name {
     width: 45%;
 }
 table#projectList .startDate {
-    width: 10%;
+    width: 8%;
     min-width:4em;
 }
 table#projectList .endDate {
-    width: 10%;
+    width: 8%;
     min-width:4em;
 }
 table#projectList .statusCol {
-    width: 15%;
+    width: 8%;
 }
 
 #addSocialMedia {

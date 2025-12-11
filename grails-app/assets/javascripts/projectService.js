@@ -304,7 +304,7 @@ function ProjectService(project, options) {
 
     /** The list of external ids needs to include at least one SAP Internal Order or one Tech One Project Code */
     self.areExternalIdsValid = function(externalIds) {
-        var requiredIdTypes = ['INTERNAL_ORDER_NUMBER', 'TECH_ONE_CODE'];
+        var requiredIdTypes = ['INTERNAL_ORDER_NUMBER', 'TECH_ONE_CODE', 'GRANT_AWARD'];
         return _.find(externalIds, function (externalId) {
             var typeMatches = _.contains(requiredIdTypes, externalId.idType);
             return typeMatches && externalId.externalId && externalId.externalId.length > 0;

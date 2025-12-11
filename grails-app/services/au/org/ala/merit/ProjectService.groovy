@@ -531,7 +531,7 @@ class ProjectService  {
 
     /** The list of external ids needs to include at least one SAP Internal Order or one Tech One Project Code */
     private boolean validateExternalIds(List externalIds) {
-        List requiredIdTypes = ["INTERNAL_ORDER_NUMBER", "TECH_ONE_CODE"]
+        List requiredIdTypes = ["INTERNAL_ORDER_NUMBER", "TECH_ONE_CODE", "GRANT_AWARD"]
         externalIds?.find{it.idType in requiredIdTypes && it.externalId}
     }
 
