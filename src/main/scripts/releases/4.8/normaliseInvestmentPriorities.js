@@ -137,7 +137,7 @@ while (projects.hasNext()) {
 
     replaceInvestmentPrioritiesWithIds(project);
 
-    replaceInvestmentPrioritiesInReportsForProject(project, reportPathsByType);
+    //replaceInvestmentPrioritiesInReportsForProject(project, reportPathsByType);
 
 }
 const projectUrl = 'https://fieldcapture.ala.org.au/project/index/';
