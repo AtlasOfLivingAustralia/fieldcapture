@@ -1,7 +1,7 @@
 <h4 style="display:inline-block">Program outcomes</h4>
 
 <p>
-    <fc:getSettingContent settingType="au.org.ala.merit.SettingPageType.PROGRAM_OUTCOMES_DESCRIPTION"/>
+    <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.PROGRAM_OUTCOMES_DESCRIPTION}"/>
 </p>
 <button class="btn btn-success float-end" data-bind="click:saveProgramOutcomes">Save Outcomes</button>
 
