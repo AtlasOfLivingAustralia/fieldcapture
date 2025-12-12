@@ -2,7 +2,7 @@ print("This script is expected to be executed with a working directory containin
 print("Current working dir: "+process.cwd());
 load('../data_common/loadMeritHub.js');
 load('../data_common/insertData.js');
-
+load('../data_common/createInvestmentPriorities.js')
 var blog1 = {
     "content": "blog test",
     "keepOnTop" : true,
@@ -49,16 +49,19 @@ var outcomes = [
     {
         outcome:'outcome 1',
         shortDescription: 'o1',
-        type:'primary'
+        type:'primary',
+        priorityCategories:['Threatened Species']
     },
     {
         outcome:'outcome 2',
-        shortDescription: 'o2'
+        shortDescription: 'o2',
+        priorityCategories:['Ramsar', 'Threatened Ecological Communities' ]
     },
     {
         outcome:'outcome 3',
         shortDescription: 'o3',
-        type:'secondary'
+        type:'secondary',
+        priorityCategories: ['Sustainable Agriculture']
     }
 ];
 createProgram({name:'New Test Program', parent:null, programId:'new_test_Program'})

@@ -111,6 +111,7 @@
         var program =<fc:modelAsJavascript model="${program}"/>;
         var config = _.extend({reportingConfigSelector:'#reporting form'}, fcConfig);
         <g:if test="${content.admin.visible}">
+        config.priorityCategories = <fc:modelAsJavascript model="${content.admin.priorityCategories}" default="[]"/>;
         config.outcomesInUse = <fc:modelAsJavascript model="${content.admin.outcomesInUse}" default="[]"/>;
         </g:if>
 

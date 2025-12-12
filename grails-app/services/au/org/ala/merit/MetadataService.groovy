@@ -368,7 +368,7 @@ class MetadataService {
 
     @Cacheable("investmentPriorityCategories")
     List<String> getInvestmentPriorityCategories() {
-        findInvestmentPriorities().collect{it.categories}.unique()
+        findInvestmentPriorities().collect{it.categories}.flatten().unique()
     }
 
     Map saveInvestmentPriority(Map investmentPriority) {

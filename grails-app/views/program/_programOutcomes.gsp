@@ -5,7 +5,7 @@
 </p>
 <button class="btn btn-success float-end" data-bind="click:saveProgramOutcomes">Save Outcomes</button>
 
-<table class="table">
+<table class="table outcomes-table">
     <thead>
     <tr>
         <th class="outcome-actions"><fc:iconHelp>Use icons in this column to delete an outcome</fc:iconHelp></th>
@@ -18,18 +18,14 @@
     </thead>
     <tbody>
         <!-- ko foreach: outcomes -->
-        <tr>
+        <tr class="program-outcome">
             <td class="outcome-actions"><i class="fa fa-remove" data-bind="visible:!isReadOnly, click:$parent.removeOutcome"></i></td>
             <td class="outcome-description">
                 <textarea rows="4" title="Outcome description" class="form-control form-control-sm" name="outcome" data-bind="enable:!isReadOnly, value:outcome"></textarea>
             </td>
             <td class="outcome-type">
-                <select title="Outcome type" class="form-control form-control-sm" name="type" data-bind="enable:!isReadOnly, value:type">
-                    <option value="">Primary and/or secondary</option>
-                    <option value="primary">Primary only</option>
-                    <option value="secondary">Secondary only</option>
-                    <option value="medium">Medium term</option>
-                    <option value="short">Short term</option>
+                <select title="Outcome type" class="form-control form-control-sm" name="type" data-bind="enable:!isReadOnly, options:typeOptions, optionsText:'label', optionsValue:'value', value:type">
+
                 </select>
             </td>
             <td class="outcome-short-description">
@@ -39,7 +35,7 @@
                 <input title="Outcome category" class="form-control form-control-sm" name="category" data-bind="value:category">
             </td>
             <td class="outcome-priorities">
-                <select title="Investment priority categories associated with this outcome" multiple="multiple" class="form-control form-control-sm" style="width:100%" name="priorities" data-bind="multiSelect2:{value: priorities}"></select>
+                <select title="Investment priority categories associated with this outcome" multiple="multiple" class="form-control form-control-sm" style="width:100%" name="priorities" data-bind="enable:outcomeTypeSupportsCategories, options:priorityCategoryOptions, multiSelect2:{value: priorityCategories}"></select>
             </td>
         </tr>
         <!-- /ko -->

@@ -143,12 +143,26 @@ var Outcome = function(outcome, options) {
     self.outcome = ko.observable(outcome.outcome);
     self.shortDescription = ko.observable(outcome.shortDescription);
     self.category = ko.observable(outcome.category);
-    self.priorities = ko.observableArray(_.map(outcome.priorities, function(priority) {
-        return priority.category;
-    }));
-    self.priorityCategories = options.priorityCategories || [];
+    self.priorityCategories = ko.observableArray(outcome.priorityCategories);
+    self.priorityCategoryOptions = options.priorityCategories || [];
     self.isReadOnly = options.outcomesInUse.indexOf(outcome.outcome) >= 0;
-    console.log("isReadOnly for "+outcome.outcome+" = "+self.isReadOnly);
+
+
+    self.typeOptions = [
+        { value:"", label:"Primary and/or secondary", supportsCategories:true},
+        { value:"primary", label:"Primary only", supportsCategories:true},
+        { value:"secondary", label:"Secondary only", supportsCategories:true},
+        { value:"medium", label:"Medium term", supportsCategories:false},
+        { value:"short", label:"Short term", supportsCategories:false}
+    ];
+
+    self.outcomeTypeSupportsCategories = ko.pureComputed(function(value) {
+        let type = self.typeOptions.find(function(value) {
+            return value.value === self.type();
+        });
+
+        return type ? type.supportsCategories : false;
+    })
 
     self.toJSON = function() {
         return {

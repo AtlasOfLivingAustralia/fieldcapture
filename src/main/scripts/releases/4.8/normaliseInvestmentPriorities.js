@@ -64,12 +64,34 @@ const typesForCategory = {
 
 let programs = db.program.find({status: {$ne: 'deleted'}});
 while (programs.hasNext()) {
+    let changed = false;
     let program = programs.next();
     if (program.priorities && program.priorities.length > 0) {
         for (let j = 0; j < program.priorities.length; j++) {
             let programPriority = program.priorities[j];
             addInvestmentPriority(programPriority);
         }
+        delete program.priorities;
+        changed = true;
+    }
+
+    if (programs.outcomes && programs.outcomes.length > 0) {
+        for (let k = 0; k < program.outcomes.length; k++) {
+            let priorityCategories = [];
+            if (outcome.priorities && outcome.priorities.length > 0) {
+                for (let l = 0; l < outcome.priorities.length; l++) {
+                    priorityCategories.push(outcome.priorities[l].category);
+                }
+                outcome.priorityCategories = priorityCategories;
+                delete outcome.priorities;
+                changed = true;
+            }
+        }
+    }
+    if (changed)   {
+        print("Updating program " + program.programId);
+        db.program.replaceOne({programId: program.programId}, program);
+        audit(program, program.programId, 'au.org.ala.ecodata.Program', adminUserId);
     }
 }
 
