@@ -103,7 +103,6 @@ function initialise(roles, currentUserId, hubId, containerId) {
         }
         else {
             message = "Are you sure you want to change this user's access from " + roleLabel(currentRole) + " to " + roleLabel(role) + "?";
-            message = "Are you sure you want to change this user's access from " + roleLabel(currentRole) + " to " + roleLabel(role) + "?";
         }
 
         bootbox.confirm(message, function (result) {
