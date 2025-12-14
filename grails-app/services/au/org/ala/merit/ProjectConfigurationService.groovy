@@ -227,7 +227,7 @@ class ProjectConfigurationService {
     }
 
     private List<Map> getInvestmentPrioritiesForOutcomes(List outcomes) {
-        List categories = outcomes.collect{ it.priorities?.collect{it.category} }
+        List categories = outcomes.collect{ it.priorityCategories ?: [] }
         categories = categories.flatten().unique()
 
         metadataService.findInvestmentPriorities([categories:categories])

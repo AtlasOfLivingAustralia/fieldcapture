@@ -152,7 +152,7 @@ class ProjectConfigurationServiceSpec extends Specification implements Autowired
 
         when: "the project does not have a management unit"
         project.managementUnitId = null
-        program.outcomes = [[name:"outcome 1", priorities:[[category:"Category 1"]]], [name:"outcome 2", priorities:[[category:"Category 2"], [category:"Category 1"], [category:"Category 3"]]]]
+        program.outcomes = [[name:"outcome 1", priorityCategories:["Category 1"]], [name:"outcome 2", priorityCategories:["Category 2", "Category 1", "Category 3"]]]
 
         config = service.getProjectConfiguration(project)
 
@@ -187,7 +187,7 @@ class ProjectConfigurationServiceSpec extends Specification implements Autowired
                 [category:"Category 2", priority:"p2"],
                 [category:"Category 3", priority:"p3", managementUnits:["mu2", "mu3"]]
         ]
-        programConfig.outcomes = [[name:"outcome 1", priorities:[[category:"Category 1"]]], [name:"outcome 2", priorities:[[category:"Category 2"], [category:"Category 1"], [category:"Category 3"]]]]
+        programConfig.outcomes = [[name:"outcome 1", priorityCategories:["Category 1"]], [name:"outcome 2", priorityCategories:["Category 2", "Category 1", "Category 3"]]]
 
         when:
         Map config = service.getProjectConfiguration(project)
