@@ -55,6 +55,7 @@ class ProjectService  {
     LockService lockService
     DataSetSummaryService dataSetSummaryService
     TermsService termsService
+    RoleService roleService
 
     def get(id, levelOfDetail = "", includeDeleted = false) {
 
@@ -225,7 +226,9 @@ class ProjectService  {
      * @return
      */
     def getMembersForProjectId(projectId) {
-        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getMembersForProject/${projectId}"
+        List roles = roleService.getRoles() + roleService.getMonitorRoles()
+        String params = commonService.buildUrlParamsFromMap(role:roles)
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/getMembersForProject/${projectId}"+params
         webService.getJson(url)
     }
 

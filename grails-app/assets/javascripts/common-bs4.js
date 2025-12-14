@@ -33,6 +33,7 @@
 //= require datatables.net-buttons/js/buttons.print.js
 //= require datatables.net-buttons-bs4/js/buttons.bootstrap4.js
 //= require datatables/dataTables.moment.js
+//= require i18n
 
 if (typeof bootbox !== 'undefined') {
     bootbox.setDefaults('closeButton', false);

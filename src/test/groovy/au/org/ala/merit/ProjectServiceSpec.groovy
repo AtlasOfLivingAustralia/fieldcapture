@@ -33,6 +33,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
     CacheService cacheService = Mock(CacheService)
     LockService lockService = Mock(LockService)
     TermsService termsService = Mock(TermsService)
+    RoleService roleService = Mock(RoleService)
 
     Map reportConfig = [
             weekDaysToCompleteReport:projectConfig.weekDaysToCompleteReport,
@@ -63,9 +64,13 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         service.lockService = lockService
         service.speciesService = new SpeciesService()
         service.termsService = termsService
+        service.roleService = roleService
+        service.commonService = new CommonService()
         userService.userIsAlaOrFcAdmin() >> false
         metadataService.getProgramConfiguration(_,_) >> [reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43]
         projectConfigurationService.getProjectConfiguration(_) >> projectConfig
+        roleService.getRoles() >> RoleService.MERIT_PROJECT_ROLES
+        roleService.getMonitorRoles() >> RoleService.MONITOR_ONLY_ROLES
     }
 
     def "generate reports with 3 monthly period"() {
@@ -266,7 +271,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         then:
         result.message == 'success'
         1 * webService.doPost({it.endsWith("project/"+projectId)}, [planStatus:ProjectService.PLAN_SUBMITTED]) >> [resp:[status:'ok']]
-        1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
+        1 * webService.getJson({it.contains("permissions/getMembersForProject/"+projectId)}) >> projectRoles
         1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_SUBMITTED_EMAIL_TEMPLATE,_,projectRoles, RoleService.PROJECT_ADMIN_ROLE, null)
     }
 
@@ -291,7 +296,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         result.message == 'success'
         1 * webService.doPost({it.endsWith("project/"+projectId)}, [planStatus:ProjectService.PLAN_APPROVED]) >> [resp:[status:'ok']]
         1 * documentService.createTextDocument([projectId:projectId, type:'text', role:ProjectService.DOCUMENT_ROLE_APPROVAL, filename: expectedFilename, name:expectedName, readOnly:true, public:false, labels:['MERI']], {compareDocuments(it, expectedDocumentContent)})
-        1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
+        1 * webService.getJson({it.contains("permissions/getMembersForProject/"+projectId)}) >> projectRoles
         1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_APPROVED_EMAIL_TEMPLATE,_,projectRoles, RoleService.GRANT_MANAGER_ROLE, null)
         userService.getCurrentUserId() >> '1234'
     }
@@ -312,7 +317,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         then:
         result.message == 'success'
         1 * webService.doPost({it.endsWith("project/"+projectId)}, [planStatus:ProjectService.PLAN_NOT_APPROVED]) >> [resp:[status:'ok']]
-        1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
+        1 * webService.getJson({it.contains("permissions/getMembersForProject/"+projectId)}) >> projectRoles
         1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_RETURNED_EMAIL_TEMPLATE,_,projectRoles, RoleService.GRANT_MANAGER_ROLE,  null)
     }
 
@@ -341,7 +346,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         then:
 
         1 * webService.doPost({it.endsWith("project/"+projectId)}, _) >> [resp:[status:'ok']]
-        1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> projectRoles
+        1 * webService.getJson({it.contains("permissions/getMembersForProject/"+projectId)}) >> projectRoles
         userService.getCurrentUserId() >> '1234'
         results.actualEmailTemplate == expectedTemplate
         results.actualRole == expectedRole
@@ -374,7 +379,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         result.success == true
         1 * webService.doPost( {it.endsWith('project/projectMetrics/'+projectId)}, _) >> [resp:[]]
         1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
-        1 * webService.getJson({ it.endsWith("permissions/getMembersForProject/" + projectId) }) >> projectRoles
+        1 * webService.getJson({ it.contains("permissions/getMembersForProject/" + projectId) }) >> projectRoles
         1 * reportService.submitReport(reportId, reportDetails.activityIds, project, projectRoles, EmailTemplate.DEFAULT_REPORT_SUBMITTED_EMAIL_TEMPLATE) >> [success:true]
     }
 
@@ -397,7 +402,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         result.success == true
 
         1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
-        1 * webService.getJson({ it.endsWith("permissions/getMembersForProject/" + projectId) }) >> projectRoles
+        1 * webService.getJson({ it.contains("permissions/getMembersForProject/" + projectId) }) >> projectRoles
         1 * reportService.approveReport(reportId, reportDetails.activityIds, reportDetails.reason, project, projectRoles, EmailTemplate.DEFAULT_REPORT_APPROVED_EMAIL_TEMPLATE) >> [success:true]
     }
 
@@ -420,7 +425,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         result.success == true
         1 * reportService.isApproved(report) >> false
         1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
-        1 * webService.getJson({ it.endsWith("permissions/getMembersForProject/" + projectId) }) >> projectRoles
+        1 * webService.getJson({ it.contains("permissions/getMembersForProject/" + projectId) }) >> projectRoles
         1 * reportService.rejectReport(reportId, reportDetails.activityIds, reportDetails.reason, reportDetails.categories, project, projectRoles, EmailTemplate.DEFAULT_REPORT_RETURNED_EMAIL_TEMPLATE) >> [success:true]
     }
 
@@ -445,7 +450,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         result.success == true
 
         1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
-        1 * webService.getJson({ it.endsWith("permissions/getMembersForProject/" + projectId) }) >> projectRoles
+        1 * webService.getJson({ it.contains("permissions/getMembersForProject/" + projectId) }) >> projectRoles
         1 * reportService.rejectReport(reportId, reportDetails.activityIds, reportDetails.reason, reportDetails.categories, project, projectRoles, EmailTemplate.DEFAULT_REPORT_RETURNED_EMAIL_TEMPLATE) >> [success:true]
 
     }
@@ -472,7 +477,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         result.error != null
 
         1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
-        1 * webService.getJson({ it.endsWith("permissions/getMembersForProject/" + projectId) }) >> projectRoles
+        1 * webService.getJson({ it.contains("permissions/getMembersForProject/" + projectId) }) >> projectRoles
         0 * reportService.rejectReport(reportId, reportDetails.activityIds, reportDetails.reason, reportDetails.categories, project, projectRoles, EmailTemplate.DEFAULT_REPORT_RETURNED_EMAIL_TEMPLATE) >> [success:true]
 
     }
@@ -496,7 +501,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         result.success == true
 
         1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
-        1 * webService.getJson({ it.endsWith("permissions/getMembersForProject/" + projectId) }) >> projectRoles
+        1 * webService.getJson({ it.contains("permissions/getMembersForProject/" + projectId) }) >> projectRoles
         1 * reportService.cancelReport(reportId, reportDetails.activityIds, reportDetails.reason, project, projectRoles) >> [success:true]
     }
 
@@ -566,7 +571,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         service.approveReport(projectId, stageReportDetails)
 
         then:
-        1 * webService.getJson({it.endsWith("permissions/getMembersForProject/"+projectId)}) >> []
+        1 * webService.getJson({it.contains("permissions/getMembersForProject/"+projectId)}) >> []
         1 * documentService.createTextDocument(_, _)
         1 * reportService.approveReport(*_) >> [success:true]
         if (shouldComplete) {
@@ -952,7 +957,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
 
         then: "A check will be performed to ensure the report belongs to the project"
         1 * webService.getJson({it.contains("/"+projectId)}) >> [projectId:projectId, reports:[[reportId:reportId, projectId:projectId, toDate:'2018-06-30T14:00:00Z']]]
-        1 * webService.getJson('permissions/getMembersForProject/'+projectId) >> []
+        1 * webService.getJson({it.contains('permissions/getMembersForProject/'+projectId)}) >> []
         1 * projectConfigurationService.getProjectConfiguration(_) >> new ProgramConfig([:])
 
         and:"the report service will perform the adjustment"
