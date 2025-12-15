@@ -4,6 +4,7 @@ load('../data_common/createInvestmentPriorities.js');
 load('../data_common/loadMeritHub.js');
 load('../data_common/insertData.js');
 load('../data/settingDefaults.js');
+load('../data/monitorRoleMapping.js');
 load('../data_common/createServices.js');
 
 loadActivityForms();
