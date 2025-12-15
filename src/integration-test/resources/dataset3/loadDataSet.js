@@ -911,11 +911,7 @@ config.meriPlanContents = [
 ];
 outcomes = [
     {
-        "priorities": [
-            {
-                "category": "Land Management"
-            }
-        ],
+        "priorityCategories": ["Land Management"],
         "targeted": true,
         "shortDescription": "Soil Condition",
         "supportsMultiplePrioritiesAsPrimary": true,
@@ -924,11 +920,7 @@ outcomes = [
         "outcome": "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
     },
     {
-        "priorities": [
-            {
-                "category": "Sustainable Agriculture"
-            }
-        ],
+        "priorityCategories": ["Sustainable Agriculture"],
         "shortDescription": "Climate / Weather Adaption",
         "supportsMultiplePrioritiesAsPrimary": true,
         "type": "primary",

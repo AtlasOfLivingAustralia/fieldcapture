@@ -234,7 +234,7 @@ class ManagementUnitSpec extends StubbedCasSpec {
         waitFor 10, {
             adminTabPane.displayed
         }
-       adminTabPane.adminColumn.size() == 6
+       adminTabPane.adminColumn.size() == 5
        adminTabPane.adminColumn[0].text() == "Edit"
        adminTabPane.adminColumn[1].text() == "Permissions"
        adminTabPane.adminColumn[2].text() == "Documents"
