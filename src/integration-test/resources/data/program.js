@@ -140,31 +140,31 @@ var programDefaults = {
           "outcomes": [
               {
                   "outcome": "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions",
-                  "priorities": [ "Ramsar"],
+                  "priorityCategories": [ "Ramsar"],
                   "category": "environment",
                   "shortDescription": "Ramsar Sites"
               },
               {
                   "outcome": "By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved.",
-                  "priorities": [ "Threatened Species" ],
+                  "priorityCategories": [ "Threatened Species" ],
                   "category": "environment",
                   "shortDescription": "Threatened Species Strategy"
               },
               {
                   "outcome": "By 2023, invasive species management has reduced threats to the natural heritage Outstanding Universal Value of World Heritage properties through the implementation of priority actions.",
-                  "priorities": [ "World Heritage Sites" ],
+                  "priorityCategories": [ "World Heritage Sites" ],
                   "category": "environment",
                   "shortDescription": "World Heritage Areas"
               },
               {
                   "outcome": "By 2023, the implementation of priority actions is leading to an improvement in the condition of EPBC Act listed Threatened Ecological Communities.",
-                  "priorities": ["Threatened Ecological Communities"],
+                  "priorityCategories": ["Threatened Ecological Communities"],
                   "category": "environment",
                   "shortDescription": "Threatened Ecological Communities"
               },
               {
                   "outcome": "By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation.",
-                  "priorities": ["Land Management"],
+                  "priorityCategories": ["Land Management"],
                   "category": "agriculture",
                   "shortDescription": "Soil Condition"
               },
@@ -176,7 +176,7 @@ var programDefaults = {
               },
               {
                   "outcome": "Secondary",
-                  "priorities": [],
+                  "priorityCategories": [],
                   "type":"secondary",
                   "category": "agriculture",
                   "shortDescription": "Climate / Weather Adaption"

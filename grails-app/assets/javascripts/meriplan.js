@@ -1874,10 +1874,7 @@ function OutcomesViewModel(outcomes, config) {
             return [];
         }
 
-        var priorityCategories = [];
-        _.each(outcome.priorities, function (outcomePriority) {
-            priorityCategories.push(outcomePriority.category);
-        });
+        var priorityCategories = outcome.priorityCategories;
         // Return the list of priorities that have at least one category in common with the selected outcome.
         var priorities = _.filter(config.priorities, function (priority) {
             return _.any(priorityCategories, function (category) {
