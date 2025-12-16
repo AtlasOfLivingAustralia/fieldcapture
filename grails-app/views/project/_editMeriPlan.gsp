@@ -7,7 +7,7 @@
 		<b>Grant manager actions:</b>
 		<div data-bind="if:!canApprove()">
 			<div class="alert alert-info">
-				At least one Tech One Project Code or SAP Internal Order must be provided before the MERI plan can be approved
+				At least one Tech One Project Code, Grant Award ID, or SAP Internal Order must be provided before the MERI plan can be approved
 			</div>
 			<div class="mb-3 row">
 				<label class="col-form-label col-sm-2">Financial system identifier/s:</label>
