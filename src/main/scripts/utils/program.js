@@ -140,3 +140,93 @@ function updateProgramServiceConfig(program, legacyId, scoreIds, mandatory){
 
     return program;
 }
+
+/**
+ * Renames a program outcome and updates all affected projects.
+ * NOTE that only short term outcomes have been tested with this script so far.
+ * @param type the type of outcome: primary, secondary, medium, short, or '' for both primary and secondary
+ * @param oldName the old name of the outcome
+ * @param newName the new name of the outcome
+ */
+function renameProgramOutcome(type, oldName, newName) {
+
+    let programs = db.program.find({'outcomes.outcome': oldName});
+    while (programs.hasNext()) {
+        let program = programs.next();
+
+        for (let i = 0; i < (program.outcomes || []).length; i++) {
+            let outcome = program.outcomes[i];
+            if (outcome.outcome === oldName) {
+                outcome.outcome = newName;
+                print("Updating program outcome: " + program.name + " outcome: " + oldName + " to " + newName);
+                db.program.replaceOne({programId:program.programId}, program);
+                audit(program, program.programId, 'au.org.ala.ecodata.Program', systemUserId);
+
+                let prefix = 'custom.details.outcomes.';
+                switch (type) {
+                    case 'primary':
+                        prefix += 'primaryOutcome';
+                        updateAffectedProjects(program.programId, prefix, 'description', oldName, newName, systemUserId);
+                        break;
+                    case 'secondary':
+                        prefix += 'secondaryOutcomes';
+                        updateAffectedProjects(program.programId, prefix, 'description', oldName, newName, systemUserId);
+                        break;
+                    case 'medium':
+                        prefix += 'midTermOutcomes';
+                        updateAffectedProjects(program.programId, prefix, 'relatedOutcome', oldName, newName, systemUserId);
+                        break;
+                    case 'short':
+                        prefix += 'shortTermOutcomes';
+                        updateAffectedProjects(program.programId, prefix, 'relatedOutcome', oldName, newName, systemUserId);
+                        break;
+                    case '':
+                        let firstPrefix = prefix + 'primaryOutcome';
+                        updateAffectedProjects(program.programId, firstPrefix, 'description', oldName, newName, systemUserId);
+                        let secondPrefix = prefix + 'secondaryOutcomes';
+                        updateAffectedProjects(program.programId, secondPrefix, 'description', oldName, newName, systemUserId);
+                        break;
+                    default:
+                        throw "Unknown outcome type: " + type;
+                }
+            }
+        }
+
+    }
+}
+
+function updateAffectedProjects(programId, prefix, nodeName, oldName, newName, systemUserId) {
+
+    const key = prefix+'.'+nodeName;
+    let query = {programId:programId};
+    query[key] = oldName;
+
+    let affectedProjects = db.project.find(query);
+    print("Found " + affectedProjects.count() + " affected projects for outcome: " + oldName);
+    while (affectedProjects.hasNext()) {
+        let project = affectedProjects.next();
+        // Split the prefix on '.' to get the array of paths to traverse to find the outcome
+        let paths = prefix.split('.');
+        let current = project;
+        for (let i=0; i<paths.length; i++) {
+            current = current[paths[i]];
+        }
+
+        if (current && current[nodeName] === oldName) {
+            current[nodeName] = newName;
+            print("Updating project: " + project.name + " outcome: " + oldName + " to " + newName);
+            db.project.replaceOne({projectId:project.projectId}, project);
+            audit(project, project.projectId, 'au.org.ala.ecodata.Project', systemUserId);
+        }
+        else if (current && Array.isArray(current)) {
+            for (let j=0; j<current.length; j++) {
+                if (current[j][nodeName] === oldName) {
+                    current[j][nodeName] = newName;
+                    print("Updating project: " + project.name + " outcome: " + oldName + " to " + newName);
+                    db.project.replaceOne({projectId:project.projectId}, project);
+                    audit(project, project.projectId, 'au.org.ala.ecodata.Project', systemUserId);
+                }
+            }
+        }
+    }
+}
