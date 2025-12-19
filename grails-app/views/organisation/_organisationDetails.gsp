@@ -1,3 +1,8 @@
+<!-- ko if:!allFieldsEditable -->
+<div class="alert alert-primary" role="alert">
+    Your current access level only allows you edit the organisation description and include images and links. If other details on this page are incorrect or need to be updated, please contact <a href="mailto:${grailsApplication.config.getProperty('merit.support.email')}"/>support</a> for assistance.
+</div>
+<!-- /ko -->
 <form class="validationEngineContainer">
     <h4 class="block-header"><g:message code="organisation.details.header"/></h4>
 
@@ -5,7 +10,7 @@
         <label for="abnStatus" class="col-sm-3 form-check-label">ABN Status: <fc:iconHelp><g:message code="organisation.abnStatus.help"/></fc:iconHelp></label>
 
         <div class="col-sm-7">
-            <select type="text" id="abnStatus" class="w-100 form-select form-select-sm" data-bind="value:abnStatus">
+            <select type="text" id="abnStatus" class="w-100 form-select form-select-sm" data-bind="enable:allFieldsEditable, value:abnStatus">
                 <option value="N/A">N/A</option>
                 <option value="Active">Active</option>
                 <option value="Cancelled">Cancelled</option>
@@ -16,12 +21,12 @@
         <label for="abnSelector" class="col-sm-3 form-check-label">ABN: <fc:iconHelp><g:message code="organisation.abn.help"/></fc:iconHelp></label>
 
             <div class="col-sm-5">
-                <input type="text" id="abnSelector" class="w-100 form-control form-control-sm" data-bind="value:abn, valueUpdate: 'input', event:{paste:onPasteAbn}, enable:abnStatus() != 'N/A' && !entityName()" data-validation-engine="validate[custom[number],minSize[11],maxSize[11]" data-validation-error-message="Please enter an 11 digit ABN"  maxlength="11" placeholder="Enter 11 digit ABN"/>
+                <input type="text" id="abnSelector" class="w-100 form-control form-control-sm" data-bind="enable:allFieldsEditable, value:abn, valueUpdate: 'input', event:{paste:onPasteAbn}, enable:abnStatus() != 'N/A' && !entityName()" data-validation-engine="validate[custom[number],minSize[11],maxSize[11]" data-validation-error-message="Please enter an 11 digit ABN"  maxlength="11" placeholder="Enter 11 digit ABN"/>
             </div>
             <div class="col-sm-4 prePopBtn">
-                <button type="button" id="prepopulateFromABN" data-bind="click:prepopulateFromABN, disable: !(abn())" class="btn btn-sm btn-primary" disabled="disabled">Pre Populate From ABN</button>
+                <button type="button" id="prepopulateFromABN" data-bind="click:prepopulateFromABN, disable: !allFieldsEditable || !(abn())" class="btn btn-sm btn-primary" disabled="disabled">Pre Populate From ABN</button>
 
-                <button type="button" class="btn btn-sm btn-warning" id="clearABN" data-bind="click:clearAbnDetails, enable:entityName()">Clear ABN Details</button>
+                <button type="button" class="btn btn-sm btn-warning" id="clearABN" data-bind="enable:allFieldsEditable, click:clearAbnDetails, enable:entityName()">Clear ABN Details</button>
             </div>
     </section>
     <section class="mb-3 row">
@@ -44,7 +49,7 @@
         <label for="organisationType" class="col-sm-3">Type of organisation: <fc:iconHelp><g:message code="organisation.type.help"/></fc:iconHelp></label>
 
         <div class="col-sm-9">
-            <select id="organisationType" class="form-select form-select-sm" data-bind="options:entityTypes, optionsCaption:'Please select...', optionsText:'label', optionsValue:'code', value:entityType, enable:abnStatus() == 'N/A'"></select>
+            <select id="organisationType" class="form-select form-select-sm" data-bind="options:entityTypes, optionsCaption:'Please select...', optionsText:'label', optionsValue:'code', value:entityType, enable:allFieldsEditable && abnStatus() == 'N/A'"></select>
         </div>
     </section>
 
@@ -54,7 +59,7 @@
         <div class="col-sm-9">
             <!-- ko foreach: indigenousOrganisationTypes -->
             <div class="form-check">
-            <input type="checkbox" class="form-check-input" data-bind="checked:$parent.indigenousOrganisationRegistration, checkedValue:$data">
+            <input type="checkbox" class="form-check-input" data-bind="enable:$parent.allFieldsEditable, checked:$parent.indigenousOrganisationRegistration, checkedValue:$data">
             <label class="form-check-label" data-bind="text:$data"></label>
 
         </div>
@@ -66,15 +71,15 @@
 
         <label for="name" class="col-sm-3 form-check-label">Name: <fc:iconHelp><g:message code="organisation.name.help"/></fc:iconHelp></label>
         <div class="col-sm-9">
-            <input type="text" id="name" class="form-control form-control-sm w-100" data-bind="value:name" data-validation-engine="validate[required]" placeholder="Organisation name">
+            <input type="text" id="name" class="form-control form-control-sm w-100" data-bind="enable:allFieldsEditable, value:name" data-validation-engine="validate[required]" placeholder="Organisation name">
         </div>
     </section>
     <section class="mb-3 row">
         <label class="col-sm-3 form-check-label">Contracted recipient name/s: <fc:iconHelp><g:message code="organisation.contractNames.help"/></fc:iconHelp></label>
         <div class="col-sm-9">
-            <multi-input params="values: contractNames">
+            <multi-input params="values: contractNames, editable:allFieldsEditable">
                 <div class="input-group-prepend"><span class="input-group-text contract-name-info" data-bind="popover:{content:$root.getHelpText(val())}, css:{nameInUse:$root.nameUsed(val())}"><i class="fa fa-info-circle" data-bind="css:{'fa-info-circle':!$root.nameUsed(val()), 'fa-warning':$root.nameUsed(val())}"></i></span></div>
-                <input type="text" data-validation-engine="validate[required]" data-bind="value:val" class="form-control form-control-sm input-group-append">
+                <input type="text" data-validation-engine="validate[required]" data-bind="enable:$parent.editable, value:val" class="form-control form-control-sm input-group-append">
             </multi-input>
         </div>
     </section>
@@ -117,7 +122,7 @@
         </div>
     </section>
 
-    <section class="mb-3 row">
+    <section class="mb-3 row" data-bind="if:allFieldsEditable">
             <label class="col-form-label col-sm-3" for="url">External ids: <fc:iconHelp><g:message
                     code="organisation.externalIds.help"/></fc:iconHelp></label>
             <div class="controls col-sm-9">
@@ -125,7 +130,7 @@
             </div>
     </section>
 
-    <section class="mb-3 row">
+    <section class="mb-3 row" data-bind="if:allFieldsEditable">
         <label class="col-form-label col-sm-3" for="url">Associated organisations: <fc:iconHelp><g:message
                 code="organisation.associatedOrgs.help"/></fc:iconHelp></label>
         <div class="controls col-sm-9">

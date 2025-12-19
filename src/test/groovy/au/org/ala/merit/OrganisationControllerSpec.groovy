@@ -599,11 +599,11 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         response.json == [success:true]
     }
 
-    def "should be able to delete links"() {
+    def "an organisation admin should be able to delete links"() {
         setup:
         def testOrg = testOrganisation("id", true, true)
         organisationService.get(_,_) >> testOrg
-        setupFcAdmin()
+        setupOrganisationAdmin()
         Map updatedOrg = new HashMap(testOrg)
         updatedOrg.links = new ArrayList(updatedOrg.links)
         Map linkRemoved = updatedOrg.links.pop()
@@ -616,7 +616,26 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         then:
         1 * documentService.delete(linkRemoved.documentId) >> 200
         1 * documentService.saveLink([name:'link2', url:'url2', documentId: 'd2', organisationId: "id"]) >> [resp: [documentId: 'd1'], statusCode: 200]
-        1 * organisationService.update(*_) >> [resp: [status:"ok"]]
+
+        and: "Only the description property should be used as the user has the organisation role, not the hub admin role"
+        1 * organisationService.update('id', [description: 'description']) >> [resp: [status:"ok"]]
+        response.json.status == "ok"
+    }
+
+    def "a hub admin should be able to edit all the organisation properties"() {
+        setup:
+        def testOrg = testOrganisation("id", true, true)
+        organisationService.get(_,_) >> testOrg
+        Map updatedOrg = new HashMap(testOrg)
+        setupFcAdmin()
+
+        when:
+        request.method = "POST"
+        request.JSON = (updatedOrg as JSON).toString()
+        controller.ajaxUpdate('id')
+
+        then:
+         1 * organisationService.update('id', [name:'name', description:'description']) >> {id, value -> println value; [resp: [status:"ok"]]}
         response.json.status == "ok"
     }
 
