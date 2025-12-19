@@ -20,7 +20,7 @@ class OrganisationController {
     ]
 
     static final List<String> ORGANISATION_ADMIN_BINDING_PROPERTIES = ['description', 'documents', 'links', "url", "postcode", "state", "acronym"]
-    static final List<String> HUB_ADMIN_BINDING_PROPERTIES = ORGANISATION_ADMIN_BINDING_PROPERTIES + ["externalIds", "contractNames", "abn", "associatedOrgs", "orgType", "entityName", "indigenousOrganisationRegistration", "name", "businessNames", "abnStatus"]
+    static final List<String> HUB_ADMIN_BINDING_PROPERTIES = ORGANISATION_ADMIN_BINDING_PROPERTIES + ["externalIds", "contractNames", "abn", "associatedOrgs", "orgType", "entityName", "indigenousOrganisationRegistration", "name", "businessNames", "abnStatus", "config"]
 
     def organisationService, searchService, documentService, userService, roleService, commonService, webService
     def activityService, metadataService, projectService, excelImportService, reportService, pdfConverterService, authService
