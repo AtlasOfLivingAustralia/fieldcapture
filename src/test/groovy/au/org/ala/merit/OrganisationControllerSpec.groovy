@@ -635,7 +635,7 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         controller.ajaxUpdate('id')
 
         then:
-         1 * organisationService.update('id', [name:'name', description:'description']) >> {id, value -> println value; [resp: [status:"ok"]]}
+         1 * organisationService.update('id', [name:'name', description:'description', config:testOrg.config]) >> {id, value -> println value; [resp: [status:"ok"]]}
         response.json.status == "ok"
     }
 
