@@ -38356,23 +38356,6 @@
                   },
                   {
                     "dataType": "text",
-                    "name": "testingDepth",
-                    "constraints": [
-                      "1-10",
-                      "11-20",
-                      "21-30",
-                      "31-40",
-                      "41-50",
-                      "51-60",
-                      "61-70",
-                      "71-80",
-                      "81-90",
-                      "91-100"
-                    ],
-                    "validate": "required"
-                  },
-                  {
-                    "dataType": "text",
                     "name": "testingObjective",
                     "description": "How will the information obtained from the tests be used?",
                     "validate": "required,maxSize[300]"
@@ -39060,22 +39043,6 @@
                                   {
                                     "source": "invoicingThisActivity",
                                     "preLabel": "Are you invoicing for this activity in this reporting period?",
-                                    "type": "selectOne"
-                                  }
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "type": "col",
-                            "css": "span3 col-border-right",
-                            "items": [
-                              {
-                                "type": "row",
-                                "items": [
-                                  {
-                                    "source": "testingDepth",
-                                    "preLabel": "Testing depth (cm)",
                                     "type": "selectOne"
                                   }
                                 ]
