@@ -62,6 +62,7 @@
            organisationSearchUrl: fcConfig.organisationSearchUrl,
            validationContainerSelector: '.validationEngineContainer',
            abnSelector: '#abnSelector',
+           allFieldsEditable: true, // Only hub admins can create organisations, so all fields are editable
            returnTo: fcConfig.returnTo };
 
         var organisationViewModel = new EditOrganisationViewModel(organisation, options);

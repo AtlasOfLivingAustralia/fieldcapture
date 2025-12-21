@@ -303,6 +303,8 @@ EditOrganisationViewModel = function(props, options) {
     var self = this;
     _.extend(self, new OrganisationViewModel(props, options));
 
+    self.allFieldsEditable = options.allFieldsEditable;
+
     self.onPasteAbn = function(vm, event) {
 
         if (event.originalEvent && event.originalEvent.clipboardData) {
