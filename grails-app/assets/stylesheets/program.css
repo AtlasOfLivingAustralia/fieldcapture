@@ -11,10 +11,13 @@ table#projectList .projectId {
     width: 10%;
 }
 table#projectList .internalOrderId {
+    width: 10%;
+}
+table#projectList .organisation {
     width: 15%;
 }
 table#projectList .name {
-    width: 45%;
+    width: 35%;
 }
 table#projectList .startDate {
     width: 8%;
