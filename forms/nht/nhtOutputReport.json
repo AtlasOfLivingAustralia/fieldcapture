@@ -12118,6 +12118,12 @@
                   },
                   {
                     "dataType": "feature",
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
                     "name": "sitesCoveredForFaunaSurvey",
                     "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
                   },
@@ -14488,6 +14494,12 @@
                   },
                   {
                     "dataType": "feature",
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
                     "name": "sitesCoveredForFloraSurvey",
                     "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
                   },
@@ -16568,6 +16580,12 @@
                   },
                   {
                     "dataType": "feature",
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
                     "name": "sitesCoveredForHabitatConditionSurvey",
                     "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
                   },
@@ -22437,6 +22455,12 @@
                   },
                   {
                     "dataType": "feature",
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
                     "name": "sitesCoveredForPestAnimal",
                     "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
                   },
@@ -34550,6 +34574,12 @@
                   },
                   {
                     "dataType": "feature",
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
                     "name": "sitesCoveredForPlantSurvival",
                     "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
                   },
@@ -37224,6 +37254,12 @@
                   },
                   {
                     "dataType": "feature",
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
                     "name": "sitesCoveredForSkillsAndKnowledge",
                     "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
                   },
@@ -38218,6 +38254,12 @@
                   },
                   {
                     "dataType": "feature",
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
                     "name": "sitesCoveredForSoilSurvey",
                     "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
                   },
@@ -41742,6 +41784,12 @@
                   {
                     "dataType": "feature",
                     "name": "sitesCoveredForWaterQuality",
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
                     "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
                   },
                   {
@@ -42951,6 +42999,12 @@
                   },
                   {
                     "dataType": "feature",
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
                     "name": "sitesCoveredForWeedDistribution",
                     "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
                   },
