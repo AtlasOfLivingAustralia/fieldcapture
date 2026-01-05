@@ -881,7 +881,7 @@ var protocols = {
     "0628e486-9b33-4d86-98db-c6d3f10f7744": {
         "name": "Vertebrate Fauna - Acoustic and Ultrasonic Recordings Deployment",
         "usesPlotLayout": false,
-        "createSpeciesRecord":true,
+        "createSpeciesRecord":false,
         "tags": ["survey"],
         "apiEndpoint": "acoustic-deployment-surveys",
         "insertions": {
