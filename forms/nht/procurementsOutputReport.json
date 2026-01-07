@@ -12667,7 +12667,7 @@
                         "type": "enable"
                       }
                     ],
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -13670,7 +13670,7 @@
                         "type": "enable"
                       }
                     ],
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -16024,7 +16024,7 @@
                         "type": "enable"
                       }
                     ],
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -18110,7 +18110,7 @@
                         "type": "enable"
                       }
                     ],
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -25572,7 +25572,7 @@
                         "type": "enable"
                       }
                     ],
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -37693,7 +37693,7 @@
                         "type": "enable"
                       }
                     ],
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -39695,7 +39695,7 @@
                         "type": "enable"
                       }
                     ],
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -40695,7 +40695,7 @@
                         "type": "enable"
                       }
                     ],
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -44211,7 +44211,7 @@
                         "type": "enable"
                       }
                     ],
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -45427,7 +45427,7 @@
                         "type": "enable"
                       }
                     ],
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {

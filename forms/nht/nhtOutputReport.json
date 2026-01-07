@@ -11128,7 +11128,7 @@
                         "type": "enable"
                       }
                     ],
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -12131,7 +12131,7 @@
                       }
                     ],
                     "name": "sitesCoveredForFaunaSurvey",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -14507,7 +14507,7 @@
                       }
                     ],
                     "name": "sitesCoveredForFloraSurvey",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -16593,7 +16593,7 @@
                       }
                     ],
                     "name": "sitesCoveredForHabitatConditionSurvey",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -22468,7 +22468,7 @@
                       }
                     ],
                     "name": "sitesCoveredForPestAnimal",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -34587,7 +34587,7 @@
                       }
                     ],
                     "name": "sitesCoveredForPlantSurvival",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -37267,7 +37267,7 @@
                       }
                     ],
                     "name": "sitesCoveredForSkillsAndKnowledge",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -38267,7 +38267,7 @@
                       }
                     ],
                     "name": "sitesCoveredForSoilSurvey",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -41796,7 +41796,7 @@
                         "type": "enable"
                       }
                     ],
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -43012,7 +43012,7 @@
                       }
                     ],
                     "name": "sitesCoveredForWeedDistribution",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
