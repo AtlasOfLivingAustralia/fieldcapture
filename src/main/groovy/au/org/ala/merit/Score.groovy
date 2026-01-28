@@ -74,8 +74,8 @@ class Score {
     boolean isOverDelivered() {
         boolean overDelivered = false
         if (target && singleResult()) {
-            BigDecimal result = new BigDecimal(singleResult())
-
+            BigDecimal result = new BigDecimal(singleResult()).round(decimalPlaces ?: 2)
+            BigDecimal target = target.round(decimalPlaces ?: 2)
             overDelivered = target * overDeliveryThreshold / 100 < result
         }
         overDelivered
