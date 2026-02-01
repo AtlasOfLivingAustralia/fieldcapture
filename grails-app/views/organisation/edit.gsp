@@ -57,6 +57,7 @@
 
    $(function () {
        var organisation = <fc:modelAsJavascript model="${organisation}"/>;
+       var allFieldsEditable = ${allFieldsEditable ?: 'false'};
        var options = {
            prepopulateAbnUrl: fcConfig.prepopulateAbnUrl,
            organisationSaveUrl:fcConfig.organisationSaveUrl,
@@ -70,6 +71,7 @@
            organisationSearchUrl: fcConfig.organisationSearchUrl,
            validationContainerSelector: '.validationEngineContainer',
            abnSelector: '#abnSelector',
+           allFieldsEditable: allFieldsEditable,
            returnTo: fcConfig.returnTo };
 
         var organisationViewModel = new EditOrganisationViewModel(organisation, options);

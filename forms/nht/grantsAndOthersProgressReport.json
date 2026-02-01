@@ -10572,7 +10572,13 @@
                   {
                     "dataType": "feature",
                     "name": "sitesCoveredForFarmSurvey",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -11460,7 +11466,13 @@
                   {
                     "dataType": "feature",
                     "name": "sitesCoveredForFaunaSurvey",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -13614,7 +13626,13 @@
                   {
                     "dataType": "feature",
                     "name": "sitesCoveredForFloraSurvey",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -15404,7 +15422,13 @@
                   {
                     "dataType": "feature",
                     "name": "sitesCoveredForHabitatConditionSurvey",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -21966,7 +21990,13 @@
                   {
                     "dataType": "feature",
                     "name": "sitesCoveredForPestAnimal",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -33176,7 +33206,13 @@
                   {
                     "dataType": "feature",
                     "name": "sitesCoveredForPlantSurvival",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -34966,7 +35002,13 @@
                   {
                     "dataType": "feature",
                     "name": "sitesCoveredForSkillsAndKnowledge",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -35845,7 +35887,13 @@
                   {
                     "dataType": "feature",
                     "name": "sitesCoveredForSoilSurvey",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -35973,29 +36021,32 @@
                   },
                   {
                     "dataType": "text",
-                    "name": "testingDepth",
-                    "constraints": [
-                      "1-10",
-                      "11-20",
-                      "21-30",
-                      "31-40",
-                      "41-50",
-                      "51-60",
-                      "61-70",
-                      "71-80",
-                      "81-90",
-                      "91-100"
-                    ],
-                    "validate": "required"
-                  },
-                  {
-                    "dataType": "text",
                     "name": "testingObjective",
                     "description": "How will the information obtained from the tests be used?",
                     "validate": "required,maxSize[300]"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "numberOfSoilTestsInDataSet",
+                    "description": "Please enter the number of soil tests included in this data set?",
+                    "validate": "required,min[0]"
                   }
                 ],
                 "minSize": 1
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfBaselineSoilTestsInSurvey",
+                "computed": {
+                  "expression": "sum(soilDataSets, \"baselineOrIndicatorSurvey == 'Baseline' ? numberOfSoilTestsInDataSet : 0\")"
+                }
+              },
+              {
+                "dataType": "number",
+                "name": "numberOfIndicatorSoilTestsInSurvey",
+                "computed": {
+                  "expression": "sum(soilDataSets, \"baselineOrIndicatorSurvey == 'Indicator' ? numberOfSoilTestsInDataSet : 0\")"
+                }
               }
             ]
           },
@@ -36110,22 +36161,22 @@
           },
           {
             "dataType": "number",
-            "name": "totalSurveyBaseline",
+            "name": "totalSoilTestsBaseline",
             "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(soilSurveys, \"baselineOrIndicatorSurvey == 'Baseline' ? 1 : 0\")"
+              "expression": "sum(soilSurveys, \"numberOfBaselineSoilTestsInSurvey\")"
             }
           },
           {
             "dataType": "number",
-            "name": "totalSurveyIndicator",
+            "name": "totalSoilTestsIndicator",
             "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
             "computed": {
-              "expression": "sum(soilSurveys, \"baselineOrIndicatorSurvey == 'Indicator' ? 1 : 0\")"
+              "expression": "sum(soilSurveys, \"numberOfIndicatorSoilTestsInSurvey\")"
             }
           },
           {
@@ -36257,8 +36308,8 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "(i) Total Number of baseline soil testing surveys completed for this reporting period",
-                            "source": "totalSurveyBaseline",
+                            "preLabel": "(iii)  Total Number of baseline soil tests completed for this reporting period",
+                            "source": "totalSoilTestsBaseline",
                             "type": "number"
                           }
                         ]
@@ -36273,8 +36324,8 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "(ii)  Total Number of  indicator soil testing surveys completed for this reporting period",
-                            "source": "totalSurveyIndicator",
+                            "preLabel": "(iii)  Total Number of indicator soil tests completed for this reporting period",
+                            "source": "totalSoilTestsIndicator",
                             "type": "number"
                           }
                         ]
@@ -36560,20 +36611,19 @@
                                     "type": "text"
                                   }
                                 ]
-                              }
-                            ]
-                          },
-                          {
-                            "type": "col",
-                            "css": "span3 col-border-right",
-                            "items": [
+                              },
                               {
-                                "type": "row",
+                                "type": "col",
                                 "items": [
                                   {
-                                    "source": "testingDepth",
-                                    "preLabel": "Testing depth (cm)",
-                                    "type": "selectOne"
+                                    "type": "row",
+                                    "items": [
+                                      {
+                                        "source": "numberOfSoilTestsInDataSet",
+                                        "preLabel": "Number of soil tests included in this data set",
+                                        "type": "number"
+                                      }
+                                    ]
                                   }
                                 ]
                               }
@@ -38972,7 +39022,13 @@
                   {
                     "dataType": "feature",
                     "name": "sitesCoveredForWaterQuality",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {
@@ -40073,7 +40129,13 @@
                   {
                     "dataType": "feature",
                     "name": "sitesCoveredForWeedDistribution",
-                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping."
+                    "behaviour": [
+                      {
+                        "condition": "dataSetId",
+                        "type": "enable"
+                      }
+                    ],
+                    "description": "Mapping field to be done and Area (ha)/length (km) field be auto-calculated from mapping.  This field will be enabled only once a data set has been selected."
                   },
                   {
                     "computed": {

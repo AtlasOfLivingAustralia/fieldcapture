@@ -879,10 +879,39 @@ var protocols = {
         }
     },
     "0628e486-9b33-4d86-98db-c6d3f10f7744": {
-        "name": "Vertebrate Fauna - Acoustic and Ultrasonic Recordings",
+        "name": "Vertebrate Fauna - Acoustic and Ultrasonic Recordings Deployment",
         "usesPlotLayout": false,
+        "createSpeciesRecord":false,
         "tags": ["survey"],
-        "apiEndpoint": "<root>",
+        "apiEndpoint": "acoustic-deployment-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
+    },
+    "29de46fe-d810-4832-a26a-c64ec4a93b14": {
+        "name": "Vertebrate Fauna - Acoustic and Ultrasonic Recordings Re-equipping",
+        "usesPlotLayout": false,
+        "createSpeciesRecord":false,
+        "tags": ["survey"],
+        "apiEndpoint": "acoustic-reequipping-surveys",
+        "insertions": {
+            "dataModel": {
+                "<root>" : [
+                    individuals
+                ]
+            }
+        }
+    },
+    "58ae091e-d36d-47b2-bbcc-6798077f61bd": {
+        "name": "Vertebrate Fauna - Acoustic and Ultrasonic Recordings Retrieval",
+        "usesPlotLayout": false,
+        "createSpeciesRecord":false,
+        "tags": ["survey"],
+        "apiEndpoint": "acoustic-retrieval-surveys",
         "insertions": {
             "dataModel": {
                 "<root>" : [
