@@ -619,7 +619,7 @@ class ActivityController {
 
         String url =  "${grailsApplication.config.getProperty('ecodata.baseUrl')}metadata/excelOutputTemplate"
 
-        Map postParams = [listName:params.listName, type:params.type, data:params.data, editMode:params.editMode, allowExtraRows:params.allowExtraRows, autosizeColumns:false, formVersion:params.getInt('formVersion'), activityForm:params.activityForm]
+        Map postParams = [listName:params.listName, type:params.type, data:params.data, editMode:params.editMode, allowExtraRows:params.allowExtraRows, autosizeColumns:false, formVersion:params.getInt('formVersion'), activityForm:params.activityForm, hints:params.hints]
 
         webService.proxyPostRequest(response, url, postParams)
 
