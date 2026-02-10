@@ -1,10 +1,24 @@
 load('../../../utils/audit.js');
+load('./investmentPriorityMapping.js');
 const adminUserId = "system";
-const toUpdate = [['Additional koala habitat planted', 'Additional Koala habitat planted']];
 
-for (const [oldValue, newValue] of toUpdate) {
+print(mapping.length);
+let unmatched = 0;
+for (const [oldValue, newValue] of mapping) {
+
 
     let projectCursor = findProjectsUsingInvestmentPriority(oldValue);
+    if (!projectCursor.hasNext()) {
+        let oldValueAsRegexp = oldValue.replaceAll('(', '\\(').replaceAll(')', '\\)').replaceAll('+', '\\+').replace(/\s+/g, '\\s+');
+
+        projectCursor = findProjectsUsingInvestmentPriority(new RegExp(oldValueAsRegexp));
+        if (!projectCursor.hasNext()) {
+            unmatched++;
+            print("No projects found using investment priority " + oldValue);
+        }
+    }
+
+
     while (projectCursor.hasNext()) {
         let project = projectCursor.next();
         updateInvestmentPriority(project, oldValue, newValue);
@@ -43,6 +57,7 @@ for (const [oldValue, newValue] of toUpdate) {
 
 
 }
+print(unmatched)
 
 function findMUsUsingInvestmentPriority(investmentPriority) {
     return db.managementUnit.find({'priorities.priority':investmentPriority});
