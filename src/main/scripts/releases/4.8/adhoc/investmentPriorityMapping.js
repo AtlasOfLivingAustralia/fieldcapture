@@ -889,8 +889,8 @@ const mapping = [["Apteronomus bordaensis (a raspy cricket)", "Apteronomus borda
 ["Cauliflower Soft Coral Dendronephthya australis", "Dendronephthya australis (Cauliflower Soft Coral)"],
 ["Celmisia sp. Pulchella (M.Gray & C.Totterdell 7079)", "Celmisia sp. Pulchella (Narrow-leaved Snow Daisy)"],
 ["Central Eastern Marine Park", "Central Eastern Marine Park"],
-["Central Rock Rat (Zyzomys pedunculatas)", "Zyzomys pedunculatas (Central Rock-rat, Antina)"],
-["Central Rock-rat Antina Zyzomys pedunculatus", "Zyzomys pedunculatus (Central Rock-Rat Antina)"],
+["Central Rock Rat (Zyzomys pedunculatas)", "Zyzomys pedunculatus (Central Rock-Rat, Antina)"],
+["Central Rock-rat Antina Zyzomys pedunculatus", "Zyzomys pedunculatus (Central Rock-Rat, Antina)"],
 ["Ceratognathus gilesi (stag beetle)", "Ceratognathus gilesi (a Beetle)"],
 ["Ceratognathus macrognathus (stag beetle)", "Ceratognathus macrognathus (a Beetle)"],
 ["Ceratognathus ocularis (stag beetle; listed as Mitophyllus ocularis, but taxonomy updated)", "Ceratognathus ocularis (a Beetle)"],
@@ -1870,5 +1870,5 @@ const mapping = [["Apteronomus bordaensis (a raspy cricket)", "Apteronomus borda
 ["Zoothera lunulata halmaturina (Bassian Thrush (South Australian), Western Bassian Thrush)", "Zoothera lunulata halmaturina (South Australian Bassian Thrush, Western Bassian Thrush)"],
 ["Zoothera lunulata halmaturina (Bassian thrush (South Australian))", "Zoothera lunulata halmaturina (South Australian Bassian Thrush, Western Bassian Thrush)"],
 ["Zoothera lunulata halmaturina, Bassian thrush (South Australian)", "Zoothera lunulata halmaturina (South Australian Bassian Thrush, Western Bassian Thrush)"],
-["Zyzomys pedunculatus (Central Rock-rat, Antina)", "Zyzomys pedunculatus (Central Rock-rat, Antina)"],
+["Zyzomys pedunculatus (Central Rock-rat, Antina)", "Zyzomys pedunculatus (Central Rock-Rat, Antina)"],
 ["snow daisy (Celmisia sp pulchella)", "Celmisia sp. pulchella (Daisy, Snow Daisy, Narrow-leaved Snow Daisy)"]];

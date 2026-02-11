@@ -11,7 +11,7 @@ for (const [oldValue, newValue] of mapping) {
     if (!projectCursor.hasNext()) {
         let oldValueAsRegexp = oldValue.replaceAll('(', '\\(').replaceAll(')', '\\)').replaceAll('+', '\\+').replace(/\s+/g, '\\s+');
 
-        projectCursor = findProjectsUsingInvestmentPriority(new RegExp(oldValueAsRegexp));
+        projectCursor = findProjectsUsingInvestmentPriority(new RegExp('\s+'+oldValueAsRegexp+'\s+'));
         if (!projectCursor.hasNext()) {
             unmatched++;
             print("No projects found using investment priority " + oldValue);
