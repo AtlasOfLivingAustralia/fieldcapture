@@ -6,12 +6,14 @@ print(mapping.length);
 let unmatched = 0;
 for (const [oldValue, newValue] of mapping) {
 
-
+    if (!newValue || newValue == 'N/A') {
+        continue;
+    }
     let projectCursor = findProjectsUsingInvestmentPriority(oldValue);
     if (!projectCursor.hasNext()) {
         let oldValueAsRegexp = oldValue.replaceAll('(', '\\(').replaceAll(')', '\\)').replaceAll('+', '\\+').replace(/\s+/g, '\\s+');
 
-        projectCursor = findProjectsUsingInvestmentPriority(new RegExp('\s+'+oldValueAsRegexp+'\s+'));
+        projectCursor = findProjectsUsingInvestmentPriority(new RegExp('^(\\s*)'+oldValueAsRegexp+'(\\s*)$'));
         if (!projectCursor.hasNext()) {
             unmatched++;
             print("No projects found using investment priority " + oldValue);
@@ -85,7 +87,13 @@ function findProjectsUsingInvestmentPriority(investmentPriority) {
     };
     return db.project.find(query);
 }
-
+function matches(value, pattern) {
+    if (pattern instanceof RegExp) {
+        return pattern.test(value);
+    } else {
+        return value === pattern;
+    }
+}
 
 function updateInvestmentPriority(project, oldValue, newValue) {
 
@@ -93,7 +101,7 @@ function updateInvestmentPriority(project, oldValue, newValue) {
     if (outcomes) {
         if (outcomes.primaryOutcome && outcomes.primaryOutcome.assets) {
             for (let i = 0; i < outcomes.primaryOutcome.assets.length; i++) {
-                if (outcomes.primaryOutcome.assets[i] === oldValue) {
+                if (matches(outcomes.primaryOutcome.assets[i], oldValue)) {
                     outcomes.primaryOutcome.assets[i] = newValue;
                 }
             }
@@ -103,7 +111,7 @@ function updateInvestmentPriority(project, oldValue, newValue) {
                 let outcome = outcomes.secondaryOutcomes[i];
                 if (outcome.assets) {
                     for (let j = 0; j < outcome.assets.length; j++) {
-                        if (outcome.assets[j] === oldValue) {
+                        if (matches(outcome.assets[j], oldValue)) {
                             outcome.assets[j] = newValue;
                         }
                     }
@@ -117,7 +125,7 @@ function updateInvestmentPriority(project, oldValue, newValue) {
             let objective = project.custom.details.objectives.rows1[i];
             if (objective.assets) {
                 for (let j=0; j < objective.assets.length; j++) {
-                    if (objective.assets[j] === oldValue) {
+                    if (matches(objective.assets[j], oldValue)) {
                         objective.assets[j] = newValue;
                     }
                 }
@@ -129,7 +137,7 @@ function updateInvestmentPriority(project, oldValue, newValue) {
     if (project.custom.details.assets) {
        for (let i=0; i < project.custom.details.assets.length; i++) {
             let asset = project.custom.details.assets[i];
-            if (asset.description === oldValue) {
+            if (matches(asset.description, oldValue)) {
                 asset.description = newValue;
             }
        }
