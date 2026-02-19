@@ -359,7 +359,7 @@ const mapping = [["Apteronomus bordaensis (a raspy cricket)", "Apteronomus borda
     ["Galaxias sp. nov. 'yalmy' (Yalmy Galaxias)", "Galaxias sp. nov. 'yalmy' (Yalmy Galaxias, A fish)"],
     ["Galium roddii", "Galium roddii (A plant)"],
     ["Gardiners Creek, Melbourne VIC", "Gardiners Creek, Vic (A waterway)"],
-    ["Gippsland Blackfish (Gadopsis sp.)", "Gadopsis (Gippsland Blackfish, River Blackfish)"],
+    ["Gippsland Blackfish (Gadopsis sp.)", "Gadopsis marmoratus (Gippsland Blackfish, River Blackfish)"],
     ["Glenelg Estuary and Discovery Bay Wetlands", "Glenelg Estuary and Discovery Bay Wetlands (A Ramsar wetland community)"],
     ["Gondwana Rainforests of Australia", "Gondwana Rainforests of Australia World Heritage Area (A forest community)"],
     ["Gondwana Rainforests of Australia World Heritage Area", "Gondwana Rainforests of Australia World Heritage Area (A forest community)"],
