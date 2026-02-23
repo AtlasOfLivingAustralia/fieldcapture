@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="alert alert-danger large-space-before">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert">&times;</button>
                 <span>Error: ${error}</span>
             </div>
         </div>
@@ -14,9 +14,9 @@
 
 <h3>Reef 2050 Plan Action Reporting</h3>
 
-    <form class="report-selector form-inline">
+    <form class="report-selector d-flex align-items-center">
         <div class="input-group">
-            <label class="control-label" for="selectPeriod">Selected period:   </label>  <select id="selectPeriod" data-bind="options:reportPeriods, optionsText:'label', value:selectedPeriod" class="form-control form-control-sm ml-1 br-2"></select>
+            <label class="control-label" for="selectPeriod">Selected period:   </label>  <select id="selectPeriod" data-bind="options:reportPeriods, optionsText:'label', value:selectedPeriod" class="form-select form-select-sm ms-1 br-2"></select>
         </div>
 
     </form>

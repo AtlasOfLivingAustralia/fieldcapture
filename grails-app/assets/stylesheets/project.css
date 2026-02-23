@@ -72,22 +72,23 @@
 	right: 10px;
 }
 
-.thumbnail-image-container > img {
-	width: 300px;
-	height: auto;
+.thumbnail-image-container img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover
 }
 .thumbnail-image-container {
-	width: 300px;
-	height: 280px;
+	width: 200px;
+	height: 200px;
 	overflow:hidden;
 }
 .thumbnail-container {
-	height:300px;
+	height:240px;
 	position:relative;
 }
 .thumbnail-container .caption {
 	position: absolute;
-	bottom:0;
+	top:200px;
 	padding-bottom:0;
 	margin-bottom:0;
 }
@@ -95,7 +96,7 @@
 #public-images-slider{
 	overflow: auto;
 	width: 100%;
-	height: 300px;
+	height: 240px;
 }
 
 #sites-table tbody tr:hover {
@@ -176,6 +177,8 @@
 
 .popover.warning {
 	background-color: yellow;
+    --bs-popover-bg: yellow;
+    --bs-popover-border-width: 0;
 	color: black;
 	cursor: pointer;
 }
@@ -184,8 +187,9 @@
 	font-size: 12px;
 }
 
-.popover.warning .arrow:after {
-	border-right-color: yellow;
+.popover.warning .popover-arrow::after, .popover.warning .popover-arrow::before {
+    --bs-popover-bg: yellow;
+    --bs-popover-border-width: 1;
 }
 
 .popover.warning.top .arrow:after {
@@ -201,11 +205,11 @@
 	margin-right:10px;
 
 }
-.row-fluid .span8 .badge-danger {
+.row-fluid .span8 .bg-danger {
 	background-color: #dc3545;
 	color: #fff;
 }
-.clearfix .span3 .badge-danger {
+.clearfix .span3 .bg-danger {
 	background-color: #dc3545;
 	color: #fff;
 }
@@ -362,3 +366,4 @@ li.select2-search input {
 .ui-autocomplete {
 	z-index:10000;
 }
+

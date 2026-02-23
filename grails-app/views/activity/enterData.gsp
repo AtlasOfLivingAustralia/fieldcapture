@@ -122,7 +122,7 @@
                     <!-- ko if:transients.themes.length -->
                     <div class="col-sm-6">
                         <label for="theme">Major theme</label>
-                        <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="form-control form-control-sm input-xlarge">
+                        <select id="theme" data-bind="value:mainTheme, options:transients.themes, optionsCaption:'Choose..'" class="form-select form-select-sm input-xlarge">
                         </select>
                     </div>
                     <!-- /ko -->

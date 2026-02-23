@@ -33,7 +33,7 @@
 
     <br/>
     <div class="row">
-        <div class="form-inline col-sm-12">
+        <div class="d-flex align-items-center col-sm-12">
             <label for="whoCompletedForm" class="control-label">Who is the authorised person completing this self assessment?</label>
             &nbsp;
             <input id="whoCompletedForm" type="text" class="form-control form-control-sm" data-bind="textInput:data.whoCompletedForm" data-validation-engine="validate[required]">

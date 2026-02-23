@@ -6,17 +6,16 @@
     <g:each in="${categories}" var="category" status="i">
 
         <g:set var="categoryContent" value="category_${i}"/>
-        <div class="accordion-group card dashboard-activities">
-            <div class="accordion-heading card-header header">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#reports" href="#${categoryContent}">
-                    ${category} <g:if test="${!scores[category]}"><span class="pull-right" style="font-weight:normal">[no data available]</span></g:if>
+        <div class="accordion-item dashboard-activities">
+            <h3 class="accordion-header">
+                <button class="accordion-button collapsed" data-bs-toggle="collapse" href="#${categoryContent}" aria-expanded="false" aria-controls="${categoryContent}">
+                    ${category} <g:if test="${!scores[category]}"><span class="pull-right">[no data available]</span></g:if>
+                </button>
+            </h3>
+            <div id="${categoryContent}" class="outputData accordion-body accordion-collapse collapse" data-bs-parent="#reports" data-category="${category}">
 
-                </a>
-            </div>
-            <div id="${categoryContent}" class="outputData accordian-body card-body collapse" data-category="${category}">
-                <div class="accordian-inner row">
-                    <asset:image width="50" height="50" src="loading.gif" alt="saving icon"/> Loading...
-                </div>
+                <asset:image width="50" height="50" src="loading.gif" alt="saving icon"/> Loading...
+
             </div>
 
         </div>
@@ -40,7 +39,7 @@
 
 
     $(function() {
-        var loadingTemplate = '<div class="accordian-inner row-fluid row">'+
+        var loadingTemplate = '<div>'+
             '<asset:image width="50" height="50" src="loading.gif" alt="saving icon"/> Loading...'+
             '</div>';
 

@@ -25,8 +25,8 @@ class FacetItem extends Module {
 class Facet extends Module {
 
     static content = {
-        title { $('.card-header a') }
-        items { $('.card-body li').moduleList(FacetItem) }
+        title { $('.accordion-header button') }
+        items { $('.accordion-body li').moduleList(FacetItem) }
     }
 
     FacetItem findItemByName(String name) {
@@ -58,13 +58,13 @@ class ProjectExplorer extends ReloadablePage {
         projects(required:false) { $('#projectTable tbody tr').moduleList(ProjectsList) }
         map(required:false) { $('#map') }
         chooseMoreFacetTerms(required: false) { $('#facetsContent .moreFacets') }
-        facetTerms(required: false) { $("#facetsContent .accordion .card-header a") }
+        facetTerms(required: false) { $("#facetsContent .accordion-header button") }
         facetAccordion(required: false) { $("#facetsContent .accordion") }
         dateOption(required: false, wait: true) { $("#isFilterByCompletedProjectsOption", dynamic: true) }
         dateFacet(required: false) { $("#projectDates", dynamic: true) }
         clearDatesBtn(required: false) { $("#facet-dates .clearDates", dynamic: true) }
         applyDatesBtn(required: false) { $("#facet-dates .applyDates", dynamic: true) }
-        organisationFacet(required: false) { $("#organisationFacet", dynamic: true) }
+        organisationFacet(required: false) { $('[href="#facet-organisationFacet"]', dynamic: true) }
         organisationFacetItems(required: false) { $("#facet-organisationFacet > div > ul > li > a", dynamic: true) }
         inputText{ $("#keywords")}
 

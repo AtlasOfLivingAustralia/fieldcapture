@@ -19,6 +19,9 @@ class OrganisationController {
         ajaxSubmitReport: "POST"
     ]
 
+    static final List<String> ORGANISATION_ADMIN_BINDING_PROPERTIES = ['description', 'documents', 'links', "url", "postcode", "state", "acronym"]
+    static final List<String> HUB_ADMIN_BINDING_PROPERTIES = ORGANISATION_ADMIN_BINDING_PROPERTIES + ["externalIds", "contractNames", "abn", "associatedOrgs", "orgType", "entityName", "indigenousOrganisationRegistration", "name", "businessNames", "abnStatus", "config"]
+
     def organisationService, searchService, documentService, userService, roleService, commonService, webService
     def activityService, metadataService, projectService, excelImportService, reportService, pdfConverterService, authService
     SettingService settingService
@@ -177,7 +180,7 @@ class OrganisationController {
                 organisation.remove('projects')
                 organisation.remove('reports')
                 [organisation: organisation,
-                 isNameEditable   : userService.userIsAlaOrFcAdmin()]
+                 allFieldsEditable   : userService.userIsAlaOrFcAdmin()]
             }
             else {
                 flash.message = 'You do not have permission to perform that action'
@@ -203,6 +206,10 @@ class OrganisationController {
     @PreAuthorise(accessLevel = 'admin')
     def ajaxUpdate(String id) {
         Map organisationDetails = request.JSON
+        // Filter the properties that can be updated based on the user's role.
+        List bindingProperties = userService.userIsAlaOrFcAdmin() ? HUB_ADMIN_BINDING_PROPERTIES : ORGANISATION_ADMIN_BINDING_PROPERTIES
+        organisationDetails = organisationDetails.findAll { k, v -> bindingProperties.contains(k) }
+println organisationDetails
         createOrUpdateOrganisation(id, organisationDetails)
     }
 

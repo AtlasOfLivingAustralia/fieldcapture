@@ -34,7 +34,7 @@
     </div>
     <div class="com-sm-5">
         <div id="formStatus" class="hide d-none alert alert-success">
-            <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+            <button class="btn-close" onclick="$('.alert').fadeOut();" href="#">×</button>
             <span></span>
         </div>
     </div>
@@ -163,7 +163,7 @@
                         message = "<span class='label label-important'>Important</span><p><b>If you modify your access level you may need assistance to get it back.</b></p><p>Are you sure you want to change your access to this project from " + currentRole + " to " + decodeCamelCase(role)+"?</p>";
                     }
                     else {
-                        message = "Are you sure you want to change this user's access from " + currentRole + " to " + decodeCamelCase(role).replace('Case','Grant') + "?";
+                        message = "Are you sure you want to change this user's access from " + currentRole + " to " + $i18n('label.role.'+role, decodeCamelCase(role).replace('Case','Grant')) + "?";
                     }
 
                     bootbox.confirm(message, function(result) {

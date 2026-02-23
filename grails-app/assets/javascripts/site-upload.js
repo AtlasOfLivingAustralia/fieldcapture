@@ -93,7 +93,7 @@ var SiteUploadViewModel = function(attributeNames, shapes, projectId, shapeFileI
 
 
         self.progressText('Uploaded 0 of '+payload.sites.length+' sites');
-        $(config.progressSelector).modal({backdrop:'static'});
+        $(config.progressSelector).modal({backdrop:'static'}).modal('show');
         setTimeout(self.showProgress, 2000);
 
 

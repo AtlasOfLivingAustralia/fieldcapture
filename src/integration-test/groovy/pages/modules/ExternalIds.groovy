@@ -26,6 +26,9 @@ class ExternalId extends Module {
     }
 
     void remove() {
+        interact {
+            moveToElement(remove)
+        }
         remove.click()
     }
 }
@@ -42,6 +45,9 @@ class ExternalIds extends Module {
 
     ExternalId addExternalId() {
         int count = externalIds.size()
+        interact {
+            moveToElement(addExternalIdButton)
+        }
         addExternalIdButton.click()
         waitFor {
             externalIds.size() == count+1

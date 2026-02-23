@@ -78,7 +78,12 @@ class ReportPage extends Page {
     }
 
     def markAsNotApplicable(String sectionId) {
-        notApplicableCheckbox(sectionId).value(true)
+
+        def checkbox = notApplicableCheckbox(sectionId)
+        interact {
+            moveToElement(checkbox)
+        }
+        checkbox.value(true)
     }
 
     Navigator notApplicableCheckbox(String sectionId) {
@@ -111,6 +116,9 @@ class ReportPage extends Page {
             exitButton.click()
         }
         else if (cancelButton.displayed) {
+            interact {
+                moveToElement(cancelButton)
+            }
             cancelButton.click()
         }
         else {

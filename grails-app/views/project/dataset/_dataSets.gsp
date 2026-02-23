@@ -4,12 +4,12 @@
     <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.DATA_SET_DESCRIPTION}"/>
     <div class="row">
         <div class="col-sm-12">
-            <div class="form-group form-actions">
+            <div class="mb-3 form-actions">
                 <button class="btn btn-sm btn-primary" type="button" data-bind="click:newDataSet">New data set summary</button>
                 <g:if test="${enableProjectDataSetsDownload}">
                 <!-- ko if: enableProjectDataSetsDownload -->
                 <div class="dropdown" style="display:inline-block">
-                    <button class="btn btn-sm btn-info dropdown-toggle" type="button" data-toggle="dropdown">
+                    <button class="btn btn-sm btn-info dropdown-toggle" type="button" data-bs-toggle="dropdown">
                         Download Monitor data
                     </button>
                     <div class="dropdown-menu">
@@ -73,11 +73,15 @@
                 <a class="btn btn-container btn-sm" data-bind="visible:!readOnly,attr:{href:editUrl}">
                     <i class="fa fa-edit" title="Edit this dataset"></i>
                 </a>
+                <a class="btn btn-container btn-sm" data-bind="if:!isMonitorDataSet,attr:{href:copyUrl}">
+                    <i class="fa fa-copy" title="Make a copy of this dataset"></i>
+                </a>
+
                 <a class="btn btn-container btn-sm" href="#" data-bind="visible:!readOnly,click:deleteDataSet">
                     <i class="fa fa-remove" title="Delete this dataset"></i>
                 </a>
                 <div class="dropdown" data-bind="if:downloadUrl" style="display:inline-block">
-                    <a class="btn btn-container btn-sm dropdown-toggle" href="#" data-toggle="dropdown">
+                    <a class="btn btn-container btn-sm dropdown-toggle" href="#" data-bs-toggle="dropdown">
                         <i class="fa fa-download" title="Download data for this dataset from the BDR"></i>
                     </a>
                     <div class="dropdown-menu">

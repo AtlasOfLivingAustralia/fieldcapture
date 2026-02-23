@@ -19,10 +19,16 @@ class AddOrEditProgram extends Module {
     }
 
     def save() {
+        interact {
+            moveToElement(saveButton)
+        }
         saveButton.click()
     }
 
     def cancel() {
+        interact {
+            moveToElement(saveButton)
+        }
         cancelButton.click()
     }
 }

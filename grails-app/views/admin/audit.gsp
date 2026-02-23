@@ -17,11 +17,11 @@
 	<body>
         <h3>Audit</h3>
         <content tag="pageTitle">Audit</content>
-        <form class="form-inline mb-3">
+        <form class="d-flex align-items-center mb-3">
             Search for a :
-            <g:select id="searchType" class="form-control form-control-sm mr-2" name="searchType" value="${searchType}" from="${['Project', 'Organisation', 'Setting / Site Blog']}">
+            <g:select id="searchType" class="form-control form-control-sm me-2" name="searchType" value="${searchType}" from="${['Project', 'Organisation', 'Setting / Site Blog']}">
             </g:select>
-            <g:textField id="searchTerm" class="form-control form-control-sm mr-2" name="searchTerm" placeholder="Search term..." value="${searchTerm}"/>
+            <g:textField id="searchTerm" class="form-control form-control-sm me-2" name="searchTerm" placeholder="Search term..." value="${searchTerm}"/>
             <button class="btn btn-sm" id="btnSearch"><i class="fa fa-search"></i></button>
         </form>
         <g:if test="${results}">

@@ -303,6 +303,8 @@ EditOrganisationViewModel = function(props, options) {
     var self = this;
     _.extend(self, new OrganisationViewModel(props, options));
 
+    self.allFieldsEditable = options.allFieldsEditable;
+
     self.onPasteAbn = function(vm, event) {
 
         if (event.originalEvent && event.originalEvent.clipboardData) {
@@ -470,20 +472,6 @@ OrganisationPageViewModel = function (props, options) {
     var tabs = {
         'about': {
             initialiser: function() {
-                if (self.mainImageUrl()) {
-                    $('#carousel').sliderPro({
-                        width: '100%',
-                        height: 'auto',
-                        autoHeight: true,
-                        arrows: false, // at the moment we only support 1 image
-                        buttons: false,
-                        waitForLayers: true,
-                        fade: true,
-                        autoplay: false,
-                        autoScaleLayers: false,
-                        touchSwipe: false // at the moment we only support 1 image
-                    });
-                }
             }
         },
         'dashboard': {

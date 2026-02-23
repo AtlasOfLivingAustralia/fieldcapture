@@ -67,7 +67,7 @@
                 <h2>${managementUnit.name?.encodeAsHTML()}</h2>
             </div>
             <div class="col-sm-2">
-                <div class="float-right pull-right">
+                <div class="float-end pull-right">
                     <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
                     <g:if test="${isManagementUnitStarredByUser}">
                         <button class="btn btn-sm" id="starBtn" data-bind="click:toggleStarred"><i

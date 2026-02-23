@@ -19,7 +19,7 @@
                 <tr>
                     <td class="index"> <span data-bind="text:$index()+1"></span></td>
                     <td class="original-outcomes"><textarea class="form-control form-control-sm" data-bind="value: description, disable: $parent.isProjectDetailsLocked()" rows="5" ></textarea></td>
-                    <td class="original-assets"><select class="form-control form-control-sm"
+                    <td class="original-assets"><select class="form-select form-select-sm"
                                             data-bind="options: $parent.protectedNaturalAssests, selectedOptions: assets, disable: $parent.isProjectDetailsLocked()" size="5" multiple="true"></select></td>
                     <td class="remove">
                         <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="fa fa-remove" data-bind="click: $parent.removeObjectivesOutcome"></i></span>
@@ -96,9 +96,9 @@
     </div>
     <div class="col-sm-12">
         <label for="obligations">1. Are you aware of, and compliant with, your workplace health and safety legislation and obligations.</label>
-        <select id="obligations" class="form-control form-control-sm" style="width: 20%;" data-bind="options: obligationOptions, optionsCaption: 'Please select', value:details.obligations, disable: isProjectDetailsLocked()"> </select>
+        <select id="obligations" class="form-select form-select-sm" style="width: 20%;" data-bind="options: obligationOptions, optionsCaption: 'Please select', value:details.obligations, disable: isProjectDetailsLocked()"> </select>
         <label for="obligationOptions">2. Do you have appropriate policies and procedures in place that are commensurate with your project activities?</label>
-        <select id="obligationOptions" class="form-control form-control-sm" style="width: 20%;" data-bind="options: obligationOptions, optionsCaption: 'Please select', value:details.policies, disable: isProjectDetailsLocked()"> </select>
+        <select id="obligationOptions" class="form-select form-select-sm" style="width: 20%;" data-bind="options: obligationOptions, optionsCaption: 'Please select', value:details.policies, disable: isProjectDetailsLocked()"> </select>
         </div>
     </div>
 </div>

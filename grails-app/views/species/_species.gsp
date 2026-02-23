@@ -17,7 +17,7 @@
     </div>
     <div class="row">
         <div class="col-sm-12">
-            <form class="form-group" id="speciesListForm">
+            <form class="mb-3" id="speciesListForm">
                 <label class="control-label" for="speciesList">List of species<br>(one per line)</label>
                 <textarea id="speciesList" rows="10" class="input-block-level validate[required] form-control w-100"></textarea>
             </form>

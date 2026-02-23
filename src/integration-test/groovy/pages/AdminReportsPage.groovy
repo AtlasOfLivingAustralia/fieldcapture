@@ -55,6 +55,9 @@ class AdminReportsPage extends Page {
 
     def generateReef2050Pdf() {
         reportFormats = "pdf"
+        interact {
+            moveToElement(viewReportBtn)
+        }
         viewReportBtn.click()
     }
 

@@ -180,7 +180,7 @@ var SimplifiedReportingViewModel = function(project, config) {
     };
 
     self.configureProjectReport = function() {
-        $('#projectReportOptions').modal({backdrop:'static'});
+        $('#projectReportOptions').modal({backdrop:'static'}).modal('show');
     };
 
     var OPTIONAL_REPORT_TYPE = config.sightingsActivityType || 'ESP Species';
@@ -435,7 +435,7 @@ var SimplifiedReportingViewModel = function(project, config) {
         })
     };
     self.collectReportDates = function() {
-        $(reportSelectionModalSelector).modal({backdrop:'static'});
+        $(reportSelectionModalSelector).modal({backdrop:'static'}).modal('show');
     };
 
     if (!hasSubmittedOrPublishedReport && !self.hasCollectedReportingDates()) {

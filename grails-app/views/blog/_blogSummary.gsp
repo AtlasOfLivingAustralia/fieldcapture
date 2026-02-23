@@ -3,14 +3,14 @@
     <g:if test="${blog.size() > 0}">
         <ul class="unstyled list-unstyled" data-bind="foreach:entries">
             <li class="customBorder mb-2">
-                <img data-bind="visible:imageUrl(), attr:{src:imageThumbnailUrl}" class="pull-left mr-2 customImage" width="50" height="50"/>
-                <img src="${assetPath(src:"no-images.png" )}" class="pull-left mr-2 customImage noPhotos" data-bind="visible:!imageThumbnailUrl()  && !stockIcon()"/>
-                <i class="blog-icon floatleft ml-1 fa fa-3x"  data-bind="visible:stockIcon(), css:stockIcon"></i>
+                <img data-bind="visible:imageUrl(), attr:{src:imageThumbnailUrl}" class="pull-left me-2 customImage" width="50" height="50"/>
+                <img src="${assetPath(src:"no-images.png" )}" class="pull-left me-2 customImage noPhotos" data-bind="visible:!imageThumbnailUrl()  && !stockIcon()"/>
+                <i class="blog-icon floatleft ms-1 fa fa-3x"  data-bind="visible:stockIcon(), css:stockIcon"></i>
 
                 <div>
                     <div class="row">
                         <strong class="col-sm-8" data-bind="text:title"></strong>
-                        <div class="col-sm-4 text-right pull-right">
+                        <div class="col-sm-4 text-end pull-right">
                             <a class="editThisBlog" href data-bind="click:$parent.editBlogEntry">Edit</a> |
                             <a class="delThisBlog" href data-bind="click:$parent.deleteBlogEntry">Delete</a>
                         </div>

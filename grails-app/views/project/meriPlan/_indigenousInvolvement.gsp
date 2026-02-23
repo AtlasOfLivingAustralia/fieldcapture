@@ -1,13 +1,13 @@
 <h4>${title ?: 'First Nations people involvement'}</h4>
 
-<div class="form-group row">
+<div class="mb-3 row">
     <div class="col-sm-8">
         <label class="required" for="indigenous-involved">${indigenousInvolvementQuestion ?: 'Are First Nations people (Indigenous) involved in the project?'}</label>
     </div>
 
     <div class="col-sm-4">
         <select id="indigenous-involved"
-                class="form-control form-control-sm"
+                class="form-select form-select-sm"
                 data-bind="disable: isProjectDetailsLocked(), value:details.indigenousInvolved, optionsCaption:'Please select...'"
                 data-validation-engine="validate[required]">
             <option value="">Please select...</option> <%-- The view model has a dependency on these values.  Don't change without updating the view model --%>
@@ -17,14 +17,14 @@
     </div>
 </div>
 
-<div class="form-group" data-bind="visible:details.indigenousInvolved() == 'Yes'">
+<div class="mb-3" data-bind="visible:details.indigenousInvolved() == 'Yes'">
 
     <label class="required" for="indigenous-involvement">What is the nature of the involvement? <fc:iconHelp html="true"><b>Leading</b> – First Nations peoples leadership, knowledge and involvement as a substantial component across all stages of the project from co-design, delivery, monitoring, evaluation and reporting. <br/>
         <b>Participating</b> - Involvement of First Nations people in at least one aspect of project co-design, delivery, monitoring, evaluation or reporting.</fc:iconHelp></label>
 
 
     <select id="indigenous-involvement"
-            class="form-control form-control-sm"
+            class="form-select form-select-sm"
             data-bind="disable: isProjectDetailsLocked(), value:details.indigenousInvolvementType, optionsCaption:'Please select...'"
             data-validation-engine="validate[required]">
         <option value="">Please select...</option>
@@ -34,7 +34,7 @@
 
 </div>
 
-<div class="form-group" data-bind="if:details.indigenousInvolved() == 'No'">
+<div class="mb-3" data-bind="if:details.indigenousInvolved() == 'No'">
 
     <label for="indigenous-involvement-comments">Comments</label>
     <textarea id="indigenous-involvement-comments" rows="3"

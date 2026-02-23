@@ -88,13 +88,9 @@ class ProjectIndexSpec extends StubbedCasSpec {
         at ProjectIndex
 
         when:
-        adminTab.click()
-
-        then:
-        waitFor { admin.projectSettingsTab.click() }
-
-        when:
-        admin.projectSettings.saveChangesButton.click()
+        openAdminTab()
+        admin.openProjectSettings()
+        admin.projectSettings.saveChanges()
 
         then:
         waitFor 20, {hasBeenReloaded()}
@@ -115,15 +111,12 @@ class ProjectIndexSpec extends StubbedCasSpec {
         at ProjectIndex
 
         when:
-        adminTab.click()
+        openAdminTab()
+        admin.openProjectSettings()
 
-        then:
-        waitFor { admin.projectSettingsTab.click() }
-
-        when:
         admin.projectSettings.externalIds.externalIds[0].idType = "INTERNAL_ORDER_NUMBER"
         admin.projectSettings.externalIds.externalIds[0].externalId = "12345"
-        admin.projectSettings.saveChangesButton.click()
+        admin.projectSettings.saveChanges()
 
         then:
         waitFor{hasBeenReloaded()}
@@ -144,14 +137,10 @@ class ProjectIndexSpec extends StubbedCasSpec {
         at ProjectIndex
 
         when:
-        adminTab.click()
-
-        then:
-        waitFor { admin.projectSettingsTab.click() }
-
-        when:
+        openAdminTab()
+        admin.openProjectSettings()
         admin.projectSettings.externalIds.externalIds[0].remove()
-        admin.projectSettings.saveChangesButton.click()
+        admin.projectSettings.saveChanges()
 
         then: "A validation error is displayed"
         admin.projectSettings.externalIdsErrorDisplayed()
@@ -168,16 +157,12 @@ class ProjectIndexSpec extends StubbedCasSpec {
         at ProjectIndex
 
         when:
-        adminTab.click()
-
-        then:
-        waitFor { admin.projectSettingsTab.click() }
-
-        when:
+        openAdminTab()
+        admin.openProjectSettings()
         ExternalId externalId = admin.projectSettings.externalIds.addExternalId()
         externalId.idType = 'INTERNAL_ORDER_NUMBER'
         externalId.externalId = '12345'
-        admin.projectSettings.saveChangesButton.click()
+        admin.projectSettings.saveChanges()
 
         then:
         waitFor{hasBeenReloaded()}
@@ -198,14 +183,10 @@ class ProjectIndexSpec extends StubbedCasSpec {
         at ProjectIndex
 
         when:
-        adminTab.click()
-
-        then:
-        waitFor { admin.projectSettingsTab.click() }
-
-        when:
+        openAdminTab()
+        admin.openProjectSettings()
         admin.projectSettings.externalIds.externalIds[0].remove()
-        admin.projectSettings.saveChangesButton.click()
+        admin.projectSettings.saveChanges()
 
         then:
         admin.projectSettings.externalIdsErrorDisplayed()
@@ -222,14 +203,10 @@ class ProjectIndexSpec extends StubbedCasSpec {
         at ProjectIndex
 
         when:
-        adminTab.click()
-
-        then:
-        waitFor { admin.projectSettingsTab.click() }
-
-        when:
+        openAdminTab()
+        admin.openProjectSettings()
         admin.projectSettings.externalIds.externalIds[0].externalId = '12345'
-        admin.projectSettings.saveChangesButton.click()
+        admin.projectSettings.saveChanges()
 
         then:
         waitFor{hasBeenReloaded()}
@@ -250,10 +227,10 @@ class ProjectIndexSpec extends StubbedCasSpec {
         at ProjectIndex
 
         when:
-        adminTab.click()
+        openAdminTab()
+        admin.openProjectSettings()
 
         then:
-        waitFor { admin.projectSettingsTab.click() }
         admin.projectSettings.projectState.@disabled
     }
 
@@ -268,10 +245,10 @@ class ProjectIndexSpec extends StubbedCasSpec {
         at ProjectIndex
 
         when:
-        adminTab.click()
+        openAdminTab()
+        admin.openProjectSettings()
 
         then:
-        waitFor { admin.projectSettingsTab.click() }
         !admin.projectSettings.projectState.@disabled
     }
 
@@ -286,10 +263,10 @@ class ProjectIndexSpec extends StubbedCasSpec {
         at ProjectIndex
 
         when:
-        adminTab.click()
+        openAdminTab()
+        admin.openProjectSettings()
 
         then:
-        waitFor { admin.projectSettingsTab.click() }
         !admin.projectSettings.projectState.@disabled
     }
 
@@ -325,12 +302,8 @@ class ProjectIndexSpec extends StubbedCasSpec {
         at ProjectIndex
 
         when:
-        adminTab.click()
-
-        then:
-        waitFor { admin.projectSettingsTab.click() }
-
-        when:
+        openAdminTab()
+        admin.openProjectSettings()
         admin.projectSettings.projectState.value("Terminated")
         admin.projectSettings.terminationReason = "Termination Reason Test"
 
@@ -342,9 +315,6 @@ class ProjectIndexSpec extends StubbedCasSpec {
             admin.projectSettings.projectState.value() == "terminated"
             admin.projectSettings.terminationReason.value() == "Termination Reason Test"
         }
-
-
-
 
     }
 

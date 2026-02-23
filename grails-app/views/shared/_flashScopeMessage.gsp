@@ -10,7 +10,7 @@
     <g:if test="${flash.message}">
         <div class="row">
             <div class="col-sm-6 alert alert-info" style="margin-bottom:0;">
-                <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+                <button class="btn-close" onclick="$('.alert').fadeOut();" href="#">×</button>
                 ${flash.message}
             </div>
         </div>

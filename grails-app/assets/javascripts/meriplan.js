@@ -119,10 +119,10 @@ function MERIPlan(project, projectService, config) {
                 }
             };
             ko.applyBindings(declarationViewModel, $declaration[0]);
-            $declaration.modal({backdrop: 'static', keyboard: true, show: true}).on('hidden.bs.modal', function () {
+            $declaration.modal({backdrop: 'static', keyboard: true}).on('hidden.bs.modal', function () {
                 $.unblockUI()
                 ko.cleanNode($declaration[0]);
-            });
+            }).modal('show');
 
         } else {
             self.submitPlan();
@@ -184,7 +184,7 @@ function MERIPlan(project, projectService, config) {
                     }
                 };
                 ko.applyBindings(planApprovalViewModel, $planApprovalModal[0]);
-                $planApprovalModal.modal({backdrop: 'static', keyboard:true, show:true}).on('hidden.bs.modal', function() {ko.cleanNode($planApprovalModal[0])});
+                $planApprovalModal.modal({backdrop: 'static', keyboard:true}).on('hidden.bs.modal', function() {ko.cleanNode($planApprovalModal[0])}).modal('show');
             }
             else {
                 var data = {
@@ -244,9 +244,9 @@ function MERIPlan(project, projectService, config) {
             }
         };
         ko.applyBindings(declarationViewModel, $declaration[0]);
-        $declaration.modal({backdrop: 'static', keyboard: true, show: true}).on('hidden', function () {
+        $declaration.modal({backdrop: 'static', keyboard: true}).on('hidden', function () {
             ko.cleanNode($declaration[0]);
-        });
+        }).modal('show');
     };
 
     self.isAgricultureProject.subscribe(function () {
@@ -716,10 +716,75 @@ function MERIPlan(project, projectService, config) {
     self.canApprove = function() {
         var canApprove = projectService.canApproveMeriPlan();
         if(!canApprove) {
-            $('.grantManagerActionSpan').popover({content:'*At least one Tech One Project Code or SAP Internal Order must be provided before the MERI plan can be approved', placement:'top', trigger:'hover'})
+            $('.grantManagerActionSpan').popover({content:'*At least one Tech One Project Code, Grand Award ID, or SAP Internal Order must be provided before the MERI plan can be approved', placement:'top', trigger:'hover'})
         }
         return canApprove
     };
+
+}
+
+function validateFloristics(field) {
+
+    const domEl   = field[0];
+    const ctx= ko.contextFor(domEl);
+    const root = ctx && ctx.$root;
+
+    // get selected values
+    let selectedValues = ($(domEl).val() || []);
+
+    const norm = s => String(s || '').trim().toLowerCase();
+
+    // get protocols from KO context
+    const protocols = (root && ko.unwrap(root.monitoringProtocols)) || [];
+    if (!Array.isArray(protocols) || !protocols.length) {
+        console.warn('validateFloristics: protocols not loaded yet');
+        return;
+    }
+
+    // find items that depend on floristics
+    const floristicsDeps = new Set(
+        protocols
+            .filter(p => (p.dependsOn || []).map(norm).includes('floristics'))
+            .map(p => norm(p.value))
+    );
+
+    // check if user needs floristics
+    const needingFloristics = selectedValues.filter(v => floristicsDeps.has(norm(v)));
+    const hasFloristics = selectedValues.some(v => norm(v).includes('floristics'));
+
+    if (needingFloristics.length && !hasFloristics) {
+        return `One or more selected modules (${needingFloristics.join(', ')}) depend on Floristics. Please also select a Floristics protocol.`;
+    }
+}
+
+/**
+ * Program configuration can specify which risk model to use.  This function creates the appropriate
+ * risk model based on the configuration.
+ * @param config
+ * @returns {RiskModel}
+ */
+function createRiskModel(config) {
+    let riskModel = null;
+    if (config.riskModel) {
+        switch (config.riskModel) {
+            case 'merit':
+                riskModel = meritRiskModel();
+                break;
+            case 'rlp':
+            default:
+                riskModel = rlpRiskModel();
+                break;
+        }
+    }
+    // Support the legacy configuration option as well.
+    else {
+        if (config.useRlpRisksModel) {
+            riskModel = rlpRiskModel();
+        } else {
+            riskModel = meritRiskModel();
+        }
+    }
+    return riskModel;
 }
 
 function ReadOnlyMeriPlan(project, projectService, config, changed) {
@@ -739,26 +804,26 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
     self.meriPlanStatus = ko.pureComputed(function () {
         var result = {
             text: 'This plan is not yet approved',
-            badgeClass: 'badge-warning'
+            badgeClass: 'bg-warning'
         };
         if (projectService.isCompletedOrTerminated()) {
             if (projectService.isUnlockedForDataCorrection()) {
-                result = {text: 'The plan has been unlocked for data correction', badgeClass: 'badge-warning'};
+                result = {text: 'The plan has been unlocked for data correction', badgeClass: 'bg-warning'};
             } else {
                 if (projectService.isTerminated()){
-                    result = {text: 'This project is ' + project.status.toLowerCase(), badgeClass: 'badge-danger'};
+                    result = {text: 'This project is ' + project.status.toLowerCase(), badgeClass: 'bg-danger'};
                 }else{
-                    result = {text: 'This project is ' + project.status.toLowerCase(), badgeClass: 'badge-info'};
+                    result = {text: 'This project is ' + project.status.toLowerCase(), badgeClass: 'bg-info'};
                 }
             }
         } else {
             if (projectService.isApproved()) {
-                result = {text: 'This plan has been approved', badgeClass: 'badge-success'};
+                result = {text: 'This plan has been approved', badgeClass: 'bg-success'};
             } else if (projectService.isSubmitted()) {
-                result = {text: 'This plan has been submitted for approval', badgeClass: 'badge-info'};
+                result = {text: 'This plan has been submitted for approval', badgeClass: 'bg-info'};
             }
             else if (!projectService.isPlanComplete()) {
-                result = {text: 'This plan has not been completed', badgeClass: 'badge-warning'};
+                result = {text: 'This plan has not been completed', badgeClass: 'bg-warning'};
             }
         }
         return result;
@@ -772,12 +837,7 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
     self.editMeriPlan = function() {
         window.location.href = config.editMeriPlanUrl;
     };
-    var riskModel;
-    if (config.useRlpRisksModel) {
-        riskModel = rlpRiskModel();
-    } else {
-        riskModel = meritRiskModel();
-    }
+    var riskModel = createRiskModel(config);
 
     // List of service / target measure
     self.allTargetMeasures = [];

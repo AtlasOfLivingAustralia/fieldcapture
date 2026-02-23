@@ -5,7 +5,6 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title"><span data-bind="text:title"></span></h3>
-                <button type="button" class="close btn-sm" data-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
             <div class="modal-body">
                 <p data-bind="visible:explanationText, text:explanationText"></p>
@@ -25,7 +24,7 @@
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-sm btn-primary" data-bind="click:submit, text:buttonText" aria-hidden="true"></button>
-                <button data-bind="visible:buttonTextNo, text:buttonTextNo" class="btn btn-sm btn-danger" data-dismiss="modal" aria-hidden="true"></button>
+                <button data-bind="visible:buttonTextNo, text:buttonTextNo" class="btn btn-sm btn-danger" data-bs-dismiss="modal" aria-hidden="true"></button>
             </div>
         </div>
     </div>

@@ -28,10 +28,16 @@ class RisksAndThreats extends Module {
     }
 
     void save() {
+        interact {
+            moveToElement(saveButton)
+        }
         saveButton.click()
     }
 
     void cancel() {
+        interact {
+            moveToElement(cancelButton)
+        }
         cancelButton.click()
     }
 

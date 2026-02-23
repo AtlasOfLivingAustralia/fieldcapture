@@ -6,13 +6,13 @@
   "directories": {},
   "private": true,
   "dependencies": {
-    "bootstrap": "4.6",
+    "bootstrap": "5.3.8",
     "slickgrid": "^2.4.34",
     "@atlasoflivingaustralia/ecodata-client-plugin": "6.2.0-pre.2023-08-22.f397d6f5"
   },
   "devDependencies": {
     "@metahub/karma-jasmine-jquery": "^2.0.1",
-    "chromedriver": "^140.0",
+    "chromedriver": "^143.0.4",
     "jasmine-core": "^3.5.0",
     "jasmine-jquery": "^2.0.0",
     "jquery": "3.6.2",
@@ -23,7 +23,7 @@
     "karma-jasmine": "^1.1.2",
     "karma-jquery": "^0.2.4",
     "knockout": "^3.5.1",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.37"
   },

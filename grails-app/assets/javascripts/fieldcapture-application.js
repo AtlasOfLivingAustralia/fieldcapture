@@ -111,7 +111,7 @@ function showAlert(message, alerttype, target) {
 
 function showAlertWithSelector(message, alerttype, targetSelector) {
 
-    $(targetSelector).append('<div class="alert ' +  alerttype + ' auto-close-alert"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div>')
+    $(targetSelector).append('<div class="alert ' +  alerttype + ' alert-dismissable auto-close-alert" role="alert"><span>'+message+'</span><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>')
 
     setTimeout(function() { // this will automatically close the alert and remove this if the users doesnt close it in 5 secs
         $(".auto-close-alert").remove();
@@ -119,7 +119,7 @@ function showAlertWithSelector(message, alerttype, targetSelector) {
 }
 
 function blockUIWithMessage(message) {
-    $.blockUI({ message: message, fadeIn:0,
+    $.blockUI({ message: message, fadeIn:0, fadeIn:0, baseZ:2000,
         css: {
             border: 'none',
             padding: '15px',
@@ -538,7 +538,12 @@ function Documents(options) {
             var embeddedVideo = selectedDoc.embeddedVideo();
             if (embeddedVideo) {
                 val = "xssViewer";
-            } else if (listContains(contentTypes.convert.concat(contentTypes.audio, contentTypes.video, contentTypes.image, contentTypes.pdf), contentType)) {
+            }
+            // We can't convert non-public documents
+            else if (listContains(contentTypes.convert, contentType) && !ko.utils.unwrapObservable(selectedDoc.public)) {
+                val = "noPreviewViewer";
+            }
+            else if (listContains(contentTypes.convert.concat(contentTypes.audio, contentTypes.video, contentTypes.image, contentTypes.pdf), contentType)) {
                 val = "iframeViewer";
             } else {
                 val = "noPreviewViewer";
@@ -555,11 +560,10 @@ function Documents(options) {
         var val;
         if (selectedDoc) {
             var contentType = (selectedDoc.contentType() || 'application/octet-stream').toLowerCase().trim();
-            //return (selectedDoc && selectedDoc.url) ? "https://docs.google.com/viewer?url="+encodeURIComponent(selectedDoc.url)+"&embedded=true" : '';
 
             if (listContains(contentTypes.pdf, contentType)) {
                 val = fcConfig.pdfViewer + '?file=' + encodeURIComponent(selectedDoc.url);
-            } else if (listContains(contentTypes.convert, contentType)) {
+            } else if (listContains(contentTypes.convert, contentType) && ko.utils.unwrapObservable(selectedDoc.public)) {
                 val = fcConfig.pdfgenUrl+'?file='+encodeURIComponent(selectedDoc.url);
             } else if (listContains(contentTypes.image, contentType)) {
                 val = fcConfig.imgViewer + '?file=' + encodeURIComponent(selectedDoc.url);
@@ -869,7 +873,7 @@ function showFloatingMessage(message, alertType) {
         alertType = 'alert-success';
     }
 
-    var messageContainer = $('<div id="alertdiv" style="display:none; margin:0;" class="alert ' +  alertType + '"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div>');
+    var messageContainer = $('<div id="alertdiv" style="display:none; margin:0;" class="alert ' +  alertType + '"><a class="btn-close" data-bs-dismiss="alert">×</a><span>'+message+'</span></div>');
 
     setTimeout(function() { // this will automatically close the alert and remove this if the users doesnt close it in 5 secs
         messageContainer.slideUp(400, function() {messageContainer.remove();});

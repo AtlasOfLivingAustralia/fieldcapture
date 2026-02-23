@@ -1,6 +1,6 @@
 
 <form id="edit-data-set" class="validationEngineContainer">
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="title" class="col-sm-5 col-form-label required">1. Dataset title</label>
         <div class="col-sm-7">
             <input type="text" class="form-control" id="title" placeholder="" data-validation-engine="validate[required,maxSize[200],funcCall[uniqueName]]" data-bind="value:name">
@@ -11,19 +11,19 @@
             Background
         </div>
     </div>
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="projectId" class="col-sm-5 col-form-label">2. ${g.message(code:'label.merit.projectID')}</label>
         <div class="col-sm-7">
             <input type="text" readonly="readonly" class="form-control" id="projectId" placeholder="" value="${project.grantId}">
         </div>
     </div>
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="projectName" class="col-sm-5 col-form-label">3. Project name</label>
         <div class="col-sm-7">
             <input type="text" readonly="readonly" class="form-control" id="projectName" placeholder="" value="${project.name}">
         </div>
     </div>
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="programName" class="col-sm-5 col-form-label">4. What program does this dataset relate to?</label>
         <div class="col-sm-7">
             <input type="text" readonly="readonly" class="form-control" id="programName" placeholder="" value="${programName}">
@@ -35,13 +35,13 @@
         </div>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="programOutcome" class="col-sm-5 col-form-label required">5. What program outcome does this dataset relate to?</label>
         <div class="col-sm-7">
             <g:select from="${outcomes}" noSelection="['':'Please select...']" class="form-control" id="programOutcome" name="programOutcome" data-validation-engine="validate[required]" data-bind="value:programOutcome"/>
         </div>
     </div>
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="investmentPriority" class="col-sm-5 col-form-label required">6. What primary or secondary investment priorities or assets does this dataset relate to?</label>
         <div class="col-sm-7">
             <g:select multiple="multiple" from="${priorities}" name="investmentPriority" class="form-control" id="investmentPriority" data-validation-engine="validate[required]" data-bind="multiSelect2:{value:investmentPriorities}"/>
@@ -50,10 +50,10 @@
     </div>
 %{--    Support for legacy data set summaries / projects without outcome targets --}%
     <g:if test="${!supportsOutcomeTargets}">
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="term" class="col-sm-5 col-form-label">7. Is this data being collected for reporting against short or medium term outcome statements?</label>
         <div class="col-sm-7">
-            <select class="form-control" id="term" data-bind="value:term">
+            <select class="form-select" id="term" data-bind="value:term">
                 <option></option>
                 <option>Short-term outcome statement</option>
                 <option>Medium-term outcome statement</option>
@@ -64,18 +64,18 @@
     </g:if>
     <g:else>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
     <label for="projectOutcomes" class="col-sm-5 col-form-label required">7. Which project service and outcome/s does this data set support? <br/>  <b><i>This data set summary will only be able to be invoiced for the service selected here</i></b>.</label>
         <div class="col-sm-7">
-            <select id="projectOutcomes" class="form-control" data-bind="options:projectOutcomeList, optionsText:'label', optionsValue: 'label', optionsCaption:'Please select...', value:serviceAndOutcomes" data-validation-engine="validate[required]"></select>
+            <select id="projectOutcomes" class="form-select" data-bind="options:projectOutcomeList, optionsText:'label', optionsValue: 'label', optionsCaption:'Please select...', value:serviceAndOutcomes" data-validation-engine="validate[required]"></select>
         </div>
     </div>
     </g:else>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="type" class="col-sm-5 col-form-label required">8a. Is this (a) a baseline dataset associated with a project outcome i.e. against which, change will be measured, (b) a project progress dataset that is tracking change against an established project baseline dataset or (c) a standalone, foundational dataset to inform future management interventions?</label>
         <div class="col-sm-7">
-            <select class="form-control" id="type" data-validation-engine="validate[required]" data-bind="value:type">
+            <select class="form-select" id="type" data-validation-engine="validate[required]" data-bind="value:type">
                 <option></option>
                 <option data-bind="disable:disableBaseline()">Baseline</option>
                 <option data-bind="disable:disableIndicator()">Indicator</option>
@@ -89,25 +89,25 @@
         </div>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="projectBaseline" class="col-sm-5 col-form-label required">8b. Which project baseline does this data set relate to or describe?</label>
         <div class="col-sm-7">
-            <select multiple="multiple" class="form-control" id="projectBaseline" data-validation-engine="validate[required]" data-bind="options:projectBaselines, optionsText:'label', optionsValue:'value', optionsCaption:'Please select...', multiSelect2:{value:baselines}"></select>
+            <select multiple="multiple" class="form-select" id="projectBaseline" data-validation-engine="validate[required]" data-bind="options:projectBaselines, optionsText:'label', optionsValue:'value', optionsCaption:'Please select...', multiSelect2:{value:baselines}"></select>
         </div>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="protocol" class="col-sm-5 col-form-label required">9a. What EMSA protocol was used when collecting the data?</label>
         <div class="col-sm-7">
-            <select class="form-control" id="protocol" data-validation-engine="validate[required]" data-bind="options:projectProtocols, optionsText:'label', optionsValue:'value', optionsCaption:'Please select...', value:protocol">
+            <select class="form-select" id="protocol" data-validation-engine="validate[required]" data-bind="options:projectProtocols, optionsText:'label', optionsValue:'value', optionsCaption:'Please select...', value:protocol">
             </select>
         </div>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="measurementTypes" class="col-sm-5 col-form-label required">9b. What types of measurements or observations does the dataset include?</label>
         <div class="col-sm-7">
-            <select multiple="multiple" type="text" class="form-control" id="measurementTypes" data-validation-engine="validate[required]" data-bind="disable: protocol() != 'other', multiSelect2:{value:measurementTypes}">
+            <select multiple="multiple" type="text" class="form-select" id="measurementTypes" data-validation-engine="validate[required]" data-bind="disable: protocol() != 'other', multiSelect2:{value:measurementTypes}">
                 <option>Abundance</option>
                 <option>Adoption - climate and market demands</option>
                 <option>Adoption - land resource management practices</option>
@@ -143,10 +143,10 @@
             Dataset collection
         </div>
     </div>
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="methods" class="col-sm-5 col-form-label required">10. Identify the method(s) used to collect the data.</label>
         <div class="col-sm-7">
-            <select class="form-control" multiple="multiple" id="methods" data-validation-engine="validate[required]" data-bind="disable: protocol() != 'other', multiSelect2:{value:methods}">
+            <select class="form-select" multiple="multiple" id="methods" data-validation-engine="validate[required]" data-bind="disable: protocol() != 'other', multiSelect2:{value:methods}">
                 <option>Active searching</option>
                 <option>Aerial photography</option>
                 <option>Area sampling</option>
@@ -176,19 +176,19 @@
             </select>
         </div>
     </div>
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="methodDescription" class="col-sm-5 col-form-label required">11. Describe the method used to collect the data in detail.</label>
         <div class="col-sm-7">
             <textarea rows="4"  class="form-control" id="methodDescription" placeholder="" data-validation-engine="validate[required,maxSize[2000]]" data-bind="disable: protocol() != 'other', value:methodDescription"></textarea>
         </div>
     </div>
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="collectionApp" class="col-sm-5 col-form-label">12. Identify any apps used during data collection. <p>Where the 'Monitor' app has not been used, please provide details</p></label>
         <div class="col-sm-7">
             <input type="text"  class="form-control" id="collectionApp" placeholder="" data-bind="value:collectionApp">
         </div>
     </div>
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="location" class="col-sm-5 col-form-label">13. Provide a coordinate centroid for the area surveyed.
         (For biophysical/ecological surveys where an app was not used, and where there are no sensitivities in providing a location). <p>For biophysical/ecological surveys where an app was not used, and where there are no sensitivities in providing a location</p>
         </label>
@@ -204,21 +204,16 @@
             <!-- /ko -->
         </div>
     </div>
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="startDate" class="col-sm-5 col-form-label required">14. First collection date.</label>
         <div class="col-sm-3">
-            <div class="input-group input-append">
-                <fc:datePicker type="text" bs4="true" class="form-control" id="startDate" name="startDate" placeholder="" targetField="startDate.date" autocomplete="off" data-validation-engine="validate[required,past[now]]"/>
-            </div>
+            <fc:datePicker type="text" bs4="true" class="form-control" id="startDate" name="startDate" placeholder="" targetField="startDate.date" autocomplete="off" data-validation-engine="validate[required,past[now]]"/>
         </div>
     </div>
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="endDate" class="col-sm-5 col-form-label required">15. Last collection date.</label>
         <div class="col-sm-3">
-            <div class="input-group input-append">
-                <fc:datePicker type="text"  bs4="true" class="form-control" id="endDate" placeholder="" data-bind="jqueryValidationEngine:{validationFunction:validateEndDate}, datepicker:endDate.date, disable:dataCollectionOngoing" targetField="" autocomplete="off"/>
-
-            </div>
+            <fc:datePicker type="text"  bs4="true" class="form-control" id="endDate" placeholder="" data-bind="jqueryValidationEngine:{validationFunction:validateEndDate}, datepicker:endDate.date, disable:dataCollectionOngoing" targetField="" autocomplete="off"/>
         </div>
         <div class="col-sm-3" id="dataCollectionOngoingDiv">
             <label class="checkbox">
@@ -227,10 +222,10 @@
             </label>
         </div>
     </div>
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="addition" class="col-sm-5 col-form-label required">16. Is this data an addition to existing time-series data collected as part of a previous project, or is being collected as part of a broader/national dataset?</label>
         <div class="col-sm-7">
-            <select class="form-control" id="addition" data-validation-engine="validate[required]" data-bind="value:addition">
+            <select class="form-select" id="addition" data-validation-engine="validate[required]" data-bind="value:addition">
                 <option></option>
                 <option>Previous project</option>
                 <option>Broader/national dataset</option>
@@ -241,10 +236,10 @@
         </div>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="threatenedSpeciesIndex" class="col-sm-5 col-form-label">16a. Has your data been uploaded to the Threatened Species Index?</label>
         <div class="col-sm-7">
-            <select class="form-control" id="threatenedSpeciesIndex" data-bind="value:threatenedSpeciesIndex">
+            <select class="form-select" id="threatenedSpeciesIndex" data-bind="value:threatenedSpeciesIndex">
                 <option></option>
                 <option>Yes</option>
                 <option>No</option>
@@ -253,12 +248,10 @@
         </div>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="threatenedSpeciesIndex" class="col-sm-5 col-form-label required">16b. Date of upload, if you answered 'Yes' to 16a above.</label>
         <div class="col-sm-3">
-            <div class="input-group input-append">
-                <fc:datePicker type="text" bs4="true" class="form-control" id="threatenedSpeciesIndexUploadDate" placeholder="" data-validation-engine="validate[required]" data-bind="datepicker:threatenedSpeciesIndexUploadDate.date, enable: threatenedSpeciesIndex() == 'Yes'" targetField="" required="true" autocomplete="off"/>
-            </div>
+            <fc:datePicker type="text" bs4="true" class="form-control" id="threatenedSpeciesIndexUploadDate" placeholder="" data-validation-engine="validate[required]" data-bind="datepicker:threatenedSpeciesIndexUploadDate.date, enable: threatenedSpeciesIndex() == 'Yes'" targetField="" required="true" autocomplete="off"/>
         </div>
     </div>
 
@@ -267,16 +260,16 @@
             Dataset accessibility
         </div>
     </div>
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="publicationUrl" class="col-sm-5 col-form-label">17. Please provide the location/system of where the dataset is held. If possible, provide a URL of the published location. If stored internally by your organisation, write ‘stored internally’.</label>
         <div class="col-sm-7">
             <input type="text"  class="form-control" id="publicationUrl" placeholder="" data-bind="value:publicationUrl">
         </div>
     </div>
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="format" class="col-sm-5 col-form-label required">18. What format is the dataset?</label>
         <div class="col-sm-7">
-            <select class="form-control" id="format" data-validation-engine="validate[required]" data-bind="value:format">
+            <select class="form-select" id="format" data-validation-engine="validate[required]" data-bind="value:format">
                 <option></option>
                 <option>CSV</option>
                 <option>XML</option>
@@ -293,7 +286,7 @@
     </div>
 
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <div class="col-sm-5">
             <label for="sizeinkb" class="col-form-label required">19. What is the size of the dataset (KB)?</label>
             <p>If you don't know the size, check the 'Unknown' checkbox</p>
@@ -311,10 +304,10 @@
         </div>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="sensitivities" class="col-sm-5 col-form-label required">20. Are there any sensitivities in the dataset?</label>
         <div class="col-sm-7">
-            <select class="form-control" multiple="multiple" id="sensitivities" data-validation-engine="validate[required]" data-bind="selectedOptions:sensitivities">
+            <select class="form-select" multiple="multiple" id="sensitivities" data-validation-engine="validate[required]" data-bind="selectedOptions:sensitivities">
                 <option>No</option>
                 <option>Indigenous/cultural</option>
                 <option>Commercially sensitive</option>

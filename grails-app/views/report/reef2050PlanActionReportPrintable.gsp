@@ -16,7 +16,7 @@
         <g:set var="error" value="${flash.error ?: error}"/>
         <div class="row">
             <div class="alert alert-danger large-space-before">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert">&times;</button>
                 <span>Error: ${error}</span>
             </div>
         </div>

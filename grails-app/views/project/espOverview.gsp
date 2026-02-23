@@ -71,10 +71,10 @@
             </g:if>
             <g:set var="disabled">${(!user) ? "disabled='disabled' title='login required'" : ''}</g:set>
             <g:if test="${isProjectStarredByUser}">
-                <button class="btn btn-sm float-right" id="starBtn"><i class="fa fa-star"></i> <span>Remove from favourites</span></button>
+                <button class="btn btn-sm float-end" id="starBtn"><i class="fa fa-star"></i> <span>Remove from favourites</span></button>
             </g:if>
             <g:else>
-                <button class="btn btn-sm float-right" id="starBtn" ${disabled}><i class="fa fa-star-o"></i> <span>Add to favourites</span></button>
+                <button class="btn btn-sm float-end" id="starBtn" ${disabled}><i class="fa fa-star-o"></i> <span>Add to favourites</span></button>
             </g:else>
         </div>
     </section>
@@ -86,7 +86,7 @@
         <div class="row">
             <div class="col-sm-5">
                 <div class="alert alert-danger">
-                    <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+                    <button class="btn-close" onclick="$('.alert').fadeOut();" href="#">×</button>
                     ${flash.errorMessage?:flash.message}
                 </div>
             </div>
@@ -222,13 +222,13 @@
 
             <form class="form-horizontal" id = "stageReportPDF">
 
-                <div class="form-group row">
+                <div class="mb-3 row">
                     <label class="col-sm-2 col-form-label" for="stageToReport">Report to download: </label>
                     <div class="col-sm-6">
-                        <select id="stageToReport" class="form-control form-control-sm" data-bind="value:stageToReport, options:reportSelectionList, optionsText: 'label', optionsValue: 'stage' " ></select>
+                        <select id="stageToReport" class="form-select form-select-sm" data-bind="value:stageToReport, options:reportSelectionList, optionsText: 'label', optionsValue: 'stage' " ></select>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <button type="button" class="btn btn-sm btn-success"
                             data-bind="click:generateProjectReportHTML">Generate Report</button>
                 </div>
@@ -286,7 +286,7 @@
 
 <div>
     <strong data-bind="text:name"></strong>
-    <span class="badge badge-danger" data-bind="if:isReadOnly">Reporting is disabled for this site</span>
+    <span class="badge text-bg-danger" data-bind="if:isReadOnly">Reporting is disabled for this site</span>
     <div data-bind="visible:reportingComplete">
         <p>You have finished reporting for this site.</p>
     </div>

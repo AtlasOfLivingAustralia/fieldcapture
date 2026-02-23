@@ -199,7 +199,7 @@ if(!app.default.hub) {
     app.default.hub = 'merit'
 }
 if (!pdfgen.baseURL){
-    pdfgen.baseURL="http://pdfgen.ala.org.au/"
+    pdfgen.baseURL="https://pdfgen.ala.org.au/"
 }
 app.http.header.hostName = "X-ALA-hostName"
 abn.abnLookupToken = "Insert abn Token here"
@@ -354,6 +354,7 @@ environments {
         spatial.baseUrl = "http://localhost:${wiremock.port}"
         spatial.layersUrl = spatial.baseUrl + "/ws"
         grails.mail.port = 3025 // com.icegreen.greenmail.util.ServerSetupTest.SMTP.port
+        scanFile.enabled = false
 
     }
     production {

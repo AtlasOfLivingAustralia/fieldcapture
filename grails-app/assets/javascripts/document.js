@@ -341,7 +341,14 @@ function attachViewModelToFileUpload(uploadUrl, documentViewModel, uiSelector, p
         }
 
     }).on('fileuploadfail', function(e, data) {
-        documentViewModel.fileUploadFailed(data.errorThrown);
+        var jqXHR = data.jqXHR;
+        if (jqXHR && jqXHR.status === 422) {
+            var resp = jqXHR.responseJSON || {message: 'File upload could not be processed. Possible virus detected.'};
+            documentViewModel.fileUploadFailed(resp.message);
+        }
+        else {
+            documentViewModel.fileUploadFailed(data.errorThrown);
+        }
     });
 
 
@@ -452,7 +459,7 @@ function showDocumentAttachInModal(uploadUrl, documentViewModel, modalSelector, 
         // at 0 size.  This is a workaround.
         $modal.find('.select2-container input[type="search"]').width('100%');
 
-    });
+    }).modal('show');
 
     return result;
 }
@@ -603,7 +610,7 @@ function initialiseDocumentTable(containerSelector, excludeReportColumn) {
     });
 
     function searchStage(column, searchString) {
-        table.columns(column).search(searchString, true).draw();
+        table.columns(column).search(searchString, true, false).draw();
     }
 
     $(containerSelector + " input[name='doc-filter']").click(function(e) {

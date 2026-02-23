@@ -17,6 +17,6 @@ var printInstructionsVM = function(viewSelector) {
     });
 
     if (!dontShowAgainFromStorage) {
-        $(viewSelector).modal();
+        $(viewSelector).modal().modal('show');
     }
 };

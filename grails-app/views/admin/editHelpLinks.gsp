@@ -26,7 +26,7 @@
 <div id="help-resources" class="validationEngineContainer" data-bind="foreach:helpLinks">
 
     <div class="help-resource row">
-        <div class="col-sm-2"><select data-bind="options:$parent.types, optionsText:'description', optionsValue:'type', value:type" class="form-control form-control-sm mb-1"></select></div>
+        <div class="col-sm-2"><select data-bind="options:$parent.types, optionsText:'description', optionsValue:'type', value:type" class="form-select form-select-sm mb-1"></select></div>
         <div class="col-sm-4"><input type="text" data-bind="value:name" class="form-control form-control-sm mb-1 input-medium" data-validation-engine="validate[required]"></div>
         <div class="col-sm-4"><input type="text" data-bind="value:externalUrl"  class="form-control form-control-sm mb-1" data-validation-engine="validate[required,custom[url]]"></div>
     </div>
@@ -35,7 +35,7 @@
 </div>
 
 
-<div class="form-actions ml-3 mt-4">
+<div class="form-actions ms-3 mt-4">
     <button type="button" id="save" data-bind="click:save" class="btn btn-primary btn-sm">Save</button>
     <button type="button" id="cancel" data-bind="click:cancel" class="btn btn-sm btn-danger">Cancel</button>
 </div>

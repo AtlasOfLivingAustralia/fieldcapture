@@ -108,7 +108,7 @@ class ProjectController {
                 project.projectSite = project.sites?.find { it.siteId == project.projectSiteId }
                 List roles = roleService.getRoles()
                 if (config.supportsParatoo) {
-                    roles = roles + [RoleService.PROJECT_SURVEYOR_ROLE]
+                    roles = roles + roleService.getMonitorRoles()
                 }
 
                 def members = projectService.getMembersForProjectId(id)
@@ -1156,8 +1156,18 @@ class ProjectController {
         String MONITORING_TAG = 'survey'
         List<Map> forms = activityService.monitoringProtocolForms()
         forms = forms.findAll{MONITORING_TAG in it.tags}
-        List<String> categories = forms?.collect{
-            [label:g.message(code:it.category, default:it.category.capitalize()), value:it.category]}?.unique()?.sort({it.label})
+
+        Set floristicsCategories = (forms?.findAll { (it.tags ?: []).contains('floristics') }
+            ?.collect { it.category } ?: []) as Set
+
+        List<Map> categories = forms?.collect {
+            [
+                label     : g.message(code: it.category, default: (it.category ?: '').capitalize()),
+                value     : it.category,
+                dependsOn : floristicsCategories.contains(it.category) ? ['floristics'] : []
+            ]
+        }?.unique()?.sort { it.label }
+
         render categories as JSON
     }
 

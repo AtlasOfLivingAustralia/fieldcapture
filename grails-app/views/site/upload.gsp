@@ -40,10 +40,10 @@
         <h2>Upload project sites from file</h2>
 
         <g:if test="${flash.errorMessage || flash.message}">
-            <div class="row ml-1">
+            <div class="row ms-1">
                 <div class="col-sm-5">
                     <div class="alert alert-danger">
-                        <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+                        <button class="btn-close" onclick="$('.alert').fadeOut();" href="#">×</button>
                         ${flash.errorMessage?:flash.message}
                     </div>
                 </div>
@@ -76,19 +76,19 @@
             <div class="col-sm-4">
                 <label for="nameAttribute">Shapefile attribute to use as the site name:</label>
                 <div>
-                <select id="nameAttribute" name="nameAttribute" class="form-control form-control-sm input-medium" data-bind="value:nameAttribute,options:attributeNames,optionsCaption:'Select an attribute'"></select>
+                <select id="nameAttribute" name="nameAttribute" class="form-select form-select-sm input-medium" data-bind="value:nameAttribute,options:attributeNames,optionsCaption:'Select an attribute'"></select>
                 </div>
             </div>
             <div class="col-sm-4">
                 <label for="descriptionAttribute">Shapefile attribute to use as the site description:</label>
                 <div>
-                    <select id="descriptionAttribute" class="form-control form-control-sm input-medium" name="descriptionAttribute" data-bind="value:descriptionAttribute,options:attributeNames,optionsCaption:'Select an attribute'"></select>
+                    <select id="descriptionAttribute" class="form-select form-select-sm input-medium" name="descriptionAttribute" data-bind="value:descriptionAttribute,options:attributeNames,optionsCaption:'Select an attribute'"></select>
                 </div>
             </div>
             <div class="col-sm-4">
                 <label for="externalIdAttribute">Shapefile attribute to use as the site ID:</label>
                 <div>
-                    <select id="externalIdAttribute" class="form-control form-control-sm input-medium" name="externalIdAttribute" data-bind="value:externalIdAttribute,options:attributeNames,optionsCaption:'Select an attribute'"></select>
+                    <select id="externalIdAttribute" class="form-select form-select-sm input-medium" name="externalIdAttribute" data-bind="value:externalIdAttribute,options:attributeNames,optionsCaption:'Select an attribute'"></select>
                 </div>
             </div>
         </div>

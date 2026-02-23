@@ -2,15 +2,15 @@
 
     <h4><label class="col-form-label row-cols-sm-1" style="font-size: small"><g:message code="attach.document.subtitle"/><a href="https://www.dcceew.gov.au/environment/environmental-information-data/information-policy/sensitive-ecological-data-access-and-management-policy" target="_blank"> <g:message code="attach.document.subtitle.link"/></a>
         <fc:iconHelp helpTextCode="attach.document.help"></fc:iconHelp></label></h4>
-    <div class="form-group row required">
+    <div class="mb-3 row required">
         <label class="control-label col-sm-3"
                for="type">Type: <fc:iconHelp>What type of entry is this?</fc:iconHelp></label>
         <div class="col-sm-9">
-            <select id="type" class="form-control form-control-sm input-small" data-bind="options:transients.blogEntryTypes, value:type"></select>
+            <select id="type" class="form-select form-select-sm input-small" data-bind="options:transients.blogEntryTypes, value:type"></select>
         </div>
     </div>
 
-    <div class="form-group row required">
+    <div class="mb-3 row required">
         <label class="control-label col-sm-3"
                for="date">Date: <fc:iconHelp>The date for this blog entry</fc:iconHelp></label>
         <div class="col-sm-9">
@@ -20,7 +20,7 @@
         </div>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label class="control-label col-sm-3"
                for="keepOnTop">Keep on top: <fc:iconHelp>Normally, blog entries are sorted by date.  Checking this box will keep this entry above others that do not have this box checked.</fc:iconHelp></label>
         <div class="col-sm-9">
@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    <div class="form-group row required">
+    <div class="mb-3 row required">
         <label class="control-label col-sm-3"
                for="title">Title: <fc:iconHelp>The title of this blog entry</fc:iconHelp></label>
         <div class="col-sm-9">
@@ -39,7 +39,7 @@
     </div>
 
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <!-- ko if:type() !== 'Photo' -->
         <label class="control-label col-sm-3"
                for="image">Feature image: <fc:iconHelp>An image that will be displayed alongside this blog entry</fc:iconHelp>
@@ -59,11 +59,11 @@
         <div class="col-sm-3" data-bind="visible:stockIcon()">
             <i class="fa fa-4x" data-bind="css:stockIcon"></i>
         </div>
-        <div class="ml-3 col-sm-3">
+        <div class="ms-3 col-sm-3">
             <!-- ko if:type() !== 'Photo' -->
             <p data-bind="visible:!image() && !stockIcon()">Select or attach an image</p>
 
-            <select class="form-control form-control-sm" data-bind="visible:!image(), value:stockIcon" name="docCategory">
+            <select class="form-select form-select-sm" data-bind="visible:!image(), value:stockIcon" name="docCategory">
                 <option/>
                 <option value="fa-warning">Important<i class="fa fa-warning fa-3x"></i></option>
                 <option value="fa-newspaper-o">News<i class="fa fa-newspaper-o fa-3x"></i></option>
@@ -81,20 +81,20 @@
                   data-bind="stagedImageUpload:documents, visible:!image() && !stockIcon()"><i class="fa fa-plus "></i> <input
                     id="image" type="file" name="files" class="form-control form-control-sm input-small"><span>Attach</span></div>
 
-            <button class="btn btn-sm float-right main-image-button" data-bind="click:removeBlogImage, visible:image()"><i
+            <button class="btn btn-sm float-end main-image-button" data-bind="click:removeBlogImage, visible:image()"><i
                     class="fa fa-minus"></i> Remove</button>
         </div>
 
         </div>
 
-    <div class="form-group row" data-bind="with:image">
+    <div class="mb-3 row" data-bind="with:image">
         <label class="control-label col-sm-3"
                for="attribution">Image attribution: <fc:iconHelp>Will be displayed alongside the image</fc:iconHelp></label>
         <div class="col-sm-9">
             <input type="text" id="attribution" class="form-control form-control-sm input-medium" data-bind="value:attribution">
         </div>
     </div>
-    <div class="form-group row" data-bind="with:image">
+    <div class="mb-3 row" data-bind="with:image">
         <label class="control-label required col-sm-3"
                for="declaration">Privacy declaration: <fc:iconHelp>You must accept the declaration before the image can be saved.</fc:iconHelp></label>
         <div class="col-sm-6">
@@ -106,7 +106,7 @@
     </div>
 
     <!-- ko if:type() !== 'Photo' -->
-    <div class="form-group row required">
+    <div class="mb-3 row required">
         <label class="control-label col-sm-3" for="blog-content">Content: <fc:iconHelp>The content of this blog entry</fc:iconHelp></label>
         <div class="col-sm-9">
             <textarea rows="10" id="blog-content" class="form-control form-control-sm input-medium" data-bind="value:content" data-validation-engine="validate[required]" placeholder="Content goes here..."></textarea>
@@ -114,7 +114,7 @@
         </div>
     </div>
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label class="control-label col-sm-3"
                for="title">See More URL: <fc:iconHelp>If supplied, the blog entry will show a "see more" link at the end which will take the user to this URL</fc:iconHelp></label>
         <div class="col-sm-9">

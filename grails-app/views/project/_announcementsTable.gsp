@@ -36,7 +36,7 @@
         <tbody data-bind="foreach : details.events">
         <tr>
             <td class="index">  <span data-bind="text:$index()+1"></span></td>
-            <td class="event"> <select class="form-control form-control-sm" data-bind="value:type, disable: ${disableCondition}" style="text-align: center; width: 90%;" data-errormessage="*This field is required. If you do not have any announcement information available yet then please delete this row via the X icon" class="validate[required]" data-validation-engine="validate[required]"><option value="">Please select</option><option>1: funding announcements</option><option>2: non-funding opportunities</option></select></td>
+            <td class="event"> <select class="form-select form-select-sm" data-bind="value:type, disable: ${disableCondition}" style="text-align: center; width: 90%;" data-errormessage="*This field is required. If you do not have any announcement information available yet then please delete this row via the X icon" class="validate[required]" data-validation-engine="validate[required]"><option value="">Please select</option><option>1: funding announcements</option><option>2: non-funding opportunities</option></select></td>
             <td class="event-type"> <textarea rows="2"  class="form-control form-control-sm"  data-bind="value: name, disable: ${disableCondition}"></textarea></td>
             <td class="event-date"> <div><input class="form-control form-control-sm" data-bind="datepicker:scheduledDate.date, disable: ${disableCondition}" type="text" /></div></td>
             <td class="grant-date"> <div><input class="form-control form-control-sm" data-bind="value:grantAnnouncementDate, disable: ${disableCondition}" type="text" /></div></td>

@@ -1,0 +1,15 @@
+{
+  "request": {
+    "urlPattern": "/monitor/protocols/reverse-lookup",
+
+    "method": "POST"
+  },
+  "response" : {
+    "status": 200,
+    "headers": {
+      "content-Type": "application/json"
+    },
+    "body": "{}"
+
+  }
+}

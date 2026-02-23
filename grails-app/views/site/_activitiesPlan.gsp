@@ -6,22 +6,22 @@
 
 
 <script id="stageNotApprovedTmpl" type="text/html">
-<span class="badge badge-warning">Report not submitted</span>
+<span class="badge text-bg-warning text-white">Report not submitted</span>
 </script>
 
 <script id="stageApprovedTmpl" type="text/html">
-<span class="badge badge-success">Report Approved</span>
+<span class="badge text-bg-success">Report Approved</span>
 </script>
 
 <script id="stageSubmittedTmpl" type="text/html">
-<span class="badge badge-info" style="font-size:13px;">Report submitted</span>
+<span class="badge text-bg-info" style="font-size:13px;">Report submitted</span>
 </script>
 
 
 
 <script id="stageSubmittedVariationTmpl" type="text/html">
 
-<span class="badge badge-info" style="font-size:13px;">Report submitted</span>
+<span class="badge text-bg-info" style="font-size:13px;">Report submitted</span>
 
 </script>
 

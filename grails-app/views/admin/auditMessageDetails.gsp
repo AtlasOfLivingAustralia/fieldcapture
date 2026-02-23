@@ -18,7 +18,7 @@
             <h4>Edited by: ${userDetails?.displayName} <g:encodeAs codec="HTML">${message?.userId ?: '<anon>'}</g:encodeAs> </h4>
             <h5><small>${message?.eventType} : ${DateUtils.displayFormatWithTime(message?.date)}</small></h5>
         </div>
-        <div class="col-sm-6 pr-0 text-right">
+        <div class="col-sm-6 pe-0 text-end">
             <button id="toggle-ids" type="button" class="btn btn-default btn-sm">Show Ids</button>
             <div id="ids" class="col-sm-12">
                 <h6>
@@ -32,7 +32,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-12 mb-1 text-right">
+        <div class="col-sm-12 mb-1 text-end">
             <a href="${params.returnTo}" class="btn btn-default btn-sm"><i class="fa fa-backward"></i> Back</a>
         </div>
     </div>
@@ -51,8 +51,8 @@
 
         <div id="content">
             <ul id="tabs" class="nav nav-tabs" role="tablist" data-tabs="tabs">
-                <li class="nav-item"><a class="nav-link active" href="#minimal" data-toggle="tab">Overview</a></li>
-                <li class="nav-item"><a class="nav-link" href="#detailed" data-toggle="tab">Detailed</a></li>
+                <li class="nav-item"><a class="nav-link active" href="#minimal" data-bs-toggle="tab">Overview</a></li>
+                <li class="nav-item"><a class="nav-link" href="#detailed" data-bs-toggle="tab">Detailed</a></li>
             </ul>
             <div id="my-tab-content" class="tab-content">
                 <div class="tab-pane fade show active overflow-auto" role="tabpanel" id="minimal">

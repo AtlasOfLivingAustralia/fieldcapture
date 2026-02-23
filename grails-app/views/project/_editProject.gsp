@@ -14,7 +14,7 @@
         <label for="name" class="control-label">Harvest records to ALA</label>
         <div class="controls">
             <div>
-                <select class="form-control form-control-sm input-large" data-bind="options: transients.yesNoOptions, value: transients.alaHarvest, optionsCaption: 'Please select'"></select>
+                <select class="form-select form-select-sm input-large" data-bind="options: transients.yesNoOptions, value: transients.alaHarvest, optionsCaption: 'Please select'"></select>
             </div>
         </div>
     </div>
@@ -95,7 +95,7 @@
         <label for="funding-verification-date">Funding Verification Date</label><fc:iconHelp>If the funding amount is already correct, press the "Verify funding is correct" button to record the verification date.  If you update the funding amount the verification date will automatically be updated.</fc:iconHelp>
         <div class="input-group input-append">
             <fc:datePicker targetField="fundingVerificationDate.date" id="funding-verification-date" bs4="true" name="fundingVerificationDate" size="form-control form-control-sm dateControl" readonly="readonly" autocomplete="off"/>
-            <button class="ml-2 btn btn-warning btn-sm" data-bind="click:verifyFunding">Verify funding is correct</button>
+            <button class="ms-2 btn btn-warning btn-sm" data-bind="click:verifyFunding">Verify funding is correct</button>
         </div>
     </div>
 </div>
@@ -240,10 +240,10 @@
         <!-- Application status is set only when creating the project -->
         <div class="control">
         <g:if test="${ProjectService.PLAN_UNLOCKED == project.planStatus || ProjectService.APPLICATION_STATUS == project.status}">
-            <select class="form-control form-control-sm input-small" id="projectState" data-bind="options:projectStatus, optionsText: 'name', optionsValue: 'id', value:status" disabled="disabled"></select>
+            <select class="form-select form-select-sm input-small" id="projectState" data-bind="options:projectStatus, optionsText: 'name', optionsValue: 'id', value:status" disabled="disabled"></select>
         </g:if>
         <g:else>
-            <select class="form-control form-control-sm input-small" id="projectState" data-bind="options:projectStatus.filter(x => x.name != '${ProjectService.APPLICATION_STATUS}'), optionsText: 'name', optionsValue: 'id', value:status"></select>
+            <select class="form-select form-select-sm input-small" id="projectState" data-bind="options:projectStatus.filter(x => x.name != '${ProjectService.APPLICATION_STATUS}'), optionsText: 'name', optionsValue: 'id', value:status"></select>
         </g:else>
     </div>
     </div>
@@ -275,11 +275,11 @@
                     </td>
                     <td>
                         The sites for this project should be:
-                        <div class="form-group form-check">
+                        <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="national" data-bind="checked: geographicInfo.nationwide">
                             <label class="form-check-label" for="national">National</label>
                         </div>
-                        <div class="form-group form-check">
+                        <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="statewide" data-bind="checked: geographicInfo.statewide">
                             <label class="form-check-label" for="statewide">Statewide</label>
                         </div>
@@ -290,8 +290,8 @@
                         <label for="primaryElectorate">Primary electorate</label>
                     </td>
                     <td>
-                        <select id="primaryElectorate" data-bind="options:transients.electorates, value:geographicInfo.primaryElectorate, optionsCaption: 'Select an electorate', disable: geographicInfo.nationwide() || geographicInfo.statewide() || !geographicInfo.overridePrimaryElectorate()" class="select form-control" data-validation-engine="validate[required]"></select>
-                        <div class="form-group form-check">
+                        <select id="primaryElectorate" data-bind="options:transients.electorates, value:geographicInfo.primaryElectorate, optionsCaption: 'Select an electorate', disable: geographicInfo.nationwide() || geographicInfo.statewide() || !geographicInfo.overridePrimaryElectorate()" class="select form-select" data-validation-engine="validate[required]"></select>
+                        <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="geographicInfoElectorateBehaviour" name="geographicInfoElectorateBehaviour" data-bind="checked: geographicInfo.overridePrimaryElectorate">
                             <label class="form-check-label" for="geographicInfoElectorateBehaviour">Override primary electorate with above selection.</label>
                         </div>
@@ -302,13 +302,13 @@
                         <label for="otherElectorates">Other electorates</label>
                     </td>
                     <td>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="otherElectorates">Include</label>
-                            <select id="otherElectorates" multiple="multiple" data-bind="options:transients.electorates.electoratesToInclude, multiSelect2:{value:geographicInfo.otherElectorates, placeholder:'', tags: false}, disable: geographicInfo.nationwide() || geographicInfo.statewide()" class="select form-control"></select>
+                            <select id="otherElectorates" multiple="multiple" data-bind="options:transients.electorates.electoratesToInclude, multiSelect2:{value:geographicInfo.otherElectorates, placeholder:'', tags: false}, disable: geographicInfo.nationwide() || geographicInfo.statewide()" class="select form-select"></select>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="otherExcludedElectorates">Exclude</label>
-                            <select id="otherExcludedElectorates" multiple="multiple" data-bind="options:transients.electorates.electoratesToExclude, multiSelect2:{value:geographicInfo.otherExcludedElectorates, placeholder:'', tags: false}, disable: geographicInfo.nationwide() || geographicInfo.statewide()" class="select form-control"></select>
+                            <select id="otherExcludedElectorates" multiple="multiple" data-bind="options:transients.electorates.electoratesToExclude, multiSelect2:{value:geographicInfo.otherExcludedElectorates, placeholder:'', tags: false}, disable: geographicInfo.nationwide() || geographicInfo.statewide()" class="select form-select"></select>
                         </div>
                     </td>
                 </tr>
@@ -317,8 +317,8 @@
                             <label for="primaryState">Primary state</label>
                         </td>
                         <td>
-                            <select id="primaryState" data-bind="options:transients.states, value:geographicInfo.primaryState, optionsCaption: 'Select a state', disable: geographicInfo.nationwide() || !geographicInfo.overridePrimaryState()" class="select form-control"  data-validation-engine="validate[required]"></select>
-                            <div class="form-group form-check">
+                            <select id="primaryState" data-bind="options:transients.states, value:geographicInfo.primaryState, optionsCaption: 'Select a state', disable: geographicInfo.nationwide() || !geographicInfo.overridePrimaryState()" class="select form-select"  data-validation-engine="validate[required]"></select>
+                            <div class="mb-3 form-check">
                                 <input type="checkbox" class="form-check-input" id="geographicInfoStateBehaviour" name="geographicInfoStateBehaviour" data-bind="checked: geographicInfo.overridePrimaryState, disable: geographicInfo.overridePrimaryElectorate()">
                                 <label class="form-check-label" for="geographicInfoStateBehaviour">Override primary state with above selection.</label>
                             </div>
@@ -329,13 +329,13 @@
                             <label for="otherStates">Other states</label>
                         </td>
                         <td>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label for="otherStates">Include</label>
-                                <select id="otherStates" multiple="multiple" data-bind="options:transients.states.statesToInclude, multiSelect2:{value:geographicInfo.otherStates, placeholder:'', tags: false}, disable: geographicInfo.nationwide()" class="select form-control"></select>
+                                <select id="otherStates" multiple="multiple" data-bind="options:transients.states.statesToInclude, multiSelect2:{value:geographicInfo.otherStates, placeholder:'', tags: false}, disable: geographicInfo.nationwide()" class="select form-select"></select>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label for="otherExcludedStates">Exclude</label>
-                                <select id="otherExcludedStates" multiple="multiple" data-bind="options:transients.states.statesToExclude, multiSelect2:{value:geographicInfo.otherExcludedStates, placeholder:'', tags: false}, disable: geographicInfo.nationwide()" class="select form-control"></select>
+                                <select id="otherExcludedStates" multiple="multiple" data-bind="options:transients.states.statesToExclude, multiSelect2:{value:geographicInfo.otherExcludedStates, placeholder:'', tags: false}, disable: geographicInfo.nationwide()" class="select form-select"></select>
                             </div>
                         </td>
                     </tr>

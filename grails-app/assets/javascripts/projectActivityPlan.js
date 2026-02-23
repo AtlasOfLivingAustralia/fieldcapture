@@ -292,7 +292,7 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
 
         ko.applyBindings(declarationViewModel, declaration);
         var unbind = function() {ko.cleanNode(declaration)};
-        $(declaration).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden.bs.modal', unbind);
+        $(declaration).modal({ backdrop: 'static', keyboard: true }).on('hidden.bs.modal', unbind).modal('show');
 
     };
 
@@ -306,13 +306,14 @@ var PlanStage = function (stage, activities, planViewModel, isCurrentStage, proj
             explanationText:explanationText,
             buttonText: buttonText,
             submit:function() {
+                $reasonModal.modal('hide');
                 self.updateStageStatus(url, this.reason(), this.rejectionCategory());
             }
         };
 
         ko.applyBindings(reasonViewModel, $reasonModal[0]);
         var unbind = function() {ko.cleanNode($reasonModal[0])};
-        $($reasonModal[0]).modal({ backdrop: 'static', keyboard: true, show: true }).on('hidden.bs.modal', unbind);
+        $($reasonModal[0]).modal({ backdrop: 'static', keyboard: true }).on('hidden.bs.modal', unbind).modal('show');
 
     };
 
@@ -495,7 +496,7 @@ function ProjectActivitiesTabViewModel(activities, reports, outputTargets, targe
     self.autoUpdateEndDate = ko.observable(true);
 
     self.changeProjectDates = function() {
-        $('#changeProjectDates').modal({backdrop:'static'});
+        $('#changeProjectDates').modal({backdrop:'static'}).modal('show');
         $('#projectDatesForm').validationEngine();
     };
 
@@ -563,7 +564,7 @@ function ProjectActivitiesTabViewModel(activities, reports, outputTargets, targe
         defaultReportStage = self.stages[self.stages.length-1].label;
     }
     self.configureProjectReport = function() {
-        $('#projectReportOptions').modal({backdrop:'static'});
+        $('#projectReportOptions').modal({backdrop:'static'}).modal('show');
     };
     self.reportFromStage = ko.observable(defaultReportStage);
     self.reportToStage = ko.observable(defaultReportStage);

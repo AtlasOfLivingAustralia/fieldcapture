@@ -1,20 +1,20 @@
 <div class="row">
     <div class="nav flex-column nav-pills col-3">
         <g:if test="${fc.userIsSiteAdmin() || isAdmin}">
-            <a class="nav-link active" data-toggle="pill" href="#edit-managementUnit-details" role="tab">Edit</a>
-            <a id="mu-permissions-tab" class="nav-link" data-toggle="pill" href="#managementUnit-permissions" role="tab">Permissions</a>
-            <a id="edit-documents-tab" class="nav-link" data-toggle="pill" href="#edit-documents" role="tab">Documents</a>
+            <a class="nav-link active" data-bs-toggle="pill" href="#edit-managementUnit-details" role="tab">Edit</a>
+            <a id="mu-permissions-tab" class="nav-link" data-bs-toggle="pill" href="#managementUnit-permissions" role="tab">Permissions</a>
+            <a id="edit-documents-tab" class="nav-link" data-bs-toggle="pill" href="#edit-documents" role="tab">Documents</a>
         </g:if>
         <g:if test="${fc.userIsSiteAdmin()}">
-            <a class="nav-link" data-toggle="pill" href="#reporting" role="tab">Reporting</a>
+            <a class="nav-link" data-bs-toggle="pill" href="#reporting" role="tab">Reporting</a>
         </g:if>
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
-            <a class="nav-link" data-toggle="pill" href="#priorities" role="tab">Priorities</a>
-            <a class="nav-link" data-toggle="pill" href="#config" role="tab">Configuration</a>
+            <a class="nav-link" data-bs-toggle="pill" href="#priorities" role="tab">Priorities</a>
+            <a class="nav-link" data-bs-toggle="pill" href="#config" role="tab">Configuration</a>
         </g:if>
         <g:elseif test="${fc.userHasReadOnlyAccess()}">
-            <a id="mu-permissions-tab" class="nav-link active" data-toggle="pill" href="#managementUnit-permissions" role="tab">Permissions</a>
-            <a id="edit-documents-tab" class="nav-link" data-toggle="pill" href="#edit-documents" role="tab">Documents</a>
+            <a id="mu-permissions-tab" class="nav-link active" data-bs-toggle="pill" href="#managementUnit-permissions" role="tab">Permissions</a>
+            <a id="edit-documents-tab" class="nav-link" data-bs-toggle="pill" href="#edit-documents" role="tab">Documents</a>
         </g:elseif>
     </div>
 
@@ -53,10 +53,10 @@
                 <div class="attachDocumentModal">
                     <div class="row">
                         <h3 class="col-3 d-inline-block">Documents</h3>
-                        <form class="col-9 form-inline justify-content-end">
+                        <form class="col-9 d-flex align-items-center justify-content-end">
 
                             <label class="col-auto col-form-label">Filter documents:
-                                <select class="form-control form-control-sm" data-bind="optionsCaption:'No filter', options:documentRoles, optionsText:'name', optionsValue:'id', value:documentFilter"></select>
+                                <select class="form-select form-select-sm" data-bind="optionsCaption:'No filter', options:documentRoles, optionsText:'name', optionsValue:'id', value:documentFilter"></select>
                             </label>
                             <button class="btn btn-info btn-sm form-control" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
 
@@ -85,28 +85,28 @@
             <div class="tab-pane" id="reporting">
                 <form>
                     <h3>Core services and output reporting frequency</h3>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="start-date">Start date</label>
                         <div class="input-group">
                             <fc:datePicker class="form-control dateControl" id="start-date" name="start-date" bs4="bs4" targetField="startDate.date" data-validation-engine="validate[required,future[30-06-2018]]" autocomplete="off"/>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="end-date">End date</label>
                         <div class="input-group">
                             <fc:datePicker class="form-control dateControl" id="end-date" name="end-date" bs4="bs4" targetField="endDate.date" data-validation-engine="validate[required,future[start-date]]" autocomplete="off"/>
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="core-services-group">Core services reporting group</label>
-                        <select class="form-control" id="core-services-group" data-bind="value:coreServicesPeriod, options:coreServicesOptions, optionsText:'label', optionsValue:'label', optionsCaption:'Please select'" data-validation-engine="validate[required]"></select>
+                        <select class="form-select" id="core-services-group" data-bind="value:coreServicesPeriod, options:coreServicesOptions, optionsText:'label', optionsValue:'label', optionsCaption:'Please select'" data-validation-engine="validate[required]"></select>
 
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="progress-reporting-group">Project Output reporting group</label>
-                        <select class="form-control" id="progress-reporting-group" data-bind="value:activityReportingPeriod, options:activityReportingOptions, optionsText:'label', optionsValue:'label', optionsCaption:'Please select'" data-validation-engine="validate[required]"></select>
+                        <select class="form-select" id="progress-reporting-group" data-bind="value:activityReportingPeriod, options:activityReportingOptions, optionsText:'label', optionsValue:'label', optionsCaption:'Please select'" data-validation-engine="validate[required]"></select>
 
                     </div>
 
@@ -136,14 +136,14 @@
         </g:if>
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
             <div class="tab-pane" id="config">
-                <h4 style="display:inline-block">Management Unit configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveManagementUnitConfiguration">Save Configuration</button>
+                <h4 style="display:inline-block">Management Unit configuration</h4> <button class="btn btn-success float-end" data-bind="click:saveManagementUnitConfiguration">Save Configuration</button>
 
                 <textarea rows="80" style="width:100%" data-bind="value:config">
 
                 </textarea>
             </div>
             <div class="tab-pane" id="priorities">
-                <h4 style="display:inline-block">Management Unit priorities</h4> <button class="btn btn-success float-right" data-bind="click:saveManagementUnitPriorities">Save Priorities</button>
+                <h4 style="display:inline-block">Management Unit priorities</h4> <button class="btn btn-success float-end" data-bind="click:saveManagementUnitPriorities">Save Priorities</button>
 
                 <textarea rows="80" style="width:100%" data-bind="value:priorities">
 
@@ -165,10 +165,10 @@
                 <div class="attachDocumentModal">
                     <div class="row">
                         <h3 class="col-3 d-inline-block">Documents</h3>
-                        <form class="col-9 form-inline justify-content-end">
+                        <form class="col-9 d-flex align-items-center justify-content-end">
 
                             <label class="col-auto col-form-label">Filter documents:
-                                <select class="form-control form-control-sm" data-bind="optionsCaption:'No filter', options:documentRoles, optionsText:'name', optionsValue:'id', value:documentFilter"></select>
+                                <select class="form-select form-select-sm" data-bind="optionsCaption:'No filter', options:documentRoles, optionsText:'name', optionsValue:'id', value:documentFilter"></select>
                             </label>
                         </form>
                     </div>

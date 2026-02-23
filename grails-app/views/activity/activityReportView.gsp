@@ -42,7 +42,7 @@
 <div class="${containerType} validationEngineContainer" id="validation-container">
     <g:if test="${activity.lock && params.attemptedEdit}">
         <div class="row mb-2">
-            <div class="col-sm-12 pl-3 pr-3">
+            <div class="col-sm-12 ps-3 pe-3">
                 <div class="alert alert-danger report-locked">
                     <p class="text-dark">This form has been locked for editing by <fc:userDisplayName userId="${activity.lock.userId}" defaultValue="an unknown user"/> since ${au.org.ala.merit.DateUtils.displayFormatWithTime(activity.lock.dateCreated)}</p>
                     <p class="text-dark">To edit anyway, click the button below.  Note that if the user is currently making edits, those edits will be lost.</p>
@@ -55,7 +55,7 @@
     </g:if>
     <g:if test="${au.org.ala.merit.Status.isReadOnly(report.status)}">
         <div class="row mb-2">
-            <div class="col-sm-12 pl-3 pr-3">
+            <div class="col-sm-12 ps-3 pe-3">
                 <div class="alert alert-danger report-readonly">
                     <p class="text-dark"><g:message code="report.status.readonly"/></p>
                 </div>

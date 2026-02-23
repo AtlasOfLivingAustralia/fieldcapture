@@ -9,7 +9,7 @@ class AdminDocumentSummary extends Module {
         deleteButton { $('[data-bind*=deleteDocument]')}
         editButton { $('[data-bind*=editDocumentMetadata]') }
         icon { $('.media-object') }
-        name { $('.media-heading').text() }
+        name { $('a [data-bind*=filename]').text() }
         attribution { $('span[data-bind*=attribution]').text()}
     }
 

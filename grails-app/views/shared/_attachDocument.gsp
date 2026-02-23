@@ -8,7 +8,7 @@
                 <fc:iconHelp helpTextCode="attach.document.help"></fc:iconHelp></label>
             </div>
             <div class="modal-body validationContainer" id="documentForm">
-                    <div class="form-group row">
+                    <div class="mb-3 row">
                         <label class="col-form-label col-sm-4" for="documentName">Title</label>
 
                         <div class="col-sm-8">
@@ -16,33 +16,33 @@
                         </div>
                     </div>
 
-                    <div class="form-group row" data-bind="visible:roles.length > 1">
+                    <div class="mb-3 row" data-bind="visible:roles.length > 1">
                         <label class="col-form-label col-sm-4" for="documentRole">Document type</label>
 
                         <div class="col-sm-8">
-                            <select id="documentRole" class="form-control form-control-sm" data-bind="options:roles, optionsText: 'name', optionsValue: 'id', value:role, event: {change: onRoleChange}"></select>
+                            <select id="documentRole" class="form-select form-select-sm" data-bind="options:roles, optionsText: 'name', optionsValue: 'id', value:role, event: {change: onRoleChange}"></select>
                         </div>
                     </div>
 
                 <!-- ko if:settings.labels && settings.labels.length || settings.labelsLabel-->
-                   <div class="form-group row labels">
+                   <div class="mb-3 row labels">
                        <label class="col-form-label col-sm-4" for="documentLabels" data-bind="text:settings.labelsLabel || 'Labels'"></label>
                           <div class="col-sm-8">
-                            <select id="documentLabels" multiple="multiple" class="form-control form-control-sm" style="width:100%" data-bind="options:settings.labels, multiSelect2:{value:labels}"></select>
+                            <select id="documentLabels" multiple="multiple" class="form-select form-select-sm" style="width:100%" data-bind="options:settings.labels, multiSelect2:{value:labels}"></select>
                           </div>
                    </div>
                     <!-- /ko -->
 
                     <!-- ko if:settings.reports && settings.reports.length -->
-                    <div class="form-group row">
+                    <div class="mb-3 row">
                         <label class="col-form-label col-sm-4" for="associatedReport">Associate to report</label>
                         <div class="col-sm-8">
-                            <select id="associatedReport" class="form-control form-control-sm" data-bind="options:settings.reports, optionsText:'name', optionsValue:'reportId', optionsCaption: 'Please select', value:reportId" data-validation-engine="validate[funcCall[validateReportAssociation],required]"></select>
+                            <select id="associatedReport" class="form-select form-select-sm" data-bind="options:settings.reports, optionsText:'name', optionsValue:'reportId', optionsCaption: 'Please select', value:reportId" data-validation-engine="validate[funcCall[validateReportAssociation],required]"></select>
                         </div>
                     </div>
                     <!-- /ko -->
 
-                    <div class="form-group row">
+                    <div class="mb-3 row">
                         <label class="col-form-label col-sm-4" for="documentAttribution">Attribution</label>
 
                         <div class="col-sm-8">
@@ -51,7 +51,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="mb-3 row">
                         <label class="col-form-label col-sm-4" for="documentLicense">License</label>
 
                         <div class="col-sm-8">
@@ -59,7 +59,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group row" data-bind="visible: embeddedVideoVisible()">
+                    <div class="mb-3 row" data-bind="visible: embeddedVideoVisible()">
                         <label class="col-form-label col-sm-4" for="embeddedVideo">
                             Embed video
                         </label>
@@ -70,7 +70,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group row" data-bind="visible:settings.showSettings">
+                    <div class="mb-3 row" data-bind="visible:settings.showSettings">
                         <label class="col-form-label col-sm-4" for="public">Settings</label>
                         <div class="col-sm-8">
                             <label class="checkbox form-check-label" for="public">
@@ -81,7 +81,7 @@
 
                     </div>
 
-                    <div class="form-group row" data-bind="visible:thirdPartyConsentDeclarationRequired">
+                    <div class="mb-3 row" data-bind="visible:thirdPartyConsentDeclarationRequired">
                         <label for="thirdPartyConsentDeclarationMade" class="col-form-label col-sm-4">Privacy declaration</label>
                         <div id="thirdPartyConsentDeclarationMade" class="col-sm-8">
                             <label id="thirdPartyDeclarationText" class="checkbox form-check-label" for="thirdPartyConsentDeclarationMade">
@@ -93,7 +93,7 @@
 
 
                     <div data-bind="visible: !embeddedVideoVisible()">
-                        <div class="form-group row"  data-bind="visible:false">
+                        <div class="mb-3 row"  data-bind="visible:false">
                             <label class="col-form-label col-sm-4" for="documentFile">Image settings</label>
                             <div class="col-sm-8">
                                 <label class="checkbox form-check-label" for="mainImage">
@@ -104,7 +104,7 @@
                         </div>
 
 
-                        <div class="form-group row">
+                        <div class="mb-3 row">
                             <label class="col-form-label col-sm-4" for="documentFile">File</label>
 
                             <div class="col-sm-8">
@@ -117,7 +117,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="mb-3 row">
                             <label class="col-form-label col-sm-4" for="fileLabel"></label>
 
                             <div class="col-sm-8">
@@ -131,13 +131,13 @@
                             </div>
                         </div>
 
-                        <div class="form-group row" data-bind="visible:hasPreview">
+                        <div class="mb-3 row" data-bind="visible:hasPreview">
                             <label class="col-form-label col-sm-4">Preview</label>
 
                             <div id="preview" class="col-sm-8"></div>
                         </div>
 
-                        <div class="form-group row" data-bind="visible:progress() > 0">
+                        <div class="mb-3 row" data-bind="visible:progress() > 0">
                             <label class="col-form-label col-sm-4">Progress</label>
 
                             <div class="col-sm-8">

@@ -31,7 +31,7 @@
         </ol>
     </nav>
     <div class="row">
-        <h2 class="ml-3">Edit Announcements - ${organisation.name?.encodeAsHTML()}</h2>
+        <h2 class="ms-3">Edit Announcements - ${organisation.name?.encodeAsHTML()}</h2>
     </div>
     <div class="card customCard">
         <p>Instructions:</p>
@@ -62,11 +62,11 @@
     <div id="bulkUpload" class="row" data-bind="visible:showBulkUploadOptions" style="display:none;">
         When adding new rows to the Excel template, please be sure that the Grant ID and Project Name columns exactly match an existing project.
 
-        <div class="text-left" style="margin:5px">
+        <div class="text-start" style="margin:5px">
             <a target="_blank" id="downloadTemplate" class="btn btn-small">Step 1 - Download template (.xlsx)</a>
         </div>
 
-        <div class="text-left" style="margin:5px">
+        <div class="text-start" style="margin:5px">
             <span class="btn btn-small fileinput-button">
                 Step 2 - Upload populated template <input id="fileupload" type="file" name="announcementsTemplate">
             </span>

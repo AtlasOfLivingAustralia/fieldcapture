@@ -17,7 +17,7 @@
           },
           {
             "dataType": "text",
-            "name": "primaryOutcomeAssets"
+            "name": "primaryOutcomeInvestmentPriority"
           },
           {
             "dataType": "list",
@@ -31,7 +31,7 @@
               },
               {
                 "dataType": "text",
-                "name": "outcomeAssets",
+                "name": "outcomeInvestmentPriorities",
                 "validate": "required"
               }
             ]
@@ -47,7 +47,7 @@
               },
               {
                 "dataType": "text",
-                "name": "secondaryOutcomeAssets"
+                "name": "secondaryOutcomeInvestmentPriorities"
               }
             ]
           },
@@ -67,7 +67,7 @@
               },
               {
                 "dataType": "text",
-                "name": "outcomeAssets",
+                "name": "outcomeInvestmentPriorities",
                 "validate": "required"
               },
               {
@@ -76,92 +76,13 @@
                 "validate": "required"
               },
               {
-                "dataType": "text",
-                "name": "st1SupplementaryQuestions1"
+                "dataType": "number",
+                "name": "effectivePestControlPercentage",
+                "validate": "min[0],max[100]"
               },
               {
                 "dataType": "text",
-                "name": "st1SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st2SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st2SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st3SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st3SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st4SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st4SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st5SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st5SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st6SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st6SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st7SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st7SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st8SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st8SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st9SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st9SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st10SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st10SupplementaryQuestions2"
-              },
-              {
-                "dataType": "text",
-                "name": "st11SupplementaryQuestions1"
-              },
-              {
-                "dataType": "text",
-                "name": "st11SupplementaryQuestions2"
+                "name": "pestCompetitorSpeciesControlled"
               },
               {
                 "dataType": "stringList",
@@ -185,7 +106,7 @@
                 "dataType": "text",
                 "name": "projectAchievementAgainstOutcome",
                 "validate": "required,maxSize[2500]",
-                "description": "Where applicable, refer to the 'Key Threat(s)' and 'Monitoring Methodology' sections of the MERI Plan and Project Services to show how your activities support the stated outcome and align with the identified investment priority. Include any adaptive management actions planned for the project outcome at mid-term."
+                "description": "Where applicable, refer to the 'Key Threat(s)' and 'Monitoring Methodology' sections of the MERI Plan and Project Services to show how your activities support the stated outcome and align with the identified investment priority."
               },
               {
                 "dataType": "text",
@@ -272,7 +193,7 @@
               "Community involvement",
               "Partnerships with local groups",
               "Collaboration with Indigenous groups",
-              "Adequate Funding and Resources",
+              "Funding and Resources",
               "In-kind contributions",
               "Governance and accountability with well-defined roles and responsibilities",
               "Regulatory or policy requirements",
@@ -280,13 +201,14 @@
               "Conservation advice",
               "Management plans and strategies",
               "Regular Monitoring and evaluation",
+              "Weather conditions",
               "Time and capacity",
               "Resource use or economic priorities",
               "Data and knowledge",
               "IT infrastructure",
               "Site access/location",
               "Access to expertise and skilled personnel",
-              "Other"
+              "Other (enable mandatory free text to define if ‘other’ selected. ‘Other’ could also be used to provide additional context for the options above.)"
             ]
           },
           {
@@ -296,7 +218,7 @@
             "behaviour": [
               {
                 "type": "enable_and_clear",
-                "condition": "\"Other\" in keq3"
+                "condition": "\"Other (enable mandatory free text to define if ‘other’ selected. ‘Other’ could also be used to provide additional context for the options above.)\" in keq3"
               }
             ]
           },
@@ -310,25 +232,23 @@
               "Community involvement",
               "Partnerships with local groups",
               "Collaboration with Indigenous groups",
-              "Insufficient Funding and Resources",
+              "Funding and Resources",
               "In-kind contributions not realised",
               "Governance and accountability with well-defined roles and responsibilities",
               "Regulatory or policy requirements",
               "Project planning",
-              "Inadequate conservation advice",
+              "Conservation advice",
               "Management plans and strategies",
               "Regular monitoring and evaluation",
-              "Lack of stakeholder buy-in",
-              "Unpredictable/adverse weather conditions",
               "Natural disasters or extreme weather events",
               "Disease/Pandemic",
               "Time and capacity constraints",
-              "Conflicting resource use or economic priorities",
-              "Inadequate data and knowledge",
-              "Inadequate IT infrastructure",
-              "Issues with Site Access/Remote site location",
+              "Resource use or economic priorities",
+              "Data and knowledge",
+              "IT infrastructure",
+              "Site Access/Location",
               "Access to expertise and skilled personnel",
-              "Other"
+              "Other (enable mandatory free text to define if ‘other’ selected. ‘Other’ could also be used to provide additional context for the options above.)"
             ]
           },
           {
@@ -338,7 +258,7 @@
             "behaviour": [
               {
                 "type": "enable_and_clear",
-                "condition": "\"Other\" in keq4"
+                "condition": "\"Other (enable mandatory free text to define if ‘other’ selected. ‘Other’ could also be used to provide additional context for the options above.)\" in keq4"
               }
             ]
           },
@@ -375,7 +295,7 @@
             "behaviour": [
               {
                 "type": "enable_and_clear",
-                "condition": "\"Yes\" == keq6"
+                "condition": "\"Yes\" == keq6 or \"No\" == keq6"
               }
             ]
           },
@@ -426,7 +346,7 @@
           {
             "items": [
               {
-                "source": "<h4>1. PROJECT OUTCOMES</h4>",
+                "source": "An interim report designed for RDP Panel projects of three or more years in duration. The primary focus of the report is to provide an assessment of the project’s short-term outcomes, progress to date and support any adjustments to project delivery.",
                 "type": "literal"
               }
             ],
@@ -435,7 +355,7 @@
           {
             "items": [
               {
-                "source": "An interim report designed for RDP Panel projects of three or more years in duration. The primary focus of the report is to provide an assessment of the project’s short-term outcomes, progress to date and support any adjustments to project delivery.",
+                "source": "<h4>1. PROJECT OUTCOMES</h4>",
                 "type": "literal"
               }
             ],
@@ -464,7 +384,7 @@
               {
                 "type": "textarea",
                 "readonly": true,
-                "source": "primaryOutcomeAssets",
+                "source": "primaryOutcomeInvestmentPriority",
                 "title": "Primary Investment Priority",
                 "rows": 5,
                 "width": "50%"
@@ -497,7 +417,7 @@
               {
                 "type": "textarea",
                 "readonly": true,
-                "source": "secondaryOutcomeAssets",
+                "source": "secondaryOutcomeInvestmentPriorities",
                 "title": "Additional Investment Priorities",
                 "rows": 5,
                 "width": "50%"
@@ -535,7 +455,7 @@
               {
                 "type": "readonlyText",
                 "readonly": true,
-                "source": "outcomeAssets",
+                "source": "outcomeInvestmentPriorities",
                 "title": "Investment Priority",
                 "rows": 5,
                 "width": "10%"
@@ -552,14 +472,14 @@
                 "width": "20%",
                 "type": "col",
                 "title": "Supplementary Questions",
-                "helpText": "Additional  questions to support outcomes at the program level",
+                "helpText": "Additional questions to support outcomes at the program level. If blank please disregard.",
                 "items": [
                   {
                     "type": "row",
                     "behaviour": [
                       {
                         "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Managing Threats - Pest predator an competitor species have been controlled or are under active, long-term control programs\""
+                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Managing Threats - Pest predator and competitor species have been controlled or are under active, long-term control programs\" or relatedProgramOutcome == \"2. World Heritage Protection (Short term): Managing threats - Pest predator and competitor species have been controlled\" or relatedProgramOutcome == \"3. Ramsar Wetland Protection (Short term): Managing Threats - Pest predator and competitor species have been controlled \""
                       }
                     ],
                     "items": [
@@ -567,271 +487,17 @@
                         "type": "col",
                         "items": [
                           {
-                            "type": "textarea",
+                            "type": "text",
                             "width": "10%",
-                            "source": "st1SupplementaryQuestions1",
+                            "source": "effectivePestControlPercentage",
                             "preLabel": "Q1. Over the project area, what is the reduction in pest/competitor species that were effectively controlled (0-100) %",
                             "rows": 4,
                             "fullWidthLabelAbove": true
                           },
                           {
                             "type": "textarea",
-                            "source": "st1SupplementaryQuestions1",
+                            "source": "pestCompetitorSpeciesControlled",
                             "preLabel": "Q2. What pest/competitor species have been controlled?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Managing Threats - Threats from disease have been contained, reduced or excluded\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st2SupplementaryQuestions1",
-                            "preLabel": "Q1. Threats from disease have been contained?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          },
-                          {
-                            "type": "textarea",
-                            "source": "st2SupplementaryQuestions2",
-                            "preLabel": "Q2. Managing Threats?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Improving habitat - Land management practices have improved\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st3SupplementaryQuestions1",
-                            "preLabel": "Q1. Land management practices have improved?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Improving habitat - Quality of (TS/TECs) habitat has improved\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st4SupplementaryQuestions1",
-                            "preLabel": "Q1. Over the project area, what is the reduction in pest/competitor species that were effectively controlled (0-100) %",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          },
-                          {
-                            "type": "textarea",
-                            "source": "st4SupplementaryQuestions2",
-                            "preLabel": "Q2. What pest/competitor species have been controlled?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Improving habitat - Area/Extent of (TS/TECs) habitat has increased\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st5SupplementaryQuestions1",
-                            "preLabel": "Q1. Area/Extent of (TS/TECs) habitat has increased?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Improving habitat - Increased connectivity between patches\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st6SupplementaryQuestions1",
-                            "preLabel": "Q1. Increased connectivity between patches?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Improving habitat - Quality of breeding and foraging habitat is improved\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st7SupplementaryQuestions1",
-                            "preLabel": "Q1. Quality of breeding and foraging habitat is improved?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Creating insurance populations - Existing populations have been protected\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st8SupplementaryQuestions1",
-                            "preLabel": "Q1. Existing populations have been protected?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Creating insurance populations - Re-introductions have enhanced wild populations\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st9SupplementaryQuestions1",
-                            "preLabel": "Q1. Re-introductions have enhanced wild populations?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): Climate adaption and resilience - Climate change resilience and adaptive capacity actions underway\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st10SupplementaryQuestions1",
-                            "preLabel": "Q1. Climate change resilience and adaptive capacity actions underway?",
-                            "rows": 4,
-                            "fullWidthLabelAbove": true
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "row",
-                    "behaviour": [
-                      {
-                        "type": "if_expression",
-                        "condition": "relatedProgramOutcome == \"1.  Species and Landscapes (Short term): First Nations People and community involvement - First Nations people are leading and/or participating in recovery activities\""
-                      }
-                    ],
-                    "items": [
-                      {
-                        "type": "col",
-                        "items": [
-                          {
-                            "type": "textarea",
-                            "width": "10%",
-                            "source": "st11SupplementaryQuestions1",
-                            "preLabel": "Q1. First Nations people are leading and/or participating in recovery activities?",
                             "rows": 4,
                             "fullWidthLabelAbove": true
                           }
@@ -854,7 +520,7 @@
                           {
                             "type": "select2Many",
                             "source": "csapOutcomes",
-                            "preLabel": "Which CSAP Outcomes support this project outcome?"
+                            "preLabel": "Which CSAP outcomes are supported by this project outcome?"
                           }
                         ]
                       }
@@ -879,7 +545,7 @@
               {
                 "type": "selectOne",
                 "source": "projectOutcomeAchievementDegree",
-                "title": "The degree to which the project outcome was achieved",
+                "title": "To what degree was the project outcome achieved?",
                 "rows": 5,
                 "width": "20%"
               }
@@ -889,7 +555,7 @@
             "items": [
               {
                 "source": "outcomeProgress",
-                "preLabel": "1.2 Considered collectively (based on previous responses in table 1.1), to what extent are you progressing towards the short-term project outcomes?",
+                "preLabel": "1.2 Considered collectively (based on previous responses in table 1.1), to what extent are you progressing towards the medium-term project outcomes?",
                 "type": "selectOne"
               }
             ],
@@ -984,7 +650,7 @@
             "behaviour": [
               {
                 "type": "if_expression",
-                "condition": "\"Other\" in keq3"
+                "condition": "\"Other (enable mandatory free text to define if ‘other’ selected. ‘Other’ could also be used to provide additional context for the options above.)\" in keq3"
               }
             ]
           },
@@ -1012,7 +678,7 @@
             "behaviour": [
               {
                 "type": "if_expression",
-                "condition": "\"Other\" in keq4"
+                "condition": "\"Other (enable mandatory free text to define if ‘other’ selected. ‘Other’ could also be used to provide additional context for the options above.)\" in keq4"
               }
             ]
           },
@@ -1053,7 +719,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "KEQ6.1 If yes, how?",
+                "preLabel": "KEQ6.1 If yes, how?  If no, why not?",
                 "type": "textarea",
                 "rows": 5,
                 "source": "keq6How"
@@ -1110,6 +776,15 @@
             "source": {
               "context-path": "owner"
             },
+            "merge": {
+              "programSecondaryOutcomes": {
+                "deleteUnmatchedExistingRows": true,
+                "addUnmatchedNewRows": true,
+                "keys": [
+                  "outcomeStatement"
+                ]
+              }
+            },
             "mapping": [
               {
                 "source-path": "custom.details.outcomes.primaryOutcome.description",
@@ -1118,7 +793,7 @@
               },
               {
                 "source-path": "custom.details.outcomes.primaryOutcome.assets",
-                "target": "primaryOutcomeAssets"
+                "target": "primaryOutcomeInvestmentPriority"
 
               }
             ]
@@ -1147,7 +822,7 @@
                   },
                   {
                     "source-path": "assets",
-                    "target": "secondaryOutcomeAssets"
+                    "target": "secondaryOutcomeInvestmentPriorities"
                   }
                 ],
                 "source-path": "custom.details.outcomes.secondaryOutcomes"
@@ -1180,7 +855,7 @@
                     "source-path": "description"
                   },
                   {
-                    "target": "outcomeAssets",
+                    "target": "outcomeInvestmentPriorities",
                     "source-path": "assets"
                   },
                   {

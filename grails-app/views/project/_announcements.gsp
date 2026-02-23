@@ -1,4 +1,4 @@
-<div class="row space-after ml-4" data-bind="if: isProjectDetailsLocked()">
+<div class="row space-after ms-4" data-bind="if: isProjectDetailsLocked()">
     <div class="col-sm-12 validationEngineContainer announcements">
         <!-- ko stopBinding:true -->
 

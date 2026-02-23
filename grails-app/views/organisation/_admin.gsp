@@ -1,16 +1,16 @@
 <div class="row">
     <div class="nav flex-column nav-pills col-3">
         <g:if test="${fc.userIsAlaAdmin() || !fc.userHasReadOnlyAccess()}">
-        <a class="nav-link active" data-toggle="pill" href="#edit-program-details" id="edit-program-details-tab" role="tab">Edit</a>
+        <a class="nav-link active" data-bs-toggle="pill" href="#edit-program-details" id="edit-program-details-tab" role="tab">Edit</a>
         </g:if>
-        <a class="nav-link" data-toggle="pill" href="#organisation-permissions" id="organisation-permissions-tab" role="tab">Permissions</a>
-        <a id="edit-documents-tab" class="nav-link" data-toggle="pill" href="#edit-documents" role="tab">Documents</a>
+        <a class="nav-link" data-bs-toggle="pill" href="#organisation-permissions" id="organisation-permissions-tab" role="tab">Permissions</a>
+        <a id="edit-documents-tab" class="nav-link" data-bs-toggle="pill" href="#edit-documents" role="tab">Documents</a>
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
-            <a class="nav-link" data-toggle="pill" href="#reporting-config" id="reporting-config-tab" role="tab">Reporting</a>
-            <a class="nav-link" data-toggle="pill" href="#config" id="config-tab" role="tab">Configuration</a>
+            <a class="nav-link" data-bs-toggle="pill" href="#reporting-config" id="reporting-config-tab" role="tab">Reporting</a>
+            <a class="nav-link" data-bs-toggle="pill" href="#config" id="config-tab" role="tab">Configuration</a>
         </g:if>
         <g:if test="${showTargets}">
-        <a class="nav-link" data-toggle="pill" href="#organisation-details" id="organisation-details-tab" role="tab">Targets</a>
+        <a class="nav-link" data-bs-toggle="pill" href="#organisation-details" id="organisation-details-tab" role="tab">Targets</a>
         </g:if>
     </div>
 
@@ -19,16 +19,16 @@
         <div class="tab-pane active" id="edit-program-details">
             <h4>Administrator actions</h4>
             <div class="row">
-                <p class="ml-3"><button class="btn btn-info btn-sm admin-action" style="width:200px;" data-bind="click:editOrganisation"><i class="fa fa-edit"></i> Edit</button> Edit the organisation details and content</p>
+                <p class="ms-3"><button class="btn btn-info btn-sm admin-action" style="width:200px;" data-bind="click:editOrganisation"><i class="fa fa-edit"></i> Edit</button> Edit the organisation details and content</p>
             </div>
             <g:if test="${showEditAnnoucements}">
                 <div class="row">
-                    <p class="ml-3"><a href="${g.createLink(action:'editAnnouncements',id:organisation.organisationId)}"><button class="btn btn-sm btn-info admin-action" style="width:200px;"><i class="fa fa-edit"></i> Edit Announcements</button></a> Bulk edit the announcements for all projects managed by this organisation</p>
+                    <p class="ms-3"><a href="${g.createLink(action:'editAnnouncements',id:organisation.organisationId)}"><button class="btn btn-sm btn-info admin-action" style="width:200px;"><i class="fa fa-edit"></i> Edit Announcements</button></a> Bulk edit the announcements for all projects managed by this organisation</p>
                 </div>
             </g:if>
             <g:if test="${fc.userIsAlaOrFcAdmin()}">
                 <div class="row">
-                    <p class="ml-3"><button class="admin-action btn btn-sm btn-danger" style="width:200px;" data-bind="click:deleteOrganisation"><i class="fa fa-remove"></i> Delete</button> Delete this organisation from the system. <strong>This cannot be undone</strong></p>
+                    <p class="ms-3"><button class="admin-action btn btn-sm btn-danger" style="width:200px;" data-bind="click:deleteOrganisation"><i class="fa fa-remove"></i> Delete</button> Delete this organisation from the system. <strong>This cannot be undone</strong></p>
                 </div>
             </g:if>
         </div>
@@ -46,20 +46,20 @@
         <div class="tab-pane" id="reporting-config">
             <form>
                 <h3>Reporting configuration</h3>
-                <div class="form-group">
+                <div class="mb-3">
                     <div class="input-group">
                         <button id="enable-reporting" class="btn btn-success" data-bind="enable:!isReportingEnabled() && availableReportCategories.length > 0, click:enableReporting">Enable Reporting</button>
                     </div>
                 </div>
 
 
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="start-date">Start date</label>
                     <div class="input-group">
                         <fc:datePicker class="form-control dateControl" id="start-date" name="start-date" bs4="bs4" targetField="startDate.date" data-validation-engine="validate[required,future[30-06-2018]]" autocomplete="off"/>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="end-date">End date</label>
                     <div class="input-group">
                         <fc:datePicker class="form-control dateControl" id="end-date" name="end-date" bs4="bs4" targetField="endDate.date" data-validation-engine="validate[required,future[start-date]]" autocomplete="off"/>
@@ -84,7 +84,7 @@
         </div>
 
             <div class="tab-pane" id="config">
-                <h4 style="display:inline-block">Organisation configuration</h4> <button class="btn btn-success float-right" data-bind="click:saveOrganisationConfiguration">Save Configuration</button>
+                <h4 style="display:inline-block">Organisation configuration</h4> <button class="btn btn-success float-end" data-bind="click:saveOrganisationConfiguration">Save Configuration</button>
 
                 <textarea id="textConfig" rows="80" style="width:100%" data-bind="value:config">
 
@@ -99,10 +99,10 @@
             <div class="attachDocumentModal">
                 <div class="row">
                     <h3 class="col-3 d-inline-block">Documents</h3>
-                    <form class="col-9 form-inline justify-content-end">
+                    <form class="col-9 d-flex align-items-center justify-content-end">
 
                         <label class="col-auto col-form-label">Filter documents:
-                            <select class="form-control form-control-sm" data-bind="optionsCaption:'No filter', options:documentRoles, optionsText:'name', optionsValue:'id', value:documentFilter"></select>
+                            <select class="form-select form-select-sm" data-bind="optionsCaption:'No filter', options:documentRoles, optionsText:'name', optionsValue:'id', value:documentFilter"></select>
                         </label>
                     </form>
                 </div>
@@ -128,10 +128,10 @@
                 <div class="attachDocumentModal">
                     <div class="row">
                         <h3 class="col-3 d-inline-block">Documents</h3>
-                        <form class="col-9 form-inline justify-content-end">
+                        <form class="col-9 d-flex align-items-center justify-content-end">
 
                             <label class="col-auto col-form-label">Filter documents:
-                                <select class="form-control form-control-sm" data-bind="optionsCaption:'No filter', options:documentRoles, optionsText:'name', optionsValue:'id', value:documentFilter"></select>
+                                <select class="form-select form-select-sm" data-bind="optionsCaption:'No filter', options:documentRoles, optionsText:'name', optionsValue:'id', value:documentFilter"></select>
                             </label>
                             <button class="btn btn-info btn-sm form-control" id="doAttach" data-bind="click:attachDocument">Attach Document</button>
 

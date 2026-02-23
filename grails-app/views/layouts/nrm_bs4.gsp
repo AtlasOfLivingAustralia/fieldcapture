@@ -40,10 +40,24 @@
     <g:if test="${grailsApplication.config.getProperty('analytics.fathom.trackingId')}">
         <script src="https://cdn.usefathom.com/script.js" data-site="${grailsApplication.config.getProperty('analytics.fathom.trackingId')}" defer></script>
     </g:if>
+    <g:if test="${grails.util.Environment.current == grails.util.Environment.TEST}">
+%{--        Bootstrap 5 enables smooth scrolling by default which breaks selenium tests.--}%
+        <style>
+            html {
+                scroll-behavior: auto !important;
+            }
+        </style>
+
+    </g:if>
+
 </head>
 
 <body class="${pageProperty(name: 'body.class')}" id="${pageProperty(name: 'body.id')}"
       onload="${pageProperty(name: 'body.onload')}">
+<a href="#content" class="visually-hidden-focusable skip-link">
+    Skip to main content
+</a>
+
 <g:set var="introText"><fc:getSettingContent settingType="${SettingPageType.INTRO}"/></g:set>
 <g:set var="userLoggedIn"><fc:userIsLoggedIn/></g:set>
 <g:if test="${fc.announcementContent()}">
@@ -75,9 +89,9 @@
                     </a>
                 </div>
             </g:if>
-            <div class="ml-md-auto text-right">
+            <div class="ms-md-auto text-end">
                 <g:if test="${fc.currentUserDisplayName()}">
-                    <div class="greeting text-right">G'day <fc:currentUserDisplayName/></div>
+                    <div class="greeting text-end">G'day <fc:currentUserDisplayName/></div>
                     <g:if test="${expiryDate}">
                         <div class="alert alert-warning">
                             Your access is due to expire on ${expiryDate}. Please contact the department if you require an extension.
@@ -110,18 +124,18 @@
         <div id="dcNav" class="clearfix ">
 
             <nav class="navbar navbar-expand-lg text-light">
-                <a href="#" class="navbar-brand hidden-desktop text-light">Home</a>
+                <a href="/" class="navbar-brand hidden-desktop text-light">Home</a>
 
-                <button class="navbar-toggler btn btn-navbar btn-inverse" type="button" data-toggle="collapse" data-target="#nav-items" aria-controls="nav-items" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler btn btn-navbar btn-inverse" type="button" data-bs-toggle="collapse" data-bs-target="#nav-items" aria-controls="nav-items" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="text-light fa fa-navicon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="nav-items">
-                    <ul class="nav navbar-nav mr-auto">
+                    <ul class="nav navbar-nav me-auto">
                         <fc:navbar active="${pageProperty(name: 'page.topLevelNav')}"
                                    items="${['home', 'projectExplorer', 'about', 'help', 'contacts']}"/>
 
                     </ul>
-                    <form class="form-inline">
+                    <form class="d-flex align-items-center">
                         %{--                        <span id="buttonBar">--}%
                         <g:render template="/layouts/nrmUserButtons"/>
                         <g:pageProperty name="page.buttonBar"/>
@@ -158,8 +172,8 @@
             <div class="large-space-before">
                 <button class="btn btn-mini" id="toggleFluid">toggle fixed/fluid width</button>
                 <g:if test="${userLoggedIn && introText}">
-                    <button class="btn btn-mini" type="button" data-toggle="modal"
-                            data-target="#introPopup">display user intro</button>
+                    <button class="btn btn-mini" type="button" data-bs-toggle="modal"
+                            data-bs-target="#introPopup">display user intro</button>
                 </g:if>
             </div>
         </div>

@@ -157,7 +157,7 @@ describe("The ESP reporting process works slightly differently to the normal MER
         });
 
         spyOn(ko, 'applyBindings').and.returnValue(undefined);
-        $.fn.modal = function() { return {on:function() {}}};
+        $.fn.modal = function() { return {on:function() { return { modal: function() {}} }}};
 
         viewModel.submitReport();
         expect(ajaxParamsForSpeciesActivity).toEqual({
@@ -237,7 +237,12 @@ describe("The ESP reporting process works slightly differently to the normal MER
         spyOn(ko, 'applyBindings').and.returnValue(undefined);
         $.fn.modal = function() {
             declarationModalShown = true;
-            return {on:function() {}};
+            return {
+                on:function() {
+                    return {modal: function() {}} ;
+                }
+            };
+
         };
 
         viewModel.submitReport();

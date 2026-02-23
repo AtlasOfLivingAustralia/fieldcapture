@@ -1286,6 +1286,7 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             dataSetsSelector: config.dataSetsSelector || '#project-data-sets',
             newDataSetUrl:  config.newDataSetUrl,
             editDataSetUrl: config.editDataSetUrl,
+            copyDataSetUrl: config.copyDataSetUrl,
             deleteDataSetUrl: config.deleteDataSetUrl,
             viewDataSetUrl: config.viewDataSetUrl,
             downloadDataSetUrl: config.downloadDataSetUrl,

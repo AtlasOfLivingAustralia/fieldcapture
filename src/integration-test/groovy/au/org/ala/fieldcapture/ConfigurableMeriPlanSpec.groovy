@@ -778,9 +778,14 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         when:
         meriPlan = openMeriPlanEditTab()
+        waitFor {
+            meriPlan.assets[0].description.displayed
+        }
 
         then:
-        meriPlan.assets[0].description == "asset 1"
+        waitFor {
+            meriPlan.assets[0].description == "asset 1"
+        }
         meriPlan.shortTermOutcomes[0].outcome.value() == "outcome 1"
         meriPlan.projectDescription == 'Project description'
         meriPlan.projectMethodology == 'Project Methodology'
@@ -790,7 +795,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.projectPartnerships[0].name == 'partner name'
         meriPlan.projectPartnerships[0].partnership == 'partnership'
         meriPlan.projectPartnerships[0].orgType == 'Trust'
-        meriPlan.consultation == 'Consultation'
+        meriPlan.consultation.value() == 'Consultation'
 
     }
 
@@ -927,7 +932,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan.projectServices[0].selectService("Communication materials")
         meriPlan.projectServices[0].selectScore("Number of communication materials published")
         meriPlan.projectServices[0].targets = "5"
-
+        meriPlan.hideFloatingSave()
         meriPlan.save()
 
         def previousLoad = getAtCheckTime()

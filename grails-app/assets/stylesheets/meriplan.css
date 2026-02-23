@@ -426,7 +426,7 @@ a.meri-history-toggle {
     font-size: 14px;
     content: "\f059";
 }
-.control-group .badge-danger {
+.control-group .bg-danger {
     background-color: #dc3545;
 }
 

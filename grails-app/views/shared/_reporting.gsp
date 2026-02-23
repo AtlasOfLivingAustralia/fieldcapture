@@ -108,15 +108,15 @@
                 <div class="modal-body">
                     <form class="form-horizontal" id="reportForm">
 
-                        <div class="control-group form-group">
+                        <div class="control-group mb-3">
                             <label class="control-label" for="reportType">Report Type</label>
 
                             <div class="controls">
-                                <select id="reportType" class="form-control" style="width: 97%;" data-bind="options:availableReports, optionsText:formatReportType, value:selectedReportType"></select>
+                                <select id="reportType" class="form-select" style="width: 97%;" data-bind="options:availableReports, optionsText:formatReportType, value:selectedReportType"></select>
                             </div>
                         </div>
 
-                        <div class="control-group form-group">
+                        <div class="control-group mb-3">
                             <label class="control-label" for="fromDate">From</label>
 
                             <div class="controls">
@@ -127,7 +127,7 @@
                         <div class="control-group">
                             <label class="control-label" for="toDate">To</label>
 
-                            <div class="controls form-group">
+                            <div class="controls mb-3">
                                 <fc:datePicker class="form-control" targetField="toDate.date" name="toDate" data-validation-engine="validate[required]" printable="${printView}" autocomplete="off"/>
                             </div>
                         </div>
@@ -148,10 +148,10 @@
     </div>
 
 <script id="notReportable" type="text/html">
-<span class="badge badge-warning">Report not submitted</span><br/>
+<span class="badge text-bg-warning text-white">Report not submitted</span><br/>
 </script>
 <script id="notSubmitted" type="text/html">
-    <p><span class="badge badge-warning">Report not submitted</span></p>
+    <p><span class="badge text-bg-warning text-white">Report not submitted</span></p>
 
 <g:if test="${isAdmin || fc.userIsAlaOrFcAdmin()}">
     <p>
@@ -160,7 +160,7 @@
 </g:if>
 </script>
 <script id="approved" type="text/html">
-<p><span class="badge badge-success">Report approved</span></p>
+<p><span class="badge text-bg-success">Report approved</span></p>
 
 <g:if test="${fc.userIsAlaOrFcAdmin()}">
     <p>
@@ -168,7 +168,7 @@
     </p>
 </script>
 <script id="submitted" type="text/html">
-<p><span class="badge badge-info">Report submitted</span></p>
+<p><span class="badge text-bg-info">Report submitted</span></p>
 <g:if test="${isGrantManager || fc.userIsAlaOrFcAdmin()}">
 
     <span class="btn-group">

@@ -5,7 +5,7 @@
     <strong>Compare performance:</strong>
 
     <form>
-        <div class="form-group row">
+        <div class="mb-3 row">
             <label for="year" class="col-sm-1">Year: </label>
             <div class="col-sm-3">
                 <g:select name="year" class="form-control form-control-sm" from="${years}" value="${year}"/>

@@ -18,7 +18,7 @@ class DatasetSpec extends StubbedCasSpec{
     }
 
 
-    def "Add new data set in to project"() {
+    def "Data set summaries can be created, edited, copied and deleted"() {
         setup:
         String projectId = 'fdFundProject'
         loginAsUser('1', browser)
@@ -56,16 +56,16 @@ class DatasetSpec extends StubbedCasSpec{
         dataSet.format = "JSON"
         dataSet.sensitivities =["Commercially sensitive", "Ecologically sensitive"]
 
-        dataSet.createButton.click()
+        save()
 
         then:
         waitFor  { at RlpProjectPage }
-        waitFor {$("#project-data-sets .fa-eye").displayed}
-        $('[data-bind*="text: progress"]').displayed
-        $('[data-bind*="text: progress"]').text() == "started"
+        openDataSetSummaryTab()
+        datasetDetails.dataSetRows[0].status == "started"
 
         when:
-        $("#project-data-sets .fa-eye").click()
+        openDataSetSummaryTab()
+        datasetDetails.dataSetRows[0].view()
 
         then: "user can view the data set details"
         at DatasetPage
@@ -84,12 +84,12 @@ class DatasetSpec extends StubbedCasSpec{
 
         then:
         waitFor { at RlpProjectPage }
-        waitFor {$("#project-data-sets .fa-edit").displayed}
-        $('[data-bind*="text: progress"]').displayed
-        $('[data-bind*="text: progress"]').text() == "started"
+        openDataSetSummaryTab()
+        datasetDetails.dataSetRows[0].status == "started"
 
         when:
-        $("#project-data-sets .fa-edit").click()
+        openDataSetSummaryTab()
+        datasetDetails.dataSetRows[0].edit()
 
         then:
         at DatasetPage
@@ -120,8 +120,45 @@ class DatasetSpec extends StubbedCasSpec{
         waitFor { at RlpProjectPage }
         waitFor {$("#project-data-sets .fa-remove").displayed}
 
-        when: "Delete the data set"
-        $("#project-data-sets .fa-remove").click()
+        when: "We copy a data set"
+        datasetDetails.dataSetRows[0].copy()
+        then:
+        at DatasetPage
+        def copyOfSet = datasetContent
+        copyOfSet.title == "Copy of Title"
+        copyOfSet.programOutcome == "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
+        copyOfSet.investmentPriorities == ["Soil acidification"]
+        copyOfSet.protocol == "other"
+        copyOfSet.type == "Baseline"
+        copyOfSet.measurementTypes == ["Soil erosion"]
+        copyOfSet.methods == ["Area sampling", "Genetic sampling"]
+        copyOfSet.methodDescription == "Method description"
+        copyOfSet.collectionApp == "Collection App"
+        copyOfSet.location == "Location"
+        copyOfSet.startDate ==""
+        copyOfSet.endDate ==""
+        copyOfSet.addition == "Previous project"
+        copyOfSet.threatenedSpeciesIndex == "Yes"
+        copyOfSet.format == "JSON"
+        copyOfSet.sensitivities ==["Commercially sensitive", "Ecologically sensitive"]
+        !copyOfSet.dataCollectionOngoing.checked
+
+        when:
+        save()
+
+        then: "The data set summary is displayed and a new data set summary has been added"
+        waitFor { at RlpProjectPage }
+
+        when:
+        def dataSetSummary = openDataSetSummaryTab()
+
+        then:
+        waitFor 10, {
+            dataSetSummary.dataSetSummaryCount() == 2
+        }
+
+        when: "We delete the first data set"
+        $("#project-data-sets .fa-remove").first().click()
         okBootbox()
 
         then: "The data set is removed"
@@ -129,12 +166,14 @@ class DatasetSpec extends StubbedCasSpec{
             hasBeenReloaded()
         }
         when:
-        def dataSetSummary = openDataSetSummaryTab()
+        dataSetSummary = openDataSetSummaryTab()
 
         then:
         waitFor 10, {
-           dataSetSummary.dataSetSummaryCount() == 0
+            dataSetSummary.dataSetSummaryCount() == 1
+            dataSetSummary.dataSetRows[0].title == "Title"
         }
+
 
     }
 
@@ -153,29 +192,32 @@ class DatasetSpec extends StubbedCasSpec{
 
         when:
         def dataSet = datasetContent
-        dataSet.title = "Title"
+        dataSet.title = "Title 2"
 
-        dataSet.createButton.click()
+        save()
 
         then:
         waitFor { at RlpProjectPage }
-        waitFor {$("#project-data-sets .fa-edit").displayed}
-        $('[data-bind*="text: progress"]').displayed
-        $('[data-bind*="text: progress"]').text() == "started"
+        waitFor {
+            datasetDetails.dataSetSummaryCount() == 2
+        }
+        datasetDetails.dataSetRows[0].title == "Title 2"
+        datasetDetails.dataSetRows[0].status == "started"
+        datasetDetails.dataSetRows[1].title == "Title"
 
         when:
-        $("#project-data-sets .fa-edit").click()
+        datasetDetails.dataSetRows[0].edit()
 
         then:
         at DatasetPage
 
         def set = datasetContent
-        set.title == "Title"
+        set.title == "Title 2"
         !set.dataCollectionOngoing.checked
 
         when:
-        set.markCompleted.click()
-        set.createButton.click()
+        markCompleted()
+        save()
 
         then:
         waitFor {
@@ -183,7 +225,7 @@ class DatasetSpec extends StubbedCasSpec{
         }
 
         when:
-        set.title = "Title"
+        set.title = "Title 2"
         set.programOutcome = "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
         set.investmentPriorities = ["Soil acidification"]
         set.type = "Baseline"
@@ -201,7 +243,7 @@ class DatasetSpec extends StubbedCasSpec{
         set.dataSetSize = '200'
         set.publicationUrl = "https://www.ala.org.au"
 
-        set.createButton.click()
+        save()
 
         then:
         waitFor {
@@ -211,10 +253,16 @@ class DatasetSpec extends StubbedCasSpec{
 
             at RlpProjectPage
         }
-        waitFor {$("#project-data-sets .fa-edit").displayed}
-        $('[data-bind*="text: progress"]').displayed
-        $('[data-bind*="text: progress"]').text() == "finished"
 
+        when:
+        openDataSetSummaryTab()
+
+        then:
+        waitFor {
+            datasetDetails.dataSetSummaryCount() == 2
+        }
+        datasetDetails.dataSetRows[0].title == "Title 2"
+        datasetDetails.dataSetRows[0].status == "finished"
     }
 
     /** Note that this test relies on the data set summary inserted in the previous test, as per the @Stepwise annotation */
@@ -227,8 +275,8 @@ class DatasetSpec extends StubbedCasSpec{
         to RlpProjectPage, projectId
         openDataSetSummaryTab()
 
-        then: "We have a single data set summary displayed in the table"
-        datasetDetails.dataSetSummaryCount() == 1
+        then: "We have a two data set summaries displayed in the table"
+        datasetDetails.dataSetSummaryCount() == 2
 
         when: "We update and save the MERI plan"
         openMERIPlanTab()
@@ -249,8 +297,8 @@ class DatasetSpec extends StubbedCasSpec{
         to RlpProjectPage, projectId
         openDataSetSummaryTab()
 
-        then: "We still have a single data set summary displayed in the table"
-        datasetDetails.dataSetSummaryCount() == 1
+        then: "We still have two data set summaries displayed in the table"
+        datasetDetails.dataSetSummaryCount() == 2
 
         when: "We update the project settings"
         openAdminTab()
@@ -261,8 +309,8 @@ class DatasetSpec extends StubbedCasSpec{
         waitFor {hasBeenReloaded()}
         openDataSetSummaryTab()
 
-        then: "We still have a single data set summary displayed in the table"
-        datasetDetails.dataSetSummaryCount() == 1
+        then: "We still have two data set summaries displayed in the table"
+        datasetDetails.dataSetSummaryCount() == 2
 
 
     }

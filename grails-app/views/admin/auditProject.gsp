@@ -29,8 +29,8 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-12 text-right">
-                <a href="${createLink(action:'auditProjectSearch',params:[searchTerm: searchTerm])}" class="btn btn-default btn-sm float-right"><i class="fa fa-backward"></i> Back</a>
+            <div class="col-sm-12 text-end">
+                <a href="${createLink(action:'auditProjectSearch',params:[searchTerm: searchTerm])}" class="btn btn-default btn-sm float-end"><i class="fa fa-backward"></i> Back</a>
             </div>
         </div>
 

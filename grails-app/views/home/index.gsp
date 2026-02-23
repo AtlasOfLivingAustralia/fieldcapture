@@ -38,7 +38,7 @@
         <g:if test="${flash.message}">
             <div class="row">
                 <div class="col-sm-12 alert alert-info" style="margin-bottom:0;">
-                    <button class="close" onclick="$('.alert').fadeOut();" href="#">×</button>
+                    <button class="btn-close" onclick="$('.alert').fadeOut();" href="#">×</button>
                     ${flash.message}
                 </div>
             </div>
@@ -47,7 +47,8 @@
 
     <div class="row">
         <div class="col-sm-12" id="heading">
-            <h1 class="float-left"><fc:homePageTitle/></h1>
+            <h1 >Project Explorer</h1>
+            <fc:homePageTitle/>
         </div>
     </div>
 

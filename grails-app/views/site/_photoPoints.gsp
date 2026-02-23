@@ -108,7 +108,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="model-title"><h3 data-bind="text:title"></h3></div>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" aria-hidden="true">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" aria-hidden="true">&times;</button>
 
                 </div>
                 <div class="modal-body">
@@ -129,33 +129,33 @@
                             </div>
 
                             <div>
-                                <div class="row form-group required">
+                                <div class="row mb-3 required">
                                     <label for="photoPointName" class="col-form-label col-sm-4">Name: </label>
                                     <div class="col-sm-8">
                                         <input type="text" class="form-control form-control-sm" id="photoPointName" data-bind="value:photoPoint.name" data-validation-engine="validate[required]">
                                     </div>
                                 </div>
-                                <div class="row form-group">
+                                <div class="row mb-3">
                                     <label for="photoPointDescription" class="col-form-label col-sm-4">Description: </label>
                                     <div class="col-sm-8">
                                         <input type="text" class="form-control form-control-sm" id="photoPointDescription" data-bind="value:photoPoint.description">
                                     </div>
                                 </div>
-                                <div class="row form-group required">
+                                <div class="row mb-3 required">
                                     <label class="col-form-label col-sm-4" for="photoPointLatitude">Latitude: </label>
                                     <div class="col-sm-8">
                                         <input type="text" data-bind="value:photoPoint.geometry.decimalLatitude" class="form-control form-control-sm" id="photoPointLatitude" data-validation-engine="validate[required,custom[number],min[-90],max[0]]">
                                     </div>
                                 </div>
 
-                                <div class="row form-group required">
+                                <div class="row mb-3 required">
                                     <label for="photoPointLongitude" class="col-form-label col-sm-4">Longitude: </label>
                                     <div class="col-sm-8">
                                         <input type="text" class="form-control form-control-sm" id="photoPointLongitude" data-bind="value:photoPoint.geometry.decimalLongitude" data-validation-engine="validate[required,custom[number],min[-180],max[180]]">
                                     </div>
                                 </div>
 
-                                <div class="row form-group required">
+                                <div class="row mb-3 required">
                                     <label for="photoPointBearing" class="col-form-label col-sm-4">Bearing: </label>
                                     <div class="col-sm-8">
                                         <input type="text" class="form-control form-control-sm" id="photoPointBearing" data-bind="value:photoPoint.geometry.bearing" data-validation-engine="validate[required]">
@@ -203,28 +203,28 @@
 </script>
 <script id="photoEditTemplate" type="text/html">
 <div class="form-horizontal">
-    <div class="row form-group required">
+    <div class="row mb-3 required">
         <label for="name" class="col-sm-4">Title: </label>
         <input type="text" class="col-sm-8 form-control form-control-sm" id="name" data-bind="value:name" data-validation-engine="validate[required]">
     </div>
-    <div class="row form-group required">
+    <div class="row mb-3 required">
         <label for="dateTaken" class="col-sm-4">Date Taken: <i class="fa fa-question-circle" data-bind="popover:{container:'body', content:'Please ensure that this information is accurate and the date that the photograph was taken, not the date it was uploaded (unless they are the same date).', placement:'top'}">&nbsp;</i></label>
         <div class="input-group col-sm-8 dateInput"><fc:datePicker size="input-small" bs4="true" class="form-control form-control-sm" targetField="dateTaken.date" id="dateTaken" name="dateTaken" data-validation-engine="validate[required]" autocomplete="off"/></div>
     </div>
-    <div class="row form-group">
+    <div class="row mb-3">
         <label for="attribution" class="col-sm-4">Attribution: <i class="fa fa-question-circle" data-bind="popover:{content:'The name of the photographer', placement:'top'}">&nbsp;</i></label>
         <input type="text" class="form-control form-control-sm col-sm-8" id="attribution" data-bind="value:attribution">
     </div>
-    <div class="row form-group">
+    <div class="row mb-3">
         <label for="notes" class="col-sm-4">Notes: <i class="fa fa-question-circle" data-bind="popover:{content:'Additional notes you would like to supply regarding the photo point or photograph.', placement:'top'}">&nbsp;</i></label>
         <input type="text" class="form-control form-control-sm col-sm-8" id="notes" data-bind="value:notes">
     </div>
 
-    <div class="row form-group readonly">
+    <div class="row mb-3 readonly">
         <label class="col-sm-4">File Name: </label>
         <label class="col-sm-8" data-bind="text:filename"></label>
     </div>
-    <div class="row form-group readonly">
+    <div class="row mb-3 readonly">
         <label class="col-sm-4">File Size: </label>
         <label class="col-sm-8" data-bind="text:formattedSize"></label>
     </div>
@@ -232,23 +232,23 @@
 </script>
 
 <script id="photoViewTemplate" type="text/html">
-<div class="form-group">
+<div class="mb-3">
     <label>Title: <span data-bind="text:name"></span></label>
 </div>
-<div class="form-group">
+<div class="mb-3">
     <label>Date Taken: <span data-bind="text:dateTaken"></span></label>
 </div>
-<div class="form-group">
+<div class="mb-3">
     <label>Attribution : <span data-bind="text:attribution"></span></label>
 </div>
-<div class="form-group">
+<div class="mb-3">
     <label>Notes: <span data-bind="text:notes"></span></label>
 </div>
 
-<div class="form-group readonly">
+<div class="mb-3 readonly">
     <label>File Name: <span data-bind="text:filename"></span></label>
 </div>
-<div class="form-group readonly">
+<div class="mb-3 readonly">
     <label>File Size: <span data-bind="text:formattedSize"></span></label>
 </div>
 </script>

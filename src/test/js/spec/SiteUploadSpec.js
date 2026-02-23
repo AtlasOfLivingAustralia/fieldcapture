@@ -23,7 +23,7 @@ describe("The SiteUploadViewModel is responsible for the site upload page", func
     var modal;
     beforeAll(function() {
         modal = $.fn.modal;
-        $.fn.modal = function() {};
+        $.fn.modal = function() { return this; };
         jasmine.clock().install();
     });
 

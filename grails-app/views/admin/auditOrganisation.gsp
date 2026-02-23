@@ -15,7 +15,7 @@
 
 
         <div class="row">
-            <div class="col-sm-12 text-right">
+            <div class="col-sm-12 text-end">
                 <a href="${createLink(action:'auditOrganisationSearch',params:[searchTerm: searchTerm])}" class="btn btn-default btn-sm"><i class="fa fa-backward"></i> Back</a>
             </div>
         </div>

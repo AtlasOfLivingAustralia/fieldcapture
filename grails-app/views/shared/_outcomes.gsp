@@ -1,6 +1,6 @@
 <div class="well">
     <div class="well-title">${title}</div>
-    <div class="row outcomes ${type} no-gutters">
+    <div class="row outcomes ${type} g-0">
         <g:each in="${outcomes}" var="outcome" >
             <g:set var="outcomeClass" value="${outcome.targeted ? 'targeted' :''}"/>
             <div class="col-md">

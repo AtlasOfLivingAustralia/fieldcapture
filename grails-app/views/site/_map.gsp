@@ -79,9 +79,9 @@
 
                 <div class="col-sm-6">
                     <div class="well well-small">
-                        <div class="form-group row">
-                            <label for="extentSource" class="col-sm-3 pr-0"><h4>Define extent using:</h4></label>
-                            <div class="col-sm-9 pl-0 extentSelect">
+                        <div class="mb-3 row">
+                            <label for="extentSource" class="col-sm-3 pe-0"><h4>Define extent using:</h4></label>
+                            <div class="col-sm-9 ps-0 extentSelect">
                                 <g:select class="input-small form-control" data-bind="value: extentSource" data-validation-engine="validate[funcCall[validateSiteExtent]]"
                                           name='extentSource'
                                           from="['choose type','point','known shape','draw a shape']"
@@ -149,12 +149,12 @@
                             <div class="col-sm-11" data-bind="foreach: poi">
                                 <div>
                                     <div data-bind="template: { name: 'poi'}" ></div>
-                                    <button type="button" class="mt-2 ml-4 btn btn-sm btn-danger" style="margin-bottom:20px;" data-bind="click: $parent.removePOI, visible:!hasPhotoPointDocuments">Remove</button>
+                                    <button type="button" class="mt-2 ms-4 btn btn-sm btn-danger" style="margin-bottom:20px;" data-bind="click: $parent.removePOI, visible:!hasPhotoPointDocuments">Remove</button>
                                 </div>
                                 <hr/>
                             </div>
                         </div>
-                        <div class="row ml-1">
+                        <div class="row ms-1">
                             <button type="button" data-bind="click: newPOI, visible: poi.length == 0" class="btn btn-sm">Add a POI</button>
                             <button type="button" data-bind="click: newPOI, visible: poi.length > 0" class="btn btn-sm">Add another POI</button>
                         </div>
@@ -209,7 +209,7 @@
 
     <script type="text/html" id="poi">
     <div class="drawLocationDiv row">
-        <div class="col-sm-12 pl-4 ml-2">
+        <div class="col-sm-12 ps-4 ms-2">
             <div class="row alert" style="box-sizing:border-box;" data-bind="visible:hasPhotoPointDocuments">
                 This point of interest has documents attached and cannot be removed.
             </div>
@@ -220,7 +220,7 @@
                 <fc:textArea rows="2" data-bind="value:description" outerClass="col-sm-12 ml-3" class="form-control form-control-sm" label="Description"/>
             </div>
             <div class=" mt-2 row controls-row">
-                <div class="col-sm-10 ml-1">
+                <div class="col-sm-10 ms-1">
                     <label for="type">Point type</label>
                     <div>
                         <g:select class="from-control form-control-sm custom-input" data-bind="value: type"
@@ -231,7 +231,7 @@
                 </div>
 
             </div>
-            <div class="mt-2 pl-1 row controls-row">
+            <div class="mt-2 ps-1 row controls-row">
 
                     <fc:textField data-bind="value:geometry().decimalLatitude" outerClass="col-sm-4"  class="form-control form-control-sm" label="Latitude" data-validation-engine="validate[required,custom[number],min[-90],max[0]]" data-prompt-position="topRight:-150"/>
                     <fc:textField data-bind="value:geometry().decimalLongitude" outerClass="col-sm-4" class="form-control form-control-sm" label="Longitude" data-validation-engine="validate[required,custom[number],min[-180],max[180]]"/>
@@ -258,13 +258,13 @@
                 optionsCaption:'Choose a layer...',
                 optionsValue: 'id',
                 optionsText:'name',
-                value: chosenLayer" class="form-control"></select>
+                value: chosenLayer" class="form-select"></select>
             </div>
             <div class="col-sm-4">
                 <select id="chooseShape"   name="chooseShape" data-bind="options: layerObjects, disable: layerObjects().length == 0,
                 optionsCaption:'Choose shape ...',
                 optionsValue: 'pid',
-                optionsText:'name', value: layerObject" class="form-control"></select>
+                optionsText:'name', value: layerObject" class="form-select"></select>
             </div>
         </div>
 
@@ -307,7 +307,7 @@
 
     <script type="text/html" id="drawn">
     <div id="drawnLocationDiv" class="drawLocationDiv row">
-        <div class="col-sm-10 ml-3">
+        <div class="col-sm-10 ms-3">
 
             <div class="mt-2 row controls-row" style="display:none;">
                 <span class="label label-success">Type</span> <span data-bind="text:geometry().type"></span>

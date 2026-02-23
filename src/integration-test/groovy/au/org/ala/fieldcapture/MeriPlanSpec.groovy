@@ -98,6 +98,7 @@ class MeriPlanSpec extends StubbedCasSpec {
         meriPlan.nationalAndRegionalPlans[0].alignment = "Alignment 1"
         // Services aren't configured in the dataset
         // meriPlan.serviceTargets[0].target = "Target 1"
+        meriPlan.hideFloatingSave()
 
         meriPlan.save()
 
@@ -306,7 +307,8 @@ class MeriPlanSpec extends StubbedCasSpec {
         admin.projectSettings.externalIds[0].externalId = '12345'
         admin.projectSettings.externalIds[0].idType = 'INTERNAL_ORDER_NUMBER'
 
-        admin.projectSettings.saveChangesButton.click()
+
+        admin.projectSettings.saveChanges()
 
         then:
         waitFor{hasBeenReloaded()}
@@ -375,7 +377,7 @@ class MeriPlanSpec extends StubbedCasSpec {
 
         when:
         admin.projectSettings.externalIds.externalIds[0].externalId = '12345'
-        admin.projectSettings.saveChangesButton.click()
+        admin.projectSettings.saveChanges()
 
         then:
         waitFor{hasBeenReloaded()}

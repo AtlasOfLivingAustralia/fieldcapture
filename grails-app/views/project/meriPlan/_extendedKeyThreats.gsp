@@ -23,13 +23,13 @@
         <td class="index"><span data-bind="text:$index()+1"></span></td>
         <td class="related-outcomes">
             <select
-                    class="form-control form-control-sm dropdown-right"
+                    class="form-select form-select-sm dropdown-right"
                     data-validation-engine="validate[required]"
                     multiple="true"
                     data-bind="options:$root.selectedOutcomes, optionsText:'code', optionsValue:'code', multiSelect2:{value:relatedOutcomes, templateResult:$root.renderOutcome, tags:false}, disable: $root.isProjectDetailsLocked()"></select>
         </td>
         <td class="threat-code">
-            <select class="form-control form-control-sm"
+            <select class="form-select form-select-sm"
                     data-validation-engine="validate[required]"
                     data-bind="options:$root.keyThreatCodes, value:threatCode, optionsCaption:'Please select...', disable: $root.isProjectDetailsLocked()">
             </select>
@@ -43,7 +43,7 @@
         </td>
         <td class="services">
             <select multiple="true"
-                    class="form-control form-control-sm"
+                    class="form-select form-select-sm"
                     data-validation-engine="validate[required]"
                     data-bind="options:$root.keyThreatsTargetMeasures(), optionsText:'label', optionsValue:'scoreId', multiSelect2:{tags:false, preserveColumnWidth:20, value:relatedTargetMeasures}, disable: $root.isProjectDetailsLocked()"></select>
         </td>

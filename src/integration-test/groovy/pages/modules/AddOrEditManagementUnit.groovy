@@ -17,6 +17,9 @@ class AddOrEditManagementUnit extends Module{
         cancelButton { $('#cancel') }
     }
     def save(){
+        interact {
+            moveToElement(saveButton)
+        }
         saveButton.click()
     }
 }

@@ -34,7 +34,7 @@ describe("warningPopup binding handler Spec", function () {
         expect($('.popover-body').text()).toEqual("Warning!");
 
         model.valid(true);
-        jasmine.clock().tick(1);
+        jasmine.clock().tick(10);
         expect($('.popover.warning').length).toEqual(0);
 
         model.valid(false);

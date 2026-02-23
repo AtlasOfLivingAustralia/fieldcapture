@@ -1,6 +1,6 @@
 <g:if test="${project.lock?.userId == user.userId}">
     <div class="row space-after">
-        <div class="col-sm-12 pl-3 pr-3">
+        <div class="col-sm-12 ps-3 pe-3">
             <div class="alert alert-danger meri-lock-held">
                 <p class="text-dark"><i class="fa fa-lock"></i> You currently hold an editing lock for this MERI plan.  No other users will be able to edit the plan until you release the lock using "Save changes and finish editing", "Submit for approval", or "Cancel" buttons.</p>
             </div>
@@ -8,14 +8,14 @@
         <div class="col-sm-12">
             <div class="form-actions">
 
-                <div class="form-check ml-2 mb-2">
+                <div class="form-check ms-2 mb-2">
                     <input type="checkbox" class="form-check-input" id="caseStudy" data-bind="checked: meriPlan().caseStudy, disable: isProjectDetailsLocked()">
                     <label for="caseStudy" class="form-check-label">Are you willing for your project to be used as a case study by the Department?</label>
                 </div>
                 <br/>
 
                 <div class="alert alert-secondary form-check">
-                    <label for="planFinished" class="ml-2 form-check-label"><input type="checkbox" class="form-check-input" id="planFinished" data-bind="checked: meriPlan().markAsFinished, disable: isProjectDetailsLocked()"> Mark the MERI plan as complete</label> <fc:iconHelp>The "Submit for approval" function will not be available until the MERI plan is marked as complete</fc:iconHelp>
+                    <label for="planFinished" class="ms-2 form-check-label"><input type="checkbox" class="form-check-input" id="planFinished" data-bind="checked: meriPlan().markAsFinished, disable: isProjectDetailsLocked()"> Mark the MERI plan as complete</label> <fc:iconHelp>The "Submit for approval" function will not be available until the MERI plan is marked as complete</fc:iconHelp>
                 </div>
                 <button type="button" data-bind="click: saveProjectDetails, disable: isProjectDetailsLocked()" class="btn btn-sm btn-primary">Save changes</button>
                 <button type="button" data-bind="click: saveMeriPlanAndUnlock, disable: isProjectDetailsLocked()" class="btn btn-sm btn-primary">Save changes and finish editing</button>

@@ -29,7 +29,7 @@
         if (messages[key] !== undefined) {
             return messages[key];
         } else {
-            return defaultValue || key;
+            return _.isUndefined(defaultValue) ? key : defaultValue;
         }
     };
 

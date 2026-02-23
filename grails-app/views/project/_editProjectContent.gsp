@@ -3,11 +3,11 @@
 <h3>${header}</h3>
 <div class="row">
     <div class="col-sm-5 alert d-none" data-bind="visible:message(), css:{'alert-error':error(), 'alert-success':success()}">
-        <button class="close" data-bind="click:clearMessage" href="#">×</button>
+        <button class="btn-close" data-bind="click:clearMessage" href="#">×</button>
         <span data-bind="text:message"></span>
     </div>
 </div>
-<div class="row space-after ml-1 well well-small">
+<div class="row space-after ms-1 well well-small">
 
         <h4>Update project "${header}"</h4>
         <div id="${attributeName}-button-bar" class="w-100 bg-white mb-2"></div>
