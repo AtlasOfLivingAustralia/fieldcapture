@@ -1865,7 +1865,7 @@ function OutcomesViewModel(outcomes, config) {
         return selectedOutcome;
     }
 
-    self.outcomePriorities = function (outcomeText) {
+    self.outcomePriorities = function (outcomeText, investmentPriorityIds) {
 
         var outcome = _.find(config.outcomes, function (outcome) {
             return outcome.outcome == outcomeText;
@@ -1873,11 +1873,24 @@ function OutcomesViewModel(outcomes, config) {
         if (!outcome) {
             return [];
         }
+        // This function exists to handle the case where an investment
+        // priority has been selected for the project but the configuration
+        // has changed such that the priority is no longer associated with
+        // the program outcomes.  It prevents it from being removed from the MERI plan in this case.
+        function isSelected(priority) {
+            investmentPriorityIds = ko.utils.unwrapObservable(investmentPriorityIds);
+            if (Array.isArray(investmentPriorityIds)) {
+                return investmentPriorityIds && investmentPriorityIds.indexOf(priority.investmentPriorityId) >= 0;
+            }
+            else {
+                return investmentPriorityIds === priority;
+            }
+        }
 
         var priorityCategories = outcome.priorityCategories;
         // Return the list of priorities that have at least one category in common with the selected outcome.
         var priorities = _.filter(config.priorities, function (priority) {
-            return _.any(priorityCategories, function (category) {
+            return isSelected(priority.investmentPriorityId) || _.any(priorityCategories, function (category) {
                 return priority.categories.indexOf(category) >= 0;
             });
         });

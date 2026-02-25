@@ -106,7 +106,7 @@ function addInvestmentPriority(priority, project) {
         print(project.projectId + 'has an empty priority');
         return;
     }
-    let category = null;
+    let categories = [];
     let type = null;
 
     let mu = null;
@@ -115,41 +115,42 @@ function addInvestmentPriority(priority, project) {
         let muPriority = mu.priorities && mu.priorities.find(
             m => (m.priority && m.priority.trim()) === priorityName
         );
-        category = muPriority ? muPriority.category : null;
-        if (category) {
-            type = typesForCategory[category] || 'Other';
+        let muCategory = muPriority ? muPriority.category : null;
+        if (muCategory) {
+            type = typesForCategory[muCategory] || 'Other';
+            categories.push(muCategory);
         }
 
     }
 
-    if (!category) {
-        let program = db.program.findOne({programId: project.programId});
-        if (program) {
-            let programPriority = program.priorities && program.priorities.find(
-                p => (p.priority && p.priority.trim()) === priorityName
-            );
-            if (!programPriority) {
-                //print("No priority found for " + priorityName + " in program " + program.name);
-                if (!programsWithMissingStuff[program.programId]) {
-                    programsWithMissingStuff[program.programId] = {
-                        name: program.name,
-                        count: 0,
-                        ips: []
-                    }
+    let program = db.program.findOne({programId: project.programId});
+    if (program) {
+        let programPriority = program.priorities && program.priorities.find(
+            p => (p.priority && p.priority.trim()) === priorityName
+        );
+        if (!programPriority) {
+            //print("No priority found for " + priorityName + " in program " + program.name);
+            if (!programsWithMissingStuff[program.programId]) {
+                programsWithMissingStuff[program.programId] = {
+                    name: program.name,
+                    count: 0,
+                    ips: []
                 }
-                programsWithMissingStuff[program.programId].count++;
-                programsWithMissingStuff[program.programId].ips.push({[priorityName]:project.projectId});
-                // print(program.priorities)
-                //print(project.custom.details.assets);
-                //print(project.custom.details.outcomes);
-                //return "error";
-            } else {
-                priorityName = programPriority.priority.trim();
-                category = programPriority.category;
-                type = typesForCategory[category] || 'Other';
             }
+            programsWithMissingStuff[program.programId].count++;
+            programsWithMissingStuff[program.programId].ips.push({[priorityName]:project.projectId});
+
+        } else {
+            priorityName = programPriority.priority.trim();
+            let programCategory = programPriority.category;
+            if (programCategory) {
+                categories.push(programCategory);
+                type = typesForCategory[programCategory] || 'Other';
+            }
+
         }
     }
+
     let existingPriority = db.investmentPriority.findOne({name: priorityName});
     if (!existingPriority) {
         investmentPriority = {
@@ -159,13 +160,29 @@ function addInvestmentPriority(priority, project) {
             status: 'active',
             type:type,
             name: priorityName,
-            categories: [category],
+            categories: categories,
             managementUnits: [],
         }
 
 
         db.investmentPriority.insertOne(investmentPriority);
         existingPriority = db.investmentPriority.findOne({name: priorityName});
+    }
+    else {
+        let changed = false;
+        if (!existingPriority.type && type) {
+            existingPriority.type = type;
+            changed = true;
+        }
+        for (let i=0; i<categories.length; i++) {
+            if (!existingPriority.categories.find(c => c === categories[i])) {
+                existingPriority.categories.push(categories[i]);
+                changed = true;
+            }
+        }
+        if (changed) {
+            db.investmentPriority.replaceOne({investmentPriorityId: existingPriority.investmentPriorityId}, existingPriority);
+        }
     }
     if (project.managementUnitId) {
         if (!existingPriority.managementUnits.find(m => m === project.managementUnitId)) {
@@ -191,7 +208,7 @@ while (projects.hasNext()) {
             throw "e";
         }
     }
-    //replaceInvestmentPrioritiesWithIds(project);
+    replaceInvestmentPrioritiesWithIds(project);
 
 
     //replaceInvestmentPrioritiesInReportsForProject(project, reportPathsByType);

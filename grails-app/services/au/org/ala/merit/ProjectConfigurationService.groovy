@@ -221,7 +221,8 @@ class ProjectConfigurationService {
             !investmentPriorities.find{ it.investmentPriorityId == id }
         }
         if (orphanedPriorities) {
-            investmentPriorities += metadataService.findInvestmentPriorities([investmentPriorityIds:orphanedPriorities])
+            log.warn("Project ${project.projectId} has recorded investment priorities that are not associated with any program outcomes. These priorities will still be available for selection but should be reviewed. Orphaned priority ids: ${orphanedPriorities}")
+            investmentPriorities += metadataService.findInvestmentPriorities([investmentPriorityId:orphanedPriorities])
         }
         investmentPriorities
     }

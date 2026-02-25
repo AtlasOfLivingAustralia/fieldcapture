@@ -258,7 +258,7 @@ const mapping = [["Apteronomus bordaensis (a raspy cricket)", "Apteronomus borda
     ["Prostanthera sp. Rowleys Creek (L.M.Copeland 4288)", "Prostanthera sp. Rowleys Creek (Australian native)"],
     ["Pultenaea sp. Olinda", "Pultenaea sp. Olinda (Olinda Bush Pea)"],
     ["Queanbeyan River, Queanbeyan NSW", "Queanbeyan River, Queanbeyan NSW (waterway)"],
-    ["Raspy Cricket - Apteronomus bordaensis", "Apteronotus bodoensis (Raspy Cricket)"],
+    ["Raspy Cricket - Apteronomus bordaensis", "Apteronotus bordaensis (Raspy Cricket)"],
     ["Raspy Cricket - Apteronomus tepperi", "Apteronomus tepperi (Raspy Cricket)"],
     ["Rhodamnia arenaria (Myrteae)", "Rhodamnia arenaria (a tree)"],
     ["Rhodamnia pauciovulata (Myrteae)", "Rhodamnia pauciovulata (a shrub)"],
