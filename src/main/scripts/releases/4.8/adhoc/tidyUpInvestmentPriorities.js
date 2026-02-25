@@ -2,7 +2,6 @@ load('../../../utils/audit.js');
 load('./investmentPriorityMapping.js');
 const adminUserId = "system";
 
-print(mapping.length);
 let unmatched = 0;
 for (const [oldValue, newValue] of mapping) {
 
@@ -10,10 +9,11 @@ for (const [oldValue, newValue] of mapping) {
         continue;
     }
     let projectCursor = findProjectsUsingInvestmentPriority(oldValue);
+    let oldValueToMatch = oldValue;
     if (!projectCursor.hasNext()) {
-        let oldValueAsRegexp = oldValue.replaceAll('(', '\\(').replaceAll(')', '\\)').replaceAll('+', '\\+').replace(/\s+/g, '\\s+');
-
-        projectCursor = findProjectsUsingInvestmentPriority(new RegExp('^(\\s*)'+oldValueAsRegexp+'(\\s*)$'));
+        oldValueToMatch = oldValue.replaceAll('(', '\\(').replaceAll(')', '\\)').replaceAll('+', '\\+').replace(/\s+/g, '\\s+');
+        oldValueToMatch = new RegExp('^(\\s*)'+oldValueToMatch+'(\\s*)$')
+        projectCursor = findProjectsUsingInvestmentPriority(oldValueToMatch);
         if (!projectCursor.hasNext()) {
             unmatched++;
             print("No projects found using investment priority " + oldValue);
@@ -23,19 +23,19 @@ for (const [oldValue, newValue] of mapping) {
 
     while (projectCursor.hasNext()) {
         let project = projectCursor.next();
-        updateInvestmentPriority(project, oldValue, newValue);
+        updateInvestmentPriority(project, oldValueToMatch, newValue);
 
-        print("Updating project " + project.projectId + " with investment priority " + oldValue + " to " + newValue);
+        print(project.projectId + ',"'+ oldValue + '","' + newValue+'"');
         project.lastUpdated = ISODate();
         db.project.replaceOne({_id: project._id}, project);
         audit(project, project.projectId, 'au.org.ala.ecodata.Project', adminUserId);
     }
 
-    let muCursor = findMUsUsingInvestmentPriority(oldValue);
+    let muCursor = findMUsUsingInvestmentPriority(oldValueToMatch);
     while (muCursor.hasNext()) {
         let mu = muCursor.next();
         for (let i=0; i<mu.priorities.length; i++) {
-            if (mu.priorities[i].priority == oldValue) {
+            if (matches(mu.priorities[i].priority, oldValueToMatch)){
                 mu.priorities[i].priority = newValue;
             }
         }
@@ -44,11 +44,11 @@ for (const [oldValue, newValue] of mapping) {
         audit(mu, mu.managementUnitId, 'au.org.ala.ecodata.ManagementUnit', adminUserId);
     }
 
-    let programCursor = findProgramsUsingInvestmentPriority(oldValue);
+    let programCursor = findProgramsUsingInvestmentPriority(oldValueToMatch);
     while (programCursor.hasNext()) {
         let program = programCursor.next();
         for (let i=0; i<program.priorities.length; i++) {
-            if (program.priorities[i].priority == oldValue) {
+            if (matches(program.priorities[i].priority, oldValueToMatch)) {
                 program.priorities[i].priority = newValue;
             }
         }
@@ -106,13 +106,17 @@ function updateInvestmentPriority(project, oldValue, newValue) {
                 }
             }
         }
-        if (outcomes.secondaryOutcomes) {
-            for (let i = 0; i < outcomes.secondaryOutcomes.length; i++) {
-                let outcome = outcomes.secondaryOutcomes[i];
-                if (outcome.assets) {
-                    for (let j = 0; j < outcome.assets.length; j++) {
-                        if (matches(outcome.assets[j], oldValue)) {
-                            outcome.assets[j] = newValue;
+
+        const outcomeTypes = ["secondaryOutcomes", "shortTermOutcomes", "midTermOutcomes"];
+        for (let k = 0; k < outcomeTypes.length; k++) {
+            if (outcomes[outcomeTypes[k]]) {
+                for (let i = 0; i < outcomes[outcomeTypes[k]].length; i++) {
+                    let outcome = outcomes[outcomeTypes[k]][i];
+                    if (outcome.assets) {
+                        for (let j = 0; j < outcome.assets.length; j++) {
+                            if (matches(outcome.assets[j], oldValue)) {
+                                outcome.assets[j] = newValue;
+                            }
                         }
                     }
                 }

@@ -242,7 +242,7 @@ class ProjectConfigurationService {
             investmentPriorities.addAll(meriPlan.outcomes?.primaryOutcome?.assets?:[])
             investmentPriorities.addAll(meriPlan.outcomes?.secondaryOutcomes?.collect({it.assets})?:[])
 
-            investmentPriorities.flatten()?.findAll{it}
+            investmentPriorities = investmentPriorities.flatten()?.findAll{it}
         }
         investmentPriorities
 

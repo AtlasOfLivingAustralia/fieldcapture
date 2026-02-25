@@ -135,7 +135,9 @@ function addInvestmentPriorities(project, investmentPriorities) {
 
 function getInvestmentPriorities(project) {
     let investmentPriorities = [];
-    let objectives = project.custom.details.objectives && project.custom.details.objectives.rows1;
+    // The investment priorities in project.custom.details.objectives.rows1.assets
+    // are more like investment priority categories rather than specific investment priorities
+    /*let objectives = project.custom.details.objectives && project.custom.details.objectives.rows1;
     if (objectives) {
         for (let i = 0; i < objectives.length; i++) {
             let objective = objectives[i];
@@ -149,7 +151,7 @@ function getInvestmentPriorities(project) {
                 }
             }
         }
-    }
+    }*/
 
     let assets = project.custom.details.assets;
     if (assets) {
