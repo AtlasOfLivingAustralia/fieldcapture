@@ -29,6 +29,7 @@ const typesForCategory = {
     "Harness carbon and biodiversity incentives": "Agricultural Practices",
     "High Risk Species": "Threatened Species",
     "Improve the condition for all priority places": "Priority Place",
+    "Influenza Sector": "Threatened Species",
     "Invertebrate species": "Threatened Species",
     "Invertebrates": "Threatened Species",
     "Land Management": "Agricultural Practices",
@@ -241,6 +242,24 @@ while (programs.hasNext()) {
         db.program.replaceOne({programId: program.programId}, program);
         audit(program, program.programId, 'au.org.ala.ecodata.Program', adminUserId);
     }
+}
+
+let investmentPriorities = db.investmentPriority.find({type: null});
+while (investmentPriorities.hasNext()) {
+    let ip = investmentPriorities.next();
+    // Check if the ip.name matches a species using the regexp "<exactly two words> (common name, common name 2, etc)"
+    // If it does, update the type to "Threatened Species"
+    // For example, Eucalyptus elaeophloia (Olive Mallee) should match
+    let m = ip.name.match(/^[A-Z][a-z]+(-[a-z]+)? [a-z]+(-[a-z]+)?(\s+[a-z]+(-[a-z]+)?)?(\s+\(.+\))?$/);
+    if (m) {
+        ip.type = "Threatened Species";
+        if (ip.categories && ip.categories[0] == null) {
+            ip.categories = [];
+        }
+        db.investmentPriority.replaceOne({investmentPriorityId: ip.investmentPriorityId}, ip);
+
+    }
+
 }
 
 
