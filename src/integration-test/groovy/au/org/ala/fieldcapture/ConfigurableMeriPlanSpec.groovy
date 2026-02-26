@@ -603,7 +603,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         at RlpProjectPage // reset at check time.
 
         meriPlan = openMeriPlanEditTab()
-        meriPlan.assets[0].description = "asset 1"
+        meriPlan.assets[0].description = "Soil carbon"
         meriPlan.checkObjective("objective 2")
         waitFor {
             meriPlan.floatingSaveDisplayed()
@@ -640,7 +640,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         meriPlan = openMeriPlanEditTab()
 
         then:
-        meriPlan.assets[0].description == "asset 1"
+        meriPlan.assets[0].description.value() == "ip16"
         waitFor 40, { meriPlan.checkedObjectives() == ["objective 2", "Other"] }
         meriPlan.otherObjective == "Other objective"
         meriPlan.shortTermOutcomes[0].outcome.value() == "outcome 1"
@@ -679,7 +679,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
             closePrintInstructions()
 
 
-        page.meriPlan.assets[0].description.text() == "asset 1"
+        page.meriPlan.assets[0].description.text() == "ip16"
         waitFor { page.meriPlan.objectives() == ["objective 2", "Other objective"] }
 
             page.meriPlan.shortTermOutcomes[0].outcome.text() == "outcome 1"
@@ -752,7 +752,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         at RlpProjectPage // reset at check time.
 
         meriPlan = openMeriPlanEditTab()
-        meriPlan.assets[0].description = "asset 1"
+        meriPlan.assets[0].description = "Soil carbon"
         meriPlan.shortTermOutcomes[0].outcome.value("outcome 1")
         waitFor {
             meriPlan.floatingSaveDisplayed()
@@ -784,7 +784,7 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
 
         then:
         waitFor {
-            meriPlan.assets[0].description == "asset 1"
+            meriPlan.assets[0].description == "ip16"
         }
         meriPlan.shortTermOutcomes[0].outcome.value() == "outcome 1"
         meriPlan.projectDescription == 'Project description'

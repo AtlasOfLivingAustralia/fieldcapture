@@ -132,7 +132,7 @@ class BudgetRow extends Module {
 
 class AssetRow extends Module {
     static content = {
-        description { $('td.asset textarea') }
+        description { $('td.asset select') }
         remove { $('i.icon-remove') }
     }
 }
