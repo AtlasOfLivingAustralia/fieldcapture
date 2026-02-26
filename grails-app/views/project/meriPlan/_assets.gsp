@@ -22,33 +22,28 @@
 <tbody data-bind="foreach:details.assets">
 <tr>
     <td class="index" data-bind="text:$index()+1"></td>
-    <g:if test="${fromPriorities && useCategorySelection}">
+    <g:if test="${useCategorySelection}">
         <td class="asset-category required">
             <select class="form-select form-select-sm" data-validation-engine="validate[required]"
-                    data-bind="select2:{}, value:category, optionsCaption:'${placeHolder  ?: "Please select..."}', options: $root.assetCategories(<fc:modelAsJavascript model="${priorityCategories}"/>), disable: $parent.isProjectDetailsLocked()">
+                    data-bind="select2:{}, value:category, optionsCaption:'${placeHolder  ?: "Please select..."}', options: $root.assetCategories(<fc:modelAsJavascript model="${priorityCategories ?: ""}" default=""/>), disable: $parent.isProjectDetailsLocked()">
             </select>
         </td>
     </g:if>
     <td class="${assetClass}">
-        <g:if test="${fromPriorities}">
-            <g:if test="${useCategorySelection}">
-                <select class="form-select form-select-sm" data-validation-engine="validate[required]"
-                        data-bind="select2:{}, value:description, optionsCaption:'${placeHolder  ?: "Please select..."}', optionsText:'name',  optionsValue:'investmentPriorityId', options: $root.priorityAssets(category()), disable: !category() || $parent.isProjectDetailsLocked()">
-                </select>
-            </g:if>
-            <g:else>
-                <select class="form-select form-select-sm" data-validation-engine="validate[required]"
-                        data-bind="select2:{}, value:description, optionsCaption:'${placeHolder  ?: "Please select..."}', optionsText:'name',  optionsValue:'investmentPriorityId', options: $root.priorityAssets(<fc:modelAsJavascript model="${priorityCategories}" default=""/>), disable: $parent.isProjectDetailsLocked()">
-                </select>
-            </g:else>
 
+        <g:if test="${useCategorySelection}">
+            <select class="form-select form-select-sm" data-validation-engine="validate[required]"
+                    data-bind="select2:{}, value:description, optionsCaption:'${placeHolder  ?: "Please select..."}', optionsText:'name',  optionsValue:'investmentPriorityId', options: $root.priorityAssets(category()), disable: !category() || $parent.isProjectDetailsLocked()">
+            </select>
         </g:if>
         <g:else>
-            <textarea class="form-control form-control-sm" placeholder="${placeHolder}" data-validation-engine="validate[required]" data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea>
+            <select class="form-select form-select-sm" data-validation-engine="validate[required]"
+                    data-bind="select2:{}, value:description, optionsCaption:'${placeHolder  ?: "Please select..."}', optionsText:'name',  optionsValue:'investmentPriorityId', options: $root.priorityAssets(<fc:modelAsJavascript model="${priorityCategories ?: ""}" default=""/>), disable: $parent.isProjectDetailsLocked()">
+            </select>
         </g:else>
 
     </td>
-    <g:if test="${fromPriorities && autoSelectCategory}">
+    <g:if test="${autoSelectCategory}">
         <td class="asset-category required">
                 <select type="text" class="form-select form-select-sm" readonly="readonly" placeholder="${categoryPlaceholder ?:"Select an asset..."}"
                         data-bind="value:category, options:[$root.assetCategory(description(), ${priorityCategories})], disable: $parent.isProjectDetailsLocked()"></select>
