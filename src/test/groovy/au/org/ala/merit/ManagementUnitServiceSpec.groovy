@@ -37,7 +37,7 @@ class ManagementUnitServiceSpec extends Specification implements ServiceUnitTest
         service.submitReport(managementUnitId, reportId)
 
         then:
-        1 * webService.getJson({it.endsWith("/managementUnit/$managementUnitId")}) >> managementUnit
+        1 * webService.getJson2({it.endsWith("/managementUnit/$managementUnitId")}) >> [resp:managementUnit]
         1 * userService.getMembersOfManagementUnit(managementUnitId) >> [members:roles]
         1 * reportService.get(reportId) >> report
         1 * reportService.submitReport(reportId, [report.activityId], managementUnit, [],  EmailTemplate.RLP_CORE_SERVCIES_REPORT_SUBMITTED_EMAIL_TEMPLATE)
@@ -57,7 +57,7 @@ class ManagementUnitServiceSpec extends Specification implements ServiceUnitTest
         service.approveReport(managementUnitId, reportId, reason)
 
         then:
-        1 * webService.getJson({it.endsWith("/managementUnit/$managementUnitId")}) >> managementUnit
+        1 * webService.getJson2({it.endsWith("/managementUnit/$managementUnitId")}) >> [resp:managementUnit]
         1 * userService.getMembersOfManagementUnit(managementUnitId) >> [members:roles]
         1 * reportService.get(reportId) >> report
         1 * reportService.approveReport(reportId, [report.activityId], reason, managementUnit, [],  EmailTemplate.RLP_CORE_SERVICES_REPORT_APPROVED_EMAIL_TEMPLATE)
@@ -77,7 +77,7 @@ class ManagementUnitServiceSpec extends Specification implements ServiceUnitTest
         service.rejectReport(managementUnitId, reportId, reason, ['unused'])
 
         then:
-        1 * webService.getJson({it.endsWith("/managementUnit/$managementUnitId")}) >> managementUnit
+        1 * webService.getJson2({it.endsWith("/managementUnit/$managementUnitId")}) >> [resp:managementUnit]
         1 * userService.getMembersOfManagementUnit(managementUnitId) >> [members:roles]
         1 * reportService.get(reportId) >> report
         1 * reportService.rejectReport(reportId, [report.activityId], reason, ['unused'], managementUnit, [],  EmailTemplate.RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_TEMPLATE)
@@ -94,7 +94,7 @@ class ManagementUnitServiceSpec extends Specification implements ServiceUnitTest
         service.regenerateReports(managementUnitId)
 
         then:
-        1 * webService.getJson({it.endsWith("/managementUnit/$managementUnitId")}) >> managementUnit
+        1 * webService.getJson2({it.endsWith("/managementUnit/$managementUnitId")}) >> [resp:managementUnit]
         1 * userService.isUserAdminForManagementUnit(_, managementUnitId) >> true
         1 * reportService.findReportsForManagementUnit(managementUnitId) >> managementUnit.reports
         0 * reportService.regenerateReports(_, _, {it.id.managementUnitId == managementUnitId})
@@ -114,7 +114,7 @@ class ManagementUnitServiceSpec extends Specification implements ServiceUnitTest
         service.regenerateReports(managementUnitId, ['c2'], ['c5', 'c6'])
 
         then:
-        1 * webService.getJson({it.endsWith("/managementUnit/$managementUnitId")}) >> managementUnit
+        1 * webService.getJson2({it.endsWith("/managementUnit/$managementUnitId")}) >> [resp:managementUnit]
         1 * userService.isUserAdminForManagementUnit(_, managementUnitId) >> true
         1 * reportService.findReportsForManagementUnit(managementUnitId) >> managementUnit.reports
         1 * reportService.regenerateAll([], {it.size() == 3}, {it.id.managementUnitId == managementUnitId}, ['c2'])
@@ -141,7 +141,7 @@ class ManagementUnitServiceSpec extends Specification implements ServiceUnitTest
         service.regenerateReports(managementUnitId, ['c5'], ['c1', 'c2'])
 
         then:
-        1 * webService.getJson({it.endsWith("/managementUnit/$managementUnitId")}) >> managementUnit
+        1 * webService.getJson2({it.endsWith("/managementUnit/$managementUnitId")}) >> [resp:managementUnit]
         1 * userService.isUserAdminForManagementUnit(_, managementUnitId) >> true
         1 * reportService.findReportsForManagementUnit(managementUnitId) >> managementUnit.reports
         0 * reportService.regenerateReports(_, _, {it.id.managementUnitId == managementUnitId})
@@ -170,7 +170,7 @@ class ManagementUnitServiceSpec extends Specification implements ServiceUnitTest
         1 * userService.getCurrentUserId() >> userId
         1 * userService.isUserAdminForManagementUnit(userId, muId) >> false
         1 * userService.userHasReadOnlyAccess() >> false
-        1 * webService.getJson({it.endsWith("/managementUnit/${muId}")}) >> [managementUnitId: muId]
+        1 * webService.getJson2({it.endsWith("/managementUnit/${muId}")}) >> [resp:[managementUnitId: muId]]
         1 * documentService.search([managementUnitId: muId, public: true]) >> [documents:[], count:0]
         0 * reportService.findReportsForManagementUnit(muId)
     }
@@ -187,7 +187,7 @@ class ManagementUnitServiceSpec extends Specification implements ServiceUnitTest
         1 * userService.getCurrentUserId() >> userId
         1 * userService.isUserAdminForManagementUnit(userId, muId) >> false
         1 * userService.userHasReadOnlyAccess() >> true
-        1 * webService.getJson({it.endsWith("/managementUnit/${muId}")}) >> [managementUnitId: muId]
+        1 * webService.getJson2({it.endsWith("/managementUnit/${muId}")}) >> [resp:[managementUnitId: muId]]
         1 * documentService.search([managementUnitId: muId]) >> [documents:[], count:0]
         1 * reportService.findReportsForManagementUnit(muId)
     }
@@ -232,7 +232,7 @@ class ManagementUnitServiceSpec extends Specification implements ServiceUnitTest
         Map result = service.update(muId, [description:"new description"])
 
         then:
-        1 * webService.getJson({it.endsWith("/managementUnit/$muId")}) >> [managementUnitId:"mu1"]
+        1 * webService.getJson2({it.endsWith("/managementUnit/$muId")}) >> [resp:[managementUnitId:"mu1"]]
         1 * webService.doPost({it.endsWith("/managementUnit/$muId")}, [description:"new description"]) >> [statusCode: HttpStatus.SC_OK, resp:[message:'updated']]
 
         !result.error
@@ -241,7 +241,7 @@ class ManagementUnitServiceSpec extends Specification implements ServiceUnitTest
         result = service.update(muId, [description:"new description"])
 
         then:
-        1 * webService.getJson({it.endsWith("/managementUnit/$muId")}) >> [error:'an error', statusCode:HttpStatus.SC_NOT_FOUND]
+        1 * webService.getJson2({it.endsWith("/managementUnit/$muId")}) >> [error:'an error', statusCode:HttpStatus.SC_NOT_FOUND]
         0 * webService.doPost(_, _)
         result.error
     }

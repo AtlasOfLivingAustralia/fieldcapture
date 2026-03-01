@@ -26,8 +26,11 @@ class ManagementUnitService {
 
     Map get(String id) {
         String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}managementUnit/$id"
-        Map mu = webService.getJson(url)
-
+        Map resp = webService.getJson2(url)
+        if (resp.error) {
+            return resp
+        }
+        Map mu = resp.resp
         // If the user is an admin for a management unit or has the FC_READ_ONLY role, they are allowed
         // to view the reports and all documents.
         boolean hasExtendedAccess = userService.isUserAdminForManagementUnit(userService.getCurrentUserId(), id) || userService.userHasReadOnlyAccess()
@@ -90,10 +93,13 @@ class ManagementUnitService {
         String error = null
         boolean creating = !managementUnitId
 
+        Map existingMu = null
         if (!creating) {
-            Map existingMu = get(managementUnitId)
-            if (existingMu?.error) {
+            Map resp = get(managementUnitId)
+            if (resp?.error) {
                 return "invalid managementUnitId"
+            } else {
+                existingMu = resp.resp
             }
         }
 
@@ -103,7 +109,7 @@ class ManagementUnitService {
         }
 
         if (props.containsKey("name")) {
-            Map existingMu = getByName(props.name)
+            existingMu = getByName(props.name)
             if ((existingMu as Boolean) && (creating || existingMu?.managementUnitId != managementUnitId)) {
                 return "name is not unique"
             }
