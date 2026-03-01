@@ -76,10 +76,7 @@ class RoleService {
 
     private static final List MERIT_PROJECT_ROLES = [GRANT_MANAGER_ROLE, PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE, PROJECT_READ_ONLY_ROLE]
     public static final List MERIT_HUB_ROLES = [HUB_ADMIN_ROLE, HUB_SUPPORT_OFFICER_ROLE, HUB_OFFICER_ROLE, HUB_READ_ONLY_ROLE]
-
-    // Disabling the new Monitor app roles until they are implemented in Monitor.
-    //public static final List MONITOR_ONLY_ROLES = [PROJECT_DETERMINER_SURVEYOR_ROLE, PROJECT_MODERATOR_ROLE, PROJECT_DETERMINER_ROLE, PROJECT_SURVEYOR_ROLE]
-    public static final List MONITOR_ONLY_ROLES = [PROJECT_SURVEYOR_ROLE]
+    public static final List MONITOR_ONLY_ROLES = [PROJECT_DETERMINER_SURVEYOR_ROLE, PROJECT_MODERATOR_ROLE, PROJECT_DETERMINER_ROLE, PROJECT_SURVEYOR_ROLE]
     /** Granted to ALA developers, gives access to all functions in MERIT */
     public static final String ALA_ADMIN_ROLE = "alaAdmin"
 
@@ -131,9 +128,7 @@ class RoleService {
     }
 
     Set getAllowedUserRoles() {
-        return new HashSet([PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE, PROJECT_SURVEYOR_ROLE])
-        // Disabling the new Monitor app roles until they are implemented in Monitor.
-        //return new HashSet([PROJECT_MODERATOR_ROLE, PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE, PROJECT_DETERMINER_SURVEYOR_ROLE, PROJECT_SURVEYOR_ROLE, PROJECT_DETERMINER_ROLE])
+        return new HashSet([PROJECT_MODERATOR_ROLE, PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE, PROJECT_DETERMINER_SURVEYOR_ROLE, PROJECT_SURVEYOR_ROLE, PROJECT_DETERMINER_ROLE])
     }
 
 }
