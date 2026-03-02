@@ -1162,14 +1162,14 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
                     },
                     {
                         "targets":2,
-                        "orderable": false,
+                        "orderable": true,
                         "searchable": true,
                         "width": "2em",
                         "visible":config.showSiteType
                     },
                     {
                         "targets": 3,
-                        "orderable": false,
+                        "orderable": true,
                         "searchable": true
 
                     },
