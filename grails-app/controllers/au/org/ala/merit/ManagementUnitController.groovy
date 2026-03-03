@@ -51,9 +51,7 @@ class ManagementUnitController {
                 isManagementUnitStarredByUser = userService.isManagementUnitStarredByUser(user?.userId, mu?.managementUnitId)?.isManagementUnitStarredByUser
             }
 
-            def mapFeatures = mu.managementUnitSiteId?siteService.getSiteGeoJson(mu.managementUnitSiteId) : null
-            if (mapFeatures)
-                mu.mapFeatures = mapFeatures
+            def muExtent = mu.managementUnitSiteId?siteService.getSiteGeoJson(mu.managementUnitSiteId) : null
 
             [managementUnit     : mu,
              roles              : roles,
@@ -61,7 +59,8 @@ class ManagementUnitController {
              isAdmin            : user?.isAdmin,
              isGrantManager     : user?.isGrantManager,
              content            : content(mu, user),
-             isManagementUnitStarredByUser: isManagementUnitStarredByUser
+             isManagementUnitStarredByUser: isManagementUnitStarredByUser,
+             muExtent:muExtent
              ]
         }
     }
