@@ -112,6 +112,8 @@
 
     $(function () {
         var managementUnit =<fc:modelAsJavascript model="${managementUnit}"/>;
+        var muExtent = <fc:modelAsJavascript model="${managementUnitExtent}" default="null"/>;
+        managementUnit.mapFeatures = muExtent;
         var config = _.extend({reportingConfigSelector:'#reporting form'}, fcConfig);
         var managementUnitViewModel = new ManagementUnitPageViewModel(managementUnit, config);
 
