@@ -295,7 +295,7 @@
             "behaviour": [
               {
                 "type": "enable_and_clear",
-                "condition": "\"Yes\" == keq6"
+                "condition": "\"Yes\" == keq6 or \"No\" == keq6"
               }
             ]
           },
@@ -719,7 +719,7 @@
             "type": "row",
             "items": [
               {
-                "preLabel": "KEQ6.1 If yes, how?",
+                "preLabel": "KEQ6.1 If yes, how?  If no, why not?",
                 "type": "textarea",
                 "rows": 5,
                 "source": "keq6How"

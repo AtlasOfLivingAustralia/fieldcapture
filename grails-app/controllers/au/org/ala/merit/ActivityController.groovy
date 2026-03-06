@@ -546,10 +546,10 @@ class ActivityController {
 
                         def result = speciesService.searchByScientificName(scientificName)
                         if (result) {
-                            row[species.name] = [name:result.name, listId:result.listId, guid:result.guid]
+                            row[species.name] = [name:result.name, listId:result.listId, guid:result.guid, scientificName: result.scientificName ?: result.name, commonName: result.commonName]
                         }
                         else {
-                            row[species.name] = [name:scientificName, listId:'unmatched', guid:null]
+                            row[species.name] = [name:scientificName, listId:'unmatched', scientificName:scientificName, commonName: '', guid:null]
                         }
 
                     }
