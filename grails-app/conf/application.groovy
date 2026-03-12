@@ -323,6 +323,7 @@ environments {
         security.oidc.discoveryUri = "http://localhost:${wiremock.port}/cas/oidc/.well-known"
         security.jwt.discoveryUri = "http://localhost:${wiremock.port}/cas/oidc/.well-known"
         bdr.discoveryUri = "http://localhost:${wiremock.port}/cas/oidc/.well-known"
+        bdr.allowUnsignedIdTokens = true
         security.oidc.allowUnsignedIdTokens = true
         security.oidc.clientId="oidcId"
         security.oidc.secret="oidcSecret"
