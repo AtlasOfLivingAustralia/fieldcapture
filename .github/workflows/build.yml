@@ -37,6 +37,9 @@ jobs:
 
       - run: npm install
 
+      - name: Clear Gradle cache
+        run: rm -rf ~/.gradle/caches
+
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0

@@ -87,7 +87,7 @@
     <div class="col-sm-4">
         <label for="funding">Project Funding (GST Exclusive)</label>
         <div>
-            <g:textField class="form-control form-control-sm input-small" id="funding" name="funding" data-bind="value:funding" data-validation-engine="validate[custom[number]]"/>
+            <input type="number" step="0.01" class="form-control form-control-sm input-small" id="funding" name="funding" data-bind="value:funding" data-validation-engine="validate[custom[number]]" value="">
         </div>
     </div>
 

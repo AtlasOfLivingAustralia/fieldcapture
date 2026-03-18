@@ -112,6 +112,11 @@
 
     $(function () {
         var managementUnit =<fc:modelAsJavascript model="${managementUnit}"/>;
+        var muExtent = <fc:modelAsJavascript model="${muExtent}" default="null"/>;
+        if (muExtent) {
+            muExtent.properties = {type:'compound'}; // Borrowing the red compound style for the MU
+        }
+        managementUnit.mapFeatures = muExtent;
         var config = _.extend({reportingConfigSelector:'#reporting form'}, fcConfig);
         var managementUnitViewModel = new ManagementUnitPageViewModel(managementUnit, config);
 

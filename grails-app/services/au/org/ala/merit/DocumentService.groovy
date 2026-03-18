@@ -243,4 +243,8 @@ class DocumentService {
 
         url
     }
+
+    String buildDownloadUrl(Map document) {
+        buildDownloadUrl(document.filepath, document.filename)
+    }
 }

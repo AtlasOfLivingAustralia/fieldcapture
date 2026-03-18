@@ -19,6 +19,9 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
     def emailService = Mock(EmailService)
     def userService = Mock(UserService)
     def authService = Mock(AuthService)
+    def documentService = Mock(DocumentService)
+    def imageService = Mock(ImageService)
+    def grailsLinkGenerator = Mock(grails.web.mapping.LinkGenerator)
 
     def setup() {
 
@@ -30,6 +33,9 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         service.grailsApplication = grailsApplication
         service.userService = userService
         service.authService = authService
+        service.documentService = documentService
+        service.imageService = imageService
+        service.grailsLinkGenerator = grailsLinkGenerator
     }
 
     /**
@@ -548,5 +554,163 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         then:
         1 * webService.doPost({it.endsWith('search/targetsReportForScoreIds')}, expectedParams) >> [statusCode:200, resp:targetsData]
         results.scores[0].target == 100
+    }
+
+    def "homePageImages returns image details with thumbnail URLs when thumbnails exist"() {
+        setup:
+        File tmpDir = File.createTempDir()
+        File thumb1 = new File(tmpDir, 'd1-thumb-500.jpg')
+        thumb1.text = 'thumb1'
+        File thumb2 = new File(tmpDir, 'd2-thumb-500.png')
+        thumb2.text = 'thumb2'
+
+        List documents = [
+                [documentId:'d1', name:'Image 1', attribution:'Author 1', projectId:'p1', filename:'image1.jpg', url:'http://original/image1.jpg', contentType:'image/jpeg'],
+                [documentId:'d2', name:'Image 2', attribution:'Author 2', projectId:'p2', filename:'image2.png', url:'http://original/image2.png', contentType:'image/png']
+        ]
+
+        when:
+        List result = service.homePageImages()
+
+        then:
+        1 * documentService.search({it.max == 1}) >> [count:10]
+        1 * documentService.search({it.max == 5}) >> [documents:documents]
+        projectService.search([projectId:['p1', 'p2']]) >> [resp:[projects:[[projectId:'p1', name:'Project 1'], [projectId:'p2', name:'Project 2']]]]
+        1 * imageService.fullPath('d1-thumb-500.jpg') >> thumb1.absolutePath
+        1 * imageService.fullPath('d2-thumb-500.png') >> thumb2.absolutePath
+        1 * grailsLinkGenerator.link([controller:'image', id:'d1-thumb-500.jpg']) >> '/image/d1-thumb-500.jpg'
+        1 * grailsLinkGenerator.link([controller:'image', id:'d2-thumb-500.png']) >> '/image/d2-thumb-500.png'
+
+        and:
+        result.size() == 2
+        result[0].name == 'Image 1'
+        result[0].attribution == 'Author 1'
+        result[0].projectName == 'Project 1'
+        result[0].url == '/image/d1-thumb-500.jpg'
+        result[0].projectId == 'p1'
+        result[1].name == 'Image 2'
+        result[1].projectName == 'Project 2'
+        result[1].url == '/image/d2-thumb-500.png'
+
+        cleanup:
+        tmpDir.deleteDir()
+    }
+
+    def "homePageImages downloads and creates a thumbnail when one does not already exist"() {
+        setup:
+        File tmpDir = File.createTempDir()
+        String thumbPath = new File(tmpDir, 'd1-thumb-500.jpg').absolutePath
+
+        List documents = [
+                [documentId:'d1', name:'Image 1', attribution:'Author 1', projectId:'p1', filename:'image1.jpg', filepath:'2024-01', url:'http://original/image1.jpg', contentType:'image/jpeg']
+        ]
+
+        when:
+        List result = service.homePageImages()
+
+        then:
+        1 * documentService.search({it.max == 1}) >> [count:10]
+        1 * documentService.search({it.max == 5}) >> [documents:documents]
+        projectService.search(_) >> [resp:[projects:[[projectId:'p1', name:'Project 1']]]]
+        1 * imageService.fullPath('d1-thumb-500.jpg') >> thumbPath
+        1 * documentService.buildDownloadUrl(documents[0]) >> 'http://ecodata/document/download/2024-01/image1.jpg'
+        1 * webService.readToStream('http://ecodata/document/download/2024-01/image1.jpg', _, true) >> [statusCode:200]
+        1 * imageService.createThumbnail(_, {it.absolutePath == thumbPath}, 'image/jpeg', 500) >> { File src, File dest, String ct, int sz ->
+            dest.text = 'thumbnail'
+            true
+        }
+        1 * grailsLinkGenerator.link([controller:'image', id:'d1-thumb-500.jpg']) >> '/image/d1-thumb-500.jpg'
+
+        and:
+        result.size() == 1
+        result[0].url == '/image/d1-thumb-500.jpg'
+
+        cleanup:
+        tmpDir.deleteDir()
+    }
+
+    def "homePageImages keeps original URL when thumbnail download fails"() {
+        setup:
+        File tmpDir = File.createTempDir()
+        String thumbPath = new File(tmpDir, 'd1-thumb-500.jpg').absolutePath
+
+        List documents = [
+                [documentId:'d1', name:'Image 1', attribution:'Author 1', projectId:'p1', filename:'image1.jpg', filepath:'2024-01', url:'http://original/image1.jpg', contentType:'image/jpeg']
+        ]
+
+        when:
+        List result = service.homePageImages()
+
+        then:
+        1 * documentService.search({it.max == 1}) >> [count:10]
+        1 * documentService.search({it.max == 5}) >> [documents:documents]
+        projectService.search(_) >> [resp:[projects:[[projectId:'p1', name:'Project 1']]]]
+        1 * imageService.fullPath('d1-thumb-500.jpg') >> thumbPath
+        1 * documentService.buildDownloadUrl(documents[0]) >> 'http://ecodata/document/download/2024-01/image1.jpg'
+        1 * webService.readToStream(_, _, true) >> [statusCode:500]
+        0 * imageService.createThumbnail(_, _, _, _)
+        0 * grailsLinkGenerator.link(_)
+
+        and:
+        result.size() == 1
+        result[0].url == 'http://original/image1.jpg'
+
+        cleanup:
+        tmpDir.deleteDir()
+    }
+
+    def "homePageImages handles exceptions during thumbnail creation gracefully"() {
+        setup:
+        File tmpDir = File.createTempDir()
+        String thumbPath = new File(tmpDir, 'd1-thumb-500.jpg').absolutePath
+
+        List documents = [
+                [documentId:'d1', name:'Image 1', attribution:'Author 1', projectId:'p1', filename:'image1.jpg', filepath:'2024-01', url:'http://original/image1.jpg', contentType:'image/jpeg']
+        ]
+
+        when:
+        List result = service.homePageImages()
+
+        then:
+        1 * documentService.search({it.max == 1}) >> [count:10]
+        1 * documentService.search({it.max == 5}) >> [documents:documents]
+        projectService.search(_) >> [resp:[projects:[[projectId:'p1', name:'Project 1']]]]
+        1 * imageService.fullPath('d1-thumb-500.jpg') >> thumbPath
+        1 * documentService.buildDownloadUrl(documents[0]) >> { throw new RuntimeException("connection error") }
+        0 * grailsLinkGenerator.link(_)
+
+        and: "no exception is thrown and the original URL is preserved"
+        result.size() == 1
+        result[0].url == 'http://original/image1.jpg'
+
+        cleanup:
+        tmpDir.deleteDir()
+    }
+
+    def "homePageImages returns empty project name when project is not found"() {
+        setup:
+        File tmpDir = File.createTempDir()
+        File thumb1 = new File(tmpDir, 'd1-thumb-500.jpg')
+        thumb1.text = 'thumb1'
+
+        List documents = [
+                [documentId:'d1', name:'Image 1', attribution:'Author 1', projectId:'p1', filename:'image1.jpg', url:'http://original/image1.jpg', contentType:'image/jpeg']
+        ]
+
+        when:
+        List result = service.homePageImages()
+
+        then:
+        1 * documentService.search({it.max == 1}) >> [count:10]
+        1 * documentService.search({it.max == 5}) >> [documents:documents]
+        projectService.search(_) >> [resp:[projects:[]]]
+        1 * imageService.fullPath('d1-thumb-500.jpg') >> thumb1.absolutePath
+        1 * grailsLinkGenerator.link([controller:'image', id:'d1-thumb-500.jpg']) >> '/image/d1-thumb-500.jpg'
+
+        and:
+        result[0].projectName == ''
+
+        cleanup:
+        tmpDir.deleteDir()
     }
 }
