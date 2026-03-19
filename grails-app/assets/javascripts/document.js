@@ -342,9 +342,9 @@ function attachViewModelToFileUpload(uploadUrl, documentViewModel, uiSelector, p
 
     }).on('fileuploadfail', function(e, data) {
         var jqXHR = data.jqXHR;
-        if (jqXHR && jqXHR.status === 422) {
-            var resp = jqXHR.responseJSON || {message: 'File upload could not be processed. Possible virus detected.'};
-            documentViewModel.fileUploadFailed(resp.message);
+        if (jqXHR && (jqXHR.status === 422 || jqXHR.status === 500 )) {
+            var resp = jqXHR.responseJSON || {};
+            documentViewModel.fileUploadFailed(resp.message || jqXHR.responseText || "File upload failed");
         }
         else {
             documentViewModel.fileUploadFailed(data.errorThrown);
