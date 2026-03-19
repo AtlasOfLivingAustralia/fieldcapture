@@ -509,7 +509,7 @@ OrganisationPageViewModel = function (props, options) {
         },
         'sites': {
             initialiser: function () {
-                generateMap(['organisationFacet:' + self.name], false, {includeLegend: false});
+                generateMap(['organisationFacet:' + self.name()], false, {includeLegend: false});
             }
         },
         'admin': {
