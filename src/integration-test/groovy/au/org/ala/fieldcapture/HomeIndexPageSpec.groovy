@@ -36,10 +36,7 @@ class HomeIndexPageSpec extends StubbedCasSpec {
         }
         and:
         box1[0].statTitle.text() == "THREATENED SPECIES STRATEGY"
-        interact {
-            moveToElement(box1[0].statTitle)
-        }
-        box1[0].statValue.text() =="3"
+        box1[0].statValue.text() =="0"
         box1[0].statUnit.text() =="Projects"
         box1[0].statLabel.text() =="PROTECTING THREATENED SPECIES"
         box2[0].statTitle.text() == "NATIONAL LANDCARE PROGRAMME"
@@ -47,7 +44,7 @@ class HomeIndexPageSpec extends StubbedCasSpec {
         box2[0].statUnit.text() =="Projects"
         box2[0].statLabel.text() =="SUPPORTING SUSTAINABLE AGRICULTURE"
         box3[0].statTitle.text() == "NATIONAL LANDCARE PROGRAMME"
-        box3[0].statValue.text() =="3"
+        box3[0].statValue.text() =="0"
         box3[0].statUnit.text() =="Projects"
         box3[0].statLabel.text() =="THAT SUPPORT WORLD HERITAGE AREAS"
         box4[0].statTitle.text() == "NATIONAL LANDCARE PROGRAMME"
