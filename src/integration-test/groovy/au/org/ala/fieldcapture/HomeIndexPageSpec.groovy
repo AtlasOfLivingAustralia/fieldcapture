@@ -36,6 +36,9 @@ class HomeIndexPageSpec extends StubbedCasSpec {
         }
         and:
         box1[0].statTitle.text() == "THREATENED SPECIES STRATEGY"
+        interact {
+            moveToElement(box1[0].statTitle)
+        }
         box1[0].statValue.text() =="3"
         box1[0].statUnit.text() =="Projects"
         box1[0].statLabel.text() =="PROTECTING THREATENED SPECIES"
