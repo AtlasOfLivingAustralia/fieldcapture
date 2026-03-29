@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.ecodata.forms.EcpWebService
 import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
@@ -9,6 +10,7 @@ import au.org.ala.merit.reports.ReportOwner
 import grails.plugin.cache.Cacheable
 import groovy.util.logging.Slf4j
 import org.apache.commons.io.FilenameUtils
+import org.apache.http.HttpStatus
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Period
@@ -34,7 +36,7 @@ class ReportService {
     }
 
     def grailsApplication
-    def webService
+    EcpWebService webService
     def userService
     def projectService
     def authService
@@ -836,13 +838,27 @@ class ReportService {
     private Map createCustomThumbnail(Map document) {
         String thumbName = document.documentId+'-thumb-500.'+FilenameUtils.getExtension(document.filename)
         File homePageThumb = new File(imageService.fullPath(thumbName))
+        File tmpFullSizeImage = null
         try {
-            if (!homePageThumb.exists() && document.url) {
-                imageService.createThumbnail(new URL(document.url).openStream(), homePageThumb, document.contentType, HOME_PAGE_IMAGE_SIZE)
+            if (!homePageThumb.exists()  && document.url) {
+                String documentUrl = documentService.buildDownloadUrl(document)
+                tmpFullSizeImage = File.createTempFile(document.documentId+"-tmp", '.'+FilenameUtils.getExtension(document.filename))
+                Map resp = null
+                tmpFullSizeImage.withOutputStream {
+                   resp = webService.readToStream(documentUrl, it, true)
+                }
+                if (resp?.statusCode == HttpStatus.SC_OK) {
+                    imageService.createThumbnail(tmpFullSizeImage, homePageThumb, document.contentType, HOME_PAGE_IMAGE_SIZE)
+                }
             }
         }
         catch (Exception e) {
             log.warn("Unable to create thumbnail: ${homePageThumb}")
+        }
+        finally {
+            if (tmpFullSizeImage?.exists()) {
+                tmpFullSizeImage.delete()
+            }
         }
 
         [thumbnailFile:homePageThumb, fileName:thumbName]

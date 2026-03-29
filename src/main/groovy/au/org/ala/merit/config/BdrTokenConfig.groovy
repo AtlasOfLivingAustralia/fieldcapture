@@ -30,12 +30,18 @@ class BdrTokenConfig {
     @Value('${bdr.discovery-uri}')
     String discoveryUri
 
+    // To allow mocking of the OIDC configuration for testing, we allow unsigned tokens to be used if the property is set to true. This should not be used in production.
+    @Value('${bdr.allowUnsignedIdTokens:false}')
+    boolean allowUnsignedIdTokens
+
     @Bean
     OidcConfiguration bdrOidcConfiguration(@Qualifier("oidcResourceRetriever") ResourceRetriever jwtResourceRetriever) {
         OidcConfiguration config = new OidcConfiguration()
         config.setClientId(clientId)
         config.setSecret(clientSecret)
         config.setDiscoveryURI(discoveryUri)
+        config.setAllowUnsignedIdTokens(allowUnsignedIdTokens)
+
         config.setResourceRetriever(jwtResourceRetriever)
         config.init()
         return config
