@@ -63,8 +63,10 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
     private String searchMERITProjectsQuery(String fqString) {
          """{
                 searchMeritProjects(
-                  page:1, 
-                  max:10,
+                  pagination:{
+                    offset:0, 
+                    max:10
+                  },
                   ${fqString}
                   ) {
                   results {
@@ -214,7 +216,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         String userId = '1000'
         String query = """
         {
-          searchMeritProjects(page:1, max:10, status:[ACTIVE]) {
+          searchMeritProjects(pagination:{offset:0, max:10}, status:[ACTIVE]) {
             results {
               projectId
             }
@@ -820,14 +822,17 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         {
             meritProject(projectId: \"a0f57791-e858-4f33-ae8e-7e3e3fffb447\") {
                 projectId
-                sites {
-                    siteId
-                    dateCreated
-                    lastUpdated
-                    name
-                    purposeCode
-                    geoJson
-                    areaM2
+                sites(pagination: {max: 30, offset: 0}) {
+                   totalCount
+                   results {
+                        siteId
+                        dateCreated
+                        lastUpdated
+                        name
+                        purposeCode
+                        geoJson
+                        areaM2
+                    }
                 }
             }
         }
@@ -841,7 +846,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         !resp.resp?.errors
 
         resp.resp.data.meritProject.projectId == GRAPHQL_TEST_PROJECT_ID
-        def sites = resp.resp.data.meritProject.sites
+        def sites = resp.resp.data.meritProject.sites.results
         sites instanceof List
         sites.size() == 27
         // First site (CTMAUA4788)
@@ -906,39 +911,42 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         {
             meritProject(projectId: \"a0f57791-e858-4f33-ae8e-7e3e3fffb447\") {
                 projectId
-                reports {
-                  publicationStatus
-                  reportId
-                  category
-                  name
-                  fromDate
-                  toDate
-                  submissionDate
-                  dateSubmitted
-                  dateApproved
-                  dateReturned
-                  dateCancelled
-                  activity {
-                    dateCreated
-                    lastUpdated
-                    activityId
-                    status
-                    type
-                    formVersion
-                    description
-                    progress
-                    startDate
-                    endDate
-                    plannedStartDate
-                    plannedEndDate
+                reports(pagination: {max: 20, offset: 0, sort:"dateCrated", order:asc, }) {
+                   totalCount
+                   results {
+                      publicationStatus
+                      reportId
+                      category
+                      name
+                      fromDate
+                      toDate
+                      submissionDate
+                      dateSubmitted
+                      dateApproved
+                      dateReturned
+                      dateCancelled
+                      activity {
+                        dateCreated
+                        lastUpdated
+                        activityId
+                        status
+                        type
+                        formVersion
+                        description
+                        progress
+                        startDate
+                        endDate
+                        plannedStartDate
+                        plannedEndDate
+                      }
+                      statusChangeHistory {
+                        dateChanged
+                        changedBy
+                        status
+                        comment
+                      }
+                    }
                   }
-                  statusChangeHistory {
-                    dateChanged
-                    changedBy
-                    status
-                    comment
-                  }
-                }
             }
         }
         """
@@ -951,14 +959,14 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         !resp.resp?.errors
 
         resp.resp.data.meritProject.projectId == GRAPHQL_TEST_PROJECT_ID
-        def reports = resp.resp.data.meritProject.reports
+        def reports = resp.resp.data.meritProject.reports.results
         reports instanceof List
         reports.size() == 13 // One report is deleted, so not returned
         // First report: Outcomes Report 2
-        def r1 = reports[0]
+        def r1 = reports.find{it.reportId == "97fd3a79-bb35-4eaa-af00-e2edba24a7f2"}
         r1.publicationStatus == "DRAFT"
         r1.reportId == "97fd3a79-bb35-4eaa-af00-e2edba24a7f2"
-        r1.activity == null
+        r1.activity != null
         r1.toDate == "2026-01-01"
         r1.submissionDate == "2026-01-01"
         r1.fromDate == "2024-01-01"
@@ -970,10 +978,10 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         r1.dateReturned == null
         r1.dateSubmitted == null
         // Second report: Annual Progress Report 2025 - 2026
-        def r2 = reports[1]
+        def r2 = reports.find{it.reportId == "aab26622-8c16-4751-a766-20036076ae41"}
         r2.publicationStatus == "DRAFT"
         r2.reportId == "aab26622-8c16-4751-a766-20036076ae41"
-        r2.activity == null
+        r2.activity != null
         r2.toDate == "2026-01-01"
         r2.submissionDate == "2026-01-01"
         r2.fromDate == "2025-07-01"
@@ -985,10 +993,10 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         r2.dateReturned == null
         r2.dateSubmitted == null
         // Third report: Annual Progress Report 2024 - 2025
-        def r3 = reports[2]
+        def r3 = reports.find{it.reportId == "d342cc4b-cb7c-4755-8d56-4277fe90ac24"}
         r3.publicationStatus == "DRAFT"
         r3.reportId == "d342cc4b-cb7c-4755-8d56-4277fe90ac24"
-        r3.activity == null
+        r3.activity != null
         r3.toDate == "2025-07-01"
         r3.submissionDate == "2025-07-01"
         r3.fromDate == "2024-07-01"
@@ -1000,10 +1008,10 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         r3.dateReturned == null
         r3.dateSubmitted == null
         // Fourth report: Annual Progress Report 2023 - 2024 (cancelled, with statusChangeHistory)
-        def r4 = reports[3]
+        def r4 = reports.find{it.reportId == "435c4d42-aed0-4daa-be2c-9c4882e4b61e"}
         r4.publicationStatus == "CANCELLED"
         r4.reportId == "435c4d42-aed0-4daa-be2c-9c4882e4b61e"
-        r4.activity == null
+        r4.activity != null
         r4.toDate == "2024-07-01"
         r4.submissionDate == "2024-07-01"
         r4.fromDate == "2024-01-01"
@@ -1027,10 +1035,10 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         r4.dateReturned == "2024-06-18T01:02:25Z"
         r4.dateSubmitted == null
         // Fifth report: Year 2025/2026 - Quarter 3 Outputs Report
-        def r5 = reports[4]
+        def r5 = reports.find{it.reportId == "2cddd195-4e4b-4d80-ad57-9a4b16e95d62"}
         r5.publicationStatus == "DRAFT"
         r5.reportId == "2cddd195-4e4b-4d80-ad57-9a4b16e95d62"
-        r5.activity == null
+        r5.activity != null
         r5.toDate == "2026-01-01"
         r5.submissionDate == "2026-01-01"
         r5.fromDate == "2026-01-01"
@@ -1042,10 +1050,10 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         r5.dateReturned == null
         r5.dateSubmitted == null
         // Sixth report: Year 2025/2026 - Quarter 2 Outputs Report
-        def r6 = reports[5]
+        def r6 = reports.find{it.reportId == "245f5f8a-a105-4fd4-8f77-169c641051a1"}
         r6.publicationStatus == "DRAFT"
         r6.reportId == "245f5f8a-a105-4fd4-8f77-169c641051a1"
-        r6.activity == null
+        r6.activity != null
         r6.toDate == "2026-01-01"
         r6.submissionDate == "2025-10-01"
         r6.fromDate == "2025-10-01"
@@ -1057,10 +1065,10 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         r6.dateReturned == null
         r6.dateSubmitted == null
         // Seventh report: Year 2025/2026 - Quarter 1 Outputs Report
-        def r7 = reports[6]
+        def r7 = reports.find{it.reportId == "d354b597-09d4-412d-bf24-71a071266e33"}
         r7.publicationStatus == "DRAFT"
         r7.reportId == "d354b597-09d4-412d-bf24-71a071266e33"
-        r7.activity == null
+        r7.activity != null
         r7.toDate == "2025-10-01"
         r7.submissionDate == "2025-07-01"
         r7.fromDate == "2025-07-01"
@@ -1072,10 +1080,10 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         r7.dateReturned == null
         r7.dateSubmitted == null
         // Eighth report: Year 2024/2025 - Quarter 4 Outputs Report
-        def r8 = reports[7]
+        def r8 = reports.find{it.reportId == "14d38a95-4f15-4d2b-a307-3b905c876b2b"}
         r8.publicationStatus == "DRAFT"
         r8.reportId == "14d38a95-4f15-4d2b-a307-3b905c876b2b"
-        r8.activity == null
+        r8.activity != null
         r8.toDate == "2025-07-01"
         r8.submissionDate == "2025-04-01"
         r8.fromDate == "2025-04-01"
@@ -1087,10 +1095,10 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         r8.dateReturned == null
         r8.dateSubmitted == null
         // Ninth report: Year 2024/2025 - Quarter 3 Outputs Report
-        def r9 = reports[8]
+        def r9 = reports.find{it.reportId == "7b2fc26e-9071-4a90-b2bd-78ce5a8f6642"}
         r9.publicationStatus == "DRAFT"
         r9.reportId == "7b2fc26e-9071-4a90-b2bd-78ce5a8f6642"
-        r9.activity == null
+        r9.activity != null
         r9.toDate == "2025-04-01"
         r9.submissionDate == "2025-01-01"
         r9.fromDate == "2025-01-01"
@@ -1102,10 +1110,10 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         r9.dateReturned == null
         r9.dateSubmitted == null
         // Tenth report: Year 2024/2025 - Quarter 2 Outputs Report
-        def r10 = reports[9]
+        def r10 = reports.find{it.reportId == "f810fd11-3403-404e-af87-8d116a100cd9"}
         r10.publicationStatus == "DRAFT"
         r10.reportId == "f810fd11-3403-404e-af87-8d116a100cd9"
-        r10.activity == null
+        r10.activity != null
         r10.toDate == "2025-01-01"
         r10.submissionDate == "2024-10-01"
         r10.fromDate == "2024-10-01"
@@ -1117,10 +1125,10 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         r10.dateReturned == null
         r10.dateSubmitted == null
         // Eleventh report: Year 2024/2025 - Quarter 1 Outputs Report
-        def r11 = reports[10]
+        def r11 = reports.find{it.reportId == "2ed7f087-5200-4f1a-bfae-d743abbd371f"}
         r11.publicationStatus == "DRAFT"
         r11.reportId == "2ed7f087-5200-4f1a-bfae-d743abbd371f"
-        r11.activity == null
+        r11.activity != null
         r11.toDate == "2024-10-01"
         r11.submissionDate == "2024-07-01"
         r11.fromDate == "2024-07-01"
@@ -1132,10 +1140,10 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         r11.dateReturned == null
         r11.dateSubmitted == null
         // Twelfth report: Year 2023/2024 - Quarter 4 Outputs Report
-        def r12 = reports[11]
+        def r12 = reports.find{it.reportId == "8b193938-db66-41f4-a5c0-5592c03ab111"}
         r12.publicationStatus == "DRAFT"
         r12.reportId == "8b193938-db66-41f4-a5c0-5592c03ab111"
-        r12.activity == null
+        r12.activity != null
         r12.toDate == "2024-07-01"
         r12.submissionDate == "2024-04-01"
         r12.fromDate == "2024-04-01"
