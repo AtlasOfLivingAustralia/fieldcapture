@@ -966,7 +966,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         def r1 = reports.find{it.reportId == "97fd3a79-bb35-4eaa-af00-e2edba24a7f2"}
         r1.publicationStatus == "DRAFT"
         r1.reportId == "97fd3a79-bb35-4eaa-af00-e2edba24a7f2"
-        r1.activity == null
+        r1.activity != null
         r1.toDate == "2026-01-01"
         r1.submissionDate == "2026-01-01"
         r1.fromDate == "2024-01-01"
@@ -981,7 +981,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         def r2 = reports.find{it.reportId == "aab26622-8c16-4751-a766-20036076ae41"}
         r2.publicationStatus == "DRAFT"
         r2.reportId == "aab26622-8c16-4751-a766-20036076ae41"
-        r2.activity == null
+        r2.activity != null
         r2.toDate == "2026-01-01"
         r2.submissionDate == "2026-01-01"
         r2.fromDate == "2025-07-01"
@@ -996,7 +996,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         def r3 = reports.find{it.reportId == "d342cc4b-cb7c-4755-8d56-4277fe90ac24"}
         r3.publicationStatus == "DRAFT"
         r3.reportId == "d342cc4b-cb7c-4755-8d56-4277fe90ac24"
-        r3.activity == null
+        r3.activity != null
         r3.toDate == "2025-07-01"
         r3.submissionDate == "2025-07-01"
         r3.fromDate == "2024-07-01"
@@ -1011,7 +1011,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         def r4 = reports.find{it.reportId == "435c4d42-aed0-4daa-be2c-9c4882e4b61e"}
         r4.publicationStatus == "CANCELLED"
         r4.reportId == "435c4d42-aed0-4daa-be2c-9c4882e4b61e"
-        r4.activity == null
+        r4.activity != null
         r4.toDate == "2024-07-01"
         r4.submissionDate == "2024-07-01"
         r4.fromDate == "2024-01-01"
@@ -1038,7 +1038,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         def r5 = reports.find{it.reportId == "2cddd195-4e4b-4d80-ad57-9a4b16e95d62"}
         r5.publicationStatus == "DRAFT"
         r5.reportId == "2cddd195-4e4b-4d80-ad57-9a4b16e95d62"
-        r5.activity == null
+        r5.activity != null
         r5.toDate == "2026-01-01"
         r5.submissionDate == "2026-01-01"
         r5.fromDate == "2026-01-01"
@@ -1053,7 +1053,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         def r6 = reports.find{it.reportId == "245f5f8a-a105-4fd4-8f77-169c641051a1"}
         r6.publicationStatus == "DRAFT"
         r6.reportId == "245f5f8a-a105-4fd4-8f77-169c641051a1"
-        r6.activity == null
+        r6.activity != null
         r6.toDate == "2026-01-01"
         r6.submissionDate == "2025-10-01"
         r6.fromDate == "2025-10-01"
@@ -1068,7 +1068,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         def r7 = reports.find{it.reportId == "d354b597-09d4-412d-bf24-71a071266e33"}
         r7.publicationStatus == "DRAFT"
         r7.reportId == "d354b597-09d4-412d-bf24-71a071266e33"
-        r7.activity == null
+        r7.activity != null
         r7.toDate == "2025-10-01"
         r7.submissionDate == "2025-07-01"
         r7.fromDate == "2025-07-01"
@@ -1083,7 +1083,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         def r8 = reports.find{it.reportId == "14d38a95-4f15-4d2b-a307-3b905c876b2b"}
         r8.publicationStatus == "DRAFT"
         r8.reportId == "14d38a95-4f15-4d2b-a307-3b905c876b2b"
-        r8.activity == null
+        r8.activity != null
         r8.toDate == "2025-07-01"
         r8.submissionDate == "2025-04-01"
         r8.fromDate == "2025-04-01"
@@ -1098,7 +1098,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         def r9 = reports.find{it.reportId == "7b2fc26e-9071-4a90-b2bd-78ce5a8f6642"}
         r9.publicationStatus == "DRAFT"
         r9.reportId == "7b2fc26e-9071-4a90-b2bd-78ce5a8f6642"
-        r9.activity == null
+        r9.activity != null
         r9.toDate == "2025-04-01"
         r9.submissionDate == "2025-01-01"
         r9.fromDate == "2025-01-01"
@@ -1113,7 +1113,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         def r10 = reports.find{it.reportId == "f810fd11-3403-404e-af87-8d116a100cd9"}
         r10.publicationStatus == "DRAFT"
         r10.reportId == "f810fd11-3403-404e-af87-8d116a100cd9"
-        r10.activity == null
+        r10.activity != null
         r10.toDate == "2025-01-01"
         r10.submissionDate == "2024-10-01"
         r10.fromDate == "2024-10-01"
@@ -1128,7 +1128,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         def r11 = reports.find{it.reportId == "2ed7f087-5200-4f1a-bfae-d743abbd371f"}
         r11.publicationStatus == "DRAFT"
         r11.reportId == "2ed7f087-5200-4f1a-bfae-d743abbd371f"
-        r11.activity == null
+        r11.activity != null
         r11.toDate == "2024-10-01"
         r11.submissionDate == "2024-07-01"
         r11.fromDate == "2024-07-01"
@@ -1143,7 +1143,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         def r12 = reports.find{it.reportId == "8b193938-db66-41f4-a5c0-5592c03ab111"}
         r12.publicationStatus == "DRAFT"
         r12.reportId == "8b193938-db66-41f4-a5c0-5592c03ab111"
-        r12.activity == null
+        r12.activity != null
         r12.toDate == "2024-07-01"
         r12.submissionDate == "2024-04-01"
         r12.fromDate == "2024-04-01"
