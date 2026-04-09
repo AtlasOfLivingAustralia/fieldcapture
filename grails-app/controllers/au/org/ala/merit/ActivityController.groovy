@@ -503,6 +503,7 @@ class ActivityController {
     def ajaxUpload() {
         if (request.respondsTo('getFile')) {
             def file = request.getFile('data')
+            Map result
             if (file) {
 
                 def outputName = params.type
@@ -510,94 +511,47 @@ class ActivityController {
                 String activityForm = params.activityForm
                 Integer formVersion = params.getInt('formVersion', null)
 
-                def model = metadataService.annotatedOutputDataModel(activityForm, outputName, formVersion)
-                if (listName) {
-                    model = metadataService.findByName(listName, model)?.columns
-                }
-                model = model.findAll{!it.computed}
-                int index = 0;
-                def columnMap = model.collectEntries {
-                    def colString = CellReference.convertNumToColString(index++)
-                    [(colString):it.name]
-                }
-                def config = [
-                        sheet:sheetNameFromOutput(outputName),
-                        startRow:1,
-                        columnMap:columnMap
-                ]
-                Workbook workbook = WorkbookFactory.create(file.inputStream)
+                def resp = webService.postMultipart(grailsApplication.config.getProperty('ecodata.service.url') + "/metadata/extractOutputDataFromExcelOutputTemplate", [activityForm: activityForm, type: outputName, listName:listName, formVersion: formVersion], file, 'data')
+                if (resp.status != HttpStatus.SC_OK) {
+                    result = [status:resp.status, error:resp.error ?: 'An error occurred processing the file.']
 
-                def data = excelImportService.convertColumnMapConfigManyRows(workbook, config)
-                data.each { row ->
-                    for (entry in row) {
-                        if (entry.value instanceof org.joda.time.LocalDate) {
-                            //update the type for the datepicker
-                            entry.value = entry.value.toDate()
-
-                        }
-                    }
-                }
-
-                // Do species lookup
-                def species = model.find {it.dataType == 'species'}
-                if (species) {
-                    data.each { row ->
-                        def scientificName = row[species.name]
-
-                        def result = speciesService.searchByScientificName(scientificName)
-                        if (result) {
-                            row[species.name] = [name:result.name, listId:result.listId, guid:result.guid, scientificName: result.scientificName ?: result.name, commonName: result.commonName]
-                        }
-                        else {
-                            row[species.name] = [name:scientificName, listId:'unmatched', scientificName:scientificName, commonName: '', guid:null]
-                        }
-
-                    }
-                }
-                // Multiselect correction
-                List stringLists = model.findAll {it.dataType == 'stringList'}
-                stringLists?.each { dataItem ->
-                    data.each { row ->
-                        String values = row[dataItem.name]
-
-                        if (values) {
-                            // lists are treated as comma separated.  Do a bit of cleanup (trim and remove duplicates).
-                            row[dataItem.name] = Arrays.asList(values.split(','))
-                            row[dataItem.name] = row[dataItem.name].collect{it?.trim()}.unique()
-
-                        }
-
-                    }
-                }
-
-
-                def result
-                if (!data) {
-                    response.status = 400
-                    result = [status:400, error:'No data was found that matched the columns in this table, please check the template you used to upload the data. ']
                 }
                 else {
-                    result = [status: 200, data:data]
+                    def data = resp.resp?.data
+
+                    def model = metadataService.annotatedOutputDataModel(activityForm, outputName, formVersion)
+                    if (listName) {
+                        model = metadataService.findByName(listName, model)?.columns
+                    }
+
+                    // Do species lookup
+                    def species = model.find {it.dataType == 'species'}
+                    if (species) {
+                        data.each { row ->
+                            def scientificName = row[species.name]
+
+                            def speciesResult = speciesService.searchByScientificName(scientificName)
+                            if (speciesResult) {
+                                row[species.name] = [name:speciesResult.name, listId:speciesResult.listId, guid:speciesResult.guid, scientificName: speciesResult.scientificName ?: speciesResult.name, commonName: speciesResult.commonName]
+                            }
+                            else {
+                                row[species.name] = [name:scientificName, listId:'unmatched', scientificName:scientificName, commonName: '', guid:null]
+                            }
+
+                        }
+                    }
+
+                    result = [status: HttpStatus.SC_OK, data:data]
                 }
 
-                // This is returned to the browswer as a text response due to workaround the warning
-                // displayed by IE8/9 when JSON is returned from an iframe submit.
-                response.setContentType('text/plain;charset=UTF8')
-                JSON.use("clientSideFormattedDates") {
-                    def resultJson = result as JSON
-                    render resultJson.toString()
-                }
+                render result as JSON
             }
         }
         else {
             response.status = 400
-            def result = [status: 400, error:'No file attachment found']
-            // This is returned to the browswer as a text response due to workaround the warning
-            // displayed by IE8/9 when JSON is returned from an iframe submit.
+            result = [status: 400, error:'No file attachment found']
 
-            response.setContentType('text/plain;charset=UTF8')
-            def resultJson = result as JSON
-            render resultJson.toString()
+            render result as JSON
         }
     }
 
