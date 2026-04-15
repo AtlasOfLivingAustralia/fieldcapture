@@ -1,11 +1,14 @@
 package au.org.ala.merit
 
+import grails.core.GrailsApplication
 import groovy.util.logging.Slf4j
 import org.grails.web.json.JSONObject
 
 @Slf4j
 class RoleService {
-    def metadataService, cacheService
+    MetadataService metadataService
+    CacheService cacheService
+    GrailsApplication grailsApplication
 
     /**
      * This role is given to grant and project managers and allows access to workflow actions
@@ -76,7 +79,10 @@ class RoleService {
 
     private static final List MERIT_PROJECT_ROLES = [GRANT_MANAGER_ROLE, PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE, PROJECT_READ_ONLY_ROLE]
     public static final List MERIT_HUB_ROLES = [HUB_ADMIN_ROLE, HUB_SUPPORT_OFFICER_ROLE, HUB_OFFICER_ROLE, HUB_READ_ONLY_ROLE]
-    public static final List MONITOR_ONLY_ROLES = [PROJECT_DETERMINER_SURVEYOR_ROLE, PROJECT_MODERATOR_ROLE, PROJECT_DETERMINER_ROLE, PROJECT_SURVEYOR_ROLE]
+
+    private static final List ORIGINAL_MONITOR_ROLES = [PROJECT_SURVEYOR_ROLE]
+    private static final List UPDATED_MONITOR_ROLES = ORIGINAL_MONITOR_ROLES + [PROJECT_DETERMINER_SURVEYOR_ROLE, PROJECT_MODERATOR_ROLE, PROJECT_DETERMINER_ROLE]
+
     /** Granted to ALA developers, gives access to all functions in MERIT */
     public static final String ALA_ADMIN_ROLE = "alaAdmin"
 
@@ -112,7 +118,7 @@ class RoleService {
 
     /** Projects supporting the monitor app need additional roles not available to other projects */
     List getMonitorRoles() {
-        MONITOR_ONLY_ROLES
+        grailsApplication.config.getProperty("enable.monitorDeterminerRoles") ? UPDATED_MONITOR_ROLES : ORIGINAL_MONITOR_ROLES
     }
 
     List getAugmentedRoles() {
@@ -128,7 +134,9 @@ class RoleService {
     }
 
     Set getAllowedUserRoles() {
-        return new HashSet([PROJECT_MODERATOR_ROLE, PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE, PROJECT_DETERMINER_SURVEYOR_ROLE, PROJECT_SURVEYOR_ROLE, PROJECT_DETERMINER_ROLE])
+        List MERIT_USER_ROLES = [PROJECT_ADMIN_ROLE, PROJECT_EDITOR_ROLE]
+        List allUserRoles = MERIT_USER_ROLES + getMonitorRoles()
+        return new HashSet(allUserRoles)
     }
 
 }
