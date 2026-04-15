@@ -12,7 +12,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
 
     SearchService searchService = Mock(SearchService)
     UserService userService = Mock(UserService)
-    HubSettings hubSettings = new HubSettings(availableFacets:['nameFacet', 'descriptionFacet', 'admin', 'elect'], availableMapFacets:['adminMap'], adminFacets:['admin', 'adminMap'], officerFacets:['elect'])
+    HubSettings hubSettings = new HubSettings(availableFacets:['nameFacet', 'descriptionFacet', 'admin', 'elect'], availableMapFacets:['adminMap'], adminFacets:['admin', 'adminMap'], officerFacets:['elect'], supportOfficerFacets:['supportOfficer'])
     SettingService settingService = Mock(SettingService)
     MetadataService metadataService = Mock(MetadataService)
     ActivityService activityService = Mock(ActivityService)

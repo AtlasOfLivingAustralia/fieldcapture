@@ -104,6 +104,12 @@ class HomeController {
             facetsList?.removeAll(adminFacetList)
             mapFacets?.removeAll(adminFacetList)
         }
+        boolean canViewSupportOfficerFacets = canViewAdminFacets || userService.userIsSupportOfficer()
+        if (!canViewSupportOfficerFacets) {
+            List supportOfficerFacetList = SettingService.getHubConfig().supportOfficerFacets ?: []
+            facetsList?.removeAll(supportOfficerFacetList)
+            mapFacets?.removeAll(supportOfficerFacetList)
+        }
         boolean canViewDownloads = canViewAdminFacets || userService.userIsSiteAdmin()
         boolean canViewOfficerFacets = userService.userIsSiteAdmin() || userService.userHasReadOnlyAccess()
         if (!canViewOfficerFacets) {
