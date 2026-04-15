@@ -118,7 +118,7 @@ class RoleService {
 
     /** Projects supporting the monitor app need additional roles not available to other projects */
     List getMonitorRoles() {
-        grailsApplication.config.getProperty("enable.monitorDeterminerRoles") ? UPDATED_MONITOR_ROLES : ORIGINAL_MONITOR_ROLES
+        grailsApplication.config.getProperty("monitor.enableDeterminerRoles", Boolean, false) ? UPDATED_MONITOR_ROLES : ORIGINAL_MONITOR_ROLES
     }
 
     List getAugmentedRoles() {
