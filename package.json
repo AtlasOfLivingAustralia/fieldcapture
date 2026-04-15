@@ -23,7 +23,7 @@
     "karma-jasmine": "^1.1.2",
     "karma-jquery": "^0.2.4",
     "knockout": "^3.5.1",
-    "lodash": "^4.17.23",
+    "lodash": "^4.18.1",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.37"
   },
