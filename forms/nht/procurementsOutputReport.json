@@ -3161,12 +3161,6 @@
               },
               {
                 "dataType": "number",
-                "name": "numberOfEvents",
-                "validate": "required",
-                "description": "This field can contribute to Number of the engagement event types: <li>training/workshops,</li> <li>on-ground trials/demonstrations and</li> <li>field days</li>"
-              },
-              {
-                "dataType": "number",
                 "name": "numberOfParticipants",
                 "validate": "required,min[0]"
               },
