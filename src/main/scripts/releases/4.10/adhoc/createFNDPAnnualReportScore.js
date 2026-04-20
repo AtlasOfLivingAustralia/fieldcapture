@@ -6,9 +6,9 @@ let scores = [
         tags: [],
         displayType: '',
         entity: 'Activity',
-        outputType: 'FTE',
+        outputType: 'FTE delivered',
         isOutputTarget: false,
-        category: 'Reporting',
+        category: 'Annual Reporting',
         status: 'active',
         label: 'Total FTE supporting and/or delivering the project',
         description: 'An aggregate of the FTE value reported in the Outputs Report PSO header',
@@ -29,7 +29,41 @@ let scores = [
                 }
             ]
         }
-    }
+    },
+    {
+        scoreId: 'l7712124-l23j-15ar-80f5-86f9ffcef60v',
+        entityTypes: [],
+        tags: [],
+        displayType: '',
+        entity: 'Activity',
+        outputType: 'NHT Communications PSO',
+        isOutputTarget: false,
+        category: 'Annual Reporting',
+        status: 'active',
+        label: 'Output report communications',
+        description: 'All the communications from the output report',
+        configuration: {
+            "filter": {
+                "filterValue": "First Nations Delivery Partners PSO",
+                "type": "filter",
+                "property": "name"
+            },
+            "childAggregations": [
+                {
+                    "groups": {
+                        "type": "discrete",
+                        "property": "data.psoCommunicationDetails.communicationMaterialType"
+                    },
+                    "childAggregations": [
+                        {
+                            "property": "data.psoCommunicationDetails",
+                            "type": "SET"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
 ];
 
 for (let i = 0; i < scores.length; i++) {
