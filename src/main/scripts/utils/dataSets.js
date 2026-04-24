@@ -52,6 +52,9 @@ function moveDataSet(dataSetId, fromProjectId, toProjectId, adminUserId) {
         throw "Data set with dataSetId "+dataSetId+" is used in a report: "+dataSet.reportId;
     }
 
+    if (dataSet.projectId) {
+        dataSet.projectId = toProjectId;
+    }
     toProject.custom.dataSets.push(dataSet);
     let site = null;
     if (dataSet.siteId) {
