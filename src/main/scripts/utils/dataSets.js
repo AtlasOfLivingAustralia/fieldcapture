@@ -37,8 +37,9 @@ function moveDataSet(dataSetId, fromProjectId, toProjectId, adminUserId) {
 
     let dataSet = null;
     for (let i=0; i<fromProject.custom.dataSets.length; i++) {
-        dataSet = fromProject.custom.dataSets[i];
-        if (dataSet.dataSetId === dataSetId) {
+
+        if (fromProject.custom.dataSets[i].dataSetId === dataSetId) {
+            dataSet = fromProject.custom.dataSets[i];
             fromProject.custom.dataSets.splice(i, 1);
             break;
         }
@@ -51,6 +52,7 @@ function moveDataSet(dataSetId, fromProjectId, toProjectId, adminUserId) {
         throw "Data set with dataSetId "+dataSetId+" is used in a report: "+dataSet.reportId;
     }
 
+    dataSet.projectId = toProjectId;
     toProject.custom.dataSets.push(dataSet);
     let site = null;
     if (dataSet.siteId) {
