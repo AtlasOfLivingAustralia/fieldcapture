@@ -29,3 +29,55 @@ function removeDataSetSite(projectId, dataSetId, adminUserId, deleteSite) {
     audit(project, project.projectId, 'au.org.ala.ecodata.Project', adminUserId);
 
 }
+
+function moveDataSet(dataSetId, fromProjectId, toProjectId, adminUserId) {
+
+    let fromProject = db.project.findOne({projectId:fromProjectId});
+    let toProject = db.project.findOne({projectId:toProjectId});
+
+    let dataSet = null;
+    for (let i=0; i<fromProject.custom.dataSets.length; i++) {
+
+        if (fromProject.custom.dataSets[i].dataSetId === dataSetId) {
+            dataSet = fromProject.custom.dataSets[i];
+            fromProject.custom.dataSets.splice(i, 1);
+            break;
+        }
+    }
+
+    if (!dataSet) {
+        throw "No dataset found with dataSetId "+dataSetId+" in project "+fromProjectId;
+    }
+    if (dataSet.reportId) {
+        throw "Data set with dataSetId "+dataSetId+" is used in a report: "+dataSet.reportId;
+    }
+
+    if (dataSet.projectId) {
+        dataSet.projectId = toProjectId;
+    }
+    toProject.custom.dataSets.push(dataSet);
+    let site = null;
+    if (dataSet.siteId) {
+        site = db.site.findOne({siteId:dataSet.siteId});
+        if (site.projects.length !== 1 || site.projects[0] !== fromProjectId) {
+            throw "Site "+dataSet.siteId + " is not associated with the project "+fromProjectId;
+        }
+        site.projects[0] = toProjectId;
+    }
+    fromProject.lastUpdated = ISODate();
+    toProject.lastUpdated = ISODate();
+
+    db.project.replaceOne({projectId:fromProjectId}, fromProject);
+    audit(fromProject, fromProjectId, 'au.org.ala.ecodata.Project', adminUserId);
+    db.project.replaceOne({projectId:toProjectId}, toProject);
+    audit(toProject, toProjectId, 'au.org.ala.ecodata.Project', adminUserId);
+
+    if (site) {
+        site.lastUpdated = ISODate();
+        db.site.replaceOne({siteId:site.siteId}, site);
+        audit(site, site.siteId, 'au.org.ala.ecodata.Site', adminUserId, toProjectId);
+    }
+
+
+
+}
