@@ -283,7 +283,8 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
                  FINISH_DT: '30/06/2023',
                  WORK_ORDER_ID: 'WO1234',
                  ADMIN_EMAIL: 'admin@test.org',
-                 GRANT_MGR_EMAIL: 'gm@test.org'
+                 GRANT_MGR_EMAIL: 'gm@test.org',
+                 PORTFOLIO: 'Environment'
          ]]
     }
 
