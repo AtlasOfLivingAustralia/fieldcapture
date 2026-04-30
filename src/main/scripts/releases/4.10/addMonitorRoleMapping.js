@@ -1,5 +1,5 @@
 let roleMapping = {
-    "authenticated": {
+    "collector": {
         "read": {
             "a9cb9e38-690f-41c9-8151-06108caf539d": true,
             "b201a011-c60f-4af1-9a23-0b3b87e2ed9b": true,
