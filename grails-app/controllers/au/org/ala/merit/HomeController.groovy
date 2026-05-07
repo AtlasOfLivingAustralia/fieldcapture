@@ -134,7 +134,7 @@ class HomeController {
            includeDownloads: canViewDownloads
         ]
 
-        if (canViewAdminFacets) {
+        if (canViewSupportOfficerFacets) {
             List activityTypes = metadataService.activityTypesList()
             Map activityTypesFacet = resp?.facets?.get(ACTIVITY_TYPE_FACET_NAME)
             model.activityTypes = filterActivityTypesToProjectSelection(activityTypes, activityTypesFacet)
