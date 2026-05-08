@@ -222,7 +222,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         String userId = '1000'
         String query = """
         {
-          searchMeritProjects(pagination:{offset:0, max:10}, status:[ACTIVE]) {
+          searchMeritProjects(pagination:{offset:0, max:10}, status:ACTIVE) {
             results {
               projectId
             }
