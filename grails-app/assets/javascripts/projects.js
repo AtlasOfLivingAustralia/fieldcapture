@@ -1139,7 +1139,7 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             useAlaMap: config.useAlaMap,
             useGoogleBaseMap: config.useGoogleBaseMap,
             fullscreenControl:false,
-            wmsLayerUrl: fcConfig.spatialWmsUrl + + '/wms/reflect?',
+            wmsLayerUrl: fcConfig.spatialWmsUrl + '/wms/reflect?',
             wmsFeatureUrl: fcConfig.spatialWms + '?featureId='
         };
 

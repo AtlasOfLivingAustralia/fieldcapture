@@ -164,8 +164,8 @@ var POI = function (l, hasDocuments) {
         marker: null,
         popupContent: ko.pureComputed(function() {
             var content = '<table><tbody>';
-            content += '<tr><td>Name</td><td>' + self.name() + '</td></tr>';
-            content += '<tr><td>Type</td><td>' + self.type() + '</td></tr>';
+            content += '<tr><td>Name</td><td>' + _.escape(self.name()) + '</td></tr>';
+            content += '<tr><td>Type</td><td>' + _.escape(self.type()) + '</td></tr>';
             content += '</tbody></table>';
             return content;
         }),
@@ -350,7 +350,6 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
         self.renderPOIs();
         self.renderOnMap();
         deferredUpdate.subscribe(self.updateGeometryAndRefreshGazInfo);
-        alaMap.registerListener('pm:globaleditmodetoggled', modeListener);
         alaMap.registerListener('pm:globaleditmodetoggled', modeListener);
         alaMap.registerListener('pm:globaldragmodetoggled', modeListener);
         alaMap.registerListener('pm:globalremovalmodetoggled', modeListener);

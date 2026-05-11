@@ -4,7 +4,6 @@ import static java.net.URLEncoder.encode
 import grails.core.GrailsApplication
 import org.springframework.web.multipart.MultipartFile
 
-import static java.net.URLEncoder.encode
 /**
  * This class implements the interface between MERIT and the ALA spatial service.
  */

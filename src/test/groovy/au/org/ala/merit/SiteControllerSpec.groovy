@@ -1,6 +1,5 @@
 package au.org.ala.merit
 
-
 import grails.converters.JSON
 import grails.testing.web.controllers.ControllerUnitTest
 import net.sf.json.JSONNull
@@ -198,5 +197,36 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         model.site == site
         model.project == project
 
+    }
+
+    def "regionList returns transformed regions from settingService"() {
+        given:
+        def layers = [
+            [id: 'layer1', name: 'Layer One'],
+            [id: 'layer2', name: 'Layer Two']
+        ]
+        settingService.getJson(_) >> layers
+
+        when:
+        controller.regionList()
+
+        then:
+        response.json == [regions: [[key: 'layer1', value: 'Layer One'], [key: 'layer2', value: 'Layer Two']]]
+    }
+
+    def "regionList falls back to config if settingService returns null"() {
+        given:
+        settingService.getJson(_) >> null
+        def fallbackLayers = [
+            [id: 'layerA', name: 'Layer A'],
+            [id: 'layerB', name: 'Layer B']
+        ]
+        controller.grailsApplication.config.sites.known_shapes = fallbackLayers
+
+        when:
+        controller.regionList()
+
+        then:
+        response.json == [regions: [[key: 'layerA', value: 'Layer A'], [key: 'layerB', value: 'Layer B']]]
     }
 }

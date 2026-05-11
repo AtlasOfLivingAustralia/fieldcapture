@@ -200,7 +200,7 @@
                     mapContainerId:'smallMap',
                     useGoogleBaseMap:fcConfig.useGoogleBaseMap,
                     featureServiceUrl: fcConfig.featureService,
-                    wmsLayerUrl: fcConfig.spatialWmsUrl + + '/wms/reflect?',
+                    wmsLayerUrl: fcConfig.spatialWmsUrl + '/wms/reflect?',
                     wmsFeatureUrl: fcConfig.spatialWms + '?featureId='
                 });
 
