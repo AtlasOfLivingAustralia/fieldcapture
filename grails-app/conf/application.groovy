@@ -102,7 +102,7 @@ if (!collectory.baseURL) {
 }
 // spatial services
 if(!spatial.baseUrl){
-    spatial.baseUrl = "https://spatial-test.ala.org.au"
+    spatial.baseUrl = "https://spatial.test.ala.org.au"
 }
 if(!spatial.layersUrl){
     spatial.layersUrl = spatial.baseUrl + "/ws"

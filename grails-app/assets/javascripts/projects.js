@@ -1138,7 +1138,9 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             leafletIconPath:options.leafletIconPath,
             useAlaMap: config.useAlaMap,
             useGoogleBaseMap: config.useGoogleBaseMap,
-            fullscreenControl:false
+            fullscreenControl:false,
+            wmsLayerUrl: fcConfig.spatialWmsUrl + + '/wms/reflect?',
+            wmsFeatureUrl: fcConfig.spatialWms + '?featureId='
         };
 
         var map = createMap(mapOptions);

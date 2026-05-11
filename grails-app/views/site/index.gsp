@@ -24,6 +24,7 @@
             sldPolgonHighlightUrl: "${grailsApplication.config.getProperty('sld.polgon.highlight.url')}",
             featureService: "${createLink(controller: 'proxy', action:'feature')}",
             sitesPhotoPointsUrl:"${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
+            poiIconUrl: "${assetPath(src: '/icons/poi.png')}",
             useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION}
             },
             here = window.location.href;
@@ -196,17 +197,19 @@
             else {
 
                 var map = createMap({
-                    useAlaMap:true,
                     mapContainerId:'smallMap',
                     useGoogleBaseMap:fcConfig.useGoogleBaseMap,
                     featureServiceUrl: fcConfig.featureService,
-                    wmsServerUrl: fcConfig.spatialWmsUrl
+                    wmsLayerUrl: fcConfig.spatialWmsUrl + + '/wms/reflect?',
+                    wmsFeatureUrl: fcConfig.spatialWms + '?featureId='
                 });
 
                 map.replaceAllFeatures([mapFeatures]);
                 _.each(site.poi || [], function(poi) {
                     if (poi.geometry) {
-                        map.addMarker(poi.geometry.decimalLatitude, poi.geometry.decimalLongitude, poi.name);
+                        map.addPOI(poi.geometry.decimalLatitude, poi.geometry.decimalLongitude, poi.name, {
+                            poiIconUrl: fcConfig.poiIconUrl
+                        });
                     }
                 });
 

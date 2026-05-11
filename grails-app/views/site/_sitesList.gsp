@@ -5,7 +5,6 @@
         <g:if test="${editable}">
             <div class="btn-group btn-group-horizontal ">
                 <button data-bind="click: $root.addSite" type="button" class="btn btn-sm addSite"><i class="fa fa-plus"></i> Add new ${wordForSite}</button>
-                <button data-bind="click: $root.uploadSites" type="button" class="btn btn-sm uploadSite"> <i class="fa fa-upload"></i> Upload ${wordForSite}s from shapefile</button>
             </div>
         </g:if>
     </div>
@@ -16,7 +15,6 @@
                 <div class="btn-group" role="group">
                     <span>Actions:</span>
                     <a data-bind="click: $root.addSite" id="addSite" class="btn btn-sm" type="button" title="Create a new site for your project"><i class="fa fa-plus"></i> New</a>
-                    <a data-bind="click: $root.uploadSites" id="siteUpload" type="button" class="btn btn-sm" title="Create sites for your project by uploading a file"><i class="fa fa-upload"></i> Upload</a>
                     <a data-bind="click: $root.downloadShapefile" id="siteDownload" type="button" class="btn btn-sm" title="Download your project sites in shapefile format"><i class="fa fa-download"></i> Download</a>
                     <button data-bind="click: $root.removeSelectedSites, enable:$root.selectedSiteIds().length > 0"  id="siteDeleted" type="button" class="btn btn-sm" title="Delete selected sites"><i class="fa fa-trash"></i> Delete</button>
                 </div>
