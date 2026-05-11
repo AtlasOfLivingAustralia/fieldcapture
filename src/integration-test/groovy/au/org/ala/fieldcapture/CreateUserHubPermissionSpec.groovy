@@ -54,7 +54,7 @@ class CreateUserHubPermissionSpec extends StubbedCasSpec {
 
         then:
         waitFor {
-            permissions.size() == 3
+            permissions.size() == 4
         }
     }
 
@@ -74,7 +74,7 @@ class CreateUserHubPermissionSpec extends StubbedCasSpec {
 
         then: "User appears in the permissions table with the officer role"
         waitFor {
-            permissions.size() == 4
+            permissions.size() == 5
         }
         findPermissionForUser('2').userId == "2"
         findPermissionForUser('2').sortRoleSelection == "Officer"
@@ -98,7 +98,7 @@ class CreateUserHubPermissionSpec extends StubbedCasSpec {
 
         then:
         waitFor {
-            permissions.size() == 3
+            permissions.size() == 4
         }
 
     }
@@ -117,7 +117,7 @@ class CreateUserHubPermissionSpec extends StubbedCasSpec {
 
         then: "User appears in the permissions table"
         waitFor {
-            permissions.size() == 3
+            permissions.size() == 4
         }
         findPermissionForUser('1001').userId == "1001"
     }
