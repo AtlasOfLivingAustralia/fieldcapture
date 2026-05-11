@@ -20,7 +20,8 @@ class OrganisationController {
     ]
 
     static final List<String> ORGANISATION_ADMIN_BINDING_PROPERTIES = ['description', 'documents', 'links', "url", "postcode", "state", "acronym"]
-    static final List<String> HUB_ADMIN_BINDING_PROPERTIES = ORGANISATION_ADMIN_BINDING_PROPERTIES + ["externalIds", "contractNames", "abn", "associatedOrgs", "orgType", "entityName", "indigenousOrganisationRegistration", "name", "businessNames", "abnStatus", "config"]
+    static final List<String> SUPPORT_OFFICER_BINDING_PROPERTIES = ["custom"] + ORGANISATION_ADMIN_BINDING_PROPERTIES
+    static final List<String> HUB_ADMIN_BINDING_PROPERTIES = SUPPORT_OFFICER_BINDING_PROPERTIES + ["externalIds", "contractNames", "abn", "associatedOrgs", "orgType", "entityName", "indigenousOrganisationRegistration", "name", "businessNames", "abnStatus", "config"]
 
     def organisationService, searchService, documentService, userService, roleService, commonService, webService
     def activityService, metadataService, projectService, excelImportService, reportService, pdfConverterService, authService
@@ -206,10 +207,16 @@ class OrganisationController {
     @PreAuthorise(accessLevel = 'admin')
     def ajaxUpdate(String id) {
         Map organisationDetails = request.JSON
+        List bindingProperties = ORGANISATION_ADMIN_BINDING_PROPERTIES
         // Filter the properties that can be updated based on the user's role.
-        List bindingProperties = userService.userIsAlaOrFcAdmin() ? HUB_ADMIN_BINDING_PROPERTIES : ORGANISATION_ADMIN_BINDING_PROPERTIES
+        if (userService.userIsAlaOrFcAdmin()) {
+            bindingProperties = HUB_ADMIN_BINDING_PROPERTIES
+        }
+        else if (userService.userIsSupportOfficer()) {
+            bindingProperties = SUPPORT_OFFICER_BINDING_PROPERTIES
+        }
         organisationDetails = organisationDetails.findAll { k, v -> bindingProperties.contains(k) }
-println organisationDetails
+
         createOrUpdateOrganisation(id, organisationDetails)
     }
 

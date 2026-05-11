@@ -26,7 +26,24 @@ var orgDefaults = {
                         "category": "Regional Capacity Services Annual Reporting",
                         "activityType": "RLP Core Services annual report"
                     }
-                ]
+                ],
+
+                "targets": {
+                    "periodGenerationConfig": {
+                        "reportType": "Administrative",
+                        "reportDescriptionFormat": "Regional capacity services report %d for %4$s",
+                        "reportNameFormat": "Regional capacity report %d",
+                        "reportingPeriodInMonths": 12,
+                        "minimumReportDurationInDays": 1,
+                        "label": "Annual",
+                        "category": "Regional Capacity Services Reporting",
+                        "activityType": "Regional Capacity Services Report",
+                        "periodStart": "2023-06-30T14:00:00Z",
+                        "periodEnd": "2030-06-30T13:59:59Z"
+                    },
+                    "periodLabelFormat": "MMM YYYY"
+                }
+
             },
             "dateCreated": ISODate("2022-02-01T14:00:00Z"),
             "description": "A description of the organisation",
