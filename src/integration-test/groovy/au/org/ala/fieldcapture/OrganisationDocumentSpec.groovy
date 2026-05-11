@@ -82,24 +82,25 @@ class OrganisationDocumentsSpec extends StubbedCasSpec {
         document.name == "Test doc"
     }
 
-    def "read only users see a read only version of the documents tab"() {
+    def "read only users see a read only version of the admin tab"() {
         setup:
         String organisationId = 'test_organisation'
         loginAsReadOnlyUser(browser)
 
-        when: "Display the admin tab, navigate to the documents section"
+        when: "Open the organisation page"
         to Organisation, organisationId
 
-        then: "The admin tab is visible and the user permissions and documents tab are read only"
+        then: "The admin tab is visible"
         adminTab.displayed == true
 
         when:
         openAdminTab()
 
-        then:
-        adminTabContent.adminColumn.size() == 2
+        then: "the user permissions, documents, and targets tab are displayed"
+        adminTabContent.adminColumn.size() == 3
         adminTabContent.adminColumn[0].text() == "Permissions"
         adminTabContent.adminColumn[1].text() == "Documents"
+        adminTabContent.adminColumn[2].text() == "Targets"
 
 
         when:
