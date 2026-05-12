@@ -303,6 +303,7 @@
 
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="projects.js"/>
+<asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="esp-overview.js"/>
 <asset:deferredScripts/>
 

@@ -547,6 +547,7 @@ var config = {
 <asset:javascript src="document.js"/>
 <asset:javascript src="reporting.js"/>
 
+<asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="forms-manifest.js"/>
 <asset:javascript src="speciesModel.js"/>
 <asset:javascript src="leaflet-manifest.js"/>

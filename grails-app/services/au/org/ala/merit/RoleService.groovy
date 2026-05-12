@@ -13,7 +13,7 @@ class RoleService {
     /**
      * This role is given to grant and project managers and allows access to workflow actions
      * (approving reports and MERIT plans) for the project the role is granted on.
-     * It can only be given to a user that also has the HUB_OFFICER_ROLE
+    8uy * It can only be given to a user that also has the HUB_OFFICER_ROLE
      */
     public static final String GRANT_MANAGER_ROLE = 'caseManager'
 

@@ -149,6 +149,7 @@
 
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
+<asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="program.js"/>
 <asset:deferredScripts/>
 

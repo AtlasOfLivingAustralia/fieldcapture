@@ -297,11 +297,11 @@ clientDependencies {
 }
 
 assets {
-    minifyJs = false
+    minifyJs = true
     minifyCss = true
     maxThreads = 4 //useful for concurrent asset processing during build
     configOptions = [:] //useful for custom config on extension libraries
-    minifyOptions = [excludes: ['leaflet-geoman.js', '**/vendor-ext/**', '**/vendor-external/**', '**/vendor/**']] //Example Exclude GLOB pattern
+    minifyOptions = [excludes: ['leaflet-geoman.js', 'leaflet-manifest.js', '**/vendor-ext/**', '**/vendor-external/**', '**/vendor/**', '**/ala-map*.js']] //Example Exclude GLOB pattern
     includes = ['webjars/**/images/*']
     excludes = ['**/*.less','**/build/hintrc.js', 'hintrc.unminified.js', '**/spec.hintrc.js', 'spec.hintrc.unminified.js', '**/*hintrc*', '**/webjars/**'] //Example Exclude GLOB pattern
 }
