@@ -1025,6 +1025,21 @@ class ProjectService  {
         }
     }
 
+    List<Map> generateTargetPeriods(Map project, ProgramConfig config) {
+        Map targetsConfig = config?.targetsConfig
+        if (!targetsConfig) {
+            return null
+        }
+        ReportConfig targetsReportConfig = new ReportConfig(targetsConfig.periodGenerationConfig)
+        ReportOwner owner = new ReportOwner(
+                id:[projectId:project.projectId],
+                name:project.name,
+                periodStart:project.plannedStartDate,
+                periodEnd:project.plannedEndDate
+        )
+        reportService.generateTargetPeriods(targetsReportConfig, owner, targetsConfig.periodLabelFormat)
+    }
+
     /**
      * Modifies project activities to keep the dates in sync with a change to the project dates.
      */

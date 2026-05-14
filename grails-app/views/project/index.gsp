@@ -358,6 +358,7 @@ var config = {
     config.minutesToIngestDataSet = fcConfig.minutesToIngestDataSet;
     project.mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
     config.projectTags = <fc:modelAsJavascript model="${projectContent.admin.tags}" default="[]"/>;
+    config.targetPeriods = <fc:modelAsJavascript model="${projectContent.admin?.forecastPeriods ?: []}"/>;
     var viewModel = new ProjectPageViewModel(project, project.sites, project.activities || [], userRoles, config);
     viewModel.loadPrograms(programs);
     viewModel.loadStatesAndElectorates();

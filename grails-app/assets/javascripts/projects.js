@@ -1021,6 +1021,7 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
         externalIds: self.externalIds,
         canModifyMeriPlan: config.canModifyMeriPlan,
         bieUrl: config.bieUrl,
+        targetPeriods: config.targetPeriods,
         searchBieUrl: config.searchBieUrl,
         speciesListUrl: config.speciesListUrl,
         speciesImageUrl: config.speciesImageUrl,

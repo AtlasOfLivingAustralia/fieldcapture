@@ -799,8 +799,15 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
         project.custom.details = {};
     }
 
-    self.periods = projectService.getBudgetHeaders(project);
-
+    if (config.targetPeriods && config.targetPeriods.length > 0) {
+        self.periods = [];
+        for (let i=0; i<config.targetPeriods.length; i++) {
+            self.periods.push(config.targetPeriods[i].label);
+        }
+    }
+    else {
+        self.periods = projectService.getBudgetHeaders(project);
+    }
     self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
     self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
 
