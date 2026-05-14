@@ -38,12 +38,22 @@
           },
           {
             "dataType": "boolean",
-            "name": "reviewedAndUpdated",
+            "name": "reviewedAndUpdatedQ3",
             "description": ""
           },
           {
             "dataType": "boolean",
-            "name": "reviewedAndNoChange",
+            "name": "reviewedAndNoChangeQ3",
+            "description": ""
+          },
+          {
+            "dataType": "boolean",
+            "name": "reviewedAndUpdatedQ5",
+            "description": ""
+          },
+          {
+            "dataType": "boolean",
+            "name": "reviewedAndNoChangeQ5",
             "description": ""
           },
           {
@@ -54,16 +64,36 @@
             "description": ""
           },
           {
+            "dataType": "text",
+            "name": "totalFteIsCorrect",
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
+          },
+          {
             "dataType": "number",
             "name": "updatedTotalFteEquivalent",
             "decimalPlaces": 2,
             "validate": "min[0]",
-            "description": ""
+            "behaviour": [
+              {
+                "condition": "totalFteIsCorrect == \"No\"",
+                "type": "enable"
+              }
+            ]
           },
           {
             "dataType": "text",
             "name": "fteComments",
-            "validate": "maxSize[1250]"
+            "validate": "maxSize[1250]",
+            "behaviour": [
+              {
+                "condition": "totalFteIsCorrect == \"No\"",
+                "type": "enable"
+              }
+            ]
           },
           {
             "columns": [
@@ -345,7 +375,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "<b>3. Please review the risks and threats table and update if in the past 12 months there have been<ul><li>any risks that have been realised or have newly emerged</li><li>any adaptive management actions that have impacted existing risks</li><li>any mitigation strategies that have been identified as ineffective.</li></ul></b>",
+                            "source": "<b>2.b Please review the risks and threats table and update if in the past 12 months there have been<ul><li>any risks that have been realised or have newly emerged</li><li>any adaptive management actions that have impacted existing risks</li><li>any mitigation strategies that have been identified as ineffective.</li></ul></b>",
                             "type": "literal"
                           }
                         ]
@@ -354,13 +384,13 @@
                         "type": "col",
                         "items": [
                           {
-                            "preLabel": "1. Reviewed and updated",
-                            "source": "reviewedAndUpdated",
+                            "preLabel": "◦ Reviewed and updated or",
+                            "source": "reviewedAndUpdatedQ3",
                             "type": "boolean"
                           },
                           {
-                            "preLabel": "2. Reviewed and no change",
-                            "source": "reviewedAndNoChange",
+                            "preLabel": "◦ Reviewed and no change",
+                            "source": "reviewedAndNoChangeQ3",
                             "type": "boolean"
                           }
                         ]
@@ -369,6 +399,26 @@
                   }
                 ],
                 "class": ""
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "preLabel": "Have all adaptive management actions identified in the MERIT quarterly output reports over the last 12 months been reflected in the MERI plan?",
+                "source": "adaptiveManagementActions",
+                "type": "selectOne",
+                "rows": 4
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "source": "<h4>3. Progress against Project Services forecasts</h4>",
+                "type": "literal"
               }
             ]
           },
@@ -415,14 +465,14 @@
             ],
             "userAddedRows": false,
             "source": "minimumAnnualTargetsNotMet",
-            "title": "<b>4. Progress against Project Services forecasts</b><br/>Please provide details on progress where delivery has varied from proposed targets.",
+            "title": "Please provide details on progress where delivery has varied from proposed targets.",
             "type": "table"
           },
           {
             "type": "row",
             "items": [
               {
-                "source": "<h4>5. Project Workplace Health and Safety (WHS) Risk</h4>",
+                "source": "<h4>4. Project Workplace Health and Safety (WHS) Risk</h4>",
                 "type": "literal"
               }
             ]
@@ -445,7 +495,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "<b>5.a Please review the project WHS risk register and update if in the past 12 months there have been <br><ul><li>any WHS risks that have been realised or have newly emerged</li><li>any mitigation strategies that have been identified as ineffective.</li></ul></b>",
+                            "source": "<b>4.a Please review the project WHS risk register and update if in the past 12 months there have been <br><ul><li>any WHS risks that have been realised or have newly emerged</li><li>any mitigation strategies that have been identified as ineffective.</li></ul></b>",
                             "type": "literal"
                           }
                         ]
@@ -454,13 +504,13 @@
                         "type": "col",
                         "items": [
                           {
-                            "preLabel": "1. Reviewed and updated",
-                            "source": "reviewedAndUpdated",
+                            "preLabel": "◦ Reviewed and updated or",
+                            "source": "reviewedAndUpdatedQ5",
                             "type": "boolean"
                           },
                           {
-                            "preLabel": "2. Reviewed and no change",
-                            "source": "reviewedAndNoChange",
+                            "preLabel": "◦ Reviewed and no change",
+                            "source": "reviewedAndNoChangeQ5",
                             "type": "boolean"
                           }
                         ]
@@ -486,7 +536,7 @@
             "type": "row",
             "items": [
               {
-                "source": "<h4>6. First Nations Delivery Partners Project Support and Overheads Summary Data Tables</h4>",
+                "source": "<h4>5. First Nations Delivery Partners Project Support and Overheads Summary Data Tables</h4>",
                 "type": "literal"
               }
             ]
@@ -495,7 +545,7 @@
             "type": "row",
             "items": [
               {
-                "source": "<b>6.a This report aggregates data from the Project Support & Overheads fields reported in the last 12 months through quarterly reporting. Please review for accuracy.</b>",
+                "source": "<b>5.a This report aggregates data from the Project Support & Overheads fields reported in the last 12 months through quarterly reporting. Please review for accuracy.</b>",
                 "type": "literal"
               }
             ]
@@ -516,7 +566,7 @@
                         "readonly": "readonly",
                         "type": "number",
                         "source": "totalFteEquivalent",
-                        "preLabel": "Total FTE supporting and/or delivering the project."
+                        "preLabel": "Total FTE supporting and/or delivering the project in the last 12 months"
                       }
                     ]
                   },
@@ -529,21 +579,21 @@
                         "items": [
                           {
                             "css": "span8",
-                            "source": "<b>6.b Please review and confirm the auto calculated FTE supporting and/or delivering the project for the past 12 months.</b>",
+                            "source": "<b>5.b Please review and confirm the auto calculated FTE supporting and/or delivering the project for the last 12 months.</b>",
                             "type": "literal"
                           }
                         ]
-                      },
+                      }
+                    ]
+                  },
+                  {
+                    "type": "row",
+                    "items": [
                       {
-                        "type": "col",
-                        "css": "span4 col-border-right",
-                        "items": [
-                          {
-                            "preLabel": "Confirmed",
-                            "source": "reviewedAndUpdated",
-                            "type": "boolean"
-                          }
-                        ]
+                        "preLabel": "Total FTE is correct",
+                        "source": "totalFteIsCorrect",
+                        "type": "selectOne",
+                        "rows": 4
                       }
                     ]
                   },
@@ -573,7 +623,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<h3>Communications</h3>"
+                "source": "<h3>6. Communications</h3><br><b>6.a Please review and add any further communication materials not already reported into below editable table.</b>"
               }
             ]
           },
@@ -650,7 +700,7 @@
           {
             "mapping": [
               {
-                "source-path": "afcd5f84-240a-4cf8-a909-7cacfc505a93",
+                "source-path": "9kb244ec-a15r-lb23-l77d-d9317xyza3rk",
                 "target": "totalFteEquivalent"
               }
             ],
@@ -673,7 +723,7 @@
                 },
                 {
                   "name": "scoreIds",
-                  "value": "afcd5f84-240a-4cf8-a909-7cacfc505a93"
+                  "value": "9kb244ec-a15r-lb23-l77d-d9317xyza3rk"
                 }
               ],
               "url": "/project/scoresForReport/"
