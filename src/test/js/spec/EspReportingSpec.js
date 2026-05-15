@@ -1,15 +1,24 @@
 describe("The ESP reporting process works slightly differently to the normal MERIT stage report submission", function () {
 
+    let originalUnblockUI;
+    let originalBlockUI;
+
     beforeAll(function() {
         window.fcConfig = {
             imageLocation:'/'
         };
         window.ecodata = { forms: {} };
+        originalUnblockUI = $.fn.unblockUI;
+        originalBlockUI = $.fn.blockUI;
+        $.unblockUI = function() {};
+        $.blockUI = function() {};
 
     });
     afterAll(function() {
         delete window.fcConfig;
         delete window.ecodata;
+        $.unblockUI = originalUnblockUI;
+        $.blockUI = originalBlockUI;
     });
 
     beforeEach(function() {

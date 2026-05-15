@@ -31,6 +31,7 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
     static String READ_ONLY_USER_ID = '1000'
     static String GRANT_MANAGER_USER_ID = '1001'
     static String MERIT_ADMIN_USER_ID = '1002'
+    static String SUPPORT_OFFICER_USER_ID = '1003'
     static String ALA_ADMIN_USER_ID = '2000'
 
     static KeyPair pair
@@ -181,13 +182,16 @@ class StubbedCasSpec extends FieldcaptureFunctionalTest {
     def loginAsGrantManager(Browser browser) {
         login([userId:GRANT_MANAGER_USER_ID, email: 'grant_manager@nowhere.com', firstName:"Grant", lastName:"Manager"], browser)
     }
+    def loginAsSupportOfficer(Browser browser) {
+        login([userId:SUPPORT_OFFICER_USER_ID, email: "support_officer@nowhere.com", firstName:"Support", lastName:"Officer"], browser)
+    }
     /** Convenience method to stub the login of a user with the CAS ROLE_ALA_ADMIN role */
     def loginAsAlaAdmin(Browser browser) {
         login([userId:ALA_ADMIN_USER_ID, role:"ROLE_ADMIN", userName: 'ala_admin@nowhere.com', email: 'ala_admin@nowhere.com', firstName:"ALA", lastName:"Administrator"], browser)
     }
     /** Convenience method to stub the login of a user no special roles */
     def loginAsUser(String userId, Browser browser) {
-        if (userId in [MERIT_ADMIN_USER_ID, READ_ONLY_USER_ID, GRANT_MANAGER_USER_ID, ALA_ADMIN_USER_ID]) {
+        if (userId in [MERIT_ADMIN_USER_ID, READ_ONLY_USER_ID, GRANT_MANAGER_USER_ID, SUPPORT_OFFICER_USER_ID, ALA_ADMIN_USER_ID]) {
             throw new IllegalArgumentException("${userId} is reserved for users with higher level roles")
         }
         login([userId:userId, email: "user${userId}@nowhere.com", firstName:"MERIT", lastName:"User ${userId}"], browser)

@@ -46,7 +46,9 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         service.activityService = activityService
         service.cacheService = new CacheService()
         service.settingService = settingService
-        service.roleService = new RoleService()
+        RoleService roleService = new RoleService()
+        roleService.grailsApplication = grailsApplication
+        service.roleService = roleService
         service.projectService = projectService
         authService.userInRole(_) >> false
     }

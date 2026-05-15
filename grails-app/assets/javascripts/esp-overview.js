@@ -373,6 +373,7 @@ var SimplifiedReportingViewModel = function(project, config) {
 
     function saveAndSubmitAnnualReport() {
         ecodata.forms[self.administrativeReport.activityId].save(function(valid, data) {
+            $.unblockUI();
             if (valid && data && !data.error) {
                 currentStage.submitReport();
             }

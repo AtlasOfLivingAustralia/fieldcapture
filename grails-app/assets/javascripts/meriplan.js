@@ -770,6 +770,9 @@ function createRiskModel(config) {
             case 'merit':
                 riskModel = meritRiskModel();
                 break;
+            case 'ag':
+                riskModel = agRiskModel();
+                break;
             case 'rlp':
             default:
                 riskModel = rlpRiskModel();
