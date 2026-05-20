@@ -102,13 +102,19 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
                         description
                         relatedOutcome
                         code
-                        assets
+                        assets {
+                            name
+                            investmentPriorityId 
+                        }
                       } 
                       secondaryOutcomes {
                         description
                         code
                         relatedOutcome
-                        assets
+                        assets { 
+                            name 
+                            investmentPriorityId
+                        }
                       }
                       shortTermOutcomes {
                         description
