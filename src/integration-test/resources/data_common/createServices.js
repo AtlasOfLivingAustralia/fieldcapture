@@ -286,6 +286,17 @@ if (db.service.count() == 0) {
             }],
             "name": "WHS",
             "id": 42
+        },
+        {
+            "outputs": [
+                {
+                    "formName": "RLP Core Services report",
+                    "sectionName": "RLP Core Services report"
+                }
+            ],
+            "name": "Indigenous Procurement",
+            "legacyId": 47,
+            "id": 47
         }
     ];
 

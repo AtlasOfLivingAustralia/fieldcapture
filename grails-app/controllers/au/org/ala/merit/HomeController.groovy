@@ -104,7 +104,13 @@ class HomeController {
             facetsList?.removeAll(adminFacetList)
             mapFacets?.removeAll(adminFacetList)
         }
-        boolean canViewDownloads = canViewAdminFacets || userService.userIsSiteAdmin()
+        boolean canViewSupportOfficerFacets = canViewAdminFacets || userService.userIsSupportOfficer()
+        if (!canViewSupportOfficerFacets) {
+            List supportOfficerFacetList = SettingService.getHubConfig().supportOfficerFacets ?: []
+            facetsList?.removeAll(supportOfficerFacetList)
+            mapFacets?.removeAll(supportOfficerFacetList)
+        }
+        boolean canViewDownloads = canViewSupportOfficerFacets || userService.userIsSiteAdmin()
         boolean canViewOfficerFacets = userService.userIsSiteAdmin() || userService.userHasReadOnlyAccess()
         if (!canViewOfficerFacets) {
             List officerFacetList = SettingService.getHubConfig().officerFacets ?: []
@@ -128,7 +134,7 @@ class HomeController {
            includeDownloads: canViewDownloads
         ]
 
-        if (canViewAdminFacets) {
+        if (canViewSupportOfficerFacets) {
             List activityTypes = metadataService.activityTypesList()
             Map activityTypesFacet = resp?.facets?.get(ACTIVITY_TYPE_FACET_NAME)
             model.activityTypes = filterActivityTypesToProjectSelection(activityTypes, activityTypesFacet)

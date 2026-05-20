@@ -70,7 +70,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         metadataService.getProgramConfiguration(_,_) >> [reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43]
         projectConfigurationService.getProjectConfiguration(_) >> projectConfig
         roleService.getRoles() >> RoleService.MERIT_PROJECT_ROLES
-        roleService.getMonitorRoles() >> RoleService.MONITOR_ONLY_ROLES
+        roleService.getMonitorRoles() >> [RoleService.PROJECT_SURVEYOR_ROLE]
     }
 
     def "generate reports with 3 monthly period"() {

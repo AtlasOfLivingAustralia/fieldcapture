@@ -349,5 +349,49 @@ class OrganisationReportingSpec extends StubbedCasSpec {
         reportsTabPane.reports[2].isCancelled()
     }
 
+    def "A user with the MERIT officer role can see organisation targets but not edit them"() {
+        setup:
+        loginAsGrantManager(browser)
+
+        when: "Display the reporting tab, then view the approved report"
+        to Organisation, orgId
+        openAdminTab()
+
+        then:
+        page.adminTabContent.targetsTab.displayed
+
+        when:
+        def targets = page.adminTabContent.viewTargetsSection()
+
+        then:
+        targets.fundingAmounts.each { it.module(FormElement).disabled }
+    }
+
+    def "A support officer can edit organisation targets"() {
+        setup:
+        loginAsSupportOfficer(browser)
+
+        when: "Display the reporting tab, then view the targets section"
+        to Organisation, orgId
+        openAdminTab()
+        def targets = page.adminTabContent.viewTargetsSection()
+
+        then: "The targets should be displayed, but not editable"
+        targets.displayed
+
+        when:
+        targets.fundingAmounts[1].value("10000")
+        targets.saveTargets()
+        Thread.sleep(1000) // Wait for the save to complete
+
+        to Organisation, orgId // reload the page
+        openAdminTab()
+        targets = page.adminTabContent.viewTargetsSection()
+
+        then:
+        targets.fundingAmounts[1].value() == "10000"
+
+    }
+
 }
 
