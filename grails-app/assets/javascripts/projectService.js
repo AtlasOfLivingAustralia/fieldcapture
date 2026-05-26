@@ -339,7 +339,7 @@ function ProjectService(project, options) {
 
         var count = endYr - startYr;
         for (i = 0; i < count; i++){
-            headers.push(startYr + '/' + ++startYr);
+            headers.push({period:startYr + '/' + ++startYr, periodStart:new Date(startYr, 7, 1), periodEnd:new Date(endYr, 7, 1)});
         }
         return headers;
 

@@ -14,7 +14,7 @@
     <tr>
 
         <!-- ko foreach: forecastPeriods -->
-        <th class="budget-cell"><div data-bind="text:$data"></div></th>
+        <th class="budget-cell"><div data-bind="text:period"></div></th>
         <!-- /ko -->
     </tr>
     </thead>

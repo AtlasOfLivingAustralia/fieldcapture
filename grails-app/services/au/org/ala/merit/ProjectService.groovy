@@ -1038,6 +1038,7 @@ class ProjectService  {
                 periodEnd:project.plannedEndDate
         )
         reportService.generateTargetPeriods(targetsReportConfig, owner, targetsConfig.periodLabelFormat)
+
     }
 
     /**

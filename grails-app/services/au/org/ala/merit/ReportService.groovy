@@ -163,7 +163,13 @@ class ReportService {
             formatString ? DateUtils.format(toDate, formatString, DateTimeZone.default) : it
         }
 
-        reports.collect{[label:fromDateFormatter(it.fromDate) +' - '+toDateFormatter(it.toDate), value:it.toDate]}
+        reports.collect {
+            [
+                    period: "${fromDateFormatter(it.fromDate)} - ${toDateFormatter(it.toDate)}",
+                    periodStart: it.fromDate,
+                    periodEnd: it.toDate
+            ]
+        }
     }
 
     boolean needsRegeneration(Map report1, Map report2) {

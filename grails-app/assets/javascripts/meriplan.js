@@ -802,7 +802,9 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
     if (config.targetPeriods && config.targetPeriods.length > 0) {
         self.periods = [];
         for (let i=0; i<config.targetPeriods.length; i++) {
-            self.periods.push(config.targetPeriods[i].label);
+
+            var period = config.targetPeriods[i];
+            self.periods.push({period:period.period, periodStart:period.periodStart, periodEnd:period.periodEnd});
         }
     }
     else {
@@ -1248,10 +1250,10 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
         self.periodTargets = _.map(forecastPeriods, function (period) {
 
             var existingPeriodTarget = _.find(outputTarget.periodTargets, function(periodTarget) {
-                return periodTarget.period == period;
+                return periodTarget.period == period.period;
             });
             var target = existingPeriodTarget ? existingPeriodTarget.target : 0;
-            return {period: period, target: ko.observable(target)};
+            return {period: period.period, target: ko.observable(target), periodStart:period.periodStart, periodEnd:period.periodEnd};
         });
 
         // This needs to be declared before it's populated due to a reliance on the availableOutcomes function
@@ -1407,7 +1409,7 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
         target.targetDate = ko.observable().extend({simpleDate:false});
 
         target.periodTargets = _.map(periods, function (period) {
-            return {period: period, target: ko.observable(0)}
+            return {period: period.period, target: ko.observable(0), periodStart:period.periodStart, periodEnd:period.periodEnd};
         });
 
         target.minimumTargetsValid = ko.pureComputed(function () {
@@ -1433,7 +1435,7 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
                 var periodTarget = 0;
                 if (currentTarget) {
                     var currentPeriodTarget = _.find(currentTarget.periodTargets || [], function (periodTarget) {
-                        return periodTarget.period == period;
+                        return periodTarget.period == period.period;
                     }) || {};
                     periodTarget = currentPeriodTarget.target;
                 }
@@ -1539,10 +1541,10 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
         _.each(periods || [], function(period) {
 
             var periodTarget = _.find(serviceTargetRow.periodTargets || [], function(pt) {
-                return pt.period == period;
+                return pt.period == period.period;
             });
             var periodTargetValue = _.find(serviceTarget.periodTargets || [], function(pt) {
-                return pt.period == period;
+                return pt.period == period.period;
             });
             if (periodTarget && periodTargetValue) {
                 periodTarget.target(periodTargetValue.target);

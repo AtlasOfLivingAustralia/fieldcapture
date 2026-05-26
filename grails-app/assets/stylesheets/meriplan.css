@@ -134,6 +134,7 @@ table tr.header th {
 
 .meri-plan .budget-cell input {
     width: 100%;
+    min-width: 3em;
 }
 
 .meri-plan .budget-footer, .meri-budget-view .budget-footer {

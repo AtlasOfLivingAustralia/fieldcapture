@@ -21,7 +21,7 @@
     <tr>
 
         <!-- ko foreach: periods -->
-        <th class="budget-cell"><div data-bind="text:$data"></div></th>
+        <th class="budget-cell"><div data-bind="text:period"></div></th>
         <!-- /ko -->
         <th class="remove"></th>
     </tr>

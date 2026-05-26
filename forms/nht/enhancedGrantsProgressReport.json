@@ -12,7 +12,7 @@
   "publicationStatus": "published",
   "externalIds": null,
   "gmsId": null,
-  "name": "Grants and Others Progress Report",
+  "name": "Grants and Others Progress Report - with Activities",
   "sections": [
     {
       "collapsedByDefault": false,
@@ -403,29 +403,65 @@
             "items": [
               {
                 "source": "projectOutcomes",
-                "type": "table",
+                "type": "repeat",
                 "userAddedRows": false,
                 "disableTableUpload": true,
-                "columns": [
+                "items": [
                   {
                     "source": "code",
                     "type": "readonlyText",
-                    "title": "Outcome No."
+                    "preLabel": "Outcome No."
                   },
                   {
                     "type": "textarea",
                     "source": "outcomeStatement",
-                    "title": "Outcome",
+                    "preLabel": "Outcome",
                     "readonly": true,
-                    "rows": 5,
-                    "width": "45%"
+                    "rows": 5
                   },
                   {
-                    "type": "textarea",
-                    "source": "achievement",
-                    "title": "Achievement against the outcome",
-                    "rows": 5,
-                    "width": "50%"
+                    "type": "table",
+                    "source": "servicesToAchieveOutcome",
+                    "columns": [
+                      {
+                        "type": "text",
+                        "source": "targetMeasure",
+                        "title": "Target measure",
+                        "readonly": true
+                      },
+                      {
+                        "type": "number",
+                        "source": "target",
+                        "title": "Target",
+                        "readonly": true
+                      },
+                      {
+                        "type": "number",
+                        "source": "forecast",
+                        "title": "Forecast this period",
+                        "readonly": true
+                      },
+                      {
+                        "type": "number",
+                        "source": "deliveredThisReportingPeriod",
+                        "title": "Delivered this period",
+                        "readonly": true
+                      },
+                      {
+                        "type": "number",
+                        "source": "deliveredToDate",
+                        "title": "Delivered to date",
+                        "readonly": true
+                      },
+                      {
+                        "type": "textarea",
+                        "source": "achievement",
+                        "title": "Achievement against the outcome",
+                        "rows": 5,
+                        "validate": "required,maxSize[1000]",
+                        "width": "30%"
+                      }
+                    ]
                   }
                 ]
               }
