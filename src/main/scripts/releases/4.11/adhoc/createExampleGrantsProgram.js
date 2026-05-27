@@ -73,7 +73,8 @@ program.config.meriPlanContents = [
     {
         "template": "extendedKeyThreats",
         "model": {
-            "threatsHeading":"Key threats/barriers/issues the project is addressing",
+            "threatsHeading":"Key threats / barriers / issues the project is addressing",
+            "servicesHeading":"Which activities will be used to address these threats?",
             "descriptionHeading":"How have these threats or barriers impacted the investment priority",
             "methodologyHeading": "How will you carry out the activities to support this?",
             "title": "Threats, Barriers and Issues"
@@ -107,7 +108,9 @@ program.config.meriPlanContents = [
     {
         "template": "serviceForecasts",
         "model": {
-            "titleHelpText": "Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections"
+            "title": "Project services (Activities) forecasts (indicative only)",
+            "titleHelpText": "Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections",
+            "annualTargetHeading": "Target forecast for delivery during each reporting period",
         },
         "excludedModes": [
             "PRINT"
