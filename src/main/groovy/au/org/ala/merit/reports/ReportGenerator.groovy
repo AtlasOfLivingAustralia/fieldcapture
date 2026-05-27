@@ -338,6 +338,6 @@ class ReportGenerator {
         // the sequence number of this report based on "number of reports per financial year"
         int sequenceInFinancialYear = periodInMonths ? Math.floor(((endOfReport.getMonthOfYear()+5)%12)/config.reportingPeriodInMonths)+1 : 1
 
-        return sprintf(pattern, sequenceNo, fromDate.toDate(), toDate.toDate(), owner.name, financialYear, periodDescription, sequenceInFinancialYear)
+        return sprintf(pattern, sequenceNo, fromDate.toDate(), toDate.minusHours(1).toDate(), owner.name, financialYear, periodDescription, sequenceInFinancialYear)
     }
 }

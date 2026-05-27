@@ -1037,7 +1037,33 @@ class ProjectService  {
                 periodStart:project.plannedStartDate,
                 periodEnd:project.plannedEndDate
         )
-        reportService.generateTargetPeriods(targetsReportConfig, owner, targetsConfig.periodLabelFormat)
+        // Reports are already sorted by toDate in the project.  Target periods shouldn't be re-generated for
+        // dates before the most recent submitted/approved report.
+        int lastReadOnlyReportIndex = project.reports ? project.reports?.findLastIndexOf {reportService.excludesNotApproved(it)} : -1
+
+        // All output targets use the same set of period targets so the first one is representative of the existing periods.
+        List<Map> existingTargetPeriods = project.outputTargets[0]?.periodTargets?.collect {
+            [period:it.period, fromDate:it.periodStart, toDate:it.periodEnd]
+        }
+
+        DateTime latestApprovedReportPeriodEnd = null
+        int index = 0
+        List generatedPeriods = []
+        if (lastReadOnlyReportIndex >= 0) {
+            Map lastReadOnlyReport = project.reports[lastReadOnlyReportIndex]
+            index = existingTargetPeriods ? existingTargetPeriods.findIndexOf{it.fromDate >= lastReadOnlyReport.toDate} : -1
+            latestApprovedReportPeriodEnd = DateUtils.parse(lastReadOnlyReport.toDate)
+            if (index >= 0) {
+                generatedPeriods = existingTargetPeriods[0..<index]
+            } else {
+                generatedPeriods = existingTargetPeriods
+            }
+        }
+        int startSequence = index+1
+
+        generatedPeriods += reportService.generateTargetPeriods(targetsReportConfig, owner, targetsConfig.periodLabelFormat, startSequence, latestApprovedReportPeriodEnd)
+
+        generatedPeriods
 
     }
 

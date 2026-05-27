@@ -151,9 +151,9 @@ class ReportService {
      * the targets can be aligned to reports if required.
      * (Previously MERIT only supported targets per financial year)
      */
-    List<Map> generateTargetPeriods(ReportConfig reportConfig, ReportOwner reportOwner, String formatString = null) {
+    List<Map> generateTargetPeriods(ReportConfig reportConfig, ReportOwner reportOwner, String formatString = null, int startSequence = 0, DateTime latestApprovedReportEndDate = null) {
         List<Map> reports = new ReportGenerator().generateReports(
-                reportConfig, reportOwner, 0, null)
+                reportConfig, reportOwner, startSequence, latestApprovedReportEndDate)
         Closure fromDateFormatter = {
             formatString ? DateUtils.format(DateUtils.parse(it), formatString, DateTimeZone.default) : it
         }
@@ -164,8 +164,12 @@ class ReportService {
         }
 
         reports.collect {
+            String period = it.name
+            if (formatString || !reportConfig.reportNameFormat) {
+                period = "${fromDateFormatter(it.fromDate)} - ${toDateFormatter(it.toDate)}"
+            }
             [
-                    period: "${fromDateFormatter(it.fromDate)} - ${toDateFormatter(it.toDate)}",
+                    period: period,
                     periodStart: it.fromDate,
                     periodEnd: it.toDate
             ]
