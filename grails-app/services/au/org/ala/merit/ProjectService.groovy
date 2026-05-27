@@ -1031,12 +1031,7 @@ class ProjectService  {
             return null
         }
         ReportConfig targetsReportConfig = new ReportConfig(targetsConfig.periodGenerationConfig)
-        ReportOwner owner = new ReportOwner(
-                id:[projectId:project.projectId],
-                name:project.name,
-                periodStart:project.plannedStartDate,
-                periodEnd:project.plannedEndDate
-        )
+        ReportOwner owner = projectReportOwner(project)
         // Reports are already sorted by toDate in the project.  Target periods shouldn't be re-generated for
         // dates before the most recent submitted/approved report.
         int lastReadOnlyReportIndex = project.reports ? project.reports?.findLastIndexOf {reportService.excludesNotApproved(it)} : -1

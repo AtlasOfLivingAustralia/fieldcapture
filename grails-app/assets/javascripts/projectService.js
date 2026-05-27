@@ -322,10 +322,10 @@ function ProjectService(project, options) {
             return []; // Return a single period header for the project
         }
         var headers = [];
-        var startYr = moment(project.plannedStartDate).format('YYYY');
-        var endYr = moment(project.plannedEndDate).format('YYYY');
-        var startMonth = moment(project.plannedStartDate).format('M');
-        var endMonth = moment(project.plannedEndDate).format('M');
+        var startYr = Number(moment(project.plannedStartDate).format('YYYY'));
+        var endYr = Number(moment(project.plannedEndDate).format('YYYY'));
+        var startMonth = Number(moment(project.plannedStartDate).format('M'));
+        var endMonth = Number(moment(project.plannedEndDate).format('M'));
 
         //Is startYr is between jan to june?
         if(startMonth >= 1 &&  startMonth <= 6 ){
@@ -339,7 +339,8 @@ function ProjectService(project, options) {
 
         var count = endYr - startYr;
         for (i = 0; i < count; i++){
-            headers.push({period:startYr + '/' + ++startYr, periodStart:new Date(startYr, 7, 1), periodEnd:new Date(endYr, 7, 1)});
+            headers.push({period:startYr + '/' + (startYr+1), periodStart:new Date(startYr, 6, 1).toISOStringNoMillis(), periodEnd:new Date(startYr+1, 6, 1).toISOStringNoMillis()});
+            startYr++
         }
         return headers;
 
