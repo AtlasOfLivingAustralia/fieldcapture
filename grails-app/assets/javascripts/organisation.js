@@ -550,7 +550,6 @@ OrganisationPageViewModel = function (props, options) {
             }
         }
     };
-    var organisationService = new OrganisationService(options);
     self.periods = options.targetPeriods || [];
 
     self.initialise = function() {
