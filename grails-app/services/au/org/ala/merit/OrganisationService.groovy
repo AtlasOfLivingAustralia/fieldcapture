@@ -144,8 +144,7 @@ class OrganisationService {
                 id:[organisationId:organisation.organisationId],
                 name:organisation.name
         )
-        List<Map> generated = reportService.generateTargetPeriods(targetsReportConfig, owner, targetsConfig.periodLabelFormat)
-        generated.collect{[label:period, value:it.toDate]}
+        reportService.generateTargetPeriods(targetsReportConfig, owner, targetsConfig.periodLabelFormat)
     }
 
     String getRcsFundingForPeriod(Map organisation, String periodEndDate) {

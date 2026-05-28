@@ -23,7 +23,7 @@
     <tr>
 
         <!-- ko foreach: periods -->
-        <th class="budget-cell"><div data-bind="text:$data.label"></div></th>
+        <th class="budget-cell"><div data-bind="text:$data.period"></div></th>
         <!-- /ko -->
     </tr>
     <!-- /ko -->
