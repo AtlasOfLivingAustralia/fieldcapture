@@ -1916,21 +1916,28 @@ class ProjectService  {
     Map scoresForReport(String projectId, String reportId, List scoreIds) {
         Map project = get(projectId)
         Map report = project.reports?.find{it.reportId == reportId}
-        Map result = [:]
+
+        Map results = [:]
         if (report) {
-            String format = 'YYYY-MM'
-
-            List dateBuckets = [report.fromDate, report.toDate]
-            Map results = reportService.dateHistogramForScores(projectId, dateBuckets, format, scoreIds)
-
-            // Match the algorithm used in ecodata to determine the algorithm so we can determine
-            DateTime start = DateUtils.parse(report.fromDate).withZone(DateTimeZone.getDefault())
-            DateTime end = DateUtils.parse(report.toDate).withZone(DateTimeZone.getDefault())
-
-            String matchingGroup = DateUtils.format(start, format) + ' - ' + DateUtils.format(end.minusDays(1), format)
-            result = results.resp?.find{ it.group == matchingGroup } ?: [:]
-
+           results = scoresForPeriod(projectId, report.fromDate, report.toDate, scoreIds)
         }
+        results
+
+    }
+
+    Map scoresForPeriod(String projectId, String fromDate, String toDate, List scoreIds, String format = 'YYYY-MM') {
+        Map result = [:]
+
+        List dateBuckets = [fromDate, toDate]
+        Map results = reportService.dateHistogramForScores(projectId, dateBuckets, format, scoreIds)
+
+        // Match the algorithm used in ecodata to determine the algorithm so we can determine
+        DateTime start = DateUtils.parse(fromDate).withZone(DateTimeZone.getDefault())
+        DateTime end = DateUtils.parse(toDate).withZone(DateTimeZone.getDefault())
+
+        String matchingGroup = DateUtils.format(start, format) + ' - ' + DateUtils.format(end.minusDays(1), format)
+        result = results.resp?.find{ it.group == matchingGroup } ?: [:]
+
         scoreIds.collectEntries{ String scoreId ->[(scoreId):result.results?.find{it.scoreId == scoreId}?.result?.result ?: 0]}
     }
 
