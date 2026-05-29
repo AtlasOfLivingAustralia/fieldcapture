@@ -1578,13 +1578,13 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": "required"
                   },
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": [
                       {
                         "rule": "required"
@@ -12642,7 +12642,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": "required",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.startDate"
@@ -12651,7 +12651,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.endDate"
                     }
@@ -13645,7 +13645,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": "required",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.startDate"
@@ -13654,7 +13654,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.endDate"
                     }
@@ -14799,7 +14799,7 @@
               {
                 "dataType": "date",
                 "name": "activitiesStartDate",
-                "description": "Specific the dates these events were held on.",
+                "description": "Specify the dates these events were held on.",
                 "validate": "required"
               },
               {
@@ -15999,7 +15999,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": "required",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.startDate"
@@ -16008,7 +16008,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.endDate"
                     }
@@ -17165,13 +17165,13 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": "required"
                   },
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": [
                       {
                         "rule": "required"
@@ -18085,7 +18085,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": "required",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.startDate"
@@ -18094,7 +18094,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.endDate"
                     }
@@ -25543,7 +25543,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": "required",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.startDate"
@@ -25552,7 +25552,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.endDate"
                     }
@@ -26752,13 +26752,13 @@
               {
                 "dataType": "date",
                 "name": "activitiesStartDate",
-                "description": "Specific the dates these events were held on.",
+                "description": "Specify the dates these events were held on.",
                 "validate": "required"
               },
               {
                 "dataType": "date",
                 "name": "activitiesEndDate",
-                "description": "Specific the dates these events were held on.",
+                "description": "Specify the dates these events were held on.",
                 "validate": [
                   {
                     "rule": "required"
@@ -28136,13 +28136,13 @@
                   {
                     "dataType": "date",
                     "name": "resAndDevStartDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": "required"
                   },
                   {
                     "dataType": "date",
                     "name": "resAndDevFinishDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": [
                       {
                         "rule": "required"
@@ -35594,13 +35594,13 @@
               {
                 "dataType": "date",
                 "name": "activitiesStartDate",
-                "description": "Specific the dates these events were held on.",
+                "description": "Specify the dates these events were held on.",
                 "validate": "required"
               },
               {
                 "dataType": "date",
                 "name": "activitiesEndDate",
-                "description": "Specific the dates these events were held on.",
+                "description": "Specify the dates these events were held on.",
                 "validate": [
                   {
                     "rule": "required"
@@ -36540,13 +36540,13 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": "required"
                   },
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": [
                       {
                         "rule": "required"
@@ -37662,7 +37662,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": "required",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.startDate"
@@ -37671,7 +37671,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.endDate"
                     }
@@ -38778,13 +38778,13 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": "required"
                   },
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": [
                       {
                         "rule": "required"
@@ -39664,7 +39664,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": "required",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.startDate"
@@ -39673,7 +39673,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.endDate"
                     }
@@ -40664,7 +40664,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": "required",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.startDate"
@@ -40673,7 +40673,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.endDate"
                     }
@@ -43340,13 +43340,13 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": "required"
                   },
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": [
                       {
                         "rule": "required"
@@ -44179,7 +44179,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": "required",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.startDate"
@@ -44188,7 +44188,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.endDate"
                     }
@@ -45395,7 +45395,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesStartDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "validate": "required",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.startDate"
@@ -45404,7 +45404,7 @@
                   {
                     "dataType": "date",
                     "name": "activitiesEndDate",
-                    "description": "Specific the dates these events were held on.",
+                    "description": "Specify the dates these events were held on.",
                     "computed": {
                       "expression": "x=find($context.owner.custom.dataSets, \"dataSetId\", dataSetId); x.endDate"
                     }
