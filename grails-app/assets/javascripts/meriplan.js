@@ -868,14 +868,25 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
 
     self.allTargetMeasures = _.sortBy(self.allTargetMeasures, 'label');
     self.keyThreatsTargetMeasures = function() {
-        if (self.meriPlan().baseline.rows().length > 0) {
-            return self.allTargetMeasures;
+        // For legacy data preservation, we include any previously selected survey services in the
+        // selection list, but otherwise only allow non-survey related target measures.
+        var threatRows = project.custom.details.threats.rows;
+        var threatTargetMeasures = [];
+        for (var i=0; i<threatRows.length; i++) {
+            let threat = threatRows[i];
+            if (threat.relatedTargetMeasures) {
+                for (var j=0; j<threat.relatedTargetMeasures.length; j++) {
+                    if (threatTargetMeasures.indexOf(threat.relatedTargetMeasures[j]) < 0) {
+                        threatTargetMeasures.push(threat.relatedTargetMeasures[j]);
+                    }
+                }
+            }
         }
-        else {  // To report against a survey (baseline/indicator) target measure, a related baseline is required.
-            return _.filter(self.allTargetMeasures, function(targetMeasure) {
-                return !projectService.isSurveyTargetMeasure(targetMeasure.score);
-            });
-        }
+
+        // To report against a survey (baseline/indicator) target measure, a related baseline is required.
+        return _.filter(self.allTargetMeasures, function(targetMeasure) {
+            return !projectService.isSurveyTargetMeasure(targetMeasure.score) || threatTargetMeasures.indexOf(targetMeasure.score.scoreId) >=0;
+        });
     };
     self.monitoringTargetMeasures = _.filter(self.allTargetMeasures, function(targetMeasure) {
         return projectService.isMonitoringTargetMeasure(targetMeasure.score);
