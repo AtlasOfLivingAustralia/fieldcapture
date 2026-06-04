@@ -85,7 +85,8 @@ map = {
             simplifyOptions: {
                 tolerance: 0.0001
             },
-            markerOrShapeNotBoth: false
+            markerOrShapeNotBoth: false,
+            zoomToObject: false
         },
         that = this;
 

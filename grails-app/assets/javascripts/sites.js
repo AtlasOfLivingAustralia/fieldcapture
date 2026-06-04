@@ -325,7 +325,14 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
                 features: self.features()
             };
 
-            featureCollection = turf.simplify(featureCollection, {tolerance: 0.0001, highQuality: false});
+            try {
+                featureCollection = turf.simplify(featureCollection, {tolerance: 0.0001, highQuality: false});
+            }
+            catch (e) {
+                console.error("Error simplifying geometry for display on map", e);
+                console.log("Falling back to unsimplified geometry");
+            }
+
             alaMap.setGeoJSON(featureCollection);
         } else {
             var currentDrawnShape = ko.toJS(self.extent().geometry),
@@ -339,7 +346,14 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
                 };
 
             if (geometry.coordinates) {
-                feature = turf.simplify(feature, {tolerance: 0.0001, highQuality: false});
+                try {
+                    feature = turf.simplify(feature, {tolerance: 0.0001, highQuality: false});
+                }
+                catch (e) {
+                    console.error("Error simplifying geometry for display on map", e);
+                    console.log("Falling back to unsimplified geometry");
+                }
+
                 alaMap.setGeoJSON(feature);
             }
         }
@@ -659,6 +673,7 @@ var createMap = function(options) {
     options.allowSearchLocationByAddress = false;
     options.allowSearchRegionByAddress = false;
     options.markerOrShapeNotBoth = false;
+    options.zoomToObject = false;
 
     if (options.leafletIconPath) {
         L.Icon.Default.imagePath = options.leafletIconPath;
