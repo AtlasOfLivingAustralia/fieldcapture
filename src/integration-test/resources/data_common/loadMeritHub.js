@@ -12,5 +12,7 @@ db.userPermission.insert({userId:'1000', entityType:'au.org.ala.ecodata.Hub', en
 db.userPermission.insert({userId:'1001', entityType:'au.org.ala.ecodata.Hub', entityId:'merit', accessLevel:'caseManager'});
 // Create MERIT admin user with id "1002"
 db.userPermission.insert({userId:'1002', entityType:'au.org.ala.ecodata.Hub', entityId:'merit', accessLevel:'admin'});
+// Create MERIT support officer user with id "1003"
+db.userPermission.insert({userId:'1003', entityType:'au.org.ala.ecodata.Hub', entityId:'merit', accessLevel:'moderator'});
 
 

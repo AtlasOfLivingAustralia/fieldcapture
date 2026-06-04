@@ -154,7 +154,9 @@ class ProgramConfig implements Map {
     /** This flag controls whether the invoice field in the dashboard is shown */
     boolean showsDashboardInvoiceField = true
 
-    String riskModel = config?.riskModel ?: config?.useRlpTemplate ? "rlp" : "merit"
+    String riskModel()  {
+        config?.riskModel ?: getProjectTemplate() == ProjectTemplate.RLP ? "rlp" : "merit"
+    }
 
 }
 

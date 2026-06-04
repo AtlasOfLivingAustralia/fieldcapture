@@ -38,4 +38,30 @@ class ProgramConfigSpec extends Specification {
         programConfig.includesContent(ProgramConfig.ProjectContent.DASHBOARD) == false
 
     }
+
+    void "The program risk model depends on the project template if no explicit risk model is configured"() {
+        when:
+        programConfig = new ProgramConfig(projectTemplate: ProgramConfig.ProjectTemplate.ESP.toString())
+
+        then:
+        programConfig.riskModel() == "merit"
+
+        when:
+        programConfig = new ProgramConfig(projectTemplate: ProgramConfig.ProjectTemplate.RLP.toString())
+
+        then:
+        programConfig.riskModel() == "rlp"
+
+        when:
+        programConfig = new ProgramConfig(projectTemplate: ProgramConfig.ProjectTemplate.DEFAULT.toString())
+
+        then:
+        programConfig.riskModel() == "merit"
+
+        when:
+        programConfig = new ProgramConfig(projectTemplate: ProgramConfig.ProjectTemplate.RLP.toString(), riskModel: "ag")
+
+        then:
+        programConfig.riskModel() == "ag"
+    }
 }

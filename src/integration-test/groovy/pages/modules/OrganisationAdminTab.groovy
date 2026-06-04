@@ -26,6 +26,9 @@ class OrganisationAdminTab extends Module{
         permissionAccessTab {$('#mu-permissions-tab')}
         permissionAccess { $('#managementUnit-permissions').module PermissionsAdminModule }
 
+        targetsTab(required:false) { $('#organisation-details-tab') }
+        targets(required:false) { $('#organisation-details').module OrganisationTargets }
+
     }
 
     def viewDocumentsSection() {
@@ -79,6 +82,14 @@ class OrganisationAdminTab extends Module{
             reportingSection.displayed
         }
         reportingSection
+    }
+
+    def viewTargetsSection() {
+        targetsTab.click()
+        waitFor {
+            targets.displayed
+        }
+        targets
     }
 
 }
