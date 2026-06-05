@@ -329,6 +329,7 @@ var config = {
 
     config.useRlpTemplate = ${config.getProjectTemplate() == au.org.ala.merit.config.ProgramConfig.ProjectTemplate.RLP};
     config.useServiceOutcomesModel = ${config.program?.config?.meriPlanContents?.find{it.template == 'serviceOutcomeTargets'} != null};
+    config.separateTargetsPerOutcome = ${config.program?.config?.meriPlanContents?.find{it.template == 'serviceOutcomeTargets'}?.model?.separateTargetsPerOutcome ?: false};
     config.riskModel = "${config.riskModel()}";
     config.keyThreatCodes  = <fc:modelAsJavascript model="${config.program?.config?.keyThreatCodes ?: []}"/>;
     config.priorityPlaces = <fc:modelAsJavascript model="${config.program?.config?.priorityPlaces ?: []}"/>;

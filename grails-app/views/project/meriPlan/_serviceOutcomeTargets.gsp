@@ -44,17 +44,26 @@
             <!-- ko if:orphanedOutcomes().length > 0 -->
             <input type="text" value="" class="hidden-validation-holder" data-bind="attr:{'data-errormessage':orphanedOutcomesError()}" data-validation-engine="validate[required]">
             <!-- /ko -->
+            <g:if test="${!separateTargetsPerOutcome}">
             <select multiple class="form-select form-select-sm" data-bind="options:availableOutcomes, multiSelect2:{value:relatedOutcomes, templateResult:$root.renderOutcome, tags:false}, disable: $root.isProjectDetailsLocked()">
             </select>
+            </g:if>
+            <g:else>
+            <input type="text" readonly class="form-control form-control-sm" data-bind="value:relatedOutcomes, disable: $root.isProjectDetailsLocked()">
+            </g:else>
+
         </td>
         <td class="score"><input type="number" class="form-control form-control-sm" data-bind="value:target, disable: $root.isProjectDetailsLocked()" data-validation-engine="validate[required,min[validate[min[0.01]]"></td>
         <td>
+            <!-- ko if:orphanedOutcomes().length > 0 -->
             <span data-bind="if:!$root.isProjectDetailsLocked()">
             <i class="fa fa-remove" data-bind="click:$parent.removeOutcomeTarget, disable: $root.isProjectDetailsLocked()"></i>
             </span>
+            <!-- /ko -->
         </td>
     </tr>
     <!-- /ko -->
+    <g:if test="${!separateTargetsPerOutcome}">
     <tr>
         <td colspan="4">
             <button class="btn btn-sm" data-bind="click:addOutcomeTarget, disable: $root.isProjectDetailsLocked()"><i class="fa fa-plus"></i>Add outcome target</button>
@@ -63,6 +72,7 @@
             <!-- /ko -->
         </td>
     </tr>
+    </g:if>
     </tbody>
 
 

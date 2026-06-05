@@ -1019,7 +1019,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
     var period = budgetHeaders;
     if (config.useRlpTemplate) {
         if (config.useServiceOutcomesModel) {
-            self.serviceOutcomes = new ServiceOutcomeTargetsViewModel(o.serviceIds, project.outputTargets, budgetHeaders, allServices, selectedTargetMeasures);
+            self.serviceOutcomes = new ServiceOutcomeTargetsViewModel(o.serviceIds, project.outputTargets, budgetHeaders, allServices, selectedTargetMeasures, {separateTargetsPerOutcome:config.separateTargetsPerOutcome});
         }
         else {
             self.services = new ServicesViewModel(o.serviceIds, config.services, project.outputTargets, budgetHeaders);
@@ -1159,10 +1159,11 @@ function outcomesToJSON(outcomeArray) {
     }), function(outcome) { return outcome != null});
 };
 
-function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPeriods, allServices, selectedTargetMeasures) {
+function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPeriods, allServices, selectedTargetMeasures, options) {
 
-
+    options = options || {};
     var self = this;
+    self.separateTargetsPerOutcome = options.separateTargetsPerOutcome || false;
     self.forecastPeriods = forecastPeriods;
     self.outcomeTargets = ko.observableArray();
 
@@ -1220,10 +1221,27 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
                 return _.union(selectableOutcomes, orphanedOutcomes);
             });
 
+            self.periodTargets = [];
+            if (options.separateTargetsPerOutcome) {
+                self.periodTargets = _.map(forecastPeriods, function (period) {
+
+                    var target = 0;
+                    if (target && target.periodTargets) {
+                        var existingPeriodTarget = _.find(target.periodTargets || [], function(periodTarget) {
+                            return periodTarget.period === period.period;
+                        });
+                        target = existingPeriodTarget ? existingPeriodTarget.target : 0;
+                    }
+
+                    return {period: period.period, target: ko.observable(target), periodStart:period.periodStart, periodEnd:period.periodEnd};
+                });
+            }
+
             self.toJSON = function() {
                 return {
                     target: self.target(),
-                    relatedOutcomes: self.relatedOutcomes()
+                    relatedOutcomes: self.relatedOutcomes(),
+                    periodTargets: ko.mapping.toJS(self.periodTargets)
                 };
             }
         }
@@ -1277,6 +1295,22 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
         self.availableOutcomes = ko.computed(function() {
             return availableOutcomes();
         });
+
+        if (options.separateTargetsPerOutcome) {
+            self.availableOutcomes.subscribe(function (availableOutcomes) {
+                for (var i = 0; i < availableOutcomes.length; i++) {
+
+                    const outcome = availableOutcomes[i];
+                    var existingTarget = _.find(self.outcomeTargets(), function (target) {
+                        return target.relatedOutcomes().indexOf(outcome) >= 0;
+                    });
+                    if (!existingTarget) {
+                        self.outcomeTargets.push(new ServiceOutcomesTarget({relatedOutcomes: [outcome]}));
+                    }
+                }
+            });
+        }
+
 
         self.addOutcomeTarget = function() {
             self.outcomeTargets.push(new ServiceOutcomesTarget(self.scoreId, self.availableOutcomes));
