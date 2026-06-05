@@ -1211,7 +1211,7 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
             self.relatedOutcomes = ko.observableArray(target.relatedOutcomes);
             self.orphanedOutcomes = ko.observableArray();
             self.orphanedOutcomesError = function() {
-                return 'The outcomes '+self.orphanedOutcomes().join(', ')+' are no longer linked to a target measure and should be removed from this target.';
+                return 'The outcome/s '+self.orphanedOutcomes().join(', ')+' are no longer linked to this target measure and should be removed.';
             }
             self.availableOutcomes = ko.computed(function() {
                 var selectableOutcomes = availableOutcomes(self);
