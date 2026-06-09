@@ -716,7 +716,7 @@ describe("Loading the MERI plan is handled correctly", function () {
         var viewModel = new OutcomesViewModel({}, options);
 
         var serialized = JSON.parse(JSON.stringify(viewModel));
-        expect(serialized).toEqual({"primaryOutcome":{"description":"Outcome 2","assets":[]},"secondaryOutcomes":[],"shortTermOutcomes":[],"midTermOutcomes":[], otherOutcomes:[]});
+        expect(serialized).toEqual({"primaryOutcome":{"description":"Outcome 2","assets":[]},"secondaryOutcomes":[],"shortTermOutcomes":[],"midTermOutcomes":[], projectTermOutcomes:[], otherOutcomes:[]});
 
     });
 

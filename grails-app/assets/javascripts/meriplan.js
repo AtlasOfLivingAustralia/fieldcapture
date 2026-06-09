@@ -1993,6 +1993,7 @@ function OutcomesViewModel(outcomes, config) {
             secondaryOutcomes: outcomesToJSON(self.secondaryOutcomes()),
             shortTermOutcomes: outcomesToJSON(self.shortTermOutcomes()),
             midTermOutcomes: outcomesToJSON(self.midTermOutcomes()),
+            projectTermOutcomes: outcomesToJSON(self.projectTermOutcomes()),
             otherOutcomes: self.otherOutcomes()
         }
     }
