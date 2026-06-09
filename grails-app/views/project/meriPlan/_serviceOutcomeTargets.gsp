@@ -55,7 +55,7 @@
         </td>
         <td class="score"><input type="number" class="form-control form-control-sm" data-bind="value:target, disable: $root.isProjectDetailsLocked()" data-validation-engine="validate[required,min[validate[min[0.01]]"></td>
         <td>
-            <!-- ko if:orphanedOutcomes().length > 0 -->
+            <!-- ko if:orphanedOutcomes().length > 0 || availableOutcomes().length == 0 -->
             <span data-bind="if:!$root.isProjectDetailsLocked()">
             <i class="fa fa-remove" data-bind="click:$parent.removeOutcomeTarget, disable: $root.isProjectDetailsLocked()"></i>
             </span>
