@@ -189,7 +189,7 @@ class ProjectController {
         def showAnnouncementsTab = (user?.isAdmin || user?.isCaseManager) && projectService.isMeriPlanSubmittedOrApproved(project)
         List<Map> scores = metadataService.getOutputTargetScores()
 
-        List blogIds = blog.collect{it?.imageId}
+        List blogIds = blog.findAll{it.type != 'Photo'}?.collect{it?.imageId }
         def imagesModel = publicImages.findAll { it?.documentId !in blogIds }.collect{
             [name: it.name, projectName: project.name, url: it.url, thumbnailUrl: it.thumbnailUrl]
         }
