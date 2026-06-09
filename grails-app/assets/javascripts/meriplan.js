@@ -503,6 +503,10 @@ function MERIPlan(project, projectService, config) {
     self.addShortTermOutcome = function () {
         addOutcomeStatement(self.meriPlan().outcomes.shortTermOutcomes, 'ST');
     };
+    // The odd naming of this function is to match the convention used in the "_outcomeStatements.gsp" template
+    self.addProjectTermOutcome = function() {
+        addOutcomeStatement(self.meriPlan().outcomes.projectTermOutcomes, 'PO');
+    }
 
     self.addAsset = function() {
         self.meriPlan().assets.push(new AssetViewModel());
@@ -1863,10 +1867,12 @@ function OutcomesViewModel(outcomes, config) {
     var SECONDARY_OUTCOMES = 'secondary';
     var MEDIUM_TERM_OUTCOMES = 'medium';
     var SHORT_TERM_OUTCOMES = 'short';
+    var PROJECT_OUTCOMES = 'project';
     self.selectablePrimaryOutcomes = selectableOutcomes(config.outcomes, PRIMARY_OUTCOMES, true);
     self.selectableSecondaryOutcomes = selectableOutcomes(config.outcomes, SECONDARY_OUTCOMES, true);
     self.selectableMidTermOutcomes = selectableOutcomes(config.outcomes, MEDIUM_TERM_OUTCOMES, false);
     self.selectableShortTermOutcomes = selectableOutcomes(config.outcomes, SHORT_TERM_OUTCOMES, false);
+    self.selectableProjectTermOutcomes = selectableOutcomes(config.outcomes, PROJECT_OUTCOMES, false);
 
     // If the program has specified a default primary outcome, and the project has not yet selected an outcome,
     // set the default.
@@ -1956,6 +1962,9 @@ function OutcomesViewModel(outcomes, config) {
         return new SingleAssetOutcomeViewModel(outcome);
     }));
     self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], function (outcome) {
+        return new SingleAssetOutcomeViewModel(outcome);
+    }));
+    self.projectTermOutcomes = ko.observableArray(_.map(outcomes.projectTermOutcomes || [], function(outcome) {
         return new SingleAssetOutcomeViewModel(outcome);
     }));
     self.otherOutcomes = ko.observableArray(outcomes.otherOutcomes);

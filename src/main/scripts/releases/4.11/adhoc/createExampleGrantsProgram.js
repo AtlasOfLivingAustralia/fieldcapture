@@ -1,7 +1,7 @@
 load('../../../utils/program.js');
 load('../../../utils/audit.js');
 load('../../../utils/uuid.js');
-const programToCopy = 'Bush Blitz'; // Fairly new grants program as a template
+const programToCopy = 'Priority Places - Grants';
 const programName = 'Example Grants Program';
 let program = db.program.findOne({name:programName});
 if (!program) {
@@ -53,20 +53,11 @@ program.config.meriPlanContents = [
     {
         "template": "outcomeStatements",
         "model": {
-            "outcomeType": "mid",
-            "helpText": "Projects more than 3 years in duration must set medium-term Project outcomes achievable at project completion. Ensure proposed outcomes are measurable with consideration to the baseline and proposed monitoring regime",
-            "minimumNumberOfOutcomes": 0,
-            "subtitle": "Medium-term outcome statement/s",
+            "outcomeType": "project",
+            "helpText": "",
+            "minimumNumberOfOutcomes": 1,
+            "subtitle": "Project outcome statement/s",
             "title": "Project Outcomes",
-            "extendedOutcomes": true
-        }
-    },
-    {
-        "template": "outcomeStatements",
-        "model": {
-            "outcomeType": "short",
-            "helpText": "Outline the degree of impact having undertaken the services for up to three years. Ensure the outcomes are measurable with consideration to the baseline and proposed monitoring regime",
-            "subtitle": "Short-term outcome statement/s",
             "extendedOutcomes": true
         }
     },
@@ -98,23 +89,13 @@ program.config.meriPlanContents = [
         }
     },
     {
-        "template": "serviceOutcomeTargets",
+        "template": "serviceOutcomeTargetsWithForecasts",
         "model": {
             "titleHelpText": "Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections",
+            "separateTargetsPerOutcome": true,
             "title": "Project services and targets",
             "serviceName": "Service"
         }
-    },
-    {
-        "template": "serviceForecasts",
-        "model": {
-            "title": "Project services (Activities) forecasts (indicative only)",
-            "titleHelpText": "Service and Target measure fields pre-populated through the Project Service/Target Measure/s to address threats field and Monitoring methodology sections",
-            "annualTargetHeading": "Target forecast for delivery during each reporting period",
-        },
-        "excludedModes": [
-            "PRINT"
-        ]
     },
     {
         "template": "projectMethodology",
@@ -157,8 +138,8 @@ program.config.meriPlanContents = [
 program.config.targetsConfig = {
     "periodGenerationConfig": {
         "reportType": "Targets",
-        "reportDescriptionFormat": "Target period %d for %4$s",
-        "reportNameFormat": "Target period %d",
+        "reportDescriptionFormat": "Report %d",
+        "reportNameFormat": "%2$tb %2$tY - %3$tb %3$tY",
         "reportingPeriodInMonths": 6,
         "minimumReportDurationInDays": 1,
         "label": "6 monthly",

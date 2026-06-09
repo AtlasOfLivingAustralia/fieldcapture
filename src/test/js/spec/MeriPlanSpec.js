@@ -23,9 +23,9 @@ describe("Loading the MERI plan is handled correctly", function () {
                 {"period": "2021/2022", "target": "4", "periodStart": "2021-06-30T14:00:00Z", periodEnd: "2022-06-30T14:00:00Z"},
                 {"period": "2022/2023", "target": "5", "periodStart": "2022-06-30T14:00:00Z", periodEnd: "2023-06-30T14:00:00Z"}],
             "outcomeTargets": [
-                {"relatedOutcomes":["ST1"], "target": "1"},
-                {"relatedOutcomes":["MT1"], "target": "2"},
-                {"relatedOutcomes":["MT2"], "target": "3"}
+                {"relatedOutcomes":["ST1"], "target": "1", periodTargets:[]},
+                {"relatedOutcomes":["MT1"], "target": "2", periodTargets:[]},
+                {"relatedOutcomes":["MT2"], "target": "3", periodTargets:[]}
             ]
         }];
         risks = {
