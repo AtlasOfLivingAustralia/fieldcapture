@@ -49,7 +49,7 @@
     <p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white text-bg-danger">Report adjusted</span></p>
     <p><span class="badge p-1 text-white text-bg-warning">Report not submitted</span></p>
 
-    <g:if test="${isAdmin || fc.userIsAlaOrFcAdmin()}">
+    <g:if test="${isAdmin || fc.userIsSupportOfficerOrAdmin()}">
         <p>
             <button class="btn btn-success btn-sm" data-bind="enable:complete,click:submitReport"
                     title="The reporting form must be marked as complete before this report can be submitted.">Submit report</button>

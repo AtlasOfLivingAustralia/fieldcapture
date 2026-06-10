@@ -182,7 +182,7 @@ if(!google.geocode.url){
     google.geocode.url = "https://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng="
 }
 if(!google.drawmaps.url){
-    google.drawmaps.url = "https://maps.googleapis.com/maps/api/js?libraries=drawing,geometry"
+    google.drawmaps.url = "https://maps.googleapis.com/maps/api/js?libraries=geometry"
 }
 
 // If true, no-cache headers will be added to all responses.

@@ -118,6 +118,7 @@ class BlogControllerSpec extends Specification implements ControllerUnitTest<Blo
         controller.edit('1')
 
         then:
+        1 * blogService.get('1234', '1', BlogType.PROGRAM) >> [:]
         view == '/blog/edit'
     }
 

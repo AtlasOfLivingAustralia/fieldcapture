@@ -34,27 +34,55 @@
                 "type": "enable"
               }
             ],
-            "validate": "required,maxSize[1250]"
+            "validate": "maxSize[1250]"
           },
           {
-            "dataType": "boolean",
+            "dataType": "text",
             "name": "reviewedAndUpdatedQ3",
-            "description": ""
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
           },
           {
-            "dataType": "boolean",
+            "dataType": "text",
             "name": "reviewedAndNoChangeQ3",
-            "description": ""
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "behaviour": [
+              {
+                "condition": "reviewedAndUpdatedQ3 == \"No\"",
+                "type": "enable_and_clear"
+              }
+            ],
+            "validate": "required"
           },
           {
-            "dataType": "boolean",
+            "dataType": "text",
             "name": "reviewedAndUpdatedQ5",
-            "description": ""
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "validate": "required"
           },
           {
-            "dataType": "boolean",
+            "dataType": "text",
             "name": "reviewedAndNoChangeQ5",
-            "description": ""
+            "constraints": [
+              "Yes",
+              "No"
+            ],
+            "behaviour": [
+              {
+                "condition": "reviewedAndUpdatedQ5 == \"No\"",
+                "type": "enable_and_clear"
+              }
+            ],
+            "validate": "required"
           },
           {
             "dataType": "number",
@@ -143,6 +171,7 @@
               {
                 "name": "psoCommunicationDetails",
                 "dataType": "list",
+                "allowRowDelete": "false",
                 "columns": [
                   {
                     "dataType": "stringList",
@@ -184,6 +213,46 @@
               {
                 "dataType": "number",
                 "name": "numberCommunicationMaterialsType"
+              }
+            ]
+          },
+          {
+            "dataType": "list",
+            "name": "psoCommunicationDetailsExtra",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "communicationMaterialTypeExtra",
+                "constraints": [
+                  "Advertising",
+                  "Event Flyers and Brochures",
+                  "Media release",
+                  "Newsletters",
+                  "Newspaper articles",
+                  "Publishing reports",
+                  "Social media",
+                  "Other"
+                ],
+                "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "communicationTitleExtra",
+                "validate": "required,maxSize[100]"
+              },
+              {
+                "dataType": "text",
+                "name": "communicationPurposeExtra",
+                "validate": "required,maxSize[4000]"
+              },
+              {
+                "dataType": "date",
+                "name": "publishedDateExtra",
+                "validate": "required,past[now]"
+              },
+              {
+                "dataType": "text",
+                "name": "linkExtra"
               }
             ]
           },
@@ -375,7 +444,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "<b>2.b Please review the risks and threats table and update if in the past 12 months there have been<ul><li>any risks that have been realised or have newly emerged</li><li>any adaptive management actions that have impacted existing risks</li><li>any mitigation strategies that have been identified as ineffective.</li></ul></b>",
+                            "source": "<b>2.b Please review the risks and threats table and update if in the last 12 months there have been<ul><li>any risks that have been realised or have newly emerged</li><li>any adaptive management actions that have impacted existing risks</li><li>any mitigation strategies that have been identified as ineffective.</li></ul></b>",
                             "type": "literal"
                           }
                         ]
@@ -386,12 +455,12 @@
                           {
                             "preLabel": "◦ Reviewed and updated or",
                             "source": "reviewedAndUpdatedQ3",
-                            "type": "boolean"
+                            "type": "selectOne"
                           },
                           {
                             "preLabel": "◦ Reviewed and no change",
                             "source": "reviewedAndNoChangeQ3",
-                            "type": "boolean"
+                            "type": "selectOne"
                           }
                         ]
                       }
@@ -399,17 +468,6 @@
                   }
                 ],
                 "class": ""
-              }
-            ]
-          },
-          {
-            "type": "row",
-            "items": [
-              {
-                "preLabel": "Have all adaptive management actions identified in the MERIT quarterly output reports over the last 12 months been reflected in the MERI plan?",
-                "source": "adaptiveManagementActions",
-                "type": "selectOne",
-                "rows": 4
               }
             ]
           },
@@ -495,7 +553,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "source": "<b>4.a Please review the project WHS risk register and update if in the past 12 months there have been <br><ul><li>any WHS risks that have been realised or have newly emerged</li><li>any mitigation strategies that have been identified as ineffective.</li></ul></b>",
+                            "source": "<b>4.a Please review the project WHS risk register and update if in the last 12 months there have been <br><ul><li>any WHS risks that have been realised or have newly emerged</li><li>any mitigation strategies that have been identified as ineffective.</li></ul></b>",
                             "type": "literal"
                           }
                         ]
@@ -506,12 +564,12 @@
                           {
                             "preLabel": "◦ Reviewed and updated or",
                             "source": "reviewedAndUpdatedQ5",
-                            "type": "boolean"
+                            "type": "selectOne"
                           },
                           {
                             "preLabel": "◦ Reviewed and no change",
                             "source": "reviewedAndNoChangeQ5",
-                            "type": "boolean"
+                            "type": "selectOne"
                           }
                         ]
                       }
@@ -623,7 +681,7 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<h3>6. Communications</h3><br><b>6.a Please review and add any further communication materials not already reported into below editable table.</b>"
+                "source": "<h3>6. Communications</h3><br>"
               }
             ]
           },
@@ -652,7 +710,7 @@
                 "type": "table",
                 "source": "psoCommunicationDetails",
                 "title": "<b>Communications material published during the year</b>",
-                "userAddedRows": true,
+                "userAddedRows": false,
                 "disableTableUpload": true,
                 "columns": [
                   {
@@ -694,6 +752,51 @@
                 ]
               }
             ]
+          },
+          {
+            "items": [
+              {
+                "type": "table",
+                "source": "psoCommunicationDetailsExtra",
+                "title": "<b>6.a Please review and add any further communication materials not already reported into below editable table.</b>",
+                "preLabel": "If yes, please provide link or copy of the material.",
+                "userAddedRows": true,
+                "columns": [
+                  {
+                    "source": "communicationMaterialTypeExtra",
+                    "type": "selectOne",
+                    "width": "15%",
+                    "title": "Type of Communications Material"
+                  },
+                  {
+                    "source": "communicationTitleExtra",
+                    "type": "text",
+                    "width": "25%",
+                    "title": "Title"
+                  },
+                  {
+                    "type": "textarea",
+                    "source": "communicationPurposeExtra",
+                    "width": "35%",
+                    "title": "Purpose",
+                    "rows": 4
+                  },
+                  {
+                    "title": "Date published",
+                    "source": "publishedDateExtra",
+                    "type": "date",
+                    "width": "15%"
+                  },
+                  {
+                    "source": "linkExtra",
+                    "type": "text",
+                    "width": "20%",
+                    "title": "URL/link"
+                  }
+                ]
+              }
+            ],
+            "type": "row"
           }
         ],
         "pre-populate": [
