@@ -537,6 +537,7 @@ function MERIPlan(project, projectService, config) {
         var outcomes = [];
         outcomes = outcomes.concat(self.meriPlan().outcomes.midTermOutcomes());
         outcomes = outcomes.concat(self.meriPlan().outcomes.shortTermOutcomes());
+        outcomes = outcomes.concat(self.meriPlan().outcomes.projectTermOutcomes());
         return outcomes;
     }).extend({rateLimit:200});
 
@@ -1056,13 +1057,19 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
     self.keq = new GenericViewModel(o.keq);
     self.objectives = new ObjectiveViewModel(o.objectives, config.programObjectives || []); // Used in original MERI plan template
     var outcomesConfig = {
+        outcomeStatements:config.outcomeStatementsConfig,
         outcomes:project.outcomes,
         priorities:project.priorities,
         bieUrl: config.bieUrl,
         searchBieUrl: config.searchBieUrl,
         speciesListUrl: config.speciesListUrl,
         speciesImageUrl: config.speciesImageUrl,
-        speciesProfileUrl: config.speciesProfileUrl
+        speciesProfileUrl: config.speciesProfileUrl,
+        outcomeTypeCodePrefixMap: {
+            'short':'ST',
+            'mid':'MT',
+            'project':'PO'
+        }
     };
     self.outcomes = new OutcomesViewModel(o.outcomes, outcomesConfig); // Use in new MERI plan template
     self.priorities = new GenericViewModel(o.priorities, ['data1', 'data2', 'data3', 'documentUrl']);
@@ -1813,9 +1820,13 @@ function ObjectiveViewModel(o, programObjectives) {
 /**
  * Categories project outcomes into primary, secondary, mid-term and short-term outcomes.
  * @param outcomes existing outcome data, if any.
- * @param config {outcomes:<all available outcomes>, priorities:<priorities selectable by this project>}
+ * @param options {outcomes:<all available outcomes>, priorities:<priorities selectable by this project>, outcomeStatements:<configuration for the different outcome types to be used in this project>, bieUrl, searchBieUrl, speciesListUrl, speciesImageUrl, speciesProfileUrl}
  */
-function OutcomesViewModel(outcomes, config) {
+function OutcomesViewModel(outcomes, options) {
+    var defaults = {
+        outcomeStatements:[]
+    };
+    var config = _.defaults(options, defaults);
     var self = this;
     if (!outcomes) {
         outcomes = {};
@@ -1825,19 +1836,31 @@ function OutcomesViewModel(outcomes, config) {
             description: null, asset: ''
         };
     }
-    if (!outcomes.shortTermOutcomes) {
-        outcomes.shortTermOutcomes = [{
-            code:"ST1", description: null, assets: []
-        }];
-    }
     if (!outcomes.secondaryOutcomes) {
         outcomes.secondaryOutcomes = [{
             description: null, asset: ''
         }]
     }
-
     if (!outcomes.otherOutcomes){
         outcomes.otherOutcomes = []
+    }
+
+    for (var i=0; i<config.outcomeStatements.length; i++) {
+        var configItem = config.outcomeStatements[i];
+        var path = configItem.outcomeType+'TermOutcomes'
+        if (configItem.minimumNumberOfOutcomes > 0) {
+            if (!outcomes[path]) {
+                outcomes[path] = [];
+
+                for (var j = 0; j < configItem.minimumNumberOfOutcomes; j++) {
+                    outcomes[path].push({
+                        code: config.outcomeTypeCodePrefixMap[configItem.outcomeType] + (j+1),
+                        description: null,
+                        assets: []
+                    });
+                }
+            }
+        }
     }
 
     /**

@@ -1037,7 +1037,7 @@ class ProjectService  {
         int lastReadOnlyReportIndex = project.reports ? project.reports?.findLastIndexOf {reportService.excludesNotApproved(it)} : -1
 
         // All output targets use the same set of period targets so the first one is representative of the existing periods.
-        List<Map> existingTargetPeriods = project.outputTargets[0]?.periodTargets?.collect {
+        List<Map> existingTargetPeriods = project.outputTargets?[0]?.periodTargets?.collect {
             [period:it.period, fromDate:it.periodStart, toDate:it.periodEnd]
         }
 
