@@ -1288,12 +1288,7 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
         // This needs to be declared before it's populated due to a reliance on the availableOutcomes function
         // which references this array.
         self.outcomeTargets = ko.observableArray();
-        self.outcomeTargets(_.map(outputTarget.outcomeTargets || {}, function(outcomeTarget) {
-            return new ServiceOutcomesTarget(outcomeTarget);
-        }));
-        if (self.outcomeTargets().length == 0) {
-            self.outcomeTargets.push(new ServiceOutcomesTarget());
-        }
+
 
         self.target = ko.pureComputed(function() {
            var target = 0;
@@ -1308,6 +1303,17 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
         });
 
         if (options.separateTargetsPerOutcome) {
+            self.outcomeTargets(_.map(outputTarget.outcomeTargets || {}, function(outcomeTarget) {
+                for (var i=0; i<outcomeTarget.relatedOutcomes.length; i++) {
+                    return new ServiceOutcomesTarget({
+                        relatedOutcomes: [outcomeTarget.relatedOutcomes[i]],
+                        target: outcomeTarget.target,
+                        periodTargets: outcomeTarget.periodTargets
+                    });
+                }
+
+            }));
+
             self.availableOutcomes.subscribe(function (availableOutcomes) {
                 for (var i = 0; i < availableOutcomes.length; i++) {
 
@@ -1320,6 +1326,14 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
                     }
                 }
             });
+        }
+        else {
+            self.outcomeTargets(_.map(outputTarget.outcomeTargets || {}, function(outcomeTarget) {
+                return new ServiceOutcomesTarget(outcomeTarget);
+            }));
+            if (self.outcomeTargets().length == 0) {
+                self.outcomeTargets.push(new ServiceOutcomesTarget());
+            }
         }
 
 

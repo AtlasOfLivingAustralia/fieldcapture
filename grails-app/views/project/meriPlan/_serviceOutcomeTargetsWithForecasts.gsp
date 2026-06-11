@@ -5,20 +5,20 @@
     <thead>
     <tr>
         <th class="index"></th>
-        <th colspan="5" class="required service">${serviceName ?: "Project Service"}</th>
-        <th colspan="5" class="required score">${targetMeasureHeading ?: 'Target measure'}</th>
+        <th data-bind="attr:{colspan:($root.periods.length+2)/2}" class="required service">${serviceName ?: "Project Service"}</th>
+        <th data-bind="attr:{colspan:($root.periods.length % 2) == 0 ? ($root.periods.length+2) / 2 : ($root.periods.length+3) / 2}" class="required score">${targetMeasureHeading ?: 'Target measure'}</th>
         <th></th>
     </tr>
     </thead>
     <tbody data-bind="foreach : sortedOutcomeTargets">
     <tr class="service-target">
         <td class="index"><span data-bind="text:$index()+1"></span></td>
-        <td data-bind="attr:{colspan:periodTargets.length/2+1}" class="service">
+        <td data-bind="attr:{colspan:($root.periods.length+2)/2}" class="service">
             <input readonly="readonly" class="form-control form-control-sm"
                     data-bind="value:serviceLabel, disable: $root.isProjectDetailsLocked()"
                     >
         </td>
-        <td data-bind="attr:{colspan:periodTargets.length/2+1}" class="score">
+        <td data-bind="attr:{colspan:($root.periods.length % 2) == 0 ? ($root.periods.length+2) / 2 : ($root.periods.length+3) / 2}" class="score">
             <input readonly="readonly"  class="form-control form-control-sm"
                     data-bind="value:scoreLabel, disable: $root.isProjectDetailsLocked()"
                    >
@@ -40,7 +40,7 @@
     </tr>
     <tr class="sub-heading">
         <!-- ko foreach:periodTargets -->
-        <th><span data-bind="text:period"></span></th>
+        <th class="period"><span data-bind="text:period"></span></th>
         <!-- /ko -->
         <th></th>
     </tr>
