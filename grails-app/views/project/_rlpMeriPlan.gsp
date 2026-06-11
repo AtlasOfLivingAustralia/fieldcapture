@@ -3,44 +3,12 @@
 
     <g:render template="/project/meriPlan/additionalOutcomes"/>
 
-    <h4>Project outcomes</h4>
-    <table class="table">
-        <thead>
-        <tr class="header">
-            <th class="index"></th>
-            <th class="outcome required">Short-term outcome statement/s <fc:iconHelp html="true" container="body">Short-term outcomes should:
-                <ul>
-                    <li>Contribute to the 5-year Outcome (e.g. what degree of impact you are expecting from this Project’s interventions).</li>
-                    <li>Outline the degree of impact having undertaken the Services for up to 3 years, for example "area of relevant vegetation type has increased".</li>
-                    <li>Be expressed as a SMART statement. SMART stands for Specific, Measurable, Attainable, Realistic, and Time-bound. Ensure the outcomes are measurable with consideration to the baseline and proposed monitoring regime.</li>
-                </ul>
-                <b>Please note: </b>for Projects three years or less in duration, a short-term Project outcome achievable at the Project’s completion must be set.
-            </fc:iconHelp> </th>
-            <th class="remove"></th>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach:details.outcomes.shortTermOutcomes">
-        <tr>
-            <td class="index" data-bind="text:$index()+1"></td>
-            <td class="outcome">
-                <textarea class="form-control form-control-sm" data-validation-engine="validate[required]" data-bind="value:description, disable: $parent.isProjectDetailsLocked()"></textarea>
-            </td>
-            <td class="remove">
-                <span data-bind="if: $index() && !$parent.isProjectDetailsLocked()"><i class="fa fa-remove"
-                                                                                       data-bind="click: $parent.removeShortTermOutcome"></i>
-                </span>
-            </td>
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan="3">
-                <button type="button" class="btn btn-sm"
-                        data-bind="disable: isProjectDetailsLocked(), click: addShortTermOutcome">
-                    <i class="fa fa-plus"></i> Add a row</button></td>
-        </tr>
-        </tfoot>
-    </table>
+    <g:render template="/project/meriPlan/outcomeStatements" model="${[
+            outcomeType:'short',
+            minimumNumberOfOutcomes:1,
+            title:"Project outcomes",
+            subtitle:'Short-term outcome statement/s',
+            helpText:'Short-term outcomes should contribute to the 5-year Outcome and outline the degree of impact having undertaken the Services for up to 3 years. Short-term outcomes should be expressed as a SMART statement. SMART stands for Specific, Measurable, Attainable, Realistic, and Time-bound. Ensure the proposed outcomes are measurable with consideration to the baseline and proposed monitoring regime. Please note: for Projects three years or less in duration, a short-term Project outcome achievable at the Project’s completion must be set.']}"/>
 
     <g:render template="/project/meriPlan/mediumTermOutcomes"/>
 

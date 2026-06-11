@@ -88,7 +88,9 @@ config = {
                     "- contribute to the project's Expert Panel objectives; <br/>" +
                     "- outline the degree of impact having undertaken the actions within the project timeframe;<br/>" +
                     "- be expressed as a SMART statement (Specific, Measurable, Attainable, Realistic and Time-bound); and<br/>" +
-                    "- ensure the outcomes are measurable with consideration to the monitoring methodology provided below."
+                    "- ensure the outcomes are measurable with consideration to the monitoring methodology provided below.",
+                "outcomeType": "short",
+                "minimumNumberOfOutcomes": 1
             }
         },
         {
@@ -237,7 +239,9 @@ config.meriPlanContents = [
         "model": {
             "subtitle": "Please provide short term outcome statements. Short term outcomes statements should: <br/>- outline the degree of impact having undertaken the actions within the project timeframe;<br/>- be expressed as a SMART statement (Specific, Measurable, Attainable, Realistic and Time-bound); and<br/>- ensure the outcomes are measurable with consideration to the monitoring methodology provided below.",
             "placeholder": "By 30 June 2021, [Free text]",
-            "title": "Short term outcome statements"
+            "title": "Short term outcome statements",
+            "outcomeType": "short",
+            "minimumNumberOfOutcomes": 1
         }
     },
     {
@@ -335,7 +339,9 @@ config.meriPlanContents = [
         "template": "outcomeStatements",
         "model": {
             "subtitle": "Short-term outcome statement/s",
-            "title": "Project outcomes"
+            "title": "Project outcomes",
+            "outcomeType": "short",
+            "minimumNumberOfOutcomes": 1
         }
     },
     {
@@ -446,7 +452,9 @@ config.meriPlanContents = [
         "model": {
             "subtitle": "Please provide outcome statements. Outcomes statements should: <br/>- Contribute to the regional investment strategy;<br/>- Outline the degree of impact having undertaken the actions within the project timeframe;<br/>- Be expressed as a SMART statement (Specific, Measurable, Attainable, Realistic and Time-bound); and<br/>- Ensure the outcomes are measurable with consideration to the monitoring methodology provided below.",
             "placeholder": "By 30 June 2021, [Free text]",
-            "title": "Outcome statements"
+            "title": "Outcome statements",
+            "outcomeType": "short",
+            "minimumNumberOfOutcomes": 1
         }
     },
     {
@@ -641,7 +649,9 @@ config.meriPlanContents = [
         "model": {
             "subtitle": "Please provide outcome statements. Outcomes statements should: <br/>- outline the degree of impact having undertaken the actions within the project timeframe;<br/>- be expressed as a SMART statement (Specific, Measurable, Attainable, Realistic and Time-bound); and<br/>- ensure the outcomes are measurable with consideration to the monitoring methodology provided below.",
             "placeholder": "By 30 June 2021, [Free text]",
-            "title": "Outcome statements"
+            "title": "Outcome statements",
+            "outcomeType": "short",
+            "minimumNumberOfOutcomes": 1
         }
     },
     {
@@ -841,7 +851,9 @@ config.meriPlanContents = [
         "model": {
             "helpText": "Short term outcomes statements should: <br/><ul> <li>Contribute to the 5-year Outcome (e.g. what degree of impact are you expecting from the Project's interventions )</li> <li>Outline the degree of impact having undertaken the Services for  up to 3 years, for example 'area of relevant vegetation type has increased'.</li><li>Be expressed as a SMART statement. SMART stands for Specific, Measurable, Attainable, Realistic, and Time-bound. Ensure the outcomes are measurable with consideration to the baseline and proposed monitoring regime.</li></ul><b>Please Note: </b> for Project three years or less in duration, a short-term Project outcome achievable at the Project's completion must be set.",
             "subtitle": "Short-terms outcome statement/s",
-            "title": "Project Outcomes"
+            "title": "Project Outcomes",
+            "outcomeType": "short",
+            "minimumNumberOfOutcomes": 1
         }
     },
     {
@@ -1207,7 +1219,9 @@ config.meriPlanContents = [
         "template": "outcomeStatements",
         "model": {
             "subtitle": "Short-terms outcome statement/s",
-            "title": "Project Outcomes"
+            "title": "Project Outcomes",
+            "outcomeType": "short",
+            "minimumNumberOfOutcomes": 1
         }
     },
     {
@@ -1378,6 +1392,7 @@ config.meriPlanContents = [
         "template": "outcomeStatements",
         "model": {
             "outcomeType": "short",
+            "minimumNumberOfOutcomes":1,
             "helpText": "Outline the degree of impact having undertaken the services for up to three years. Ensure the outcomes are measurable with consideration to the baseline and proposed monitoring regime",
             "subtitle": "Short-term outcome statement/s",
             "extendedOutcomes": true
