@@ -28,12 +28,37 @@ class GrantsReportLifecycleListener extends NHTOutputReportLifecycleListener {
         }
         contextData.progressSectionFromPreviousReport = progressSectionFromPreviousReport
 
-        Map targetsForThisReport = project.outputTargets?.findAll {
-            it.periodEnd == report.toDate
-        }
+        List targetsForThisReport = targetsForReportingPeriod(project, report)
 
-        contextData.targetsForThisReport = targetsForThisReport
+        contextData.outcomeTargets = targetsForThisReport
 
         return contextData
     }
+
+    private List<Map> targetsForReportingPeriod(Map project, Map report) {
+        List<Map> outcomeTargetsForReport = []
+        List scoresForProject =  projectService.getProjectServices(project)
+        project.outputTargets?.each { Map outputTarget ->
+            outputTarget.outcomeTargets?.each { Map outcomeTarget ->
+                List outcomeStatements = project.custom?.details?.outcomes?.projectTermOutcomes?.findAll { it.code in outcomeTarget.relatedOutcomes }?.collect { it.description }
+
+                Map periodTarget = outcomeTarget.periodTargets?.find { Map periodTarget ->
+                    periodTarget.periodStart < report.toDate && periodTarget.periodEnd >= report.toDate
+                }
+                String label = null
+                scoresForProject.find { Map service ->
+                    Map score = service.scores?.find{it.scoreId == outputTarget.scoreId }
+                    if (score) {
+                        label = service.name + ' - ' + score.label
+                    }
+                    score
+                }
+
+                outcomeTargetsForReport << [scoreId: outputTarget.scoreId, targetMeasureLabel: label ?: outputTarget.scoreId, relatedOutcomes: outcomeTarget.relatedOutcomes?.join(', '), outcomeStatements: outcomeStatements?.join(','), target: outcomeTarget.target, periodTarget: periodTarget?.target ?: 0]
+
+            }
+        }
+        outcomeTargetsForReport
+    }
+
 }

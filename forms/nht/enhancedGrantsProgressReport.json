@@ -27,14 +27,8 @@
                 "deleteUnmatchedExistingRows": true,
                 "addUnmatchedNewRows": true,
                 "keys": [
-                  "code"
-                ]
-              },
-              "midTermProjectOutcomes": {
-                "deleteUnmatchedExistingRows": true,
-                "addUnmatchedNewRows": true,
-                "keys": [
-                  "code"
+                  "code",
+                  "scoreId"
                 ]
               }
             },
@@ -44,28 +38,31 @@
                 "mapping": [
                   {
                     "target": "code",
-                    "source-path": "code"
+                    "source-path": "relatedOutcomes"
                   },
                   {
                     "target": "outcomeStatement",
-                    "source-path": "description"
-                  }
-                ],
-                "source-path": "custom.details.outcomes.shortTermOutcomes"
-              },
-              {
-                "target": "midTermProjectOutcomes",
-                "mapping": [
-                  {
-                    "target": "code",
-                    "source-path": "code"
+                    "source-path": "outcomeStatements"
                   },
                   {
-                    "target": "outcomeStatement",
-                    "source-path": "description"
+                    "target": "scoreId",
+                    "source-path": "scoreId"
+                  },
+                  {
+                    "target": "targetMeasureLabel",
+                    "source-path": "targetMeasureLabel"
+                  },
+                  {
+                    "target": "target",
+                    "source-path": "target"
+
+                  },
+                  {
+                    "target": "periodTarget",
+                    "source-path": "periodTarget"
                   }
                 ],
-                "source-path": "custom.details.outcomes.midTermOutcomes"
+                "source-path": "outcomeTargets"
               }
             ]
           }
@@ -111,6 +108,30 @@
                 "dataType": "text",
                 "name": "outcomeStatement",
                 "validate": "required"
+              },
+              {
+                "dataType": "text",
+                "name": "scoreId"
+              },
+              {
+                "dataType": "text",
+                "name": "targetMeasureLabel"
+              },
+              {
+                "dataType": "number",
+                "name": "target"
+              },
+              {
+                "dataType": "number",
+                "name": "periodTarget"
+              },
+              {
+                "dataType": "number",
+                "name": "deliveredThisPeriod"
+              },
+              {
+                "dataType": "number",
+                "name": "deliveredApproved"
               },
               {
                 "dataType": "text",
@@ -382,7 +403,8 @@
                   {
                     "source": "code",
                     "type": "readonlyText",
-                    "title": "Outcome No."
+                    "title": "Outcome No.",
+                    "width": "5%"
                   },
                   {
                     "type": "textarea",
@@ -390,14 +412,50 @@
                     "title": "Outcome",
                     "readonly": true,
                     "rows": 5,
-                    "width": "45%"
+                    "width": "20%"
+                  },
+                  {
+                    "title": "Activities and target measures",
+                    "type": "text",
+                    "source": "targetMeasureLabel",
+                    "readonly": true,
+                    "width": "20%"
+                  },
+                  {
+                    "title": "Target (total for this outcome)",
+                    "type": "number",
+                    "source": "target",
+                    "readonly": true,
+                    "width": "5%"
+                  },
+                  {
+                    "title": "Forcecast for reporting period",
+                    "type": "number",
+                    "source": "periodTarget",
+                    "readonly": true,
+                    "width": "5%"
+                  },
+                  {
+                    "title": "Delivered this reporting period",
+                    "type": "number",
+                    "source": "deliveredThisPeriod",
+                    "readonly": true,
+                    "width": "5%"
+                  },
+
+                  {
+                    "title": "Approved delivered to date",
+                    "type": "number",
+                    "source": "deliveredApproved",
+                    "readonly": true,
+                    "width": "5%"
                   },
                   {
                     "type": "textarea",
                     "source": "achievement",
                     "title": "Achievement against the outcome",
                     "rows": 5,
-                    "width": "50%"
+                    "width": "30%"
                   }
                 ]
               }
