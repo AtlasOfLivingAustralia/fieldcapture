@@ -1,22 +1,12 @@
 load('../../../utils/uuid.js');
 load('../../../utils/audit.js');
 load('../../../utils/program.js');
-load("../../../utils/addService.js")
 
 const adminUserId = "system";
 const initialScoreId = '99bd36b0-5a87-4c69-a46b-064499708310';
 const followUpScoreId = '5a2af425-34bf-4ac8-a9b9-04a679504588';
-//var label = "Sediment Reduction"
-var serviceName = "Image pairing to document on-ground change"
+
 var sectionName = "Image pairing to document on-ground change"
-var newOutputs = [
-    {formName: "NHT Output Report", sectionName: sectionName},
-    {formName: "Grants and Others Progress Report", sectionName: sectionName},
-    {formName: "Procurement Output Report", sectionName: sectionName}
-];
-
-
-addService(serviceName, NumberInt(58), undefined, undefined, newOutputs, adminUserId)
 
 let scores = [
     {
@@ -41,7 +31,7 @@ let scores = [
                     },
                     childAggregations: [
                         {
-                            property: 'data.totalActualImagesCollectedInitial',
+                            property: 'data.totalNumberOfLocationsWhereImagesCollectedInitial',
                             type: 'SUM'
                         }
                     ]
@@ -67,7 +57,7 @@ let scores = [
                     },
                     childAggregations: [
                         {
-                            property: 'data.totalActualImagesCollectedFollowup',
+                            property: 'data.totalNumberOfLocationsWhereImagesCollectedFollowup',
                             type: 'SUM'
                         }
                     ]
@@ -87,11 +77,10 @@ for (let i=0; i<scores.length; i++) {
     }
 }
 
-var excludedPrograms = []
 var programServices = [
     {
         serviceTargets: [initialScoreId, followUpScoreId],
-        serviceId: NumberInt(58)
+        serviceId: NumberInt(51)
     }
 ];
 

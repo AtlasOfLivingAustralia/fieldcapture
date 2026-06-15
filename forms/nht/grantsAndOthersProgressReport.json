@@ -18268,7 +18268,7 @@
           },
           {
             "dataType": "number",
-            "name": "totalPreImagesTakenInitial",
+            "name": "totalNumberOfLocationsWhereImagesCollectedInitial",
             "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
@@ -18278,7 +18278,7 @@
           },
           {
             "dataType": "number",
-            "name": "totalActualImagesCollectedFollowup",
+            "name": "totalNumberOfLocationsWhereImagesCollectedFollowup",
             "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
             "decimalPlaces": 0,
@@ -18399,7 +18399,7 @@
                     "items": [
                       {
                         "preLabel": "(i) Total number of location of actual images or imagery collected (initial) for this reporting period",
-                        "source": "totalActualImagesCollectedInitial",
+                        "source": "totalNumberOfLocationsWhereImagesCollectedInitial",
                         "type": "number"
                       }
                     ]
@@ -18415,7 +18415,7 @@
                     "items": [
                       {
                         "preLabel": "(ii) Total number of location of actual images or imagery collected (follow-up) for this reporting period",
-                        "source": "totalActualImagesCollectedFollowup",
+                        "source": "totalNumberOfLocationsWhereImagesCollectedFollowup",
                         "type": "number"
                       }
                     ]
