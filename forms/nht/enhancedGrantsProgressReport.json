@@ -27,8 +27,7 @@
                 "deleteUnmatchedExistingRows": true,
                 "addUnmatchedNewRows": true,
                 "keys": [
-                  "code",
-                  "scoreId"
+                  "code"
                 ]
               }
             },
@@ -45,26 +44,32 @@
                     "source-path": "outcomeStatements"
                   },
                   {
-                    "target": "scoreId",
-                    "source-path": "scoreId"
-                  },
-                  {
-                    "target": "targetMeasureLabel",
-                    "source-path": "targetMeasureLabel"
-                  },
-                  {
-                    "target": "target",
-                    "source-path": "target"
-
-                  },
-                  {
-                    "target": "periodTarget",
-                    "source-path": "periodTarget"
-                  },
-                  {
-                    "target": "deliveredApproved",
-                    "source-path": "deliveredApproved"
+                    "target": "deliveredAgainstOutcomes",
+                    "source-path": "deliveredAgainstOutcomes",
+                    "mapping": [
+                      {
+                        "target": "scoreId",
+                        "source-path": "scoreId"
+                      },
+                      {
+                        "target": "targetMeasureLabel",
+                        "source-path": "targetMeasureLabel"
+                      },
+                      {
+                        "target": "target",
+                        "source-path": "target"
+                      },
+                      {
+                        "target": "periodTarget",
+                        "source-path": "periodTarget"
+                      },
+                      {
+                        "target": "deliveredApproved",
+                        "source-path": "deliveredApproved"
+                      }
+                    ]
                   }
+
                 ],
                 "source-path": "outcomeTargets"
               }
@@ -90,13 +95,19 @@
           {
             "dataType": "text",
             "name": "shortTermOutcomesAchieved",
-            "constraints": ["Yes", "No"],
+            "constraints": [
+              "Yes",
+              "No"
+            ],
             "validate": "required"
           },
           {
             "dataType": "text",
             "name": "reportOnMediumTermOutcomes",
-            "constraints": ["Yes", "No"],
+            "constraints": [
+              "Yes",
+              "No"
+            ],
             "validate": "required"
           },
           {
@@ -115,53 +126,39 @@
               },
               {
                 "dataType": "text",
-                "name": "scoreId"
-              },
-              {
-                "dataType": "text",
-                "name": "targetMeasureLabel"
-              },
-              {
-                "dataType": "number",
-                "name": "target"
-              },
-              {
-                "dataType": "number",
-                "name": "periodTarget"
-              },
-              {
-                "dataType": "number",
-                "name": "deliveredThisPeriod"
-              },
-              {
-                "dataType": "number",
-                "name": "deliveredApproved"
-              },
-              {
-                "dataType": "text",
                 "name": "achievement",
                 "validate": "required,maxSize[1000]"
-              }
-            ]
-          },
-          {
-            "dataType": "list",
-            "name": "midTermProjectOutcomes",
-            "allowRowDelete": "false",
-            "columns": [
-              {
-                "dataType": "text",
-                "name": "code"
               },
               {
-                "dataType": "text",
-                "name": "outcomeStatement",
-                "validate": "required"
-              },
-              {
-                "dataType": "text",
-                "name": "achievement",
-                "validate": "required,maxSize[1000]"
+                "dataType": "list",
+                "name": "deliveredAgainstOutcomes",
+                "allowRowDelete": false,
+                "columns": [
+                  {
+                    "dataType": "text",
+                    "name": "scoreId"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "targetMeasureLabel"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "target"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "periodTarget"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "deliveredThisPeriod"
+                  },
+                  {
+                    "dataType": "number",
+                    "name": "deliveredApproved"
+                  }
+                ]
               }
             ]
           },
@@ -374,35 +371,12 @@
             "type": "row"
           },
           {
-            "type":"row",
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "length(midTermProjectOutcomes) > 0"
-              }
-            ],
+            "source": "projectOutcomes",
+            "type": "repeat",
+            "userAddedRows": false,
             "items": [
               {
-                "type": "selectOne",
-                "preLabel": "Have all of the short term outcomes of the project been achieved?",
-                "source": "shortTermOutcomesAchieved"
-              }
-            ]
-          },
-          {
-            "type":"row",
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "length(midTermProjectOutcomes) == 0 or shortTermOutcomesAchieved != \"Yes\""
-              }
-            ],
-            "items": [
-              {
-                "source": "projectOutcomes",
                 "type": "table",
-                "userAddedRows": false,
-                "disableTableUpload": true,
                 "columns": [
                   {
                     "source": "code",
@@ -418,6 +392,19 @@
                     "rows": 5,
                     "width": "20%"
                   },
+                  {
+                    "type": "textarea",
+                    "source": "achievement",
+                    "title": "Achievement against the outcome",
+                    "rows": 5,
+                    "width": "30%"
+                  }
+                ]
+              },
+              {
+                "type": "table",
+                "source": "deliveredAgainstOutcomes",
+                "columns": [
                   {
                     "title": "Activities and target measures",
                     "type": "text",
@@ -446,75 +433,12 @@
                     "readonly": true,
                     "width": "5%"
                   },
-
                   {
                     "title": "Approved delivered to date",
                     "type": "number",
                     "source": "deliveredApproved",
                     "readonly": true,
                     "width": "5%"
-                  },
-                  {
-                    "type": "textarea",
-                    "source": "achievement",
-                    "title": "Achievement against the outcome",
-                    "rows": 5,
-                    "width": "30%"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type":"row",
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "length(midTermProjectOutcomes) > 0 and shortTermOutcomesAchieved != \"Yes\""
-              }
-            ],
-            "items": [
-              {
-                "type": "selectOne",
-                "preLabel": "Would you like to report on your medium term outcomes?",
-                "source": "reportOnMediumTermOutcomes"
-              }
-            ]
-          },
-          {
-            "type":"row",
-            "behaviour": [
-              {
-                "type": "if_expression",
-                "condition": "length(midTermProjectOutcomes) > 0 and (reportOnMediumTermOutcomes == \"Yes\" or shortTermOutcomesAchieved == \"Yes\")"
-              }
-            ],
-            "items": [
-              {
-                "source": "midTermProjectOutcomes",
-                "type": "table",
-                "userAddedRows": false,
-                "disableTableUpload": true,
-                "columns": [
-                  {
-                    "source": "code",
-                    "type": "readonlyText",
-                    "title": "Outcome No."
-                  },
-                  {
-                    "type": "textarea",
-                    "source": "outcomeStatement",
-                    "title": "Outcome",
-                    "readonly": true,
-                    "rows": 5,
-                    "width": "45%"
-                  },
-                  {
-                    "type": "textarea",
-                    "source": "achievement",
-                    "title": "Achievement against the outcome",
-                    "rows": 5,
-                    "width": "50%"
                   }
                 ]
               }
@@ -2178,7 +2102,6 @@
                   }
                 ]
               },
-
               {
                 "columns": [
                   {
@@ -2283,7 +2206,6 @@
               }
             ]
           }
-
         ]
       },
       "modelName": null,
@@ -2883,7 +2805,6 @@
               }
             ]
           }
-
         ]
       },
       "modelName": null,
@@ -6081,18 +6002,24 @@
               },
               {
                 "type": "row",
-                "items":  [{
-                  "type": "col",
-                  "css": "span3",
-                  "items": [{
-                    "type": "row",
-                    "items":  [{
-                      "source": "numberOfPeopleEmployed",
-                      "preLabel": "Number of people employed to perform the role of this position",
-                      "type": "number"
-                    }]
-                  }]
-                }]
+                "items": [
+                  {
+                    "type": "col",
+                    "css": "span3",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "numberOfPeopleEmployed",
+                            "preLabel": "Number of people employed to perform the role of this position",
+                            "type": "number"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
               },
               {
                 "type": "row",
@@ -9572,7 +9499,6 @@
       "name": "NHT - Establishing Agreements",
       "description": null
     },
-
     {
       "collapsedByDefault": false,
       "template": {
@@ -10294,7 +10220,6 @@
       "name": "Establishing Agreements",
       "description": null
     },
-
     {
       "collapsedByDefault": false,
       "template": {
@@ -18021,7 +17946,6 @@
       "name": "NHT - Fire management",
       "description": null
     },
-
     {
       "collapsedByDefault": false,
       "template": {
@@ -18841,7 +18765,6 @@
       "name": "Image pairing to document on-ground change",
       "description": null
     },
-
     {
       "collapsedByDefault": false,
       "template": {
@@ -21735,7 +21658,6 @@
                         "title": "Date approval valid to",
                         "type": "date"
                       }
-
                     ],
                     "userAddedRows": true,
                     "disableTableUpload": true,
@@ -21744,7 +21666,9 @@
                     "type": "table"
                   }
                 ]
-              }]},
+              }
+            ]
+          },
           {
             "type": "row",
             "items": [
@@ -30320,7 +30244,6 @@
       "name": "NHT - Research and development",
       "description": null
     },
-
     {
       "collapsedByDefault": false,
       "template": {

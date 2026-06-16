@@ -39,22 +39,19 @@ class GrantsReportLifecycleListener extends NHTOutputReportLifecycleListener {
                 Map byOutcome = score.relatedScores.find{it.description == 'By outcome'}
                 if (byOutcome) {
                     Score outcomeScore = byOutcome.score
-                    outcomeScore?.result?.groups.each { Map group ->
-                        String outcome = group.group
+                    outcomeScore?.result?.groups?.each { Map group ->
+                        String outcomeGroup = group.group
                         def outcomeDelivered = group.results?[0]?.result
 
-                        Map outcomeTarget = targetsForThisReport.find{it.relatedOutcomes == outcome && it.scoreId == score.scoreId}
+                        Map outcome = targetsForThisReport.find{it.relatedOutcomes == outcomeGroup}
+                        Map outcomeTarget = outcome?.deliveredAgainstOutcomes?.find{it.scoreId == score.scoreId}
                         if (outcomeTarget) {
                             outcomeTarget.deliveredApproved = outcomeDelivered ?: 0
                         }
-
                     }
-
-
                 }
             }
         }
-
 
         return contextData
     }
@@ -63,8 +60,15 @@ class GrantsReportLifecycleListener extends NHTOutputReportLifecycleListener {
         List<Map> outcomeTargetsForReport = []
         List scoresForProject =  projectService.getProjectServices(project)
         project.outputTargets?.each { Map outputTarget ->
+
             outputTarget.outcomeTargets?.each { Map outcomeTarget ->
-                List outcomeStatements = project.custom?.details?.outcomes?.projectTermOutcomes?.findAll { it.code in outcomeTarget.relatedOutcomes }?.collect { it.description }
+
+                Map outcome = outcomeTargetsForReport.find{it.relatedOutcomes == outcomeTarget.relatedOutcomes}
+                if (!outcome) {
+                    List outcomeStatements = project.custom?.details?.outcomes?.projectTermOutcomes?.findAll { it.code in outcomeTarget.relatedOutcomes }?.collect { it.description }
+                    outcome = [relatedOutcomes: new ArrayList(outcomeTarget.relatedOutcomes)?.join(', '), outcomeStatements: outcomeStatements?.join(','), deliveredAgainstOutcomes: []]
+                    outcomeTargetsForReport << outcome
+                }
 
                 Map periodTarget = outcomeTarget.periodTargets?.find { Map periodTarget ->
                     periodTarget.periodStart < report.toDate && periodTarget.periodEnd >= report.toDate
@@ -78,7 +82,7 @@ class GrantsReportLifecycleListener extends NHTOutputReportLifecycleListener {
                     score
                 }
 
-                outcomeTargetsForReport << [scoreId: outputTarget.scoreId, targetMeasureLabel: label ?: outputTarget.scoreId, relatedOutcomes: new ArrayList(outcomeTarget.relatedOutcomes)?.join(', '), outcomeStatements: outcomeStatements?.join(','), target: outcomeTarget.target, periodTarget: periodTarget?.target ?: 0]
+                outcome.deliveredAgainstOutcomes << [scoreId: outputTarget.scoreId, targetMeasureLabel: label ?: outputTarget.scoreId, target: outcomeTarget.target, periodTarget: periodTarget?.target ?: 0]
 
             }
         }
