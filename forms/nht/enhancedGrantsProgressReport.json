@@ -60,6 +60,10 @@
                   {
                     "target": "periodTarget",
                     "source-path": "periodTarget"
+                  },
+                  {
+                    "target": "deliveredApproved",
+                    "source-path": "deliveredApproved"
                   }
                 ],
                 "source-path": "outcomeTargets"

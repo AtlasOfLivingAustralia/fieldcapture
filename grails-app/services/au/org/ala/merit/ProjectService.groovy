@@ -1951,8 +1951,9 @@ class ProjectService  {
     Map getServiceDashboardData(String projectId, boolean approvedDataOnly) {
 
         List<Score> projectServices = getProjectServicesWithTargets(projectId)
-        List scoreIds = projectServices.collect{it.scores?.collect{ score ->
+        // The dashboard only displays scores with non zero targets.
 
+        List scoreIds = projectServices.collect {it.scores?.findAll{it.target}?.collect{ score ->
             if (score.relatedScores) {
                 return score.relatedScores.collect{it.scoreId} + score.scoreId
             }

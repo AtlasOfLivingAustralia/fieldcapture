@@ -2,6 +2,7 @@ package au.org.ala.merit.reports
 
 import au.org.ala.merit.OutputService
 import au.org.ala.merit.PublicationStatus
+import au.org.ala.merit.Score
 import org.springframework.beans.factory.annotation.Autowired
 
 class GrantsReportLifecycleListener extends NHTOutputReportLifecycleListener {
@@ -32,6 +33,29 @@ class GrantsReportLifecycleListener extends NHTOutputReportLifecycleListener {
 
         contextData.outcomeTargets = targetsForThisReport
 
+        Map result = projectService.getServiceDashboardData(project.projectId, false)
+        result.services.each { Map service ->
+            service.scores?.each { Score score ->
+                Map byOutcome = score.relatedScores.find{it.description == 'By outcome'}
+                if (byOutcome) {
+                    Score outcomeScore = byOutcome.score
+                    outcomeScore?.result?.groups.each { Map group ->
+                        String outcome = group.group
+                        def outcomeDelivered = group.results?[0]?.result
+
+                        Map outcomeTarget = targetsForThisReport.find{it.relatedOutcomes == outcome && it.scoreId == score.scoreId}
+                        if (outcomeTarget) {
+                            outcomeTarget.deliveredApproved = outcomeDelivered ?: 0
+                        }
+
+                    }
+
+
+                }
+            }
+        }
+
+
         return contextData
     }
 
@@ -54,7 +78,7 @@ class GrantsReportLifecycleListener extends NHTOutputReportLifecycleListener {
                     score
                 }
 
-                outcomeTargetsForReport << [scoreId: outputTarget.scoreId, targetMeasureLabel: label ?: outputTarget.scoreId, relatedOutcomes: outcomeTarget.relatedOutcomes?.join(', '), outcomeStatements: outcomeStatements?.join(','), target: outcomeTarget.target, periodTarget: periodTarget?.target ?: 0]
+                outcomeTargetsForReport << [scoreId: outputTarget.scoreId, targetMeasureLabel: label ?: outputTarget.scoreId, relatedOutcomes: new ArrayList(outcomeTarget.relatedOutcomes)?.join(', '), outcomeStatements: outcomeStatements?.join(','), target: outcomeTarget.target, periodTarget: periodTarget?.target ?: 0]
 
             }
         }
