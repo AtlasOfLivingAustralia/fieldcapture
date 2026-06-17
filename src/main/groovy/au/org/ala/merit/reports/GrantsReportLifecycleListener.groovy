@@ -17,17 +17,19 @@ class GrantsReportLifecycleListener extends NHTOutputReportLifecycleListener {
         List previousReports = project.reports?.findAll {
             it.toDate < report.toDate && it.activityType == report.activityType && it.publicationStatus != PublicationStatus.CANCELLED
         }
-        Map previousReport = previousReports?.max { it.toDate }
 
-        Map progressSectionFromPreviousReport = null
-        if (previousReport) {
+        List previouslyReportedProjectOutcomes = []
+        if (previousReports) {
             // We are only interested in the first section of the report.
-            Map criteria = [name: 'Overview Output Report', activityId: previousReport.activityId]
+            Map criteria = [name: 'Overview Output Report', activityId: previousReports*.activityId]
             Map results = outputService.search(criteria)
-            Map output = results?.outputs ? results.outputs[0] : [] // The query should return at most a single output
-            progressSectionFromPreviousReport = output?.data?.progressSection
+            List outputs = results?.resp?.outputs ?: [] // The query should return at most a single output
+            previouslyReportedProjectOutcomes = outputs.collect {
+                [reportName: previousReports.find{it.activityId == it.activityId}?.name ?: 'Unknown report',
+                projectOutcomes: it.data?.projectOutcomes]
+            }
         }
-        contextData.progressSectionFromPreviousReport = progressSectionFromPreviousReport
+        contextData.previouslyReportedProjectOutcomes = previouslyReportedProjectOutcomes
 
         List targetsForThisReport = targetsForReportingPeriod(project, report)
 

@@ -29,6 +29,13 @@
                 "keys": [
                   "code"
                 ]
+              },
+              "previouslyReportedProjectOutcomes": {
+                "deleteUnmatchedExistingRows": true,
+                "addUnmatchedNewRows": true,
+                "keys": [
+                  "reportName"
+                ]
               }
             },
             "mapping": [
@@ -69,9 +76,63 @@
                       }
                     ]
                   }
-
                 ],
                 "source-path": "outcomeTargets"
+              },
+              {
+                "target": "previouslyReportedProjectOutcomes",
+                "source-path": "previouslyReportedProjectOutcomes",
+                "mapping": [
+                  {
+                    "target": "reportName",
+                    "source-path": "reportName"
+                  },
+                  {
+                    "target": "projectOutcomes",
+                    "source-path": "projectOutcomes",
+                    "mapping": [
+                      {
+                        "target": "code",
+                        "source-path": "code"
+                      },
+                      {
+                        "target": "outcomeStatement",
+                        "source-path": "outcomeStatement"
+                      },
+                      {
+                        "target": "achievement",
+                        "source-path": "achievement"
+                      },
+                      {
+                        "target": "deliveredAgainstOutcomes",
+                        "source-path": "deliveredAgainstOutcomes",
+                        "mapping": [
+                          {
+                            "target": "scoreId",
+                            "source-path": "scoreId"
+                          },
+                          {
+                            "target": "targetMeasureLabel",
+                            "source-path": "targetMeasureLabel"
+                          },
+                          {
+                            "target": "target",
+                            "source-path": "target"
+                          },
+                          {
+                            "target": "periodTarget",
+                            "source-path": "periodTarget"
+                          },
+                          {
+                            "target": "deliveredApproved",
+                            "source-path": "deliveredApproved"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "source-path": "previouslyReportedProjectOutcomes"
               }
             ]
           }
@@ -109,6 +170,69 @@
               "No"
             ],
             "validate": "required"
+          },
+          {
+            "dataType": "list",
+            "name": "previouslyReportedProjectOutcomes",
+            "allowRowDelete": "false",
+            "columns": [
+              {
+                "dataType": "text",
+                "name": "reportName"
+              },
+              {
+                "dataType": "list",
+                "name": "projectOutcomes",
+                "allowRowDelete": "false",
+                "columns": [
+                  {
+                    "dataType": "text",
+                    "name": "code"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "outcomeStatement",
+                    "validate": "required"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "achievement",
+                    "validate": "required,maxSize[1000]"
+                  },
+                  {
+                    "dataType": "list",
+                    "name": "deliveredAgainstOutcomes",
+                    "allowRowDelete": false,
+                    "columns": [
+                      {
+                        "dataType": "text",
+                        "name": "scoreId"
+                      },
+                      {
+                        "dataType": "text",
+                        "name": "targetMeasureLabel"
+                      },
+                      {
+                        "dataType": "number",
+                        "name": "target"
+                      },
+                      {
+                        "dataType": "number",
+                        "name": "periodTarget"
+                      },
+                      {
+                        "dataType": "number",
+                        "name": "deliveredThisPeriod"
+                      },
+                      {
+                        "dataType": "number",
+                        "name": "deliveredApproved"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           },
           {
             "dataType": "list",
@@ -365,7 +489,103 @@
             "items": [
               {
                 "type": "literal",
-                "source": "<b>2.1 Provide a short summary of what has been achieved to date against the project outcomes during this reporting period as outlined in the MERI plan.</b><br>(This includes if the project is on track to meet targets overall, any key governance or project milestones. Keep your answer concise and do not repeat activity specific information which will be reported against the services and targets below.)"
+                "source": "<b>2.1 Reported progress in previous reporting periods are displayed here for reference.</b><p>This section will be empty if this is the first reporting period for this project.</p>"
+              }
+            ],
+            "type": "row"
+          },
+          {
+            "source": "previouslyReportedProjectOutcomes",
+            "type": "repeat",
+            "userAddedRows": false,
+            "items": [
+              {
+                "type": "text",
+                "preLabel": "Report",
+                "source": "reportName"
+              },
+              {
+                "type": "repeat",
+                "source": "projectOutcomes",
+                "items": [
+                  {
+                    "type": "table",
+                    "columns": [
+                      {
+                        "source": "code",
+                        "type": "readonlyText",
+                        "title": "Outcome No.",
+                        "width": "5%"
+                      },
+                      {
+                        "type": "textarea",
+                        "source": "outcomeStatement",
+                        "title": "Outcome",
+                        "readonly": true,
+                        "rows": 5,
+                        "width": "20%"
+                      },
+                      {
+                        "type": "textarea",
+                        "source": "achievement",
+                        "title": "Achievement against the outcome",
+                        "readonly": true,
+                        "rows": 5,
+                        "width": "30%"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "table",
+                    "source": "deliveredAgainstOutcomes",
+                    "disableTableUpload": true,
+                    "columns": [
+                      {
+                        "title": "Activities and target measures",
+                        "type": "text",
+                        "source": "targetMeasureLabel",
+                        "readonly": true,
+                        "width": "20%"
+                      },
+                      {
+                        "title": "Target (total for this outcome)",
+                        "type": "number",
+                        "source": "target",
+                        "readonly": true,
+                        "width": "5%"
+                      },
+                      {
+                        "title": "Forcecast for reporting period",
+                        "type": "number",
+                        "source": "periodTarget",
+                        "readonly": true,
+                        "width": "5%"
+                      },
+                      {
+                        "title": "Delivered this reporting period",
+                        "type": "number",
+                        "source": "deliveredThisPeriod",
+                        "readonly": true,
+                        "width": "5%"
+                      },
+                      {
+                        "title": "Approved delivered to date",
+                        "type": "number",
+                        "source": "deliveredApproved",
+                        "readonly": true,
+                        "width": "5%"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "items": [
+              {
+                "type": "literal",
+                "source": "<b>2.2 Provide a short summary of what has been achieved to date against the project outcomes during this reporting period as outlined in the MERI plan.</b><br>(This includes if the project is on track to meet targets overall, any key governance or project milestones. Keep your answer concise and do not repeat activity specific information which will be reported against the services and targets below.)"
               }
             ],
             "type": "row"
@@ -404,6 +624,7 @@
               {
                 "type": "table",
                 "source": "deliveredAgainstOutcomes",
+                "disableTableUpload": true,
                 "columns": [
                   {
                     "title": "Activities and target measures",
