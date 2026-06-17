@@ -63,7 +63,8 @@ class GrantsReportLifecycleListener extends NHTOutputReportLifecycleListener {
 
             outputTarget.outcomeTargets?.each { Map outcomeTarget ->
 
-                Map outcome = outcomeTargetsForReport.find{it.relatedOutcomes == outcomeTarget.relatedOutcomes}
+                String outcomeTargetKey = new ArrayList(outcomeTarget.relatedOutcomes)?.join(',')
+                Map outcome = outcomeTargetsForReport.find{it.relatedOutcomes == outcomeTargetKey}
                 if (!outcome) {
                     List outcomeStatements = project.custom?.details?.outcomes?.projectTermOutcomes?.findAll { it.code in outcomeTarget.relatedOutcomes }?.collect { it.description }
                     outcome = [relatedOutcomes: new ArrayList(outcomeTarget.relatedOutcomes)?.join(', '), outcomeStatements: outcomeStatements?.join(','), deliveredAgainstOutcomes: []]
@@ -86,7 +87,10 @@ class GrantsReportLifecycleListener extends NHTOutputReportLifecycleListener {
 
             }
         }
+        outcomeTargetsForReport.sort { it.relatedOutcomes }
+        outcomeTargetsForReport.each {
+            it.deliveredAgainstOutcomes.sort { it.targetMeasureLabel }
+        }
         outcomeTargetsForReport
     }
-
 }
