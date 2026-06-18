@@ -126,13 +126,17 @@
                           {
                             "target": "deliveredApproved",
                             "source-path": "deliveredApproved"
+                          },
+                          {
+                            "target": "reasonTargetNotMet",
+                            "source-path": "reasonTargetNotMet"
                           }
+
                         ]
                       }
                     ]
                   }
-                ],
-                "source-path": "previouslyReportedProjectOutcomes"
+                ]
               }
             ]
           }
@@ -227,6 +231,10 @@
                       {
                         "dataType": "number",
                         "name": "deliveredApproved"
+                      },
+                      {
+                        "dataType": "text",
+                        "name": "reasonTargetNotMet"
                       }
                     ]
                   }
@@ -281,6 +289,17 @@
                   {
                     "dataType": "number",
                     "name": "deliveredApproved"
+                  },
+                  {
+                    "dataType": "text",
+                    "name": "reasonTargetNotMet",
+                    "behaviour": [
+                      {
+                        "condition": "deliveredThisPeriod < periodTarget or deliveredThisPeriod > periodTarget",
+                        "type": "enable_and_clear"
+                      }
+                    ],
+                    "validate": "required"
                   }
                 ]
               }
@@ -497,6 +516,11 @@
           {
             "source": "previouslyReportedProjectOutcomes",
             "type": "repeat",
+            "collapsable": true,
+            "collapsedByDefault": true,
+            "title": {
+              "computed": "reportName"
+            },
             "userAddedRows": false,
             "items": [
               {
@@ -574,6 +598,13 @@
                         "source": "deliveredApproved",
                         "readonly": true,
                         "width": "5%"
+                      },
+                      {
+                        "width": "40%",
+                        "source": "reasonTargetNotMet",
+                        "type": "textarea",
+                        "rows": 3,
+                        "title": "Explanation of target under or over delivery for this reporting period (500 character, [approx. 100 word] limit)"
                       }
                     ]
                   }
@@ -660,6 +691,13 @@
                     "source": "deliveredApproved",
                     "readonly": true,
                     "width": "5%"
+                  },
+                  {
+                    "width": "40%",
+                    "source": "reasonTargetNotMet",
+                    "type": "textarea",
+                    "rows": 3,
+                    "title": "Explanation of target under or over delivery (500 character, [approx. 100 word] limit)"
                   }
                 ]
               }
