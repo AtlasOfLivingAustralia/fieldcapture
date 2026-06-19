@@ -28,14 +28,62 @@
                 "addUnmatchedNewRows": true,
                 "keys": [
                   "code"
-                ]
+                ],
+                "outcomeStatement": {
+                  "replaceExisting": true
+                },
+                "deliveredAgainstOutcomes": {
+                  "keys": [
+                    "scoreId"
+                  ],
+                  "deleteUnmatchedExistingRows": true,
+                  "addUnmatchedNewRows": true,
+                  "target": {
+                    "replaceExisting": true
+                  },
+                  "periodTarget": {
+                    "replaceExisting": true
+                  },
+                  "deliveredApproved": {
+                    "replaceExisting": true
+                  }
+                }
               },
               "previouslyReportedProjectOutcomes": {
                 "deleteUnmatchedExistingRows": true,
                 "addUnmatchedNewRows": true,
                 "keys": [
                   "reportName"
-                ]
+                ],
+                "projectOutcomes": {
+                  "deleteUnmatchedExistingRows": true,
+                  "addUnmatchedNewRows": true,
+                  "keys": [
+                    "code"
+                  ],
+                  "outcomeStatement": {
+                    "replaceExisting": true
+                  },
+                  "deliveredAgainstOutcomes": {
+                    "keys": [
+                      "scoreId"
+                    ],
+                    "deleteUnmatchedExistingRows": true,
+                    "addUnmatchedNewRows": true,
+                    "target": {
+                      "replaceExisting": true
+                    },
+                    "periodTarget": {
+                      "replaceExisting": true
+                    },
+                    "deliveredApproved": {
+                      "replaceExisting": true
+                    },
+                    "reasonTargetNotMet": {
+                      "replaceExisting": true
+                    }
+                  }
+                }
               }
             },
             "mapping": [
@@ -222,15 +270,15 @@
                       },
                       {
                         "dataType": "number",
+                        "name": "deliveredApproved"
+                      },
+                      {
+                        "dataType": "number",
                         "name": "periodTarget"
                       },
                       {
                         "dataType": "number",
                         "name": "deliveredThisPeriod"
-                      },
-                      {
-                        "dataType": "number",
-                        "name": "deliveredApproved"
                       },
                       {
                         "dataType": "text",
@@ -579,16 +627,9 @@
                         "width": "5%"
                       },
                       {
-                        "title": "Forcecast for reporting period",
+                        "title": "Forecast for this reporting period",
                         "type": "number",
                         "source": "periodTarget",
-                        "readonly": true,
-                        "width": "5%"
-                      },
-                      {
-                        "title": "Delivered this reporting period",
-                        "type": "number",
-                        "source": "deliveredThisPeriod",
                         "readonly": true,
                         "width": "5%"
                       },
@@ -596,6 +637,13 @@
                         "title": "Approved delivered to date",
                         "type": "number",
                         "source": "deliveredApproved",
+                        "readonly": true,
+                        "width": "5%"
+                      },
+                      {
+                        "title": "Delivered this reporting period",
+                        "type": "number",
+                        "source": "deliveredThisPeriod",
                         "readonly": true,
                         "width": "5%"
                       },
@@ -672,7 +720,14 @@
                     "width": "5%"
                   },
                   {
-                    "title": "Forcecast for reporting period",
+                    "title": "Approved delivered to date",
+                    "type": "number",
+                    "source": "deliveredApproved",
+                    "readonly": true,
+                    "width": "5%"
+                  },
+                  {
+                    "title": "Forecast for this reporting period",
                     "type": "number",
                     "source": "periodTarget",
                     "readonly": true,
@@ -682,13 +737,6 @@
                     "title": "Delivered this reporting period",
                     "type": "number",
                     "source": "deliveredThisPeriod",
-                    "readonly": true,
-                    "width": "5%"
-                  },
-                  {
-                    "title": "Approved delivered to date",
-                    "type": "number",
-                    "source": "deliveredApproved",
                     "readonly": true,
                     "width": "5%"
                   },
