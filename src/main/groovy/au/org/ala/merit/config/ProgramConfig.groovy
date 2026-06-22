@@ -147,7 +147,7 @@ class ProgramConfig implements Map {
     boolean supportsMeriPlanComparison = false
 
     boolean supportsOutcomeTargets() {
-        Map template = config.meriPlanContents?.find{ it.template == "serviceOutcomeTargets"}
+        Map template = config.meriPlanContents?.find{ it.template?.startsWith("serviceOutcomeTargets")}
         template != null
     }
 
