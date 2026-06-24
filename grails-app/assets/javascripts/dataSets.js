@@ -211,6 +211,9 @@ var DataSetViewModel = function(dataSet, projectService, options) {
 
     self.projectBaselines = ko.computed(function() {
         const serviceId = self.serviceId();
+        if (!serviceId) {
+            return options.projectBaselines;
+        }
         return _.filter(options.projectBaselines, function(baseline) {
             return _.contains(baseline.serviceIds, serviceId);
         })
