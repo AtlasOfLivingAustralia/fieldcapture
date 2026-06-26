@@ -1153,6 +1153,15 @@ class ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'readOnly')
+    def projectOutcomeTargetsForReport(String id, String reportData) {
+        Map reportContents = JSON.parse(reportData)
+        String reportId = reportContents.reportId
+        Map project = projectService.get(id)
+        Map report = project.reports.find {it.reportId == reportId}
+        render projectService.getOutcomeTargetsForProject(project, report) as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'readOnly')
     def monitoringProtocolFormCategories() {
         String MONITORING_TAG = 'survey'
         List<Map> forms = activityService.monitoringProtocolForms()

@@ -179,7 +179,6 @@
                             "target": "reasonTargetNotMet",
                             "source-path": "reasonTargetNotMet"
                           }
-
                         ]
                       }
                     ]
@@ -204,24 +203,6 @@
             "description": "Summary of Project Progress for the Period",
             "name": "progressSummary",
             "validate": "required,maxSize[5000]"
-          },
-          {
-            "dataType": "text",
-            "name": "shortTermOutcomesAchieved",
-            "constraints": [
-              "Yes",
-              "No"
-            ],
-            "validate": "required"
-          },
-          {
-            "dataType": "text",
-            "name": "reportOnMediumTermOutcomes",
-            "constraints": [
-              "Yes",
-              "No"
-            ],
-            "validate": "required"
           },
           {
             "dataType": "list",
@@ -293,6 +274,64 @@
           {
             "dataType": "list",
             "name": "projectOutcomes",
+            "behaviour": [
+              {
+                "type": "pre_populate",
+                "target": "projectOutcomes",
+                "config": {
+                  "trigger": "visible",
+                  "waitForInitialisation": true,
+                  "source": {
+                    "url": "/project/projectOutcomeTargetsForReport",
+                    "method": "POST",
+                    "params": [
+                      {
+                        "name": "id",
+                        "expression": "owner.projectId",
+                        "type": "computed",
+                        "required": true
+                      },
+                      {
+                        "expression": "reportData()",
+                        "name": "reportData",
+                        "type": "computed",
+                        "required": true
+                      }
+                    ]
+                  },
+                  "target": {
+                    "type": "singleLoad",
+                    "name": "projectOutcomes"
+                  },
+                  "merge": {
+                    "deleteUnmatchedExistingRows": true,
+                    "addUnmatchedNewRows": true,
+                    "keys": [
+                      "code"
+                    ],
+                    "outcomeStatement": {
+                      "replaceExisting": true
+                    },
+                    "deliveredAgainstOutcomes": {
+                      "keys": [
+                        "scoreId"
+                      ],
+                      "deleteUnmatchedExistingRows": true,
+                      "addUnmatchedNewRows": true,
+                      "target": {
+                        "replaceExisting": true
+                      },
+                      "periodTarget": {
+                        "replaceExisting": true
+                      },
+                      "deliveredApproved": {
+                        "replaceExisting": true
+                      }
+                    }
+                  }
+                }
+              }
+            ],
             "allowRowDelete": "false",
             "columns": [
               {
@@ -640,7 +679,6 @@
                         "readonly": true,
                         "width": "5%"
                       },
-
                       {
                         "title": "Delivered this reporting period",
                         "type": "number",
@@ -755,7 +793,7 @@
           {
             "items": [
               {
-                "preLabel": "2.2 Has this project encountered any issues or delays in delivering the activities and/or outcome statements in the project MERI Plan?",
+                "preLabel": "2.3 Has this project encountered any issues or delays in delivering the activities and/or outcome statements in the project MERI Plan?",
                 "type": "selectOne",
                 "source": "issuesEncountered"
               }

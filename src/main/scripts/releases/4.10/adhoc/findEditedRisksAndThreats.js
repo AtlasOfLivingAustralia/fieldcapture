@@ -9,6 +9,7 @@ while (projects.hasNext()) {
     let usesUniqueValue = false;
     let newRisks = false;
     let changedHighToModerateOrMajor = false;
+    let residualRiskImpacted = false;
 
     for (let i=0; i<risks.length; i++) {
         let risk = risks[i];
@@ -43,9 +44,25 @@ while (projects.hasNext()) {
                 newRisks = true;
             }
 
+
+        }
+        if (risk.residualRisk == "High" || risk.residualRisk == "Significant") {
+            let previousValues = db.auditMessage.find({entityId:project.projectId, date:{$lt:ISODate('2026-02-24T00:00:00Z')}}).sort({date:-1});
+            if (previousValues.hasNext()) {
+
+                let message = previousValues.next();
+
+                let oldRiskRows = message.entity.risks && message.entity.risks.rows;
+                if (oldRiskRows && oldRiskRows.length > i) {
+                    let oldRisk = oldRiskRows[i];
+                    if (oldRisk.residualRisk != risk.residualRisk) {
+                        residualRiskImpacted = true;
+                    }
+                }
+            }
         }
     }
 
-    print("https://fieldcapture.ala.org.au/project/index/"+project.projectId+', '+"https://merit-staging.ala.org.au/project/index/"+project.projectId+', '+"https://merit-staging.ala.org.au/project/projectReport/"+project.projectId+'?fromDate=2026-02-22T13:00:00Z&toDate=2026-05-06T04:41:21Z&sections=Project+risks+changes&orientation=portrait, '+project.risks.dateUpdated+', '+program.programId+', '+program.name+', '+(usesUniqueValue?"Yes":"")+', '+(changedHighToModerateOrMajor?"Yes":"")+", "+(newRisks?"Yes":""));
+    print("https://fieldcapture.ala.org.au/project/index/"+project.projectId+', '+"https://merit-staging.ala.org.au/project/index/"+project.projectId+', '+"https://merit-staging.ala.org.au/project/projectReport/"+project.projectId+'?fromDate=2026-02-22T13:00:00Z&toDate=2026-05-06T04:41:21Z&sections=Project+risks+changes&orientation=portrait, '+project.risks.dateUpdated+', '+program.programId+', '+program.name+', '+(usesUniqueValue?"Yes":"")+', '+(changedHighToModerateOrMajor?"Yes":"")+", "+(newRisks?"Yes":"")+', '+", "+(residualRiskImpacted?"Yes":""));
 
 }

@@ -211,6 +211,7 @@ var Master = function (activityId, config) {
         };
         // This was an observable but it's causing dirty checks to fail when the context changes state.
         context.lifecycleState = {state:'initialising'};
+        context.reportData = self.modelAsJSON;
         var config = _.defaults(options, defaults);
         var viewModel = new config.constructorFunction(output, config.model.dataModel, context, config);
         context.lifecycleState.state = 'modelCreated';
