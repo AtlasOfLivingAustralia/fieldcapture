@@ -46,6 +46,9 @@
                   },
                   "deliveredApproved": {
                     "replaceExisting": true
+                  },
+                  "deliveredThisPeriod": {
+                    "replaceExisting": true
                   }
                 }
               },
@@ -80,6 +83,9 @@
                       "replaceExisting": true
                     },
                     "reasonTargetNotMet": {
+                      "replaceExisting": true
+                    },
+                    "deliveredThisPeriod": {
                       "replaceExisting": true
                     }
                   }
@@ -121,6 +127,10 @@
                       {
                         "target": "deliveredApproved",
                         "source-path": "deliveredApproved"
+                      },
+                      {
+                        "target": "deliveredThisPeriod",
+                        "source-path": "deliveredThisPeriod"
                       }
                     ]
                   }
@@ -178,6 +188,10 @@
                           {
                             "target": "reasonTargetNotMet",
                             "source-path": "reasonTargetNotMet"
+                          },
+                          {
+                            "target": "deliveredThisPeriod",
+                            "source-path": "deliveredThisPeriod"
                           }
                         ]
                       }
@@ -303,6 +317,46 @@
                     "type": "singleLoad",
                     "name": "projectOutcomes"
                   },
+                  "mapping": [
+                    {
+                      "target": "code",
+                      "source-path": "relatedOutcomes"
+                    },
+                    {
+                      "target": "outcomeStatement",
+                      "source-path": "outcomeStatements"
+                    },
+                    {
+                      "target": "deliveredAgainstOutcomes",
+                      "source-path": "deliveredAgainstOutcomes",
+                      "mapping": [
+                        {
+                          "target": "scoreId",
+                          "source-path": "scoreId"
+                        },
+                        {
+                          "target": "targetMeasureLabel",
+                          "source-path": "targetMeasureLabel"
+                        },
+                        {
+                          "target": "target",
+                          "source-path": "target"
+                        },
+                        {
+                          "target": "periodTarget",
+                          "source-path": "periodTarget"
+                        },
+                        {
+                          "target": "deliveredApproved",
+                          "source-path": "deliveredApproved"
+                        },
+                        {
+                          "target": "deliveredThisPeriod",
+                          "source-path": "deliveredThisPeriod"
+                        }
+                      ]
+                    }
+                  ],
                   "merge": {
                     "deleteUnmatchedExistingRows": true,
                     "addUnmatchedNewRows": true,
@@ -325,6 +379,9 @@
                         "replaceExisting": true
                       },
                       "deliveredApproved": {
+                        "replaceExisting": true
+                      },
+                      "deliveredThisPeriod": {
                         "replaceExisting": true
                       }
                     }
