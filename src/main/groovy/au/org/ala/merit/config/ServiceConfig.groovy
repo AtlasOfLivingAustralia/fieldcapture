@@ -24,4 +24,5 @@ class ServiceConfig {
 class ProgramServiceConfig {
     String serviceFormName
     List<ServiceConfig> programServices
+    boolean filterServicesByForecasts
 }

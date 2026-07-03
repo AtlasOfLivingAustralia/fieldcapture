@@ -203,6 +203,24 @@ class ProjectService  {
         result
     }
 
+    List scoreDataForActivity(Map activity, List scoreIds) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/scoreDataForActivity'
+        Map postData = [
+                scoreIds:scoreIds,
+                activityData:activity
+        ]
+        Map result = webService.doPost(url, postData)
+        List scoreData = []
+        if (result.statusCode == HttpStatus.SC_OK) {
+            scoreData = result?.resp?.activityScores
+        }
+        else {
+            log.warn("Failed to retrieve score data for activity ${activity.activityId}.  Status code: ${result.statusCode}.  Error: ${result.error}")
+        }
+
+        scoreData
+    }
+
     /**
      * Returns true if the report identified by reportId belongs to the project identified by projectId.
      */
@@ -1759,6 +1777,23 @@ class ProjectService  {
         return target > result
     }
 
+    private List<Map> getServicesWithForecastsForReport(Map project, Map activity, List projectServices) {
+        List servicesWithForecastsForThisReport = []
+        project.outputTargets?.each { Map outputTarget ->
+            outputTarget.outcomeTargets?.each { Map outcomeTarget ->
+                Map periodTarget = outcomeTarget.periodTargets?.find { it.periodStart <= activity.plannedStartDate && it.periodEnd >= activity.plannedEndDate }
+                if (periodTarget?.target) {
+                    Map service = projectServices.find {
+                        it.scores?.find { score -> score.scoreId == outputTarget.scoreId }
+                    }
+                    servicesWithForecastsForThisReport << service
+                }
+            }
+        }
+
+        servicesWithForecastsForThisReport
+    }
+
     /**
      * If the activity type to be displayed is the RLP Outputs report, only show the outputs that align with
      * services to be delivered by the model.  This method has a side effect of modifying the
@@ -1777,7 +1812,9 @@ class ProjectService  {
 
             // The values to be filtered can come from either project services or activities in the MERI plan.
             selectedForProject = getProjectServices(project, config)
-
+            if (config.getProgramServices().filterServicesByForecasts) {
+                selectedForProject = getServicesWithForecastsForReport(project, existingActivityData, selectedForProject)
+            }
 
             if (!selectedForProject) {
                 serviceOutputs = config.activities?.collect{it.output}.findAll()
@@ -2431,34 +2468,57 @@ class ProjectService  {
         result
     }
 
-    List getOutcomeTargetsForProject(Map project, Map report) {
-        List targetsForThisReport = targetsForReportingPeriod(project, report)
+    private mergeScoreDataIntoResults(String scoreId, Map outcomeScoreData, List targetsForThisReport, String propertyNameToUpdate) {
+        outcomeScoreData?.groups?.each { Map group ->
+            String outcomeGroup = group.group
+            def outcomeDelivered = group.results?[0]?.result
 
-        Map result = getServiceDashboardData(project.projectId, false)
+            Map outcome = targetsForThisReport.find{it.relatedOutcomes == outcomeGroup}
+            Map outcomeTarget = outcome?.deliveredAgainstOutcomes?.find{it.scoreId == scoreId}
+            if (outcomeTarget) {
+                outcomeTarget[propertyNameToUpdate] = outcomeDelivered ?: 0
+            }
+        }
+    }
+
+    List getOutcomeTargetsForProject(Map project, Map report, Map activity) {
+        List servicesForProject = getProjectServices(project)
+        List targetsForThisReport = targetsForReportingPeriod(project, report, servicesForProject)
+
+        Map result = getServiceDashboardData(project.projectId, true)
         result.services.each { Map service ->
             service.scores?.each { Score score ->
                 Map byOutcome = score.relatedScores.find{it.description == 'By outcome'}
                 if (byOutcome) {
                     Score outcomeScore = byOutcome.score
-                    outcomeScore?.result?.groups?.each { Map group ->
-                        String outcomeGroup = group.group
-                        def outcomeDelivered = group.results?[0]?.result
+                    mergeScoreDataIntoResults(score.scoreId, outcomeScore.result, targetsForThisReport, 'deliveredApproved')
+                }
+            }
+        }
 
-                        Map outcome = targetsForThisReport.find{it.relatedOutcomes == outcomeGroup}
-                        Map outcomeTarget = outcome?.deliveredAgainstOutcomes?.find{it.scoreId == score.scoreId}
-                        if (outcomeTarget) {
-                            outcomeTarget.deliveredApproved = outcomeDelivered ?: 0
-                        }
+        if (activity.progress in [ActivityService.PROGRESS_STARTED, ActivityService.PROGRESS_FINISHED]) {
+            List scoreIds = []
+            Map scoreForOutcomeScore = [:]
+            servicesForProject?.each { Map service ->
+                service.scores?.each { Map score ->
+                    Map byOutcomeScore = score.relatedScores?.find { it.description == 'By outcome'}
+                    if (byOutcomeScore) {
+                        scoreIds << byOutcomeScore.scoreId
+                        scoreForOutcomeScore[byOutcomeScore.scoreId] = score.scoreId
                     }
                 }
             }
+            List scores = scoreDataForActivity(activity, scoreIds)
+            scores?.each { Map data ->
+                mergeScoreDataIntoResults( scoreForOutcomeScore[data.scoreId], data.result, targetsForThisReport, 'deliveredThisPeriod')
+            }
+
         }
         targetsForThisReport
     }
 
-    private List<Map> targetsForReportingPeriod(Map project, Map report) {
+    private List<Map> targetsForReportingPeriod(Map project, Map report, List servicesForProject ) {
         List<Map> outcomeTargetsForReport = []
-        List scoresForProject =  getProjectServices(project)
         project.outputTargets?.each { Map outputTarget ->
 
             outputTarget.outcomeTargets?.each { Map outcomeTarget ->
@@ -2475,7 +2535,7 @@ class ProjectService  {
                     periodTarget.periodStart < report.toDate && periodTarget.periodEnd >= report.toDate
                 }
                 String label = null
-                scoresForProject.find { Map service ->
+                servicesForProject.find { Map service ->
                     Map score = service.scores?.find{it.scoreId == outputTarget.scoreId }
                     if (score) {
                         label = service.name + ' - ' + score.label

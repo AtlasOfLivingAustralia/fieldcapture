@@ -1,8 +1,8 @@
 package au.org.ala.merit.reports
 
+
 import au.org.ala.merit.OutputService
 import au.org.ala.merit.PublicationStatus
-import au.org.ala.merit.Score
 import org.springframework.beans.factory.annotation.Autowired
 
 class GrantsReportLifecycleListener extends NHTOutputReportLifecycleListener {
@@ -30,7 +30,7 @@ class GrantsReportLifecycleListener extends NHTOutputReportLifecycleListener {
             }
         }
         contextData.previouslyReportedProjectOutcomes = previouslyReportedProjectOutcomes
-        contextData.outcomeTargets = projectService.getOutcomeTargetsForProject(project, report )
+        contextData.outcomeTargets = projectService.getOutcomeTargetsForProject(project, report, activity)
 
         return contextData
     }

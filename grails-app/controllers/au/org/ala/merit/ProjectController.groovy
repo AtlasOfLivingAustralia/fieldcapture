@@ -1158,7 +1158,7 @@ class ProjectController {
         String reportId = reportContents.reportId
         Map project = projectService.get(id)
         Map report = project.reports.find {it.reportId == reportId}
-        render projectService.getOutcomeTargetsForProject(project, report) as JSON
+        render projectService.getOutcomeTargetsForProject(project, report, reportContents.activity) as JSON
     }
 
     @PreAuthorise(accessLevel = 'readOnly')
