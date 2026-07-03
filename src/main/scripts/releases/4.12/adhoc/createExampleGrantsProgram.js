@@ -135,6 +135,7 @@ program.config.meriPlanContents = [
         }
     }
 ];
+program.config.programServiceConfig.filterServicesByForecasts = true
 program.config.targetsConfig = {
     "periodGenerationConfig": {
         "reportType": "Targets",
