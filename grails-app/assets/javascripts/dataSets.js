@@ -184,7 +184,6 @@ var DataSetViewModel = function(dataSet, projectService, options) {
         }
     });
 
-    self.projectBaselines = options.projectBaselines;
     self.type = ko.observable(dataSet.type);
     self.baselines = ko.observableArray(dataSet.baselines);
     self.otherDataSetType = ko.observable(dataSet.otherDataSetType);
@@ -208,6 +207,16 @@ var DataSetViewModel = function(dataSet, projectService, options) {
             return serviceAndOutcome.label == self.serviceAndOutcomes();
         });
         return selectedOutcome && selectedOutcome.serviceId;
+    });
+
+    self.projectBaselines = ko.computed(function() {
+        const serviceId = self.serviceId();
+        if (!serviceId) {
+            return options.projectBaselines;
+        }
+        return _.filter(options.projectBaselines, function(baseline) {
+            return _.contains(baseline.serviceIds, serviceId);
+        })
     });
 
     self.disableBaseline = function(e) {
