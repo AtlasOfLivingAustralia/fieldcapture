@@ -65,7 +65,7 @@
         <td data-bind="style:{width:cellWidth+'%'}">
             <input type="number" class="form-control form-control-sm" data-bind="value:target, disable: $root.isProjectDetailsLocked()" data-validation-engine="validate[required,min[validate[min[0.01]]"></td>
         <!-- ko foreach:periodTargets -->
-        <td class="forecast" data-bind="style:{width:cellWidth+'%'}"><input type="number" class="form control form-control-sm" data-bind="value:target"></input></td>
+        <td class="forecast" data-bind="style:{width:cellWidth+'%'}"><input type="number" class="form control form-control-sm" data-bind="value:target, disable: $root.isProjectDetailsLocked()"></input></td>
         <!-- /ko -->
         <td>
             <!-- ko if:orphanedOutcomes().length > 0 -->
