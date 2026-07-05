@@ -17,13 +17,19 @@
 
 (function() {
     var messages = {},
-        deffer = $.Deferred();
-    $.get(fcConfig.i18nURL).done(function (data) {
-        messages = data;
-        deffer.resolve();
-    }).fail(function () {
-        deffer.reject();
-    });
+        defer = $.Deferred();
+    if (fcConfig.i18nURL) {
+        $.get(fcConfig.i18nURL).done(function (data) {
+            messages = data;
+            defer.resolve();
+        }).fail(function () {
+            defer.reject();
+        });
+    }
+    else {
+        console.warn("No i18nURL defined in config");
+        defer.reject();
+    }
 
     $i18n = function(key, defaultValue) {
         if (messages[key] !== undefined) {
@@ -35,7 +41,7 @@
 
     $i18nAsync = function(key, defaultValue, callback) {
         if (callback) {
-            deffer.done(function () {
+            defer.done(function () {
                 callback($i18n(key, defaultValue));
             }).fail(function () {
                 callback($i18n(key, defaultValue));
