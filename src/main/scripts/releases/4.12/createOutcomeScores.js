@@ -1270,10 +1270,15 @@ while (scores.hasNext()) {
 for (const scoreConfig of scoreInfo) {
 
   let score = db.score.findOne({label: scoreConfig.label});
+  if (!score) {
+    print("Unable to find score with label "+scoreConfig.label);
+    continue;
+  }
   if (!scoreConfig.relatedOutcomesPath) {
     print("Can't process config: "+scoreConfig.error+", "+scoreConfig.label);
     continue;
   }
+
   const match = scoreConfig.relatedOutcomesPath.match(/dataModel\[name="([^"]+)"\]\.columns\[name="([^"]+)"\]/);
   let listName = null;
   let columnName = null;
