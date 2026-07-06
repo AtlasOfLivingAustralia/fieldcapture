@@ -1236,15 +1236,15 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
             if (options.separateTargetsPerOutcome) {
                 self.periodTargets = _.map(forecastPeriods, function (period) {
 
-                    var target = 0;
+                    var periodTarget = 0;
                     if (target && target.periodTargets) {
                         var existingPeriodTarget = _.find(target.periodTargets || [], function(periodTarget) {
                             return periodTarget.period === period.period;
                         });
-                        target = existingPeriodTarget ? existingPeriodTarget.target : 0;
+                        periodTarget = existingPeriodTarget ? existingPeriodTarget.target : 0;
                     }
 
-                    return {period: period.period, target: ko.observable(target), periodStart:period.periodStart, periodEnd:period.periodEnd};
+                    return {period: period.period, target: ko.observable(periodTarget), periodStart:period.periodStart, periodEnd:period.periodEnd};
                 });
             }
 
