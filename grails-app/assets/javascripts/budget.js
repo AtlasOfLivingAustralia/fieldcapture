@@ -11,7 +11,7 @@ function BudgetViewModel(o, period) {
 
     var headerArr = [];
     for (i = 0; i < period.length; i++) {
-        headerArr.push({"data": period[i]});
+        headerArr.push({"data": period[i].period});
     }
     self.headers = ko.observableArray(headerArr);
 
