@@ -1279,10 +1279,33 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
         self.periodTargets = _.map(forecastPeriods, function (period) {
 
             var existingPeriodTarget = _.find(outputTarget.periodTargets, function(periodTarget) {
-                return periodTarget.period == period.period;
+                return periodTarget.period === period.period;
             });
             var target = existingPeriodTarget ? existingPeriodTarget.target : 0;
-            return {period: period.period, target: ko.observable(target), periodStart:period.periodStart, periodEnd:period.periodEnd};
+
+            var targetProperty;
+            if (options.separateTargetsPerOutcome) {
+                targetProperty = ko.pureComputed(function() {
+                    var sum = 0;
+                    for (var i=0; i<self.outcomeTargets().length; i++) {
+                        var outcomeTarget = self.outcomeTargets()[i];
+                        if (outcomeTarget.periodTargets) {
+                            var matchingPeriod = _.find(outcomeTarget.periodTargets, function(periodTarget) {
+                                return periodTarget.period === period.period;
+                            });
+                            if (matchingPeriod) {
+                                sum += Number(matchingPeriod.target()) || 0;
+                            }
+                        }
+                    }
+                    return sum;
+                });
+            }
+            else {
+                targetProperty = ko.observable(target);
+            }
+
+            return {period: period.period, target: targetProperty, periodStart:period.periodStart, periodEnd:period.periodEnd};
         });
 
         // This needs to be declared before it's populated due to a reliance on the availableOutcomes function
