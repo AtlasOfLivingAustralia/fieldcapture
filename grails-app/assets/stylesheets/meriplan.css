@@ -238,18 +238,60 @@ table tr.header th {
 .meri-plan .service-outcomes-targets-view .score {
     width: 50%;
 }
+.meri-plan .service-outcomes-targets-with-forecasts {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.meri-plan .service-outcomes-targets-with-forecasts tbody td,
+.meri-plan .service-outcomes-targets-with-forecasts tbody th {
+    padding: 0.45rem 0.5rem;
+    vertical-align: middle;
+}
+
 .meri-plan .service-outcomes-targets-with-forecasts tr.sub-heading th {
     background-color: #f5f5f5;
+    border-top: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
 }
 
-.meri-plan .service-outcomes-targets-with-forecasts .service-target {
-
-}
 .meri-plan .service-outcomes-targets-with-forecasts .service-target td {
     background-color: #efefef;
+    border-bottom: 1px solid #dddddd;
 }
+
+.meri-plan .service-outcomes-targets-with-forecasts .outcome-target td {
+    background-color: #ffffff;
+    border-bottom: 1px solid #efefef;
+}
+
 .meri-plan .service-outcomes-targets-with-forecasts .period {
     font-weight: 500;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.meri-plan .service-outcomes-targets-with-forecasts td.index {
+    text-align: center;
+}
+
+.meri-plan .service-outcomes-targets-with-forecasts .remove {
+    min-width: 2em;
+    max-width: 2em;
+    width: 2em;
+    text-align: center;
+}
+
+.meri-plan .service-outcomes-targets-with-forecasts .form-control-sm,
+.meri-plan .service-outcomes-targets-with-forecasts .form-select-sm {
+    min-height: 30px;
+}
+
+@media (max-width: 768px) {
+    .meri-plan .service-outcomes-targets-with-forecasts tbody td,
+    .meri-plan .service-outcomes-targets-with-forecasts tbody th {
+        padding: 0.35rem;
+    }
 }
 .meri-plan td .select2.select2-container {
     width: 100% !important;

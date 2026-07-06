@@ -7,7 +7,7 @@
         <th class="index"></th>
         <th data-bind="attr:{colspan:($root.periods.length+2)/2}" class="required service">${serviceName ?: "Project Service"}</th>
         <th data-bind="attr:{colspan:($root.periods.length % 2) == 0 ? ($root.periods.length+2) / 2 : ($root.periods.length+3) / 2}" class="required score">${targetMeasureHeading ?: 'Target measure'}</th>
-        <th></th>
+        <th class="remove"></th>
     </tr>
     </thead>
     <tbody data-bind="foreach : sortedOutcomeTargets">
@@ -23,7 +23,7 @@
                     data-bind="value:scoreLabel, disable: $root.isProjectDetailsLocked()"
                    >
         </td>
-        <td>
+        <td class="remove">
             <!-- ko if:orphaned -->
             <input type="text" value="" class="hidden-validation-holder" data-validation-engine="validate[required]" data-errormessage="This target is associated with a service not referenced elsewhere in the MERI plan">
             <i data-bind="click:$parent.removeOutcomeTarget" class="fa fa-remove"></i>
@@ -36,13 +36,13 @@
         <th rowspan="2">${projectOutcomesHeading ?: 'Project Outcome/s'}</th>
         <th rowspan="2">${targetHeading ?: 'Target'}</th>
         <th data-bind="attr:{colspan:periodTargets.length}">${forecastHeading ?: 'Forecast/s'}</th>
-        <th></th>
+        <th class="remove"></th>
     </tr>
     <tr class="sub-heading">
         <!-- ko foreach:periodTargets -->
         <th class="period"><span data-bind="text:period"></span></th>
         <!-- /ko -->
-        <th></th>
+        <th class="remove"></th>
     </tr>
     <!-- ko let: {cellWidth: 100/(periodTargets.length+2) } -->
     <!-- ko foreach:outcomeTargets -->
@@ -67,7 +67,7 @@
         <!-- ko foreach:periodTargets -->
         <td class="forecast" data-bind="style:{width:cellWidth+'%'}"><input type="number" class="form control form-control-sm" data-bind="value:target, disable: $root.isProjectDetailsLocked()"></input></td>
         <!-- /ko -->
-        <td>
+        <td class="remove">
             <!-- ko if:orphanedOutcomes().length > 0 -->
             <span data-bind="if:!$root.isProjectDetailsLocked()">
             <i class="fa fa-remove" data-bind="click:$parent.removeOutcomeTarget, disable: $root.isProjectDetailsLocked()"></i>
