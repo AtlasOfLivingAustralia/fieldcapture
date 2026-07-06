@@ -4,7 +4,6 @@
 <table class="table service-outcomes-targets-with-forcasts-view">
     <thead>
     <tr>
-    <tr>
         <th class="index"></th>
         <th data-bind="attr:{colspan:($root.periods.length+2)/2}" class="required service">${serviceName ?: "Project Service"}</th>
         <th data-bind="attr:{colspan:($root.periods.length % 2) == 0 ? ($root.periods.length+2) / 2 : ($root.periods.length+3) / 2}" class="required score">${targetMeasureHeading ?: 'Target measure'}</th>

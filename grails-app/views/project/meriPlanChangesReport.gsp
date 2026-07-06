@@ -99,6 +99,7 @@
         $("#secondary-assets").prettyTextDiff({cleanup: true});
         $("#outcome-statements td").prettyTextDiff({cleanup: true});
         $("#project-partnerships td").prettyTextDiff({cleanup: true});
+        $("th.period-changes").prettyTextDiff({cleanup: true});
 
         });
 
