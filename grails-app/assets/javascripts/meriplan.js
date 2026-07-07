@@ -1076,7 +1076,10 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
     self.implementation = new ImplementationViewModel(o.implementation);
     self.partnership = new GenericViewModel(o.partnership, ['data1', 'data2', 'data3', 'otherOrganisationType']);
     self.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
-    self.budget = new BudgetViewModel(o.budget, period);
+    // The budget table historically used string only periods for financial years.  Keeping this
+    // format allows historical MERI plans to still render and index correctly.
+    let budgetPeriods = _.map(period, function(p) { return p.period; });
+    self.budget = new BudgetViewModel(o.budget, budgetPeriods);
     self.adaptiveManagement = ko.observable(o.adaptiveManagement);
     self.rationale = ko.observable(o.rationale);
     self.baseline = new GenericViewModel(o.baseline, ['code', 'monitoringDataStatus', 'baseline',  'method', 'evidence'], 'B', ['relatedTargetMeasures', 'relatedOutcomes', 'protocols']);
