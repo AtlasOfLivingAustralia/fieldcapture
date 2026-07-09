@@ -41,7 +41,7 @@ let scores = [
     {
         scoreId: baselineScoreId,
         entityTypes: undefined,
-        tags: [],
+        tags: ['Survey', 'Baseline'],
         displayType: '',
         entity: 'Activity',
         outputType: sectionName,
@@ -66,7 +66,17 @@ let scores = [
                     ]
                 }
             ]
-        }
+        },
+        relatedScores: [
+            {
+                description: 'Invoiced by',
+                scoreId: invoicedBaselineScoreId
+            },
+            {
+                description: 'By outcome',
+                scoreId: baselineScoreIdByOutcome
+            }
+        ]
     },
     {
         scoreId: indicatorScoreId,
@@ -91,7 +101,18 @@ let scores = [
                     ]
                 }
             ]
-        }
+        },
+        relatedScores: [
+            {
+                description: 'Invoiced by',
+                scoreId: invoicedIndicatorScoreId
+            },
+            {
+                description: 'By outcome',
+                scoreId: indicatorScoreIdByOutcome
+            }
+        ],
+        tags:['Survey', 'Indicator']
     },
     {
         scoreId: invoicedBaselineScoreId,
@@ -100,7 +121,7 @@ let scores = [
         displayType: '',
         entity: 'Activity',
         outputType: sectionName,
-        isOutputTarget: true,
+        isOutputTarget: false,
         category: "Reporting",
         status: 'active',
         label: 'Invoiced number of disease surveys conducted - baseline',
@@ -127,7 +148,7 @@ let scores = [
         scoreId: invoicedIndicatorScoreId,
         label: 'Invoiced number of disease surveys conducted - indicator',
         status: 'active',
-        isOutputTarget: true,
+        isOutputTarget: false,
         category: "Reporting",
         outputType: sectionName,
         configuration: {
@@ -155,7 +176,7 @@ let scores = [
         displayType: '',
         entity: 'Activity',
         outputType: sectionName,
-        isOutputTarget: true,
+        isOutputTarget: false,
         category: "Reporting",
         status: 'active',
         label: 'Number of disease surveys conducted by outcome - baseline by related outcomes',
@@ -190,7 +211,7 @@ let scores = [
         scoreId: indicatorScoreIdByOutcome,
         label: 'Number of disease surveys conducted - indicator by related outcomes',
         status: 'active',
-        isOutputTarget: true,
+        isOutputTarget: false,
         category: "Reporting",
         outputType: sectionName,
         configuration: {
@@ -229,6 +250,10 @@ for (let i=0; i<scores.length; i++) {
     if (!savedScore) {
         db.score.insertOne(score);
         audit(score, score.scoreId, 'au.org.ala.ecodata.Score', adminUserId, null, 'Insert');
+    }
+    else {
+        db.score.replaceOne({scoreId: score.scoreId}, score);
+        audit(score, score.scoreId, 'au.org.ala.ecodata.Score', adminUserId, null, 'Update');
     }
 }
 
