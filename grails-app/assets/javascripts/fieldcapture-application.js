@@ -990,3 +990,44 @@ function scrollToFirstInvalidField($validator) {
         $validator.data('jqv', currentOptions);
     }
 };
+
+function sortTargetMeasures(targetMeasures) {
+    var parseTargetMeasureLabel = function(label) {
+        label = label || '';
+        var suffixMatch = label.match(/(initial|follow-up)\s*$/i);
+        var suffix = suffixMatch ? suffixMatch[1].toLowerCase() : '';
+        var baseLabel = suffixMatch ? label.substring(0, suffixMatch.index).trim() : label.trim();
+
+        return {
+            baseLabel: baseLabel,
+            suffixRank: suffix === 'initial' ? 0 : (suffix === 'follow-up' ? 1 : 2)
+        };
+    };
+    var compareAlphabetically = function(textA, textB) {
+        textA = (textA || '').toLowerCase();
+        textB = (textB || '').toLowerCase();
+        if (textA < textB) {
+            return -1;
+        }
+        if (textA > textB) {
+            return 1;
+        }
+        return 0;
+    };
+
+    targetMeasures = targetMeasures.sort(function(a, b) {
+        var left = parseTargetMeasureLabel(a.label);
+        var right = parseTargetMeasureLabel(b.label);
+
+        var baseLabelComparison = compareAlphabetically(left.baseLabel, right.baseLabel);
+        if (baseLabelComparison !== 0) {
+            return baseLabelComparison;
+        }
+        if (left.suffixRank !== right.suffixRank) {
+            return left.suffixRank - right.suffixRank;
+        }
+        return compareAlphabetically(a.label, b.label);
+    });
+
+    return targetMeasures;
+}

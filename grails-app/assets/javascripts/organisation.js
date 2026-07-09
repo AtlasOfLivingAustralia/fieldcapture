@@ -655,7 +655,7 @@ OrganisationPageViewModel = function (props, options) {
         }
     }
 
-    self.allTargetMeasures = _.sortBy(self.allTargetMeasures, 'label');
+    self.allTargetMeasures = sortTargetMeasures(self.allTargetMeasures);
     var propDetails = props && props.custom && props.custom.details || {};
     self.selectedTargetMeasures = ko.observableArray();
     var details = new OrganisationDetailsViewModel(propDetails, props, self.periods, self.allTargetMeasures, options);

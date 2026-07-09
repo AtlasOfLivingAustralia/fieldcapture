@@ -880,7 +880,7 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
         }
     }
 
-    self.allTargetMeasures = _.sortBy(self.allTargetMeasures, 'label');
+    self.allTargetMeasures = sortTargetMeasures(self.allTargetMeasures);
     self.keyThreatsTargetMeasures = function() {
         if (self.meriPlan().baseline.rows().length > 0) {
             return self.allTargetMeasures;
@@ -1725,7 +1725,7 @@ function GenericViewModel(o, propertyNames, codePrefix, arrayPropertyNames, numD
     };
 
     function nextCode() {
-        var maxCodeNumber = 1;
+        var maxCodeNumber = 0;
         for (var i=0; i<self.rows().length; i++) {
             var code = ko.utils.unwrapObservable(self.rows()[i].code);
             if (code) {
