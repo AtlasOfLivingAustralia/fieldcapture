@@ -14,6 +14,7 @@
     <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script type="text/javascript">
         var fcConfig = {
+                i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
                 serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
                 activityUpdateUrl: "${saveReportUrl}",
                 contextViewUrl: "${contextViewUrl}/",
