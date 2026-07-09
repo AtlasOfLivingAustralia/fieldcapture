@@ -1279,6 +1279,10 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
             return !self.selectedTargetMeasure();
         });
 
+        // This needs to be declared before it's populated due to a reliance on the availableOutcomes function
+        // which references this array.
+        self.outcomeTargets = ko.observableArray();
+
         self.periodTargets = _.map(forecastPeriods, function (period) {
 
             var existingPeriodTarget = _.find(outputTarget.periodTargets, function(periodTarget) {
@@ -1311,11 +1315,6 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
             return {period: period.period, target: targetProperty, periodStart:period.periodStart, periodEnd:period.periodEnd};
         });
 
-        // This needs to be declared before it's populated due to a reliance on the availableOutcomes function
-        // which references this array.
-        self.outcomeTargets = ko.observableArray();
-
-
         self.target = ko.pureComputed(function() {
            var target = 0;
            for (var i=0; i<self.outcomeTargets().length; i++) {
@@ -1328,17 +1327,23 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
             return availableOutcomes();
         });
 
+        // If we require an outcome target per outcome, create one new row per related outcome.
         if (options.separateTargetsPerOutcome) {
-            self.outcomeTargets(_.map(outputTarget.outcomeTargets || {}, function(outcomeTarget) {
-                for (var i=0; i<outcomeTarget.relatedOutcomes.length; i++) {
-                    return new ServiceOutcomesTarget({
-                        relatedOutcomes: [outcomeTarget.relatedOutcomes[i]],
+            let results = [];
+            for (let i=0; i<outputTarget.outcomeTargets.length; i++) {
+                let outcomeTarget = outputTarget.outcomeTargets[i];
+
+                for (let j=0; j<outcomeTarget.relatedOutcomes.length; j++) {
+                    results.push(new ServiceOutcomesTarget({
+                        relatedOutcomes: [outcomeTarget.relatedOutcomes[j]],
                         target: outcomeTarget.target,
                         periodTargets: outcomeTarget.periodTargets
-                    });
+                    }));
                 }
-
-            }));
+            }
+            if (results) {
+                self.outcomeTargets(results);
+            }
 
             self.availableOutcomes.subscribe(function (availableOutcomes) {
                 for (var i = 0; i < availableOutcomes.length; i++) {
