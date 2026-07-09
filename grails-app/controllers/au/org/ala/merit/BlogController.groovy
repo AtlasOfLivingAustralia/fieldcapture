@@ -48,6 +48,7 @@ class BlogController {
                 }
             } else {
                 Map blogEntry = blogService.get(projectId, id, BlogType.PROJECT)
+                blogEntry.projectId = projectId
                 render view: 'edit', model: [blogEntry: blogEntry]
             }
         } else if (programId) {
@@ -60,6 +61,7 @@ class BlogController {
                 }
             } else {
                 Map blogEntry = blogService.get(programId, id, BlogType.PROGRAM)
+                blogEntry.programId = programId
                 render view: 'edit', model: [blogEntry: blogEntry]
             }
         }else if (managementUnitId){
@@ -72,6 +74,7 @@ class BlogController {
                 }
             } else {
                 Map blogEntry = blogService.get(managementUnitId, id, BlogType.MANAGEMENTUNIT)
+                blogEntry.managementUnitId = managementUnitId
                 render view: 'edit', model: [blogEntry: blogEntry]
             }
         }else{

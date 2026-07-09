@@ -2,6 +2,7 @@
 <!-- ko stopBinding: true -->
 <div id="sitemap">
             <script type="text/javascript" src="${grailsApplication.config.getProperty('google.drawmaps.url')}"></script>
+            <asset:javascript src="mcx-drawing-polyfill/mcx-drawing-polyfill.js"/>
             <div class="row">
                 <g:hiddenField name="id" value="${site?.siteId}"/>
                 <div class="col-sm-8">
@@ -95,18 +96,6 @@
                                     <a href="javascript:void(0);" class="btn active draw-tool-btn">
                                     <img src="${assetPath(src:'glyphicons_347_hand_up.png')}" alt="center and radius"/>
                                     <span class="drawButtonLabel">Move & zoom</span>
-                                    </a>
-                                </li>
-                                <li id="circle" title="Click at centre and drag the desired radius. Values can be adjusted in the boxes.">
-                                    <a href="javascript:void(0);" class="btn draw-tool-btn">
-                                    <img src="${assetPath(src:'glyphicons_095_vector_path_circle.png')}" alt="center and radius"/>
-                                    <span class="drawButtonLabel">Draw circle</span>
-                                    </a>
-                                </li>
-                                <li id="rectangle" title="Click and drag a rectangle.">
-                                    <a href="javascript:void(0);" class="btn draw-tool-btn">
-                                    <img src="${assetPath(src:'glyphicons_094_vector_path_square.png')}" alt="rectangle"/>
-                                    <span class="drawButtonLabel">Draw rect</span>
                                     </a>
                                 </li>
                                 <li id="polygon" title="Click any number of times to draw a polygon. Double click to close the polygon.">
