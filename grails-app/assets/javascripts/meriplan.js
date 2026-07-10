@@ -870,7 +870,7 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
     self.keyThreatsTargetMeasures = function() {
         // For legacy data preservation, we include any previously selected survey services in the
         // selection list, but otherwise only allow non-survey related target measures.
-        var threatRows = project.custom.details.threats.rows;
+        var threatRows = (project.custom.details.threats && project.custom.details.threats.rows) || [];
         var threatTargetMeasures = [];
         for (var i=0; i<threatRows.length; i++) {
             let threat = threatRows[i];
