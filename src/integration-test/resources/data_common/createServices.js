@@ -105,7 +105,7 @@ if (db.service.count() == 0) {
             ]
         },
         {
-            "outputs": [{"formName": "RLP Output Report", "sectionName": "RLP - Flora survey"}],
+            "outputs": [{"formName": "RLP Output Report", "sectionName": "RLP - Flora survey"}, {formName:"Enhanced Grants Progress Report", sectionName:"NHT - Flora survey"}],
             "name": "Flora survey",
             "id": 15,
             "categories": ["Monitoring activities"]

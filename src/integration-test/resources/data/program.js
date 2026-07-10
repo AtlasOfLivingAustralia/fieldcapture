@@ -238,6 +238,16 @@ var programDefaults = {
                   "outcome": "Medium term outcome 3",
                   "type": "medium",
                   "category": "Threatened Species"
+              },
+              {
+                  "outcome": "Program project outcome 1",
+                  "type": "project",
+                  "category": "Threatened Species"
+              },
+              {
+                  "outcome": "Program project outcome 2",
+                  "type": "project",
+                  "category": "Threatened Species"
               }
           ],
           "priorities": [

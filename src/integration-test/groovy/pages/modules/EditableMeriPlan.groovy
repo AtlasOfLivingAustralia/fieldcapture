@@ -229,8 +229,9 @@ class FirstNationsPeopleInvolvement extends Module {
 
 class ServiceOutcomeTarget extends Module {
     static content = {
-        outcomes { $('.service select') }
-        target { $('.score input') }
+        outcomes { $('.service select, .service input') }
+        target { $('.score input, td.overall-target input') }
+        periodTargets(required:false) { $('td.forecast input') }
     }
 }
 class ServiceOutcomeTargets extends Module {
@@ -277,10 +278,12 @@ class EditableMeriPlan extends Module {
         otherOutcomeColumn1(required: false) {$('.column-1 li label')}
         otherOutcomeColumn2(required: false) {$('.column-2 li label')}
         secondaryOutcomes(required: false) { $('table.secondary-outcome tbody tr').moduleList(OutcomeRow) }
-        shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] tr').moduleList(ProjectOutcomeRow) }
-        addShortTermOutcomeButton(required:false) { $('button[data-bind*="addShortTermOutcome"]') }
+        shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] tr, tbody[data-bind*="projectTermOutcomes"] tr').moduleList(ProjectOutcomeRow) }
+        addShortTermOutcomeButton(required:false) { $('button[data-bind*="addShortTermOutcome"], button[data-bind*="addProjectTermOutcome"]') }
         mediumTermOutcomes(required: false) {  $('tbody[data-bind*="midTermOutcomes"] tr').moduleList(ProjectOutcomeRow) }
         addMediumTermOutcomeButton(required:false) { $('button[data-bind*="addMidTermOutcome"]') }
+        projectTermOutcomes(required: false) {  $('tbody[data-bind*="projectTermOutcomes"] tr').moduleList(ProjectOutcomeRow) }
+        addProjectTermOutcomeButton(required:false) { $('button[data-bind*="addProjectTermOutcome"]') }
         projectName(required: false) { $('input[data-bind*="details.name"]') }
         projectDescription(required: false) { $('textarea[data-bind*="details.description"]') }
         rationale(required: false) { $('textarea[data-bind*="details.rationale"]') }
@@ -309,17 +312,18 @@ class EditableMeriPlan extends Module {
         objectivesAndAssets(required:false) { $('table tbody[data-bind*="objectives.rows1"] tr').moduleList(ObjectivesAndAssets) }
         controlMethods(required: false) { $('table.control-method tbody tr').moduleList(ControlMethodRow) }
         controlApproaches(required: false) { $('table.control-approach-threat tbody tr').moduleList(ControlApproachRow) }
-        serviceOutcomeTargets(required: false) { $('table.service-outcomes-targets').module(ServiceOutcomes) }
+        serviceOutcomeTargets(required: false) { $('table.service-outcomes-targets-with-forecasts, table.service-outcomes-targets').module(ServiceOutcomes) }
         serviceForecasts(required: false) { $('table.forecasts').module(ServiceForecasts) }
         floatingSaveButton { $('#floating-save [data-bind*="saveProjectDetails"]') }
+        markAsComplete { $("#planFinished").first().module(Checkbox)}
         saveButton { $('.form-actions [data-bind*="saveProjectDetails"]').first() }
         pdfButton { $('.btn[data-bind*="meriPlanPDF"]').first() }
         meriPlanChanges { $('.btn[data-bind*="meriPlanChanges"]').first() }
-        saveAndSubmitChanges { $('button.saveAndSubmitChanges').first() }
+        saveAndSubmitChanges { $('button.saveAndSubmitChanges').first().module(FormElement) }
         approveButton(required:false){ $('[data-bind*="approvePlan"]') }
         rejectButton(required:false) { $('[data-bind*="rejectPlan"]') }
         modifyApprovedPlanButton(required:false){ $('[data-bind*="modifyPlan"]') }
-
+        statusBadge(required:false) { $('[data-bind*="meriPlanStatus"]')}
         approvePlanDialog(required:false) { $('#meri-plan-approval-modal').module(MeriPlanApproveDialog) }
 
         externalIds {$('.externalIds').module(ExternalIds)}
@@ -339,6 +343,17 @@ class EditableMeriPlan extends Module {
 
         waitFor {
             budget.size() == currentRows + 1
+        }
+    }
+
+    void addSecondaryOutcome() {
+        hideFloatingSave()
+
+        int currentRows = secondaryOutcomes.size()
+        $('button[data-bind*=addSecondaryOutcome]').click()
+
+        waitFor {
+            secondaryOutcomes.size() == currentRows + 1
         }
     }
 
@@ -420,7 +435,7 @@ class EditableMeriPlan extends Module {
     }
 
     void submit() {
-        if (saveAndSubmitChanges.module(FormElement).enabled) {
+        if (saveAndSubmitChanges.enabled) {
             saveAndSubmitChanges.click()
         }
         else {
@@ -486,10 +501,13 @@ class EditableMeriPlan extends Module {
         hideFloatingSave()
 
         int midTermOutcomeCount = mediumTermOutcomes.size()
-        interact {
-            moveToElement(addMediumTermOutcomeButton)
+        try {
+            addMediumTermOutcomeButton.click()
         }
-        addMediumTermOutcomeButton.click()
+        catch (ElementClickInterceptedException e) {
+            log.warn("Click intercepted", e)
+            js.exec("\$('button[data-bind*=addMidTermOutcome]').first().click();")
+        }
         waitFor{ mediumTermOutcomes.size() > midTermOutcomeCount }
 
         mediumTermOutcomes[midTermOutcomeCount].outcome.value(outcome)
@@ -505,20 +523,23 @@ class EditableMeriPlan extends Module {
         // If we don't do this, the click will hit the floating save instead of the
         // button.
         hideFloatingSave()
-        int midTermOutcomeCount = shortTermOutcomes.size()
+        int shortTermOutcomeCount = shortTermOutcomes.size()
 
-        interact {
-            moveToElement(addShortTermOutcomeButton)
+        try {
+            addShortTermOutcomeButton.click()
         }
-        addShortTermOutcomeButton.click()
-        waitFor{ shortTermOutcomes.size() > midTermOutcomeCount }
+        catch (ElementClickInterceptedException e) {
+            log.warn("Click intercepted", e)
+            js.exec("\$('button[data-bind*=addShortTermOutcome], button[data-bind*=addProjectTermOutcome]').first().click();")
+        }
+        waitFor{ shortTermOutcomes.size() > shortTermOutcomeCount }
 
-        shortTermOutcomes[midTermOutcomeCount].outcome.value(outcome)
+        shortTermOutcomes[shortTermOutcomeCount].outcome.value(outcome)
         if (investmentPriority) {
-            shortTermOutcomes[midTermOutcomeCount].investmentPriority.value(investmentPriority)
+            shortTermOutcomes[shortTermOutcomeCount].investmentPriority.value(investmentPriority)
         }
         if (relatedProgramOutcome) {
-            shortTermOutcomes[midTermOutcomeCount].relatedProgramOutcome.value(relatedProgramOutcome)
+            shortTermOutcomes[shortTermOutcomeCount].relatedProgramOutcome.value(relatedProgramOutcome)
         }
     }
 
@@ -532,6 +553,10 @@ class EditableMeriPlan extends Module {
 
     boolean holdsEditLock() {
         $('div.meri-lock-held').each {it.displayed}
+    }
+
+    boolean isSubmitted() {
+        statusBadge.text() == "This plan has been submitted for approval"
     }
 
 }
