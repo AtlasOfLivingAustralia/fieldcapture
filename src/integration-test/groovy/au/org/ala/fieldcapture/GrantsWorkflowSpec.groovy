@@ -73,9 +73,9 @@ class GrantsWorkflowSpec extends StubbedCasSpec {
         meriPlan.keyThreats[0].threat = "Habitat Loss due to Habitat fragmentation"
         meriPlan.keyThreats[0].intervention = "Intervention 1"
         waitFor {
-            meriPlan.keyThreats[0].targetMeasures.find('[value="score_42"')
+            meriPlan.keyThreats[0].targetMeasures.find('[value="score_43"')
         }
-        meriPlan.keyThreats[0].targetMeasures = ['score_42']
+        meriPlan.keyThreats[0].targetMeasures = ['score_43']
         meriPlan.keyThreats[0].evidence = "Evidence 1"
 
         // Baselines
