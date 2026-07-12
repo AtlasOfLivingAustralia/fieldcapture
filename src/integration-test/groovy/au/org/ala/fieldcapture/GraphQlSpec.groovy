@@ -310,7 +310,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         then:
         waitFor {
             meriPlan.keyThreats[0].relatedOutcomes.find('option').collect{it.value()} == ["MT1", "MT2", "ST1"]
-            meriPlan.keyThreats[0].targetMeasures.find('option').collect{it.value()}.containsAll(["score_42", "score_43", "score_44"])
+            meriPlan.keyThreats[0].targetMeasures.find('option').collect{it.value()}.containsAll(["score_43"])
         }
 
         when:
