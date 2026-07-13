@@ -52,7 +52,7 @@
             <input type="text" value="" class="hidden-validation-holder" data-bind="attr:{'data-errormessage':orphanedOutcomesError()}" data-validation-engine="validate[required]">
             <!-- /ko -->
         </td>
-        <td data-bind="style:{width:cellWidth+'%'}">
+        <td class="outcomes" data-bind="style:{width:cellWidth+'%'}">
             <g:if test="${!separateTargetsPerOutcome}">
             <select multiple class="form-select form-select-sm" data-bind="options:availableOutcomes, multiSelect2:{value:relatedOutcomes, templateResult:$root.renderOutcome, tags:false}, disable: $root.isProjectDetailsLocked()">
             </select>

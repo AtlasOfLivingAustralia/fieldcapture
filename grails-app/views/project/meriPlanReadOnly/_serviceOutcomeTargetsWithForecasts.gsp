@@ -1,7 +1,7 @@
 <!-- ko with:details.serviceOutcomes -->
 <h4>${title ?: "Project services and outcome targets"}</h4>
 
-<table class="table service-outcomes-targets-with-forcasts-view">
+<table class="table service-outcomes-targets-with-forecasts-view">
     <thead>
     <tr>
         <th class="index"></th>
@@ -34,10 +34,10 @@
     <!-- ko foreach:outcomeTargets -->
     <tr class="outcome-target">
         <td class="index"></td>
-        <td data-bind="style:{width:cellWidth+'%'}">
+        <td class="outcomes" data-bind="style:{width:cellWidth+'%'}">
             <span data-bind="text:relatedOutcomes"></span>
         </td>
-        <td data-bind="style:{width:cellWidth+'%'}">
+        <td class="target" data-bind="style:{width:cellWidth+'%'}">
             <span data-bind="text:target"></span>
         </td>
         <!-- ko foreach:periodTargets -->

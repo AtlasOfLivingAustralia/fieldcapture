@@ -22,6 +22,9 @@ class GrantsWorkflowSpec extends StubbedCasSpec {
         to AdminClearCachePage
         clearProgramListCache()
         clearServiceListCache()
+        String ecodataUrl = testConfig.ecodata.baseUrl
+
+        go "$ecodataUrl/admin/clearCache?cache=serviceList"
         greenMail.start()
     }
 
@@ -148,6 +151,61 @@ class GrantsWorkflowSpec extends StubbedCasSpec {
 
         then:
         meriPlan.isSubmitted()
+
+        when: "We view the contents of the MERI plan in read only mode they match the data we entered"
+        meriPlan = openMERIPlanTab()
+
+        then:
+        meriPlan.priorityPlace.supportsPriorityPlaces.text() == 'No'
+        meriPlan.firstNationsPeopleInvolvement.supportsFirstNationsPeopleInvolvement.text() == 'Yes'
+        meriPlan.firstNationsPeopleInvolvement.firstNationsPeopleInvolvement.text() == 'Leading'
+
+        meriPlan.primaryOutcome.text() == "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+        meriPlan.primaryPriority.text() == "Ginini Flats Wetland Complex"
+        meriPlan.secondaryOutcomes[0].outcome.text() == "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+        meriPlan.secondaryOutcomes[0].priority.text() == "Ginini Flats Wetland Complex"
+        meriPlan.projectTermOutcomes[0].outcome.text() == "Project outcome 1"
+        meriPlan.projectTermOutcomes[0].priority.text() == "Ginini Flats Wetland Complex"
+        meriPlan.projectTermOutcomes[0].relatedProgramOutcomes.text() == "Program project outcome 1"
+
+        meriPlan.keyThreats[0].threat.text() == "Habitat Loss due to Habitat fragmentation"
+        meriPlan.keyThreats[0].intervention.text() == "Intervention 1"
+        meriPlan.keyThreats[0].evidence.text() == "Evidence 1"
+        meriPlan.keyThreats[0].relatedOutcomes.text() == 'PO1'
+
+        meriPlan.extendedBaseline.projectBaselines[0].outcome.text() == "PO1"
+        meriPlan.extendedBaseline.projectBaselines[0].monitoringData.text() == "Needs to be collected"
+        meriPlan.extendedBaseline.projectBaselines[0].baseline.text() == "Baseline 1"
+        meriPlan.extendedBaseline.projectBaselines[0].methodProtocols.text() == 'Category 1'
+        meriPlan.extendedBaseline.projectBaselines[0].evidence.text() == "Baseline Evidence 1"
+        meriPlan.monitoringIndicators[0].indicator.text() == "Indicator 1"
+        meriPlan.monitoringIndicators[0].methodProtocols.text() == 'Category 1'
+        meriPlan.monitoringIndicators[0].evidence.text() == "Evidence 2"
+
+        waitFor {
+            meriPlan.serviceOutcomeTargets.outcomeTargets.size() == 3
+        }
+        meriPlan.serviceOutcomeTargets.outcomeTargets[0].target.text() == "1"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[0].periodTargets[0].text() == "1"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[0].periodTargets[1].text() == "2"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[0].periodTargets[2].text() == "3"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[1].target.text() == "2"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[1].periodTargets[0].text() == "2"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[1].periodTargets[1].text() == "4"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[1].periodTargets[2].text() == "6"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[2].target.text() == "3"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[2].periodTargets[0].text() == "3"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[2].periodTargets[1].text() == "6"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[2].periodTargets[2].text() == "9"
+
+        meriPlan.projectMethodology.text() == "Project delivery assumptions"
+        meriPlan.projectPartnerships[0].name == 'partner name'
+        meriPlan.projectPartnerships[0].partnership == 'partnership'
+        meriPlan.projectPartnerships[0].orgType == 'Trust'
+        meriPlan.reviewMethodology.text() == "Review methodology"
+        meriPlan.nationalAndRegionalPlans[0].name.text() == "Plan 1"
+        meriPlan.nationalAndRegionalPlans[0].section.text() == "Section 1"
+        meriPlan.nationalAndRegionalPlans[0].alignment.text() == "Alignment 1"
 
     }
 

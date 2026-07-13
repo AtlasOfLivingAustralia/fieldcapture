@@ -229,7 +229,7 @@ class FirstNationsPeopleInvolvement extends Module {
 
 class ServiceOutcomeTarget extends Module {
     static content = {
-        outcomes { $('.service select, .service input') }
+        outcomes { $('.service select, .outcomes input, .outcomes select') }
         target { $('.score input, td.overall-target input') }
         periodTargets(required:false) { $('td.forecast input') }
     }
