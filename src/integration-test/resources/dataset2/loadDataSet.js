@@ -181,6 +181,7 @@ addSetting('meritfielddata.rlp.planRejected.emailText', 'Plan approved subject')
 // Load scores used by RLP services to enable their selection in the MERI plan.
 createProjectNumberBaselineDataSets({ "scoreId":"score_42"});
 createProjectNumberOfCommunicationMaterialsPublished({ "scoreId":"score_43"});
+createProjectWeedAreaSurveyedHaDefault({ "scoreId":"score_44"});
 createScore(totalBaselineFloraSurveysDefault, {scoreId:"score_flora_baseline"});
 createScore(totalIndicatorFloraSurveysDefault, {scoreId:"score_flora_indicator"});
 
