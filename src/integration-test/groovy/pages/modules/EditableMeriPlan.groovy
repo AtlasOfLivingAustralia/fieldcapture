@@ -447,6 +447,22 @@ class EditableMeriPlan extends Module {
         modifyApprovedPlanButton.click()
     }
 
+    void approvePlan() {
+        approveButton.click()
+    }
+
+    void approvePlan(String changeOrderNumber, String comment) {
+        approveButton.click()
+        waitFor {
+            approvePlanDialog.changeOrderNumbers.displayed
+        }
+
+        approvePlanDialog.changeOrderNumbers = changeOrderNumber
+        approvePlanDialog.comment = comment
+        approvePlanDialog.approve()
+    }
+
+
     List selectablePrimaryOutcomes() {
         primaryOutcome.find('option').collect{it.attr("value")}
     }
@@ -559,4 +575,7 @@ class EditableMeriPlan extends Module {
         statusBadge.text() == "This plan has been submitted for approval"
     }
 
+    boolean isApproved() {
+        statusBadge.text() == "This plan has been approved"
+    }
 }

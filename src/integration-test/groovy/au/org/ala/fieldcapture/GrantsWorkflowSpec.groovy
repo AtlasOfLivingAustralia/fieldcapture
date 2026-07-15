@@ -3,9 +3,9 @@ package au.org.ala.fieldcapture
 import com.icegreen.greenmail.util.GreenMail
 import geb.module.FormElement
 import pages.AdminClearCachePage
-import pages.MeriPlanPDFPage
-import pages.ProjectIndex
+import pages.ReportPage
 import pages.RlpProjectPage
+import pages.modules.ProgressReportOverviewSection
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -40,7 +40,7 @@ class GrantsWorkflowSpec extends StubbedCasSpec {
 
         when:
         to RlpProjectPage, projectId
-        waitFor { at RlpProjectPage }
+
         def meriPlan = openMeriPlanEditTab()
         meriPlan.aquireEditLock()
         waitFor {
@@ -207,6 +207,63 @@ class GrantsWorkflowSpec extends StubbedCasSpec {
         meriPlan.nationalAndRegionalPlans[0].section.text() == "Section 1"
         meriPlan.nationalAndRegionalPlans[0].alignment.text() == "Alignment 1"
 
+        when: "We login as a grant manager and approve the plan"
+        loginAsGrantManager(browser)
+        to RlpProjectPage, projectId
+        meriPlan = openMeriPlanEditTab()
+        previousLoad = getAtCheckTime()
+        meriPlan.approvePlan("1234", "Test approval")
+
+        and: "we wait for the page to reload"
+
+        waitFor { hasBeenReloaded() }
+        at RlpProjectPage // Reset at check time
+        meriPlan = openMeriPlanEditTab()
+
+        then:
+        meriPlan.isApproved()
+
+        when: "We generate the reports, but extend the project by 6 months"
+        displayReportingTab(0)
+        setDate(projectReports.projectStartDate, "01-07-2026")
+        setDate(projectReports.projectEndDate, "31-12-2028")
+        projectReports.generateButton.click()
+
+
+        then: "We wait for the reports to be generated"
+        waitFor { hasBeenReloaded() }
+        projectReports.getReportCategories() == ["Progress Reports", "Final Report"]
+
     }
 
+    def "The progress reports display the forecasts for the period they are in"() {
+        setup: "The user with userId 1 is an admin for project with projectId grants1"
+        String projectId = 'grants1'
+        loginAsUser('1', browser)
+
+        when:
+        to RlpProjectPage, projectId
+        displayReportingTab(2)
+        projectReports.reportsByCategory.find { it.category == "Progress Reports" }.reports[0].edit()
+
+        then:
+        at ReportPage
+        getFormSections() == ["koOverview_Output_Report", "koNHT_-_Communication_materials", "koNHT_-_Flora_survey"]
+
+        when:
+        def outcomeTargetsSection = getFormSection("koOverview_Output_Report").module(ProgressReportOverviewSection)
+
+        then: "The forecasts for this period match those in the MERI plan"
+        outcomeTargetsSection.projectOutcomes.size() == 1
+        outcomeTargetsSection.projectOutcomes[0].outcomeCode.text() == "PO1"
+        outcomeTargetsSection.projectOutcomes[0].outcomeDescription == "Project outcome 1"
+
+        outcomeTargetsSection.projectOutcomeTargets.size() == 3
+        outcomeTargetsSection.projectOutcomeTargets[0].target == "1"
+        outcomeTargetsSection.projectOutcomeTargets[0].targetThisReport == "1"
+        outcomeTargetsSection.projectOutcomeTargets[1].target == "2"
+        outcomeTargetsSection.projectOutcomeTargets[1].targetThisReport == "2"
+        outcomeTargetsSection.projectOutcomeTargets[2].target == "3"
+        outcomeTargetsSection.projectOutcomeTargets[2].targetThisReport == "3"
+    }
 }

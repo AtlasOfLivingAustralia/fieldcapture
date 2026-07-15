@@ -297,11 +297,218 @@ if (db.service.count() == 0) {
             "name": "Indigenous Procurement",
             "legacyId": 47,
             "id": 47
+        },
+        {
+            "outputs": [
+                {
+                    "formName": "NHT Output Report",
+                    "sectionName": "Image pairing to document on-ground change"
+                },
+                {
+                    "formName": "Grants and Others Progress Report",
+                    "sectionName": "Image pairing to document on-ground change"
+                },
+                {
+                    "formName": "Procurement Output Report",
+                    "sectionName": "Image pairing to document on-ground change"
+                },
+                {
+                    "formName": "Enhanced Grants Progress Report",
+                    "sectionName": "Image pairing to document on-ground change"
+                }
+            ],
+            "name": "Image pairing to document on-ground change",
+            "id": 51
+        },
+        {
+            "outputs": [
+                {
+                    "formName": "NHT Output Report",
+                    "sectionName": "NHT - Sustainable agriculture facilitators"
+                },
+                {
+                    "formName": "Grants and Others Progress Report",
+                    "sectionName": "NHT - Sustainable agriculture facilitators"
+                },
+                {
+                    "formName": "Procurement Output Report",
+                    "sectionName": "NHT - Sustainable agriculture facilitators"
+                },
+                {
+                    "formName": "Enhanced Grants Progress Report",
+                    "sectionName": "NHT - Sustainable agriculture facilitators"
+                }
+            ],
+            "name": "Sustainable agriculture facilitators",
+            "id": 43
+        },
+        {
+            "outputs": [
+                {
+                    "formName": "NHT Output Report",
+                    "sectionName": "NHT - Research and development"
+                },
+                {
+                    "formName": "Grants and Others Progress Report",
+                    "sectionName": "NHT - Research and development"
+                },
+                {
+                    "formName": "Procurement Output Report",
+                    "sectionName": "NHT - Research and development"
+                },
+                {
+                    "formName": "Enhanced Grants Progress Report",
+                    "sectionName": "NHT - Research and development"
+                }
+            ],
+            "name": "Research and Development",
+            "id": 45
+        },
+        {
+            "outputs": [
+                {
+                    "formName": "Grants and Others Progress Report",
+                    "sectionName": "Obtaining approvals"
+                },
+                {
+                    "formName": "Procurement Output Report",
+                    "sectionName": "Obtaining approvals"
+                },
+                {
+                    "formName": "Enhanced Grants Progress Report",
+                    "sectionName": "Obtaining approvals"
+                }
+            ],
+            "name": "Obtaining Relevant Approvals",
+            "id": 46
+        },
+        {
+            "outputs": [
+                {
+                    "formName": "NHT Output Report",
+                    "sectionName": "NHT - First nations australians cultural practices"
+                },
+                {
+                    "formName": "Bush Blitz Progress Report",
+                    "sectionName": "Cultural Practices"
+                },
+                {
+                    "formName": "Grants and Others Progress Report",
+                    "sectionName": "NHT - First nations australians cultural practices"
+                },
+                {
+                    "formName": "Procurement Output Report",
+                    "sectionName": "NHT - First nations australians cultural practices"
+                },
+                {
+                    "formName": "Enhanced Grants Progress Report",
+                    "sectionName": "NHT - First nations australians cultural practices"
+                }
+            ],
+            "name": "First Nations Australians cultural practices",
+            "id": 44
+        },
+        {
+            "outputs": [
+                {
+                    "formName": "NHT Output Report",
+                    "sectionName": "NHT - Habitat condition assessment"
+                },
+                {
+                    "formName": "Bush Blitz Progress Report",
+                    "sectionName": "Cultural value survey and/or assessment"
+                },
+                {
+                    "formName": "Grants and Others Progress Report",
+                    "sectionName": "NHT - Habitat condition assessment"
+                },
+                {
+                    "formName": "Procurement Output Report",
+                    "sectionName": "NHT - Habitat condition assessment"
+                },
+                {
+                    "formName": "Enhanced Grants Progress Report",
+                    "sectionName": "NHT - Habitat condition assessment"
+                }
+            ],
+            "name": "Habitat condition assessment survey",
+            "id": 52
+        },
+        {
+            "outputs": [
+                {
+                    "formName": "Enhanced Grants Progress Report",
+                    "sectionName": "RF - Employment Defined Role"
+                }
+            ],
+            "name": "Employment - Defined Role",
+            "id": 53
+        },
+        {
+            "outputs": [
+                {
+                    "formName": "NHT Output Report",
+                    "sectionName": "Establishing Agreements"
+                },
+                {
+                    "formName": "Grants and Others Progress Report",
+                    "sectionName": "Establishing Agreements"
+                },
+                {
+                    "formName": "Procurement Output Report",
+                    "sectionName": "Establishing Agreements"
+                },
+                {
+                    "formName": "Enhanced Grants Progress Report",
+                    "sectionName": "Establishing Agreements"
+                }
+            ],
+            "name": "Establishing Agreements",
+            "id": 49
         }
     ];
 
+    const enhancedGrantsSectionByServiceName = {
+        "Collecting, or synthesising baseline data": "NHT - Baseline data",
+        "Communication materials": "NHT - Communication materials",
+        "Community/stakeholder engagement": "NHT - Community engagement",
+        "Controlling access": "NHT - Controlling access",
+        "Controlling pest animals": "NHT - Pest animal management",
+        "Debris removal": "NHT - Debris removal",
+        "Developing farm/project/site management plan": "Management plan development",
+        "Erosion management": "NHT - Erosion Management",
+        "Establishing and maintaining agreements": "NHT - Establishing Agreements",
+        "Establishing and maintaining feral-free enclosures": "NHT - Maintaining feral free enclosures",
+        "Establishing and maintaining breeding programs": "NHT - Establishing ex-situ breeding programs",
+        "Farm management survey": "NHT - Farm Management Survey",
+        "Fauna survey": "NHT - Fauna survey",
+        "Fire management actions": "NHT - Fire management",
+        "Flora survey": "NHT - Flora survey",
+        "Habitat augmentation": "NHT - Habitat augmentation",
+        "Identifying the location of potential sites": "NHT - Identifying sites",
+        "Improving hydrological regimes": "NHT - Improving hydrological regimes",
+        "Improving land management practices": "NHT - Improving land management practices",
+        "Managing disease": "NHT - Disease management",
+        "Pest animal survey": "NHT - Pest animal survey",
+        "Plant survival survey": "NHT - Plant survival survey",
+        "Remediating riparian and aquatic areas": "NHT - Remediating riparian and aquatic areas",
+        "Removing weeds": "NHT - Weed treatment",
+        "Revegetating habitat": "NHT - Revegetating habitat",
+        "Seed collection": "NHT - Seed Collection",
+        "Site preparation": "NHT - Site preparation",
+        "Skills and knowledge survey": "NHT - Skills and knowledge survey",
+        "Soil testing": "NHT - Soil testing",
+        "Undertaking emergency interventions to prevent extinctions": "NHT - Emergency Interventions",
+        "Water quality survey": "NHT - Water quality survey",
+        "Weed distribution survey": "NHT - Weed distribution survey"
+    };
+
     for (let i = 0; i < services.length; i++) {
         var service = services[i];
+        var enhancedSectionName = enhancedGrantsSectionByServiceName[service.name];
+        if (enhancedSectionName) {
+            service.outputs.push({formName: "Enhanced Grants Progress Report", sectionName: enhancedSectionName});
+        }
         service.legacyId = service.id;
         delete service.id;
         service.serviceId = "s" + i;

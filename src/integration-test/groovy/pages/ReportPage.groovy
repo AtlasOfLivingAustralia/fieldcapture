@@ -95,6 +95,10 @@ class ReportPage extends Page {
         $('.output-block')*.@id
     }
 
+    def getFormSection(String sectionId) {
+        $('#'+sectionId)
+    }
+
     def save() {
         saveButton.click()
         try {

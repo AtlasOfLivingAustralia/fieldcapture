@@ -1,8 +1,10 @@
 package au.org.ala.fieldcapture
 
 import geb.Browser
+import geb.navigator.Navigator
 import geb.spock.GebReportingSpec
 import groovy.util.logging.Slf4j
+import org.openqa.selenium.Keys
 import pages.HomePage
 import spock.lang.Shared
 
@@ -120,6 +122,11 @@ class FieldcaptureFunctionalTest extends GebReportingSpec {
         String serverUrl = (testConfig.baseUrl instanceof String) ? testConfig.baseUrl : testConfig.grails.serverURL
         String logoutUrl = "${serverUrl}/logout?url=${serverUrl}/"
         browser.go logoutUrl
+    }
+
+    def setDate(Navigator dateField, String date) {
+        dateField.value(date)
+        dateField << Keys.chord(Keys.ENTER) // Dismisses the popup calendar
     }
 
 }

@@ -490,12 +490,18 @@ createProgram({
     config: configForGrantsProgram
 });
 
-createProject({projectId: "grants1", name: "New Grants Project", programId: "new_grants_program", plannedStartDate: ISODate("2026-06-30T14:00:00Z"), plannedEndDate: ISODate("2028-06-30T14:00:00Z")});
+createProject({projectId: "grants1", grantId:"GRANTS_1", status:"application", name: "New Grants Project", programId: "new_grants_program", plannedStartDate: ISODate("2026-06-30T14:00:00Z"), plannedEndDate: ISODate("2028-06-30T14:00:00Z")});
 db.userPermission.insert({
     entityType: 'au.org.ala.ecodata.Project',
     entityId: "grants1",
     userId: '1',
     accessLevel: 'admin'
+});
+db.userPermission.insert({
+    entityType: 'au.org.ala.ecodata.Project',
+    entityId: "grants1",
+    userId: '1001',
+    accessLevel: 'caseManager'
 });
 
 
