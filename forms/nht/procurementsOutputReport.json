@@ -165,7 +165,8 @@
               },
               {
                 "dataType": "text",
-                "name": "link"
+                "name": "link",
+                "validate": "url"
               }
             ]
           },
