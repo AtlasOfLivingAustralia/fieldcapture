@@ -163,7 +163,7 @@ class ProjectExplorerSpec extends StubbedCasSpec {
 
         then:
         waitFor { hasBeenReloaded() }
-        waitFor { projects.size() == 1 }
+        waitFor { projects.size() == 2 }
 
         when: "We expand the project to view the details"
         projects[0].toggle()
