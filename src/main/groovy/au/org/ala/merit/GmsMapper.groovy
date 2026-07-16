@@ -55,8 +55,6 @@ class GmsMapper {
     /** Map of management unit name to management unit id */
     private Map managementUnits
 
-    private List states
-    private List electorates
     private Map electoratesAndStates
 
     def projectMapping = [
@@ -144,6 +142,8 @@ class GmsMapper {
         this.managementUnits = [:]
         includeProgress = false
         mapForUpdate = false
+
+        initialiseGeographicInfoMapping([], [])
     }
 
     GmsMapper(activitiesModel, programModel, organisations, abnLookup, List<Map> scores, Map programs = [:], Map managementUnits = [:], List validStates, Map validElectoratesAndStates, includeProgress = false, mapForUpdate = false) {
