@@ -55,6 +55,10 @@ class GmsMapper {
     /** Map of management unit name to management unit id */
     private Map managementUnits
 
+    private List states
+    private List electorates
+    private Map electoratesAndStates
+
     def projectMapping = [
             (GRANT_ID_COLUMN):[name:'grantId', type:'string', mandatory:true,description:'The grant id of the project.  The combination of grantId and externalId must be unique.'],
             EXTERNAL_ID:[name:'externalId', type:'string',description:'The id of this project in an external system (e.g. grants hub)'],
@@ -93,15 +97,7 @@ class GmsMapper {
             MANAGING_AGENCY:[name:'manager', type:'string', description:'The agency managing the delivery of this project']
     ]
 
-    def geographicInfoMapping = [
-            NATIONWIDE:[name:'nationwide', type:'boolean', description:'If true, this project does not have a primary state'],
-            STATEWIDE:[name:'statewide', type:'boolean', description:'If true, this project does not have a primary electorate'],
-            PRIMARY_STATE:[name:'primaryState', type:'string', description:'The primary state to be manually assigned to this project'],
-            PRIMARY_ELECTORATE:[name:'primaryElectorate', type:'string', description:'The primary electorate to be manually assigned to this project'],
-            OTHER_ELECTORATES:[name:'otherElectorates', type:'list', description:'Other electorates to be manually assigned to this project.  Enter as a comma separated list'],
-            OTHER_STATES:[name:'otherStates', type:'list', description:'Other states to be manually assigned to this project.  Enter as a comma separated list'],
-    ]
-
+    def geographicInfoMapping
 
     def siteMapping = [
             LOC_DESC:[name:'description', type:'string'],
@@ -150,7 +146,7 @@ class GmsMapper {
         mapForUpdate = false
     }
 
-    GmsMapper(activitiesModel, programModel, organisations, abnLookup, List<Map> scores, Map programs = [:], Map managementUnits = [:], includeProgress = false, mapForUpdate = false) {
+    GmsMapper(activitiesModel, programModel, organisations, abnLookup, List<Map> scores, Map programs = [:], Map managementUnits = [:], List validStates, Map validElectoratesAndStates, includeProgress = false, mapForUpdate = false) {
         this.activitiesModel = activitiesModel
         this.programModel = programModel
         this.includeProgress = includeProgress
@@ -160,6 +156,23 @@ class GmsMapper {
         this.managementUnits = managementUnits
         this.abnLookupService = abnLookup
         this.mapForUpdate = mapForUpdate
+
+        List electorates = validElectoratesAndStates.keySet().toList()
+        initialiseGeographicInfoMapping(validStates, electorates)
+        this.electoratesAndStates = validElectoratesAndStates
+    }
+
+    private void initialiseGeographicInfoMapping(List validStates, List validElectorates) {
+        Map statesLookup = validStates.collectEntries { [(it): it] }
+        Map electoratesLookup = validElectorates.collectEntries { [(it): it] }
+        geographicInfoMapping = [
+                NATIONWIDE:[name:'nationwide', type:'boolean', description:'If true, this project does not have a primary state'],
+                STATEWIDE:[name:'statewide', type:'boolean', description:'If true, this project does not have a primary electorate'],
+                PRIMARY_STATE:[name:'primaryState', type:'lookup', description:'The primary state to be manually assigned to this project', values:statesLookup],
+                PRIMARY_ELECTORATE:[name:'primaryElectorate', type:'lookup', description:'The primary electorate to be manually assigned to this project', values:electoratesLookup],
+                OTHER_ELECTORATES:[name:'otherElectorates', type:'list', description:'Other electorates to be manually assigned to this project.  Enter as a comma separated list', values:validElectorates],
+                OTHER_STATES:[name:'otherStates', type:'list', description:'Other states to be manually assigned to this project.  Enter as a comma separated list', values:validStates],
+        ]
     }
 
     /** Creates a CSV file in the format required to import projects into MERIT with additional instructions */
@@ -585,8 +598,30 @@ class GmsMapper {
 
     private void mapGeographicInfo(Map rowData, Map project, boolean update, List errors) {
 
+        // Custom validation for geographic info includes whether all states are included for
+        // supplied electorates and whether the primary state matches the primary electorate.
+
         Map result = csvToProjectProperties(rowData, geographicInfoMapping, update)
+
         if (result.mappedData) {
+            String primaryElectorate = result.mappedData.primaryElectorate
+            if (primaryElectorate) {
+                String primaryState = electoratesAndStates[primaryElectorate]
+                if (primaryState) {
+                    if (result.mappedData.primaryState && result.mappedData.primaryState != primaryState) {
+                        errors << "The primary state ${result.mappedData.primaryState} doesn't match the primary electorate ${primaryElectorate} which is in ${primaryState}"
+                    }
+                    else {
+                        result.mappedData.primaryState = primaryState
+                    }
+                }
+            }
+            result.mappedData.otherElectorates?.each { String electorate ->
+                String state = electoratesAndStates[electorate]
+                if (state && !result.mappedData.otherStates?.contains(state)) {
+                    result.mappedData.otherStates << state
+                }
+            }
             project.geographicInfo = result.mappedData
         }
         errors.addAll(result.errors)
@@ -699,6 +734,10 @@ class GmsMapper {
                 result = value
                 break
             case 'lookup':
+                if (!value && !mapping.default && !mapping.mandatory) {
+                    result = null
+                    break
+                }
                 def lookupValue = value ? mapping.values[value] : mapping.default
                 if (lookupValue == null) {
                     throw new IllegalArgumentException("${value} is not in ${mapping.values}")
@@ -712,6 +751,11 @@ class GmsMapper {
                 break
             case 'list':
                 result = value?.split(',').collect{it.trim()}.findAll{it}
+                result?.each {
+                    if (mapping.values && !mapping.values.contains(it)) {
+                        throw new IllegalArgumentException("${it} is not in ${mapping.values}")
+                    }
+                }
                 break
             case 'boolean':
                 result = value?.toBoolean() // accept "y"/"true"/"1" as true

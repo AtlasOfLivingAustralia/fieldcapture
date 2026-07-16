@@ -6,6 +6,7 @@ import com.vividsolutions.jts.geom.GeometryCollection
 import com.vividsolutions.jts.geom.GeometryFactory
 import com.vividsolutions.jts.geom.Point
 import grails.converters.JSON
+import grails.core.GrailsApplication
 import grails.plugins.csv.CSVMapReader
 import groovy.util.logging.Slf4j
 import org.apache.http.HttpStatus
@@ -36,6 +37,7 @@ class ImportService {
     AbnLookupService abnLookupService
     OrganisationService organisationService
     List organisations
+    SpatialService spatialService
 
     /**
      * Looks for columns "Grant ID","Sub-project ID","Recipient email 1","Recipient email 2","Grant manager email" and
@@ -299,6 +301,9 @@ class ImportService {
 
     Map projectImport(InputStream csv, List status, Boolean preview, Boolean update, String charEncoding = 'Cp1252') {
 
+        Map electoratesAndStates = spatialService.getElectoratesWithStates()
+        List states = spatialService.getStateNames()
+
         Map programs = [:].withDefault{name ->
             programService.getByName(name)
         }
@@ -307,7 +312,7 @@ class ImportService {
             mu?.managementUnitId
         }
         refreshOrganisationList()
-        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), organisations, abnLookupService, metadataService.getOutputTargetScores(), programs, managementUnits, false, update)
+        def mapper = new GmsMapper(metadataService.activitiesModel(), metadataService.programsModel(), organisations, abnLookupService, metadataService.getOutputTargetScores(), programs, managementUnits, states, electoratesAndStates, false, update)
         def action = preview?{rows -> mapProjectRows(rows, status, mapper, update)}:{rows -> importAll(rows, status, mapper, update)}
 
         Map result = [:]
