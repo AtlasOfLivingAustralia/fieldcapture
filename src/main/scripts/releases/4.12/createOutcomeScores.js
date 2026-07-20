@@ -572,6 +572,13 @@ const scoreInfoWithoutLabels = [
     "relatedOutcomesPath": "sections[name=\"NHT - Research and development\"].template.dataModel[name=\"researchAndDevelopmentByOutcome\"].columns[name=\"relatedOutcomes\"]"
   },
   {
+    "scoreId": "d5f769b8-2377-4357-84bb-8782d2e27dcb",
+    "filterValue": "NHT - Research and development",
+    "property": "noHoursConductingResearchAndDevelopment",
+    "computedExpression": "sum(researchAndDevelopmentByOutcome, \"numberOfHoursConducted\")",
+    "relatedOutcomesPath": "sections[name=\"NHT - Research and development\"].template.dataModel[name=\"researchAndDevelopmentByOutcome\"].columns[name=\"relatedOutcomes\"]"
+  },
+  {
     "scoreId": "e4cedcec-6a4c-4125-8d27-9230d6a21ba5",
     "filterValue": "NHT - Establishing Agreements",
     "property": "totalAreaConservationAgreements",
@@ -1240,6 +1247,14 @@ const scoreInfo = [
     computedExpression: 'sum(researchAndDevelopmentByOutcome, "numberOfDaysConducted")',
     relatedOutcomesPath: 'sections[name="NHT - Research and development"].template.dataModel[name="researchAndDevelopmentByOutcome"].columns[name="relatedOutcomes"]',
     label: 'Number of days conducting research and development'
+  },
+  {
+    scoreId: 'd5f769b8-2377-4357-84bb-8782d2e27dcb',
+    filterValue: 'NHT - Research and development',
+    property: 'noHoursConductingResearchAndDevelopment',
+    computedExpression: 'sum(researchAndDevelopmentByOutcome, "numberOfHoursConducted")',
+    relatedOutcomesPath: 'sections[name="NHT - Research and development"].template.dataModel[name="researchAndDevelopmentByOutcome"].columns[name="relatedOutcomes"]',
+    label: 'Number of hours conducting research and/or development for this reporting period'
   },
   {
     scoreId: 'e4cedcec-6a4c-4125-8d27-9230d6a21ba5',
