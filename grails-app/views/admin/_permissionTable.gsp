@@ -125,8 +125,8 @@
             // click event on the "remove" button on Project Members table
                 $('.membersTbody').on("click", "td.memRemoveRole .fa-remove", function(e) {
                     var $this = this;
-                    var userId = $($this).parent().data("userid");
-                    var role = $($this).parent().data("role");
+                    var userId = $($this).parent().parent().data("userid");
+                    var role = $($this).parent().parent().data("role");
 
                     var message;
                     if (userId == '${user?.userId}') {
