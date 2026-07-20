@@ -75,6 +75,11 @@
                                 roleName = $i18n('label.role.'+el.role, roleName);
                             }
                             $clone.find('.memUserRole span').text(roleName);
+                            <g:if test="${!fc.userIsSiteAdmin()}">
+                            if (el.role === 'caseManager') {
+                                $clone.find('.memRemoveRole .fa-remove').remove();
+                            }
+                            </g:if>
                             $('.membersTbody').append($clone);
                         });
                     } else {
@@ -118,7 +123,7 @@
             }
             $(function() {
             // click event on the "remove" button on Project Members table
-                $('.membersTbody').on("click", "td.memRemoveRole", function(e) {
+                $('.membersTbody').on("click", "td.memRemoveRole .fa-remove", function(e) {
                     var $this = this;
                     var userId = $($this).parent().data("userid");
                     var role = $($this).parent().data("role");
