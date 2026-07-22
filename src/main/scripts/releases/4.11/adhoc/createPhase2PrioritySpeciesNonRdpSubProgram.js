@@ -387,6 +387,13 @@ var config =
                         "b8304577-afd8-45e0-8ef4-b71ae10998f5"
                     ],
                     "serviceId": 44
+                },
+                {
+                    "serviceTargets": [
+                        "99bd36b0-5a87-4c69-a46b-064499708310",
+                        "5a2af425-34bf-4ac8-a9b9-04a679504588"
+                    ],
+                    "serviceId": 51
                 }
             ]
         },
