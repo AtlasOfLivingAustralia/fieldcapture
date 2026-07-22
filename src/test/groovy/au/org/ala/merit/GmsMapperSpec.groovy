@@ -26,11 +26,17 @@ class GmsMapperSpec extends Specification{
             "Green Army": [programId:"ga", name:"Green Army"],
             "Test program":[programId:'p1', name:"Test program", fundingType:"Grant"]
     ]
+    List stateNames = ["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"]
+    Map electoratesByState = ["ACT":["Bean", "Canberra", "Fenner"], "NSW":["Barton", "Berowra", "Blaxland"], "NT":["Lingiari", "Solomon"], "QLD":["Blair", "Bonner", "Bowman"], "SA":["Adelaide", "Barker", "Boothby"], "TAS":["Bass", "Braddon", "Clark"], "VIC":["Ballarat", "Batman", "Bendigo"], "WA":["Brand", "Canning", "Curtin"]]
+    Map electoratesAndStates = [:]
     def setup() {
         activitiesModel = JSON.parse(new InputStreamReader(getClass().getResourceAsStream('/activities-model.json')))
         Map programModel = [programs:[[name:'Green Army']]]
         List organisations = [[ organisationId: "123", name:'Test org 1', abn:'12345678901'], [organisationId:'2', name:"Org 2", abn:""]]
-        gmsMapper = new GmsMapper(activitiesModel, programModel, organisations, abnLookupService, scores, programs, [:], false, false)
+        electoratesAndStates = electoratesByState.collectEntries { String state, List electorates ->
+            electorates.collectEntries { String electorate -> [(electorate): state] }
+        }
+        gmsMapper = new GmsMapper(activitiesModel, programModel, organisations, abnLookupService, scores, programs, [:], stateNames, electoratesAndStates, false, false)
     }
 
     /**
@@ -426,5 +432,52 @@ class GmsMapperSpec extends Specification{
                                        [idType:'WORK_ORDER', externalId: 'w1'],
                                        [idType:'GRANT_AWARD', externalId: 'g1'], [idType:'GRANT_AWARD', externalId: 'g2']]
         !result.errors
+    }
+
+    def "The geographic info mapping is initialised with valid states and electorates"() {
+        expect:
+        gmsMapper.geographicInfoMapping.PRIMARY_STATE.values.keySet() == stateNames as Set
+        gmsMapper.geographicInfoMapping.PRIMARY_ELECTORATE.values.keySet().containsAll(electoratesAndStates.keySet())
+        gmsMapper.geographicInfoMapping.OTHER_STATES.values == stateNames
+        gmsMapper.geographicInfoMapping.OTHER_ELECTORATES.values.containsAll(electoratesAndStates.keySet())
+    }
+
+    def "Primary and other states are derived from mapped electorates"() {
+        when:
+        Map result = gmsMapper.mapProject([[
+                APP_ID:'g1',
+                PROGRAM_NM:'Green Army',
+                ABN:'12345678901',
+                START_DT:'01/07/2019',
+                FINISH_DT:'01/07/2020',
+                PORTFOLIO:'Environment',
+                PRIMARY_ELECTORATE:'Bean',
+                OTHER_ELECTORATES:'Barton, Bonner',
+                OTHER_STATES:'ACT'
+        ]])
+
+        then:
+        result.project.geographicInfo.primaryElectorate == 'Bean'
+        result.project.geographicInfo.primaryState == 'ACT'
+        result.project.geographicInfo.otherElectorates == ['Barton', 'Bonner']
+        result.project.geographicInfo.otherStates == ['ACT', 'NSW', 'QLD']
+        !result.errors.find { it.toString().contains("doesn't match the primary electorate") }
+    }
+
+    def "A validation error is added when primary state does not match primary electorate"() {
+        when:
+        Map result = gmsMapper.mapProject([[
+                APP_ID:'g1',
+                PROGRAM_NM:'Green Army',
+                ABN:'12345678901',
+                START_DT:'01/07/2019',
+                FINISH_DT:'01/07/2020',
+                PORTFOLIO:'Environment',
+                PRIMARY_ELECTORATE:'Bean',
+                PRIMARY_STATE:'NSW'
+        ]])
+
+        then:
+        result.errors.find { it.toString() == "The primary state NSW doesn't match the primary electorate Bean which is in ACT" }
     }
 }

@@ -129,13 +129,13 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
             this.downloadUrl = config.downloadDataSetUrl + '/' + dataSet.dataSetId;
         }
 
-        this.isMonitorDataSet = this.createdIn === MONITOR_APP;
+        this.isMonitorDataSet = dataSet.orgMintedIdentifier != null;
         if (this.isMonitorDataSet) {
             if (this.progress === ActivityProgress.planned) {
                 var now = moment();
                 var creationDate = moment(dataSet.dateCreated);
 
-                if (creationDate.add(1, 'minutes').isBefore(now)) {
+                if (creationDate.add(5, 'minutes').isBefore(now)) {
                     this.progress = 'sync error';
                 }
                 else {
@@ -184,7 +184,6 @@ var DataSetViewModel = function(dataSet, projectService, options) {
         }
     });
 
-    self.projectBaselines = options.projectBaselines;
     self.type = ko.observable(dataSet.type);
     self.baselines = ko.observableArray(dataSet.baselines);
     self.otherDataSetType = ko.observable(dataSet.otherDataSetType);
@@ -208,6 +207,16 @@ var DataSetViewModel = function(dataSet, projectService, options) {
             return serviceAndOutcome.label == self.serviceAndOutcomes();
         });
         return selectedOutcome && selectedOutcome.serviceId;
+    });
+
+    self.projectBaselines = ko.computed(function() {
+        const serviceId = self.serviceId();
+        if (!serviceId) {
+            return options.projectBaselines;
+        }
+        return _.filter(options.projectBaselines, function(baseline) {
+            return _.contains(baseline.serviceIds, serviceId);
+        })
     });
 
     self.disableBaseline = function(e) {

@@ -60,15 +60,17 @@ class DataSetController {
                 Map service = projectServices.find{it.scores?.find{score -> score.scoreId == outputTarget.scoreId}}
                 if (service) {
                     Map score = service.scores.find{it.scoreId == outputTarget.scoreId}
-                    outputTarget.outcomeTargets.each {
-                        outcomeGroups << [
-                                serviceId: service.id,
-                                service: service.name,
-                                outcomes:it.relatedOutcomes,
-                                label:service.name+" "+it.relatedOutcomes,
-                                projectTags:score.tags,
-                                allTags: service.scores?.collect{it.tags}?.flatten()?.unique()
-                        ]
+                    if (score.tags?.contains(Score.TAG_SURVEY)) {
+                        outputTarget.outcomeTargets.each {
+                            outcomeGroups << [
+                                    serviceId  : service.id,
+                                    service    : service.name,
+                                    outcomes   : it.relatedOutcomes,
+                                    label      : service.name + " " + it.relatedOutcomes,
+                                    projectTags: score.tags,
+                                    allTags    : service.scores?.collect { it.tags }?.flatten()?.unique()
+                            ]
+                        }
                     }
                 }
                 else {
@@ -98,7 +100,7 @@ class DataSetController {
             // Only projects used the 2023 revision of the MERI plan will have a code attribute for their baselines
             String label = it.code ? it.code + ' - '+ it.baseline : it.baseline
             String value = it.code ?: it.baseline
-            [label:label, value: value]
+            [label:label, value: value, serviceIds: findServicesForBaseline(it, project, projectServices)]
         }
 
         List projectProtocols = projectService.listProjectProtocols(project).collect{
@@ -112,6 +114,23 @@ class DataSetController {
          priorities:priorities, outcomes: outcomes, project:project, projectOutcomes:outcomeGroups,
          projectBaselines:projectBaselines, projectProtocols:projectProtocols, dataSetNames:dataSetNames,
         serviceBaselineIndicatorOptions: serviceBaselineIndicatorOptions]
+    }
+
+    private static List findServicesForBaseline(Map baselineRow, Map project, List allServices) {
+        List targetMeasures = []
+        if (baselineRow?.relatedTargetMeasures) {
+            targetMeasures << baselineRow.relatedTargetMeasures
+        }
+        List monitoringForBaseline = project.custom?.details?.monitoring?.rows?.findAll{it.relatedBaseline == baselineRow.code}
+        monitoringForBaseline?.each {
+            targetMeasures << it?.relatedTargetMeasures
+        }
+
+        List scoreIds = targetMeasures.flatten()?.findAll{it}?.unique()
+        List services = allServices.findAll {
+            it.scores?.find{score -> score.scoreId in scoreIds}
+        }
+        services.collect{it.id}
     }
 
     // Note that authorization is done against a project, so the project id must be supplied to the method.
