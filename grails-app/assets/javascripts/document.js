@@ -120,7 +120,76 @@ function DocumentViewModel (doc, owner, settings) {
     this.isPrimaryProjectImage = ko.observable(doc.isPrimaryProjectImage);
     this.thirdPartyConsentDeclarationMade = ko.observable(doc.thirdPartyConsentDeclarationMade);
     this.thirdPartyConsentDeclarationText = null;
-    this.embeddedVideo = ko.observable(doc.embeddedVideo);
+
+    /** * Parses video embed code (iframe) or direct video URLs for YouTube, Vimeo, and Facebook. * @param {string} input - HTML iframe snippet or direct video URL * @returns {object|null} { url, embedUrl, domain, width, height } */
+    function parseEmbeddedVideoOrUrl(input) {
+        if (!input || typeof input !== 'string') return null;
+
+        const trimmedInput = input.trim();
+
+        // 1. Extract raw URL
+        const urlMatch = trimmedInput.match(/https?:\/\/(?:www\.|player\.|web\.)?(?:youtube\.com|youtu\.be|vimeo\.com|facebook\.com|fb\.watch)[^\s"'>]+/i);
+        if (!urlMatch) return null;
+
+        // Decode HTML entities (e.g., &amp; -> &)
+        const rawUrl = urlMatch[0].replace(/&amp;/g, '&');
+
+        // 2. Extract Domain
+        const domainMatch = rawUrl.match(/https?:\/\/(?:[a-zA-Z0-9-]+\.)*?([a-zA-Z0-9-]+\.(?:com|be))/i);
+        const domain = domainMatch ? domainMatch[1].toLowerCase() : null;
+
+        // 3. Extract Width & Height
+        const widthMatch = trimmedInput.match(/(?:width=["']?(\d+%?)|[?&]width=(\d+))/i);
+        const heightMatch = trimmedInput.match(/(?:height=["']?(\d+%?)|[?&]height=(\d+))/i);
+
+        const width = widthMatch ? (widthMatch[1] || widthMatch[2]) : null;
+        const height = heightMatch ? (heightMatch[1] || heightMatch[2]) : null;
+
+        // 4. Normalize Direct URLs into Embed URLs
+        let embedUrl = rawUrl;
+        let type = null;
+
+        if (domain === 'youtube.com' || domain === 'youtu.be') {
+            const ytIdMatch = rawUrl.match(/(?:v=|\/embed\/|\/shorts\/|\/)([\w-]{11})/);
+            if (ytIdMatch) {
+                embedUrl = `https://www.youtube.com/embed/${ytIdMatch[1]}`;
+            }
+            type = 'youtube';
+        } else if (domain === 'vimeo.com') {
+            const vimeoIdMatch = rawUrl.match(/(?:vimeo\.com\/(?:video\/)?|player\.vimeo\.com\/video\/)(\d+)/);
+            if (vimeoIdMatch) {
+                embedUrl = `https://player.vimeo.com/video/${vimeoIdMatch[1]}`;
+            }
+            type = 'vimeo';
+        } else if (domain === 'facebook.com' || domain === 'fb.watch') {
+            if (!rawUrl.includes('/plugins/video.php')) {
+                embedUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(rawUrl)}&show_text=false`;
+            }
+            type = 'facebook';
+        }
+
+        if (!type) {
+            return null;
+        }
+        return {
+            url: rawUrl,
+            embedUrl: embedUrl,
+            domain: domain,
+            width: width,
+            height: height,
+            type: type
+        };
+    }
+
+    this.embeddedVideoData = ko.observable();
+    this.embeddedVideo = ko.pureComputed({
+        read: function() {
+            return self.embeddedVideoData;
+        },
+        write: function(value) {
+            self.embeddedVideoData(parseEmbeddedVideoOrUrl(value));
+        }
+    });
     this.embeddedVideoVisible = ko.computed(function() {
         return (self.role() == 'embeddedVideo');
     });
@@ -153,13 +222,13 @@ function DocumentViewModel (doc, owner, settings) {
             return false;
         }
         else if(self.role() == 'embeddedVideo'){
-            return buildiFrame(self.embeddedVideo()) != "" ;
+            return self.embeddedVideoData() !== null;
         }
 
         return self.fileReady();
     });
     this.saveHelp = ko.computed(function() {
-        if(self.role() == 'embeddedVideo' && !buildiFrame(self.embeddedVideo())){
+        if(self.role() == 'embeddedVideo' && !self.embeddedVideoData()){
             return 'Invalid embed video code';
         }
         else if(self.role() == 'embeddedVideo' && !self.saveEnabled()){

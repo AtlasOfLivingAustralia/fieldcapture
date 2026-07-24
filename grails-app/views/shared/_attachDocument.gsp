@@ -64,7 +64,10 @@
                             Embed video
                         </label>
                         <div class="col-sm-8">
-                            <textarea placeholder="Example: <iframe width='560' height='315' src='https://www.youtube.com/embed/j1bR-0XBfcs' frameborder='0' allowfullscreen></iframe> (Allowed host: Youtube, Vimeo, Ted, Wistia.)"
+                            <!-- ko if:embeddedVideoData() && embeddedVideoData().type -->
+                            <div data-bind="template:{name:embeddedVideoData().type+'-embedded-video-template', data:embeddedVideoData}"></div>
+                            <!-- /ko -->
+                            <textarea placeholder="Example: <iframe width='560' height='315' src='https://www.youtube.com/embed/j1bR-0XBfcs' frameborder='0' allowfullscreen></iframe> (Allowed host: Youtube, Vimeo, Ted, Wistia, Facebook.)"
                                       class="form-control form-control-sm" data-bind="value: embeddedVideo,  valueUpdate: 'keyup'" rows="3" id="embeddedVideo" type="text">
                             </textarea>
                         </div>
