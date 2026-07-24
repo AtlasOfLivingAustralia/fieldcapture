@@ -87,10 +87,10 @@ class SpatialService {
         String electoratesLayerId = grailsApplication.config.getProperty('layers.elect')
         String statesLayerId = grailsApplication.config.getProperty('layers.states')
         String url = grailsApplication.config.getProperty('ecodata.baseUrl') + SPATIAL_FEATURES_PATH
-        Map params = [layerId: electoratesLayerId, intersectWithLayerId: statesLayerId]
+        Map params = [layerId: electoratesLayerId, intersectWith: statesLayerId]
 
         Map resp = webService.getJson(url, params)
-        resp?.resp?.collectEntries{[(it.name): it[statesLayerId][0]]} // We know each electorate only intersects with one state, so we can just take the first one
+        resp?.resp?.collectEntries{[(it.name): it[statesLayerId]?[0]]} // We know each electorate only intersects with one state, so we can just take the first one
     }
 
 
