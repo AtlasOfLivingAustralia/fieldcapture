@@ -74,7 +74,8 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         this.viewUrl = config.viewDataSetUrl + '?dataSetId=' + dataSet.dataSetId;
         this.copyUrl = config.copyDataSetUrl + '?dataSetId=' + dataSet.dataSetId;
         this.name = dataSet.name;
-        this.createdIn = dataSet.collectionApp === MONITOR_APP ? MONITOR_APP : 'MERIT';
+        this.isMonitorDataSet = dataSet.orgMintedIdentifier != null;
+        this.createdIn = this.isMonitorDataSet === MONITOR_APP ? MONITOR_APP : 'MERIT';
         this.progress = dataSet.progress;
         this.dateCreated = ko.observable(dataSet.dateCreated).extend({simpleDate: false});
         this.lastUpdated = ko.observable(dataSet.lastUpdated).extend({simpleDate: false});
@@ -129,7 +130,6 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
             this.downloadUrl = config.downloadDataSetUrl + '/' + dataSet.dataSetId;
         }
 
-        this.isMonitorDataSet = dataSet.orgMintedIdentifier != null;
         if (this.isMonitorDataSet) {
             if (this.progress === ActivityProgress.planned) {
                 var now = moment();
