@@ -1307,23 +1307,54 @@ for (const scoreConfig of scoreInfo) {
     continue;
   }
 
-  let nhtConfigSection = score.configuration.childAggregations;
+  let nestedConfig = null;
 
-  if (nhtConfigSection.length > 1) {
-    for (let i in nhtConfigSection) {
-     let section = nhtConfigSection[i];
-      if (section.filter && section.filter.filterValue.indexOf('NHT') >= 0) {
-        nhtConfigSection = section;
-        print("Found config section using NHT")
-        break;
+  if (scoreConfig.computedExpression.search(/Initial|Follow-up|Baseline|Indicator|Implementation|Established/) >= 0) {
+    let regexp = /sum\(([a-zA-Z0-9]+),\s*"?\s*([a-zA-Z0-9]+)\s*==\s*'([^']+)'\s*\?\s*([a-zA-Z0-9]+)\s*:.*\)?/;
+    const match = scoreConfig.computedExpression.match(regexp);
+    if (!match) {
+      throw "Hey!  "+scoreConfig.computedExpression+" didn't match!";
+    }
+    else {
+      const listName = match[1];
+      const columnName = match[2];
+      const filterValue = match[3];
+      const toSum = match[4];
+
+      const operation = toSum === '1' ? 'COUNT' : 'SUM';
+      const property = toSum === '1' ? columnName : toSum;
+      nestedConfig = {
+        filter: {
+          property: listName+'.'+columnName,
+          filterValue: filterValue
+        },
+        childAggregations: [{
+          property: listName + '.' + property,
+          type: operation
+        }]
       }
     }
-    if (!nhtConfigSection) {
-      print("Couldn't find a config matching NHT so using the last one....")
-      nhtConfigSection = score.configuration.childAggregations[score.configuration.childAggregations.length - 1];
+  }
+  else {
+    let nhtConfigSection = score.configuration.childAggregations;
+
+    if (nhtConfigSection.length > 1) {
+      for (let i in nhtConfigSection) {
+        let section = nhtConfigSection[i];
+        if (section.filter && section.filter.filterValue.indexOf('NHT') >= 0) {
+          nhtConfigSection = section;
+          print("Found config section using NHT")
+          break;
+        }
+      }
+      if (!nhtConfigSection) {
+        print("Couldn't find a config matching NHT so using the last one....")
+        nhtConfigSection = score.configuration.childAggregations[score.configuration.childAggregations.length - 1];
+      }
+    } else {
+      nhtConfigSection = score.configuration.childAggregations[0];
     }
-  } else {
-    nhtConfigSection = score.configuration.childAggregations[0];
+    nestedConfig = nhtConfigSection.childAggregations;
   }
 
 
@@ -1350,7 +1381,7 @@ for (const scoreConfig of scoreInfo) {
                   type: 'discrete',
                   property: 'data.' + listName + '.' + columnName
                 },
-                childAggregations: nhtConfigSection.childAggregations
+                childAggregations: [nestedConfig]
 
               }
             ]
