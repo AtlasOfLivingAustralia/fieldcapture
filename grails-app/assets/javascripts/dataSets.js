@@ -74,7 +74,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         this.copyUrl = config.copyDataSetUrl + '?dataSetId=' + dataSet.dataSetId;
         this.name = dataSet.name;
         this.isMonitorDataSet = dataSet.orgMintedIdentifier != null;
-        this.createdIn = !this.isMonitorDataSet && dataSet.collectionApp == MONITOR_APP ? 'MERIT' : dataSet.collectionApp || 'MERIT' ;
+        this.createdIn = !this.isMonitorDataSet && dataSet.collectionApp == MONITOR_APP ? 'MERIT' : dataSet.collectionApp || '' ;
         this.progress = dataSet.progress;
         this.dateCreated = ko.observable(dataSet.dateCreated).extend({simpleDate: false});
         this.lastUpdated = ko.observable(dataSet.lastUpdated).extend({simpleDate: false});
