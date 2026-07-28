@@ -2496,7 +2496,7 @@ class ProjectService  {
             }
         }
 
-        if (activity.progress in [ActivityService.PROGRESS_STARTED, ActivityService.PROGRESS_FINISHED]) {
+        if (activity?.outputs) { // Only perform calculations for activities that have at least some data.
             List scoreIds = []
             Map scoreForOutcomeScore = [:]
             servicesForProject?.each { Map service ->
