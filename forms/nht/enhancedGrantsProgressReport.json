@@ -710,7 +710,7 @@
                     "columns": [
                       {
                         "title": "Activities and target measures",
-                        "type": "text",
+                        "type": "readonlyText",
                         "source": "targetMeasureLabel",
                         "readonly": true,
                         "width": "20%"
@@ -803,7 +803,7 @@
                 "columns": [
                   {
                     "title": "Activities and target measures",
-                    "type": "text",
+                    "type": "readonlyText",
                     "source": "targetMeasureLabel",
                     "readonly": true,
                     "width": "20%"
