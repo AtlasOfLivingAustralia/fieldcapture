@@ -746,7 +746,7 @@ class GmsMapper {
                 }
                 def lookupValue = value ? mapping.values[value] : mapping.default
                 if (lookupValue == null) {
-                    throw new IllegalArgumentException("${value} is not in ${mapping.values}")
+                    throw new IllegalArgumentException("${value} is not in ${mapping.values?.keySet()}")
                 }
                 result = lookupValue
                 break

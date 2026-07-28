@@ -74,7 +74,8 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         this.viewUrl = config.viewDataSetUrl + '?dataSetId=' + dataSet.dataSetId;
         this.copyUrl = config.copyDataSetUrl + '?dataSetId=' + dataSet.dataSetId;
         this.name = dataSet.name;
-        this.createdIn = dataSet.collectionApp === MONITOR_APP ? MONITOR_APP : 'MERIT';
+        this.isMonitorDataSet = dataSet.orgMintedIdentifier != null;
+        this.createdIn = this.isMonitorDataSet === MONITOR_APP ? MONITOR_APP : 'MERIT';
         this.progress = dataSet.progress;
         this.dateCreated = ko.observable(dataSet.dateCreated).extend({simpleDate: false});
         this.lastUpdated = ko.observable(dataSet.lastUpdated).extend({simpleDate: false});
@@ -129,13 +130,12 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
             this.downloadUrl = config.downloadDataSetUrl + '/' + dataSet.dataSetId;
         }
 
-        this.isMonitorDataSet = this.createdIn === MONITOR_APP;
         if (this.isMonitorDataSet) {
             if (this.progress === ActivityProgress.planned) {
                 var now = moment();
                 var creationDate = moment(dataSet.dateCreated);
 
-                if (creationDate.add(1, 'minutes').isBefore(now)) {
+                if (creationDate.add(5, 'minutes').isBefore(now)) {
                     this.progress = 'sync error';
                 }
                 else {

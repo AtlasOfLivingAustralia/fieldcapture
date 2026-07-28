@@ -75,6 +75,12 @@
                                 roleName = $i18n('label.role.'+el.role, roleName);
                             }
                             $clone.find('.memUserRole span').text(roleName);
+                            <g:if test="${!fc.userIsSiteAdmin()}">
+                            if (el.role === 'caseManager') {
+                                $clone.find('.memRemoveRole .fa-remove').remove();
+                                $clone.find('.memEditRole .fa-edit').remove();
+                            }
+                            </g:if>
                             $('.membersTbody').append($clone);
                         });
                     } else {
@@ -118,10 +124,10 @@
             }
             $(function() {
             // click event on the "remove" button on Project Members table
-                $('.membersTbody').on("click", "td.memRemoveRole", function(e) {
+                $('.membersTbody').on("click", "td.memRemoveRole .fa-remove", function(e) {
                     var $this = this;
-                    var userId = $($this).parent().data("userid");
-                    var role = $($this).parent().data("role");
+                    var userId = $($this).parent().parent().data("userid");
+                    var role = $($this).parent().parent().data("role");
 
                     var message;
                     if (userId == '${user?.userId}') {
@@ -142,13 +148,13 @@
                 });
 
                 // hide/show the role select for editting role
-                $('.membersTbody').on("click", "td.memEditRole", function(e) {
-                    if ($(this).parent().find("span").is(':visible')) {
-                        $(this).parent().find("span").hide();
-                        $(this).parent().find("select").fadeIn();
+                $('.membersTbody').on("click", "td.memEditRole .fa-edit", function(e) {
+                    if ($(this).parent().parent().find("span").is(':visible')) {
+                        $(this).parent().parent().find("span").hide();
+                        $(this).parent().parent().find("select").fadeIn();
                     } else {
-                        $(this).parent().find("span").fadeIn();
-                        $(this).parent().find("select").hide();
+                        $(this).parent().parent().find("span").fadeIn();
+                        $(this).parent().parent().find("select").hide();
                     }
                 });
 
