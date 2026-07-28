@@ -622,6 +622,12 @@ class GmsMapper {
                     result.mappedData.otherStates << state
                 }
             }
+            if (result.mappedData.primaryElectorate) {
+                result.mappedData.overridePrimaryElectorate = true
+            }
+            if (result.mappedData.primaryState) {
+                result.mappedData.overridePrimaryState = true
+            }
             project.geographicInfo = result.mappedData
         }
         errors.addAll(result.errors)
