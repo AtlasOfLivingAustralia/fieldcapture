@@ -120,10 +120,13 @@ class GrantsWorkflowSpec extends StubbedCasSpec {
             meriPlan.serviceOutcomeTargets.outcomeTargets.size() == 3
         }
         meriPlan.serviceOutcomeTargets.outcomeTargets.eachWithIndex { outcomeTarget, targetIndex ->
-            outcomeTarget.target.value("${targetIndex + 1}")
+            def target = 0
             outcomeTarget.periodTargets.eachWithIndex { periodTarget, periodIndex ->
-                periodTarget.value("${(targetIndex + 1) * (periodIndex + 1)}")
+                def targetValue = (targetIndex + 1) * (periodIndex + 1)
+                target += targetValue
+                periodTarget.value(targetValue)
             }
+            outcomeTarget.target.value(target)
         }
         meriPlan.projectMethodology = "Project delivery assumptions"
 
@@ -185,15 +188,15 @@ class GrantsWorkflowSpec extends StubbedCasSpec {
         waitFor {
             meriPlan.serviceOutcomeTargets.outcomeTargets.size() == 3
         }
-        meriPlan.serviceOutcomeTargets.outcomeTargets[0].target.text() == "6"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[0].target.text() == "15"
         meriPlan.serviceOutcomeTargets.outcomeTargets[0].periodTargets[0].text() == "1"
         meriPlan.serviceOutcomeTargets.outcomeTargets[0].periodTargets[1].text() == "2"
         meriPlan.serviceOutcomeTargets.outcomeTargets[0].periodTargets[2].text() == "3"
-        meriPlan.serviceOutcomeTargets.outcomeTargets[1].target.text() == "12"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[1].target.text() == "30"
         meriPlan.serviceOutcomeTargets.outcomeTargets[1].periodTargets[0].text() == "2"
         meriPlan.serviceOutcomeTargets.outcomeTargets[1].periodTargets[1].text() == "4"
         meriPlan.serviceOutcomeTargets.outcomeTargets[1].periodTargets[2].text() == "6"
-        meriPlan.serviceOutcomeTargets.outcomeTargets[2].target.text() == "18"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[2].target.text() == "45"
         meriPlan.serviceOutcomeTargets.outcomeTargets[2].periodTargets[0].text() == "3"
         meriPlan.serviceOutcomeTargets.outcomeTargets[2].periodTargets[1].text() == "6"
         meriPlan.serviceOutcomeTargets.outcomeTargets[2].periodTargets[2].text() == "9"
@@ -259,11 +262,11 @@ class GrantsWorkflowSpec extends StubbedCasSpec {
         outcomeTargetsSection.projectOutcomes[0].outcomeDescription == "Project outcome 1"
 
         outcomeTargetsSection.projectOutcomeTargets.size() == 3
-        outcomeTargetsSection.projectOutcomeTargets[0].target == "1"
+        outcomeTargetsSection.projectOutcomeTargets[0].target == "15"
         outcomeTargetsSection.projectOutcomeTargets[0].targetThisReport == "1"
-        outcomeTargetsSection.projectOutcomeTargets[1].target == "2"
+        outcomeTargetsSection.projectOutcomeTargets[1].target == "30"
         outcomeTargetsSection.projectOutcomeTargets[1].targetThisReport == "2"
-        outcomeTargetsSection.projectOutcomeTargets[2].target == "3"
+        outcomeTargetsSection.projectOutcomeTargets[2].target == "45"
         outcomeTargetsSection.projectOutcomeTargets[2].targetThisReport == "3"
     }
 }
