@@ -44,8 +44,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
     }
 
     function isDownloadableMonitorDataSet(dataSet) {
-
-        if (dataSet.collectionApp !== MONITOR_APP) {
+        if (!dataSet.orgMintedIdentifier) {
             return false;
         }
         var protocolId = dataSet.protocol;
@@ -75,7 +74,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         this.copyUrl = config.copyDataSetUrl + '?dataSetId=' + dataSet.dataSetId;
         this.name = dataSet.name;
         this.isMonitorDataSet = dataSet.orgMintedIdentifier != null;
-        this.createdIn = this.isMonitorDataSet === MONITOR_APP ? MONITOR_APP : 'MERIT';
+        this.createdIn = !this.isMonitorDataSet && dataSet.collectionApp == MONITOR_APP ? 'MERIT' : dataSet.collectionApp || '' ;
         this.progress = dataSet.progress;
         this.dateCreated = ko.observable(dataSet.dateCreated).extend({simpleDate: false});
         this.lastUpdated = ko.observable(dataSet.lastUpdated).extend({simpleDate: false});
@@ -108,7 +107,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
                    dataSet.surveyId.survey_metadata.survey_details.survey_model === plotSelectionModelName;
         }
 
-        this.canResync = this.createdIn == MONITOR_APP && // Resyncing only makes sense for Monitor data sets
+        this.canResync = this.isMonitorDataSet && // Resyncing only makes sense for Monitor data sets
                         !this.isReadOnly && // Once data has been published we shouldn't change it
                         !dataSet.reportId && // Once data has been copied into a report we shouldn't change it
                          dataSet.surveyId &&
