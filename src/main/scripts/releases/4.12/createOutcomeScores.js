@@ -1325,11 +1325,11 @@ for (const scoreConfig of scoreInfo) {
       const property = toSum === '1' ? columnName : toSum;
       nestedConfig = [{
         filter: {
-          property: listName+'.'+columnName,
+          property: 'data.'+listName+'.'+columnName,
           filterValue: filterValue
         },
         childAggregations: [{
-          property: listName + '.' + property,
+          property: 'data.'+listName + '.' + property,
           type: operation
         }]
       }]
