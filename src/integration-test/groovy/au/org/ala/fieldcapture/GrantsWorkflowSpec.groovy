@@ -185,15 +185,15 @@ class GrantsWorkflowSpec extends StubbedCasSpec {
         waitFor {
             meriPlan.serviceOutcomeTargets.outcomeTargets.size() == 3
         }
-        meriPlan.serviceOutcomeTargets.outcomeTargets[0].target.text() == "1"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[0].target.text() == "6"
         meriPlan.serviceOutcomeTargets.outcomeTargets[0].periodTargets[0].text() == "1"
         meriPlan.serviceOutcomeTargets.outcomeTargets[0].periodTargets[1].text() == "2"
         meriPlan.serviceOutcomeTargets.outcomeTargets[0].periodTargets[2].text() == "3"
-        meriPlan.serviceOutcomeTargets.outcomeTargets[1].target.text() == "2"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[1].target.text() == "12"
         meriPlan.serviceOutcomeTargets.outcomeTargets[1].periodTargets[0].text() == "2"
         meriPlan.serviceOutcomeTargets.outcomeTargets[1].periodTargets[1].text() == "4"
         meriPlan.serviceOutcomeTargets.outcomeTargets[1].periodTargets[2].text() == "6"
-        meriPlan.serviceOutcomeTargets.outcomeTargets[2].target.text() == "3"
+        meriPlan.serviceOutcomeTargets.outcomeTargets[2].target.text() == "18"
         meriPlan.serviceOutcomeTargets.outcomeTargets[2].periodTargets[0].text() == "3"
         meriPlan.serviceOutcomeTargets.outcomeTargets[2].periodTargets[1].text() == "6"
         meriPlan.serviceOutcomeTargets.outcomeTargets[2].periodTargets[2].text() == "9"
