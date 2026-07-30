@@ -129,7 +129,7 @@
                     "source": "link",
                     "type": "text",
                     "width": "20%",
-                    "title": "URL/link"
+                    "title": "URL/link<br>(Please copy and paste the URL/link from your browser)"
                   }
                 ]
               }
@@ -1128,7 +1128,7 @@
                     "source": "link",
                     "type": "text",
                     "width": "20%",
-                    "title": "URL/link"
+                    "title": "URL/link<br>(Please copy and paste the URL/link from your browser)"
                   }
                 ]
               }
