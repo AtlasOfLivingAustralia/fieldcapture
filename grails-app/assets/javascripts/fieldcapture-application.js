@@ -841,9 +841,84 @@ function isUrlAndHostValid(url) {
     return (url && isUrlValid(url) && $.inArray(getHostName(url), allowedHost) > -1)
 };
 
+/** Parses video embed code (iframe) or direct video URLs for YouTube, Vimeo, and Facebook. * @param {string} input - HTML iframe snippet or direct video URL * @returns {object|null} { url, embedUrl, domain, width, height } */
+function parseEmbeddedVideoOrUrl(input) {
+    if (!input || typeof input !== 'string') return null;
+
+    const trimmedInput = input.trim();
+
+    // 1. Extract raw URL
+    const urlMatch = trimmedInput.match(/https?:\/\/(?:www\.|player\.|web\.)?(?:youtube\.com|youtu\.be|vimeo\.com|facebook\.com|fb\.watch)[^\s"'>]+/i);
+    if (!urlMatch) return null;
+
+    // Decode HTML entities (e.g., &amp; -> &)
+    const rawUrl = urlMatch[0].replace(/&amp;/g, '&');
+
+    // 2. Extract Domain
+    const domainMatch = rawUrl.match(/https?:\/\/(?:[a-zA-Z0-9-]+\.)*?([a-zA-Z0-9-]+\.(?:com|be))/i);
+    const domain = domainMatch ? domainMatch[1].toLowerCase() : null;
+
+    // 3. Extract Width & Height
+    const widthMatch = trimmedInput.match(/(?:width=["']?(\d+%?)|[?&]width=(\d+))/i);
+    const heightMatch = trimmedInput.match(/(?:height=["']?(\d+%?)|[?&]height=(\d+))/i);
+
+    const width = widthMatch ? (widthMatch[1] || widthMatch[2]) : null;
+    const height = heightMatch ? (heightMatch[1] || heightMatch[2]) : null;
+
+    // 4. Extract the title, if present
+    const title = trimmedInput.match(/title=["']([^"']+)["']/i)?.[1] || '';
+
+    // 5. Extract the id of the video
+    let embedUrl = rawUrl;
+    let type = null;
+    let videoId = null;
+
+    if (domain === 'youtube.com' || domain === 'youtu.be') {
+        const ytIdMatch = rawUrl.match(/(?:v=|\/embed\/|\/shorts\/|\/)([\w-]{11})/);
+        if (ytIdMatch) {
+            videoId = ytIdMatch[1];
+        }
+        type = 'youtube';
+    } else if (domain === 'vimeo.com') {
+        const vimeoIdMatch = rawUrl.match(/(?:vimeo\.com\/(?:video\/)?|player\.vimeo\.com\/video\/)(\d+)/);
+        if (vimeoIdMatch) {
+            videoId = vimeoIdMatch[1];
+        }
+        type = 'vimeo';
+    } else if (domain === 'facebook.com' || domain === 'fb.watch') {
+        let videoIdMatcher
+        if (!rawUrl.includes('/plugins/video.php')) {
+            videoIdMatcher = /.*facebook.com\/[reel|share]\/([0-9]+).*/
+        }
+        else {
+            videoIdMatcher = /.*facebook.com%2Freel%2F([0-9]+).*/;
+        }
+        const videoIdMatch = rawUrl.match(videoIdMatcher)
+        if (videoIdMatch) {
+            videoId = videoIdMatch[1];
+        }
+        type = 'facebook';
+    }
+
+    if (!type) {
+        return null;
+    }
+    return {
+        url: rawUrl,
+        videoId: videoId,
+        embedUrl: embedUrl,
+        domain: domain,
+        width: width,
+        height: height,
+        type: type,
+        title: title
+    };
+}
+
 function isUrlValid(url) {
     return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
 };
+
 
 function getHostName(href) {
     var l = document.createElement("a");
