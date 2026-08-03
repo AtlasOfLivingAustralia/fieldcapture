@@ -862,8 +862,8 @@ function parseEmbeddedVideoOrUrl(input) {
     const widthMatch = trimmedInput.match(/(?:width=["']?(\d+%?)|[?&]width=(\d+))/i);
     const heightMatch = trimmedInput.match(/(?:height=["']?(\d+%?)|[?&]height=(\d+))/i);
 
-    const width = widthMatch ? (widthMatch[1] || widthMatch[2]) : null;
-    const height = heightMatch ? (heightMatch[1] || heightMatch[2]) : null;
+    const width = widthMatch ? (widthMatch[1] || widthMatch[2]) : '500px';
+    const height = heightMatch ? (heightMatch[1] || heightMatch[2]) : '300px';
 
     // 4. Extract the title, if present
     const title = trimmedInput.match(/title=["']([^"']+)["']/i)?.[1] || '';

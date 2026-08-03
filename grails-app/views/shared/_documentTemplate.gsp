@@ -127,14 +127,12 @@
 </script>
 
 <script id="vimeo-embedded-video-template" type="text/html">
-    <div style="padding:56.25% 0 0 0;position:relative;">
-        <iframe data-bind="attr:{src:'https://player.vimeo.com/video/'+videoId+'?badge=0&autopause=0&player_id=0', width:width, height:height, title:title}"
-                frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-                referrerpolicy="strict-origin-when-cross-origin"
-                style="position:absolute;top:0;left:0;width:100%;height:100%;">
-        </iframe>
-    </div>
-    <script src="https://player.vimeo.com/api/player.js"></script>
+
+    <iframe data-bind="attr:{src:'https://player.vimeo.com/video/'+videoId+'?badge=0&autopause=0&player_id=0', width:width, height:height, title:title}"
+            frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            style="top:0;left:0;width:100%;height:100%;">
+    </iframe>
 </script>
 
 <script id="youtube-embedded-video-template" type="text/html">

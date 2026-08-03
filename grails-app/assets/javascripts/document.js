@@ -127,17 +127,20 @@ function DocumentViewModel (doc, owner, settings) {
         if (!self.embeddedVideoData() || !self.embeddedVideoData().type) {
             return '';
         }
-        let html = null;
         let i = 0;
-        while (!html) {
-            html = element[i++].innerHTML;
+        let tagName = null;
+        let embeddedVideoElement = null;
+        while (!tagName) { // The template includes whitespace like \n etc, but we only want the HTML.
+            embeddedVideoElement = element[i++];
+            tagName = embeddedVideoElement.tagName;
         }
-        let $element = $("<div></div>").append($(html));
+        let $element = $("<div></div>").append($(embeddedVideoElement).clone());
         $element.find('[data-bind]').removeAttr('data-bind');
         self.embeddedVideo($element.html());
     }
     this.embeddedVideo.subscribe(function(value) {
-        self.embeddedVideoData(parseEmbeddedVideoOrUrl(value));
+        const data = parseEmbeddedVideoOrUrl(value);
+        self.embeddedVideoData(data);
     });
     if (doc.embeddedVideo) {
         self.embeddedVideo(doc.embeddedVideo);
@@ -291,7 +294,7 @@ function DocumentViewModel (doc, owner, settings) {
     };
 
     this.modelForSaving = function() {
-        var result =  ko.mapping.toJS(self, {'ignore':['embeddedVideoVisible','iframe','helper', 'progress', 'hasPreview', 'error', 'fileLabel', 'file', 'complete', 'fileButtonText', 'roles', 'stages','reports','reportName','maxStages', 'settings', 'thirdPartyConsentDeclarationRequired', 'saveEnabled', 'saveHelp', 'fileReady', 'hasPublicRole']});
+        var result =  ko.mapping.toJS(self, {'ignore':['embeddedVideoVisible', 'embeddedVideoData', 'iframe','helper', 'progress', 'hasPreview', 'error', 'fileLabel', 'file', 'complete', 'fileButtonText', 'roles', 'stages','reports','reportName','maxStages', 'settings', 'thirdPartyConsentDeclarationRequired', 'saveEnabled', 'saveHelp', 'fileReady', 'hasPublicRole']});
         if (result.stage === undefined) {
             result.stage = null;
         }
