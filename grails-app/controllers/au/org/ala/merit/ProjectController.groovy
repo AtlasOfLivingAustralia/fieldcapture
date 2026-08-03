@@ -915,7 +915,7 @@ class ProjectController {
         Map model = reportService.activityReportModel(reportId, mode, formVersion)
         ReportLifecycleListener reportData = reportService.reportLifeCycleListener(model.activity.type)
 
-        model.metaModel = projectService.filterOutputModel(model.metaModel, project, model.activity)
+        model.metaModel = projectService.filterOutputModel(model.metaModel, project, model.activity, model.editable)
 
         model.outputModels.each { k, v ->
             if (v.scores) {
