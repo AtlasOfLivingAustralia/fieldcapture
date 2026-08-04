@@ -249,7 +249,7 @@ class DatasetSpec extends StubbedCasSpec{
         waitFor {
             // This test is failing sometimes on actions due to what seems to be a validation error - trying to track it down.
             println js.exec("return \$('div.formError')")
-            println js.exec("return \$('div.formError').next()")?.collect{[it.getAttribute('name'), it.getAttribute('id'), it.getAttribute('data-bind'), it.text()]}
+            println js.exec("return \$('div.formError').next()")?.collect{[it.getAttribute('name'), it.getAttribute('id'), it.getAttribute('data-bind'), it.getText(), it.toJson()]}
 
             at RlpProjectPage
         }
