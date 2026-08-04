@@ -622,6 +622,12 @@ class GmsMapper {
                     result.mappedData.otherStates << state
                 }
             }
+            if (result.mappedData.primaryElectorate) {
+                result.mappedData.overridePrimaryElectorate = true
+            }
+            if (result.mappedData.primaryState) {
+                result.mappedData.overridePrimaryState = true
+            }
             project.geographicInfo = result.mappedData
         }
         errors.addAll(result.errors)
@@ -740,7 +746,7 @@ class GmsMapper {
                 }
                 def lookupValue = value ? mapping.values[value] : mapping.default
                 if (lookupValue == null) {
-                    throw new IllegalArgumentException("${value} is not in ${mapping.values}")
+                    throw new IllegalArgumentException("${value} is not in ${mapping.values?.keySet()}")
                 }
                 result = lookupValue
                 break

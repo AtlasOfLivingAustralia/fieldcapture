@@ -78,6 +78,7 @@
                             <g:if test="${!fc.userIsSiteAdmin()}">
                             if (el.role === 'caseManager') {
                                 $clone.find('.memRemoveRole .fa-remove').remove();
+                                $clone.find('.memEditRole .fa-edit').remove();
                             }
                             </g:if>
                             $('.membersTbody').append($clone);
@@ -147,13 +148,13 @@
                 });
 
                 // hide/show the role select for editting role
-                $('.membersTbody').on("click", "td.memEditRole", function(e) {
-                    if ($(this).parent().find("span").is(':visible')) {
-                        $(this).parent().find("span").hide();
-                        $(this).parent().find("select").fadeIn();
+                $('.membersTbody').on("click", "td.memEditRole .fa-edit", function(e) {
+                    if ($(this).parent().parent().find("span").is(':visible')) {
+                        $(this).parent().parent().find("span").hide();
+                        $(this).parent().parent().find("select").fadeIn();
                     } else {
-                        $(this).parent().find("span").fadeIn();
-                        $(this).parent().find("select").hide();
+                        $(this).parent().parent().find("span").fadeIn();
+                        $(this).parent().parent().find("select").hide();
                     }
                 });
 
