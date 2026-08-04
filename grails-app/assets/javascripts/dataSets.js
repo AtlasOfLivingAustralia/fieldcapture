@@ -161,6 +161,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     var self = this;
     var config = _.defaults({validationContainerSelector:'.validationEngineContainer'}, options);
     dataSet = dataSet || {};
+    self.isMonitorDataSet = dataSet.orgMintedIdentifier != null;
     self.dateCreated = dataSet.dateCreated;
     self.dataSetId = dataSet.dataSetId;
     self.surveyId = dataSet.surveyId; // Data set summaries created by a submission from the Monitor app will have a surveyId
@@ -337,7 +338,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
                     'grantId', 'projectName', 'programName', 'validate', 'save', 'cancel',
                         'investmentOtherSelected', 'siteUrl', 'isAutoCreated', 'serviceAndOutcomes',
                         'projectOutcomeList', 'projectBaselines', 'projectProtocols', 'disableBaseline',
-                        'disableIndicator', 'protocolLabel']});
+                        'disableIndicator', 'protocolLabel', 'isMonitorDataSet']});
             projectService.saveDataSet(dataSet).done(function() {
                 // return to project
                 window.location.href = config.returnToUrl;
