@@ -185,7 +185,7 @@
     <div class="mb-3 row">
         <label for="collectionApp" class="col-sm-5 col-form-label">12. Identify any apps used during data collection. <p>Where the 'Monitor' app has not been used, please provide details</p></label>
         <div class="col-sm-7">
-            <input type="text"  class="form-control" id="collectionApp" placeholder="" data-bind="value:collectionApp">
+            <input type="text"  class="form-control" id="collectionApp" placeholder="" data-bind="value:collectionApp, disable:isMonitorDataSet">
         </div>
     </div>
     <div class="mb-3 row">
