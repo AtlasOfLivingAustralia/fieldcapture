@@ -321,7 +321,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         1 * projectService.doesReportBelongToProject(projectId, reportId) >> true
         1 * reportService.activityReportModel(reportId, ReportService.ReportMode.VIEW, null) >> activityReportModel
         1 * reportService.reportLifeCycleListener(_) >> new ReportLifecycleListener()
-        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
+        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity, true) >> activityReportModel.metaModel
         1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
 
         view == '/activity/activityReportView'
@@ -346,7 +346,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         1 * projectService.doesReportBelongToProject(projectId, reportId) >> true
         1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> activityReportModel
         1 * reportService.reportLifeCycleListener(_) >> new ReportLifecycleListener()
-        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
+        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity, true) >> activityReportModel.metaModel
         1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
 
         view == '/activity/activityReport'
@@ -376,7 +376,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         // Override the default behaviour from setup
         1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
         0 * reportService.lockForEditing(_)
-        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
+        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity, false) >> activityReportModel.metaModel
 
         and: "the user should be redirected to the report view"
         response.redirectUrl == '/project/viewReport/'+projectId+"?reportId="+reportId+"&attemptedEdit=true"
@@ -401,7 +401,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         1 * projectService.doesReportBelongToProject(projectId, reportId) >> true
         1 * reportService.reportLifeCycleListener(_) >> new ReportLifecycleListener()
         1 * reportService.lockForEditing(project.reports[0])
-        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
+        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity, true) >> activityReportModel.metaModel
 
         view == '/activity/activityReport'
     }
@@ -425,7 +425,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         1 * projectService.doesReportBelongToProject(projectId, reportId) >> true
         1 * reportService.reportLifeCycleListener(_) >> new ReportLifecycleListener()
         0 * reportService.lockForEditing(project.reports[0])
-        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
+        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity, true) >> activityReportModel.metaModel
 
         view == '/activity/activityReport'
     }
