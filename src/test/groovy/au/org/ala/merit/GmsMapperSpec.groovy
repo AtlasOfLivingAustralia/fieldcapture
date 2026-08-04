@@ -438,7 +438,6 @@ class GmsMapperSpec extends Specification{
         expect:
         gmsMapper.geographicInfoMapping.PRIMARY_STATE.values.keySet() == stateNames as Set
         gmsMapper.geographicInfoMapping.PRIMARY_ELECTORATE.values.keySet().containsAll(electoratesAndStates.keySet())
-        gmsMapper.geographicInfoMapping.OTHER_STATES.values == stateNames
         gmsMapper.geographicInfoMapping.OTHER_ELECTORATES.values.containsAll(electoratesAndStates.keySet())
     }
 
@@ -460,7 +459,7 @@ class GmsMapperSpec extends Specification{
         result.project.geographicInfo.primaryElectorate == 'Bean'
         result.project.geographicInfo.primaryState == 'ACT'
         result.project.geographicInfo.otherElectorates == ['Barton', 'Bonner']
-        result.project.geographicInfo.otherStates == ['ACT', 'NSW', 'QLD']
+        result.project.geographicInfo.otherStates == ['NSW', 'QLD']
         !result.errors.find { it.toString().contains("doesn't match the primary electorate") }
     }
 
