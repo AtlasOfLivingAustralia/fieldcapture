@@ -158,6 +158,10 @@ class ProgramConfig implements Map {
         config?.riskModel ?: getProjectTemplate() == ProjectTemplate.RLP ? "rlp" : "merit"
     }
 
+    boolean excludeShortTermOutcomesIfReportNotRequired() {
+        config?.excludeShortTermOutcomesIfReportNotRequired ?: false
+    }
+
 }
 
 

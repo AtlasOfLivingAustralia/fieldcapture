@@ -1290,7 +1290,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         Map activityData = [:]
 
         when:
-        Map filteredModel = service.filterOutputModel(activityModel, project, activityData)
+        Map filteredModel = service.filterOutputModel(activityModel, project, activityData, true)
 
         then:
         metadataService.getProjectServices() >> services
@@ -1312,7 +1312,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         Map activityData = [:]
 
         when:
-        Map filteredModel = service.filterOutputModel(activityModel, project, activityData)
+        Map filteredModel = service.filterOutputModel(activityModel, project, activityData, true)
 
         then:
         metadataService.getProjectServices() >> services

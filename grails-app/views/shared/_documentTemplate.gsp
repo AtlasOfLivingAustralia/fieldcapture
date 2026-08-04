@@ -126,3 +126,25 @@
     <div class="clearfix space-after col-sm-12" data-bind="template:ko.utils.unwrapObservable(type) === 'image' ? 'imageDocTmpl' : 'objDocTmpl'"></div>
 </script>
 
+<script id="vimeo-embedded-video-template" type="text/html">
+
+    <iframe data-bind="attr:{src:'https://player.vimeo.com/video/'+videoId+'?badge=0&autopause=0&player_id=0', width:width, height:height, title:title}"
+            frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            style="top:0;left:0;width:100%;height:100%;">
+    </iframe>
+</script>
+
+<script id="youtube-embedded-video-template" type="text/html">
+<iframe data-bind="attr:{src:'https://www.youtube.com/embed/'+videoId, width:width, height:height, title:title}"
+        title="YouTube video player"
+        frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</script>
+
+<script id="facebook-embedded-video-template" type="text/html">
+<iframe data-bind="attr:{src:'https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Freel%2F'+videoId+'&show_text=false&width='+width+'&height='+height, width:'100%', height:'100%', title:title}"
+        style="border:none;overflow:hidden"
+        scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+</iframe>
+</script>

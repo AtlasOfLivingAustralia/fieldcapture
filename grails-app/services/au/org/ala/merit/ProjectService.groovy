@@ -1800,7 +1800,7 @@ class ProjectService  {
      * @param model the model containing the activity metaModel and output templates.
      * @param project the project associated with the report.
      */
-    Map filterOutputModel(Map activityModel, Map project, Map existingActivityData) {
+    Map filterOutputModel(Map activityModel, Map project, Map existingActivityData, boolean editable) {
 
         Map filteredModel = activityModel
 
@@ -1847,7 +1847,7 @@ class ProjectService  {
 
                 }
 
-                filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs, mandatoryOutputs)
+                filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs, mandatoryOutputs, editable)
             }
         }
         filteredModel
@@ -1887,7 +1887,7 @@ class ProjectService  {
         filterable
     }
 
-    private Map filterActivityModel(Map activityModel, Map existingActivityData, List filterableSections, List sectionsToInclude, List mandatorySections) {
+    private Map filterActivityModel(Map activityModel, Map existingActivityData, List filterableSections, List sectionsToInclude, List mandatorySections, boolean editable) {
         Map filteredModel = new JSONObject(activityModel)
         List existingOutputs = existingActivityData?.outputs?.collect{it.name}
         filteredModel.outputs = activityModel.outputs.findAll({ String output ->
@@ -1896,7 +1896,9 @@ class ProjectService  {
             // Include this output if it's not associated with a service,
             // Or if it's associated by a service delivered by this project
             // Or it has previously had data recorded against it (this can happen if the services change after the report has been completed)
-            !isFilterable || output in sectionsToInclude || output in existingOutputs
+            // If the report is in view mode, only include those outputs that have data recorded against them (existingOutputs)
+            // as otherwise we will include outputs added after the report was completed.
+            (editable && (!isFilterable || output in sectionsToInclude)) || output in existingOutputs
         })
         filteredModel
     }
