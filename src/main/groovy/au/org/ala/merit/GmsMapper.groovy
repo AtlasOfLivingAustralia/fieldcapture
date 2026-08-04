@@ -58,25 +58,25 @@ class GmsMapper {
     private Map electoratesAndStates
 
     def projectMapping = [
-            (GRANT_ID_COLUMN):[name:'grantId', type:'string', mandatory:true,description:'The grant id of the project.  The combination of grantId and externalId must be unique.'],
+            (GRANT_ID_COLUMN):[name:'grantId', type:'string', mandatory:true,description:'The grant id (MERIT Project ID) of the project.  The combination of grantId and externalId must be unique.'],
             EXTERNAL_ID:[name:'externalId', type:'string',description:'The id of this project in an external system (e.g. grants hub)'],
-            APP_NM:[name:'name', type:'string', mandatory:true, description:'The project name as it will appear in MERIT'],
-            APP_DESC:[name:'description', type:'string', description:'The project description as it will appear in MERIT'],
+            APP_NM:[name:'name', type:'string', mandatory:true, description:'The project name as it will appear in MERIT. This will be publicly visible.'],
+            APP_DESC:[name:'description', type:'string', description:'The project description as it will appear in MERIT. This will be publicly visible.'],
             PROGRAM_NM:[name:'associatedProgram', type:'string',mandatory:true,description:'Must match the name of an existing MERIT program or sub-program'],
             ROUND_NM:[name:'associatedSubProgram', type:'string'],
             MANAGEMENT_UNIT:[name:'managementUnitName', type:'string', mandatory: false, description: 'The management unit the project is being conducted in'],
             ABN:[name: 'abn', type: 'string', description:'The ABN of the organisation receiving the funding'],
-            ORG_ID:[name:'organisationId', type:'string',description:'The organisationId of the organisation in MERIT (only used if the ABN is not supplied)'],
+            ORG_ID:[name:'organisationId', type:'string',description:'The organisationId of the organisation in MERIT (only used if the ABN is not supplied). This is the code string at the end of the URL from the Organisation page. The Organisation name will be publicly visible.'],
             ORG_CONTRACT_NAME:[name:'organisationContractName', type: 'string', description: 'The name used in the project contract.  Appears as the organisation name on the project page.'],
-            START_DT:[name:'plannedStartDate', type:'date', mandatory:true, description:'The planned start date of the project'],
-            FINISH_DT:[name:'plannedEndDate', type:'date', mandatory:true, description:'The planned end date of the project'],
+            START_DT:[name:'plannedStartDate', type:'date', mandatory:true, description:'The planned start date of the project. This will be publicly visible.'],
+            FINISH_DT:[name:'plannedEndDate', type:'date', mandatory:true, description:'The planned end date of the project. This will be publicly visible.'],
             CONTRACT_START_DT:[name:'contractStartDate', type:'date'],
             CONTRACT_END_DT:[name:'contractEndDate', type:'date'],
             ORDER_NO: [name: 'externalIds', type:'externalId',description:'The SAP Internal Order Number for this project', multipleColumnsSupported: true, idType:'INTERNAL_ORDER_NUMBER'],
             TECH_ONE_ID: [name: 'externalIds', type:'externalId', 'description':'The Tech One system ID for this project', multipleColumnsSupported: true, idType:'TECH_ONE_CODE'],
             TECH_ONE_CONTRACT_NUMBER: [name: 'externalIds', type:'externalId', 'description':'The Tech One contract number for this project', multipleColumnsSupported: true, idType:'TECH_ONE_CONTRACT_NUMBER'],
             WORK_ORDER_ID:[name:'externalIds', type:'externalId', multipleColumnsSupported: true, idType:'WORK_ORDER'],
-            FUNDING:[name:'funding', type:'decimal',description:'Total funding for this project (displayed on project overview)'],
+            FUNDING:[name:'funding', type:'decimal',description:'Total approved funding (ex-GST) for this project. This will be publicly visible.'],
             AUTHORISEDP_EMAIL:[name:'adminEmail', type:'email', description:'This user will be added as an admin to the project'],
             GRANT_MGR_EMAIL:[name:'grantManagerEmail', type:'email', description:'This user will be added as a project grant manager to the project'],
             GRANT_MGR_EMAIL_2:[name:'grantManagerEmail2', type:'email', description:'This user will be added as a project grant manager to the project'],
@@ -84,7 +84,7 @@ class GmsMapper {
             ADMIN_EMAIL:[name:'adminEmail2', type:'email', description:'This user will be added as a project admin'],
             EDITOR_EMAIL:[name:'editorEmail', type:'email', description:'This user will be added as a project editor'],
             EDITOR_EMAIL_2:[name:'editorEmail2', type:'email', description:'This user will be added as a project editor'],
-            TAGS:[name:'tags', type:'list',description:'Can be used to facet projects on the project explorer.  Currently used to tag projects as being a part of the bushfire response'],
+            TAGS:[name:'tags', type:'list',description:'Can be used to facet projects on the project explorer. Only use approved Conservation Planning Typology terms.'],
             PROJECT_STATUS:[name:'status', type:'lookup', values:['Active':'active', 'Terminated':'terminated', 'Completed':'completed'], default:'application', description:'The project status - Application (default), Active, Completed, Terminated'],
             MERI_PLAN_STATUS:['name':'planStatus', type:'lookup', values:['Approved':'approved'], default:'not approved', description:'The MERI plan status - not approved (default), Approved'],
             FUNDING_TYPE:[name:'fundingType', type:'string', description:'The funding model used for this project (Grant, Procurement, Special Purpose Payment)'],
@@ -166,12 +166,11 @@ class GmsMapper {
         Map statesLookup = validStates.collectEntries { [(it): it] }
         Map electoratesLookup = validElectorates.collectEntries { [(it): it] }
         geographicInfoMapping = [
-                NATIONWIDE:[name:'nationwide', type:'boolean', description:'If true, this project does not have a primary state'],
-                STATEWIDE:[name:'statewide', type:'boolean', description:'If true, this project does not have a primary electorate'],
-                PRIMARY_STATE:[name:'primaryState', type:'lookup', description:'The primary state to be manually assigned to this project', values:statesLookup],
+                NATIONWIDE:[name:'nationwide', type:'boolean', description:'If true, this project does not have a primary state or a primary electorate. Enter \'Y\' to mark the project as Nationwide'],
+                STATEWIDE:[name:'statewide', type:'boolean', description:'If true, this project does not have a primary electorate but requires a primary state to be defined in the PRIMARY_STATE column. Any other states need to be manually entered into the Project Settings by the MERIT team. Enter \'Y\' to mark the project as Statewide'],
+                PRIMARY_STATE:[name:'primaryState', type:'lookup', description:'The primary state to be manually assigned to this project. If a primary electorate has been assigned, leave this column blank and MERIT will automatically assign the primary state upon upload.', values:statesLookup],
                 PRIMARY_ELECTORATE:[name:'primaryElectorate', type:'lookup', description:'The primary electorate to be manually assigned to this project', values:electoratesLookup],
-                OTHER_ELECTORATES:[name:'otherElectorates', type:'list', description:'Other electorates to be manually assigned to this project.  Enter as a comma separated list', values:validElectorates],
-                OTHER_STATES:[name:'otherStates', type:'list', description:'Other states to be manually assigned to this project.  Enter as a comma separated list', values:validStates],
+                OTHER_ELECTORATES:[name:'otherElectorates', type:'list', description:'Other electorates to be manually assigned to this project. Enter as a comma separated list. MERIT will automatically assign the correct corresponding state upon upload.', values:validElectorates]
         ]
     }
 
@@ -196,7 +195,7 @@ class GmsMapper {
         }
         // Special case for MERI plan funding mapping
         headers << FINANCIAL_YEAR_FUNDING_DESCRIPTION
-        descriptions << "Description of the funding for each financial year.  Must be present for financial year funding amounts to be imported"
+        descriptions << "Description of the funding for each financial year.  Must be present for financial year funding amounts to be imported.  Used by business grants hub project imports."
         mandatoryFlags << 'Optional'
 
         for (int i : (18..30)) {
@@ -615,6 +614,9 @@ class GmsMapper {
                         result.mappedData.primaryState = primaryState
                     }
                 }
+            }
+            if (result.mappedData.otherElectorates) {
+                result.mappedData.otherStates = []
             }
             result.mappedData.otherElectorates?.each { String electorate ->
                 String state = electoratesAndStates[electorate]
