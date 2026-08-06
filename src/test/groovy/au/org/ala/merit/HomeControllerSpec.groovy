@@ -322,5 +322,60 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         model.category == category
     }
 
+    def "The help method renders the generic help page when no role is supplied"(String role) {
+        setup:
+        String content = 'General help content'
+
+        when:
+        controller.help(role)
+
+        then:
+        1 * settingService.getSettingText(SettingPageType.HELP) >> content
+        0 * userService.checkHubRole(_)
+
+        and:
+        model.settingType == SettingPageType.HELP
+        model.content == content
+        model.showNews == false
+
+        where:
+        role << [null, '']
+    }
+
+    def "The help method renders the appropriate role-specific help page for an authorized user"(String role, SettingPageType expectedType) {
+        setup:
+        String content = "${role} help content"
+
+        when:
+        controller.help(role)
+
+        then:
+        1 * userService.checkHubRole(role) >> true
+        1 * settingService.getSettingText(expectedType) >> content
+
+        and:
+        model.settingType == expectedType
+        model.content == content
+        model.showNews == false
+
+        where:
+        role                                  | expectedType
+        RoleService.HUB_ADMIN_ROLE             | SettingPageType.HELP_ADMIN
+        RoleService.HUB_SUPPORT_OFFICER_ROLE   | SettingPageType.HELP_SUPPORT_OFFICER
+        RoleService.HUB_OFFICER_ROLE           | SettingPageType.HELP_OFFICER
+    }
+
+    def "The help method redirects to generic help when the user is not authorized for the requested role"() {
+        given:
+        String role = RoleService.HUB_ADMIN_ROLE
+
+        when:
+        controller.help(role)
+
+        then:
+        1 * userService.checkHubRole(role) >> false
+        0 * settingService.getSettingText(_)
+        response.redirectUrl == '/home/help'
+    }
 
 }
