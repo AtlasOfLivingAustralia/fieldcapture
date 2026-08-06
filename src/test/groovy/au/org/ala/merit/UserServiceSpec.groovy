@@ -690,4 +690,54 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
 
     }
 
+    def "checkHubRole grants access when the user's hub access level meets the requested role"(String requestedRole, String userAccessLevel, boolean expectedResult) {
+        setup:
+        String userId = 'u1'
+        HubSettings hubSettings = new HubSettings(userPermissions:[])
+        if (userAccessLevel) {
+            hubSettings.userPermissions << [userId:userId, role:userAccessLevel]
+        }
+        SettingService.setHubConfig(hubSettings)
+
+        expect:
+        service.checkHubRole(requestedRole, userId) == expectedResult
+
+        where:
+        requestedRole                         | userAccessLevel                       | expectedResult
+        RoleService.HUB_READ_ONLY_ROLE         | null                                  | false
+        RoleService.HUB_READ_ONLY_ROLE         | RoleService.PROJECT_READ_ONLY_ROLE    | true
+        RoleService.HUB_READ_ONLY_ROLE         | RoleService.GRANT_MANAGER_ROLE        | true
+        RoleService.HUB_READ_ONLY_ROLE         | RoleService.PROJECT_MODERATOR_ROLE    | true
+        RoleService.HUB_READ_ONLY_ROLE         | RoleService.PROJECT_ADMIN_ROLE        | true
+        RoleService.HUB_OFFICER_ROLE           | RoleService.PROJECT_READ_ONLY_ROLE    | false
+        RoleService.HUB_OFFICER_ROLE           | RoleService.GRANT_MANAGER_ROLE        | true
+        RoleService.HUB_OFFICER_ROLE           | RoleService.PROJECT_MODERATOR_ROLE    | true
+        RoleService.HUB_OFFICER_ROLE           | RoleService.PROJECT_ADMIN_ROLE        | true
+        RoleService.HUB_SUPPORT_OFFICER_ROLE   | RoleService.GRANT_MANAGER_ROLE        | false
+        RoleService.HUB_SUPPORT_OFFICER_ROLE   | RoleService.PROJECT_MODERATOR_ROLE    | true
+        RoleService.HUB_SUPPORT_OFFICER_ROLE   | RoleService.PROJECT_ADMIN_ROLE        | true
+        RoleService.HUB_ADMIN_ROLE             | RoleService.PROJECT_MODERATOR_ROLE    | false
+        RoleService.HUB_ADMIN_ROLE             | RoleService.PROJECT_ADMIN_ROLE        | true
+    }
+
+    def "checkHubRole grants ALA admins every supported hub role"() {
+        setup:
+        String userId = 'ala-admin'
+        SettingService.setHubConfig(new HubSettings(userPermissions:[]))
+        def alaAdmin = Mock(au.org.ala.web.UserDetails)
+        authService.getUserForUserId(userId) >> alaAdmin
+        alaAdmin.hasRole('ADMIN') >> true
+
+        expect:
+        RoleService.MERIT_HUB_ROLES.every { service.checkHubRole(it, userId) }
+    }
+
+    def "checkHubRole rejects roles that are not hub roles"() {
+        when:
+        service.checkHubRole(RoleService.PROJECT_ADMIN_ROLE, 'u1')
+
+        then:
+        thrown IllegalArgumentException
+    }
+
 }
