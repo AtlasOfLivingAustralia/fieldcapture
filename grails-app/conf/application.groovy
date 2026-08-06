@@ -292,6 +292,8 @@ sites.known_shapes = [
 
 layers.elect = 'cl11225'
 layers.states = 'cl927'
+layers.countries.fid = 'cl932'
+layers.countries.displayNamesForAustralia = ['Australia']
 
 environments {
     development {

@@ -1130,6 +1130,7 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
 
         var mapOptions = {
             zoomToBounds:true,
+            zoomToObject: true,
             zoomLimit:16,
             highlightOnHover:true,
             features:[],

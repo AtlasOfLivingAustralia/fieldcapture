@@ -72,7 +72,27 @@
         polygonMarkerAreaKm2 : 0.01,
         // init map and load features
         init: function (options, features) {
-            var self = this;
+            var self = this,
+                googleLayer = L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'roadmap'}),
+                config = {
+                    drawOptions: false,
+                    drawControl: false,
+                    showReset: false,
+                    allowSearchLocationByAddress: false,
+                    allowSearchRegionByAddress: false,
+                    useMyLocation: false,
+                    wmsLayerUrl: options.spatialWmsUrl + '/wms/reflect?',
+                    wmsFeatureUrl: options.featureService + '?featureId=',
+                    otherLayers: {
+                        Roadmap: googleLayer,
+                        Hybrid: L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'hybrid'}),
+                        Terrain: L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'terrain'})
+                    },
+                    allowKnownShapesControl: false,
+                    baseLayers: googleLayer,
+                    zoomToObject: true,
+                    addAllFeaturesFromFile: false
+                };
             this.features = features;
             // handle options
             if (options.mapContainer) {
@@ -90,24 +110,19 @@
             if (options.polygonMarkerAreaKm2 !== undefined) {
                 this.polygonMarkerAreaKm2 = options.polygonMarkerAreaKm2;
             }
-            this.map = new google.maps.Map(document.getElementById(this.containerId), {
-                zoom: 3,
-                center: new google.maps.LatLng(-28.5, 133.5),
-                panControl: false,
-                streetViewControl: false,
-                mapTypeControl: true,
-                mapTypeId: google.maps.MapTypeId.TERRAIN,
-                scrollwheel: options.scrollwheel,
-                zoomControlOptions: {
-                    style: 'DEFAULT'
-                }
-            });
-            //console.log('[init] ZoomToBounds: ' + features.zoomToBounds);
-            //console.log('[init] ZoomLimit: ' + features.zoomLimit);
-            if(features.zoomToBounds){ this.zoomToBounds = features.zoomToBounds; }
-            if(features.zoomLimit){ this.zoomLimit = features.zoomLimit; }
+            this.map = new ALA.Map(this.containerId, config);
             if(features.features !== undefined){
-                this.load(features.features);
+                $.ajax({
+                    url: projectSitesUrl,
+                    success: function(data) {
+                        if (data.features && data.features.length > 0) {
+                            data.features.forEach(function(site) {
+                                self.setGeoJson(site);
+                            });
+                        }
+                    }
+                });
+                // this.load(features.features);
             }
             return this;
         },
@@ -139,161 +154,161 @@
                 self.allLocationsLoaded();
             }
         },
-        loadFeature: function(loc, iw){
-            var self = this, f;
-            var loaded = false;
-            if(loc != null && loc.type != null){
-                if (loc.type.toLowerCase() === 'point') {
-                    var ll = new google.maps.LatLng(Number(loc.coordinates[1]), Number(loc.coordinates[0]));
-                    f = new google.maps.Marker({
-                        map: self.map,
-                        position: ll,
-                        title: loc.name
-                    });
-                    self.featureBounds.extend(ll);
-                    self.addFeature(f, loc);
-                    loaded = true;
-                } else if (loc.type === 'dot') {
-
-                    var marker = map.smallDotIcon;
-                    if (loc.color != "-1"){
-                        // strokeColor is resource hungry. google maps performs well with encoded image data.
-                         marker = {
-                            url: "data:image/gif;base64,R0lGODlhAQABAPAAA"+encodeHex(loc.color)+"///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==",
-                            scaledSize: new google.maps.Size(5,5)
-                        };
-                    }
-
-                    var ll = new google.maps.LatLng(Number(loc.latitude), Number(loc.longitude));
-                    f = new google.maps.Marker({
-                        map: self.map,
-                        position: ll,
-                        title: loc.name,
-                        icon: marker
-                    });
-
-                    if(loc.color != "-1"){
-                        var markerMap = {};
-                        markerMap["legendName"] = loc.legendName;
-                        markerMap["marker"] = f;
-                        this.allMarkers.push(markerMap);
-                    }
-
-                    self.featureBounds.extend(ll);
-                    self.addFeature(f, loc, iw);
-                    loaded = true;
-                } else if (loc.type.toLowerCase() === 'circle') {
-                    var ll = new google.maps.LatLng(loc.coordinates[1], loc.coordinates[0]);
-                    f = new google.maps.Circle({
-                        center: ll,
-                        radius: loc.radius,
-                        map: self.map,
-                        editable: false
-                    });
-                    //set the extend of the map
-                    //console.log("f.getBounds()",f.getBounds());
-                    self.featureBounds.extend(f.getBounds().getNorthEast());
-                    self.featureBounds.extend(f.getBounds().getSouthWest());
-                    self.addFeature(f, loc, iw);
-                    loaded = true;
-                } else if (loc.type.toLowerCase() === 'polygon') {
-                    var points;
-                    var paths = geojsonToPaths(loc.coordinates[0]);
-                    f = new google.maps.Polygon({
-                        paths: paths,
-                        map: self.map,
-                        title: 'polygon name',
-                        editable: false
-                    });
-                    f.setOptions(self.overlayOptions);
-                    // flatten arrays to array of points
-                    points = [].concat.apply([], paths);
-                    // extend bounds by each point
-                    $.each(points, function (i,obj) {self.featureBounds.extend(obj);});
-                    self.addFeature(f, loc, iw);
-                    loaded = true;
-                } else if (loc.type.toLowerCase() === 'multipolygon') {
-
-                    $.each(loc.coordinates, function(i, coords) {
-                        var points;
-
-                        var paths = geojsonToPaths(coords);
-                        f = new google.maps.Polygon({
-                            paths: paths,
-                            map: self.map,
-                            title: 'polygon name',
-                            editable: false
-                        });
-                        f.setOptions(self.overlayOptions);
-                        // flatten arrays to array of points
-                        points = [].concat.apply([], paths);
-                        // extend bounds by each point
-                        $.each(points, function (i,obj) {self.featureBounds.extend(obj);});
-                        self.addFeature(f, loc, iw);
-                    });
-                    loaded = true;
-
-                }
-                else if (loc.type.toLowerCase() === 'pid') {
-                    //load the overlay instead
-                    var pid = loc.pid;
-                    //console.log('Loading PID: ' + pid);
-                    f = new PIDLayer(pid, this.wmsServer, loc.style || 'restricted');
-                    map.map.overlayMapTypes.push(f);
-                    $.ajax({
-                        url: this.featureService+ '?featureId=' + pid,
-                        dataType:'json'
-                    }).done(function(data) {
-                        if(data !== undefined && data !== null && data.bbox !== undefined && !loc.excludeBounds){
-                            var coords = data.bbox.replace(/POLYGON|LINESTRING/g,"").replace(/[\\(|\\)]/g, "");
-                            var pointArray = coords.split(",");
-                            if (pointArray.length == 2) {
-                                // The bounding box of a point is a linestring with two points
-                                pointArray = [pointArray[0], pointArray[1], pointArray[0], pointArray[1]];
-                            }
-                            self.featureBounds.extend(new google.maps.LatLng(pointArray[1].split(" ")[1],pointArray[1].split(" ")[0]));
-                            self.featureBounds.extend(new google.maps.LatLng(pointArray[3].split(" ")[1],pointArray[3].split(" ")[0]));
-                            if (!loc.areaKmSq) {
-                                loc.areaKmSq = data.area_km ? data.area_km : 0;
-                            }
-                        } else {
-//                           self.featureBounds.extend(new google.maps.LatLng(0,0));
-//                           self.featureBounds.extend(new google.maps.LatLng(-90, 180));
-                        }
-                        self.addFeature(f, loc, iw);
-                    });
-                    loaded = true;
-                } else {
-                    // count the location as loaded even if we didn't
-                    console.log('Feature type not supported: ' + loc.type);
-                }
-                return loaded;
-            }
-        },
-        // loads the features
-        load: function(features) {
-
-            if(features === undefined || features.length == 0){
-                return;
-            }
-
-            var self = this, iw;
-
-            if (!iw) {
-                iw = new google.maps.InfoWindow({maxWidth: 360});
-            }
-
-            $.each(features, function (i,loc) {
-                //console.log('Loading feature with type:' + loc.type + "|" + loc.latitude);
-                if(loc != null){
-
-                    self.loadFeature(loc, iw);
-                    //self.locationLoaded();
-                }
-            });
-
-            self.allLocationsLoaded();
-        },
+//         loadFeature: function(loc, iw){
+//             var self = this, f;
+//             var loaded = false;
+//             if(loc != null && loc.type != null){
+//                 if (loc.type.toLowerCase() === 'point') {
+//                     var ll = new google.maps.LatLng(Number(loc.coordinates[1]), Number(loc.coordinates[0]));
+//                     f = new google.maps.Marker({
+//                         map: self.map,
+//                         position: ll,
+//                         title: loc.name
+//                     });
+//                     self.featureBounds.extend(ll);
+//                     self.addFeature(f, loc);
+//                     loaded = true;
+//                 } else if (loc.type === 'dot') {
+//
+//                     var marker = map.smallDotIcon;
+//                     if (loc.color != "-1"){
+//                         // strokeColor is resource hungry. google maps performs well with encoded image data.
+//                          marker = {
+//                             url: "data:image/gif;base64,R0lGODlhAQABAPAAA"+encodeHex(loc.color)+"///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==",
+//                             scaledSize: new google.maps.Size(5,5)
+//                         };
+//                     }
+//
+//                     var ll = new google.maps.LatLng(Number(loc.latitude), Number(loc.longitude));
+//                     f = new google.maps.Marker({
+//                         map: self.map,
+//                         position: ll,
+//                         title: loc.name,
+//                         icon: marker
+//                     });
+//
+//                     if(loc.color != "-1"){
+//                         var markerMap = {};
+//                         markerMap["legendName"] = loc.legendName;
+//                         markerMap["marker"] = f;
+//                         this.allMarkers.push(markerMap);
+//                     }
+//
+//                     self.featureBounds.extend(ll);
+//                     self.addFeature(f, loc, iw);
+//                     loaded = true;
+//                 } else if (loc.type.toLowerCase() === 'circle') {
+//                     var ll = new google.maps.LatLng(loc.coordinates[1], loc.coordinates[0]);
+//                     f = new google.maps.Circle({
+//                         center: ll,
+//                         radius: loc.radius,
+//                         map: self.map,
+//                         editable: false
+//                     });
+//                     //set the extend of the map
+//                     //console.log("f.getBounds()",f.getBounds());
+//                     self.featureBounds.extend(f.getBounds().getNorthEast());
+//                     self.featureBounds.extend(f.getBounds().getSouthWest());
+//                     self.addFeature(f, loc, iw);
+//                     loaded = true;
+//                 } else if (loc.type.toLowerCase() === 'polygon') {
+//                     var points;
+//                     var paths = geojsonToPaths(loc.coordinates[0]);
+//                     f = new google.maps.Polygon({
+//                         paths: paths,
+//                         map: self.map,
+//                         title: 'polygon name',
+//                         editable: false
+//                     });
+//                     f.setOptions(self.overlayOptions);
+//                     // flatten arrays to array of points
+//                     points = [].concat.apply([], paths);
+//                     // extend bounds by each point
+//                     $.each(points, function (i,obj) {self.featureBounds.extend(obj);});
+//                     self.addFeature(f, loc, iw);
+//                     loaded = true;
+//                 } else if (loc.type.toLowerCase() === 'multipolygon') {
+//
+//                     $.each(loc.coordinates, function(i, coords) {
+//                         var points;
+//
+//                         var paths = geojsonToPaths(coords);
+//                         f = new google.maps.Polygon({
+//                             paths: paths,
+//                             map: self.map,
+//                             title: 'polygon name',
+//                             editable: false
+//                         });
+//                         f.setOptions(self.overlayOptions);
+//                         // flatten arrays to array of points
+//                         points = [].concat.apply([], paths);
+//                         // extend bounds by each point
+//                         $.each(points, function (i,obj) {self.featureBounds.extend(obj);});
+//                         self.addFeature(f, loc, iw);
+//                     });
+//                     loaded = true;
+//
+//                 }
+//                 else if (loc.type.toLowerCase() === 'pid') {
+//                     //load the overlay instead
+//                     var pid = loc.pid;
+//                     //console.log('Loading PID: ' + pid);
+//                     f = new PIDLayer(pid, this.wmsServer, loc.style || 'restricted');
+//                     map.map.overlayMapTypes.push(f);
+//                     $.ajax({
+//                         url: this.featureService+ '?featureId=' + pid,
+//                         dataType:'json'
+//                     }).done(function(data) {
+//                         if(data !== undefined && data !== null && data.bbox !== undefined && !loc.excludeBounds){
+//                             var coords = data.bbox.replace(/POLYGON|LINESTRING/g,"").replace(/[\\(|\\)]/g, "");
+//                             var pointArray = coords.split(",");
+//                             if (pointArray.length == 2) {
+//                                 // The bounding box of a point is a linestring with two points
+//                                 pointArray = [pointArray[0], pointArray[1], pointArray[0], pointArray[1]];
+//                             }
+//                             self.featureBounds.extend(new google.maps.LatLng(pointArray[1].split(" ")[1],pointArray[1].split(" ")[0]));
+//                             self.featureBounds.extend(new google.maps.LatLng(pointArray[3].split(" ")[1],pointArray[3].split(" ")[0]));
+//                             if (!loc.areaKmSq) {
+//                                 loc.areaKmSq = data.area_km ? data.area_km : 0;
+//                             }
+//                         } else {
+// //                           self.featureBounds.extend(new google.maps.LatLng(0,0));
+// //                           self.featureBounds.extend(new google.maps.LatLng(-90, 180));
+//                         }
+//                         self.addFeature(f, loc, iw);
+//                     });
+//                     loaded = true;
+//                 } else {
+//                     // count the location as loaded even if we didn't
+//                     console.log('Feature type not supported: ' + loc.type);
+//                 }
+//                 return loaded;
+//             }
+//         },
+//         // loads the features
+//         load: function(features) {
+//
+//             if(features === undefined || features.length == 0){
+//                 return;
+//             }
+//
+//             var self = this, iw;
+//
+//             if (!iw) {
+//                 iw = new google.maps.InfoWindow({maxWidth: 360});
+//             }
+//
+//             $.each(features, function (i,loc) {
+//                 //console.log('Loading feature with type:' + loc.type + "|" + loc.latitude);
+//                 if(loc != null){
+//
+//                     self.loadFeature(loc, iw);
+//                     //self.locationLoaded();
+//                 }
+//             });
+//
+//             self.allLocationsLoaded();
+//         },
         addFeature: function (f, loc, iw) {
             var self = this;
             if (this.highlightOnHover) {

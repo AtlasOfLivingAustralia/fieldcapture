@@ -5,6 +5,7 @@ var SiteViewModel = function (site, feature, options) {
     self.siteId = site.siteId;
     self.name = ko.observable(site.name);
     self.externalId = ko.observable(site.externalId);
+    site.externalIds = site.externalIds || [];
     self.context = ko.observable(site.context);
     self.type = ko.observable(site.type);
     self.area = ko.observable(site.area);
@@ -153,6 +154,18 @@ var SiteViewModel = function (site, feature, options) {
         return result;
 
     });
+
+    self.transients = self.transients || {};
+    self.transients.radiiOfCircles = ko.pureComputed(function() {
+        var radii = [];
+        var features = self.features();
+        var circles = features.filter( feature => feature.properties && feature.properties.point_type === ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE )
+        circles && circles.forEach(function(circle) {
+            radii.push({name: circle.properties.name, radius: circle.properties.radius, featureId: circle.properties.featureId});
+        });
+
+        return radii;
+    });
 };
 
 var POI = function (l, hasDocuments) {
@@ -277,7 +290,31 @@ var DrawnLocation = function (l) {
 function SiteViewModelWithMapIntegration (siteData, projectId, options) {
     var self = this,
         alaMap,
-        deferredUpdate = ko.observable(false).extend({rateLimit: {timeout: 1000, method: 'notifyWhenChangesStop'}});
+        deferredUpdate = ko.observable(false).extend({rateLimit: {timeout: 1000, method: 'notifyWhenChangesStop'}}),
+        options = {
+            styleProperty: 'type',
+            styles: {
+                compound: {
+                    color: '#f00',
+                    fillOpacity: 0.2,
+                    weight: 3
+                },
+                worksArea: {
+                    color: '#0f0',
+                    fillOpacity: 0.2,
+                    weight: 3
+                }
+            }
+        },
+        type = siteData.type,
+        currentStyle = options.styles[type],
+        layerOptions = { style: currentStyle },
+        geomanOptions = {
+            pathOptions: currentStyle,
+            hintlineStyle: currentStyle,
+            templineStyle: currentStyle
+        };
+
     SiteViewModel.apply(self, [siteData, null, options]);
 
     self.renderPOIs = function(){
@@ -333,7 +370,7 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
                 console.log("Falling back to unsimplified geometry");
             }
 
-            alaMap.setGeoJSON(featureCollection);
+            alaMap.setGeoJSON(featureCollection, layerOptions);
         } else {
             var currentDrawnShape = ko.toJS(self.extent().geometry),
                 geometry = {
@@ -354,21 +391,29 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
                     console.log("Falling back to unsimplified geometry");
                 }
 
-                alaMap.setGeoJSON(feature);
+                alaMap.setGeoJSON(feature, layerOptions);
             }
         }
     };
 
     self.mapInitialised = function(map) {
         alaMap = map;
+        var leafletMap = alaMap.getMapImpl();
+        // set geoman style to match the site type style
+        if (leafletMap.pm && leafletMap.pm.setGlobalOptions) {
+            leafletMap.pm.setGlobalOptions(geomanOptions);
+        }
+        alaMap.setStyle(currentStyle);
+
         self.renderPOIs();
         self.renderOnMap();
-        deferredUpdate.subscribe(self.updateGeometryAndRefreshGazInfo);
+        deferredUpdate.subscribe(self.updateGeometry);
         alaMap.registerListener('pm:globaleditmodetoggled', modeListener);
         alaMap.registerListener('pm:globaldragmodetoggled', modeListener);
         alaMap.registerListener('pm:globalremovalmodetoggled', modeListener);
         alaMap.registerListener('pm:globalcutmodetoggled', modeListener);
         alaMap.registerListener('pm:globalrotatemodetoggled', modeListener);
+        listenLayerEvents();
     };
 
     self.newActivity = function() {
@@ -420,6 +465,14 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
         return updated;
     };
 
+    self.highlightFeature = function(model) {
+        alaMap.highlightFeaturesByProperty('featureId', model.featureId);
+    }
+
+    self.unHighlightFeature = function(model) {
+        alaMap.unHighlightFeaturesByProperty('featureId', model.featureId);
+    }
+
     function getFeatureProperties() {
         return  {
             id: self.siteId || '',
@@ -465,12 +518,8 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
     }
 
     function modeListener(e) {
-        if (e.enabled) {
-            ignoreLayerEvents();
-        }
-        else {
-            listenLayerEvents();
-            updateFlagToggle();
+        if (!e.enabled) {
+            self.updateGeometryAndRefreshGazInfo();
         }
     }
 
@@ -673,7 +722,7 @@ var createMap = function(options) {
     options.allowSearchLocationByAddress = false;
     options.allowSearchRegionByAddress = false;
     options.markerOrShapeNotBoth = false;
-    options.zoomToObject = false;
+    options.zoomToObject = options.zoomToObject || false;
 
     if (options.leafletIconPath) {
         L.Icon.Default.imagePath = options.leafletIconPath;
@@ -904,6 +953,9 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
     this.editSite = function (site) {
         if (site.type != 'compound') {
             var url = fcConfig.siteEditUrl + '/' + site.siteId;
+            if (fcConfig.returnTo) {
+                url += "?returnTo=" + encodeURIComponent(fcConfig.returnTo);
+            }
             document.location.href = url;
         }
         else {

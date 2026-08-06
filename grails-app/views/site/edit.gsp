@@ -43,7 +43,7 @@
         sitePageUrl : "${createLink(action: 'index', id: site?.siteId)}",
         homePageUrl : "${createLink(controller: 'home', action: 'index')}",
         ajaxUpdateUrl: "${createLink(action: 'ajaxUpdate', id: site?.siteId)}",
-        returnTo: "${createLink(controller: 'project', action: 'index', id: project?.projectId)}"
+        returnTo: "${params.returnTo ?: createLink(controller: 'project', action: 'index', id: project?.projectId)}"
         },
         here = window.location.href;
 
@@ -122,9 +122,17 @@
 
         $('#cancel').click(function () {
             if(siteViewModel.saved()){
-                document.location.href = fcConfig.sitePageUrl;
+                if (fcConfig.returnTo){
+                    document.location.href = fcConfig.returnTo;
+                } else {
+                    document.location.href = fcConfig.sitePageUrl;
+                }
             } else {
-                document.location.href = fcConfig.homePageUrl;
+                if (fcConfig.returnTo){
+                    document.location.href = fcConfig.returnTo;
+                } else {
+                    document.location.href = fcConfig.homePageUrl;
+                }
             }
         });
 

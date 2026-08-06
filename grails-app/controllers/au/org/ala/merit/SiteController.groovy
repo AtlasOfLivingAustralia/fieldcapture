@@ -9,7 +9,9 @@ class SiteController {
 
     def siteService, projectService, activityService, metadataService, userService, searchService, importService, webService, projectConfigurationService
     SettingService settingService
+    SpatialService spatialService
     static defaultAction = "index"
+    static allowedMethods = ['isGeometryWithinAustralia': 'POST']
 
     static ignore = ['action','controller','id']
 
@@ -605,6 +607,24 @@ class SiteController {
         }]
 
         render knownShapeConfig as JSON
+    }
+
+    /**
+     * Checks if the supplied geometry is within Australia.
+     * Expects a JSON object in the request body (parsed from `request.JSON`).
+     * @return [success:true/false, error:message]
+     */
+    Map isGeometryWithinAustralia() {
+        Map geoJSON = request.JSON
+        if (!geoJSON) {
+            response.status = 400
+            Map result = [error:'A GeoJSON geometry is required to check if it is within Australia']
+            render result as JSON
+            return
+        }
+
+        Map isGeometryWithinAustraliaResp = spatialService.isGeometryWithinAustralia(geoJSON)
+        render isGeometryWithinAustraliaResp as JSON
     }
 
     /**

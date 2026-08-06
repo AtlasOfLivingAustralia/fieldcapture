@@ -64,8 +64,8 @@ map = {
             draggableMarkers: true,
             singleMarker: false,
             showFitBoundsToggle: true,
-            useMyLocation: true,
-            allowSearchLocationByAddress: true,
+            useMyLocation: false,
+            allowSearchLocationByAddress: false,
             allowSearchRegionByAddress: false,
             wmsLayerUrl: config.spatialWmsUrl + '/wms/reflect?',
             wmsFeatureUrl: config.featureService + '?featureId=',
@@ -85,8 +85,25 @@ map = {
             simplifyOptions: {
                 tolerance: 0.0001
             },
+            flattenMultiGeometries: true,
             markerOrShapeNotBoth: false,
-            zoomToObject: false
+            zoomToObject: false,
+            addAllFeaturesFromFile: false,
+            validateImportedShapes: function (geojson) {
+                return $.ajax({
+                    method: 'POST',
+                    url: config.validateShapesUrl,
+                    data: JSON.stringify(geojson),
+                    contentType: 'application/json',
+                    success: function (data) {
+                        if (data.success)
+                            // do not remove the shape, it is valid
+                            return {remove: false, message: data.message};
+                        else
+                            return {remove: true, message: data.message};
+                    }
+                })
+            }
         },
         that = this;
 
@@ -144,6 +161,7 @@ function init (options) {
     config.spatialServiceUrl = options.spatialService;
     config.spatialWmsUrl = options.spatialWms;
     config.featureService = options.featureService;
+    config.validateShapesUrl = options.validateShapesUrl;
 
     /*****************************************\
     | Create map

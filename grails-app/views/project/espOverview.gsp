@@ -44,7 +44,8 @@
                 returnTo: "${createLink(controller: 'project', action: 'espOverview', id: project.projectId)}",
                 projectReportUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
                 projectReportPDFUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
-                projectUrl:"${createLink(controller:'project', action:'index', id:project.projectId)}"
+                projectUrl:"${createLink(controller:'project', action:'index', id:project.projectId)}",
+                projectSitesUrl:"${createLink(controller:'project', action:'ajaxProjectSites')}/${project.projectId}"
 
             },
             here = window.location.href;
@@ -137,7 +138,7 @@
             <div class="row">
                 <!-- ko stopBinding:true -->
                 <div class="col-sm-12">
-                    <div id="map" class="w-100" style="height:500px;"></div>
+                    <m:map id="map" width="100%"/>
                 </div>
 
                 <!-- /ko -->
