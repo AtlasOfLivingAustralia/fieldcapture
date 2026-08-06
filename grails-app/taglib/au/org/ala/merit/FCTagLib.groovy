@@ -617,6 +617,35 @@ class FCTagLib {
         }
     }
 
+    def helpMenu = { attrs ->
+        def mb = new MarkupBuilder(out)
+        List userRoles = [RoleService.HUB_OFFICER_ROLE, RoleService.HUB_SUPPORT_OFFICER_ROLE, RoleService.HUB_ADMIN_ROLE].findAll{userService.checkHubRole(it)}
+        if (userRoles) {
+            mb.li(class: 'dropdown') {
+                a(class: 'dropdown-toggle', href: '#', id: 'helpMenu', role: 'button', 'data-bs-toggle': 'dropdown', 'aria-expanded': 'false') {
+                    mkp.yield("Help")
+                }
+                ul(class: 'dropdown-menu', 'aria-labelledby': 'helpMenu') {
+                    helpMenuItems(mb, userRoles)
+                }
+            }
+        }
+        else {
+            out << navbar([items:['help']])
+        }
+    }
+
+    private void helpMenuItems(mb, userRoles) {
+        mb.li {
+            a(class: 'dropdown-item', href: g.createLink(controller: 'home', action: 'help'), "User Help")
+        }
+        userRoles.each { role ->
+            mb.li {
+                a(class: 'dropdown-item', href: g.createLink(controller: 'home', action: 'help', params: [role: role]), g.message(code:"label.hubRole.${role}")+" Help")
+            }
+        }
+    }
+
     def modelAsJavascript = { attrs ->
         def model = attrs.model
         if (model instanceof String){
