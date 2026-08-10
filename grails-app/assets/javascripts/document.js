@@ -120,7 +120,31 @@ function DocumentViewModel (doc, owner, settings) {
     this.isPrimaryProjectImage = ko.observable(doc.isPrimaryProjectImage);
     this.thirdPartyConsentDeclarationMade = ko.observable(doc.thirdPartyConsentDeclarationMade);
     this.thirdPartyConsentDeclarationText = null;
+
+    this.embeddedVideoData = ko.observable(doc.embeddedVideoData);
     this.embeddedVideo = ko.observable(doc.embeddedVideo);
+    this.embeddedVideoTemplateRendered = function(element) {
+        if (!self.embeddedVideoData() || !self.embeddedVideoData().type) {
+            return '';
+        }
+        let i = 0;
+        let tagName = null;
+        let embeddedVideoElement = null;
+        while (!tagName) { // The template includes whitespace like \n etc, but we only want the HTML.
+            embeddedVideoElement = element[i++];
+            tagName = embeddedVideoElement.tagName;
+        }
+        let $element = $("<div></div>").append($(embeddedVideoElement).clone());
+        $element.find('[data-bind]').removeAttr('data-bind');
+        self.embeddedVideo($element.html());
+    }
+    this.embeddedVideo.subscribe(function(value) {
+        const data = parseEmbeddedVideoOrUrl(value);
+        self.embeddedVideoData(data);
+    });
+    if (doc.embeddedVideo) {
+        self.embeddedVideo(doc.embeddedVideo);
+    }
     this.embeddedVideoVisible = ko.computed(function() {
         return (self.role() == 'embeddedVideo');
     });
@@ -153,13 +177,13 @@ function DocumentViewModel (doc, owner, settings) {
             return false;
         }
         else if(self.role() == 'embeddedVideo'){
-            return buildiFrame(self.embeddedVideo()) != "" ;
+            return self.embeddedVideoData() !== null;
         }
 
         return self.fileReady();
     });
     this.saveHelp = ko.computed(function() {
-        if(self.role() == 'embeddedVideo' && !buildiFrame(self.embeddedVideo())){
+        if(self.role() == 'embeddedVideo' && !self.embeddedVideoData()){
             return 'Invalid embed video code';
         }
         else if(self.role() == 'embeddedVideo' && !self.saveEnabled()){
@@ -270,7 +294,7 @@ function DocumentViewModel (doc, owner, settings) {
     };
 
     this.modelForSaving = function() {
-        var result =  ko.mapping.toJS(self, {'ignore':['embeddedVideoVisible','iframe','helper', 'progress', 'hasPreview', 'error', 'fileLabel', 'file', 'complete', 'fileButtonText', 'roles', 'stages','reports','reportName','maxStages', 'settings', 'thirdPartyConsentDeclarationRequired', 'saveEnabled', 'saveHelp', 'fileReady', 'hasPublicRole']});
+        var result =  ko.mapping.toJS(self, {'ignore':['embeddedVideoVisible', 'embeddedVideoData', 'iframe','helper', 'progress', 'hasPreview', 'error', 'fileLabel', 'file', 'complete', 'fileButtonText', 'roles', 'stages','reports','reportName','maxStages', 'settings', 'thirdPartyConsentDeclarationRequired', 'saveEnabled', 'saveHelp', 'fileReady', 'hasPublicRole']});
         if (result.stage === undefined) {
             result.stage = null;
         }

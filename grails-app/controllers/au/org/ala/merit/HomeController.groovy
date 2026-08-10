@@ -274,8 +274,17 @@ class HomeController {
         renderStaticPage(SettingPageType.ABOUT, true)
     }
 
-    def help() {
-        renderStaticPage(SettingPageType.HELP, false)
+    def help(String role) {
+        if (!role) {
+            renderStaticPage(SettingPageType.HELP, false)
+        }
+        else if (!userService.checkHubRole(role)) {
+            redirect(controller: 'home', action: 'help')
+        }
+        else {
+            SettingPageType type = SettingPageType.getForKey('fielddata.help_'+role+'.text')
+            renderStaticPage(type, false)
+        }
     }
 
     def contacts() {
