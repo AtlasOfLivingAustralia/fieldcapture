@@ -103,6 +103,11 @@ map = {
                             return {remove: true, message: data.message};
                     }
                 })
+            },
+            style: {
+                color: '#0f0',
+                fillOpacity: 0.2,
+                weight: 3
             }
         },
         that = this;

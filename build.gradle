@@ -304,10 +304,18 @@ assets {
     minifyOptions = [
             languageMode: "ECMASCRIPT_NEXT",
             targetLanguage: "ECMASCRIPT_NEXT",
-            excludes: ['**/splaytree-ts.umd.js','**/robust-predicates/esm/**', '**/incircle.js','**/polyclip-ts.umd.js','**/leaflet-geoman.js', '**/index.js', '**/Leaflet.GoogleMutant.js', '**/cli.js', 'leaflet-manifest.js', '**/vendor-ext/**', '**/vendor-external/**', '**/vendor/**', '**/ala-map*.js', '**/@turf/**']
+            excludes: [
+                '**/splaytree-ts.umd.js','**/robust-predicates/esm/**', '**/incircle.js','**/polyclip-ts.umd.js',
+                '**/leaflet-geoman.js', '**/index.js', '**/Leaflet.GoogleMutant.js', '**/cli.js',
+                'leaflet-manifest.js', '**/vendor-ext/**', '**/vendor-external/**', '**/vendor/**',
+                '**/ala-map*.js', '**/@turf/**'
+            ]
     ] //Example Exclude GLOB pattern
     includes = ['webjars/**/images/*']
-    excludes = ['**/*.less','**/build/hintrc.js', 'hintrc.unminified.js', '**/spec.hintrc.js', 'spec.hintrc.unminified.js', '**/*hintrc*', '**/webjars/**'] //Example Exclude GLOB pattern
+    excludes = [
+            '**/*.less','**/build/hintrc.js', 'hintrc.unminified.js', '**/spec.hintrc.js', 'spec.hintrc.unminified.js',
+            '**/*hintrc*', '**/webjars/**'
+    ] //Example Exclude GLOB pattern
 }
 
 tasks.withType(Test) {

@@ -306,7 +306,7 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
                 }
             }
         },
-        type = siteData.type,
+        type = siteData.type || 'worksArea',
         currentStyle = options.styles[type],
         layerOptions = { style: currentStyle },
         geomanOptions = {

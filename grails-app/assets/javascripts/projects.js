@@ -25,7 +25,6 @@
 //= require_self
 //= require prettytextdiff/jquery.pretty-text-diff.min.js
 //= require prettytextdiff/diff_match_patch.js
-//= require htmldiff.js
 
 /*
     Utilities for managing project representations.
