@@ -7043,7 +7043,8 @@
                         "name": "individualsOrGroups",
                         "constraints": [
                           "Individuals",
-                          "Groups"
+                          "Populations",
+                          "Livestock"
                         ],
                         "validate": "required"
                       },
@@ -7588,7 +7589,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "(i) Total Number of baseline fauna surveys completed for this reporting period",
+                            "preLabel": "(i) Total Number of baseline disease surveys completed for this reporting period",
                             "source": "totalSurveysBaseline",
                             "type": "number"
                           }
@@ -7598,7 +7599,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "(ii) Total Number of baseline fauna surveys <u><i>invoiced</i></u> for this reporting period",
+                            "preLabel": "(ii) Total Number of baseline disease surveys <u><i>invoiced</i></u> for this reporting period",
                             "source": "totalSurveysBaselineInvoiced",
                             "type": "number"
                           }
@@ -7614,7 +7615,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "(iii)  Total Number of  indicator fauna surveys completed for this reporting period",
+                            "preLabel": "(iii)  Total Number of indicator disease surveys completed for this reporting period",
                             "source": "totalSurveysIndicator",
                             "type": "number"
                           }
@@ -7624,7 +7625,7 @@
                         "type": "row",
                         "items": [
                           {
-                            "preLabel": "(iv) Total Number of indicator fauna surveys <u><i>invoiced</i></u> for this reporting period",
+                            "preLabel": "(iv) Total Number of indicator disease surveys <u><i>invoiced</i></u> for this reporting period",
                             "source": "totalSurveysIndicatorInvoiced",
                             "type": "number"
                           }
@@ -7787,7 +7788,7 @@
                                 "type": "row",
                                 "items": [
                                   {
-                                    "preLabel": "Sites covered by disease survey",
+                                    "preLabel": "Sites covered by survey",
                                     "source": "sitesCoveredByDiseaseSurvey",
                                     "type": "feature"
                                   }
@@ -7839,7 +7840,7 @@
                                 "type": "row",
                                 "items": [
                                   {
-                                    "preLabel": "Actual area (ha) / length (km) covered by disease survey",
+                                    "preLabel": "Actual area (ha) / length (km) covered by survey",
                                     "source": "areaSurveyedHa",
                                     "type": "number",
                                     "displayOptions": {
@@ -7949,7 +7950,7 @@
                           {
                             "type": "selectOne",
                             "source": "disease",
-                            "title" : "Disease/pathogen type recorded"
+                            "title" : "Pathogen type recorded"
                           },
                           {
                             "type": "selectOne",
@@ -7963,7 +7964,7 @@
                           },
                           {
                             "type": "col",
-                            "title" : "Extent of disease (ha/km)",
+                            "title" : "Extent (ha/km)",
                             "items":  [
                               {
                                 "type": "feature",
@@ -7995,7 +7996,7 @@
                           {
                             "type": "selectOne",
                             "source": "severity",
-                            "title" : "Disease severity"
+                            "title" : "Severity"
                           },
                           {
                             "type": "selectOne",
@@ -8005,13 +8006,13 @@
                           {
                             "type": "selectOne",
                             "source": "individualsOrGroups",
-                            "title" : "Individuals / groups"
+                            "title" : "Individuals / populations / livestock"
                           },
                           {
                             "type": "number",
                             "width": "3%",
                             "source": "numberOfIndividualsOrGroups",
-                            "title" : "Number of infected individuals / populations (if applicable)"
+                            "title" : "Number of infected individuals / populations / livestock (if applicable)"
                           },
                           {
                             "type": "selectOne",
