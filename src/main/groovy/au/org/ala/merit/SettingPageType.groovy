@@ -27,9 +27,10 @@ enum SettingPageType {
     FOOTER ("footer","Footer","fielddata.footer.text"),
     ANNOUNCEMENT ("announcement","Announcement","fielddata.announcement.text"),
     HELP ("help","Help","fielddata.help.text"),
-    HELP_ADMIN ("help","MERIT Administrator Help","fielddata.help_"+ RoleService.HUB_ADMIN_ROLE +".text"),
-    HELP_SUPPORT_OFFICER ("help","MERIT Support Officer Help","fielddata.help_"+ RoleService.HUB_SUPPORT_OFFICER_ROLE +".text"),
-    HELP_OFFICER ("help","MERIT Officer Help","fielddata.help_"+ RoleService.HUB_OFFICER_ROLE +".text"),
+    HELP_ADMIN ("help_admin","MERIT Site Admin Help","fielddata.help.text."+ RoleService.HUB_ADMIN_ROLE),
+    HELP_SUPPORT_OFFICER ("help_support_officer","MERIT Support Officer Help","fielddata.help.text."+ RoleService.HUB_SUPPORT_OFFICER_ROLE),
+    HELP_OFFICER ("help_officer","MERIT Officer Help","fielddata.help.text."+ RoleService.HUB_OFFICER_ROLE),
+    HELP_DOCUMENTS("help_documents","MERIT Help Documents","fielddata.help.documents"),
     NEWS ("news","News","fielddata.news.text"),
     CONTACTS ("contacts","Contacts","fielddata.contacts.text"),
     INTRO ("intro","User Introduction","fielddata.introduction.text"),
@@ -141,5 +142,16 @@ enum SettingPageType {
                 return s
             }
         }
+    }
+
+    /**
+     * If there is a defined type with the supplied suffix, return that type. Otherwise return the parent type.
+     * MERIT help pages have defined types for role suffixes, but help document content pages do not as they
+     * are dynamically created by users tagging help documents.
+     */
+    static SettingPageType getForSuffix(SettingPageType parent, String suffix) {
+        String key = parent.key + '.' + suffix
+        SettingPageType result = getForKey(key) ?: parent
+        result
     }
 }

@@ -18,7 +18,7 @@
 (function() {
     var messages = {},
         defer = $.Deferred();
-    if (fcConfig.i18nURL) {
+    if (window.fcConfig && fcConfig.i18nURL) {
         $.get(fcConfig.i18nURL).done(function (data) {
             messages = data;
             defer.resolve();

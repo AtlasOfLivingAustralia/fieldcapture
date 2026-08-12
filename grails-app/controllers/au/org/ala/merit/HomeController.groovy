@@ -43,9 +43,15 @@ class HomeController {
 
 
     def helpDocuments(String category) {
+        if (!category && !userService.userIsFcAdmin()) {
+            redirect(controller: 'home', action: 'help')
+            return
+        }
         HubSettings hubSettings = SettingService.hubConfig
+
+        String content = settingService.getSettingText(SettingPageType.HELP_DOCUMENTS, category)
         List documents = documentService.findAllHelpDocuments(hubSettings.hubId, category)
-        [documents:documents, category:category]
+        [documents:documents, category:category, content:content]
     }
 
     /**
@@ -271,24 +277,25 @@ class HomeController {
     }
 
     def about() {
-        renderStaticPage(SettingPageType.ABOUT, true)
+        renderStaticPage(SettingPageType.ABOUT, null, true)
     }
 
-    def help(String role) {
+    def help(String suffix) {
+        String role = suffix // We use the user role as the suffix for the help page to provide customized role based help
         if (!role) {
-            renderStaticPage(SettingPageType.HELP, false)
+            renderStaticPage(SettingPageType.HELP, null, false)
         }
         else if (!userService.checkHubRole(role)) {
             redirect(controller: 'home', action: 'help')
         }
         else {
-            SettingPageType type = SettingPageType.getForKey('fielddata.help_'+role+'.text')
-            renderStaticPage(type, false)
+            SettingPageType type = SettingPageType.HELP
+            renderStaticPage(type, role, false)
         }
     }
 
     def contacts() {
-        renderStaticPage(SettingPageType.CONTACTS, false)
+        renderStaticPage(SettingPageType.CONTACTS, null,false)
     }
 
     /**
@@ -320,9 +327,12 @@ class HomeController {
         }
     }
 
-    private renderStaticPage(SettingPageType settingType, showNews = false) {
-        def content = settingService.getSettingText(settingType)
-        render view: 'about', model: [settingType: settingType, content: content, showNews: showNews]
+    private renderStaticPage(SettingPageType settingType, String suffix = null, showNews = false) {
+
+        def content = settingService.getSettingText(settingType, suffix)
+        String title = settingService.getSettingTitle(settingType, suffix)
+
+        render view: 'about', model: [settingType: settingType, content: content, suffix: suffix, showNews: showNews, title: title]
     }
 
 }
