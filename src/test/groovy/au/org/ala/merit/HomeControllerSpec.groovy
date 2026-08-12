@@ -342,7 +342,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         role << [null, '']
     }
 
-    def "The help method renders the appropriate role-specific help page for an authorized user"(String role, SettingPageType expectedCategory) {
+    def "The help method renders the appropriate role-specific help page for an authorized user"(String role, String expectedCategory) {
         setup:
         String content = "${role} help content"
 
