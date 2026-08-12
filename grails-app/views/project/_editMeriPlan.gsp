@@ -16,6 +16,32 @@
 				</div>
 			</div>
 		</div>
+		<div >
+			<div class="alert alert-info">
+				Please ensure the project start and end dates match the dates in the work order before approving the MERI plan.
+				Changing dates may result in changes to the reporting schedule which will require updates to the forecasts before the plan can be approved.
+			</div>
+			<form id="reportingTabDatesForm">
+				<div class="row mb-2">
+					<div class="col-sm-2">
+						<label for="startDate">Project start date
+						<fc:iconHelp title="Start date">Date the project is intended to commence.</fc:iconHelp>
+						</label>
+						<div class="input-group input-append">
+							<fc:datePicker class="form-control form-control-sm" bs4="true" targetField="plannedStartDate.date" id= "startDate" name="startDate" data-validation-engine="validate[required, past[endDate]]" autocomplete="off"/>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<label for="endDate">Project end date
+						<fc:iconHelp title="End date">Date the project is intended to finish.</fc:iconHelp>
+						</label>
+						<div class="input-group input-append">
+							<fc:datePicker class="form-control form-control-sm" bs4="true" targetField="plannedEndDate.date" id="endDate" name="endDate" data-validation-engine="validate[required, future[startDate]" autocomplete="off"/>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
 		<span class="grantManagerActionSpan">
 			<button type="button" data-bind="enable: canApproveMeriPlan, click:approvePlan, style:{'pointer-events': canApproveMeriPlan() ? 'all': 'none'}" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Approve MERI Plan</button>
 			<button type="button" data-bind="click:rejectPlan" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Reject MERI Plan</button>

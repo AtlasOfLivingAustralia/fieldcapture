@@ -28,7 +28,16 @@
             <li class="breadcrumb-item">Help - ${category}</li>
         </ol>
     </section>
-    <h3>Help Documents</h3>
+    <h3>Help Documents for ${category}
+    <g:if test="${fc.userIsAlaOrFcAdmin()}">
+        <div class="next-to-heading">
+        <a href="${g.createLink(controller:"admin",action:"editSettingText", id: SettingPageType.HELP_DOCUMENTS.name, params: [suffix: category, returnTo: 'helpDocuments'])}"
+           class="btn"><i class="fa fa-edit"></i> Edit category description</a>
+        </div>
+    </g:if>
+    </h3>
+
+    <fc:markdownToHtml>${content}</fc:markdownToHtml>
 
     <g:render template="/shared/listDocuments" model="${[excludeReportColumn:true, documents:documents, containerId:'help-documents', useExistingModel:false, filterBy:'all', imageUrl:assetPath(src:'/')]}"/>
 </div>
