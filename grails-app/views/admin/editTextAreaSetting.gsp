@@ -17,8 +17,10 @@
 
                     <g:form id="saveSettingContent" controller="admin" action="saveTextAreaSetting">
                         <g:hiddenField name="settingKey" value="${settingKey}" />
-                        <g:hiddenField name="returnUrl" value="${returnUrl}" />
-
+                        <g:hiddenField name="returnTo" value="${returnTo}" />
+                        <g:if test="${suffix}">
+                            <g:hiddenField name="suffix" value="${suffix}" />
+                        </g:if>
                         <div id="notes-button-bar" class="w-100 bg-white mb-3"></div>
                         <div style="padding-right:12px;">
                             <g:textArea class="border w-100 m-0" name="textValue" id="textValue" value="${textValue?:''.trim()}" rows="${!ajax ? 16 : 8}"

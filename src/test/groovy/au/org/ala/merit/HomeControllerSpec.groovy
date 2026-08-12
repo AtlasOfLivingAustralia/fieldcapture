@@ -330,7 +330,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         controller.help(role)
 
         then:
-        1 * settingService.getSettingText(SettingPageType.HELP) >> content
+        1 * settingService.getSettingText(SettingPageType.HELP, null) >> content
         0 * userService.checkHubRole(_)
 
         and:
@@ -342,7 +342,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
         role << [null, '']
     }
 
-    def "The help method renders the appropriate role-specific help page for an authorized user"(String role, SettingPageType expectedType) {
+    def "The help method renders the appropriate role-specific help page for an authorized user"(String role, String expectedCategory) {
         setup:
         String content = "${role} help content"
 
@@ -351,18 +351,18 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
 
         then:
         1 * userService.checkHubRole(role) >> true
-        1 * settingService.getSettingText(expectedType) >> content
+        1 * settingService.getSettingText(SettingPageType.HELP, expectedCategory) >> content
 
         and:
-        model.settingType == expectedType
+        model.settingType == SettingPageType.HELP
         model.content == content
         model.showNews == false
 
         where:
-        role                                  | expectedType
-        RoleService.HUB_ADMIN_ROLE             | SettingPageType.HELP_ADMIN
-        RoleService.HUB_SUPPORT_OFFICER_ROLE   | SettingPageType.HELP_SUPPORT_OFFICER
-        RoleService.HUB_OFFICER_ROLE           | SettingPageType.HELP_OFFICER
+        role                                  | expectedCategory
+        RoleService.HUB_ADMIN_ROLE             | RoleService.HUB_ADMIN_ROLE
+        RoleService.HUB_SUPPORT_OFFICER_ROLE   | RoleService.HUB_SUPPORT_OFFICER_ROLE
+        RoleService.HUB_OFFICER_ROLE           | RoleService.HUB_OFFICER_ROLE
     }
 
     def "The help method redirects to generic help when the user is not authorized for the requested role"() {
@@ -374,7 +374,7 @@ class HomeControllerSpec extends Specification implements ControllerUnitTest<Hom
 
         then:
         1 * userService.checkHubRole(role) >> false
-        0 * settingService.getSettingText(_)
+        0 * settingService.getSettingText(*_)
         response.redirectUrl == '/home/help'
     }
 

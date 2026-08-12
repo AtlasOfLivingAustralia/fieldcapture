@@ -165,16 +165,17 @@ class AdminController {
     @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
     def editSettingText(String id) {
         String content
-
-        String returnController = ( params.returnTo.equals(null) || params.returnTo.equals("staticPage")) ? "admin" : 'home'
+        String title
         String returnAction = (params.returnTo.equals("about")) ? 'about' :  (params.returnTo.equals("help")) ? "help" : (params.returnTo.equals("contacts")) ? "contacts" : 'staticPages'
-
-        String returnUrl = g.createLink(controller:returnController, action:returnAction)
+        String suffix = params.suffix
+        String returnTo = params.returnTo
         String returnLabel = GrailsNameUtils.getScriptName(returnAction).replaceAll('-',' ').capitalize()
+        def returnUrl = buildReturnToUrl(params.returnTo, suffix)
         SettingPageType type = SettingPageType.getForName(id)
 
         if (type) {
-            content = settingService.getSettingText(type)
+            content = settingService.getSettingText(type, suffix)
+            title = settingService.getSettingTitle(type, suffix)
         } else {
             render(status: 404, text: "No settings type found for: ${id}")
             return
@@ -182,24 +183,38 @@ class AdminController {
 
         render(view:'editTextAreaSetting', model:[
                 textValue: content,
+                returnTo: returnTo,
                 returnUrl: returnUrl,
                 returnLabel: returnLabel,
-                settingTitle: type.title,
-                settingKey: type.key] )
+                settingTitle: title,
+                settingKey: type.key,
+                suffix: suffix] )
+    }
+
+    private String buildReturnToUrl(String returnTo, String suffix) {
+
+        if (!returnTo) {
+            return g.createLink(controller:'admin', action:'staticPages', absolute: true )
+        }
+        String returnController = ( params.returnTo.equals(null) || params.returnTo.equals("staticPages")) ? "admin" : 'home'
+        String returnAction = params.returnTo in ['about', 'help', 'contacts', 'helpDocuments'] ? params.returnTo : 'staticPages'
+        Map params = suffix ? (returnAction == "helpDocuments" ? [category:suffix] : [suffix:suffix]) : [:]
+        String returnUrl = g.createLink(controller:returnController, action:returnAction, params:params, absolute: true)
+        returnUrl
     }
 
     @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
     def saveTextAreaSetting() {
         def text = params.textValue
         def settingKey = params.settingKey
-        def returnUrl = params.returnUrl?:g.createLink(controller:'admin', action:'settings', absolute: true )
+        String suffix = params.suffix
 
+        def returnUrl = buildReturnToUrl(params.returnTo, suffix)
         if (settingKey) {
             SettingPageType type = SettingPageType.getForKey(settingKey)
 
             if (type) {
-                settingService.setSettingText(type, text)
-                cacheService.clear(type.key) // clear cached copy
+                settingService.setSettingText(type, suffix, text)
                 flash.message = "${settingKey} content saved."
             } else {
                 throw new RuntimeException("Undefined setting key!")
