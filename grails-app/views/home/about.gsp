@@ -4,7 +4,7 @@
 <head>
   <g:set var="layoutName" value="nrm_bs4"/>
   <meta name="layout" content="${layoutName}"/>
-  <title>${settingType.title?:'About'} | MERIT</title>
+  <title>${title?:'About'} | MERIT</title>
   <script>
     window.fcConfig = {
         baseUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
@@ -21,10 +21,10 @@
     <div id="wrapper" class="${containerType}">
         <div class="row">
             <div class="col-md-8" id="">
-                <h1>${settingType.title?:'About the website'}
+                <h1>${title?:'About the website'}
                     <g:if test="${fc.userIsAlaOrFcAdmin()}">
                         <span style="display: inline-block; margin: 0 10px;">
-                            <a href="${g.createLink(controller:"admin",action:"editSettingText", id: settingType.name, params: [returnTo: params.action])}"
+                            <a href="${g.createLink(controller:"admin",action:"editSettingText", id: settingType.name, params: [suffix: suffix, returnTo: params.action])}"
                                class="btn"><i class="fa fa-edit"></i> Edit</a>
                         </span>
                     </g:if>
