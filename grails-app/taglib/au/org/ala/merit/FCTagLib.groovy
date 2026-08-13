@@ -641,7 +641,7 @@ class FCTagLib {
         }
         userRoles.each { role ->
             mb.li {
-                a(class: 'dropdown-item', href: g.createLink(controller: 'home', action: 'help', params: [role: role]), g.message(code:"label.hubRole.${role}")+" Help")
+                a(class: 'dropdown-item', href: g.createLink(controller: 'home', action: 'help', params: [suffix: role]), g.message(code:"label.hubRole.${role}")+" Help")
             }
         }
     }

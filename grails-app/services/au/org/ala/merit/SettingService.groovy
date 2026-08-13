@@ -101,21 +101,49 @@ class SettingService {
     }
 
     def getSettingText(SettingPageType type) {
-        def key = localHubConfig.get().urlPath + type.key
-
+        def key = keyForType(type)
         get(key)
+    }
 
+    String getSettingText(SettingPageType typePrefix, String typeSuffix) {
+        get(keyForType(typePrefix, typeSuffix))
+    }
+
+    String keyForType(SettingPageType typePrefix, String typeSuffix = null) {
+        String key = localHubConfig.get().urlPath + typePrefix.key
+        if (typeSuffix) {
+            key += '.' + typeSuffix
+        }
+        return key
     }
 
     def setSettingText(SettingPageType type, String content) {
         def key = localHubConfig.get().urlPath + type.key
-
         set(key, content)
     }
 
+    Map setSettingText(SettingPageType type, String suffix, String content) {
+        String key = keyForType(type, suffix)
+        set(key, content)
+    }
+
+    /**
+     * If there is a setting page defined for the specified type and suffix, returns the title of that page.
+     * Otherwise returns the title of the type.
+     */
+    String getSettingTitle(SettingPageType type, String suffix) {
+        if (suffix) {
+            type = SettingPageType.getForSuffix(type, suffix)
+        }
+        type.title
+    }
+
     private def get(key) {
-        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "setting/ajaxGetSettingTextForKey?key=${key}"
-        def res = cacheService.get(key,{ webService.getJson(url) })
+        def res = cacheService.get(key,{
+            key = URLEncoder.encode(key, "UTF-8")
+            String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "setting/ajaxGetSettingTextForKey?key=${key}"
+            webService.getJson(url)
+        })
         return res?.settingText?:""
     }
 
@@ -138,7 +166,7 @@ class SettingService {
 
     private def set(key, settings) {
         cacheService.clear(key)
-        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "setting/ajaxSetSettingText/${key}"
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "setting/ajaxSetSettingText"
         webService.doPost(url, [settingText: settings, key: key])
     }
 
