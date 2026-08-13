@@ -45,8 +45,8 @@
                 projectReportUrl:"${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
                 projectReportPDFUrl:"${createLink(controller:'project', action:'projectReportPDF', id:project.projectId)}",
                 projectUrl:"${createLink(controller:'project', action:'index', id:project.projectId)}",
-                projectSitesUrl:"${createLink(controller:'project', action:'ajaxProjectSites')}/${project.projectId}"
-
+                projectSitesUrl:"${createLink(controller:'project', action:'ajaxProjectSites')}/${project.projectId}",
+                poiIconUrl: "${assetPath(src: '/icons/poi.png')}"
             },
             here = window.location.href;
 
@@ -292,7 +292,7 @@
         <p>You have finished reporting for this site.</p>
     </div>
     <div data-bind="visible:!reportingComplete">
-        <p>Click the site to update your management progress for this site.  If you have finished reporting for the year, make sure you tick the finished reporting checkbox at the bottom of the form.</p>
+        <p class="text-wrap">Click the site to update your management progress for this site.  If you have finished reporting for the year, make sure you tick the finished reporting checkbox at the bottom of the form.</p>
     </div>
 
 </div>
@@ -303,8 +303,8 @@
 <!-- /ko -->
 
 <asset:javascript src="common-bs4.js"/>
-<asset:javascript src="projects.js"/>
 <asset:javascript src="leaflet-manifest.js"/>
+<asset:javascript src="projects.js"/>
 <asset:javascript src="esp-overview.js"/>
 <asset:deferredScripts/>
 
@@ -330,7 +330,7 @@
             highlightOnHover:true,
             features:[],
             featureService: fcConfig.featureService,
-            wmsServer:fcConfig.spatialWms,
+            wmsServer:fcConfig.spatialWmsUrl,
             mapContainer: "map"
         };
 

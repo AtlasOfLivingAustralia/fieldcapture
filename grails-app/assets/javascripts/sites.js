@@ -907,7 +907,7 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
                 }
                 $.each(site.poi, function(j, poi) {
                     if (poi.geometry) {
-                        map.addPOI(poi.geometry.decimalLatitude, poi.geometry.decimalLongitude, poi.name, {poiIconUrl: fcConfig.poiIconUrl});
+                        map.addMarker(poi.geometry.decimalLatitude, poi.geometry.decimalLongitude, poi.name, {poiIconUrl: fcConfig.poiIconUrl});
                     }
 
                 });
@@ -1004,19 +1004,6 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
 
     self.displaySites();
 };
-
-function geoJsonToPath(geojson){
-    var coords = geojson.coordinates[0];
-    return coordArrayToPath(geojson.coordinates[0]);
-}
-
-function coordArrayToPath(coords){
-    var path = [];
-    for(var i = 0; i<coords.length; i++){
-        path.push(new google.maps.LatLng(coords[i][1],coords[i][0]));
-    }
-    return path;
-}
 
 /**
  * Returns a GeoJson coordinate array for the polygon
