@@ -118,11 +118,12 @@ var PhotoPointViewModel = function(site, activity, config) {
 
     self.addOrEditPhotoPoint = function(photoPointWithPhotos, photoPointData, successCallback) {
         var map = alaMap.map;
-        var originalBounds = map.getBounds();
+        var mapImpl = map.getMapImpl();
+        var originalBounds = mapImpl.getBounds();
         $(options.newPhotoPointModalSelector).on('shown.bs.modal', function() {
             // "Borrow" the map display from the top of the page as it is already displaying the site / zoomed etc.
             $(options.newPhotoPointMapHolderSelector).append($(options.mapSelector));
-            google.maps.event.trigger(map, "resize");
+            map.redraw();
 
         }).validationEngine('attach', {scroll:false}).modal('show');
 
@@ -133,8 +134,10 @@ var PhotoPointViewModel = function(site, activity, config) {
 
             // Return the map to the top of the page.
             $(options.activityMapHolderSelector).append($(options.mapSelector));
-            google.maps.event.trigger(map, "resize");
-            map.fitBounds(originalBounds);
+            map.redraw();
+            if (originalBounds) {
+                mapImpl.fitBounds(originalBounds);
+            }
             $(options.newPhotoPointModalSelector).on('hidden.bs.modal', function() {
                 ko.cleanNode($(options.newPhotoPointModalSelector)[0]);
             }).modal('hide');
@@ -307,8 +310,9 @@ var EditPhotoPointViewModel = function(photopoint, map, isNew) {
     self.newOrEditText = isNew ? "created" : "edited";
     self.newOrEditText2 = isNew ? "" : "the edits";
 
-    var lat = map.center.lat();
-    var lng = map.center.lng();
+    var centre = map.getCentre();
+    var lat = centre.lat;
+    var lng = centre.lng;
 
 
     if (self.photoPoint.geometry.decimalLatitude()) {
@@ -324,33 +328,23 @@ var EditPhotoPointViewModel = function(photopoint, map, isNew) {
         self.photoPoint.geometry.decimalLongitude(lng);
     }
 
-    var bounds = new google.maps.LatLngBounds();
-    bounds.union(map.getBounds());
+    var icon = L.icon({
+            iconUrl: fcConfig.poiIconUrl,
+            iconSize: [32, 26],
+            iconAnchor: [16, 26],
+            popupAnchor: [0, -26]
+        }),
+        marker = map.addMarker(lat, lng, null, {draggable: true, icon: icon});
 
-    var markerPos = new google.maps.LatLng(lat,lng);
-    var marker = new google.maps.Marker({
-        position: markerPos,
-        draggable:true,
-        map:map
-    });
-    bounds = bounds.extend(markerPos);
-
-    map.fitBounds(bounds);
-
+    map.fitBounds();
     self.cleanup = function() {
-        marker.setMap(null);
+        map.removeLayer(marker);
     };
-
-    marker.setIcon('https://maps.google.com/mapfiles/marker_yellow.png');
-
-    google.maps.event.addListener(
-        marker,
-        'dragend',
-        function(event) {
-            self.photoPoint.geometry.decimalLatitude(event.latLng.lat());
-            self.photoPoint.geometry.decimalLongitude(event.latLng.lng());
-        }
-    );
+    marker.on('dragend', function(event) {
+        var pos = event.target.getLatLng();
+        self.photoPoint.geometry.decimalLatitude(pos.lat);
+        self.photoPoint.geometry.decimalLongitude(pos.lng);
+    });
 
 };
 

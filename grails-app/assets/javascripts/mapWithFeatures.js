@@ -77,7 +77,7 @@
                 config = {
                     drawOptions: false,
                     drawControl: false,
-                    showReset: false,
+                    showReset: !!options.showReset,
                     allowSearchLocationByAddress: false,
                     allowSearchRegionByAddress: false,
                     useMyLocation: false,
@@ -113,7 +113,10 @@
             if (options.polygonMarkerAreaKm2 !== undefined) {
                 this.polygonMarkerAreaKm2 = options.polygonMarkerAreaKm2;
             }
-            this.map = new ALA.Map(this.containerId, config);
+
+            if(!this.map)
+                this.map = new ALA.Map(this.containerId, config);
+
             if(features.features !== undefined){
                 self.load(features.features);
             }
@@ -123,17 +126,15 @@
         toggleMarkerVisibility:function(type, visible){
             var mapImpl = this.map.getMapImpl();
             $.each(this.allMarkers, function(idx, marker){
-                if(type == marker["legendName"]){
-                    if (!marker.marker) {
-                        return;
-                    }
+                var legendName = marker.feature && marker.feature.properties && marker.feature.properties.legendName;
+                if(type === legendName){
                     if (visible) {
-                        if (!mapImpl.hasLayer(marker.marker)) {
-                            mapImpl.addLayer(marker.marker);
+                        if (!mapImpl.hasLayer(marker)) {
+                            mapImpl.addLayer(marker);
                         }
                     }
-                    else if (mapImpl.hasLayer(marker.marker)) {
-                        mapImpl.removeLayer(marker.marker);
+                    else if (mapImpl.hasLayer(marker)) {
+                        mapImpl.removeLayer(marker);
                     }
                 }
             });
@@ -158,15 +159,20 @@
             var self = this;
             if(loc != null && loc.type != null){
                 var geoJSON = self.convertSiteToGeoJSON(loc),
-                    style = {
+                    style = geoJSON.properties && geoJSON.properties.style || {
                         color: self.overlayOptions.strokeColor,
                         fillOpacity: self.overlayOptions.fillOpacity,
                         weight: self.overlayOptions.strokeWeight
-                    },
-                    layerGroup = self.map.setGeoJSON(geoJSON);
+                    };
 
+                if (geoJSON.properties && geoJSON.properties.style) {
+                    delete geoJSON.properties.style;
+                }
+
+                var layerGroup = self.map.setGeoJSON(geoJSON);
                 layerGroup.eachLayer(function(layer) {
                     self.addFeature(layer, loc);
+                    self.allMarkers.push(layer);
                     layer.on("wmslayer:metadataupdated", function (data) {
                         if (!loc.areaKmSq) {
                             loc.areaKmSq = data.area_km ? data.area_km : 0;
@@ -174,7 +180,9 @@
                     });
                 });
 
-                self.map.setStyle(style);
+                if (layerGroup && layerGroup.setStyle) {
+                    layerGroup.setStyle(style);
+                }
             }
         },
         // loads the features

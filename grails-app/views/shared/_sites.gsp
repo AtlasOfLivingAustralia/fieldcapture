@@ -37,6 +37,11 @@
 
 <asset:script>
 
+    var heatLayer = null;
+    var heatZoomHandler = null;
+    var resetControl = null;
+    var legendControl = null;
+
     function generateMap(facetList, markBy, mapOptions) {
 
         markBy =  (markBy === undefined) || markBy == "-1" ? "" : "&markBy="+markBy;
@@ -72,7 +77,6 @@
 
             var features = [];
             var projectIdMap = {};
-            var bounds = new google.maps.LatLngBounds();
             var geoPoints = data;
             var legends = [];
             var heatMapPoints = [];
@@ -104,22 +108,32 @@
 
                                 var lat = parseFloat(el.loc.lat);
                                 var lon = parseFloat(el.loc.lon);
-                                var latLng = new google.maps.LatLng(lat,lon);
+                                var latLng = L.latLng(lat, lon);
                                 if (!isNaN(lat) && !isNaN(lon)) {
                                     if (lat >= -90 && lat <=90 && lon >= -180 && lon <= 180) {
 
                                         var point = {
-                                            type: "dot",
-                                            id: projectId,
-                                            name: projectName,
-                                            popup: generatePopup(projectLinkPrefix,projectId,projectName,project.org,siteLinkPrefix,el.siteId, el.siteName),
-                                            latitude:lat,
-                                            longitude:lon,
-                                            color: "-1"
+                                            type: "Point",
+                                            point_type: "CircleMarker",
+                                            projectId: projectId,
+                                            projectName: projectName,
+                                            siteId: el.siteId,
+                                            siteName: el.siteName,
+                                            legendName: el.legendName,
+                                            popupContent: generatePopup(projectLinkPrefix,projectId,projectName,project.org,siteLinkPrefix,el.siteId, el.siteName),
+                                            color: "-1",
+                                            coordinates: [lon, lat],
+                                            latitude: lat,
+                                            longitude: lon
                                         }
 
                                         if(el.index !== undefined && el.index != null){
-                                            point.color = legends[el.index].color;
+                                            point.style = {
+                                                color: legends[el.index].color,
+                                                weight: 2,
+                                                fillOpacity: 0.5
+                                            };
+                                            // point.color = legends[el.index].color;
                                             point.legendName = el.legendName;
                                         }
                                         features.push(point);
@@ -131,7 +145,6 @@
                                         if (useHeatMap) {
                                             heatMapPoints.push(latLng);
                                         }
-                                        bounds.extend(latLng);
                                     }
                                 }
 
@@ -166,58 +179,9 @@
             }
             $("#numberOfSites").html(numSitesHtml);
 
-            initialiseMap(features, bounds, mapOptions);
+            initialiseMap(features, mapOptions);
 
-            if (heatMapPoints.length > 0) {
-
-                var heatMap = new google.maps.visualization.HeatmapLayer({
-                    data: heatMapPoints,
-                    map: alaMap.map,
-                    maxIntensity:100,
-                    disapating:true
-                    });
-
-                var toggleMarkers = function(features, value) {
-                    for (var f in features) {
-                        if (features.hasOwnProperty(f)) {
-                            var feature = features[f];
-                            for (var i=0; i<feature.length; i++) {
-                                if (typeof feature[i].setMap == 'function') {
-                                    feature[i].setMap(value);
-                                }
-                            }
-
-                        }
-
-                    }
-                };
-                var ZOOM_THRESHOLD = 8;
-
-                alaMap.hideMarkers = function() {
-                    toggleMarkers(alaMap.featureIndex, null);
-                };
-                alaMap.showMarkers = function() {
-                    toggleMarkers(alaMap.featureIndex, alaMap.map);
-                };
-
-                alaMap.map.addListener('zoom_changed', function() {
-                    var oldZoom = alaMap.zoom;
-                    var newZoom = alaMap.map.getZoom();
-                    alaMap.zoom = newZoom;
-
-                    if ((!oldZoom || oldZoom > ZOOM_THRESHOLD) && newZoom <= ZOOM_THRESHOLD) {
-                        alaMap.hideMarkers();
-                    }
-                    else if ((!oldZoom || oldZoom <= ZOOM_THRESHOLD) && newZoom > ZOOM_THRESHOLD) {
-                        alaMap.showMarkers();
-                    }
-                });
-
-                if (alaMap.map.getZoom() <= ZOOM_THRESHOLD) {
-                    alaMap.hideMarkers();
-                }
-            }
-            mapBounds = bounds;
+            setupHeatMap(heatMapPoints);
             features.length > 0 ? showLegends(legends) : "";
 
             }).fail(function (request, status, error) {
@@ -225,7 +189,7 @@
             });
     }
 
-    function initialiseMap(features, bounds, mapOptions){
+    function initialiseMap(features, mapOptions){
 
         var defaults = {
             includeLegend: true
@@ -258,28 +222,7 @@
                 mapData
         );
 
-        if (!bounds.isEmpty()) {
-            alaMap.map.fitBounds(bounds);
-        } else {
-            alaMap.map.setZoom(4);
-        }
-
-
-        // Create the DIV to hold the control and
-        // call the HomeControl() constructor passing
-        // in this DIV.
-
-        var homeControlDiv = document.createElement('div');
-        var homeControl = new HomeControl(homeControlDiv, alaMap.map);
-        homeControlDiv.index = 2;
-        alaMap.map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(homeControlDiv);
-
-        if (config.includeLegend) {
-            var homeToggleControlDiv = document.createElement('div');
-            var toggleControl = new HomeToggleControl(homeToggleControlDiv, alaMap.map);
-            homeToggleControlDiv.index = 1;
-            alaMap.map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(homeToggleControlDiv);
-        }
+        initialiseMapControls(config.includeLegend);
     }
 
 
@@ -302,70 +245,92 @@
         return html;
     }
 
-    function HomeControl(controlDiv, map) {
+    function setupHeatMap(heatMapPoints) {
+        var mapImpl = alaMap.map.getMapImpl();
+        var ZOOM_THRESHOLD = 8;
 
-        // Set CSS styles for the DIV containing the control
-        // Setting padding to 5 px will offset the control
-        // from the edge of the map
-        controlDiv.style.padding = '5px';
+        if (heatLayer) {
+            mapImpl.removeLayer(heatLayer);
+            heatLayer = null;
+        }
+        if (heatZoomHandler) {
+            mapImpl.off('zoomend', heatZoomHandler);
+            heatZoomHandler = null;
+        }
 
-        // Set CSS for the control border
-        var controlUI = document.createElement('div');
-        controlUI.style.backgroundColor = 'white';
-        controlUI.style.borderStyle = 'solid';
-        controlUI.style.borderWidth = '1px';
-        controlUI.style.cursor = 'pointer';
-        controlUI.style.textAlign = 'center';
-        controlUI.title = 'Click to set the map to show all sites';
-        controlDiv.appendChild(controlUI);
+        var toggleMarkers = function(visible) {
+            $.each(alaMap.featureIndex, function(id, featureGroup) {
+                $.each(featureGroup, function(i, feature) {
+                    if (!feature || !mapImpl.hasLayer) {
+                        return;
+                    }
+                    if (visible) {
+                        if (!mapImpl.hasLayer(feature)) {
+                            mapImpl.addLayer(feature);
+                        }
+                    }
+                    else if (mapImpl.hasLayer(feature)) {
+                        mapImpl.removeLayer(feature);
+                    }
+                });
+            });
+        };
 
-        // Set CSS for the control interior
-        var controlText = document.createElement('div');
-        controlText.style.fontFamily = 'Arial,sans-serif';
-        controlText.style.fontSize = '12px';
-        controlText.style.paddingLeft = '6px';
-        controlText.style.paddingRight = '6px';
-        controlText.innerHTML = '<b>Reset</b>';
-        controlUI.appendChild(controlText);
+        alaMap.hideMarkers = function() {
+            toggleMarkers(false);
+        };
+        alaMap.showMarkers = function() {
+            toggleMarkers(true);
+        };
 
-        // Setup the click event listeners
-        google.maps.event.addDomListener(controlUI, 'click', function() {
-            alaMap.map.fitBounds(mapBounds);
-        });
+        if (heatMapPoints.length === 0) {
+            return;
+        }
 
+        // Leaflet heat layer is optional; fall back to marker-only rendering if plugin is unavailable.
+        if (typeof L.heatLayer === 'function') {
+            heatLayer = L.heatLayer(heatMapPoints, {
+                maxZoom: 16,
+                radius: 20,
+                blur: 15
+            }).addTo(mapImpl);
+        }
+
+        heatZoomHandler = function() {
+            var oldZoom = alaMap.zoom;
+            var newZoom = mapImpl.getZoom();
+            alaMap.zoom = newZoom;
+
+            if ((!oldZoom || oldZoom > ZOOM_THRESHOLD) && newZoom <= ZOOM_THRESHOLD) {
+                alaMap.hideMarkers();
+            }
+            else if ((!oldZoom || oldZoom <= ZOOM_THRESHOLD) && newZoom > ZOOM_THRESHOLD) {
+                alaMap.showMarkers();
+            }
+        };
+        mapImpl.on('zoomend', heatZoomHandler);
+
+        if (mapImpl.getZoom() <= ZOOM_THRESHOLD) {
+            alaMap.hideMarkers();
+        }
     }
 
 
-    function HomeToggleControl(controlDiv, map) {
+    function initialiseMapControls(includeLegend) {
+        if (!resetControl) {
+            alaMap.map.addButton('<div><i class="fa fa-refresh align-middle" title="Reset map view"></i></div>', function () {
+                alaMap.map.fitBounds();
+            },'bottomright');
+            resetControl = true;
+        }
 
-        // Set CSS styles for the DIV containing the control
-        // Setting padding to 5 px will offset the control
-        // from the edge of the map
-        controlDiv.style.padding = '5px';
 
-        // Set CSS for the control border
-        var controlUI = document.createElement('div');
-        controlUI.style.backgroundColor = 'white';
-        controlUI.style.borderStyle = 'solid';
-        controlUI.style.borderWidth = '1px';
-        controlUI.style.cursor = 'pointer';
-        controlUI.style.textAlign = 'center';
-        controlUI.title = 'Click to set the map to show all sites';
-        controlDiv.appendChild(controlUI);
-
-        // Set CSS for the control interior
-        var controlText = document.createElement('div');
-        controlText.style.fontFamily = 'Arial,sans-serif';
-        controlText.style.fontSize = '12px';
-        controlText.style.paddingLeft = '6px';
-        controlText.style.paddingRight = '6px';
-        controlText.innerHTML = '<i class="icon-list"></i>';
-        controlUI.appendChild(controlText);
-        // Setup the click event listeners
-        google.maps.event.addDomListener(controlUI, 'click', function() {
-           $("#map-legend").toggle();
-        });
-
+        if (includeLegend && !legendControl) {
+            alaMap.map.addButton('<i class="fa fa-bars align-middle" title="Toggle map legend"></i>', function () {
+                $("#map-legend").toggle();
+            },'topleft');
+            legendControl = true;
+        }
     }
 
     function showLegends(legends){
@@ -399,8 +364,8 @@
                '<td width="200">'+legend.legendName + ' (' + legend.count + ')</td></tr>');
         });
         $('input[type="checkbox"][class="legendSelection"]').change(function() {
-            var map = $('#'+this.id).prop('checked') ? alaMap.map : null;
-            alaMap.toggleMarkerVisibility(this.value, map);
+            var visible = $('#'+this.id).prop('checked');
+            alaMap.toggleMarkerVisibility(this.value, visible);
         });
     }
 
