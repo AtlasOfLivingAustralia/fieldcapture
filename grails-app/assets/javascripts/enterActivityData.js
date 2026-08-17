@@ -698,5 +698,10 @@ var ReportNavigationViewModel = function(reportMaster, activityViewModel, option
         if (progress == ActivityProgress.started) {
             scrollToFirstInvalidField(validationContainer);
         }
+        else {
+            setTimeout(function() {
+                $(validationContainer).validationEngine('hideAll');
+            }, 0); // Some of the data bindings will trigger validations on page load which we don't want for new forms.
+        }
     }
 };

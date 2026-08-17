@@ -65,7 +65,7 @@
         <td class="overall-target" data-bind="style:{width:cellWidth+'%'}">
             <input type="number" class="form-control form-control-sm" data-bind='value:target, disable: $root.isProjectDetailsLocked(), computedValidation:[{rule:"min", param:{type:"computed", expression:"max(0.01, sum(periodTargets, \"target\"))"}, message:"The target must be be greater than zero and equal to the sum of the forecasts"},{rule:"max", param:{type:"computed", expression:"sum(periodTargets, \"target\")"}, message:"The target must be greater than zero and equal to the sum of the forecasts"}, {rule:"required"}]'></td>
         <!-- ko foreach:periodTargets -->
-        <td class="forecast" data-bind="style:{width:cellWidth+'%'}"><input type="number" class="form control form-control-sm" data-bind="value:target, disable: $root.isProjectDetailsLocked()"></input></td>
+        <td class="forecast" data-bind="style:{width:cellWidth+'%'}"><input type="number" class="form control form-control-sm" data-validation-engine="validate[required,min[0]]" data-bind="value:target, disable: $root.isProjectDetailsLocked()"></input></td>
         <!-- /ko -->
         <td class="remove">
             <!-- ko if:orphanedOutcomes().length > 0 -->
