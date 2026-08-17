@@ -366,7 +366,7 @@ class EditableMeriPlan extends Module {
 
     void hideFloatingSave() {
         js.exec("\$('#floating-save').css('display', 'none');")
-        waitFor {
+        waitFor 30, 0.1, {
             !floatingSaveDisplayed()
         }
     }

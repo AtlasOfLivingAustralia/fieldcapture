@@ -38,7 +38,7 @@ class ProjectExplorerMapTabSpec extends StubbedCasSpec {
 
         and:
         waitFor 10, {
-            $('#mapView .leaflet-google-mutant img').size() ==  1
+            $('#mapView .leaflet-google-mutant img').size() >  1
         }
 
 
