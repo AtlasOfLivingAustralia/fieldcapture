@@ -107,7 +107,8 @@ class SpatialService {
         List displayNamesForAustralia = grailsApplication.config.getProperty('layers.countries.displayNamesForAustralia', List)
         Map resp = webService.doPost(url+ "/" + fid, shape, true)
         Map response = [:]
-        HttpStatus status = HttpStatus.resolve(resp?.statusCode as int)
+        // connection exception does not return a status code, so we default to 500 if it is null
+        HttpStatus status = HttpStatus.resolve((resp?.statusCode?:500) as int)
         if (status?.is2xxSuccessful()) {
             List intersectingCountries = resp?.resp?.collect{ it.name }
             List nonAustralianCountries = intersectingCountries?.findAll{ it !in displayNamesForAustralia }

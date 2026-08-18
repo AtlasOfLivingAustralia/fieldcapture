@@ -84,6 +84,7 @@
                     singleDraw: false,
                     singleMarker: false,
                     markerOrShapeNotBoth: false,
+                    assignNameEnabled: !!options.assignNameEnabled,
                     wmsLayerUrl: options.spatialWmsUrl + '/wms/reflect?',
                     wmsFeatureUrl: options.featureService + '?featureId=',
                     otherLayers: {
