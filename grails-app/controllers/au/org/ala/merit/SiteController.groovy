@@ -125,7 +125,7 @@ class SiteController {
         // 1) Isn't associated with a project
         // 2) Is associated with more than one project.
         if (site.projects && site.projects.size() == 1) {
-            project = projectService.get(site.projects[0], 'all')
+            result.project = project = projectService.get(site.projects[0], 'all')
         }
         result += editSiteModelData(site, project)
         result

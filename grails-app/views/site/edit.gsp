@@ -161,8 +161,9 @@
         });
     });
 </asset:script>
-<asset:javascript src="site-bs4.js"/>
+<asset:javascript src="common-bs4.js"/>
 <asset:javascript src="leaflet-manifest.js"/>
+<asset:javascript src="site-bs4.js"/>
 <asset:javascript src="edit-site-manifest.js"/>
 <asset:deferredScripts/>
 
