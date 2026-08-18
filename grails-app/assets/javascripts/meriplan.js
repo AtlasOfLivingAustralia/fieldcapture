@@ -143,11 +143,51 @@ function MERIPlan(project, projectService, config) {
         return projectService.validateExternalIds(ko.mapping.toJS(self.externalIds));
     };
 
+    self.internalOrderId = ko.observable(project.internalOrderId);
+    self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
+    self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
+
+    self.dateChangesInvalid = ko.observable(false);
+    function checkDateChanges() {
+        // need to validate that date changes won't mess with forecast periods.
+        self.dateChangesInvalid(true);
+        const payload = {
+            plannedStartDate: self.plannedStartDate(),
+            plannedEndDate: self.plannedEndDate()
+        };
+        $.get(config.projectDatesValidationUrl, payload).done(function(data) {
+            if (!data.valid) {
+
+                bootbox.alert({
+                    title:"Forecast periods will change",
+                    message: "<p>The change to the project dates will result in a change to the forecast periods for the project. </p>" +
+                        "Next steps: <ul>" +
+                        "<li>Return the plan using the Reject MERI Plan button</li>" +
+                        "<li>Work with the funding recipient to update the forecast table to take into account the change to the forecast periods</li>" +
+                        "<li>The recipient re-submits the MERI plan</li>" +
+                        "<li>Review and approve the MERI plan</li></ul>",
+                });
+            }
+            else {
+                self.dateChangesInvalid(false);
+            }
+        });
+    }
+
+    self.plannedStartDate.subscribe(checkDateChanges);
+    self.plannedEndDate.subscribe(checkDateChanges);
+    self.externalIdsSupplied = function() {
+        var canApprove = projectService.canApproveMeriPlan();
+        if(!canApprove) {
+            $('.grantManagerActionSpan').popover({content:'*At least one Tech One Project Code, Grand Award ID, or SAP Internal Order must be provided before the MERI plan can be approved', placement:'top', trigger:'hover'})
+        }
+        return canApprove
+    };
     self.canApproveMeriPlan = ko.computed(function() {
         // validateExternalIds returns a non-null value if the validation fails (it contains
         // the error message to display), this is a jquery-validation-engine thing.
-        return self.plannedStartDate() && !self.validateExternalIds();
-    })
+        return self.plannedStartDate() && !self.validateExternalIds() && !self.dateChangesInvalid();
+    });
 
     // approve plan and handle errors
     self.approvePlan = function () {
@@ -694,16 +734,16 @@ function MERIPlan(project, projectService, config) {
         self.meriPlanHistoryVisible(!self.meriPlanHistoryVisible());
     };
     self.deleteApproval = function(approval) {
-        bootbox.confirm("Delete this approval?  This cannot be undone.", function(yes) {
+        bootbox.confirm("Delete this approval?  This cannot be undone.", function (yes) {
 
             if (yes) {
                 blockUIWithMessage("Deleting approval...");
                 projectService.deleteDocument(approval.documentId).done(
-                    function() {
+                    function () {
                         blockUIWithMessage("Approval deleted.  Reloading page...")
                         document.location.reload();
                     }
-                ).fail(function() {
+                ).fail(function () {
                     $.unblockUI();
                     bootbox.alert("There was an error deleting the approval");
                 });
@@ -711,21 +751,6 @@ function MERIPlan(project, projectService, config) {
 
         });
     }
-    /**
-     * Workaround to allow grant managers to supply the order number as
-     * they don't have access to the project settings section.
-     * @type {Observable<string>}
-     */
-    self.internalOrderId = ko.observable(project.internalOrderId);
-    self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
-    self.canApprove = function() {
-        var canApprove = projectService.canApproveMeriPlan();
-        if(!canApprove) {
-            $('.grantManagerActionSpan').popover({content:'*At least one Tech One Project Code, Grand Award ID, or SAP Internal Order must be provided before the MERI plan can be approved', placement:'top', trigger:'hover'})
-        }
-        return canApprove
-    };
-
 }
 
 function validateFloristics(field) {
@@ -1250,12 +1275,12 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
             if (options.separateTargetsPerOutcome) {
                 self.periodTargets = _.map(forecastPeriods, function (period) {
 
-                    var periodTarget = 0;
+                    var periodTarget = null;
                     if (target && target.periodTargets) {
                         var existingPeriodTarget = _.find(target.periodTargets || [], function(periodTarget) {
                             return periodTarget.period === period.period;
                         });
-                        periodTarget = existingPeriodTarget ? existingPeriodTarget.target : 0;
+                        periodTarget = existingPeriodTarget ? existingPeriodTarget.target : null;
                     }
 
                     return {period: period.period, target: ko.observable(periodTarget), periodStart:period.periodStart, periodEnd:period.periodEnd};

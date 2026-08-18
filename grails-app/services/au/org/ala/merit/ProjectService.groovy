@@ -142,6 +142,10 @@ class ProjectService  {
         return COMPLETE.equalsIgnoreCase(project.status)
     }
 
+    boolean isApplication(Map project) {
+        return APPLICATION_STATUS.equalsIgnoreCase(project.status)
+    }
+
     /**
      * Retrieves a summary of project metrics (including planned output targets)
      * and groups them by output type.
@@ -871,8 +875,24 @@ class ProjectService  {
         String startDateMessage = validateProjectStartDate(project, config, plannedStartDate, options)
         String endDateMessage = validateProjectEndDate(project, config, plannedEndDate, options)
 
-        String message = [startDateMessage, endDateMessage].findAll().join('\n')
+        String periodsMessage = validateForecastPeriodChange(project, config, plannedStartDate, plannedEndDate)
+
+        String message = [startDateMessage, endDateMessage, periodsMessage].findAll().join('\n')
         message ?: null // Return null rather than an empty string
+    }
+
+    private String validateForecastPeriodChange(Map project, ProgramConfig config, String plannedStartDate, String plannedEndDate) {
+        String message = null
+        if (config.targetsConfig && isApplication(project)) {
+            // Check if the date changes will result in a change to the forecast periods for the project.
+            List currentPeriods = generateTargetPeriods(project, config)
+            Map projectAfterChange = [projectId:project.projectId, name:project.name, plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate]
+            List newPeriods = generateTargetPeriods(projectAfterChange, config)
+            if (newPeriods.size() != currentPeriods.size()) {
+                message = "The new project dates will result in a change to the forecast periods for the project."
+            }
+        }
+        message
     }
 
     private String validateProjectEndDate(Map project, ProgramConfig config, String plannedEndDate, ReportGenerationOptions options) {

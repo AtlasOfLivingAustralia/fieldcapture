@@ -5,7 +5,7 @@
 <div class="required">
 	<div class="form-actions" >
 		<b>Grant manager actions:</b>
-		<div data-bind="if:!canApprove()">
+		<div data-bind="if:!externalIdsSupplied()">
 			<div class="alert alert-info">
 				At least one Tech One Project Code, Grant Award ID, or SAP Internal Order must be provided before the MERI plan can be approved
 			</div>
@@ -16,7 +16,7 @@
 				</div>
 			</div>
 		</div>
-		<div >
+		<div>
 			<div class="alert alert-info">
 				Please ensure the project start and end dates match the dates in the work order before approving the MERI plan.
 				Changing dates may result in changes to the reporting schedule which will require updates to the forecasts before the plan can be approved.
