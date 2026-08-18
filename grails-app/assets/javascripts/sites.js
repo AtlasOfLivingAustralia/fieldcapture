@@ -393,6 +393,8 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
 
                 alaMap.setGeoJSON(feature, layerOptions);
             }
+
+            alaMap.fitBounds();
         }
     };
 
@@ -598,6 +600,8 @@ var AlaMapAdapter = function(map, options) {
         _.each(features, function(feature) {
             self.addFeature(feature);
         });
+
+        map.fitBounds();
     };
 
     self.unHighlightFeatureById = function (id) {
