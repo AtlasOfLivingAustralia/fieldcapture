@@ -56,8 +56,6 @@
         overlayOptions: {strokeColor:'#BC2B03',fillColor:'#DF4A21',fillOpacity:0.3,strokeWeight:1,zIndex:1,editable:false},
         // keep count of locations as we load them so we know when we've finished
         locationsLoaded: 0,
-        // keep a running bounds for loaded locations so we can zoom when all are loaded
-        featureBounds: L.latLngBounds(),
         // URL to small dot icon
         smallDotIcon: "https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle.png", // blue: measle_blue.png
 
@@ -77,6 +75,8 @@
                 config = {
                     drawOptions: false,
                     drawControl: false,
+                    maxZoom: 23,
+                    maxAutoZoom: 21,
                     showReset: !!options.showReset,
                     allowSearchLocationByAddress: false,
                     allowSearchRegionByAddress: false,
@@ -143,12 +143,13 @@
             var self = this;
             self.map.zoom(self.defaultZoom, self.defaultCenter);
             self.featureIndex = {};
-            self.featureBounds =  L.latLngBounds();
             self.allMarkers = [];
         },
         replaceAllFeatures: function(features) {
             this.features.features = features;
             this.locationsLoaded = 0;
+            this.map.clearMarkers();
+            this.map.clearLayers();
             this.load(features);
         },
         mapSite: function(site){
@@ -197,6 +198,8 @@
                     self.loadFeature(loc);
                 }
             });
+
+            self.map.fitBounds();
         },
         addFeature: function (layer, loc) {
             var self = this;
