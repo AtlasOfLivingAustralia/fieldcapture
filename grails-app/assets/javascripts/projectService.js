@@ -63,7 +63,6 @@ function ProjectService(project, options) {
                     }
                 },
                 error: function (data) {
-                    var status = data.status;
                     alert('An unhandled error occurred: ' + data.status);
                 }
             });
@@ -317,6 +316,29 @@ function ProjectService(project, options) {
         }
     }
 
+    /**
+     * @param startDate The new start date to validate
+     * @param endDate the new end date to validate
+     * @param options an object with the following attributes:
+     *  changeActivityDates: true if the activity dates should be changed to fit within the new project dates, false otherwise
+     *  includeSubmittedReports: true if the date changes should affect submitted or approved reports
+     *  keepReportEndDates: true if the end dates of reports should be kept the same, false otherwise
+     *  dateChangeReason: A reason for the change
+     *
+     * @returns a promise from the ajax call to the server to validate the new dates.
+     * The promise will resolve with an object containing a boolean 'valid' attribute and an array of 'errors' if valid is false.
+     */
+    self.validateProjectDates = function(startDate, endDate, options) {
+        let data = _.extend({
+            plannedStartDate: startDate,
+            plannedEndDate: endDate
+        }, options);
+        return $.ajax({
+            url:config.projectDatesValidationUrl,
+            data:data
+        });
+    }
+
     self.getBudgetHeaders = function() {
         if (config.excludeFinancialYearData) {
             return []; // Return a single period header for the project
@@ -437,6 +459,10 @@ function ProjectService(project, options) {
     };
     self.isSurveyTargetMeasure = function(score) {
         return self.isMonitoringTargetMeasure(score) || self.isBaselineTargetMeasure(score);
+    };
+
+    self.hasApplicationStatus = function() {
+        return project.status && project.status.toLowerCase() === ProjectStatus.APPLICATION;
     };
 
 };

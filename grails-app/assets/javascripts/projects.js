@@ -1472,24 +1472,21 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
                 plannedStartDate:self.plannedStartDate(),
                 plannedEndDate:self.plannedEndDate(),
             }, dateChangeOptions);
-            $.ajax({
-                url:config.projectDatesValidationUrl,
-                data:data}).done(function (result) {
-                if (result.valid) {
-                    self.transients.startDateInvalid(false);
-                }
-                else {
-                    self.transients.startDateInvalid(true);
-                    setTimeout(function() {
-                        $(startDateSelector).validationEngine("showPrompt", result.message, "topRight", true);
-                    }, 100);
 
-                }
-
-
-            }).fail(function() {
-                bootbox.alert("There was an error validating the project start date.  Please refresh the page and try again.");
-            });
+            projectService.validateProjectDates(self.plannedStartDate(), self.plannedEndDate(), dateChangeOptions)
+                .done(function (result) {
+                    if (result.valid) {
+                        self.transients.startDateInvalid(false);
+                    }
+                    else {
+                        self.transients.startDateInvalid(true);
+                        setTimeout(function() {
+                            $(startDateSelector).validationEngine("showPrompt", result.message, "topRight", true);
+                        }, 100);
+                    }
+                }).fail(function() {
+                    bootbox.alert("There was an error validating the project start date.  Please refresh the page and try again.");
+                });
         }
 
     };

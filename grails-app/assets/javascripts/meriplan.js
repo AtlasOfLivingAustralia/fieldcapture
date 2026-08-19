@@ -146,36 +146,48 @@ function MERIPlan(project, projectService, config) {
     self.internalOrderId = ko.observable(project.internalOrderId);
     self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
     self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
-
+    /**
+     * Allow MERI dates to be changed while the project is still in application status and the
+     * MERI plan has not yet been submitted
+     * @returns true if the project/grant manager is allowed to change project dates.
+     */
+    self.canChangeMeriDates = function() {
+        return projectService.hasApplicationStatus() && self.isEditable();
+    };
     self.dateChangesInvalid = ko.observable(false);
     function checkDateChanges() {
         // need to validate that date changes won't mess with forecast periods.
         self.dateChangesInvalid(true);
-        const payload = {
-            plannedStartDate: self.plannedStartDate(),
-            plannedEndDate: self.plannedEndDate()
-        };
-        $.get(config.projectDatesValidationUrl, payload).done(function(data) {
-            if (!data.valid) {
+        projectService.validateProjectDates(self.plannedStartDate(), self.plannedEndDate(), {})
+            .done(function(data) {
+                if (!data.valid) {
 
-                bootbox.alert({
-                    title:"Forecast periods will change",
-                    message: "<p>The change to the project dates will result in a change to the forecast periods for the project. </p>" +
-                        "Next steps: <ul>" +
-                        "<li>Return the plan using the Reject MERI Plan button</li>" +
-                        "<li>Work with the funding recipient to update the forecast table to take into account the change to the forecast periods</li>" +
-                        "<li>The recipient re-submits the MERI plan</li>" +
-                        "<li>Review and approve the MERI plan</li></ul>",
-                });
-            }
-            else {
-                self.dateChangesInvalid(false);
-            }
-        });
+                    bootbox.alert({
+                        title:"Forecast periods will change",
+                        message: "<p>The change to the project dates will result in a change to the forecast periods for the project. </p>" +
+                            "Next steps: <ul>" +
+                            "<li>Return the plan using the Reject MERI Plan button</li>" +
+                            "<li>Work with the funding recipient to update the forecast table to take into account the change to the forecast periods</li>" +
+                            "<li>The recipient re-submits the MERI plan</li>" +
+                            "<li>Review and approve the MERI plan</li></ul>",
+                    });
+                }
+                else {
+                    self.dateChangesInvalid(false);
+                }
+            }).fail(function() {
+                bootbox.alert("An error occurred validating the project dates.  Please contact support if this perists");
+            });
     }
 
     self.plannedStartDate.subscribe(checkDateChanges);
     self.plannedEndDate.subscribe(checkDateChanges);
+    self.updateProjectDates = function() {
+        projectService.saveProjectDataWithoutValidation({
+            plannedStartDate: self.plannedStartDate(),
+            plannedEndDate: self.plannedEndDate()
+        });
+    };
     self.externalIdsSupplied = function() {
         var canApprove = projectService.canApproveMeriPlan();
         if(!canApprove) {
