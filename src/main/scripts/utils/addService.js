@@ -1,5 +1,5 @@
 
-function addService (newServiceName, legacyId,  serviceFormName, sectionName, outputs, userId) {
+function addService (newServiceName, legacyId,  serviceFormName, sectionName, outputs, userId, category) {
     var eventType;
     legacyId = NumberInt(legacyId);
     if (!outputs) {
@@ -19,6 +19,9 @@ function addService (newServiceName, legacyId,  serviceFormName, sectionName, ou
             serviceId: UUID.generate(),
             dateCreated:ISODate(),
             lastUpdated:ISODate()
+        }
+        if (category) {
+            newService.categories = [category];
         }
         db.service.insertOne(newService);
         eventType = "Insert"
