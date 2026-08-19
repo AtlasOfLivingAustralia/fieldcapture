@@ -393,9 +393,9 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
 
                 alaMap.setGeoJSON(feature, layerOptions);
             }
-
-            alaMap.fitBounds();
         }
+
+        alaMap.fitBounds();
     };
 
     self.mapInitialised = function(map) {

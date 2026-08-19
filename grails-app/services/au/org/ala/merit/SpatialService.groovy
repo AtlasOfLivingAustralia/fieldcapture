@@ -120,7 +120,7 @@ class SpatialService {
             }
         } else {
             response.success = false
-            response.message = "Error checking if geometry is within Australia: ${resp?.error}"
+            response.message = "An error occurred while checking if geometry is within Australia: ${resp?.error}"
         }
 
         return response
