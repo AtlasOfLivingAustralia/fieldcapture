@@ -101,6 +101,10 @@ class SpatialServiceSpec extends Specification implements AutowiredTest{
         Map result = service.isGeometryWithinAustralia(shape)
 
         then:
+        1 * webService.doPost('site/standardiseGeoJSON', shape, true) >> [
+                statusCode: org.springframework.http.HttpStatus.OK.value(),
+                resp: shape
+        ]
         1 * webService.doPost('/intersect/geojson/cl22', shape, true) >> [
                 statusCode: org.springframework.http.HttpStatus.OK.value(),
                 resp: [[name: 'Australia']]
@@ -117,6 +121,10 @@ class SpatialServiceSpec extends Specification implements AutowiredTest{
         Map result = service.isGeometryWithinAustralia(shape)
 
         then:
+        1 * webService.doPost('site/standardiseGeoJSON', shape, true) >> [
+                statusCode: org.springframework.http.HttpStatus.OK.value(),
+                resp: shape
+        ]
         1 * webService.doPost('/intersect/geojson/cl22', shape, true) >> [
                 statusCode: org.springframework.http.HttpStatus.OK.value(),
                 resp: [[name: 'Australia'], [name: 'New Zealand']]
@@ -133,6 +141,10 @@ class SpatialServiceSpec extends Specification implements AutowiredTest{
         Map result = service.isGeometryWithinAustralia(shape)
 
         then:
+        1 * webService.doPost('site/standardiseGeoJSON', shape, true) >> [
+                statusCode: org.springframework.http.HttpStatus.OK.value(),
+                resp: shape
+        ]
         1 * webService.doPost('/intersect/geojson/cl22', shape, true) >> [
                 statusCode: org.springframework.http.HttpStatus.BAD_GATEWAY.value(),
                 error: 'spatial service unavailable'
