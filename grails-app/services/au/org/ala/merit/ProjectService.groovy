@@ -1797,21 +1797,21 @@ class ProjectService  {
         return target > result
     }
 
-    private List<Map> getServicesWithForecastsForReport(Map project, Map activity, List projectServices) {
-        List servicesWithForecastsForThisReport = []
+    private List<Map> getServicesWithoutForecastsForReport(Map project, Map activity, List projectServices) {
+        List servicesWithoutForecastsForThisReport = []
         project.outputTargets?.each { Map outputTarget ->
             outputTarget.outcomeTargets?.each { Map outcomeTarget ->
                 Map periodTarget = outcomeTarget.periodTargets?.find { it.periodStart <= activity.plannedStartDate && it.periodEnd >= activity.plannedEndDate }
-                if (periodTarget?.target) {
+                if (!periodTarget?.target) {
                     Map service = projectServices.find {
                         it.scores?.find { score -> score.scoreId == outputTarget.scoreId }
                     }
-                    servicesWithForecastsForThisReport << service
+                    servicesWithoutForecastsForThisReport << service
                 }
             }
         }
 
-        servicesWithForecastsForThisReport
+        servicesWithoutForecastsForThisReport
     }
 
     /**
@@ -1832,9 +1832,6 @@ class ProjectService  {
 
             // The values to be filtered can come from either project services or activities in the MERI plan.
             selectedForProject = getProjectServices(project, config)
-            if (config.getProgramServices().filterServicesByForecasts) {
-                selectedForProject = getServicesWithForecastsForReport(project, existingActivityData, selectedForProject)
-            }
 
             if (!selectedForProject) {
                 serviceOutputs = config.activities?.collect{it.output}.findAll()
@@ -1851,21 +1848,36 @@ class ProjectService  {
                         {it.formName == activityModel.name})?.sectionName}.findAll()
             }
 
+            boolean filterServicesByForecasts = config.getProgramServices().filterServicesByForecasts
+
             if (selectedForProject) {
                 List projectOutputs = selectedForProject.collect{it.output}
                 List mandatoryOutputs = selectedForProject.findAll{it.mandatory}.collect{it.output}
+
+                List servicesWithoutForecastsForThisReport = []
+                if (filterServicesByForecasts) {
+                    servicesWithoutForecastsForThisReport = getServicesWithoutForecastsForReport(project, existingActivityData, selectedForProject)
+                }
+
                 // Override the mandatory flag for outputs that are mandatory for the program
-                if (mandatoryOutputs) {
+                if (mandatoryOutputs || servicesWithoutForecastsForThisReport) {
                     activityModel.outputConfig = new JSONArray(
                         activityModel.outputConfig.collect { Map outputConfig ->
                             if (mandatoryOutputs.contains(outputConfig.outputName)) {
                                 outputConfig = new JSONObject(outputConfig)
                                 outputConfig.optional = false
                             }
+                            if (servicesWithoutForecastsForThisReport) {
+                                if (servicesWithoutForecastsForThisReport.find { it.output == outputConfig.outputName }) {
+                                    outputConfig = new JSONObject(outputConfig)
+                                    outputConfig.collapsedByDefault = true
+                                }
+                            }
                             outputConfig
                         })
 
                 }
+
 
                 filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs, mandatoryOutputs, editable)
             }
