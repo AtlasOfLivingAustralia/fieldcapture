@@ -316,7 +316,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
 
         then:
         result.message == 'success'
-        1 * webService.doPost({it.endsWith("project/"+projectId)}, [planStatus:ProjectService.PLAN_NOT_APPROVED]) >> [resp:[status:'ok']]
+        1 * webService.doPost({it.endsWith("project/"+projectId)}, [planStatus:ProjectService.PLAN_NOT_APPROVED, progress:ActivityService.PROGRESS_STARTED]) >> [resp:[status:'ok']]
         1 * webService.getJson({it.contains("permissions/getMembersForProject/"+projectId)}) >> projectRoles
         1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_RETURNED_EMAIL_TEMPLATE,_,projectRoles, RoleService.GRANT_MANAGER_ROLE,  null)
     }
