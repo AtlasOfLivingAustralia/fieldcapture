@@ -306,7 +306,7 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
                 }
             }
         },
-        type = siteData.type || 'worksArea',
+        type = siteData.type === 'compound'? 'compound' : 'worksArea',
         currentStyle = options.styles[type],
         layerOptions = { style: currentStyle },
         geomanOptions = {
@@ -353,15 +353,10 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
             return;
         }
 
-        var properties = getFeatureProperties();
+        var site = self.toJS();
         //retrieve the current shape if exists
         if (self.features().length > 0) {
-            var featureCollection = {
-                type: 'FeatureCollection',
-                properties: properties,
-                features: self.features()
-            };
-
+            var featureCollection = convertSiteToFeatureCollection(site);
             try {
                 featureCollection = turf.simplify(featureCollection, {tolerance: 0.0001, highQuality: false});
             }
@@ -372,17 +367,8 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
 
             alaMap.setGeoJSON(featureCollection, layerOptions);
         } else {
-            var currentDrawnShape = ko.toJS(self.extent().geometry),
-                geometry = {
-                    type: currentDrawnShape.type,
-                    coordinates: currentDrawnShape.coordinates
-                }, feature = {
-                    type: 'Feature',
-                    properties: properties,
-                    geometry: geometry
-                };
-
-            if (geometry.coordinates) {
+            var feature = convertSiteGeometryToFeature(site.extent.geometry);
+            if (feature && feature.geometry) {
                 try {
                     feature = turf.simplify(feature, {tolerance: 0.0001, highQuality: false});
                 }

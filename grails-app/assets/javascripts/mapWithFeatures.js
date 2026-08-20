@@ -160,7 +160,7 @@
         loadFeature: function(loc){
             var self = this;
             if(loc != null && loc.type != null){
-                var geoJSON = self.convertSiteToGeoJSON(loc),
+                var geoJSON = self.convertSiteGeometryToFeature(loc),
                     style = geoJSON.properties && geoJSON.properties.style || {
                         color: self.overlayOptions.strokeColor,
                         fillOpacity: self.overlayOptions.fillOpacity,
@@ -368,12 +368,12 @@
             self.reset();
 
         },
-        convertSiteToGeoJSON: function (site) {
+        convertSiteGeometryToFeature: function (siteGeometry) {
             var geometry = {
-                type: site.type,
-                coordinates: site.coordinates
+                type: siteGeometry.type,
+                coordinates: siteGeometry.coordinates
             }, properties = {
-                ...site
+                ...siteGeometry
             }, feature = {
                 type: 'Feature',
                 properties: properties,
@@ -388,18 +388,43 @@
             if (properties.pid && turf.booleanValid(feature))
                 delete properties.pid;
 
-            if (site.type === 'point')
-                geometry.type = ALA.MapConstants.DRAW_TYPE.POINT_TYPE;
-            else if (site.type === 'pid') {
-                geometry.type = ALA.MapConstants.DRAW_TYPE.POINT_TYPE;
-                properties.pid = site.pid;
-                properties.point_type = properties.type = 'pid';
+            switch (siteGeometry.type) {
+                case 'point':
+                    geometry.type = ALA.MapConstants.DRAW_TYPE.POINT_TYPE;
+                    break;
+                case 'pid':
+                    geometry.type = ALA.MapConstants.DRAW_TYPE.POINT_TYPE;
+                    properties.pid = siteGeometry.pid;
+                    properties.point_type = properties.type = 'pid';
+                    break;
+                case 'Circle':
+                case 'circle':
+                    geometry.type = ALA.MapConstants.DRAW_TYPE.POINT_TYPE;
+                    properties.point_type = properties.type = ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE;
+                    break;
             }
 
-            delete properties.type;
+            // delete properties.type;
             delete properties.coordinates;
 
             return feature;
+        },
+        convertSiteToFeatureCollection: function (site) {
+            var feature;
+            if (site.features) {
+                var featureCollection = {
+                    type: 'FeatureCollection',
+                    features: site.features
+                };
+
+                feature = map.convertSiteGeometryToFeature(site.extent.geometry);
+                featureCollection.properties = feature.properties
+                return featureCollection;
+            }
+            else {
+                feature = map.convertSiteGeometryToFeature(site.extent.geometry)
+                return ALA.MapUtils.toFeatureCollection(feature);
+            }
         }
     };
 
@@ -461,6 +486,8 @@
     windows.clearMap = clearMap;
     windows.addMarker = addMarker;
     windows.removeMarkers = removeMarkers;
+    windows.convertSiteGeometryToFeature = map.convertSiteGeometryToFeature;
+    windows.convertSiteToFeatureCollection = map.convertSiteToFeatureCollection;
     map.addMarker = addMarker;
     map.removeMarkers = removeMarkers;
     windows.alaMap = map;
