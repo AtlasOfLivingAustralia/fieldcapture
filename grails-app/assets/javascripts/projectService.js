@@ -69,12 +69,14 @@ function ProjectService(project, options) {
         }
     };
 
-    self.saveProjectDataWithoutValidation = function (jsData) {
+    self.saveProjectDataWithoutValidation = function (jsData, item) {
         // this call to stringify will make sure that undefined values are propagated to
         // the update call - otherwise it is impossible to erase fields
         var json = JSON.stringify(jsData, function (key, value) {
             return value === undefined ? "" : value;
         });
+
+        item = item || "settings";
 
         blockUIWithMessage("Saving....");
         $.ajax({
@@ -85,11 +87,11 @@ function ProjectService(project, options) {
         }).done(function (data) {
             if (data.error) {
                 $.unblockUI();
-                showAlert("Failed to save settings: " + data.detail + ' \n' + data.error,
+                showAlert("Failed to save project "+item+": " + data.detail + ' \n' + data.error,
                     "alert-error", "save-result-placeholder");
             } else {
                 blockUIWithMessage("Refreshing page...");
-                showAlert("Project settings saved", "alert-success", "save-result-placeholder");
+                showAlert("Project "+item+" saved", "alert-success", "save-result-placeholder");
                 window.location.reload();
             }
         }).fail(function (data) {
@@ -217,7 +219,7 @@ function ProjectService(project, options) {
     };
     // reject plan and handle errors
     self.rejectPlan = function () {
-        self.saveStatus(config.rejectPlanUrl);
+        return self.saveStatus(config.rejectPlanUrl);
     };
 
     self.finishCorrections = function () {

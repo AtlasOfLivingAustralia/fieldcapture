@@ -82,7 +82,7 @@
         <td colspan="4">
             <button class="btn btn-sm" data-bind="click:addOutcomeTarget, disable: $root.isProjectDetailsLocked()"><i class="fa fa-plus"></i>Add outcome target</button>
             <!-- ko if:availableOutcomes().length > 0 -->
-            <input type="text" value="" class="hidden-validation-holder" data-validation-engine="validate[required]" data-errormessage="There are outcomes related to this service that do not have a target assigned.  Press 'Add Outcome Target' to specify a target">
+            <input type="text" value="" data-bind="disable: $root.isProjectDetailsLocked()" class="hidden-validation-holder" data-validation-engine="validate[required]" data-errormessage="There are outcomes related to this service that do not have a target assigned.  Press 'Add Outcome Target' to specify a target">
             <!-- /ko -->
         </td>
     </tr>

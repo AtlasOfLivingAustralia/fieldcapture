@@ -3,7 +3,7 @@
 <div id="edit-meri-plan">
 <script id="meri-date-changes" type="text/html">
 <div>
-	<div class="alert alert-info">
+	<div class="alert alert-danger">
 		<span class="badge bg-danger">Important!</span>
 		<p>
 			Please ensure the project start and end dates match the dates in the work order before approving the MERI plan.
@@ -51,12 +51,12 @@
 				</div>
 			</div>
 		</div>
-		<!-- ko if: canChangeMeriDates -->
+		<!-- ko if: canChangeMeriDates() -->
 		<div class="pb-2" data-bind="template:'meri-date-changes'"></div>
 		<!--/ko -->
 		<div class="grantManagerActionSpan">
-			<button type="button" data-bind="enable: canApproveMeriPlan, click:approvePlan, style:{'pointer-events': canApproveMeriPlan() ? 'all': 'none'}" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Approve MERI Plan</button>
-			<button type="button" data-bind="click:rejectPlan" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Reject MERI Plan</button>
+			<button type="button" data-bind="enable: canApproveMeriPlan, click:approvePlan, style:{'pointer-events': canApproveMeriPlan() ? 'all': 'none'}" class="btn btn-sm btn-success"><i class="fa fa-check"></i> <span data-bind="if:datesChanged">Save dates and </span>Approve MERI Plan</button>
+			<button type="button" data-bind="click:rejectPlan" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> <span data-bind="if:datesChanged">Save dates and </span>Reject MERI Plan</button>
 		</div>
 	</div>
 </div>
@@ -83,16 +83,15 @@
 </script>
 <script id="editablePlanTmpl" type="text/html">
 <g:if test="${!project.lock}">
-<!-- ko if: canChangeMeriDates -->
+<!-- ko if: canChangeMeriDates() -->
 <div class="form-actions">
 	<b>Grant manager actions:</b>
 	<div class="pb-2" data-bind="template:'meri-date-changes'"></div>
 
 	<div class="grantManagerActionSpan">
-		<button type="button" data-bind="click:updateProjectDates" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Update dates</button>
+		<button type="button" data-bind="enable:datesChanged, click:updateProjectDates" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Update dates</button>
 		<button type="button" data-bind="click:function() {window.location.reload();}" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Cancel</button>
 	</div>
-
 </div>
 <!--/ko -->
 </g:if>

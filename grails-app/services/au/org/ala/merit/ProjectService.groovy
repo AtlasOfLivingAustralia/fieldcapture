@@ -571,7 +571,7 @@ class ProjectService  {
             return [error: 'Only MERIT admins can return MERI plans for this program']
         }
         if (project.planStatus in [PLAN_SUBMITTED, PLAN_APPROVED]) {
-            def resp = update(projectId, [planStatus:PLAN_NOT_APPROVED])
+            def resp = update(projectId, [planStatus:PLAN_NOT_APPROVED, progress:ActivityService.PROGRESS_STARTED])
             if (resp.resp && !resp.resp.error) {
                 sendEmail({ProgramConfig programConfig -> programConfig.getPlanReturnedTemplate()}, project, RoleService.GRANT_MANAGER_ROLE)
                 return [message:'success']
@@ -883,7 +883,7 @@ class ProjectService  {
 
     private String validateForecastPeriodChange(Map project, ProgramConfig config, String plannedStartDate, String plannedEndDate) {
         String message = null
-        if (config.targetsConfig && isApplication(project)) {
+        if (config.targetsConfig && isApplication(project) && isMeriPlanSubmittedOrApproved(project)) {
             // Check if the date changes will result in a change to the forecast periods for the project.
             List currentPeriods = generateTargetPeriods(project, config)
             Map projectAfterChange = [projectId:project.projectId, name:project.name, plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate]

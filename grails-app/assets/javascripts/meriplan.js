@@ -147,13 +147,19 @@ function MERIPlan(project, projectService, config) {
     self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
     self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
     /**
-     * Allow MERI dates to be changed while the project is still in application status and the
+     * Allow MERI dates to be changed for projects using per-report forecasts
+     * while the project is still in application status and the
      * MERI plan has not yet been submitted
      * @returns true if the project/grant manager is allowed to change project dates.
      */
     self.canChangeMeriDates = function() {
-        return projectService.hasApplicationStatus() && self.isEditable();
+        return config.separateTargetsPerOutcome && projectService.hasApplicationStatus() &&
+            (self.isPlanEditable() && !projectService.isSubmittedOrApproved() ||
+            projectService.isSubmitted());
     };
+    self.datesChanged = ko.pureComputed(function() {
+        return self.plannedStartDate() !== project.plannedStartDate || self.plannedEndDate() !== project.plannedEndDate;
+    });
     self.dateChangesInvalid = ko.observable(false);
     function checkDateChanges() {
         // need to validate that date changes won't mess with forecast periods.
@@ -180,13 +186,15 @@ function MERIPlan(project, projectService, config) {
             });
     }
 
-    self.plannedStartDate.subscribe(checkDateChanges);
-    self.plannedEndDate.subscribe(checkDateChanges);
+    if (projectService.isSubmitted()) {
+        self.plannedStartDate.subscribe(checkDateChanges);
+        self.plannedEndDate.subscribe(checkDateChanges);
+    }
     self.updateProjectDates = function() {
-        projectService.saveProjectDataWithoutValidation({
+        return projectService.saveProjectDataWithoutValidation({
             plannedStartDate: self.plannedStartDate(),
             plannedEndDate: self.plannedEndDate()
-        });
+        }, "dates");
     };
     self.externalIdsSupplied = function() {
         var canApprove = projectService.canApproveMeriPlan();
@@ -231,7 +239,8 @@ function MERIPlan(project, projectService, config) {
                             dateApproved: viewModel.dateApproved()
                         }, {
                             externalIds: ko.mapping.toJS(self.externalIds),
-                            plannedStartDate: self.plannedStartDate()
+                            plannedStartDate: self.plannedStartDate(),
+                            plannedEndDate: self.plannedEndDate()
                         });
                     }
                 };
@@ -241,16 +250,21 @@ function MERIPlan(project, projectService, config) {
             else {
                 var data = {
                     externalIds: ko.mapping.toJS(self.externalIds),
-                    plannedStartDate: self.plannedStartDate()
+                    plannedStartDate: self.plannedStartDate(),
+                    plannedEndDate: self.plannedEndDate()
                 }
                 projectService.approvePlan({dateApproved:convertToIsoDate(new Date())}, data)
             }
         }
 
     };
-    // reject plan and handle errors
+    // reject plan and update dates if they have been changed.
     self.rejectPlan = function () {
-        projectService.rejectPlan();
+        projectService.rejectPlan().done(function() {
+            if (self.canChangeMeriDates() && self.datesChanged()) {
+                self.updateProjectDates();
+            }
+        });
     };
 
     self.finishCorrections = function () {
@@ -1290,7 +1304,22 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
                     var periodTarget = null;
                     if (target && target.periodTargets) {
                         var existingPeriodTarget = _.find(target.periodTargets || [], function(periodTarget) {
-                            return periodTarget.period === period.period;
+                            let match = false;
+                            // If the period label is the same, it's the correct one.  Older projects will
+                            // only have the period (label) and no dates.
+                            if (periodTarget.period === period.period) {
+                                match = true;
+                            }
+                            // In the case where the dates change by say a month, we can use the dates to match.
+                            else {
+                                if (periodTarget.periodStart && periodTarget.periodEnd) {
+                                    if (period.periodEnd > periodTarget.periodStart && period.periodEnd <= periodTarget.periodEnd) {
+                                        match = true;
+                                    }
+                                }
+                            }
+                            return match;
+
                         });
                         periodTarget = existingPeriodTarget ? existingPeriodTarget.target : null;
                     }
