@@ -102,10 +102,15 @@ class SpatialService {
      * @return
      */
     Map isGeometryWithinAustralia(Map shape) {
+        Map fixedGeoJSON = webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + "site/standardiseGeoJSON", shape, true)?.resp
+        if (!fixedGeoJSON) {
+            return [success: false, message: "Failed to standardise geometry"]
+        }
+
         String url = grailsApplication.config.getProperty('spatial.layersUrl')+GEOJSON_INTERSECT_URL_PREFIX
         String fid = grailsApplication.config.getProperty('layers.countries.fid')
         List displayNamesForAustralia = grailsApplication.config.getProperty('layers.countries.displayNamesForAustralia', List)
-        Map resp = webService.doPost(url+ "/" + fid, shape, true)
+        Map resp = webService.doPost(url+ "/" + fid, fixedGeoJSON, true)
         Map response = [:]
         // connection exception does not return a status code, so we default to 500 if it is null
         HttpStatus status = HttpStatus.resolve((resp?.statusCode?:500) as int)
