@@ -371,7 +371,7 @@
         convertSiteGeometryToFeature: function (siteGeometry) {
             var geometry = {
                 type: siteGeometry.type,
-                coordinates: siteGeometry.coordinates
+                coordinates: siteGeometry.coordinates || siteGeometry.centre
             }, properties = {
                 ...siteGeometry
             }, feature = {
@@ -385,6 +385,7 @@
                 delete properties.popup;
             }
 
+            // some old site has both coordinates and pid. delete pid if feature is valid.
             if (properties.pid && turf.booleanValid(feature))
                 delete properties.pid;
 

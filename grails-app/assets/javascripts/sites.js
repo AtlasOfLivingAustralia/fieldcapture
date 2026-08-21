@@ -81,7 +81,7 @@ var SiteViewModel = function (site, feature, options) {
                 // deprecating point, pid and upload source types in favour of just drawn, but still need to support loading of old sites with those source types.
                 case 'drawn':
                 default:
-                    self.extent(new DrawnLocation(extent.geometry)); break;
+                    self.extent(new GenericLocation(extent.geometry)); break;
             }
         } else {
             self.extent(new EmptyLocation());
@@ -249,7 +249,7 @@ var EmptyLocation = function () {
     };
 };
 
-var DrawnLocation = function (l) {
+var GenericLocation = function (l) {
     var self = this;
     self.source = ko.observable('drawn');
     self.geometry = ko.observable({
@@ -263,7 +263,17 @@ var DrawnLocation = function (l) {
         mvg: ko.observable(exists(l,'mvg')),
         mvs: ko.observable(exists(l,'mvs')),
         areaKmSq: ko.observable(exists(l,'areaKmSq')),
-        coordinates: ko.observable(exists(l,'coordinates'))
+        coordinates: ko.observable(exists(l,'coordinates')),
+        pid : ko.observable(exists(l,'pid')),
+        name : ko.observable(exists(l,'name')),
+        fid : ko.observable(exists(l,'fid')),
+        layerName : ko.observable(exists(l,'layerName')),
+        area : ko.observable(exists(l,'area')),
+        decimalLatitude: ko.observable(exists(l,'decimalLatitude')),
+        decimalLongitude: ko.observable(exists(l,'decimalLongitude')),
+        uncertainty: ko.observable(exists(l,'uncertainty')),
+        precision: ko.observable(exists(l,'precision')),
+        datum: ko.observable('WGS84'), // only supporting WGS84 at the moment.
     });
     self.updateGeom = function(l){
         self.geometry().type(exists(l,'type'));
@@ -277,6 +287,16 @@ var DrawnLocation = function (l) {
         self.geometry().mvs(exists(l,'mvs'));
         self.geometry().areaKmSq(exists(l,'areaKmSq'));
         self.geometry().coordinates(exists(l,'coordinates'));
+        self.geometry().pid(exists(l,'pid'));
+        self.geometry().name(exists(l,'name'));
+        self.geometry().fid(exists(l,'fid'));
+        self.geometry().layerName(exists(l,'layerName'));
+        self.geometry().area(exists(l,'area'));
+        self.geometry().decimalLatitude(exists(l,'decimalLatitude'));
+        self.geometry().decimalLongitude(exists(l,'decimalLongitude'));
+        self.geometry().uncertainty(exists(l,'uncertainty'));
+        self.geometry().precision(exists(l,'precision'));
+        self.geometry().datum('WGS84'); // only supporting WGS84 at the moment.
     };
     self.toJS= function() {
         var js = ko.toJS(self);
