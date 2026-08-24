@@ -175,7 +175,9 @@
             var formFeatures = new ecodata.forms.FeatureCollection(reportSite ? reportSite.features : []);
             fcConfig.featureCollection = formFeatures;
             <g:if test="${!printView}">
-            var mapOptions = {};
+            var mapOptions = {
+                readonly: fcConfig.readonly
+            };
             if (fcConfig.useGoogleBaseMap) {
                 mapOptions.baseLayersName = 'Google'; // Default is Open Street Maps
             }

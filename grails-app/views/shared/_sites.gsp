@@ -197,7 +197,7 @@
         var config = $.extend({}, defaults, mapOptions);
 
         var mapData = {
-            "zoomToBounds": true,
+            "zoomToBounds": false,
             "zoomLimit": 12,
             "highlightOnHover": false,
             "features": features

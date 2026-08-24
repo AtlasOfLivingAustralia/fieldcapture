@@ -377,18 +377,22 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
         //retrieve the current shape if exists
         if (self.features().length > 0) {
             var featureCollection = convertSiteToFeatureCollection(site);
-            try {
-                featureCollection = turf.simplify(featureCollection, {tolerance: 0.0001, highQuality: false});
-            }
-            catch (e) {
-                console.error("Error simplifying geometry for display on map", e);
-                console.log("Falling back to unsimplified geometry");
-            }
+            if (featureCollection.features.every ( feature => turf.booleanValid(feature) )) {
+                try {
+                    featureCollection = turf.simplify(featureCollection, {tolerance: 0.0001, highQuality: false});
+                }
+                catch (e) {
+                    console.error("Error simplifying geometry for display on map", e);
+                    console.log("Falling back to unsimplified geometry");
+                }
 
-            alaMap.setGeoJSON(featureCollection, layerOptions);
+                alaMap.setGeoJSON(featureCollection, layerOptions);
+            }
+            else
+                console.error("Invalid feature collection", featureCollection);
         } else {
             var feature = convertSiteGeometryToFeature(site.extent.geometry);
-            if (feature && feature.geometry) {
+            if (turf.booleanValid(feature)) {
                 try {
                     feature = turf.simplify(feature, {tolerance: 0.0001, highQuality: false});
                 }
