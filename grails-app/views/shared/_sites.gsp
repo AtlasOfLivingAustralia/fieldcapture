@@ -181,7 +181,7 @@
 
             initialiseMap(features, mapOptions);
 
-            setupHeatMap(heatMapPoints);
+            //setupHeatMap(heatMapPoints);
             features.length > 0 ? showLegends(legends) : "";
 
             }).fail(function (request, status, error) {
