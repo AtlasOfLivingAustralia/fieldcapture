@@ -193,11 +193,34 @@
                 return;
             }
 
-            var self = this;
+            var self = this, convertedFeatures = {type: 'FeatureCollection', features: []};
             $.each(features, function (i,loc) {
-                if(loc != null){
-                    self.loadFeature(loc);
+                if(loc != null) {
+                    var geoJSON = self.convertSiteGeometryToFeature(loc);
+                    geoJSON.properties.loc = loc;
+                    convertedFeatures.features.push(geoJSON);
                 }
+            });
+
+            var layerGroup = self.map.setGeoJSON(convertedFeatures);
+            layerGroup.eachLayer(function(layer) {
+                var geoJSON = layer.toGeoJSON(),
+                    style = geoJSON.properties && geoJSON.properties.style || {
+                        color: self.overlayOptions.strokeColor,
+                        fillOpacity: self.overlayOptions.fillOpacity,
+                        weight: self.overlayOptions.strokeWeight
+                    };
+
+                self.addFeature(layer, geoJSON.properties.loc);
+                self.allMarkers.push(layer);
+                layer.on("wmslayer:metadataupdated", function (data) {
+                    if (!loc.areaKmSq) {
+                        loc.areaKmSq = data.area_km ? data.area_km : 0;
+                    }
+                });
+
+                 if (layer.setStyle)
+                     layer.setStyle(style);
             });
 
             self.map.fitBounds();
