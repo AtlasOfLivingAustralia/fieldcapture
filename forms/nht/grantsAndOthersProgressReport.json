@@ -18091,10 +18091,14 @@
                 "defaultValue": 1
               },
               {
+                "dataType": "number",
+                "name": "numberOfLocationsWhereImagesCollected",
+                "validate": "required"
+              },
+              {
                 "dataType": "text",
                 "name": "imageFilename",
-                "description": "All image files must be named using the following naming convention: Image pairing_Intial/follow up_Site name_Image #_Date (image taken)_Progress Report #/ Final Report_Project ID Example: Image pairing_Intial_Site 1_Image 1_08052025_Progress report 1_URCP000777",
-                "validate": "required"
+                "description": "All image files must be named using the following naming convention: Image pairing_Intial/follow up_Site name_Image #_Date (image taken)_Progress Report #/ Final Report_Project ID Example: Image pairing_Intial_Site 1_Image 1_08052025_Progress report 1_URCP000777"
               },
               {
                 "dataType": "text",
@@ -18112,12 +18116,11 @@
               {
                 "dataType": "date",
                 "name": "imageDateCollected",
-                "validate": "required,past[now]"
+                "validate": "past[now]"
               },
               {
                 "dataType": "time",
-                "name": "imageTimeCollected",
-                "validate": "required"
+                "name": "imageTimeCollected"
               },
               {
                 "dataType": "text",
@@ -18275,6 +18278,26 @@
           },
           {
             "dataType": "number",
+            "name": "totalNumberOfLocationsWhereImagesCollectedInitial",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
+            "validate": "min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(imagePairingAreasCollected, \"initialOrFollowup == 'Initial' ? numberOfLocationsWhereImagesCollected : 0\")"
+            }
+          },
+          {
+            "dataType": "number",
+            "name": "totalNumberOfLocationsWhereImagesCollectedFollowup",
+            "description": "This field is not editable as it is auto populated from inputted data in the section below",
+            "validate": "min[0]",
+            "decimalPlaces": 0,
+            "computed": {
+              "expression": "sum(imagePairingAreasCollected, \"initialOrFollowup == 'Follow-up' ? numberOfLocationsWhereImagesCollected : 0\")"
+            }
+          },
+          {
+            "dataType": "number",
             "name": "totalPreImagesTakenInitial",
             "description": "This field is not editable as it is auto populated from inputted data in the section below",
             "validate": "min[0]",
@@ -18423,6 +18446,43 @@
                       {
                         "preLabel": "(ii) Total number of paired post on-ground works images or imagery taken (follow-up) for this reporting period",
                         "source": "totalPostImagesTakenFollowUp",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "items": [
+              {
+                "type": "col",
+                "css": "span4",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(i) Total number of location of actual images or imagery collected (initial) for this reporting period",
+                        "source": "totalNumberOfLocationsWhereImagesCollectedInitial",
+                        "type": "number"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "col",
+                "css": "span4",
+                "items": [
+                  {
+                    "type": "row",
+                    "items": [
+                      {
+                        "preLabel": "(ii) Total number of location of actual images or imagery collected (follow-up) for this reporting period",
+                        "source": "totalNumberOfLocationsWhereImagesCollectedFollowup",
                         "type": "number"
                       }
                     ]
@@ -18686,6 +18746,22 @@
                             "source": "mappingNotAlignedComments",
                             "type": "textarea",
                             "rows": 5
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "col",
+                    "css": "span3 col-border-right",
+                    "items": [
+                      {
+                        "type": "row",
+                        "items": [
+                          {
+                            "source": "numberOfLocationsWhereImagesCollected",
+                            "preLabel": "Number of locations of images or imagery collected this reporting period",
+                            "type": "number"
                           }
                         ]
                       }
