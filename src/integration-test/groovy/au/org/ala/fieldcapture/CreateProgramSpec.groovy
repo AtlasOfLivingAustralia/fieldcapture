@@ -30,6 +30,8 @@ class CreateProgramSpec extends StubbedCasSpec {
         when:
         program.name = "A test program"
         program.description = "A test description"
+        program.startDate = "01-01-2026"
+        program.endDate = "31-12-2030"
         program.save()
 
         then:
