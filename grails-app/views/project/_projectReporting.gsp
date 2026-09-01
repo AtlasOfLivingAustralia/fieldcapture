@@ -1,5 +1,6 @@
+<g:if test="!config.generateReportsOnMeriPlanApproval()">
 <div id="generate-report" class="validationEngineContainer">
-    <g:if test="${(user?.isCaseManager || fc.userIsAlaOrFcAdmin()) && !config.generateReportsOnMeriPlanApproval()}">
+    <g:if test="${user?.isCaseManager || fc.userIsAlaOrFcAdmin()}">
         <div data-bind="if:!reportsAreGenerated()" class="required">
             <div class="alert alert-info">
                 Project reports cannot be created until the MERI plan has been approved
@@ -43,6 +44,7 @@
         </div>
     </g:elseif>
 </div>
+</g:if>
 <g:set var="declarationTemplate" value="${declarationTemplate}"/>
 <g:render template="/shared/categorizedReporting"></g:render>
 <g:render template="/shared/declaration" model="${[declarationType:declarationTemplate]}"/>

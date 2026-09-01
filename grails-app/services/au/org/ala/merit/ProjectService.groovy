@@ -1804,21 +1804,20 @@ class ProjectService  {
         return target > result
     }
 
-    private List<Map> getServicesWithoutForecastsForReport(Map project, Map activity, List projectServices) {
-        List servicesWithoutForecastsForThisReport = []
+    private static List<Map> getServicesWithoutForecastsForReport(Map project, Map activity, List projectServices) {
+        Set servicesWithForecastsForThisReport = new HashSet(projectServices.size())
         project.outputTargets?.each { Map outputTarget ->
             outputTarget.outcomeTargets?.each { Map outcomeTarget ->
                 Map periodTarget = outcomeTarget.periodTargets?.find { it.periodStart <= activity.plannedStartDate && it.periodEnd >= activity.plannedEndDate }
-                if (!periodTarget?.target) {
+                if (periodTarget?.target) {
                     Map service = projectServices.find {
                         it.scores?.find { score -> score.scoreId == outputTarget.scoreId }
                     }
-                    servicesWithoutForecastsForThisReport << service
+                    servicesWithForecastsForThisReport.add(service)
                 }
             }
         }
-
-        servicesWithoutForecastsForThisReport
+        projectServices.findAll{!servicesWithForecastsForThisReport.contains(it)}
     }
 
     /**
