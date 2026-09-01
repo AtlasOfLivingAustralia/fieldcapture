@@ -537,12 +537,19 @@ class ProjectService  {
             if (!validateExternalIds(project.externalIds)) {
                 return [error: 'A SAP internal order or TechOne code must be supplied before the MERI Plan can be approved']
             }
-
             //When the MERI plan is first approved, the status is changed to "active"
-            def resp = project.status == APPLICATION_STATUS ? update(projectId, [planStatus:PLAN_APPROVED, status:ACTIVE])
+            def resp = isApplication(project) ? update(projectId, [planStatus:PLAN_APPROVED, status:ACTIVE])
                     : update(projectId, [planStatus:PLAN_APPROVED])
             if (resp.resp && !resp.resp.error) {
-                createMeriPlanApprovalDocument(project, approvalDetails)
+                createMeriPlanApprovalDocument (project, approvalDetails)
+
+                if (isApplication(project)) {
+                    ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+                    if (config.generateReportsOnMeriPlanApproval()) {
+                        generateProjectStageReports(projectId, new ReportGenerationOptions())
+                    }
+                }
+
                 sendEmail({ProgramConfig programConfig -> programConfig.getPlanApprovedTemplate()}, project, RoleService.GRANT_MANAGER_ROLE)
                 return [message:'success']
             }

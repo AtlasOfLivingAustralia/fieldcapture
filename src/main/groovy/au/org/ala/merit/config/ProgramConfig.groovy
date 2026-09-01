@@ -162,6 +162,10 @@ class ProgramConfig implements Map {
         config?.excludeShortTermOutcomesIfReportNotRequired ?: false
     }
 
+    boolean generateReportsOnMeriPlanApproval() {
+        config?.generateReportsOnMeriPlanApproval ?: false
+    }
+
 }
 
 

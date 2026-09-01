@@ -1,5 +1,5 @@
 <div id="generate-report" class="validationEngineContainer">
-    <g:if test="${user?.isCaseManager || fc.userIsAlaOrFcAdmin()}">
+    <g:if test="${(user?.isCaseManager || fc.userIsAlaOrFcAdmin()) && !config.generateReportsOnMeriPlanApproval()}">
         <div data-bind="if:!reportsAreGenerated()" class="required">
             <div class="alert alert-info">
                 Project reports cannot be created until the MERI plan has been approved
