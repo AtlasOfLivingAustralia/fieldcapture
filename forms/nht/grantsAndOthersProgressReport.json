@@ -18465,7 +18465,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(i) Total number of location of actual images or imagery collected (initial) for this reporting period",
+                        "preLabel": "(i) Total number of locations of images or imagery collected (initial) for this reporting period",
                         "source": "totalNumberOfLocationsWhereImagesCollectedInitial",
                         "type": "number"
                       }
@@ -18481,7 +18481,7 @@
                     "type": "row",
                     "items": [
                       {
-                        "preLabel": "(ii) Total number of location of actual images or imagery collected (follow-up) for this reporting period",
+                        "preLabel": "(ii) Total number of locations of images or imagery collected (follow-up) for this reporting period",
                         "source": "totalNumberOfLocationsWhereImagesCollectedFollowup",
                         "type": "number"
                       }
