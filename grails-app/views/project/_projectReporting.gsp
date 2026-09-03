@@ -1,4 +1,4 @@
-<g:if test="!config.generateReportsOnMeriPlanApproval()">
+<g:if test="${!config.generateReportsOnMeriPlanApproval()}">
 <div id="generate-report" class="validationEngineContainer">
     <g:if test="${user?.isCaseManager || fc.userIsAlaOrFcAdmin()}">
         <div data-bind="if:!reportsAreGenerated()" class="required">
