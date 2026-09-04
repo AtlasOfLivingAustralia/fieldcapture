@@ -6,7 +6,7 @@
 	<div class="alert alert-danger">
 		<span class="badge bg-danger">Important!</span>
 		<p>
-			Please ensure the project start and end dates match the dates in the work order before approving the MERI plan.
+			Please ensure the project start and end dates match the dates in the Grant Agreement before approving the MERI plan.
 		</p>
 		<p>
 			Changing dates may result in changes to the reporting schedule which will require updates to the forecasts before the plan can be approved.
@@ -18,7 +18,7 @@
 		<div class="row mb-2">
 			<div class="col-sm-2">
 				<label for="startDate">Project start date
-				<fc:iconHelp title="Start date">The project start date as written in the contract or work order</fc:iconHelp>
+				<fc:iconHelp title="Start date">The project start date as written in the contract or Grant Agreement</fc:iconHelp>
 				</label>
 				<div class="input-group input-append">
 					<fc:datePicker class="form-control form-control-sm" bs4="true" targetField="plannedStartDate.date" id= "startDate" name="startDate" data-validation-engine="validate[required, past[endDate]]" autocomplete="off"/>
@@ -26,7 +26,7 @@
 			</div>
 			<div class="col-sm-2">
 				<label for="endDate">Project end date
-				<fc:iconHelp title="End date">The project end date as written in the contract or work order.</fc:iconHelp>
+				<fc:iconHelp title="End date">The project end date as written in the contract or Grant Agreement.</fc:iconHelp>
 				</label>
 				<div class="input-group input-append">
 					<fc:datePicker class="form-control form-control-sm" bs4="true" targetField="plannedEndDate.date" id="endDate" name="endDate" data-validation-engine="validate[required, future[startDate]" autocomplete="off"/>
