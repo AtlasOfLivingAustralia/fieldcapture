@@ -24,10 +24,12 @@ class GrantsReportLifecycleListener extends NHTOutputReportLifecycleListener {
             Map criteria = [name: 'Overview Output Report', activityId: previousReports*.activityId]
             Map results = outputService.search(criteria)
             List outputs = results?.resp?.outputs ?: [] // The query should return at most a single output
-            previouslyReportedProjectOutcomes = outputs.collect {
-                [reportName: previousReports.find{it.activityId == it.activityId}?.name ?: 'Unknown report',
-                projectOutcomes: it.data?.projectOutcomes]
-            }
+            previouslyReportedProjectOutcomes = outputs.collect { output ->
+                Map previousReport = previousReports.find { it.activityId == output.activityId }
+                [reportName: previousReport?.name ?: 'Unknown report',
+                projectOutcomes: output.data?.projectOutcomes,
+                 toDate: previousReport?.toDate]
+            }.sort({it.toDate})
         }
         contextData.previouslyReportedProjectOutcomes = previouslyReportedProjectOutcomes
         contextData.outcomeTargets = projectService.getOutcomeTargetsForProject(project, report, activity)
