@@ -627,6 +627,22 @@ class SiteController {
         render isGeometryWithinAustraliaResp as JSON
     }
 
+    Map bulkCreate(String id) {
+        Map project = projectService.get(id, 'basic')
+        if (project.error) {
+            render status: HttpStatus.SC_NOT_FOUND
+            return
+        }
+
+        // permissions check
+        if (!projectService.canUserEditProject(userService.getCurrentUserId(), id)) {
+            flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${id}"
+            redirect(controller:'project', action:'index', id: id)
+        }
+
+        render view: 'bulkCreate', model: [project: project]
+    }
+
     /**
      * Check each of the site's projects if logged in user is a member
      *

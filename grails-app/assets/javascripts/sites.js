@@ -166,6 +166,12 @@ var SiteViewModel = function (site, feature, options) {
 
         return radii;
     });
+    self.transients.siteCreated = ko.observable(false);
+    self.transients.loading = ko.observable(false);
+    self.transients.tempSiteId = ko.observable();
+    if (typeof UUID !== 'undefined') {
+        self.transients.tempSiteId(UUID.generate());
+    }
 };
 
 var POI = function (l, hasDocuments) {
@@ -1003,6 +1009,9 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
     this.addSite = function () {
         document.location.href = fcConfig.siteCreateUrl;
     };
+    this.bulkCreateSites = function () {
+        document.location.href = fcConfig.bulkCreateSitesUrl;
+    }
     this.addExistingSite = function () {
         document.location.href = fcConfig.siteSelectUrl;
     };
@@ -1018,6 +1027,443 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
 
     self.displaySites();
 };
+
+function BulkCreateSiteViewModel (alaMap, config) {
+    const DEFAULT_MAX_ZOOM = 21;
+    var self = this,
+        projects = [config.projectId],
+        defaultSiteValues = {
+            type: 'worksArea',
+            projects: projects
+        }, ignoreSiteSelectionChange = false;
+    self.sites = ko.observableArray([]);
+    self.selectedSites = ko.observableArray([]);
+    self.selectAll = ko.observable(false);
+
+    self.addSite = function() {
+        self.sites.push(new SiteViewModel(defaultSiteValues, {}));
+    };
+
+    self.removeSite = function() {
+        self.sites.remove(this);
+    };
+
+    self.selectAllSites = function() {
+        var siteIds = self.sites().map(site => {
+            if (self.isSiteSelectable(site)) {
+                return site.transients.tempSiteId();
+            }
+        }).filter(id => id !== undefined);
+        self.selectedSites(siteIds);
+    };
+
+    self.mergeSites = function() {
+        var siteIds = self.selectedSites(),
+            sites = self.sites().filter(site => siteIds.indexOf(site.transients.tempSiteId()) >= 0);
+        if ( sites.length > 0 ) {
+            var mergedName = "Merged site of " + sites.map(site => site.name()).join(', '),
+                mergedSiteVM = sites.pop();
+
+            mergedSiteVM.name(mergedName);
+            self.selectedSites([]);
+            sites.forEach(site => {
+                var features = site.features();
+                for (var i =0; i < features.length; i++) {
+                    var feature = features[i];
+                    feature.properties.tempSiteId = mergedSiteVM.transients.tempSiteId();
+                    mergedSiteVM.features.push(feature);
+                }
+            });
+
+            self.sites.removeAll(sites);
+        }
+    };
+
+    self.splitSite = function() {
+        var site = this,
+            splitNamePrefix = "Split of " + site.name(),
+            placeToInsert = self.sites().indexOf(site);
+
+        self.selectedSites([]);
+        self.sites.remove(site);
+        site.features().forEach((feature, index) => {
+            var siteName = splitNamePrefix, siteProps, newSite;
+            if (feature.properties.name) {
+                siteName += " (" + feature.properties.name + ")";
+            }
+
+            siteProps = Object.assign({}, defaultSiteValues, feature.properties)
+            siteProps.name = siteName;
+            siteProps.features = [feature];
+            newSite = new SiteViewModel(siteProps);
+            feature.properties.tempSiteId = newSite.transients.tempSiteId();
+            self.sites.splice(placeToInsert, 0, newSite);
+            placeToInsert += 1;
+        });
+    };
+
+    self.zoomIn = function() {
+        var site = this,
+            layers = alaMap.findLayersByProperty('tempSiteId', site.transients.tempSiteId()),
+            featureGroup = L.featureGroup(layers);
+
+        if (layers.length > 0) {
+            alaMap.getMapImpl().fitBounds(featureGroup.getBounds(), { animate: true, maxZoom: DEFAULT_MAX_ZOOM });
+        }
+    };
+
+    self.deleteSite = function() {
+        var site = this,
+            layers = alaMap.findLayersByProperty('tempSiteId', site.transients.tempSiteId()),
+            zoomToObject = alaMap.getZoomToObject();
+
+        alaMap.setZoomToObject(false);
+        layers && layers.forEach(layer => alaMap.removeLayer(layer));
+        alaMap.setZoomToObject(zoomToObject);
+        self.sites.remove(site);
+    };
+
+    self.createSites = async function() {
+        var sites = self.selectedSites().map(id => self.findSiteByTempSiteId(id));
+        for (var i = 0; i < sites.length; i++) {
+            await self.createSite.apply(sites[i]);
+        }
+    };
+
+    self.createSite = function() {
+        var site = this,
+            layers = alaMap.findLayersByProperty('tempSiteId', site.transients.tempSiteId()),
+            featureCollection = L.featureGroup(layers).toGeoJSON(),
+            data;
+
+        if (!featureCollection || !featureCollection.features || featureCollection.features.length === 0) {
+            alert("No features found for site " + site.name() + ". Please draw a shape on the map before creating the site.");
+            return;
+        }
+
+        site.features(featureCollection.features);
+        if (!featureCollection.features.every(feature => turf.booleanValid(feature))) {
+            alert("One or more geometries for site " + site.name() + " are invalid and cannot be saved. Please edit and try again.");
+            return;
+        }
+
+        data = site.modelAsJSON();
+        alaMap.startLoading();
+        site.transients.loading(true);
+        return $.ajax({
+            url: config.createSiteUrl,
+            method: 'POST',
+            data: data,
+            contentType: 'application/json',
+            success: function(data) {
+                switch (data.status) {
+                    case 'created':
+                        site.siteId = data.id;
+                        site.transients.siteCreated(true);
+                        break;
+                    case 'updated':
+                        // do nothing
+                        break;
+                    case 'error':
+                    break;
+                }
+
+                alaMap.finishLoading();
+                site.transients.loading(false);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alaMap.finishLoading();
+                site.transients.loading(false);
+            }
+        });
+    }
+
+    self.highlightSite = function() {
+        var site = this;
+        alaMap.highlightFeaturesByProperty('tempSiteId', site.transients.tempSiteId());
+    }
+
+    self.unhighlightSite = function() {
+        var site = this;
+        alaMap.unHighlightFeaturesByProperty('tempSiteId', site.transients.tempSiteId());
+    }
+
+    self.highlightFeature = function() {
+        var feature = this;
+        alaMap.highlightFeaturesByProperty('featureId', feature.properties.featureId);
+        return false;
+    }
+
+    self.unhighlightFeature = function() {
+        var feature = this;
+        alaMap.unHighlightFeaturesByProperty('featureId', feature.properties.featureId);
+        return false;
+    }
+
+    self.findSiteByFeatureId = function(featureId) {
+        var sites = self.sites();
+        var site = sites.filter(site => site.feature && site.feature.properties && site.feature.properties.featureId === featureId);
+        return site.length > 0 ? site[0] : null;
+    }
+
+    self.findSiteByTempSiteId = function(tempSiteId) {
+        var sites = self.sites();
+        var site = sites.filter(site => site.transients && site.transients.tempSiteId && site.transients.tempSiteId() === tempSiteId);
+        return site.length > 0 ? site[0] : null;
+    }
+
+    self.updateSites = function() {
+        var geoJSON = alaMap.getGeoJSON(),
+            sitesToRemove = self.sites().slice();
+
+        geoJSON.features.forEach(function(feature, index) {
+            var site;
+            if (!feature.properties || !feature.properties.tempSiteId) {
+                Object.assign(feature.properties, defaultSiteValues);
+                site = self.createSiteViewModel(feature);
+                feature.properties.tempSiteId = site.transients.tempSiteId();
+                self.sites.push(site);
+            }
+            else {
+                // remove site from sitesToRemove
+                site = self.findSiteByTempSiteId(feature.properties.tempSiteId);
+                sitesToRemove = sitesToRemove.filter(s => s.transients.tempSiteId() !== site.transients.tempSiteId());
+            }
+        });
+
+        if (sitesToRemove.length > 0) {
+            self.sites.removeAll(sitesToRemove);
+        }
+
+        self.updateSiteFeatures();
+    }
+
+    self.createSiteViewModel = function(feature) {
+        var vm = new SiteViewModel(feature.properties);
+        vm.extent(new GenericLocation());
+        return vm;
+    }
+
+    self.updateSiteFeatures = function() {
+        var sites = self.sites(),
+            features = alaMap.getGeoJSON().features;
+        sites.forEach(function(site) {
+            let siteFeatures = features.filter(f => f.properties.tempSiteId === site.transients.tempSiteId());
+            site.features(siteFeatures);
+            let featureBoundsCentreAndGeoJSON = self.getBoundsCentreAndGeoJSON(siteFeatures);
+            let centre = featureBoundsCentreAndGeoJSON.centre;
+            let geoJSON = featureBoundsCentreAndGeoJSON.geoJSON;
+            site.extent().geometry().centre(centre);
+            site.extent().geometry().type(geoJSON.type);
+            site.extent().geometry().coordinates(geoJSON.coordinates);
+        });
+    }
+
+    self.getBoundsCentreAndGeoJSON = function(features) {
+        var fc = {
+                type: 'FeatureCollection',
+                properties: {},
+                features: features
+            },
+            bounds = L.geoJSON(fc).getBounds(),
+            rectangle = L.rectangle(bounds),
+            geoJSON = rectangle.toGeoJSON(),
+            geometry = geoJSON.geometry,
+            centre = bounds.getCenter(),
+            cPoint = [centre.lng, centre.lat];
+
+        return {geoJSON: geometry, centre: cPoint};
+    }
+
+    self.selectedSitesNames = ko.computed(function() {
+        return self.selectedSites().map(function(siteId) {
+            var site = self.findSiteByTempSiteId(siteId);
+            return site && site.name();
+        }).filter(name => name !== undefined);
+    });
+
+    self.goToProject = function() {
+        if (self.selectableSites().length > 0) {
+            var notSavedSites = self.selectableSites().length;
+            var yes = confirm(`${notSavedSites} site(s) have not been created yet. If you leave this page, they will be lost. Are you sure you want to continue?`);
+            if (!yes) {
+                return;
+            }
+        }
+
+        alaMap.startLoading();
+        document.location.href = config.returnTo;
+    }
+
+    self.isSiteSelectable = function(site) {
+        return !self.isSitePublished.apply(site);
+    }
+
+    self.isSelectAll = function() {
+        var sites = self.sites(),
+            sitesSelectable = sites.filter(site => self.isSiteSelectable(site));
+
+        return  sitesSelectable.length > 0 && self.selectedSites().length === sitesSelectable.length;
+    }
+
+    self.deleteFeature = function(site) {
+        var feature = this,
+            layers = alaMap.findLayersByProperty('featureId', feature.properties.featureId);
+        if (layers && layers.length > 0) {
+            alaMap.removeLayer(layers[0]);
+        }
+
+        site.features.remove(feature);
+    }
+
+    self.unpackFeature = function(site) {
+        ALA.MapUtils.checkTurfAvailability();
+        var feature = this,
+            index = site.features.indexOf(feature),
+            namePrefix = feature.properties.name + " - Unpack ";
+        if (index >= 0) {
+            var fc = turf.flatten(feature),
+                expandedFeatures = fc.features,
+                layer = alaMap.findLayersByProperty('featureId', feature.properties.featureId)[0];
+
+            expandedFeatures.forEach((f, index) => {
+                delete feature.properties.featureId;
+                f.properties = Object.assign({}, feature.properties, f.properties);
+                f.properties.name = namePrefix + (index + 1);
+            });
+
+            // for better animation, remove after add fade in occurred
+            site.features.splice(index + 1, 0, ...expandedFeatures);
+            setTimeout(() => {
+                site.features.remove(feature);
+            }, 5000);
+            alaMap.setGeoJSON(fc);
+            alaMap.removeLayer(layer);
+        }
+    }
+
+    self.zoomToFeature = function(feature) {
+        var layers = alaMap.findLayersByProperty('featureId', feature.properties.featureId),
+            featureGroup = L.featureGroup(layers);
+
+        if (layers.length > 0) {
+            alaMap.getMapImpl().fitBounds(featureGroup.getBounds(), { animate: true, maxZoom: DEFAULT_MAX_ZOOM });
+        }
+    }
+
+    // computed observables
+    self.selectableSites = ko.pureComputed(function() {
+        return self.sites().filter(site => self.isSiteSelectable(site));
+    });
+
+    self.isBulkCreateDisabled = ko.computed(function() {
+        return self.selectedSites().length === 0
+    });
+
+    self.isBulkMergeDisabled = ko.computed(function() {
+        return self.selectedSites().length <= 1
+    });
+
+    self.isSelectAllDisabled = ko.computed(function() {
+        return self.selectableSites().length === 0;
+    });
+
+    /**
+     * Used when rendering feature table
+     * @returns {*|string}
+     */
+    self.getFeatureType = function(feature) {
+        switch (feature.geometry.type) {
+            case ALA.MapConstants.DRAW_TYPE.POINT_TYPE:
+                if (feature.properties && feature.properties.type === ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE) {
+                    return ALA.MapConstants.DRAW_TYPE.CIRCLE_TYPE;
+                }
+                // no need to break here
+            default:
+                return feature.geometry.type;
+        }
+    }
+
+    self.isFeatureSplittable = function() {
+        var feature = this,
+            match = feature.geometry && feature.geometry.type && feature.geometry.type.match(/^Multi|GeometryCollection/);
+        return !!(match && match.length > 0);
+    }
+
+    // element controls
+    self.isSiteDisabled = function() {
+        var site = this;
+        return site.transients.siteCreated() || site.transients.loading();
+    }
+
+    self.isSitePublished = function() {
+        var site = this;
+        return site.transients.siteCreated();
+    }
+
+    self.isSplitDisabled = function () {
+        if (self.isSiteDisabled.apply(this)) {
+            return true;
+        }
+
+        var site = this,
+            layers = alaMap.findLayersByProperty('tempSiteId', site.transients.tempSiteId());
+        return layers.length <= 1;
+    }
+
+    self.isFeatureUnpackDisabled = function() {
+        var feature = this,
+            site = self.findSiteByTempSiteId(feature.properties.tempSiteId);
+
+        return self.isSiteDisabled.apply(site) || !self.isFeatureSplittable.apply(feature);
+    }
+
+    self.isFeatureDeleteDisabled = function() {
+        var site = this;
+        return self.isSiteDisabled.apply(site) || site.features().length <= 1;
+    }
+
+    self.fadeIn = function(element) {
+        $(element).hide().fadeIn();
+    }
+
+    self.fadeOut = function(element) {
+        $(element).fadeOut(function () {
+            $(element).remove();
+        });
+    }
+
+    self.enablePopovers = function(nodes) {
+        var popovers = $(nodes).find('[data-bs-toggle="popover"]');
+        [...popovers].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+    }
+
+    // observable subscriptions
+    self.updateSelectAll = function() {
+        ignoreSiteSelectionChange = true;
+        self.selectAll(self.isSelectAll());
+        ignoreSiteSelectionChange = false;
+    }
+
+    self.handleSelectAll = function(newValue) {
+        if (ignoreSiteSelectionChange)
+            return;
+
+        if (newValue) {
+            var sites = self.selectableSites(),
+                siteIds = sites.map(site => site.transients.tempSiteId());
+
+            self.selectedSites(siteIds);
+        } else {
+            self.selectedSites([]);
+        }
+    }
+    self.selectedSites.subscribe(self.updateSelectAll);
+    self.selectAll.subscribe(self.handleSelectAll);
+    self.sites.subscribe(self.updateSelectAll);
+
+    alaMap.subscribe(self.updateSites);
+}
 
 /**
  * Returns a GeoJson coordinate array for the polygon
