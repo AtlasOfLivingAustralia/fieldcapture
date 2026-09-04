@@ -137,6 +137,7 @@
     <g:render template="/shared/pdfInstructions"/>
 </g:if>
 <asset:javascript src="common-bs4.js"/>
+<asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="forms-manifest.js"/>
 
 <script>
@@ -174,7 +175,9 @@
             var formFeatures = new ecodata.forms.FeatureCollection(reportSite ? reportSite.features : []);
             fcConfig.featureCollection = formFeatures;
             <g:if test="${!printView}">
-            var mapOptions = {};
+            var mapOptions = {
+                readonly: fcConfig.readonly
+            };
             if (fcConfig.useGoogleBaseMap) {
                 mapOptions.baseLayersName = 'Google'; // Default is Open Street Maps
             }

@@ -201,7 +201,7 @@ dependencies {
     providedCompile "io.methvin:directory-watcher:0.4.0"
 
     if (!Boolean.valueOf(inplace)) {
-        implementation "org.grails.plugins:ecodata-client-plugin:9.1"
+        implementation "org.grails.plugins:ecodata-client-plugin:9.2-MAP-SNAPSHOT"
     }
 }
 
@@ -254,7 +254,7 @@ clientDependencies {
         }
         'jquery'('3.6.0')
         'font-awesome'('4.7.0')
-        'knockout'('3.5.1', from:'build/output')
+        'knockout'('3.5.3', from:'build/output')
         'knockout-mapping'('2.6.0')
         'bootstrap-datepicker'('1.9.0')
         'select2'('4.0.13')
@@ -270,7 +270,7 @@ clientDependencies {
         'fancybox'('3.0.1')
         "fuelux"("3.17.2", transitive:false)
         "fuse.js"("6.4.6", transitive:false)
-        "leaflet"("0.7.7")
+        'leaflet'('1.9.4')
         "select2-theme-bootstrap4"("1.0.2") // The bootstrap 5 theme overflows containers and this theme still looks OK
         "slickgrid"("2.4.38")
         "jquery-appear-original"("0.4.1", transitive:false)
@@ -299,10 +299,23 @@ clientDependencies {
 assets {
     minifyJs = true
     minifyCss = true
-    maxThreads = 4 //useful for concurrent asset processing during build
+    maxThreads = 10 //useful for concurrent asset processing during build
     configOptions = [:] //useful for custom config on extension libraries
+    minifyOptions = [
+            languageMode: "ECMASCRIPT_NEXT",
+            targetLanguage: "ECMASCRIPT_NEXT",
+            excludes: [
+                '**/splaytree-ts.umd.js','**/robust-predicates/esm/**', '**/incircle.js','**/polyclip-ts.umd.js',
+                '**/leaflet-geoman.js', '**/index.js', '**/Leaflet.GoogleMutant.js', '**/cli.js',
+                'leaflet-manifest.js', '**/vendor-ext/**', '**/vendor-external/**', '**/vendor/**',
+                '**/ala-map*.js', '**/@turf/**'
+            ]
+    ] //Example Exclude GLOB pattern
     includes = ['webjars/**/images/*']
-    excludes = ['**/*.less','**/build/hintrc.js', 'hintrc.unminified.js', '**/spec.hintrc.js', 'spec.hintrc.unminified.js', '**/*hintrc*', '**/webjars/**'] //Example Exclude GLOB pattern
+    excludes = [
+            '**/*.less','**/build/hintrc.js', 'hintrc.unminified.js', '**/spec.hintrc.js', 'spec.hintrc.unminified.js',
+            '**/*hintrc*', '**/webjars/**'
+    ] //Example Exclude GLOB pattern
 }
 
 tasks.withType(Test) {

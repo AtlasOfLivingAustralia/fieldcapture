@@ -159,6 +159,7 @@
 <g:render template="/shared/documentTemplate"/>
 
 <asset:javascript src="common-bs4.js"/>
+<asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="forms-manifest.js"/>
 <asset:deferredScripts/>
 

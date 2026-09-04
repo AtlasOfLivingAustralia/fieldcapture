@@ -1975,7 +1975,7 @@ class ProjectService  {
         Map projectSites = siteService.getProjectSites(projectId)
         if (projectSites && !projectSites.error) {
             List sites = projectSites.sites
-            Map projectArea = projectSites?.find { it.properties?.type == SiteService.SITE_TYPE_PROJECT_AREA }
+            Map projectArea = sites?.find { it.properties?.type == SiteService.SITE_TYPE_PROJECT_AREA }
             if (projectArea) {
                 result.projectArea = projectArea
             }

@@ -25,9 +25,11 @@
         intersectService: "${createLink(controller: 'proxy', action: 'intersect')}",
         featuresService: "${createLink(controller: 'proxy', action: 'features')}",
         featureService: "${createLink(controller: 'proxy', action: 'feature')}",
+        regionListUrl: "${createLink(controller: 'site', action: 'regionList')}",
         spatialWms: "${grailsApplication.config.getProperty('spatial.geoserverUrl')}",
-        geocodeUrl: "${grailsApplication.config.getProperty('google.geocode.url')}",
+        geocodeUrl: "${raw(grailsApplication.config.getProperty('google.geocode.url'))}",
         siteMetaDataUrl: "${createLink(controller:'site', action:'lookupLocationMetadataForSite')}",
+        poiIconUrl: "${assetPath(src: '/icons/poi.png')}",
         <g:if test="${project}">
             pageUrl : "${grailsApplication.config.getProperty('grails.serverName')}${createLink(controller:'site', action:'createForProject', params:[projectId:project.projectId,checkForState:true])}",
             projectUrl : "${grailsApplication.config.getProperty('grails.serverName')}${createLink(controller:'project', action:'index', id:project.projectId)}",
@@ -41,7 +43,7 @@
         sitePageUrl : "${createLink(action: 'index', id: site?.siteId)}",
         homePageUrl : "${createLink(controller: 'home', action: 'index')}",
         ajaxUpdateUrl: "${createLink(action: 'ajaxUpdate', id: site?.siteId)}",
-        returnTo: "${createLink(controller: 'project', action: 'index', id: project?.projectId)}"
+        returnTo: "${params.returnTo ?: createLink(controller: 'project', action: 'index', id: project?.projectId)}"
         },
         here = window.location.href;
 
@@ -120,14 +122,24 @@
 
         $('#cancel').click(function () {
             if(siteViewModel.saved()){
-                document.location.href = fcConfig.sitePageUrl;
+                if (fcConfig.returnTo){
+                    document.location.href = fcConfig.returnTo;
+                } else {
+                    document.location.href = fcConfig.sitePageUrl;
+                }
             } else {
-                document.location.href = fcConfig.homePageUrl;
+                if (fcConfig.returnTo){
+                    document.location.href = fcConfig.returnTo;
+                } else {
+                    document.location.href = fcConfig.homePageUrl;
+                }
             }
         });
 
         $('#save').click(function () {
             if ($('#validation-container').validationEngine('validate')) {
+                // sync view model with map drawings
+                siteViewModel.updateGeometry();
                 siteViewModel.saveWithErrorDetection(
                     function (data) {
                         if(data.status == 'created'){
@@ -149,6 +161,8 @@
         });
     });
 </asset:script>
+<asset:javascript src="common-bs4.js"/>
+<asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="site-bs4.js"/>
 <asset:javascript src="edit-site-manifest.js"/>
 <asset:deferredScripts/>

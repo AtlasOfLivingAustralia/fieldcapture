@@ -2,7 +2,6 @@
 <!-- ko stopBinding: true -->
 <div id="sitemap">
             <script type="text/javascript" src="${grailsApplication.config.getProperty('google.drawmaps.url')}"></script>
-            <asset:javascript src="mcx-drawing-polyfill/mcx-drawing-polyfill.js"/>
             <div class="row">
                 <g:hiddenField name="id" value="${site?.siteId}"/>
                 <div class="col-sm-8">
@@ -74,59 +73,14 @@
                 As are PID's of existing features in the Atlas Spatial Portal.</fc:iconHelp>
 
             <div class="row">
-                <div class="col-sm-6">
-                    <div id="mapForExtent" class="smallMap w-100" style="height:600px;"></div>
+                <div class="col-sm-8">
+                    <m:map id="mapForExtent" class="smallMap" width="100%" height="800px"></m:map>
                 </div>
 
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="well well-small">
-                        <div class="mb-3 row">
-                            <label for="extentSource" class="col-sm-3 pe-0"><h4>Define extent using:</h4></label>
-                            <div class="col-sm-9 ps-0 extentSelect">
-                                <g:select class="input-small form-control" data-bind="value: extentSource" data-validation-engine="validate[funcCall[validateSiteExtent]]"
-                                          name='extentSource'
-                                          from="['choose type','point','known shape','draw a shape']"
-                                          keys="['none','point','pid','drawn']"/>
-                            </div>
-                        </div>
-
-                        <div id="map-controls" data-bind="visible: extent().source() == 'drawn' ">
-                            <ul id="control-buttons">
-                                <li class="active" id="pointer" title="Drag to move. Double click or use the zoom control to zoom.">
-                                    <a href="javascript:void(0);" class="btn active draw-tool-btn">
-                                    <img src="${assetPath(src:'glyphicons_347_hand_up.png')}" alt="center and radius"/>
-                                    <span class="drawButtonLabel">Move & zoom</span>
-                                    </a>
-                                </li>
-                                <li id="polygon" title="Click any number of times to draw a polygon. Double click to close the polygon.">
-                                    <a href="javascript:void(0);" class="btn draw-tool-btn">
-                                    <img src="${assetPath(src:'glyphicons_096_vector_path_polygon.png')}" alt="polygon"/>
-                                    <span class="drawButtonLabel">Draw polygon</span>
-                                    </a>
-                                </li>
-                                <li id="clear" title="Clear the region from the map.">
-                                    <a href="javascript:void(0);" class="btn draw-tool-btn">
-                                    <img src="${assetPath(src:'glyphicons_016_bin.png')}" alt="clear"/>
-                                    <span class="drawButtonLabel">Clear</span>
-                                    </a>
-                                </li>
-                                <li id="reset" title="Zoom and centre on Australia.">
-                                    <a href="javascript:void(0);" class="btn draw-tool-btn">
-                                    <img src="${assetPath(src:'reset.png')}" alt="reset map"/>
-                                    <span class="drawButtonLabel">Reset</span>
-                                    </a>
-                                </li>
-                                <li id="zoomToExtent" title="Zoom to extent of drawn shape.">
-                                    <a href="javascript:zoomToShapeBounds();" class="btn draw-tool-btn">
-                                    <img src="${assetPath(src:'glyphicons_186_move.png')}" alt="zoom to extent of drawn shape"/>
-                                    <span class="drawButtonLabel">Zoom</span>
-                                    </a>
-                                </li>
-                            </ul>
-                         </div>
-
                          <div style="padding-top:10px;" data-bind="template: { name: extent().source, data: extent }"></div>
-                        </div>
+                    </div>
 
                     <div class="well well-small">
                         <h4>Points of interest
@@ -155,47 +109,6 @@
 <script type="text/html" id="none">
     %{--<span>Choose a type</span>--}%
 </script>
-
-<script type="text/html" id="point">
-    <div class="drawLocationDiv row">
-        <div class="col-sm-10">
-            <div class="row controls-row mb-2">
-                <fc:textField data-bind="value:geometry().decimalLatitude" data-validation-engine="validate[required,custom[number],min[-90],max[0]]" outerClass="col-sm-6" class="form-control form-control-sm" label="Latitude"/>
-                <fc:textField data-bind="value:geometry().decimalLongitude" data-validation-engine="validate[required,custom[number],min[-180],max[180]]" data-prompt-position="topRight:-150" outerClass="col-sm-6" class="form-control form-control-sm" label="Longitude"/>
-            </div>
-            <div class="row controls-row">
-                <fc:textField data-bind="value:geometry().uncertainty, enable: hasCoordinate()" outerClass="col-sm-4" class="form-control form-control-sm" label="Uncertainty (metres)" data-validation-engine="validate[min[0],custom[integer]]"/>
-                <fc:textField data-bind="value:geometry().precision, enable: hasCoordinate()" outerClass="col-sm-4" class="form-control form-control-sm" label="Precision" data-validation-engine="validate[min[0],custom[number]]"/>
-                %{-- CG - only supporting WGS84 at the moment --}%
-                <fc:textField data-bind="value:geometry().datum, enable: hasCoordinate()" outerClass="col-sm-4" class="form-control form-control-sm" label="Datum" placeholder="WGS84" readonly="readonly"/>
-            </div>
-        </div>
-        <div class="mt-3 col-sm-10">
-            <div class=" row controls-row gazProperties">
-                <div class="col-sm-8 mb-2">
-                    <span class="label label-success">State/territory</span> <span data-bind="expandable:geometry().state"></span>
-                </div>
-                <div class="col-sm-8 mb-2">
-                    <span class="label label-success">Local Gov. Area</span> <span data-bind="expandable:geometry().lga"></span>
-                </div>
-                <div class="col-sm-8 mb-2">
-                    <span class="label label-success">NRM</span> <span data-bind="expandable:geometry().nrm"></span>
-                </div>
-                <div class="col-sm-8 mb-2">
-                    <span class="label label-success">Locality</span> <span data-bind="text:geometry().locality"></span>
-                </div>
-                <div class="col-sm-8 mb-2">
-                    <span class="label label-success">NVIS major vegetation group:</span> <span data-bind="text:geometry().mvg"></span>
-                </div>
-                <div class="col-sm-8 mb-2">
-                    <span class="label label-success">NVIS major vegetation subgroup:</span> <span data-bind="text:geometry().mvs"></span>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</script>
-
     <script type="text/html" id="poi">
     <div class="drawLocationDiv row">
         <div class="col-sm-12 ps-4 ms-2">
@@ -222,9 +135,9 @@
             </div>
             <div class="mt-2 ps-1 row controls-row">
 
-                    <fc:textField data-bind="value:geometry().decimalLatitude" outerClass="col-sm-4"  class="form-control form-control-sm" label="Latitude" data-validation-engine="validate[required,custom[number],min[-90],max[0]]" data-prompt-position="topRight:-150"/>
-                    <fc:textField data-bind="value:geometry().decimalLongitude" outerClass="col-sm-4" class="form-control form-control-sm" label="Longitude" data-validation-engine="validate[required,custom[number],min[-180],max[180]]"/>
-                    <fc:textField data-bind="value:geometry().bearing" outerClass="col-sm-4" class="form-control form-control-sm" label="Bearing (degrees)" data-validation-engine="validate[custom[number],min[0],max[360]]" data-prompt-position="topRight:-150"/>
+                <fc:textField data-bind="value:geometry().decimalLatitude" outerClass="col-sm-4"  class="form-control form-control-sm" label="Latitude" data-validation-engine="validate[required,custom[number],min[-90],max[0]]" data-prompt-position="topRight:-150"/>
+                <fc:textField data-bind="value:geometry().decimalLongitude" outerClass="col-sm-4" class="form-control form-control-sm" label="Longitude" data-validation-engine="validate[required,custom[number],min[-180],max[180]]"/>
+                <fc:textField data-bind="value:geometry().bearing" outerClass="col-sm-4" class="form-control form-control-sm" label="Bearing (degrees)" data-validation-engine="validate[custom[number],min[0],max[360]]" data-prompt-position="topRight:-150"/>
             </div>
             <div class="row controls-row" style="display:none;">
                 <div class="col-sm-10">
@@ -236,62 +149,6 @@
             </div>
         </div>
     </div>
-    </script>
-
-    <script type="text/html" id="pid">
-    <div id="pidLocationDiv" class="drawLocationDiv">
-        <div class="row">
-            <div class="col-sm-4">
-                <select id="chooseLayer" name="chooseLayer" data-bind="
-                options: layers(),
-                optionsCaption:'Choose a layer...',
-                optionsValue: 'id',
-                optionsText:'name',
-                value: chosenLayer" class="form-select"></select>
-            </div>
-            <div class="col-sm-4">
-                <select id="chooseShape"   name="chooseShape" data-bind="options: layerObjects, disable: layerObjects().length == 0,
-                optionsCaption:'Choose shape ...',
-                optionsValue: 'pid',
-                optionsText:'name', value: layerObject" class="form-select"></select>
-            </div>
-        </div>
-
-            <div class="mt-3 row controls-row" style="display:none;">
-                <div class="col-sm-10">
-                    <span class="label label-success">PID</span> <span data-bind="text:geometry().pid"></span>
-                </div>
-
-            </div>
-            <div class="mt-3 row controls-row">
-                <div class="col-sm-10">
-                    <span class="label label-success">Name</span> <span data-bind="text:geometry().name"></span>
-                </div>
-            </div>
-            <div class="mt-3 row controls-row" style="display:none;">
-                <div class="col-sm-10">
-                    <span class="label label-success">LayerID</span> <span data-bind="text:geometry().fid"></span>
-                </div>
-
-            </div>
-            <div class="mt-3 row controls-row">
-                <div class="col-sm-10">
-                    <span class="label label-success">Layer</span> <span data-bind="text:geometry().layerName"></span>
-                </div>
-
-            </div>
-            <div class="mt-3 row controls-row">
-                <div class="col-sm-10">
-                    <span class="label label-success">Area (Ha)</span> <span data-bind="text:geometry().area() ? geometry().area() * 100 : ''"></span>
-
-                </div>
-            </div>
-        </div>
-    </div>
-    </script>
-
-    <script type="text/html" id="upload">
-    <h3> Not implemented - waiting on web services...</h3>
     </script>
 
     <script type="text/html" id="drawn">
@@ -332,21 +189,28 @@
             <div style="display:none;" class="mt-2 row controls-row">
                 <span class="label label-success">Center</span> <span data-bind="text:geometry().centre"></span>
             </div>
+            <!-- ko if: $root.transients.radiiOfCircles().length > 0 -->
             <div class="mt-2 row controls-row circleProperties propertyGroup">
-                <span class="label label-success">Radius (m)</span> <span data-bind="text:geometry().radius"></span>
+                <span class="label label-success">Radius (m)</span>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Radius (m)</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: $root.transients.radiiOfCircles">
+                        <tr data-bind="event: { mouseover: $root.highlightFeature, mouseout: $root.unHighlightFeature }">
+                            <td data-bind="text: name"></td>
+                            <td data-bind="text: radius"></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+            <!-- /ko -->
 
             <div style="display:none;" class="mt-2 row controls-row  propertyGroup">
                 <span class="label">GeoJSON</span> <span data-bind="text:ko.toJSON(geometry())"></span>
-            </div>
-
-            <div class="mt-2 row controls-row rectangleProperties propertyGroup">
-                <span class="label label-success">Latitude (SW)</span> <span data-bind="text:geometry().minLat"></span>
-                <span class="label label-success">Longitude (SW)</span> <span data-bind="text:geometry().minLon"></span>
-            </div>
-            <div class="mt-2 row controls-row rectangleProperties propertyGroup">
-                <span class="label label-success">Latitude (NE)</span> <span data-bind="text:geometry().maxLat"></span>
-                <span class="label label-success">Longitude (NE)</span> <span data-bind="text:geometry().maxLon"></span>
             </div>
         </div>
         %{--<div class="smallMap span8" style="width:500px;height:300px;"></div>--}%
@@ -366,6 +230,7 @@ function initSiteViewModel() {
         intersectService: "${createLink(controller: 'proxy', action: 'intersect')}",
         featuresService: "${createLink(controller: 'proxy', action: 'features')}",
         featureService: "${createLink(controller: 'proxy', action: 'feature')}",
+        validateShapesUrl: "${createLink(controller: 'site', action: 'isGeometryWithinAustralia')}",
         spatialWms: '${grailsApplication.config.getProperty('spatial.geoserverUrl')}',
         knownShapeConfig: <fc:modelAsJavascript model="${knownShapeConfig}" default="[]"/>
     };
@@ -381,6 +246,7 @@ function initSiteViewModel() {
         description : '${site?.description?.encodeAsJavaScript() ?: ""}',
         notes : '${site?.notes?.encodeAsJavaScript() ?: ""}',
         documents : <fc:modelAsJavascript model="${siteDocuments?:documents}"/>,
+        features: <fc:modelAsJavascript model="${site?.features}" default="[]"/>,
     <g:if test="${project}">
         projects : ['${raw(project.projectId)}'],
     </g:if>
@@ -394,20 +260,33 @@ function initSiteViewModel() {
 
         //retrieve serialised model
         siteViewModel = new SiteViewModelWithMapIntegration(savedSiteData, null, SERVER_CONF);
-        window.validateSiteExtent = siteViewModel.attachExtentValidation()
 
         ko.applyBindings(siteViewModel, document.getElementById("sitemap"));
 
-        init_map({
+        var alaMap = init_map({
             spatialService: SERVER_CONF.spatialService,
             spatialWms: SERVER_CONF.spatialWms,
-            mapContainer: 'mapForExtent'
+            mapContainer: 'mapForExtent',
+            featureService: SERVER_CONF.featureService,
+            validateShapesUrl: SERVER_CONF.validateShapesUrl
         });
 
-        siteViewModel.mapInitialised(window);
+        siteViewModel.mapInitialised(alaMap);
+
+        // enable edit mode if the site already exists
+        if (savedSiteData.siteId) {
+            enableEditMode(alaMap);
+        }
 
     }());
 
     return siteViewModel;
+}
+
+function enableEditMode(alaMap) {
+    if (alaMap) {
+        var options = alaMap.getMapImpl().pm.getGlobalOptions();
+        alaMap.getMapImpl().pm.enableGlobalEditMode(options);
+    }
 }
 </asset:script>

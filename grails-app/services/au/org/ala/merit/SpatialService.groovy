@@ -3,6 +3,7 @@ package au.org.ala.merit
 import static java.net.URLEncoder.encode
 import grails.core.GrailsApplication
 import org.springframework.web.multipart.MultipartFile
+import org.springframework.http.HttpStatus
 
 /**
  * This class implements the interface between MERIT and the ALA spatial service.
@@ -18,6 +19,7 @@ class SpatialService {
     private static final String UPLOAD_SHAPE_PATH = "/shape/upload/shp"
     private static final String SHAPE_GEOJSON_PATH = "/shape/geojson"
     private static final String SPATIAL_FEATURES_PATH = "/spatial/features"
+    private static final String GEOJSON_INTERSECT_URL_PREFIX = "/intersect/geojson"
 
     /**
      * Deletes the user uploaded (i.e. not a "known shape") object (site) from the spatial portal
@@ -93,5 +95,39 @@ class SpatialService {
         resp?.resp?.collectEntries{[(it.name): it[statesLayerId]?[0]]} // We know each electorate only intersects with one state, so we can just take the first one
     }
 
+    /**
+     * Checks if the supplied geometry is within Australia.
+     * This is done by checking if the geometry intersects with any country that is not Australia.
+     * @param shape - GeoJSON formatted geometry to check.
+     * @return
+     */
+    Map isGeometryWithinAustralia(Map shape) {
+        Map fixedGeoJSON = webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + "site/standardiseGeoJSON", shape, true)?.resp
+        if (!fixedGeoJSON) {
+            return [success: false, message: "Failed to standardise geometry"]
+        }
 
+        String url = grailsApplication.config.getProperty('spatial.layersUrl')+GEOJSON_INTERSECT_URL_PREFIX
+        String fid = grailsApplication.config.getProperty('layers.countries.fid')
+        List displayNamesForAustralia = grailsApplication.config.getProperty('layers.countries.displayNamesForAustralia', List)
+        Map resp = webService.doPost(url+ "/" + fid, fixedGeoJSON, true)
+        Map response = [:]
+        // connection exception does not return a status code, so we default to 500 if it is null
+        HttpStatus status = HttpStatus.resolve((resp?.statusCode?:500) as int)
+        if (status?.is2xxSuccessful()) {
+            List intersectingCountries = resp?.resp?.collect{ it.name }
+            List nonAustralianCountries = intersectingCountries?.findAll{ it !in displayNamesForAustralia }
+            response.success = nonAustralianCountries?.size() == 0
+            if (!response.success) {
+                response.message = "Geometry is not within Australia. Intersects with: ${nonAustralianCountries.join(', ')}"
+            } else {
+                response.message = "Geometry is within Australia"
+            }
+        } else {
+            response.success = false
+            response.message = "An error occurred while checking if geometry is within Australia: ${resp?.error}"
+        }
+
+        return response
+    }
 }

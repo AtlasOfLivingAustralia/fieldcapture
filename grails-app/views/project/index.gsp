@@ -24,6 +24,7 @@
                 activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
                 activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
                 siteCreateUrl: "${createLink(controller: 'site', action: 'createForProject', params: [projectId:project.projectId])}",
+                bulkCreateSitesUrl: "${createLink(controller: 'site', action: 'bulkCreate', params: [id: project.projectId])}",
                 siteSelectUrl: "${createLink(controller: 'site', action: 'select', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}",
                 siteUploadUrl: "${createLink(controller: 'site', action: 'siteUpload', id: project.projectId)}",
                 starProjectUrl: "${createLink(controller: 'project', action: 'starProject')}",
@@ -540,6 +541,7 @@ var config = {
 
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
+<asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="tab-init.js"/>
 <asset:javascript src="select2/js/select2.full.js"/>
 <asset:javascript src="select2-dropdown-placement-override.js"/>
@@ -549,7 +551,6 @@ var config = {
 
 <asset:javascript src="forms-manifest.js"/>
 <asset:javascript src="speciesModel.js"/>
-<asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="feature.js"/>
 <asset:deferredScripts/>
 </body>
