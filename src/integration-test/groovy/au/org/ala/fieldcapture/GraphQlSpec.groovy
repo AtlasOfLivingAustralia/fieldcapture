@@ -503,7 +503,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         result.meriPlan.partnerships[0].partnerName == "partner name"
         result.meriPlan.partnerships[0].description == "partnership"
         result.meriPlan.partnerships[0].partnerOrganisationType == "Trust"
-        result.meriPlan.baselines[0].code == "B2"
+        result.meriPlan.baselines[0].code == "B1"
         result.meriPlan.baselines[0].description == "Project baseline 1"
         result.meriPlan.baselines[0].relatedOutcomes == ["MT1"]
         result.meriPlan.baselines[0].existsOrToBeEstablished == "Needs to be collected"
@@ -517,7 +517,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         result.meriPlan.monitoringMethodology[0].targetMeasures[0].targetMeasureId == "score_42"
         result.meriPlan.monitoringMethodology[0].targetMeasures[0].service.name == "Collecting, or synthesising baseline data"
         result.meriPlan.monitoringMethodology[0].targetMeasures[0].label == "Number of baseline data sets collected and/or synthesised"
-        result.meriPlan.monitoringMethodology[0].relatedBaseline == "B2"
+        result.meriPlan.monitoringMethodology[0].relatedBaseline == "B1"
         result.meriPlan.monitoringMethodology[0].emsaModules == ["Category 1"]
         result.meriPlan.monitoringMethodology[0].evidence == "Evidence 2"
 

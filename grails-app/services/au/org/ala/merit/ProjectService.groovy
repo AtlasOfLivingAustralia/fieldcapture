@@ -142,6 +142,10 @@ class ProjectService  {
         return COMPLETE.equalsIgnoreCase(project.status)
     }
 
+    boolean isApplication(Map project) {
+        return APPLICATION_STATUS.equalsIgnoreCase(project.status)
+    }
+
     /**
      * Retrieves a summary of project metrics (including planned output targets)
      * and groups them by output type.
@@ -201,6 +205,24 @@ class ProjectService  {
         }
 
         result
+    }
+
+    List scoreDataForActivity(Map activity, List scoreIds) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'project/scoreDataForActivity'
+        Map postData = [
+                scoreIds:scoreIds,
+                activityData:activity
+        ]
+        Map result = webService.doPost(url, postData)
+        List scoreData = []
+        if (result.statusCode == HttpStatus.SC_OK) {
+            scoreData = result?.resp?.activityScores
+        }
+        else {
+            log.warn("Failed to retrieve score data for activity ${activity.activityId}.  Status code: ${result.statusCode}.  Error: ${result.error}")
+        }
+
+        scoreData
     }
 
     /**
@@ -515,12 +537,19 @@ class ProjectService  {
             if (!validateExternalIds(project.externalIds)) {
                 return [error: 'A SAP internal order or TechOne code must be supplied before the MERI Plan can be approved']
             }
-
             //When the MERI plan is first approved, the status is changed to "active"
-            def resp = project.status == APPLICATION_STATUS ? update(projectId, [planStatus:PLAN_APPROVED, status:ACTIVE])
+            def resp = isApplication(project) ? update(projectId, [planStatus:PLAN_APPROVED, status:ACTIVE])
                     : update(projectId, [planStatus:PLAN_APPROVED])
             if (resp.resp && !resp.resp.error) {
-                createMeriPlanApprovalDocument(project, approvalDetails)
+                createMeriPlanApprovalDocument (project, approvalDetails)
+
+                if (isApplication(project)) {
+                    ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+                    if (config.generateReportsOnMeriPlanApproval()) {
+                        generateProjectStageReports(projectId, new ReportGenerationOptions())
+                    }
+                }
+
                 sendEmail({ProgramConfig programConfig -> programConfig.getPlanApprovedTemplate()}, project, RoleService.GRANT_MANAGER_ROLE)
                 return [message:'success']
             }
@@ -549,7 +578,7 @@ class ProjectService  {
             return [error: 'Only MERIT admins can return MERI plans for this program']
         }
         if (project.planStatus in [PLAN_SUBMITTED, PLAN_APPROVED]) {
-            def resp = update(projectId, [planStatus:PLAN_NOT_APPROVED])
+            def resp = update(projectId, [planStatus:PLAN_NOT_APPROVED, progress:ActivityService.PROGRESS_STARTED])
             if (resp.resp && !resp.resp.error) {
                 sendEmail({ProgramConfig programConfig -> programConfig.getPlanReturnedTemplate()}, project, RoleService.GRANT_MANAGER_ROLE)
                 return [message:'success']
@@ -853,8 +882,24 @@ class ProjectService  {
         String startDateMessage = validateProjectStartDate(project, config, plannedStartDate, options)
         String endDateMessage = validateProjectEndDate(project, config, plannedEndDate, options)
 
-        String message = [startDateMessage, endDateMessage].findAll().join('\n')
+        String periodsMessage = validateForecastPeriodChange(project, config, plannedStartDate, plannedEndDate)
+
+        String message = [startDateMessage, endDateMessage, periodsMessage].findAll().join('\n')
         message ?: null // Return null rather than an empty string
+    }
+
+    private String validateForecastPeriodChange(Map project, ProgramConfig config, String plannedStartDate, String plannedEndDate) {
+        String message = null
+        if (config.targetsConfig && isApplication(project) && isMeriPlanSubmittedOrApproved(project)) {
+            // Check if the date changes will result in a change to the forecast periods for the project.
+            List currentPeriods = generateTargetPeriods(project, config)
+            Map projectAfterChange = [projectId:project.projectId, name:project.name, plannedStartDate:plannedStartDate, plannedEndDate:plannedEndDate]
+            List newPeriods = generateTargetPeriods(projectAfterChange, config)
+            if (newPeriods.size() != currentPeriods.size()) {
+                message = "The new project dates will result in a change to the forecast periods for the project."
+            }
+        }
+        message
     }
 
     private String validateProjectEndDate(Map project, ProgramConfig config, String plannedEndDate, ReportGenerationOptions options) {
@@ -1023,6 +1068,43 @@ class ProjectService  {
                 reportService.regenerateReports(reportsOfType, configs, reportOwner)
             }
         }
+    }
+
+    List<Map> generateTargetPeriods(Map project, ProgramConfig config) {
+        Map targetsConfig = config?.targetsConfig
+        if (!targetsConfig) {
+            return null
+        }
+        ReportConfig targetsReportConfig = new ReportConfig(targetsConfig.periodGenerationConfig)
+        ReportOwner owner = projectReportOwner(project)
+        // Reports are already sorted by toDate in the project.  Target periods shouldn't be re-generated for
+        // dates before the most recent submitted/approved report.
+        int lastReadOnlyReportIndex = project.reports ? project.reports?.findLastIndexOf {reportService.excludesNotApproved(it)} : -1
+
+        // All output targets use the same set of period targets so the first one is representative of the existing periods.
+        List<Map> existingTargetPeriods = project.outputTargets?[0]?.periodTargets?.collect {
+            [period:it.period, fromDate:it.periodStart, toDate:it.periodEnd]
+        }
+
+        DateTime latestApprovedReportPeriodEnd = null
+        int index = 0
+        List generatedPeriods = []
+        if (lastReadOnlyReportIndex >= 0) {
+            Map lastReadOnlyReport = project.reports[lastReadOnlyReportIndex]
+            index = existingTargetPeriods ? existingTargetPeriods.findIndexOf{it.fromDate >= lastReadOnlyReport.toDate} : -1
+            latestApprovedReportPeriodEnd = DateUtils.parse(lastReadOnlyReport.toDate)
+            if (index >= 0) {
+                generatedPeriods = existingTargetPeriods[0..<index]
+            } else {
+                generatedPeriods = existingTargetPeriods
+            }
+        }
+        int startSequence = index+1
+
+        generatedPeriods += reportService.generateTargetPeriods(targetsReportConfig, owner, targetsConfig.periodLabelFormat, startSequence, latestApprovedReportPeriodEnd)
+
+        generatedPeriods
+
     }
 
     /**
@@ -1722,6 +1804,22 @@ class ProjectService  {
         return target > result
     }
 
+    private static List<Map> getServicesWithoutForecastsForReport(Map project, Map activity, List projectServices) {
+        Set servicesWithForecastsForThisReport = new HashSet(projectServices.size())
+        project.outputTargets?.each { Map outputTarget ->
+            outputTarget.outcomeTargets?.each { Map outcomeTarget ->
+                Map periodTarget = outcomeTarget.periodTargets?.find { it.periodStart <= activity.plannedStartDate && it.periodEnd >= activity.plannedEndDate }
+                if (periodTarget?.target) {
+                    Map service = projectServices.find {
+                        it.scores?.find { score -> score.scoreId == outputTarget.scoreId }
+                    }
+                    servicesWithForecastsForThisReport.add(service)
+                }
+            }
+        }
+        projectServices.findAll{!servicesWithForecastsForThisReport.contains(it)}
+    }
+
     /**
      * If the activity type to be displayed is the RLP Outputs report, only show the outputs that align with
      * services to be delivered by the model.  This method has a side effect of modifying the
@@ -1741,7 +1839,6 @@ class ProjectService  {
             // The values to be filtered can come from either project services or activities in the MERI plan.
             selectedForProject = getProjectServices(project, config)
 
-
             if (!selectedForProject) {
                 serviceOutputs = config.activities?.collect{it.output}.findAll()
                 selectedForProject = getProjectActivities(project, config)
@@ -1757,21 +1854,36 @@ class ProjectService  {
                         {it.formName == activityModel.name})?.sectionName}.findAll()
             }
 
+            boolean filterServicesByForecasts = config.getProgramServices().filterServicesByForecasts
+
             if (selectedForProject) {
                 List projectOutputs = selectedForProject.collect{it.output}
                 List mandatoryOutputs = selectedForProject.findAll{it.mandatory}.collect{it.output}
+
+                List servicesWithoutForecastsForThisReport = []
+                if (filterServicesByForecasts) {
+                    servicesWithoutForecastsForThisReport = getServicesWithoutForecastsForReport(project, existingActivityData, selectedForProject)
+                }
+
                 // Override the mandatory flag for outputs that are mandatory for the program
-                if (mandatoryOutputs) {
+                if (mandatoryOutputs || servicesWithoutForecastsForThisReport) {
                     activityModel.outputConfig = new JSONArray(
                         activityModel.outputConfig.collect { Map outputConfig ->
                             if (mandatoryOutputs.contains(outputConfig.outputName)) {
                                 outputConfig = new JSONObject(outputConfig)
                                 outputConfig.optional = false
                             }
+                            if (servicesWithoutForecastsForThisReport) {
+                                if (servicesWithoutForecastsForThisReport.find { it.output == outputConfig.outputName }) {
+                                    outputConfig = new JSONObject(outputConfig)
+                                    outputConfig.collapsedByDefault = true
+                                }
+                            }
                             outputConfig
                         })
 
                 }
+
 
                 filteredModel = filterActivityModel(activityModel, existingActivityData, serviceOutputs, projectOutputs, mandatoryOutputs, editable)
             }
@@ -1881,21 +1993,28 @@ class ProjectService  {
     Map scoresForReport(String projectId, String reportId, List scoreIds) {
         Map project = get(projectId)
         Map report = project.reports?.find{it.reportId == reportId}
-        Map result = [:]
+
+        Map results = [:]
         if (report) {
-            String format = 'YYYY-MM'
-
-            List dateBuckets = [report.fromDate, report.toDate]
-            Map results = reportService.dateHistogramForScores(projectId, dateBuckets, format, scoreIds)
-
-            // Match the algorithm used in ecodata to determine the algorithm so we can determine
-            DateTime start = DateUtils.parse(report.fromDate).withZone(DateTimeZone.getDefault())
-            DateTime end = DateUtils.parse(report.toDate).withZone(DateTimeZone.getDefault())
-
-            String matchingGroup = DateUtils.format(start, format) + ' - ' + DateUtils.format(end.minusDays(1), format)
-            result = results.resp?.find{ it.group == matchingGroup } ?: [:]
-
+           results = scoresForPeriod(projectId, report.fromDate, report.toDate, scoreIds)
         }
+        results
+
+    }
+
+    Map scoresForPeriod(String projectId, String fromDate, String toDate, List scoreIds, String format = 'YYYY-MM') {
+        Map result = [:]
+
+        List dateBuckets = [fromDate, toDate]
+        Map results = reportService.dateHistogramForScores(projectId, dateBuckets, format, scoreIds)
+
+        // Match the algorithm used in ecodata to determine the algorithm so we can determine
+        DateTime start = DateUtils.parse(fromDate).withZone(DateTimeZone.getDefault())
+        DateTime end = DateUtils.parse(toDate).withZone(DateTimeZone.getDefault())
+
+        String matchingGroup = DateUtils.format(start, format) + ' - ' + DateUtils.format(end.minusDays(1), format)
+        result = results.resp?.find{ it.group == matchingGroup } ?: [:]
+
         scoreIds.collectEntries{ String scoreId ->[(scoreId):result.results?.find{it.scoreId == scoreId}?.result?.result ?: 0]}
     }
 
@@ -1909,8 +2028,9 @@ class ProjectService  {
     Map getServiceDashboardData(String projectId, boolean approvedDataOnly) {
 
         List<Score> projectServices = getProjectServicesWithTargets(projectId)
-        List scoreIds = projectServices.collect{it.scores?.collect{ score ->
+        // The dashboard only displays scores with non zero targets.
 
+        List scoreIds = projectServices.collect {it.scores?.findAll{it.target}?.collect{ score ->
             if (score.relatedScores) {
                 return score.relatedScores.collect{it.scoreId} + score.scoreId
             }
@@ -2386,5 +2506,91 @@ class ProjectService  {
         }
         result.success = result.errors.size() == 0
         result
+    }
+
+    private mergeScoreDataIntoResults(String scoreId, Map outcomeScoreData, List targetsForThisReport, String propertyNameToUpdate) {
+        outcomeScoreData?.groups?.each { Map group ->
+            String outcomeGroup = group.group
+            def outcomeDelivered = group.results?[0]?.result
+
+            Map outcome = targetsForThisReport.find{it.relatedOutcomes == outcomeGroup}
+            Map outcomeTarget = outcome?.deliveredAgainstOutcomes?.find{it.scoreId == scoreId}
+            if (outcomeTarget) {
+                outcomeTarget[propertyNameToUpdate] = outcomeDelivered ?: 0
+            }
+        }
+    }
+
+    List getOutcomeTargetsForProject(Map project, Map report, Map activity) {
+        List servicesForProject = getProjectServices(project)
+        List targetsForThisReport = targetsForReportingPeriod(project, report, servicesForProject)
+
+        Map result = getServiceDashboardData(project.projectId, true)
+        result.services.each { Map service ->
+            service.scores?.each { Score score ->
+                Map byOutcome = score.relatedScores.find{it.description == 'By outcome'}
+                if (byOutcome) {
+                    Score outcomeScore = byOutcome.score
+                    mergeScoreDataIntoResults(score.scoreId, outcomeScore.result, targetsForThisReport, 'deliveredApproved')
+                }
+            }
+        }
+
+        if (activity?.outputs) { // Only perform calculations for activities that have at least some data.
+            List scoreIds = []
+            Map scoreForOutcomeScore = [:]
+            servicesForProject?.each { Map service ->
+                service.scores?.each { Map score ->
+                    Map byOutcomeScore = score.relatedScores?.find { it.description == 'By outcome'}
+                    if (byOutcomeScore) {
+                        scoreIds << byOutcomeScore.scoreId
+                        scoreForOutcomeScore[byOutcomeScore.scoreId] = score.scoreId
+                    }
+                }
+            }
+            List scores = scoreDataForActivity(activity, scoreIds)
+            scores?.each { Map data ->
+                mergeScoreDataIntoResults( scoreForOutcomeScore[data.scoreId], data.result, targetsForThisReport, 'deliveredThisPeriod')
+            }
+
+        }
+        targetsForThisReport
+    }
+
+    private List<Map> targetsForReportingPeriod(Map project, Map report, List servicesForProject ) {
+        List<Map> outcomeTargetsForReport = []
+        project.outputTargets?.each { Map outputTarget ->
+
+            outputTarget.outcomeTargets?.each { Map outcomeTarget ->
+
+                String outcomeTargetKey = new ArrayList(outcomeTarget.relatedOutcomes)?.join(',')
+                Map outcome = outcomeTargetsForReport.find{it.relatedOutcomes == outcomeTargetKey}
+                if (!outcome) {
+                    List outcomeStatements = project.custom?.details?.outcomes?.projectTermOutcomes?.findAll { it.code in outcomeTarget.relatedOutcomes }?.collect { it.description }
+                    outcome = [relatedOutcomes: new ArrayList(outcomeTarget.relatedOutcomes)?.join(', '), outcomeStatements: outcomeStatements?.join(','), deliveredAgainstOutcomes: []]
+                    outcomeTargetsForReport << outcome
+                }
+
+                Map periodTarget = outcomeTarget.periodTargets?.find { Map periodTarget ->
+                    periodTarget.periodStart < report.toDate && periodTarget.periodEnd >= report.toDate
+                }
+                String label = null
+                servicesForProject.find { Map service ->
+                    Map score = service.scores?.find{it.scoreId == outputTarget.scoreId }
+                    if (score) {
+                        label = service.name + ' - ' + score.label
+                    }
+                    score
+                }
+
+                outcome.deliveredAgainstOutcomes << [scoreId: outputTarget.scoreId, targetMeasureLabel: label ?: outputTarget.scoreId, target: outcomeTarget.target, periodTarget: periodTarget?.target ?: 0]
+
+            }
+        }
+        outcomeTargetsForReport.sort { it.relatedOutcomes }
+        outcomeTargetsForReport.each {
+            it.deliveredAgainstOutcomes.sort { it.targetMeasureLabel }
+        }
+        outcomeTargetsForReport
     }
 }

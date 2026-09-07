@@ -328,7 +328,15 @@ var config = {
     config.services = services;
 
     config.useRlpTemplate = ${config.getProjectTemplate() == au.org.ala.merit.config.ProgramConfig.ProjectTemplate.RLP};
-    config.useServiceOutcomesModel = ${config.program?.config?.meriPlanContents?.find{it.template == 'serviceOutcomeTargets'} != null};
+    config.useServiceOutcomesModel = ${config.program?.config?.meriPlanContents?.find{it.template?.startsWith('serviceOutcomeTargets')} != null};
+    config.separateTargetsPerOutcome = ${config.program?.config?.meriPlanContents?.find{it.template.startsWith('serviceOutcomeTargets')}?.model?.separateTargetsPerOutcome ?: false};
+    <g:if test="${config.program?.config?.meriPlanTemplate == 'rlpMeriPlan'}">
+        config.outcomeStatementsConfig = [{outcomeType:'short', minimumNumberOfOutcomes:1}, {outcomeType:'mid', minimumNumberOfOutcomes:0}];
+    </g:if>
+    <g:else>
+        config.outcomeStatementsConfig = <fc:modelAsJavascript model="${config.program?.config?.meriPlanContents?.findAll{it.template == 'outcomeStatements'}?.collect{[outcomeType:it.model.outcomeType?:'short', minimumNumberOfOutcomes:it.model.minimumNumberOfOutcomes?:0]}}" default="{}"/>;
+    </g:else>
+
     config.riskModel = "${config.riskModel()}";
     config.keyThreatCodes  = <fc:modelAsJavascript model="${config.program?.config?.keyThreatCodes ?: []}"/>;
     config.priorityPlaces = <fc:modelAsJavascript model="${config.program?.config?.priorityPlaces ?: []}"/>;
@@ -358,6 +366,7 @@ var config = {
     config.minutesToIngestDataSet = fcConfig.minutesToIngestDataSet;
     project.mapFeatures = $.parseJSON('${mapFeatures?.encodeAsJavaScript()}');
     config.projectTags = <fc:modelAsJavascript model="${projectContent.admin.tags}" default="[]"/>;
+    config.targetPeriods = <fc:modelAsJavascript model="${projectContent.admin?.forecastPeriods ?: []}"/>;
     var viewModel = new ProjectPageViewModel(project, project.sites, project.activities || [], userRoles, config);
     viewModel.loadPrograms(programs);
     viewModel.loadStatesAndElectorates();

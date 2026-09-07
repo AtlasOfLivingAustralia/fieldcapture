@@ -208,7 +208,7 @@ class RlpReportingSpec extends StubbedCasSpec {
         !projectReports.reports[0].notRequired()
     }
 
-    def "A PDF can be genreated from report tab"() {
+    def "A PDF can be generated from report tab"() {
         setup:
         String projectId = '1'
         loginAsUser('1', browser)
