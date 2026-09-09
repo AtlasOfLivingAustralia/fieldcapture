@@ -31,7 +31,7 @@ class HomeIndexPageSpec extends StubbedCasSpec {
 
         then:
         waitFor 60, { // The homepage statistics are loaded via AJAX when the cache is cleared
-            box1.size() == 1
+            box1.size() == 1 && box2.size() == 1 && box3.size() == 1 && box4.size() == 1 && box5.size() == 1 && box6.size() == 1
             box1[0].statUnit.text() == "Projects"
         }
         and:
