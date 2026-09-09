@@ -1794,7 +1794,6 @@ class ProjectService  {
         targets
     }
 
-
     private boolean missedTarget(Map targetData) {
         if (!targetData) {
             return false
@@ -1990,14 +1989,38 @@ class ProjectService  {
         return report
     }
 
-    Map scoresForReport(String projectId, String reportId, List scoreIds) {
+    Map scoresForReport(String projectId, String reportId, List scoreIds, Boolean includeTargets = false) {
         Map project = get(projectId)
         Map report = project.reports?.find{it.reportId == reportId}
 
         Map results = [:]
         if (report) {
-           results = scoresForPeriod(projectId, report.fromDate, report.toDate, scoreIds)
+
+            List services = null
+            if (!scoreIds || includeTargets) {
+                services = getProjectServicesWithTargets(projectId)
+                scoreIds = services.collect { it.scores?.collect { score -> score.scoreId } }.flatten()
+            }
+
+            Map deliveredDuringPeriod = scoresForPeriod(projectId, report.fromDate, report.toDate, scoreIds)
+
+            if (includeTargets) {
+                List targetMeasuresWithTargetsAndDelivered = []
+                services.each { Map service ->
+                    service.scores?.each { Score score ->
+                        def projectTarget = score.target
+                        def periodTarget = score.periodTargets?.find { it.periodStart <= report.fromDate && it.periodEnd >= report.toDate }?.target
+                        def periodDelivered = deliveredDuringPeriod[score.scoreId] ?: 0
+                        targetMeasuresWithTargetsAndDelivered << [scoreId:score.scoreId, service: service.name, targetMeasure:score.label, projectTarget:projectTarget, periodTarget: periodTarget, periodResult: periodDelivered]
+                    }
+                }
+                results = [targetMeasures:targetMeasuresWithTargetsAndDelivered]
+            }
+            else {
+                results = deliveredDuringPeriod
+            }
         }
+
         results
 
     }

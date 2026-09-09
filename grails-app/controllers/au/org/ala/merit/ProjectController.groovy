@@ -1002,8 +1002,8 @@ class ProjectController {
     def scoresForReport(String id) {
         List scoreIds = params.getList('scoreIds')
         String reportId = params.get('reportId')
-
-        Map result = projectService.scoresForReport(id, reportId, scoreIds)
+        Boolean includeTargets = params.get('includeTargets')
+        Map result = projectService.scoresForReport(id, reportId, scoreIds, includeTargets)
 
         render result as JSON
     }
