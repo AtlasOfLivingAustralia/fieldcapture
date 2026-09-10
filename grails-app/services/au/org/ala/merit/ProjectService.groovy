@@ -2009,9 +2009,11 @@ class ProjectService  {
                 services.each { Map service ->
                     service.scores?.each { Score score ->
                         def projectTarget = score.target
-                        def periodTarget = score.periodTargets?.find { it.periodStart <= report.fromDate && it.periodEnd >= report.toDate }?.target
-                        def periodDelivered = deliveredDuringPeriod[score.scoreId] ?: 0
-                        targetMeasuresWithTargetsAndDelivered << [scoreId:score.scoreId, service: service.name, targetMeasure:score.label, projectTarget:projectTarget, periodTarget: periodTarget, periodResult: periodDelivered]
+                        if (projectTarget) {
+                            def periodTarget = score.periodTargets?.find { it.periodStart <= report.fromDate && it.periodEnd >= report.toDate }?.target
+                            def periodDelivered = deliveredDuringPeriod[score.scoreId] ?: 0
+                            targetMeasuresWithTargetsAndDelivered << [scoreId:score.scoreId, service: service.name, targetMeasure:score.label, projectTarget:projectTarget, periodTarget: periodTarget, periodResult: periodDelivered]
+                        }
                     }
                 }
                 results = [targetMeasures:targetMeasuresWithTargetsAndDelivered]
