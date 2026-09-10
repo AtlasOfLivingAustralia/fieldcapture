@@ -2010,7 +2010,7 @@ class ProjectService  {
                     service.scores?.each { Score score ->
                         def projectTarget = score.target
                         if (projectTarget) {
-                            def periodTarget = score.periodTargets?.find { it.periodStart <= report.fromDate && it.periodEnd >= report.toDate }?.target
+                            def periodTarget = score.periodTargets?.find { it.periodStart <= report.toDate && it.periodEnd >= report.toDate }?.target
                             def periodDelivered = deliveredDuringPeriod[score.scoreId] ?: 0
                             targetMeasuresWithTargetsAndDelivered << [scoreId:score.scoreId, service: service.name, targetMeasure:score.label, projectTarget:projectTarget, periodTarget: periodTarget, periodResult: periodDelivered]
                         }
