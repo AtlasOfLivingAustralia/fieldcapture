@@ -797,6 +797,24 @@
                 ]
               },
               {
+                "type": "row",
+                "class": "alert alert-warning m-1",
+                "items": [
+                  {
+                    "type": "col",
+
+                    "items": [
+                      {
+
+                        "type": "literal",
+                        "source": "The target and amount deliveried fields below cannot be edited. They will populate automatically once you start entering your activity data at question 6 below."
+                      }
+                    ]
+                  }
+
+                ]
+              },
+              {
                 "type": "table",
                 "source": "deliveredAgainstOutcomes",
                 "disableTableUpload": true,
@@ -820,21 +838,24 @@
                     "type": "number",
                     "source": "deliveredApproved",
                     "readonly": true,
-                    "width": "5%"
+                    "width": "5%",
+                    "helpText": "This value is derived from previously submitted and approved reports"
                   },
                   {
                     "title": "Forecast for this reporting period",
                     "type": "number",
                     "source": "periodTarget",
                     "readonly": true,
-                    "width": "5%"
+                    "width": "5%",
+                    "helpText": "This is the forecast for the outcome and target measure from the project MERI plan for this reporting period"
                   },
                   {
                     "title": "Delivered this reporting period",
                     "type": "number",
                     "source": "deliveredThisPeriod",
                     "readonly": true,
-                    "width": "5%"
+                    "width": "5%",
+                    "helpText": "This value is calculated from data reported in the project service sections below in this report.  They will update as you enter data into the report."
                   },
                   {
                     "width": "40%",
@@ -1064,7 +1085,7 @@
           {
             "items": [
               {
-                "source": "<h4>6. Activity Reporting</h4></br><b>Only selected services in the MERI Plan is auto-populated and viewed in the Progress Report/s.<br>Reported data from each of the Progress Report/s is aggregated into the Final Report.</b>",
+                "source": "<h4>6. Activity Reporting</h4></br><b>Only services selected in the MERI Plan are auto-populated and visible in Progress Reports.\nData reported in each Progress Report is aggregated into the Final Report.</b>",
                 "type": "literal"
               }
             ],
