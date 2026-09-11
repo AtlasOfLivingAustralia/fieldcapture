@@ -721,4 +721,43 @@ class ReportGeneratorSpec extends Specification {
         '2024-06-29T14:00:00Z' | '2026-06-30T14:00:00Z'
 
     }
+
+    def "The bufferForLastReportEndDate configuration can be used to reduce the period end date for reports"() {
+        setup:
+        ReportGenerator generator = new ReportGenerator()
+        ReportConfig config = new ReportConfig(
+                reportingPeriodInMonths: 3,
+                reportsAlignedToCalendar: true,
+                activityType: 'Progress Report',
+                category: 'Progress Reporting',
+                reportNameFormat: "Progress Report %1\$d",
+                reportDescriptionFormat: "Progress Report %1\$d"
+        )
+        ReportOwner owner = new ReportOwner(id:[projectId:'p1'], name:'Project 1', periodStart: '2020-06-30T14:00:00Z', periodEnd: '2021-06-30T14:00:00Z')
+
+        when: "No buffer is specified"
+        DateTime periodEnd = config.getPeriodEnd(owner)
+
+        then: "The period end matches the owner period end"
+        periodEnd == DateUtils.parse('2021-06-30T14:00:00Z')
+
+        when: "A buffer of 1 month is specified"
+        config.bufferForLastReportEndDate = "P1M"
+        periodEnd = config.getPeriodEnd(owner)
+
+        then: "The period end is reduced by 1 month"
+        periodEnd == DateUtils.parse('2021-05-30T14:00:00Z')
+
+        when: "A buffer of 3 months is specified and reports are generated"
+        config.bufferForLastReportEndDate = "P3M"
+        periodEnd = config.getPeriodEnd(owner)
+        List reports = generator.generateReports(config, owner, 0, null)
+
+        then: "The period end is reduced by 3 months and the final period report is not generated"
+        periodEnd == DateUtils.parse('2021-03-30T14:00:00Z')
+        reports.size() == 3
+        reports[0].toDate == '2020-09-30T14:00:00Z'
+        reports[1].toDate == '2020-12-31T13:00:00Z'
+        reports[2].toDate == '2021-03-30T14:00:00Z'
+    }
 }

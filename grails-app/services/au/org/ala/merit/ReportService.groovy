@@ -93,6 +93,10 @@ class ReportService {
         log.info("name: " + existingReport.name + " - " + report.name)
         log.info("fromDate: " + existingReport.fromDate + " - " + report.fromDate)
         log.info("toDate: " + existingReport.toDate + " - " + report.toDate)
+        // Don't change any due dates that have been overridden by a grant manager
+        if (existingReport.dueDateManuallyAssigned) {
+            report.dueDate = existingReport.dueDate
+        }
         if (excludesNotApproved(existingReport)) {
 
             boolean approved = isApproved(existingReport)

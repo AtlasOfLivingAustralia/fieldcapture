@@ -28,7 +28,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
     EmailService emailService = Mock(EmailService)
     AuditService auditService = Mock(AuditService)
     ProjectConfigurationService projectConfigurationService = Mock(ProjectConfigurationService)
-    ProgramConfig projectConfig = new ProgramConfig([activityBasedReporting: true, reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43])
+    ProgramConfig projectConfig = new ProgramConfig([activityBasedReporting: true, reportingPeriod:6, reportingPeriodAlignedToCalendar: true, reportDueDatePeriod:"P43D"])
     ProgramService programService = Mock(ProgramService)
     CacheService cacheService = Mock(CacheService)
     LockService lockService = Mock(LockService)
@@ -36,7 +36,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
     RoleService roleService = Mock(RoleService)
 
     Map reportConfig = [
-            weekDaysToCompleteReport:projectConfig.weekDaysToCompleteReport,
+            reportDueDatePeriod:projectConfig.reportDueDatePeriod,
             reportType:ReportService.REPORT_TYPE_STAGE_REPORT,
             reportingPeriodInMonths: projectConfig.reportingPeriod,
             reportsAlignedToCalendar: projectConfig.reportingPeriodAlignedToCalendar,

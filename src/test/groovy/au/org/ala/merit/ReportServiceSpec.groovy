@@ -44,7 +44,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
      * Activities will only be created when no reporting activity of the correct type exists within each period.
      * @param projectId identifies the project.
      */
-    private void regenerateAllStageReportsForProject(String projectId, Integer periodInMonths = 6, boolean alignToCalendar = false, Integer weekDaysToCompleteReport = null) {
+    private void regenerateAllStageReportsForProject(String projectId, Integer periodInMonths = 6, boolean alignToCalendar = false, String reportDueDatePeriod = null) {
         Map project = projectService.get(projectId, 'all')
 
         ReportConfig reportConfig = new ReportConfig(
@@ -54,7 +54,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
                 reportDescriptionFormat: "Stage %1\$d for %4\$s",
                 reportType:'Activity',
                 category:"Stage reports",
-                weekDaysToCompleteReport: weekDaysToCompleteReport
+                reportDueDatePeriod: reportDueDatePeriod
         )
         ReportOwner reportOwner = new ReportOwner(
                 id:[projectId:projectId],
@@ -88,14 +88,14 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         projectService.get(_, _) >> project
 
         when:
-        regenerateAllStageReportsForProject('p1', 6, true, 43)
+        regenerateAllStageReportsForProject('p1', 6, true, "P1M")
 
         then:
         0 * webService.doDelete(*_)
-        1 * webService.doPost(_, [fromDate: '2014-12-31T13:00:00Z', toDate: '2015-06-30T14:00:00Z', submissionDate: '2015-06-30T14:00:00Z', dueDate: '2015-08-12T14:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
-        1 * webService.doPost(_, [fromDate: '2015-06-30T14:00:00Z', toDate: '2015-12-31T13:00:00Z', submissionDate: '2015-12-31T13:00:00Z', dueDate: '2016-02-12T13:00:00Z', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
-        1 * webService.doPost(_, [fromDate: '2015-12-31T13:00:00Z', toDate: '2016-06-30T14:00:00Z', submissionDate: '2016-06-30T14:00:00Z', dueDate: '2016-08-12T14:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
-        1 * webService.doPost(_, [fromDate: '2016-06-30T14:00:00Z', toDate: '2016-12-31T23:59:59Z', submissionDate: '2016-12-31T23:59:59Z', dueDate: '2017-02-12T13:00:00Z', type: 'Activity', name: 'Stage 4', description: "Stage 4 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost(_, [fromDate: '2014-12-31T13:00:00Z', toDate: '2015-06-30T14:00:00Z', submissionDate: '2015-06-30T14:00:00Z', dueDate: '2015-07-31T14:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost(_, [fromDate: '2015-06-30T14:00:00Z', toDate: '2015-12-31T13:00:00Z', submissionDate: '2015-12-31T13:00:00Z', dueDate: '2016-01-31T13:00:00Z', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost(_, [fromDate: '2015-12-31T13:00:00Z', toDate: '2016-06-30T14:00:00Z', submissionDate: '2016-06-30T14:00:00Z', dueDate: '2016-07-31T14:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost(_, [fromDate: '2016-06-30T14:00:00Z', toDate: '2016-12-31T23:59:59Z', submissionDate: '2016-12-31T23:59:59Z', dueDate: '2017-01-31T13:00:00Z', type: 'Activity', name: 'Stage 4', description: "Stage 4 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
         0 * webService._
     }
 
@@ -106,7 +106,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         projectService.get(_, _) >> project
 
         when:
-        regenerateAllStageReportsForProject('p1', 6, true, 43)
+        regenerateAllStageReportsForProject('p1', 6, true, "P43D")
 
         then:
         0 * webService.doDelete(*_)
@@ -126,7 +126,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         projectService.get(_, _) >> project
 
         when:
-        regenerateAllStageReportsForProject('p1', 6, true, 43)
+        regenerateAllStageReportsForProject('p1', 6, true, "P43D")
 
         then:
         1 * webService.doPost(_, [reportId:'1', fromDate: '2015-08-01T00:00:00Z', toDate: '2015-12-31T13:00:00Z', submissionDate: '2015-12-31T13:00:00Z', dueDate: '2016-02-12T13:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
@@ -145,7 +145,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         projectService.get(_, _) >> project
 
         when:
-        regenerateAllStageReportsForProject('p1', 6, true, 43)
+        regenerateAllStageReportsForProject('p1', 6, true, "P43D")
 
         then: "a new report should be added at the end of the project"
 
@@ -162,7 +162,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         projectService.get(_, _) >> project
 
         when:
-        regenerateAllStageReportsForProject('p1', 6, true, 43)
+        regenerateAllStageReportsForProject('p1', 6, true, "P43D")
 
         then: "the last report should be deleted"
         1 * webService.doDelete({ it.endsWith('/report/4')})
@@ -177,7 +177,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         projectService.get(_, _) >> project
 
         when:
-        regenerateAllStageReportsForProject('p1', 6, true, 43)
+        regenerateAllStageReportsForProject('p1', 6, true, "P43D")
 
         then: "a new report should be added to the end"
         1 * webService.doPost({it.endsWith('/report/')}, [fromDate: '2016-12-31T13:00:00Z', toDate: '2017-07-01T00:00:00Z', submissionDate:'2017-07-01T00:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", projectId: 'p1', dueDate: '2017-08-12T14:00:00Z', category:'Stage reports', 'generatedBy':'Stage reports', 'generatedBy':'Stage reports'])
@@ -197,7 +197,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         projectService.get(_, _) >> project
 
         when:
-        regenerateAllStageReportsForProject('p1', 6, true, 43)
+        regenerateAllStageReportsForProject('p1', 6, true, "P43D")
 
         then: "no reports should not be changed"
         0 * webService._
@@ -216,7 +216,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         projectService.get(_, _) >> project
 
         when:
-        regenerateAllStageReportsForProject('p1', 6, true, 43)
+        regenerateAllStageReportsForProject('p1', 6, true, "P43D")
 
         then: "a new report is added to the end of the schedule"
         1 * webService.doPost({it.endsWith('/report/')}, [fromDate: '2016-12-31T13:00:00Z', toDate: '2017-01-07T00:00:00Z', submissionDate: '2017-01-07T00:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", dueDate:'2017-08-12T14:00:00Z', projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports', 'generatedBy':'Stage reports'])
@@ -237,7 +237,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         projectService.get(_, _) >> project
 
         when:
-        regenerateAllStageReportsForProject('p1', 6, true, 43)
+        regenerateAllStageReportsForProject('p1', 6, true, "P43D")
 
         then: "only the non-approved or submitted report should be removed."
         1 * webService.doDelete({ it.endsWith('/report/4')})
