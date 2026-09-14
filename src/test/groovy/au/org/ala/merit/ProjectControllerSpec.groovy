@@ -973,7 +973,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         controller.scoresForReport(projectId)
 
         then:
-        1 * projectService.scoresForReport(projectId, reportId, scoreIds) >> result
+        1 * projectService.scoresForReport(projectId, reportId, scoreIds, null) >> result
         response.json == result
     }
 

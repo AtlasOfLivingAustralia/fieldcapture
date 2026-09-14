@@ -3,6 +3,7 @@ import au.org.ala.merit.MeritServletContextConfig
 import au.org.ala.merit.config.BdrTokenConfig
 import au.org.ala.merit.StatisticsFactory
 import au.org.ala.merit.hub.HubAwareLinkGenerator
+import au.org.ala.merit.reports.GrantsReportLifecycleListener
 import au.org.ala.merit.reports.NHTOutputReportLifecycleListener
 import au.org.ala.merit.reports.NHTOutcomes2ReportLifecycleListener
 import au.org.ala.merit.reports.RegionalCapacityServicesReportLifecycleListener
@@ -26,6 +27,7 @@ beans = {
     NHTOutputReport(NHTOutputReportLifecycleListener)
     NHTOutcomes2Report(NHTOutcomes2ReportLifecycleListener)
     GrantsandOthersProgressReport(NHTOutputReportLifecycleListener)
+    EnhancedGrantsProgressReport(GrantsReportLifecycleListener)
     ProcurementOutputReport(NHTOutputReportLifecycleListener)
     RegionalCapacityServicesReport(RegionalCapacityServicesReportLifecycleListener)
 

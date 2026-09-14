@@ -6,8 +6,9 @@ load('../data/activityForms/RLPOutputReport.js');
 load('../data/activityForms/CoreServicesReport.js');
 load('../data/activityForms/ProgressReport.js');
 load('../data/activityForms/Revegetation.js');
-load('../data/activityForms/PlantPropogation.js')
-load('../data/activityForms/ESPActivityReport.js')
+load('../data/activityForms/PlantPropogation.js');
+load('../data/activityForms/ESPActivityReport.js');
+load('../data/activityForms/enhancedGrantsProgressReport.js');
 load('../data/scoreDefaults.js');
 load('../data/activityDefaults.js');
 load('../data/outputDefaults.js');
@@ -156,9 +157,15 @@ function createProjectCommunityOnGroundWorks(data){
     assign(data, scoreDefault)
     db.score.insert(scoreDefault);
 }
-function createProjectCommunityDemostrations(data){
+function createProjectCommunityDemonstrations(data){
     var scoreDefault = projectCommunityDemostrations.create();
     assign(data, scoreDefault)
+    db.score.insert(scoreDefault);
+}
+
+function createScore(score, data) {
+    let scoreDefault = score.create();
+    assign(data, scoreDefault);
     db.score.insert(scoreDefault);
 }
 
@@ -178,6 +185,7 @@ function loadActivityForms() {
     db.activityForm.insert(revegetation);
     db.activityForm.insert(plantPropogation);
     db.activityForm.insert(espPMUReport);
+    db.activityForm.insert(grantsProgressReport);
 
     var forms = db.activityForm.find({});
     print("Total Forms in DB: " + forms.count());

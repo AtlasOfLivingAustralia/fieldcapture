@@ -303,6 +303,13 @@ EditOrganisationViewModel = function(props, options) {
     var self = this;
     _.extend(self, new OrganisationViewModel(props, options));
 
+    var defaults = {
+        validationContainerSelector: '.validationEngineContainer',
+        helpPopoverSelector: '.helphover'
+    };
+
+    var config = _.extend({}, defaults, options);
+
     self.allFieldsEditable = options.allFieldsEditable;
 
     self.onPasteAbn = function(vm, event) {
@@ -412,7 +419,7 @@ EditOrganisationViewModel = function(props, options) {
         });
 
     self.save = function() {
-        if ($(options.validationContainerSelector).validationEngine('validate')) {
+        if ($(config.validationContainerSelector).validationEngine('validate')) {
 
             self.saveWithErrorDetection(
                 function(data) {
@@ -435,7 +442,7 @@ EditOrganisationViewModel = function(props, options) {
     }
 
     self.attachValidation = function() {
-        $(options.validationContainerSelector).validationEngine();
+        $(config.validationContainerSelector).validationEngine();
     };
 
     self.toJS = function(includeDocuments) {
@@ -461,6 +468,8 @@ EditOrganisationViewModel = function(props, options) {
         orgJs.postcode = Number(orgJs.postcode);
         return JSON.stringify(orgJs);
     };
+
+    $(config.helpPopoverSelector).popover({animation: true, trigger:'hover', container:'body'});
 
 }
 
@@ -550,7 +559,6 @@ OrganisationPageViewModel = function (props, options) {
             }
         }
     };
-    var organisationService = new OrganisationService(options);
     self.periods = options.targetPeriods || [];
 
     self.initialise = function() {
@@ -656,7 +664,7 @@ OrganisationPageViewModel = function (props, options) {
         }
     }
 
-    self.allTargetMeasures = _.sortBy(self.allTargetMeasures, 'label');
+    self.allTargetMeasures = sortTargetMeasures(self.allTargetMeasures);
     var propDetails = props && props.custom && props.custom.details || {};
     self.selectedTargetMeasures = ko.observableArray();
     var details = new OrganisationDetailsViewModel(propDetails, props, self.periods, self.allTargetMeasures, options);

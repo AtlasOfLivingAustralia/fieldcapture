@@ -25,6 +25,7 @@ class ProjectExplorerSpec extends StubbedCasSpec {
         expectedProjects.add("project active")
         expectedProjects.add("Grants project")
         expectedProjects.add("project application")
+        expectedProjects.add("New Grants Project")
 
 
         when: "Reindex to ensure the project explorer will have predictable data"
@@ -55,7 +56,7 @@ class ProjectExplorerSpec extends StubbedCasSpec {
 
         then:
         waitFor 20, {
-            projects.size() == 15
+            projects.size() == 16
             facets.size() == 12
             chooseMoreFacetTerms.size() == 0
         }
@@ -84,7 +85,7 @@ class ProjectExplorerSpec extends StubbedCasSpec {
             clearDatesBtn.displayed
         }
         waitFor 20, {
-            projects.size() == 15
+            projects.size() == 16
         }
 
         when: "We filter project by dates"
@@ -145,7 +146,7 @@ class ProjectExplorerSpec extends StubbedCasSpec {
             clearDatesBtn.displayed
         }
         waitFor 20, {
-            projects.size() == 15
+            projects.size() == 16
             facets.size() == 12
             chooseMoreFacetTerms.size() == 0
         }
@@ -162,7 +163,7 @@ class ProjectExplorerSpec extends StubbedCasSpec {
 
         then:
         waitFor { hasBeenReloaded() }
-        waitFor { projects.size() == 1 }
+        waitFor { projects.size() == 2 }
 
         when: "We expand the project to view the details"
         projects[0].toggle()
