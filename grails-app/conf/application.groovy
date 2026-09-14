@@ -102,7 +102,7 @@ if (!collectory.baseURL) {
 }
 // spatial services
 if(!spatial.baseUrl){
-    spatial.baseUrl = "https://spatial-test.ala.org.au"
+    spatial.baseUrl = "https://spatial.test.ala.org.au"
 }
 if(!spatial.layersUrl){
     spatial.layersUrl = spatial.baseUrl + "/ws"
@@ -292,6 +292,8 @@ sites.known_shapes = [
 
 layers.elect = 'cl11225'
 layers.states = 'cl927'
+layers.countries.fid = 'cl932'
+layers.countries.displayNamesForAustralia = ['Australia']
 
 environments {
     development {
