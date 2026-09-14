@@ -1039,6 +1039,11 @@ function BulkCreateSiteViewModel (alaMap, config) {
     self.sites = ko.observableArray([]);
     self.selectedSites = ko.observableArray([]);
     self.selectAll = ko.observable(false);
+    self.uploading = ko.observable(false);
+    self.countSuccess = ko.observable(0);
+    self.countError = ko.observable(0);
+    self.successfulSitesPercentage = ko.observable(0);
+    self.failedSitesPercentage = ko.observable(0);
 
     self.addSite = function() {
         self.sites.push(new SiteViewModel(defaultSiteValues, {}));
@@ -1123,59 +1128,112 @@ function BulkCreateSiteViewModel (alaMap, config) {
         self.sites.remove(site);
     };
 
-    self.createSites = async function() {
-        var sites = self.selectedSites().map(id => self.findSiteByTempSiteId(id));
-        for (var i = 0; i < sites.length; i++) {
-            await self.createSite.apply(sites[i]);
+    self.viewSite = function() {
+        var site = this,
+            siteId = site.siteId;
+        if (siteId) {
+            var url = config.siteViewUrl + '/' + siteId;
+            window.open(url, '_blank').focus();
         }
+    }
+
+    self.createSites = async function() {
+        var sites = self.selectedSites().map(id => self.findSiteByTempSiteId(id)),
+            message, sitesToRemove = [];
+
+        self.countSuccess(0);
+        self.countError(0);
+        self.successfulSitesPercentage(0);
+        self.failedSitesPercentage(0);
+        self.uploading(true);
+        for (var i = 0; i < sites.length; i++) {
+            try {
+                await self.createSite.apply(sites[i]);
+                self.countSuccess(self.countSuccess() + 1);
+                self.successfulSitesPercentage(self.countSuccess() / sites.length * 100);
+                sitesToRemove.push(sites[i].transients.tempSiteId());
+            } catch (e) {
+                self.countError(self.countError() + 1);
+                self.failedSitesPercentage(self.countError() / sites.length * 100);
+            }
+        }
+
+
+        if (sitesToRemove.length > 0)
+            self.selectedSites.removeAll(sitesToRemove);
+
+        if (self.countSuccess() > 0)
+            message = self.countSuccess() + " site" + (self.countSuccess() > 1 ? "s" : "") + " created successfully.";
+
+        if (self.countError() > 0)
+            message = (message ? message + " " : "") + self.countError() + " site" + (self.countError() > 1 ? "s" : "") + " failed to create.";
+
+        setTimeout(() => {
+            self.uploading(false);
+        }, 5000);
+
+        message && setTimeout(() => {
+            alert(message);
+        }, 1000);
     };
 
     self.createSite = function() {
         var site = this,
             layers = alaMap.findLayersByProperty('tempSiteId', site.transients.tempSiteId()),
             featureCollection = L.featureGroup(layers).toGeoJSON(),
-            data;
+            data, resolve, reject,
+            promise = new Promise((res, rej ) => {
+                resolve = res;
+                reject = rej;
+            });
 
         if (!featureCollection || !featureCollection.features || featureCollection.features.length === 0) {
             alert("No features found for site " + site.name() + ". Please draw a shape on the map before creating the site.");
-            return;
+            return Promise.reject();
+        }
+
+        if (!featureCollection.features.every(feature => turf.booleanValid(feature))) {
+            alert("One or more geometries for site " + site.name() + " are invalid and cannot be saved. Please edit and try again.");
+            return Promise.reject();
         }
 
         site.features(featureCollection.features);
-        if (!featureCollection.features.every(feature => turf.booleanValid(feature))) {
-            alert("One or more geometries for site " + site.name() + " are invalid and cannot be saved. Please edit and try again.");
-            return;
-        }
-
         data = site.modelAsJSON();
         alaMap.startLoading();
         site.transients.loading(true);
-        return $.ajax({
+        $.ajax({
             url: config.createSiteUrl,
             method: 'POST',
             data: data,
             contentType: 'application/json',
             success: function(data) {
+                var callback;
                 switch (data.status) {
                     case 'created':
                         site.siteId = data.id;
                         site.transients.siteCreated(true);
+                        callback = resolve;
                         break;
                     case 'updated':
-                        // do nothing
+                        callback = resolve;
                         break;
                     case 'error':
+                        callback = reject;
                     break;
                 }
 
                 alaMap.finishLoading();
                 site.transients.loading(false);
+                callback();
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 alaMap.finishLoading();
                 site.transients.loading(false);
+                reject();
             }
         });
+
+        return promise;
     }
 
     self.highlightSite = function() {
@@ -1275,17 +1333,10 @@ function BulkCreateSiteViewModel (alaMap, config) {
         return {geoJSON: geometry, centre: cPoint};
     }
 
-    self.selectedSitesNames = ko.computed(function() {
-        return self.selectedSites().map(function(siteId) {
-            var site = self.findSiteByTempSiteId(siteId);
-            return site && site.name();
-        }).filter(name => name !== undefined);
-    });
-
     self.goToProject = function() {
         if (self.selectableSites().length > 0) {
             var notSavedSites = self.selectableSites().length;
-            var yes = confirm(`${notSavedSites} site(s) have not been created yet. If you leave this page, they will be lost. Are you sure you want to continue?`);
+            var yes = confirm(`${notSavedSites} site(s) with status draft and not yet published. You will lose them if you navigate away from this page. Are you sure you want to continue?`);
             if (!yes) {
                 return;
             }
@@ -1357,10 +1408,18 @@ function BulkCreateSiteViewModel (alaMap, config) {
     });
 
     self.isBulkCreateDisabled = ko.computed(function() {
+        if (self.uploading()) {
+            return true;
+        }
+
         return self.selectedSites().length === 0
     });
 
     self.isBulkMergeDisabled = ko.computed(function() {
+        if (self.uploading()) {
+            return true;
+        }
+
         return self.selectedSites().length <= 1
     });
 
@@ -1406,16 +1465,20 @@ function BulkCreateSiteViewModel (alaMap, config) {
             return true;
         }
 
-        var site = this,
-            layers = alaMap.findLayersByProperty('tempSiteId', site.transients.tempSiteId());
-        return layers.length <= 1;
+        var site = this;
+        return site.features().length <= 1;
     }
 
-    self.isFeatureUnpackDisabled = function() {
+    self.isFeatureUnpackVisible = function() {
         var feature = this,
             site = self.findSiteByTempSiteId(feature.properties.tempSiteId);
 
-        return self.isSiteDisabled.apply(site) || !self.isFeatureSplittable.apply(feature);
+        return !self.isSiteDisabled.apply(site) && self.isFeatureSplittable.apply(feature);
+    }
+
+    self.isViewDisabled = function() {
+        var site = this;
+        return !site.transients.siteCreated();
     }
 
     self.isFeatureDeleteDisabled = function() {
@@ -1434,6 +1497,7 @@ function BulkCreateSiteViewModel (alaMap, config) {
     }
 
     self.enablePopovers = function(nodes) {
+        nodes = nodes || document;
         var popovers = $(nodes).find('[data-bs-toggle="popover"]');
         [...popovers].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
     }
@@ -1458,6 +1522,7 @@ function BulkCreateSiteViewModel (alaMap, config) {
             self.selectedSites([]);
         }
     }
+
     self.selectedSites.subscribe(self.updateSelectAll);
     self.selectAll.subscribe(self.handleSelectAll);
     self.sites.subscribe(self.updateSelectAll);

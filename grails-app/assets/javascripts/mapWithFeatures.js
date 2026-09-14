@@ -95,7 +95,7 @@
                     allowKnownShapesControl: false,
                     baseLayer: googleLayer,
                     zoomToObject: true,
-                    addAllFeaturesFromFile: false
+                    addAllFeaturesFromFile: true
                 };
             this.features = features;
             // handle options

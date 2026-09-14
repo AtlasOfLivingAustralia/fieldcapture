@@ -102,6 +102,7 @@ class SpatialService {
      * @return
      */
     Map isGeometryWithinAustralia(Map shape) {
+        shape = sanitiseGeoJSON(shape)
         Map fixedGeoJSON = webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + "site/standardiseGeoJSON", shape, true)?.resp
         if (!fixedGeoJSON) {
             return [success: false, message: "Failed to standardise geometry"]
@@ -129,5 +130,21 @@ class SpatialService {
         }
 
         return response
+    }
+
+    Map sanitiseGeoJSON(Map shape) {
+        switch (shape.type) {
+            case 'Feature':
+                shape.remove('properties') // Remove properties to avoid issues with spatial portal
+                return shape
+            case 'FeatureCollection':
+                shape.features = shape.features.collect { Map feature ->
+                    feature.remove('properties') // Remove properties to avoid issues with spatial portal
+                    feature
+                }
+                return shape
+            default:
+                return shape
+        }
     }
 }

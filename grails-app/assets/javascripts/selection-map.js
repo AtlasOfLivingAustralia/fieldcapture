@@ -88,7 +88,7 @@ map = {
             flattenMultiGeometries: true,
             markerOrShapeNotBoth: false,
             zoomToObject: false,
-            addAllFeaturesFromFile: false,
+            addAllFeaturesFromFile: true,
             validateImportedShapes: function (geojson) {
                 return $.ajax({
                     method: 'POST',

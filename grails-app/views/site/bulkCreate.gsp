@@ -12,11 +12,17 @@
                     featureService: "${createLink(controller: 'proxy', action:'feature')}",
                     validateShapesUrl: "${createLink(controller: 'site', action:'isGeometryWithinAustralia')}",
                     createSiteUrl: "${createLink(action:'ajaxUpdate')}",
+                    siteViewUrl: "${createLink(controller: 'site', action: 'index')}"
                 },
                 here = window.location.href;
         </script>
         <asset:stylesheet src="base-bs4.css"/>
         <asset:stylesheet src="leaflet-manifest.css"/>
+        <style type="text/css">
+            .progress {
+                margin-top: 0px !important;
+            }
+        </style>
     </head>
     <body>
     <div class="container-fluid">
@@ -30,20 +36,22 @@
         <h1>Create multiple sites for a project</h1>
         <div class="row" style="height: 800px">
             <div class="col-md-8">
-                <div id="alaMap" class="ala-map h-100">
-
+                <div id="alaMap" class="ala-map h-100" data-leaflet-img="${assetPath(src: 'leaflet/images/')}">
                 </div>
             </div>
             <div class="col-md-4 h-100" id="sites">
                 <div class="row h-75  overflow-y-auto">
                     <div class="col-sm-12">
                         <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            <h4 class="alert-heading">Creating Sites</h4>
                             <p>
-                                Create sites by drawing geometries on the map.You can draw multiple geometries and then
-                                create a site for each shape, or merge multiple shapes into one site.
-                                Or, you can create a site by importing a file such as shapefile, KML, GeoJSON, etc.
-                                Each site can have multiple geometries. Sites with multiple geometries can be unpacked
-                                into sites with one geometry each.
+                                You can create a site by drawing one or more geometries directly on the map. Draw multiple shapes and either turn each one into its own site, or merge them together into a single site.
+                            </p>
+                            <p>
+                                Alternatively, you can create a site by importing a file — such as a Shapefile, KML, or GeoJSON.
+                            </p>
+                            <p>
+                                Each site can contain multiple geometries. If a site has multiple geometries, you can later unmerge it into separate single-geometry sites.
                             </p>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
@@ -91,20 +99,22 @@
                                                         <th>Actions</th>
                                                     </tr>
                                                     </thead>
-                                                    <tbody data-bind="foreach: {data: features, afterAdd: $root.fadeIn, beforeRemove: $root.fadeOut}">
+                                                    <tbody data-bind="foreach: {data: features, afterAdd: $root.fadeIn, beforeRemove: $root.fadeOut, afterRender: $root.enablePopovers}">
                                                     <tr data-bind="event: {mouseover: $root.highlightFeature, mouseout: $root.unhighlightFeature}, mouseoverBubble: false, mouseoutBubble: false">
                                                         <td data-bind="text: properties.name"></td>
                                                         <td data-bind="text: $root.getFeatureType($data)"></td>
                                                         <td>
                                                             <button class="btn btn-sm btn-secondary"
                                                                     data-bind="click: $root.unpackFeature.bind($data, $parent),
-                                                                    disable: $root.isFeatureUnpackDisabled.apply($data)"
+                                                                    visible: $root.isFeatureUnpackVisible.apply($data)"
                                                                     title="Unpack geometries into individual geometry on this site.
-                                                                    For example, MultiPolygons are converted to Polygons or MultiPoints to Points">
+                                                                    For example, MultiPolygon are converted to a list of Polygons or MultiPoint to a list of Points">
                                                                 <i class="fa fa-chain-broken" aria-hidden="true"></i>
                                                             </button>
-                                                            <button class="btn btn-sm btn-secondary" data-bind="click: $root.zoomToFeature.bind($data)" title="Zoom to geometry"><i class="fa fa-search-plus" aria-hidden="true"></i></button>
-                                                            <button class="btn btn-sm btn-danger" data-bind="click: $root.deleteFeature.bind($data, $parent), disable: $root.isFeatureDeleteDisabled.apply($parent)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                                            <button class="btn btn-sm btn-secondary" data-bind="click: $root.zoomToFeature.bind($data)" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-delay='{"show": 300, "hide": 0}' data-bs-content="Zoom to this geometry on the map."><i class="fa fa-search-plus" aria-hidden="true"></i></button>
+                                                            <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-delay='{"show": 300, "hide": 0}' data-bs-content="Remove this geometry from the site. You can only do this if the site has more than one geometry.">
+                                                                <button class="btn btn-sm btn-danger" data-bind="click: $root.deleteFeature.bind($data, $parent), disable: $root.isFeatureDeleteDisabled.apply($parent)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                                            </span>
                                                         </td>
                                                     </tr>
                                                     </tbody>
@@ -115,10 +125,21 @@
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <button href="#" class="btn btn-sm btn-primary mt-1" data-bind="click: $parent.createSite, disable: $parent.isSiteDisabled.apply($data)" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-delay='{"show": 300, "hide": 0}' data-bs-content="Create a site with the attached geometries.">Create</button>
-                                <button href="#" class="btn btn-sm btn-secondary mt-1" data-bind="click: $parent.splitSite, disable: $parent.isSplitDisabled.apply($data)" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-delay='{"show": 300, "hide": 0}' data-bs-content="Convert multi-geometry to individual geometry. For example, MultiPolygon gets convert to Polygon geometries.">Unpack</button>
-                                <button href="#" class="btn btn-sm btn-secondary mt-1" data-bind="click: $parent.zoomIn" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-delay='{"show": 300, "hide": 0}' data-bs-content="Zoom in to the site geometries.">Zoom in</button>
-                                <button href="#" class="btn btn-sm btn-danger mt-1" data-bind="click: $parent.deleteSite, disable: $parent.isSiteDisabled.apply($data)" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-delay='{"show": 300, "hide": 0}' data-bs-content="Delete this site.">Delete</button>
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-delay='{"show": 300, "hide": 0}' data-bs-content="Create a site with the attached geometries.">
+                                    <button class="btn btn-sm btn-primary mt-1" data-bind="click: $parent.createSite, disable: $parent.isSiteDisabled.apply($data)">Create</button>
+                                </span>
+                                <span class="d-inline-block" tabindex="0"  data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-delay='{"show": 300, "hide": 0}' data-bs-content="Expand this site into multiple sites with one geometry per site.">
+                                    <button class="btn btn-sm btn-secondary mt-1" data-bind="click: $parent.splitSite, disable: $parent.isSplitDisabled.apply($data)">Unmerge</button>
+                                </span>
+                                <span class="d-inline-block" tabindex="0"  data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-delay='{"show": 300, "hide": 0}' data-bs-content="Zoom in to the site geometries.">
+                                    <button class="btn btn-sm btn-secondary mt-1" data-bind="click: $parent.zoomIn">Zoom in</button>
+                                </span>
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-delay='{"show": 300, "hide": 0}' data-bs-content="View this site on separate tab. Only available if site has been created.">
+                                    <button class="btn btn-sm btn-secondary mt-1" data-bind="click: $parent.viewSite, disable: $parent.isViewDisabled.apply($data)">View</button>
+                                </span>
+                                <span class="d-inline-block" tabindex="0"  data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-delay='{"show": 300, "hide": 0}' data-bs-content="Delete this site.">
+                                    <button class="btn btn-sm btn-danger mt-1" data-bind="click: $parent.deleteSite, disable: $parent.isSiteDisabled.apply($data)">Delete</button>
+                                </span>
                             </div>
                         </div>
                         <!-- /ko -->
@@ -134,29 +155,27 @@
                                             <input class="form-check-input" type="checkbox" id="select-all" data-bind="checked: selectAll, disable: isSelectAllDisabled">
                                             <label class="form-check-label" for="select-all">Select all</label>
                                         </div>
-                                        <div class="accordion accordion-flush mb-3" id="selectedSiteNamesAccordion" data-bind="visible: selectedSites().length > 0">
-                                            <div class="accordion-item">
-                                                <h2 class="accordion-header">
-                                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#selectedSiteNames" aria-expanded="true" aria-controls="selectedSiteNames">
-                                                        <!-- ko text: selectedSites().length --><!-- /ko --> of <!-- ko text: selectableSites().length --><!-- /ko --> sites selected
-                                                    </button>
-                                                </h2>
-                                                <div id="selectedSiteNames" class="accordion-collapse collapse" data-bs-parent="#selectedSiteNamesAccordion">
-                                                    <div class="accordion-body" data-bind="text: selectedSitesNames().join(', ')"></div>
+                                        <div class="my-2">
+                                            <div class="progress-stacked" data-bind="visible: uploading">
+                                                <div class="progress" role="progressbar" aria-label="Number of successfully created site(s)"  data-bind="style: {width: successfulSitesPercentage() + '%'}, visible: successfulSitesPercentage() > 0">
+                                                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"><!--ko text: countSuccess --> <!-- /ko --></div>
+                                                </div>
+                                                <div class="progress" role="progressbar" aria-label="Number of failed site(s)"  data-bind="style: {width: failedSitesPercentage() + '%'}, visible: failedSitesPercentage() > 0">
+                                                    <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated"><!-- ko text: countError --> <!-- /ko --></div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover focus" data-bs-delay='{"show": 300, "hide": 0}' data-bs-content="Create the selected draft sites.">
+                                        <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-delay='{"show": 300, "hide": 0}' data-bs-content="Create the selected draft sites.">
                                             <button type="button" id="save" class="mr-2 btn btn-sm btn-primary" data-bind="click: createSites, disable: isBulkCreateDisabled">Create <span class="badge text-bg-primary" data-bind="text: selectedSites().length"></span></button>
                                         </span>
-                                        <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover focus" data-bs-delay='{"show": 300, "hide": 0}' data-bs-content="Combine selected draft sites into one site.">
+                                        <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-delay='{"show": 300, "hide": 0}' data-bs-content="Combine selected draft sites into one site.">
                                             <button type="button" id="mergeSites" class="mr-2 btn btn-sm btn-secondary" data-bind="click: mergeSites, disable: isBulkMergeDisabled">Merge <span class="badge text-bg-secondary" data-bind="text: selectedSites().length"></span></button>
                                         </span>
                                     </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-sm-12">
-                                        <button type="button" id="cancel" class="mr-2 btn btn-sm btn-danger" data-bind="click: goToProject" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-delay='{"show": 300, "hide": 0}' data-bs-content="Navigate to the project page">Go to project</button>
+                                        <button type="button" id="cancel" class="mr-2 btn btn-sm btn-danger" data-bind="click: goToProject" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-delay='{"show": 300, "hide": 0}' data-bs-content="Navigate to the project page">Go to project</button>
                                     </div>
                                 </div>
                             </div>
@@ -171,7 +190,6 @@
     <asset:javascript src="knockout-mapping/knockout.mapping.js"/>
     <asset:javascript src="leaflet-manifest.js"/>
     <asset:javascript src="fieldcapture-application.js"/>
-%{--    <asset:javascript src="mapWithFeatures.js"/>--}%
     <asset:javascript src="sites.js"/>
     <script type="application/javascript">
         function initMap() {
@@ -180,6 +198,14 @@
                 googleLayer = L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'roadmap'}),
                 mapOptions = {
                     drawControl: true,
+                    drawOptions: {
+                        polyline: true,
+                        polygon: true,
+                        rectangle: true,
+                        circle: true,
+                        circlemarker: false,
+                        edit: true
+                    },
                     maxZoom: 23,
                     maxAutoZoom: 21,
                     showReset: false,
@@ -191,6 +217,7 @@
                     markerOrShapeNotBoth: false,
                     assignNameEnabled: true,
                     addGeometryFromLocalFile: true,
+                    flattenMultiGeometries: true,
                     wmsLayerUrl: fcConfig.spatialWmsUrl + '/wms/reflect?',
                     wmsFeatureUrl: fcConfig.featureService + '?featureId=',
                     otherLayers: {
@@ -201,7 +228,7 @@
                     allowKnownShapesControl: false,
                     baseLayer: googleLayer,
                     zoomToObject: true,
-                    addAllFeaturesFromFile: false,
+                    addAllFeaturesFromFile: true,
                     style: {
                         color: '#0f0',
                         fillOpacity: 0.2,

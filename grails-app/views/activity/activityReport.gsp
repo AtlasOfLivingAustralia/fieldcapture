@@ -173,7 +173,7 @@
                 });
                 if (planningFeatures.length > 0) {
                     allFeatures.unshift({
-                        type: 'Feature Collection',
+                        type: 'FeatureCollection',
                         features: planningFeatures,
                         properties: {category: planningSitesCategory, name: planningSitesCategory}
                     });
