@@ -108,8 +108,12 @@ function useNhtServiceLabels(programName, programNameToCopy) {
  * @param mandatory
  */
 function updateProgramServiceConfig(program, legacyId, scoreIds, mandatory){
-    if (!program || !program.config) {
+    if (!program) {
         print("Program not found ");
+        return;
+    }
+    if (!program.config) {
+        print("Program has no config: "+program.name);
         return;
     }
 

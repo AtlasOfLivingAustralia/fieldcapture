@@ -143,11 +143,71 @@ function MERIPlan(project, projectService, config) {
         return projectService.validateExternalIds(ko.mapping.toJS(self.externalIds));
     };
 
+    self.internalOrderId = ko.observable(project.internalOrderId);
+    self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
+    self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
+    /**
+     * Allow MERI dates to be changed for projects using per-report forecasts
+     * while the project is still in application status and the
+     * MERI plan has not yet been submitted
+     * @returns true if the project/grant manager is allowed to change project dates.
+     */
+    self.canChangeMeriDates = function() {
+        return config.separateTargetsPerOutcome && projectService.hasApplicationStatus() &&
+            (self.isPlanEditable() && !projectService.isSubmittedOrApproved() ||
+            projectService.isSubmitted());
+    };
+    self.datesChanged = ko.pureComputed(function() {
+        return self.plannedStartDate() !== project.plannedStartDate || self.plannedEndDate() !== project.plannedEndDate;
+    });
+    self.dateChangesInvalid = ko.observable(false);
+    function checkDateChanges() {
+        // need to validate that date changes won't mess with forecast periods.
+        self.dateChangesInvalid(true);
+        projectService.validateProjectDates(self.plannedStartDate(), self.plannedEndDate(), {})
+            .done(function(data) {
+                if (!data.valid) {
+
+                    bootbox.alert({
+                        title:"Forecast periods will change",
+                        message: "<p>The change to the project dates will result in a change to the forecast periods for the project. </p>" +
+                            "Next steps: <ul>" +
+                            "<li>Return the plan using the Reject MERI Plan button</li>" +
+                            "<li>Work with the funding recipient to update the forecast table to take into account the change to the forecast periods</li>" +
+                            "<li>The recipient re-submits the MERI plan</li>" +
+                            "<li>Review and approve the MERI plan</li></ul>",
+                    });
+                }
+                else {
+                    self.dateChangesInvalid(false);
+                }
+            }).fail(function() {
+                bootbox.alert("An error occurred validating the project dates.  Please contact support if this perists");
+            });
+    }
+
+    if (projectService.isSubmitted()) {
+        self.plannedStartDate.subscribe(checkDateChanges);
+        self.plannedEndDate.subscribe(checkDateChanges);
+    }
+    self.updateProjectDates = function() {
+        return projectService.saveProjectDataWithoutValidation({
+            plannedStartDate: self.plannedStartDate(),
+            plannedEndDate: self.plannedEndDate()
+        }, "dates");
+    };
+    self.externalIdsSupplied = function() {
+        var canApprove = projectService.canApproveMeriPlan();
+        if(!canApprove) {
+            $('.grantManagerActionSpan').popover({content:'*At least one Tech One Project Code, Grand Award ID, or SAP Internal Order must be provided before the MERI plan can be approved', placement:'top', trigger:'hover'})
+        }
+        return canApprove
+    };
     self.canApproveMeriPlan = ko.computed(function() {
         // validateExternalIds returns a non-null value if the validation fails (it contains
         // the error message to display), this is a jquery-validation-engine thing.
-        return self.plannedStartDate() && !self.validateExternalIds();
-    })
+        return self.plannedStartDate() && !self.validateExternalIds() && !self.dateChangesInvalid();
+    });
 
     // approve plan and handle errors
     self.approvePlan = function () {
@@ -179,7 +239,8 @@ function MERIPlan(project, projectService, config) {
                             dateApproved: viewModel.dateApproved()
                         }, {
                             externalIds: ko.mapping.toJS(self.externalIds),
-                            plannedStartDate: self.plannedStartDate()
+                            plannedStartDate: self.plannedStartDate(),
+                            plannedEndDate: self.plannedEndDate()
                         });
                     }
                 };
@@ -189,16 +250,21 @@ function MERIPlan(project, projectService, config) {
             else {
                 var data = {
                     externalIds: ko.mapping.toJS(self.externalIds),
-                    plannedStartDate: self.plannedStartDate()
+                    plannedStartDate: self.plannedStartDate(),
+                    plannedEndDate: self.plannedEndDate()
                 }
                 projectService.approvePlan({dateApproved:convertToIsoDate(new Date())}, data)
             }
         }
 
     };
-    // reject plan and handle errors
+    // reject plan and update dates if they have been changed.
     self.rejectPlan = function () {
-        projectService.rejectPlan();
+        projectService.rejectPlan().done(function() {
+            if (self.canChangeMeriDates() && self.datesChanged()) {
+                self.updateProjectDates();
+            }
+        });
     };
 
     self.finishCorrections = function () {
@@ -503,6 +569,10 @@ function MERIPlan(project, projectService, config) {
     self.addShortTermOutcome = function () {
         addOutcomeStatement(self.meriPlan().outcomes.shortTermOutcomes, 'ST');
     };
+    // The odd naming of this function is to match the convention used in the "_outcomeStatements.gsp" template
+    self.addProjectTermOutcome = function() {
+        addOutcomeStatement(self.meriPlan().outcomes.projectTermOutcomes, 'PO');
+    }
 
     self.addAsset = function() {
         self.meriPlan().assets.push(new AssetViewModel());
@@ -533,6 +603,7 @@ function MERIPlan(project, projectService, config) {
         var outcomes = [];
         outcomes = outcomes.concat(self.meriPlan().outcomes.midTermOutcomes());
         outcomes = outcomes.concat(self.meriPlan().outcomes.shortTermOutcomes());
+        outcomes = outcomes.concat(self.meriPlan().outcomes.projectTermOutcomes());
         return outcomes;
     }).extend({rateLimit:200});
 
@@ -689,16 +760,16 @@ function MERIPlan(project, projectService, config) {
         self.meriPlanHistoryVisible(!self.meriPlanHistoryVisible());
     };
     self.deleteApproval = function(approval) {
-        bootbox.confirm("Delete this approval?  This cannot be undone.", function(yes) {
+        bootbox.confirm("Delete this approval?  This cannot be undone.", function (yes) {
 
             if (yes) {
                 blockUIWithMessage("Deleting approval...");
                 projectService.deleteDocument(approval.documentId).done(
-                    function() {
+                    function () {
                         blockUIWithMessage("Approval deleted.  Reloading page...")
                         document.location.reload();
                     }
-                ).fail(function() {
+                ).fail(function () {
                     $.unblockUI();
                     bootbox.alert("There was an error deleting the approval");
                 });
@@ -706,21 +777,6 @@ function MERIPlan(project, projectService, config) {
 
         });
     }
-    /**
-     * Workaround to allow grant managers to supply the order number as
-     * they don't have access to the project settings section.
-     * @type {Observable<string>}
-     */
-    self.internalOrderId = ko.observable(project.internalOrderId);
-    self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
-    self.canApprove = function() {
-        var canApprove = projectService.canApproveMeriPlan();
-        if(!canApprove) {
-            $('.grantManagerActionSpan').popover({content:'*At least one Tech One Project Code, Grand Award ID, or SAP Internal Order must be provided before the MERI plan can be approved', placement:'top', trigger:'hover'})
-        }
-        return canApprove
-    };
-
 }
 
 function validateFloristics(field) {
@@ -799,8 +855,17 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
         project.custom.details = {};
     }
 
-    self.periods = projectService.getBudgetHeaders(project);
+    if (config.targetPeriods && config.targetPeriods.length > 0) {
+        self.periods = [];
+        for (let i=0; i<config.targetPeriods.length; i++) {
 
+            var period = config.targetPeriods[i];
+            self.periods.push({period:period.period, periodStart:period.periodStart, periodEnd:period.periodEnd});
+        }
+    }
+    else {
+        self.periods = projectService.getBudgetHeaders(project);
+    }
     self.plannedStartDate = ko.observable(project.plannedStartDate).extend({simpleDate: false});
     self.plannedEndDate = ko.observable(project.plannedEndDate).extend({simpleDate: false});
 
@@ -866,7 +931,7 @@ function ReadOnlyMeriPlan(project, projectService, config, changed) {
         }
     }
 
-    self.allTargetMeasures = _.sortBy(self.allTargetMeasures, 'label');
+    self.allTargetMeasures = sortTargetMeasures(self.allTargetMeasures);
     self.keyThreatsTargetMeasures = function() {
         // For legacy data preservation, we include any previously selected survey services in the
         // selection list, but otherwise only allow non-survey related target measures.
@@ -1021,7 +1086,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
     var period = budgetHeaders;
     if (config.useRlpTemplate) {
         if (config.useServiceOutcomesModel) {
-            self.serviceOutcomes = new ServiceOutcomeTargetsViewModel(o.serviceIds, project.outputTargets, budgetHeaders, allServices, selectedTargetMeasures);
+            self.serviceOutcomes = new ServiceOutcomeTargetsViewModel(o.serviceIds, project.outputTargets, budgetHeaders, allServices, selectedTargetMeasures, {separateTargetsPerOutcome:config.separateTargetsPerOutcome});
         }
         else {
             self.services = new ServicesViewModel(o.serviceIds, config.services, project.outputTargets, budgetHeaders);
@@ -1054,20 +1119,29 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
     self.keq = new GenericViewModel(o.keq);
     self.objectives = new ObjectiveViewModel(o.objectives, config.programObjectives || []); // Used in original MERI plan template
     var outcomesConfig = {
+        outcomeStatements:config.outcomeStatementsConfig,
         outcomes:project.outcomes,
         priorities:project.priorities,
         bieUrl: config.bieUrl,
         searchBieUrl: config.searchBieUrl,
         speciesListUrl: config.speciesListUrl,
         speciesImageUrl: config.speciesImageUrl,
-        speciesProfileUrl: config.speciesProfileUrl
+        speciesProfileUrl: config.speciesProfileUrl,
+        outcomeTypeCodePrefixMap: {
+            'short':'ST',
+            'mid':'MT',
+            'project':'PO'
+        }
     };
     self.outcomes = new OutcomesViewModel(o.outcomes, outcomesConfig); // Use in new MERI plan template
     self.priorities = new GenericViewModel(o.priorities, ['data1', 'data2', 'data3', 'documentUrl']);
     self.implementation = new ImplementationViewModel(o.implementation);
     self.partnership = new GenericViewModel(o.partnership, ['data1', 'data2', 'data3', 'otherOrganisationType']);
     self.lastUpdated = o.lastUpdated ? o.lastUpdated : moment().format();
-    self.budget = new BudgetViewModel(o.budget, period);
+    // The budget table historically used string only periods for financial years.  Keeping this
+    // format allows historical MERI plans to still render and index correctly.
+    let budgetPeriods = _.map(period, function(p) { return p.period; });
+    self.budget = new BudgetViewModel(o.budget, budgetPeriods);
     self.adaptiveManagement = ko.observable(o.adaptiveManagement);
     self.rationale = ko.observable(o.rationale);
     self.baseline = new GenericViewModel(o.baseline, ['code', 'monitoringDataStatus', 'baseline',  'method', 'evidence'], 'B', ['relatedTargetMeasures', 'relatedOutcomes', 'protocols']);
@@ -1161,10 +1235,11 @@ function outcomesToJSON(outcomeArray) {
     }), function(outcome) { return outcome != null});
 };
 
-function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPeriods, allServices, selectedTargetMeasures) {
+function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPeriods, allServices, selectedTargetMeasures, options) {
 
-
+    options = options || {};
     var self = this;
+    self.separateTargetsPerOutcome = options.separateTargetsPerOutcome || false;
     self.forecastPeriods = forecastPeriods;
     self.outcomeTargets = ko.observableArray();
 
@@ -1212,7 +1287,7 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
             self.relatedOutcomes = ko.observableArray(target.relatedOutcomes);
             self.orphanedOutcomes = ko.observableArray();
             self.orphanedOutcomesError = function() {
-                return 'The outcomes '+self.orphanedOutcomes().join(', ')+' are no longer linked to a target measure and should be removed from this target.';
+                return 'The outcome/s '+self.orphanedOutcomes().join(', ')+' are no longer linked to this target measure and should be removed.';
             }
             self.availableOutcomes = ko.computed(function() {
                 var selectableOutcomes = availableOutcomes(self);
@@ -1222,10 +1297,42 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
                 return _.union(selectableOutcomes, orphanedOutcomes);
             });
 
+            self.periodTargets = [];
+            if (options.separateTargetsPerOutcome) {
+                self.periodTargets = _.map(forecastPeriods, function (period) {
+
+                    var periodTarget = null;
+                    if (target && target.periodTargets) {
+                        var existingPeriodTarget = _.find(target.periodTargets || [], function(periodTarget) {
+                            let match = false;
+                            // If the period label is the same, it's the correct one.  Older projects will
+                            // only have the period (label) and no dates.
+                            if (periodTarget.period === period.period) {
+                                match = true;
+                            }
+                            // In the case where the dates change by say a month, we can use the dates to match.
+                            else {
+                                if (periodTarget.periodStart && periodTarget.periodEnd) {
+                                    if (period.periodEnd > periodTarget.periodStart && period.periodEnd <= periodTarget.periodEnd) {
+                                        match = true;
+                                    }
+                                }
+                            }
+                            return match;
+
+                        });
+                        periodTarget = existingPeriodTarget ? existingPeriodTarget.target : null;
+                    }
+
+                    return {period: period.period, target: ko.observable(periodTarget), periodStart:period.periodStart, periodEnd:period.periodEnd};
+                });
+            }
+
             self.toJSON = function() {
                 return {
                     target: self.target(),
-                    relatedOutcomes: self.relatedOutcomes()
+                    relatedOutcomes: self.relatedOutcomes(),
+                    periodTargets: ko.mapping.toJS(self.periodTargets)
                 };
             }
         }
@@ -1249,24 +1356,41 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
             return !self.selectedTargetMeasure();
         });
 
-        self.periodTargets = _.map(forecastPeriods, function (period) {
-
-            var existingPeriodTarget = _.find(outputTarget.periodTargets, function(periodTarget) {
-                return periodTarget.period == period;
-            });
-            var target = existingPeriodTarget ? existingPeriodTarget.target : 0;
-            return {period: period, target: ko.observable(target)};
-        });
-
         // This needs to be declared before it's populated due to a reliance on the availableOutcomes function
         // which references this array.
         self.outcomeTargets = ko.observableArray();
-        self.outcomeTargets(_.map(outputTarget.outcomeTargets || {}, function(outcomeTarget) {
-            return new ServiceOutcomesTarget(outcomeTarget);
-        }));
-        if (self.outcomeTargets().length == 0) {
-            self.outcomeTargets.push(new ServiceOutcomesTarget());
-        }
+
+        self.periodTargets = _.map(forecastPeriods, function (period) {
+
+            var existingPeriodTarget = _.find(outputTarget.periodTargets, function(periodTarget) {
+                return periodTarget.period === period.period;
+            });
+            var target = existingPeriodTarget ? existingPeriodTarget.target : 0;
+
+            var targetProperty;
+            if (options.separateTargetsPerOutcome) {
+                targetProperty = ko.pureComputed(function() {
+                    var sum = 0;
+                    for (var i=0; i<self.outcomeTargets().length; i++) {
+                        var outcomeTarget = self.outcomeTargets()[i];
+                        if (outcomeTarget.periodTargets) {
+                            var matchingPeriod = _.find(outcomeTarget.periodTargets, function(periodTarget) {
+                                return periodTarget.period === period.period;
+                            });
+                            if (matchingPeriod) {
+                                sum += Number(matchingPeriod.target()) || 0;
+                            }
+                        }
+                    }
+                    return sum;
+                });
+            }
+            else {
+                targetProperty = ko.observable(target);
+            }
+
+            return {period: period.period, target: targetProperty, periodStart:period.periodStart, periodEnd:period.periodEnd};
+        });
 
         self.target = ko.pureComputed(function() {
            var target = 0;
@@ -1279,6 +1403,47 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
         self.availableOutcomes = ko.computed(function() {
             return availableOutcomes();
         });
+
+        // If we require an outcome target per outcome, create one new row per related outcome.
+        if (options.separateTargetsPerOutcome) {
+            let results = [];
+            for (let i=0; i<outputTarget.outcomeTargets.length; i++) {
+                let outcomeTarget = outputTarget.outcomeTargets[i];
+
+                for (let j=0; j<outcomeTarget.relatedOutcomes.length; j++) {
+                    results.push(new ServiceOutcomesTarget({
+                        relatedOutcomes: [outcomeTarget.relatedOutcomes[j]],
+                        target: outcomeTarget.target,
+                        periodTargets: outcomeTarget.periodTargets
+                    }));
+                }
+            }
+            if (results) {
+                self.outcomeTargets(results);
+            }
+
+            self.availableOutcomes.subscribe(function (availableOutcomes) {
+                for (var i = 0; i < availableOutcomes.length; i++) {
+
+                    const outcome = availableOutcomes[i];
+                    var existingTarget = _.find(self.outcomeTargets(), function (target) {
+                        return target.relatedOutcomes().indexOf(outcome) >= 0;
+                    });
+                    if (!existingTarget) {
+                        self.outcomeTargets.push(new ServiceOutcomesTarget({relatedOutcomes: [outcome]}));
+                    }
+                }
+            });
+        }
+        else {
+            self.outcomeTargets(_.map(outputTarget.outcomeTargets || {}, function(outcomeTarget) {
+                return new ServiceOutcomesTarget(outcomeTarget);
+            }));
+            if (self.outcomeTargets().length == 0) {
+                self.outcomeTargets.push(new ServiceOutcomesTarget());
+            }
+        }
+
 
         self.addOutcomeTarget = function() {
             self.outcomeTargets.push(new ServiceOutcomesTarget(self.scoreId, self.availableOutcomes));
@@ -1411,7 +1576,7 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
         target.targetDate = ko.observable().extend({simpleDate:false});
 
         target.periodTargets = _.map(periods, function (period) {
-            return {period: period, target: ko.observable(0)}
+            return {period: period.period, target: ko.observable(0), periodStart:period.periodStart, periodEnd:period.periodEnd};
         });
 
         target.minimumTargetsValid = ko.pureComputed(function () {
@@ -1437,7 +1602,7 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
                 var periodTarget = 0;
                 if (currentTarget) {
                     var currentPeriodTarget = _.find(currentTarget.periodTargets || [], function (periodTarget) {
-                        return periodTarget.period == period;
+                        return periodTarget.period == period.period;
                     }) || {};
                     periodTarget = currentPeriodTarget.target;
                 }
@@ -1543,10 +1708,10 @@ function ServicesViewModel(serviceIds, allServices, outputTargets, periods) {
         _.each(periods || [], function(period) {
 
             var periodTarget = _.find(serviceTargetRow.periodTargets || [], function(pt) {
-                return pt.period == period;
+                return pt.period == period.period;
             });
             var periodTargetValue = _.find(serviceTarget.periodTargets || [], function(pt) {
-                return pt.period == period;
+                return pt.period == period.period;
             });
             if (periodTarget && periodTargetValue) {
                 periodTarget.target(periodTargetValue.target);
@@ -1642,7 +1807,7 @@ function GenericViewModel(o, propertyNames, codePrefix, arrayPropertyNames, numD
     };
 
     function nextCode() {
-        var maxCodeNumber = 1;
+        var maxCodeNumber = 0;
         for (var i=0; i<self.rows().length; i++) {
             var code = ko.utils.unwrapObservable(self.rows()[i].code);
             if (code) {
@@ -1777,9 +1942,13 @@ function ObjectiveViewModel(o, programObjectives) {
 /**
  * Categories project outcomes into primary, secondary, mid-term and short-term outcomes.
  * @param outcomes existing outcome data, if any.
- * @param config {outcomes:<all available outcomes>, priorities:<priorities selectable by this project>}
+ * @param options {outcomes:<all available outcomes>, priorities:<priorities selectable by this project>, outcomeStatements:<configuration for the different outcome types to be used in this project>, bieUrl, searchBieUrl, speciesListUrl, speciesImageUrl, speciesProfileUrl}
  */
-function OutcomesViewModel(outcomes, config) {
+function OutcomesViewModel(outcomes, options) {
+    var defaults = {
+        outcomeStatements:[]
+    };
+    var config = _.defaults(options, defaults);
     var self = this;
     if (!outcomes) {
         outcomes = {};
@@ -1789,19 +1958,31 @@ function OutcomesViewModel(outcomes, config) {
             description: null, asset: ''
         };
     }
-    if (!outcomes.shortTermOutcomes) {
-        outcomes.shortTermOutcomes = [{
-            code:"ST1", description: null, assets: []
-        }];
-    }
     if (!outcomes.secondaryOutcomes) {
         outcomes.secondaryOutcomes = [{
             description: null, asset: ''
         }]
     }
-
     if (!outcomes.otherOutcomes){
         outcomes.otherOutcomes = []
+    }
+
+    for (var i=0; i<config.outcomeStatements.length; i++) {
+        var configItem = config.outcomeStatements[i];
+        var path = configItem.outcomeType+'TermOutcomes'
+        if (configItem.minimumNumberOfOutcomes > 0) {
+            if (!outcomes[path]) {
+                outcomes[path] = [];
+
+                for (var j = 0; j < configItem.minimumNumberOfOutcomes; j++) {
+                    outcomes[path].push({
+                        code: config.outcomeTypeCodePrefixMap[configItem.outcomeType] + (j+1),
+                        description: null,
+                        assets: []
+                    });
+                }
+            }
+        }
     }
 
     /**
@@ -1831,10 +2012,12 @@ function OutcomesViewModel(outcomes, config) {
     var SECONDARY_OUTCOMES = 'secondary';
     var MEDIUM_TERM_OUTCOMES = 'medium';
     var SHORT_TERM_OUTCOMES = 'short';
+    var PROJECT_OUTCOMES = 'project';
     self.selectablePrimaryOutcomes = selectableOutcomes(config.outcomes, PRIMARY_OUTCOMES, true);
     self.selectableSecondaryOutcomes = selectableOutcomes(config.outcomes, SECONDARY_OUTCOMES, true);
     self.selectableMidTermOutcomes = selectableOutcomes(config.outcomes, MEDIUM_TERM_OUTCOMES, false);
     self.selectableShortTermOutcomes = selectableOutcomes(config.outcomes, SHORT_TERM_OUTCOMES, false);
+    self.selectableProjectTermOutcomes = selectableOutcomes(config.outcomes, PROJECT_OUTCOMES, false);
 
     // If the program has specified a default primary outcome, and the project has not yet selected an outcome,
     // set the default.
@@ -1926,6 +2109,9 @@ function OutcomesViewModel(outcomes, config) {
     self.midTermOutcomes = ko.observableArray(_.map(outcomes.midTermOutcomes || [], function (outcome) {
         return new SingleAssetOutcomeViewModel(outcome);
     }));
+    self.projectTermOutcomes = ko.observableArray(_.map(outcomes.projectTermOutcomes || [], function(outcome) {
+        return new SingleAssetOutcomeViewModel(outcome);
+    }));
     self.otherOutcomes = ko.observableArray(outcomes.otherOutcomes);
 
     self.selectedPrimaryAndSecondaryPriorities = ko.pureComputed(function() {
@@ -1952,6 +2138,7 @@ function OutcomesViewModel(outcomes, config) {
             secondaryOutcomes: outcomesToJSON(self.secondaryOutcomes()),
             shortTermOutcomes: outcomesToJSON(self.shortTermOutcomes()),
             midTermOutcomes: outcomesToJSON(self.midTermOutcomes()),
+            projectTermOutcomes: outcomesToJSON(self.projectTermOutcomes()),
             otherOutcomes: self.otherOutcomes()
         }
     }

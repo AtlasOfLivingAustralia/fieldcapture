@@ -174,7 +174,7 @@
             var reportSite =  <fc:modelAsJavascript model="${reportSite}" default="{}"/>
             var formFeatures = new ecodata.forms.FeatureCollection(reportSite ? reportSite.features : []);
             fcConfig.featureCollection = formFeatures;
-            <g:if test="${!printView}">
+
             var mapOptions = {
                 readonly: fcConfig.readonly
             };
@@ -183,7 +183,7 @@
             }
             // Initialise our map so we can supply options (otherwise it's initialised  with  defaults)
             ecodata.forms.maps.featureMap(mapOptions);
-            </g:if>
+
         }
 
         $('.imageList a[target="_photo"]').attr('rel', 'gallery').fancybox({type:'image', autoSize:true, nextEffect:'fade', preload:0, 'prevEffect':'fade'});

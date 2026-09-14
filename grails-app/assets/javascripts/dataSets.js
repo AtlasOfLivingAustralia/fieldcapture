@@ -319,6 +319,12 @@ var DataSetViewModel = function(dataSet, projectService, options) {
             }
         }
     };
+    self.validateCollectionApp = function() {
+        let app = self.collectionApp();
+        if (!self.isMonitorDataSet && (app && app.toLowerCase() === MONITOR_APP.toLowerCase())) {
+            return "This is not a dataset created in Monitor, so this value cannot entered"
+        }
+    }
 
     self.isAutoCreated = dataSet.surveyId != null;
 
@@ -361,7 +367,8 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     }
 
     self.attachValidation = function () {
-        $(config.validationContainerSelector).validationEngine();
+        $(config.validationContainerSelector).validationEngine({promptPosition:"topLeft"});
         window.uniqueName = self.uniqueName; // Setup the validation function for the name field.
+        window.validateCollectionApp = self.validateCollectionApp;
     }
 };

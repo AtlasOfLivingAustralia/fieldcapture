@@ -63,19 +63,20 @@ function ProjectService(project, options) {
                     }
                 },
                 error: function (data) {
-                    var status = data.status;
                     alert('An unhandled error occurred: ' + data.status);
                 }
             });
         }
     };
 
-    self.saveProjectDataWithoutValidation = function (jsData) {
+    self.saveProjectDataWithoutValidation = function (jsData, item) {
         // this call to stringify will make sure that undefined values are propagated to
         // the update call - otherwise it is impossible to erase fields
         var json = JSON.stringify(jsData, function (key, value) {
             return value === undefined ? "" : value;
         });
+
+        item = item || "settings";
 
         blockUIWithMessage("Saving....");
         $.ajax({
@@ -86,11 +87,11 @@ function ProjectService(project, options) {
         }).done(function (data) {
             if (data.error) {
                 $.unblockUI();
-                showAlert("Failed to save settings: " + data.detail + ' \n' + data.error,
+                showAlert("Failed to save project "+item+": " + data.detail + ' \n' + data.error,
                     "alert-error", "save-result-placeholder");
             } else {
                 blockUIWithMessage("Refreshing page...");
-                showAlert("Project settings saved", "alert-success", "save-result-placeholder");
+                showAlert("Project "+item+" saved", "alert-success", "save-result-placeholder");
                 window.location.reload();
             }
         }).fail(function (data) {
@@ -218,7 +219,7 @@ function ProjectService(project, options) {
     };
     // reject plan and handle errors
     self.rejectPlan = function () {
-        self.saveStatus(config.rejectPlanUrl);
+        return self.saveStatus(config.rejectPlanUrl);
     };
 
     self.finishCorrections = function () {
@@ -317,15 +318,38 @@ function ProjectService(project, options) {
         }
     }
 
+    /**
+     * @param startDate The new start date to validate
+     * @param endDate the new end date to validate
+     * @param options an object with the following attributes:
+     *  changeActivityDates: true if the activity dates should be changed to fit within the new project dates, false otherwise
+     *  includeSubmittedReports: true if the date changes should affect submitted or approved reports
+     *  keepReportEndDates: true if the end dates of reports should be kept the same, false otherwise
+     *  dateChangeReason: A reason for the change
+     *
+     * @returns a promise from the ajax call to the server to validate the new dates.
+     * The promise will resolve with an object containing a boolean 'valid' attribute and an array of 'errors' if valid is false.
+     */
+    self.validateProjectDates = function(startDate, endDate, options) {
+        let data = _.extend({
+            plannedStartDate: startDate,
+            plannedEndDate: endDate
+        }, options);
+        return $.ajax({
+            url:config.projectDatesValidationUrl,
+            data:data
+        });
+    }
+
     self.getBudgetHeaders = function() {
         if (config.excludeFinancialYearData) {
             return []; // Return a single period header for the project
         }
         var headers = [];
-        var startYr = moment(project.plannedStartDate).format('YYYY');
-        var endYr = moment(project.plannedEndDate).format('YYYY');
-        var startMonth = moment(project.plannedStartDate).format('M');
-        var endMonth = moment(project.plannedEndDate).format('M');
+        var startYr = Number(moment(project.plannedStartDate).format('YYYY'));
+        var endYr = Number(moment(project.plannedEndDate).format('YYYY'));
+        var startMonth = Number(moment(project.plannedStartDate).format('M'));
+        var endMonth = Number(moment(project.plannedEndDate).format('M'));
 
         //Is startYr is between jan to june?
         if(startMonth >= 1 &&  startMonth <= 6 ){
@@ -339,7 +363,8 @@ function ProjectService(project, options) {
 
         var count = endYr - startYr;
         for (i = 0; i < count; i++){
-            headers.push(startYr + '/' + ++startYr);
+            headers.push({period:startYr + '/' + (startYr+1), periodStart:new Date(startYr, 6, 1).toISOStringNoMillis(), periodEnd:new Date(startYr+1, 6, 1).toISOStringNoMillis()});
+            startYr++
         }
         return headers;
 
@@ -436,6 +461,10 @@ function ProjectService(project, options) {
     };
     self.isSurveyTargetMeasure = function(score) {
         return self.isMonitoringTargetMeasure(score) || self.isBaselineTargetMeasure(score);
+    };
+
+    self.hasApplicationStatus = function() {
+        return project.status && project.status.toLowerCase() === ProjectStatus.APPLICATION;
     };
 
 };

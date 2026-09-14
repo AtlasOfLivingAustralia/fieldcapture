@@ -1,5 +1,5 @@
 function OrganisationDetailsViewModel(o, organisation, budgetHeaders, allServices, config) {
-    var self = this;
+        var self = this;
     var period = budgetHeaders,
         serviceIds = o.services && o.services.serviceIds || [],
         targets = o.services && o.services.targets || [];
@@ -92,7 +92,7 @@ function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, p
         target.targetDate = ko.observable().extend({simpleDate:false});
 
         target.periodTargets = _.map(periods, function (period) {
-             return {period: period.value, target: ko.observable(0)};
+             return {period: period.periodEnd, target: ko.observable(0)};
         });
 
         function evaluateAndAssignAverage() {
@@ -151,7 +151,7 @@ function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, p
                 var periodTarget = null;
                 if (currentTarget) {
                     var currentPeriodTarget = _.find(currentTarget.periodTargets || [], function (periodTarget) {
-                        return periodTarget.period == period.value;
+                        return periodTarget.period == period.periodEnd;
                     }) || {};
                     periodTarget = currentPeriodTarget.target;
                 }
@@ -270,10 +270,10 @@ function OrganisationServicesViewModel(serviceIds, allServices, outputTargets, p
         _.each(periods || [], function(period) {
 
             var periodTarget = _.find(serviceTargetRow.periodTargets || [], function(pt) {
-                return pt.period == period;
+                return pt.period == period.period;
             });
             var periodTargetValue = _.find(serviceTarget.periodTargets || [], function(pt) {
-                return pt.period == period;
+                return pt.period == period.period;
             });
             if (periodTarget && periodTargetValue) {
                 periodTarget.target(periodTargetValue.target);

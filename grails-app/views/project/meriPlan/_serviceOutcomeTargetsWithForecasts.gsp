@@ -1,29 +1,29 @@
 <!-- ko with:details.serviceOutcomes -->
 <h4 class="header-with-help">${title ?: "Project services and outcome targets"}</h4><g:if test="${titleHelpText}"> <fc:iconHelp>${titleHelpText}</fc:iconHelp></g:if>
 
-<table class="table service-outcomes-targets">
+<table class="table service-outcomes-targets-with-forecasts">
     <thead>
     <tr>
         <th class="index"></th>
-        <th class="required service">${serviceName ?: "Project Service"}</th>
-        <th class="required score">${targetMeasureHeading ?: 'Target measure'}</th>
-        <th></th>
+        <th data-bind="attr:{colspan:($root.periods.length+2)/2}" class="required service">${serviceName ?: "Project Service"}</th>
+        <th data-bind="attr:{colspan:($root.periods.length % 2) == 0 ? ($root.periods.length+2) / 2 : ($root.periods.length+3) / 2}" class="required score">${targetMeasureHeading ?: 'Target measure'}</th>
+        <th class="remove"></th>
     </tr>
     </thead>
     <tbody data-bind="foreach : sortedOutcomeTargets">
     <tr class="service-target">
         <td class="index"><span data-bind="text:$index()+1"></span></td>
-        <td class="service">
+        <td data-bind="attr:{colspan:($root.periods.length+2)/2}" class="service">
             <input readonly="readonly" class="form-control form-control-sm"
                     data-bind="value:serviceLabel, disable: $root.isProjectDetailsLocked()"
                     >
         </td>
-        <td class="score">
+        <td data-bind="attr:{colspan:($root.periods.length % 2) == 0 ? ($root.periods.length+2) / 2 : ($root.periods.length+3) / 2}" class="score">
             <input readonly="readonly"  class="form-control form-control-sm"
                     data-bind="value:scoreLabel, disable: $root.isProjectDetailsLocked()"
                    >
         </td>
-        <td>
+        <td class="remove">
             <!-- ko if:orphaned -->
             <input type="text" value="" class="hidden-validation-holder" data-validation-engine="validate[required]" data-errormessage="This target is associated with a service not referenced elsewhere in the MERI plan">
             <i data-bind="click:$parent.removeOutcomeTarget" class="fa fa-remove"></i>
@@ -31,19 +31,28 @@
         </td>
     </tr>
 
-    <tr>
-        <td class="index"></td>
-        <th>${projectOutcomesHeading ?: 'Project Outcome/s'}</th>
-        <th>${targetHeading ?: 'Target'}</th>
-        <th></th>
+    <tr class="sub-heading">
+        <td rowspan="2" class="index"></td>
+        <th rowspan="2">${projectOutcomesHeading ?: 'Project Outcome/s'}</th>
+        <th rowspan="2">${targetHeading ?: 'Target'}</th>
+        <th data-bind="attr:{colspan:periodTargets.length}">${forecastHeading ?: 'Forecast/s'}</th>
+        <th class="remove"></th>
     </tr>
+    <tr class="sub-heading">
+        <!-- ko foreach:periodTargets -->
+        <th class="period"><span data-bind="text:period"></span></th>
+        <!-- /ko -->
+        <th class="remove"></th>
+    </tr>
+    <!-- ko let: {cellWidth: 100/(periodTargets.length+2) } -->
     <!-- ko foreach:outcomeTargets -->
     <tr class="outcome-target">
-        <td class="index"></td>
-        <td class="service">
+        <td class="index">
             <!-- ko if:orphanedOutcomes().length > 0 -->
             <input type="text" value="" class="hidden-validation-holder" data-bind="attr:{'data-errormessage':orphanedOutcomesError()}" data-validation-engine="validate[required]">
             <!-- /ko -->
+        </td>
+        <td class="outcomes" data-bind="style:{width:cellWidth+'%'}">
             <g:if test="${!separateTargetsPerOutcome}">
             <select multiple class="form-select form-select-sm" data-bind="options:availableOutcomes, multiSelect2:{value:relatedOutcomes, templateResult:$root.renderOutcome, tags:false}, disable: $root.isProjectDetailsLocked()">
             </select>
@@ -53,9 +62,13 @@
             </g:else>
 
         </td>
-        <td class="score"><input type="number" class="form-control form-control-sm" data-bind="value:target, disable: $root.isProjectDetailsLocked()" data-validation-engine="validate[required,min[validate[min[0.01]]"></td>
-        <td>
-            <!-- ko if:orphanedOutcomes().length > 0 || availableOutcomes().length == 0 -->
+        <td class="overall-target" data-bind="style:{width:cellWidth+'%'}">
+            <input type="number" class="form-control form-control-sm" data-bind='value:target, disable: $root.isProjectDetailsLocked(), computedValidation:[{rule:"min", param:{type:"computed", expression:"max(0.01, sum(periodTargets, \"target\"))"}, message:"The target must be be greater than zero and equal to the sum of the forecasts"},{rule:"max", param:{type:"computed", expression:"sum(periodTargets, \"target\")"}, message:"The target must be greater than zero and equal to the sum of the forecasts"}, {rule:"required"}]'></td>
+        <!-- ko foreach:periodTargets -->
+        <td class="forecast" data-bind="style:{width:cellWidth+'%'}"><input type="number" class="form control form-control-sm" data-validation-engine="validate[required,min[0]]" data-bind="value:target, disable: $root.isProjectDetailsLocked()"></input></td>
+        <!-- /ko -->
+        <td class="remove">
+            <!-- ko if:orphanedOutcomes().length > 0 -->
             <span data-bind="if:!$root.isProjectDetailsLocked()">
             <i class="fa fa-remove" data-bind="click:$parent.removeOutcomeTarget, disable: $root.isProjectDetailsLocked()"></i>
             </span>
@@ -63,12 +76,13 @@
         </td>
     </tr>
     <!-- /ko -->
+    <!-- /ko -->
     <g:if test="${!separateTargetsPerOutcome}">
     <tr>
         <td colspan="4">
             <button class="btn btn-sm" data-bind="click:addOutcomeTarget, disable: $root.isProjectDetailsLocked()"><i class="fa fa-plus"></i>Add outcome target</button>
             <!-- ko if:availableOutcomes().length > 0 -->
-            <input type="text" value="" class="hidden-validation-holder" data-validation-engine="validate[required]" data-errormessage="There are outcomes related to this service that do not have a target assigned.  Press 'Add Outcome Target' to specify a target">
+            <input type="text" value="" data-bind="disable: $root.isProjectDetailsLocked()" class="hidden-validation-holder" data-validation-engine="validate[required]" data-errormessage="There are outcomes related to this service that do not have a target assigned.  Press 'Add Outcome Target' to specify a target">
             <!-- /ko -->
         </td>
     </tr>

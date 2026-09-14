@@ -2025,3 +2025,64 @@ var projectWeedNumberOfSurveysConductedDefault = {
         }
     }
 };
+
+var totalBaselineFloraSurveysDefault = {
+    create: function(){
+        return {
+            "configuration": {
+                "childAggregations": [{
+                    "filter": {
+                        "property": "name",
+                        "filterValue": "NHT - Flora survey",
+                        "type": "filter"
+                    },
+                    "childAggregations": [
+                        {
+                            "property": "data.totalSurveyBaseline",
+                            "type": "SUM"
+                        }
+                    ]
+                }]
+            },
+            "outputType": "RLP - Weed distribution survey",
+            "entityTypes": ["RLP Output Report"],
+            "label": "Number of flora surveys conducted - baseline",
+            "units": "",
+            "category": "RLP",
+            "isOutputTarget": true,
+            "status": "active",
+            "tags":["Baseline"]
+        }
+    }
+};
+
+var totalIndicatorFloraSurveysDefault = {
+    create: function(){
+        return {
+            "configuration": {
+                "childAggregations": [{
+                    "filter": {
+                        "property": "name",
+                        "filterValue": "NHT - Flora survey",
+                        "type": "filter"
+                    },
+                    "childAggregations": [
+                        {
+                            "property": "data.totalSurveyBaseline",
+                            "type": "SUM"
+                        }
+                    ]
+                }]
+            },
+            "outputType": "RLP - Weed distribution survey",
+            "entityTypes": ["RLP Output Report"],
+            "label": "Number of flora surveys conducted - indicator",
+            "units": "",
+            "category": "RLP",
+            "isOutputTarget": true,
+            "status": "active",
+            "tags":["Indicator"]
+        }
+    }
+}
+

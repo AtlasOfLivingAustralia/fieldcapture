@@ -6,7 +6,7 @@ class OutputService {
 
     WebService webService
 
-    @Value('${ecodata.baseUrl}+output/')
+    @Value('${ecodata.baseUrl}output/')
     private String outputPath
 
     def get(String id) {
@@ -20,6 +20,10 @@ class OutputService {
 
     def delete(String id) {
         webService.doDelete(outputPath + id)
+    }
+
+    def search(Map criteria) {
+        webService.doPost(outputPath + 'search', criteria)
     }
 
 }

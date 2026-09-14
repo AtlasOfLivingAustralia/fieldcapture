@@ -231,19 +231,8 @@
                 "dataType": "list",
                 "columns": [
                   {
-                    "dataType": "stringList",
-                    "name": "communicationMaterialType",
-                    "constraints": [
-                      "Advertising",
-                      "Extension materials",
-                      "Flyers and brochures",
-                      "Media release",
-                      "Newsletters",
-                      "Newspaper articles",
-                      "Publishing reports",
-                      "Social media",
-                      "Other"
-                    ]
+                    "dataType": "text",
+                    "name": "communicationMaterialType"
                   },
                   {
                     "dataType": "text",
@@ -665,7 +654,7 @@
                 "columns": [
                   {
                     "source": "communicationMaterialType",
-                    "type": "selectOne",
+                    "type": "text",
                     "width": "15%",
                     "title": "Type of Communications Material",
                     "readonly": true

@@ -1,11 +1,46 @@
 <!-- ko stopBinding: true -->
 <h3>MERI Plan</h3>
 <div id="edit-meri-plan">
+<script id="meri-date-changes" type="text/html">
+<div>
+	<div class="alert alert-danger">
+		<span class="badge bg-danger">Important!</span>
+		<p>
+			Please ensure the project start and end dates match the dates in the Grant Agreement before approving the MERI plan.
+		</p>
+		<p>
+			Changing dates may result in changes to the reporting schedule which will require updates to the forecasts before the plan can be approved.
+		</p><p>
+		Once reporting has commenced, changing project dates can impact reporting data so will require assistance from the MERI team.
+	</p>
+	</div>
+	<form id="reportingTabDatesForm">
+		<div class="row mb-2">
+			<div class="col-sm-2">
+				<label for="startDate">Project start date
+				<fc:iconHelp title="Start date">The project start date as written in the contract or Grant Agreement</fc:iconHelp>
+				</label>
+				<div class="input-group input-append">
+					<fc:datePicker class="form-control form-control-sm" bs4="true" targetField="plannedStartDate.date" id= "startDate" name="startDate" data-validation-engine="validate[required, past[endDate]]" autocomplete="off"/>
+				</div>
+			</div>
+			<div class="col-sm-2">
+				<label for="endDate">Project end date
+				<fc:iconHelp title="End date">The project end date as written in the contract or Grant Agreement.</fc:iconHelp>
+				</label>
+				<div class="input-group input-append">
+					<fc:datePicker class="form-control form-control-sm" bs4="true" targetField="plannedEndDate.date" id="endDate" name="endDate" data-validation-engine="validate[required, future[startDate]" autocomplete="off"/>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+</script>
 <script id="submittedPlanTmpl" type="text/html">
 <div class="required">
 	<div class="form-actions" >
 		<b>Grant manager actions:</b>
-		<div data-bind="if:!canApprove()">
+		<div data-bind="if:!externalIdsSupplied()">
 			<div class="alert alert-info">
 				At least one Tech One Project Code, Grant Award ID, or SAP Internal Order must be provided before the MERI plan can be approved
 			</div>
@@ -16,10 +51,13 @@
 				</div>
 			</div>
 		</div>
-		<span class="grantManagerActionSpan">
-			<button type="button" data-bind="enable: canApproveMeriPlan, click:approvePlan, style:{'pointer-events': canApproveMeriPlan() ? 'all': 'none'}" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Approve MERI Plan</button>
-			<button type="button" data-bind="click:rejectPlan" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Reject MERI Plan</button>
-		</span>
+		<!-- ko if: canChangeMeriDates() -->
+		<div class="pb-2" data-bind="template:'meri-date-changes'"></div>
+		<!--/ko -->
+		<div class="grantManagerActionSpan">
+			<button type="button" data-bind="enable: canApproveMeriPlan, click:approvePlan, style:{'pointer-events': canApproveMeriPlan() ? 'all': 'none'}" class="btn btn-sm btn-success"><i class="fa fa-check"></i> <span data-bind="if:datesChanged">Save dates and </span>Approve MERI Plan</button>
+			<button type="button" data-bind="click:rejectPlan" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> <span data-bind="if:datesChanged">Save dates and </span>Reject MERI Plan</button>
+		</div>
 	</div>
 </div>
 </script>
@@ -44,17 +82,22 @@
 </div>
 </script>
 <script id="editablePlanTmpl" type="text/html">
+<g:if test="${!project.lock}">
+<!-- ko if: canChangeMeriDates() -->
+<div class="form-actions">
+	<b>Grant manager actions:</b>
+	<div class="pb-2" data-bind="template:'meri-date-changes'"></div>
 
+	<div class="grantManagerActionSpan">
+		<button type="button" data-bind="enable:datesChanged, click:updateProjectDates" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Update dates</button>
+		<button type="button" data-bind="click:function() {window.location.reload();}" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Cancel</button>
+	</div>
+</div>
+<!--/ko -->
+</g:if>
 </script>
 <script id="completedProjectTmpl" type="text/html">
-<div class="required">
-	%{--<div class="form-actions" >--}%
-		%{--<b>Grant manager actions:</b>--}%
-		%{--<span class="btn-group">--}%
-			%{--<button type="button" data-bind="click:unlockPlanForCorrection" class="btn btn-danger"><i class="fa fa-unlock"></i> Unlock plan for correction</button>--}%
-		%{--</span>--}%
-	%{--</div>--}%
-</div>
+
 </script>
 <script id="unlockedProjectTmpl" type="text/html">
 <div class="required">

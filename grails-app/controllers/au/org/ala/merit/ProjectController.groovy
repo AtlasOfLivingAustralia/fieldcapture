@@ -212,6 +212,7 @@ class ProjectController {
         List downloadableProtocols = downloadableProtocols()
         boolean resyncEnabled = userService.userIsAlaOrFcAdmin() && user?.isCaseManager
         boolean showExternalIds = userService.userHasReadOnlyAccess() || userService.userIsSiteAdmin()
+        List<Map> forecastPeriods = projectService.generateTargetPeriods(project, config)
         def model = [overview       : [label: 'Overview', visible: true, default: true, type: 'tab', publicImages: imagesModel, displayOutcomes: false, blog: blog, hasNewsAndEvents: hasNewsAndEvents, hasProjectStories: hasProjectStories, canChangeProjectDates: canChangeProjectDates, outcomes:project.outcomes, objectives:config.program?.config?.objectives, showExternalIds:showExternalIds],
                      documents      : [label: 'Documents', visible: config.includesContent(ProgramConfig.ProjectContent.DOCUMENTS), type: 'tab', user:user, template:'docs', activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
                      details        : [label: 'MERI Plan', default: false, disabled: !meriPlanEnabled, visible: meriPlanVisible, meriPlanVisibleToUser: meriPlanVisibleToUser, risksAndThreatsVisible: canViewRisks, announcementsVisible: true, project:project, type: 'tab', template:'viewMeriPlan', meriPlanTemplate:MERI_PLAN_TEMPLATE+'View', config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage'],
@@ -219,7 +220,7 @@ class ProjectController {
                      site           : [label: 'Sites', visible: config.includesContent(ProgramConfig.ProjectContent.SITES), disabled: !user?.hasViewAccess, editable:user?.isEditor, type: 'tab', template:'projectSites'],
                      dashboard      : [label: 'Dashboard', visible: config.includesContent(ProgramConfig.ProjectContent.DASHBOARD), disabled: !user?.hasViewAccess, type: 'tab'],
                      datasets       : [label: 'Data set summary', visible: datasetsVisible, template: '/project/dataset/dataSets', downloadableProtocols: downloadableProtocols, supportedFormats:bdrDataSetSupportedFormats(), enableProjectDataSetsDownload:enableProjectDataSetsDownload, resyncEnabled: resyncEnabled, type:'tab'],
-                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage', canRegenerateReports: canRegenerateReports, hasSubmittedOrApprovedFinalReportInCategory: hasSubmittedOrApprovedFinalReportInCategory, canModifyMeriPlan: canModifyMeriPlan, showRequestLabels:config.supportsParatoo, outcomeStartIndex:outcomeStartIndex, tags:tags]]
+                     admin          : [label: 'Admin', visible: adminTabVisible, user:user, type: 'tab', template:'projectAdmin', project:project, canChangeProjectDates: canChangeProjectDates, minimumProjectEndDate:minimumProjectEndDate, showMERIActivityWarning:true, showAnnouncementsTab: showAnnouncementsTab, showSpecies:true, meriPlanTemplate:MERI_PLAN_TEMPLATE, showMeriPlanHistory:showMeriPlanHistory, requireMeriPlanApprovalReason:Boolean.valueOf(config.supportsMeriPlanHistory),  config:config, activityPeriodDescriptor:config.activityPeriodDescriptor ?: 'Stage', canRegenerateReports: canRegenerateReports, hasSubmittedOrApprovedFinalReportInCategory: hasSubmittedOrApprovedFinalReportInCategory, canModifyMeriPlan: canModifyMeriPlan, forecastPeriods:forecastPeriods, showRequestLabels:config.supportsParatoo, outcomeStartIndex:outcomeStartIndex, tags:tags]]
 
         if (template == MERI_ONLY_TEMPLATE) {
             model = [details:model.details]
@@ -1001,8 +1002,8 @@ class ProjectController {
     def scoresForReport(String id) {
         List scoreIds = params.getList('scoreIds')
         String reportId = params.get('reportId')
-
-        Map result = projectService.scoresForReport(id, reportId, scoreIds)
+        Boolean includeTargets = params.get('includeTargets')
+        Map result = projectService.scoresForReport(id, reportId, scoreIds, includeTargets)
 
         render result as JSON
     }
@@ -1149,6 +1150,15 @@ class ProjectController {
     @PreAuthorise(accessLevel = 'readOnly')
     def projectPrioritiesByOutcomeType(String id) {
         render projectService.projectPrioritiesByOutcomeType(id) as JSON
+    }
+
+    @PreAuthorise(accessLevel = 'readOnly')
+    def projectOutcomeTargetsForReport(String id, String reportData) {
+        Map reportContents = JSON.parse(reportData)
+        String reportId = reportContents.reportId
+        Map project = projectService.get(id)
+        Map report = project.reports.find {it.reportId == reportId}
+        render projectService.getOutcomeTargetsForProject(project, report, reportContents.activity) as JSON
     }
 
     @PreAuthorise(accessLevel = 'readOnly')

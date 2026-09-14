@@ -17,15 +17,15 @@ describe("Loading the MERI plan is handled correctly", function () {
             "scoreId": "1",
             "target": 6,
             "periodTargets": [
-                {"period": "2018/2019", "target": "1"},
-                {"period": "2019/2020", "target": "2"},
-                {"period": "2020/2021", "target": "3"},
-                {"period": "2021/2022", "target": "4"},
-                {"period": "2022/2023", "target": "5"}],
+                {"period": "2018/2019", "target": "1", "periodStart": "2018-06-30T14:00:00Z", periodEnd: "2019-06-30T14:00:00Z"},
+                {"period": "2019/2020", "target": "2", "periodStart": "2019-06-30T14:00:00Z", periodEnd: "2020-06-30T14:00:00Z"},
+                {"period": "2020/2021", "target": "3", "periodStart": "2020-06-30T14:00:00Z", periodEnd: "2021-06-30T14:00:00Z"},
+                {"period": "2021/2022", "target": "4", "periodStart": "2021-06-30T14:00:00Z", periodEnd: "2022-06-30T14:00:00Z"},
+                {"period": "2022/2023", "target": "5", "periodStart": "2022-06-30T14:00:00Z", periodEnd: "2023-06-30T14:00:00Z"}],
             "outcomeTargets": [
-                {"relatedOutcomes":["ST1"], "target": "1"},
-                {"relatedOutcomes":["MT1"], "target": "2"},
-                {"relatedOutcomes":["MT2"], "target": "3"}
+                {"relatedOutcomes":["ST1"], "target": "1", periodTargets:[]},
+                {"relatedOutcomes":["MT1"], "target": "2", periodTargets:[]},
+                {"relatedOutcomes":["MT2"], "target": "3", periodTargets:[]}
             ]
         }];
         risks = {
@@ -716,7 +716,7 @@ describe("Loading the MERI plan is handled correctly", function () {
         var viewModel = new OutcomesViewModel({}, options);
 
         var serialized = JSON.parse(JSON.stringify(viewModel));
-        expect(serialized).toEqual({"primaryOutcome":{"description":"Outcome 2","assets":[]},"secondaryOutcomes":[],"shortTermOutcomes":[],"midTermOutcomes":[], otherOutcomes:[]});
+        expect(serialized).toEqual({"primaryOutcome":{"description":"Outcome 2","assets":[]},"secondaryOutcomes":[],"shortTermOutcomes":[],"midTermOutcomes":[], projectTermOutcomes:[], otherOutcomes:[]});
 
     });
 
