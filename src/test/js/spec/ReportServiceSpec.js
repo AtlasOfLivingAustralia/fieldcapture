@@ -153,4 +153,28 @@ describe("ProjectViewModel Spec", function () {
     ]);
         expect(message).toEqual('<p><strong>Targets for this project have been over-delivered.</strong></p>Please check the reported data for the following targets: <ul><li>Score 1: 4 of 2 (200%)</li></ul>');
     });
+
+    it("Can save a new due date for a report", function() {
+
+        var ajaxOptions;
+        spyOn($, 'ajax').and.callFake(function(options) {
+            ajaxOptions = options;
+            var fakeResult = $.Deferred();
+            fakeResult.resolve({success:true});
+            return fakeResult;
+        });
+
+        var reportService = new ReportService({updateReportDueDateUrl:'/project/ajaxUpdateReportDueDate/p1'});
+
+        var result;
+        reportService.saveReportDueDate('r1', '2021-07-31T14:00:00Z').done(function(data) {
+            result = data;
+        });
+
+        expect(ajaxOptions.url).toEqual('/project/ajaxUpdateReportDueDate/p1');
+        expect(ajaxOptions.type).toEqual('POST');
+        expect(ajaxOptions.contentType).toEqual('application/json');
+        expect(JSON.parse(ajaxOptions.data)).toEqual({reportId:'r1', dueDate:'2021-07-31T14:00:00Z'});
+        expect(result).toEqual({success:true});
+    });
 });

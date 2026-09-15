@@ -20,7 +20,7 @@ import static ReportService.ReportMode
 
 class ProjectController {
 
-    static allowedMethods =  [listProjectInvestmentPriorities: 'GET', ajaxUpdate: 'POST']
+    static allowedMethods =  [listProjectInvestmentPriorities: 'GET', ajaxUpdate: 'POST', ajaxUpdateReportDueDate: 'POST']
     static defaultAction = "index"
     static ignore = ['action', 'controller', 'id', 'planStatus', 'hubId', 'projectId', 'isMERIT']
     static final ADMIN_ONLY_FIELDS = ['config', 'programId', 'associatedProgram', 'associatedSubProgram', 'grantId', 'status', 'organisationId', 'orgIdSvcProvider']
@@ -247,8 +247,8 @@ class ProjectController {
             model.details.visible = model.details.visible && userHasViewAccess
 
             boolean reportsVisible = config.includesContent(ProgramConfig.ProjectContent.REPORTING) && userHasViewAccess
-
-            Map reportingTab = [label: 'Reporting', visible:reportsVisible, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:true, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager, declarationTemplate:config.getDeclarationTemplate()]
+            boolean showDueDates = config.showReportDueDates
+            Map reportingTab = [label: 'Reporting', visible:reportsVisible, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:!showDueDates, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager, declarationTemplate:config.getDeclarationTemplate()]
             if (reportingTab.visible) {
                 reportingTab.reportOrder = config?.projectReports?.collect{
                     [category:it.category, description:it.description, banner:it.banner, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]}?.unique({it.category}) ?: []
@@ -591,6 +591,20 @@ class ProjectController {
 
         render result as JSON
 
+    }
+
+    @PreAuthorise(accessLevel = 'caseManager')
+    def ajaxUpdateReportDueDate(String id) {
+
+        def reportDetails = request.JSON
+
+        def result = projectService.updateReportDueDate(id, reportDetails)
+
+        if (!result.success) {
+            response.status = HttpStatus.SC_UNPROCESSABLE_ENTITY
+        }
+
+        render result as JSON
     }
 
     @PreAuthorise(accessLevel = 'siteAdmin')

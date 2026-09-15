@@ -515,6 +515,28 @@ class ReportService {
         webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/"+report.reportId, report)
     }
 
+    /**
+     * Updates the due date of a report.  Due dates changed in this way are flagged as manually assigned
+     * so they won't be overwritten if the reports for the report owner are regenerated.
+     * @param report the report to update.
+     * @param dueDate the new due date, formatted as an ISO 8601 date string.
+     * @return a Map containing a boolean flag "success" and a String "error" if success == false
+     */
+    Map updateDueDate(Map report, String dueDate) {
+        if (!dueDate) {
+            return [success:false, error:'A due date must be supplied']
+        }
+        if (excludesNotApproved(report)) {
+            return [success:false, error:'The due date of a submitted or approved report cannot be changed']
+        }
+
+        Map resp = update([reportId:report.reportId, dueDate:dueDate, dueDateManuallyAssigned:true])
+        if (resp?.error) {
+            return [success:false, error:resp.error]
+        }
+        [success:true, dueDate:dueDate]
+    }
+
     Map reset(String reportId) {
         Map report = get(reportId)
         if (excludesNotApproved(report)) {

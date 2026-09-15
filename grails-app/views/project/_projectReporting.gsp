@@ -53,6 +53,7 @@
 <fc:getSettingContent settingType="${au.org.ala.merit.SettingPageType.REPORT_ADJUSTMENT_INSTRUCTIONS}"/>
 </script>
 
+<g:if test="${!config.generateReportsOnMeriPlanApproval()}">
 <g:if test="${user?.isCaseManager || fc.userIsAlaOrFcAdmin()}">
 <asset:script type="text/javascript">
     $(function() {
@@ -60,4 +61,5 @@
         ko.applyBindings(new GrantManagerReportsViewModel(config), document.getElementById('generate-report'));
     });
 </asset:script>
+</g:if>
 </g:if>

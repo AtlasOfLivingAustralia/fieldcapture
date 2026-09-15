@@ -127,15 +127,18 @@
         <th class="report-actions">
             Actions <fc:iconHelp html="html">Submitted and approved reports cannot be edited<br/>Only reports marked as completed can be viewed or downloaded as a PDF</fc:iconHelp></th>
         <th class="report-name">Report</th>
-        <th class="report-start">Period start</th>
-        <th class="report-end">Period end
-        </th>
         <g:if test="${!hideDueDate}">
-            <th class="report-due">Date Due
+            <th class="report-due">
+                Date Due <fc:iconHelp>This is the date your report is due. You must submit your report by this date.</fc:iconHelp>
             </th>
         </g:if>
-        <th class="report-status">Status <fc:iconHelp html="html">Reports cannot be submitted until after the end of the reporting period. <br/> Reports must be marked as complete before they can be submitted. </fc:iconHelp><br/></th>
+        <th class="report-start">
+            Period start <fc:iconHelp>Each report covers your activities that were conducted between the 'Period start' date and the 'Period end' date of that report</fc:iconHelp>
+        </th>
+        <th class="report-end">Period end <fc:iconHelp>Each report covers your activities that were conducted between the 'Period start' date and the 'Period end' date of that report</fc:iconHelp></th>
+        <th class="report-status">Status <fc:iconHelp html="html">Reports cannot be submitted until after the end of the reporting period. <br/> Reports must be marked as complete before they can be submitted. </fc:iconHelp></th>
     </tr>
+
     </thead>
     <tbody data-bind="foreach:{ data:filteredReports, as:'report', afterAdd: attachHelp}">
 
@@ -176,11 +179,19 @@
                 data-bind="text:description"></span></a>
             <span data-bind="visible:!editable, text:description"></span>
         </td>
-        <td class="report-start" data-bind="text:fromDate.formattedDate"></td>
-    <td class="report-end" data-bind="text:toDateLabel">
         <g:if test="${!hideDueDate}">
-            <td class="report-due" data-bind="text:dueDate.formattedDate()"></td>
+            <td class="report-due">
+                <p><span data-bind="text:dueDate.formattedDate"></span></p>
+                <g:if test="${isGrantManager || fc.userIsAlaOrFcAdmin()}">
+                    <p>
+                    <a href="#" class="btn btn-warning btn-sm edit-due-date" data-bind="visible:canEditDueDate, click:editDueDate">Edit due date</a>
+                    </p>
+                </g:if>
+            </td>
         </g:if>
+        <td class="report-start" data-bind="text:fromDate.formattedDate"></td>
+        <td class="report-end" data-bind="text:toDateLabel"></td>
+
         <td class="report-status" data-bind="template:approvalTemplate()">
 
             <span class="label"
@@ -197,6 +208,33 @@
 
 </table>
 
+</script>
+
+<script type="text/html" id="edit-due-date-modal-template">
+    <div class="modal validationEngineContainer" id="edit-due-date-modal" role="dialog" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Edit due date</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Change the date the report <b><span data-bind="text:reportName"></span></b> is due.</p>
+
+                    <label class="form-label" for="report-due-date">Date due</label>
+                    <fc:datePicker type="text" bs4="true" class="form-control" id="report-due-date" name="reportDueDate"
+                                   data-bind="datepicker:dueDate.date" targetField="" required="true" autocomplete="off"/>
+
+                    <div class="alert alert-danger mt-2" data-bind="visible:error">
+                        <span data-bind="text:error"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-sm btn-primary" data-bind="click:save, disable:saving">Save</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-bind="click:cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </script>
 
 <asset:script type="text/javascript">

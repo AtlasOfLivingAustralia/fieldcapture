@@ -713,4 +713,60 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         cleanup:
         tmpDir.deleteDir()
     }
+
+    def "The due date of a report can be updated and is flagged as manually assigned"() {
+        setup:
+        Map report = [reportId: 'r1', publicationStatus: PublicationStatus.NOT_APPROVED]
+
+        when:
+        Map result = service.updateDueDate(report, '2021-07-31T14:00:00Z')
+
+        then:
+        1 * webService.doPost({it.endsWith('report/r1')}, [reportId: 'r1', dueDate: '2021-07-31T14:00:00Z', dueDateManuallyAssigned: true]) >> [resp: [reportId: 'r1']]
+
+        and:
+        result == [success: true, dueDate: '2021-07-31T14:00:00Z']
+    }
+
+    def "A due date must be supplied to update the due date of a report"() {
+        when:
+        Map result = service.updateDueDate([reportId: 'r1', publicationStatus: PublicationStatus.NOT_APPROVED], dueDate)
+
+        then:
+        0 * webService.doPost(_, _)
+
+        and:
+        result.success == false
+        result.error == 'A due date must be supplied'
+
+        where:
+        dueDate << [null, '']
+    }
+
+    def "The due date of a submitted, approved or cancelled report cannot be changed"(String publicationStatus) {
+        when:
+        Map result = service.updateDueDate([reportId: 'r1', publicationStatus: publicationStatus], '2021-07-31T14:00:00Z')
+
+        then:
+        0 * webService.doPost(_, _)
+
+        and:
+        result.success == false
+        result.error == 'The due date of a submitted or approved report cannot be changed'
+
+        where:
+        publicationStatus << [PublicationStatus.SUBMITTED, PublicationStatus.APPROVED, PublicationStatus.CANCELLED]
+    }
+
+    def "An error updating the due date of a report is returned to the caller"() {
+        when:
+        Map result = service.updateDueDate([reportId: 'r1', publicationStatus: PublicationStatus.NOT_APPROVED], '2021-07-31T14:00:00Z')
+
+        then:
+        1 * webService.doPost(_, _) >> [error: 'Error updating report']
+
+        and:
+        result.success == false
+        result.error == 'Error updating report'
+    }
 }

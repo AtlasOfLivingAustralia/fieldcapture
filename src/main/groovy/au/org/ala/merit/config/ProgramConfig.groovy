@@ -166,6 +166,8 @@ class ProgramConfig implements Map {
         config?.generateReportsOnMeriPlanApproval ?: false
     }
 
+    boolean showReportDueDates = false
+
 }
 
 

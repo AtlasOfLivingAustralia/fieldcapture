@@ -63,6 +63,42 @@ var ReportStatusChangeReasonViewModel = function(config) {
     }
 };
 
+/**
+ * View model for the modal dialog used to change the due date of a report.
+ * @param report the ReportViewModel for the report being edited.
+ * @param options must supply a saveCallback function which accepts the new due date (as an ISO 8601
+ * formatted String) and returns a promise, and a closeCallback function used to close the modal.
+ */
+var EditReportDueDateViewModel = function(report, options) {
+    var self = this;
+
+    self.reportName = report.description;
+    self.dueDate = ko.observable(report.dueDate()).extend({simpleDate:false});
+    self.saving = ko.observable(false);
+    self.error = ko.observable();
+
+    self.save = function(data, e) {
+        var form = $(e.target).closest('.validationEngineContainer');
+        if (form.length && !form.validationEngine('validate')) {
+            return;
+        }
+        self.error(null);
+        self.saving(true);
+        options.saveCallback(self.dueDate()).done(function() {
+            self.saving(false);
+            options.closeCallback();
+        }).fail(function(data) {
+            self.saving(false);
+            var message = data && data.responseJSON && data.responseJSON.error;
+            self.error(message || 'An error occurred while saving the due date.  Please try again.');
+        });
+    };
+
+    self.cancel = function() {
+        options.closeCallback();
+    };
+};
+
 var ReportViewModel = function(report, config) {
     $.extend(this, report);
     var self = this;
@@ -256,6 +292,41 @@ var ReportViewModel = function(report, config) {
 
     };
 
+
+    /** The due date can only be changed while the report hasn't been submitted or approved */
+    self.canEditDueDate = ko.pureComputed(function() {
+        return !!config.updateReportDueDateUrl &&
+            !PublicationStatus.isReadOnly(report.publicationStatus) &&
+            !ReportStatus.isCancelled(report.status);
+    });
+
+    /** Displays a modal allowing the due date of this report to be changed */
+    self.editDueDate = function() {
+        var modalTemplate = $(config.dueDateModalSelector || '#edit-due-date-modal-template');
+        var $modal = $(modalTemplate.text());
+        $(document.body).append($modal);
+
+        var dueDateViewModel = new EditReportDueDateViewModel(self, {
+            saveCallback: function(dueDate) {
+                return reportService.saveReportDueDate(report.reportId, dueDate).done(function() {
+                    self.dueDate(dueDate);
+                });
+            },
+            closeCallback: function() {
+                $modal.modal('hide');
+            }
+        });
+
+        ko.applyBindings(dueDateViewModel, $modal[0]);
+        $modal.validationEngine({promptPosition:'topLeft'});
+
+        $modal.modal({backdrop:'static', keyboard:true}).on('hidden.bs.modal', function() {
+            // clean up event handlers and dispose of the modal
+            $modal.validationEngine('detach');
+            ko.cleanNode($modal[0]);
+            $modal.remove();
+        }).modal('show');
+    };
 
     self.showReportStatusChangeModal = function(options) {
 
