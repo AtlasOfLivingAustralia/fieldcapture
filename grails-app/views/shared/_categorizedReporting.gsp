@@ -47,16 +47,23 @@
 </script>
 
 <script id="notSubmitted" type="text/html">
- <p data-bind="if:!report.editable"><span class="badge text-bg-danger p-1">Template being updated</span></p>
+    <!-- ko if:!report.editable -->
+    <p><span class="badge text-bg-danger text-wrap" data-bind="text:notEditableReason()"></span></p>
+    <!-- /ko -->
     <p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white text-bg-danger">Report adjusted</span></p>
     <p><span class="badge p-1 text-white text-bg-warning">Report not submitted</span></p>
 
     <g:if test="${isAdmin || fc.userIsSupportOfficerOrAdmin()}">
         <p>
-            <button class="btn btn-success btn-sm" data-bind="enable:complete,click:submitReport"
+            <button class="btn btn-success btn-sm" data-bind="enable:complete && report.editable,click:submitReport"
                     title="The reporting form must be marked as complete before this report can be submitted.">Submit report</button>
         </p>
 
+    </g:if>
+    <g:if test="${!hideDueDate}">
+    <p data-bind="if:isDueSoon"><span class="badge p-1 text-white text-bg-success">This report is due soon</span></p>
+    <p data-bind="if:isDueToday"><span class="badge p-1 text-white text-bg-warning">This report is due tody</span></p>
+    <p data-bind="if:isOverdue"><span class="badge p-1 text-white text-bg-danger">This report is overdue</span></p>
     </g:if>
     <span class="badge p-1 text-white text-bg-info" data-bind="if:progress() == 'started'">Reporting form incomplete</span>
     <span class="badge p-1 text-white text-bg-success" data-bind="if:progress() == 'finished'">Reporting form complete</span>
@@ -183,7 +190,20 @@
         </td>
         <g:if test="${!hideDueDate}">
             <td class="report-due">
-                <p><span data-bind="text:dueDate.formattedDate"></span></p>
+                <p>
+                    <!-- ko if:isOverdue -->
+                    <span class="badge p-1 text-white fs-5 text-bg-danger" data-bind="text:dueDate.formattedDate"></span>
+                    <!-- /ko -->
+                    <!-- ko if:isDueToday -->
+                    <span class="badge p-1 text-white fs-5 text-bg-warning" data-bind="text:dueDate.formattedDate"></span>
+                    <!-- /ko -->
+                    <!-- ko if:isDueSoon -->
+                    <span class="badge p-1 text-white fs-5 text-bg-success" data-bind="text:dueDate.formattedDate"></span>
+                    <!-- /ko -->
+                    <!-- ko if:!isOverdue && !isDueToday && !isDueSoon -->
+                    <span data-bind="text:dueDate.formattedDate"></span>
+                    <!-- /ko -->
+                </p>
                 <g:if test="${isGrantManager || fc.userIsAlaOrFcAdmin()}">
                     <p>
                     <a href="#" class="btn btn-warning btn-sm edit-due-date" data-bind="visible:canEditDueDate, click:editDueDate">Edit due date</a>

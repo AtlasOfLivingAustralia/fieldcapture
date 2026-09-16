@@ -195,6 +195,15 @@ var ReportViewModel = function(report, config) {
         return self.editable && self.hasData();
     });
 
+    let now = moment();
+    // The due date (including time) is midnight of the day due to truncating the hours/minutes from the date picker so we
+    // add a day to allow it to be delivered during that day.
+    let dueDate = moment(report.dueDate).add(1, 'days');
+
+    self.isDueToday = report.dueDate && now.isAfter(dueDate.clone().subtract(1, 'days')) && now.isBefore(dueDate);
+    self.isDueSoon = report.dueDate && now.isBefore(dueDate.clone().subtract(1, 'days')) && now.isAfter(dueDate.clone().subtract(7, 'days'));
+    self.isOverdue = report.dueDate && now.isAfter(dueDate);
+
     self.approvalTemplate = function() {
         if (report.publicationStatus == 'cancelled') {
             return 'cancelled';
@@ -321,8 +330,12 @@ var ReportViewModel = function(report, config) {
 
         var dueDateViewModel = new EditReportDueDateViewModel(self, {
             saveCallback: function(dueDate) {
+                blockUIWithMessage("Saving due date");
                 return reportService.saveReportDueDate(report.reportId, dueDate).done(function() {
                     self.dueDate(dueDate);
+                    blockUIWithMessage("Due date saved.  Reloading page....");
+                    window.location.reload();
+
                 });
             },
             closeCallback: function() {
@@ -570,10 +583,8 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
         });
         filteredReports.sort(function(r1, r2) {
 
-            var result = ( ( r1.dueDate() == r2.dueDate() ) ? 0 : ( ( r1.dueDate() > r2.dueDate() ) ? 1 : -1 ) );
-            if (result === 0) {
-                result = ( ( r1.toDate() == r2.toDate() ) ? 0 : ( ( r1.toDate() > r2.toDate() ) ? 1 : -1 ) );
-            }
+            let result = ( ( r1.toDate() == r2.toDate() ) ? 0 : ( ( r1.toDate() > r2.toDate() ) ? 1 : -1 ) );
+
             if (result === 0) {
                 result = ( ( r1.type == r2.type ) ? 0 : ( ( r1.type > r2.type ) ? 1 : -1 ) );
             }
