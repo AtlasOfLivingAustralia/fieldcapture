@@ -128,6 +128,13 @@ class ReportConfig {
     String label = null
 
     /**
+     * If this value is assigned the value of another report config category, then
+     * reports in this category will only become editable when all reports in the dependency category have been submitted.
+     * This is used to enforce a reporting order when data from one report category is used in another.
+     */
+    String dependsOn = false
+
+    /**
      * For reports with multiple=false and no reportingPeriodInMonths supplied, this property acts to suppress
      * the creation of reports for owners with durations less than this value.
      */

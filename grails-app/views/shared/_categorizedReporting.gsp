@@ -25,7 +25,9 @@
 </div>
 
 <script id="notReportable" type="text/html">
-    <span class="badge text-bg-danger" data-bind="if:!report.editable">Template being updated</span>
+    <!-- ko if:!report.editable -->
+    <p><span class="badge text-bg-danger text-wrap" data-bind="text:notEditableReason()"></span></p>
+    <!-- /ko -->
 <p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white text-bg-danger">Report adjusted</span></p>
     <div data-bind="if:isCurrent()">
         <span><span class="badge p-1 text-white text-bg-info" data-bind="if:isCurrent()">Current reporting period</span>

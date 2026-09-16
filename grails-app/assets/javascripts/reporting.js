@@ -149,7 +149,7 @@ var ReportViewModel = function(report, config) {
         self.activities.push(new GreenArmyActivityViewModel(activity));
     });
 
-    self.editable = (report.bulkEditable || self.activities.length == 0 || self.activities.length == 1) && (!ReportStatus.isReadOnly(report.status) && report.publicationStatus != 'published' && report.publicationStatus != 'pendingApproval' && report.publicationStatus != 'cancelled');
+    self.editable = (report.bulkEditable || self.activities.length == 0 || self.activities.length == 1) && (!ReportStatus.isReadOnly(report.status) && !PublicationStatus.isReadOnly(report.publicationStatus));
 
     self.title = 'Expand the activity list to complete the reports';
     if (self.editable) {
@@ -168,8 +168,21 @@ var ReportViewModel = function(report, config) {
         return report.fromDate <= now && report.toDate >= now;
     };
     self.currentPeriodHelpText = ko.computed(function() {
-        return "This report can be submitted on or after "+self.submissionDate.formattedDate();
+        let helpText = "This report can be submitted on or after "+self.submissionDate.formattedDate();
+        if (!self.editable && config.dependsOn) {
+            helpText += " and cannot be completed until all "+config.dependsOn+" reports in the same reporting period " +
+                "as this report have been submitted";
+        }
+        return helpText;
     });
+
+    self.notEditableReason = function() {
+        if (config.dependsOn) {
+            return "Complete \n" + config.dependsOn + "\n before editing this report";
+        }
+        return "Template in development"
+    }
+
     self.complete = ko.pureComputed(function() {
         return self.isReportable() && self.progress() == 'finished' && self.editable;
     });
@@ -505,7 +518,7 @@ var ReportViewModel = function(report, config) {
     };
 };
 
-var ReportsViewModel = function(reports, projects, availableReports, reportOwner, config) {
+var ReportsViewModel = function(reports, projects, availableReports, reportOwner, categorizedReports, config) {
     var self = this;
     self.projects = projects;
     self.allReports = ko.observableArray(reports);
@@ -516,6 +529,28 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
     self.attachHelp = function(element) {
         $(element).find('.helphover').popover();
     };
+
+    // If a report category depends on another report category, then reports in the dependent
+    // category are readonly if any of the reports in the category it depends that fall into the
+    // same reporting period have not been submitted.
+    // This is to prevent users from entering data into a report that is dependent on another report that has not yet been submitted.
+    if (config.dependsOn) {
+        let dependsOnReports = categorizedReports[config.dependsOn];
+
+        for (let i=0; i<reports.length; i++) {
+            let report = reports[i];
+
+            let hasEditableDependency = false;
+            for (let j=0; j<dependsOnReports.length; j++) {
+                let dependsOnReport = dependsOnReports[j];
+
+                if (dependsOnReport.toDate > report.fromDate && dependsOnReport.toDate <= report.toDate) {
+                    hasEditableDependency = hasEditableDependency || !PublicationStatus.isReadOnly(dependsOnReport.publicationStatus);
+                }
+            }
+            report.status = ReportStatus.READ_ONLY;
+        }
+    }
 
     self.filteredReports = ko.computed(function() {
 
@@ -709,12 +744,12 @@ var CategorisedReportsViewModel = function(allReports, order, availableReports, 
     _.each(order, function(category) {
         var reports = categorizedReports[category.category];
         if (reports && reports.length > 0) {
-            var reportsOptions = _.extend({}, config, {rejectionReasonCategoryOptions:category.rejectionReasonCategoryOptions})
+            var reportsOptions = _.extend({}, config, {rejectionReasonCategoryOptions:category.rejectionReasonCategoryOptions, dependsOn:category.dependsOn});
             self.reportsByCategory.push({
                 title:category.category,
                 description:ko.observable(category.description).extend({markdown:true}),
                 banner:ko.observable(category.banner).extend({markdown:true}),
-                model:new ReportsViewModel(reports, undefined, availableReports, reportOwner, reportsOptions)
+                model:new ReportsViewModel(reports, undefined, availableReports, reportOwner, categorizedReports, reportsOptions)
             });
         }
 

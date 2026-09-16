@@ -251,7 +251,7 @@ class ProjectController {
             Map reportingTab = [label: 'Reporting', visible:reportsVisible, type:'tab', template:'projectReporting', reports:project.reports, stopBinding:true, services: config.services, scores:scores, hideDueDate:!showDueDates, isAdmin:user?.isAdmin, isGrantManager:user?.isCaseManager, declarationTemplate:config.getDeclarationTemplate()]
             if (reportingTab.visible) {
                 reportingTab.reportOrder = config?.projectReports?.collect{
-                    [category:it.category, description:it.description, banner:it.banner, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[]]}?.unique({it.category}) ?: []
+                    [category:it.category, description:it.description, banner:it.banner, rejectionReasonCategoryOptions:it.rejectionReasonCategoryOptions?:[], dependsOn: it.dependsOn]}?.unique({it.category}) ?: []
                 project.reports?.each { Map report ->
                     ReportConfig reportConfig = ((ProgramConfig)config).findProjectReportConfigForReport(report)
                     report.isAdjustable = reportConfig?.isAdjustable()
