@@ -663,6 +663,22 @@ class ProjectService  {
     }
 
     /**
+     * Updates the due date of a project report.
+     * @param projectId the owner of the report.
+     * @param reportDetails details of the report, specifically the reportId and the new dueDate.
+     * @return a Map containing a boolean flag "success" and a String "error" if success == false
+     */
+    Map updateReportDueDate(String projectId, Map reportDetails) {
+
+        Map reportInformation = prepareReport(projectId, reportDetails)
+        if (reportInformation.error) {
+            return [success:false, error:reportInformation.error]
+        }
+
+        reportService.updateDueDate(reportInformation.report, reportDetails.dueDate)
+    }
+
+    /**
      * Creates a PDF document containing details of the report and attaches it as a document to the project.
      */
     private void createStageReportDocument(Map project, Map reportDetails, Map report) {

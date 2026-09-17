@@ -322,7 +322,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     self.validateCollectionApp = function() {
         let app = self.collectionApp();
         if (!self.isMonitorDataSet && (app && app.toLowerCase() === MONITOR_APP.toLowerCase())) {
-            return "This is not a dataset created in Monitor, so this value cannot entered"
+            return "This dataset was not created in the Monitor App. Please change to another value or leave this field blank if unsure"
         }
     }
 

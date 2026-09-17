@@ -25,7 +25,9 @@
 </div>
 
 <script id="notReportable" type="text/html">
-    <span class="badge text-bg-danger" data-bind="if:!report.editable">Template being updated</span>
+    <!-- ko if:!report.editable -->
+    <p><span class="badge text-bg-danger text-wrap" data-bind="text:notEditableReason()"></span></p>
+    <!-- /ko -->
 <p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white text-bg-danger">Report adjusted</span></p>
     <div data-bind="if:isCurrent()">
         <span><span class="badge p-1 text-white text-bg-info" data-bind="if:isCurrent()">Current reporting period</span>
@@ -45,16 +47,23 @@
 </script>
 
 <script id="notSubmitted" type="text/html">
- <p data-bind="if:!report.editable"><span class="badge text-bg-danger p-1">Template being updated</span></p>
+    <!-- ko if:!report.editable -->
+    <p><span class="badge text-bg-danger text-wrap" data-bind="text:notEditableReason()"></span></p>
+    <!-- /ko -->
     <p data-bind="visible:report.dateAdjusted"><span class="badge p-1 text-white text-bg-danger">Report adjusted</span></p>
     <p><span class="badge p-1 text-white text-bg-warning">Report not submitted</span></p>
 
     <g:if test="${isAdmin || fc.userIsSupportOfficerOrAdmin()}">
         <p>
-            <button class="btn btn-success btn-sm" data-bind="enable:complete,click:submitReport"
+            <button class="btn btn-success btn-sm" data-bind="enable:complete && report.editable,click:submitReport"
                     title="The reporting form must be marked as complete before this report can be submitted.">Submit report</button>
         </p>
 
+    </g:if>
+    <g:if test="${!hideDueDate}">
+    <p data-bind="if:isDueSoon"><span class="badge p-1 text-white text-bg-success">This report is due soon</span></p>
+    <p data-bind="if:isDueToday"><span class="badge p-1 text-white text-bg-warning">This report is due tody</span></p>
+    <p data-bind="if:isOverdue"><span class="badge p-1 text-white text-bg-danger">This report is overdue</span></p>
     </g:if>
     <span class="badge p-1 text-white text-bg-info" data-bind="if:progress() == 'started'">Reporting form incomplete</span>
     <span class="badge p-1 text-white text-bg-success" data-bind="if:progress() == 'finished'">Reporting form complete</span>
@@ -127,15 +136,18 @@
         <th class="report-actions">
             Actions <fc:iconHelp html="html">Submitted and approved reports cannot be edited<br/>Only reports marked as completed can be viewed or downloaded as a PDF</fc:iconHelp></th>
         <th class="report-name">Report</th>
-        <th class="report-start">Period start</th>
-        <th class="report-end">Period end
-        </th>
         <g:if test="${!hideDueDate}">
-            <th class="report-due">Date Due
+            <th class="report-due">
+                Date Due <fc:iconHelp>This is the date your report is due. You must submit your report by this date.</fc:iconHelp>
             </th>
         </g:if>
-        <th class="report-status">Status <fc:iconHelp html="html">Reports cannot be submitted until after the end of the reporting period. <br/> Reports must be marked as complete before they can be submitted. </fc:iconHelp><br/></th>
+        <th class="report-start">
+            Period start <fc:iconHelp>Each report covers your activities that were conducted between the 'Period start' date and the 'Period end' date of that report</fc:iconHelp>
+        </th>
+        <th class="report-end">Period end <fc:iconHelp>Each report covers your activities that were conducted between the 'Period start' date and the 'Period end' date of that report</fc:iconHelp></th>
+        <th class="report-status">Status <fc:iconHelp html="html">Reports cannot be submitted until after the end of the reporting period. <br/> Reports must be marked as complete before they can be submitted. </fc:iconHelp></th>
     </tr>
+
     </thead>
     <tbody data-bind="foreach:{ data:filteredReports, as:'report', afterAdd: attachHelp}">
 
@@ -176,11 +188,32 @@
                 data-bind="text:description"></span></a>
             <span data-bind="visible:!editable, text:description"></span>
         </td>
-        <td class="report-start" data-bind="text:fromDate.formattedDate"></td>
-    <td class="report-end" data-bind="text:toDateLabel">
         <g:if test="${!hideDueDate}">
-            <td class="report-due" data-bind="text:dueDate.formattedDate()"></td>
+            <td class="report-due">
+                <p>
+                    <!-- ko if:isOverdue -->
+                    <span class="badge p-1 text-white fs-5 text-bg-danger" data-bind="text:dueDate.formattedDate"></span>
+                    <!-- /ko -->
+                    <!-- ko if:isDueToday -->
+                    <span class="badge p-1 text-white fs-5 text-bg-warning" data-bind="text:dueDate.formattedDate"></span>
+                    <!-- /ko -->
+                    <!-- ko if:isDueSoon -->
+                    <span class="badge p-1 text-white fs-5 text-bg-success" data-bind="text:dueDate.formattedDate"></span>
+                    <!-- /ko -->
+                    <!-- ko if:!isOverdue && !isDueToday && !isDueSoon -->
+                    <span data-bind="text:dueDate.formattedDate"></span>
+                    <!-- /ko -->
+                </p>
+                <g:if test="${isGrantManager || fc.userIsAlaOrFcAdmin()}">
+                    <p>
+                    <a href="#" class="btn btn-warning btn-sm edit-due-date" data-bind="visible:canEditDueDate, click:editDueDate">Edit due date</a>
+                    </p>
+                </g:if>
+            </td>
         </g:if>
+        <td class="report-start" data-bind="text:fromDate.formattedDate"></td>
+        <td class="report-end" data-bind="text:toDateLabel"></td>
+
         <td class="report-status" data-bind="template:approvalTemplate()">
 
             <span class="label"
@@ -197,6 +230,33 @@
 
 </table>
 
+</script>
+
+<script type="text/html" id="edit-due-date-modal-template">
+    <div class="modal validationEngineContainer" id="edit-due-date-modal" role="dialog" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Edit due date</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Change the date the report <b><span data-bind="text:reportName"></span></b> is due.</p>
+
+                    <label class="form-label" for="report-due-date">Date due</label>
+                    <fc:datePicker type="text" bs4="true" class="form-control" id="report-due-date" name="reportDueDate"
+                                   data-bind="datepicker:dueDate.date" targetField="" required="true" autocomplete="off"/>
+
+                    <div class="alert alert-danger mt-2" data-bind="visible:error">
+                        <span data-bind="text:error"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-sm btn-primary" data-bind="click:save, disable:saving">Save</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-bind="click:cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </script>
 
 <asset:script type="text/javascript">

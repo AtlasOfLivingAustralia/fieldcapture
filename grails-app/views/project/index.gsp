@@ -66,6 +66,7 @@
                 rejectReportUrl: "${createLink(controller: 'project', action: 'ajaxRejectReport', id:project.projectId)}/",
                 cancelReportUrl: "${createLink(controller: 'project', action: 'ajaxCancelReport', id:project.projectId)}/",
                 unCancelReportUrl: "${createLink(controller: 'project', action: 'ajaxUnCancelReport', id:project.projectId)}/",
+                updateReportDueDateUrl: "${createLink(controller: 'project', action: 'ajaxUpdateReportDueDate', id:project.projectId)}",
                 resetReportUrl: "${createLink(controller:'project', action:'resetReport', id:project.projectId)}",
                 adjustReportUrl: "${createLink(controller:'project', action:'adjustReport', id:project.projectId)}",
                 reportOwner: {projectId: '${project.projectId}', endDate: '${project.plannedEndDate}', startDate: '${project.plannedStartDate}'},

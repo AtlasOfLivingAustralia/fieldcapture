@@ -63,10 +63,51 @@ var ReportStatusChangeReasonViewModel = function(config) {
     }
 };
 
+/**
+ * View model for the modal dialog used to change the due date of a report.
+ * @param report the ReportViewModel for the report being edited.
+ * @param options must supply a saveCallback function which accepts the new due date (as an ISO 8601
+ * formatted String) and returns a promise, and a closeCallback function used to close the modal.
+ */
+var EditReportDueDateViewModel = function(report, options) {
+    var self = this;
+
+    self.reportName = report.description;
+    self.dueDate = ko.observable(report.dueDate()).extend({simpleDate:false});
+    self.saving = ko.observable(false);
+    self.error = ko.observable();
+
+    self.save = function(data, e) {
+        var form = $(e.target).closest('.validationEngineContainer');
+        if (form.length && !form.validationEngine('validate')) {
+            return;
+        }
+        self.error(null);
+        self.saving(true);
+        options.saveCallback(self.dueDate()).done(function() {
+            self.saving(false);
+            options.closeCallback();
+        }).fail(function(data) {
+            self.saving(false);
+            var message = data && data.responseJSON && data.responseJSON.error;
+            self.error(message || 'An error occurred while saving the due date.  Please try again.');
+        });
+    };
+
+    self.cancel = function() {
+        options.closeCallback();
+    };
+};
+
 var ReportViewModel = function(report, config) {
     $.extend(this, report);
     var self = this;
     var reportService = new ReportService(config);
+
+    /** Reloads the page.  Exposed on the view model so it can be stubbed during tests. */
+    self.reloadPage = function() {
+        window.location.reload();
+    };
 
     self.description = report.description || report.name;
     self.fromDate = ko.observable(report.fromDate).extend({simpleDate:false});
@@ -113,7 +154,7 @@ var ReportViewModel = function(report, config) {
         self.activities.push(new GreenArmyActivityViewModel(activity));
     });
 
-    self.editable = (report.bulkEditable || self.activities.length == 0 || self.activities.length == 1) && (!ReportStatus.isReadOnly(report.status) && report.publicationStatus != 'published' && report.publicationStatus != 'pendingApproval' && report.publicationStatus != 'cancelled');
+    self.editable = (report.bulkEditable || self.activities.length == 0 || self.activities.length == 1) && (!ReportStatus.isReadOnly(report.status) && !PublicationStatus.isReadOnly(report.publicationStatus));
 
     self.title = 'Expand the activity list to complete the reports';
     if (self.editable) {
@@ -132,8 +173,21 @@ var ReportViewModel = function(report, config) {
         return report.fromDate <= now && report.toDate >= now;
     };
     self.currentPeriodHelpText = ko.computed(function() {
-        return "This report can be submitted on or after "+self.submissionDate.formattedDate();
+        let helpText = "This report can be submitted on or after "+self.submissionDate.formattedDate();
+        if (!self.editable && config.dependsOn) {
+            helpText += " and cannot be completed until all "+config.dependsOn+" reports in the same reporting period " +
+                "as this report have been submitted";
+        }
+        return helpText;
     });
+
+    self.notEditableReason = function() {
+        if (config.dependsOn) {
+            return "Complete \n" + config.dependsOn + "\n before editing this report";
+        }
+        return "Template in development"
+    }
+
     self.complete = ko.pureComputed(function() {
         return self.isReportable() && self.progress() == 'finished' && self.editable;
     });
@@ -145,6 +199,15 @@ var ReportViewModel = function(report, config) {
     self.canReset = ko.pureComputed(function() {
         return self.editable && self.hasData();
     });
+
+    let now = moment();
+    // The due date (including time) is midnight of the day due to truncating the hours/minutes from the date picker so we
+    // add a day to allow it to be delivered during that day.
+    let dueDate = moment(report.dueDate).add(1, 'days');
+
+    self.isDueToday = report.dueDate && now.isAfter(dueDate.clone().subtract(1, 'days')) && now.isBefore(dueDate);
+    self.isDueSoon = report.dueDate && now.isBefore(dueDate.clone().subtract(1, 'days')) && now.isAfter(dueDate.clone().subtract(7, 'days'));
+    self.isOverdue = report.dueDate && now.isAfter(dueDate);
 
     self.approvalTemplate = function() {
         if (report.publicationStatus == 'cancelled') {
@@ -256,6 +319,45 @@ var ReportViewModel = function(report, config) {
 
     };
 
+
+    /** The due date can only be changed while the report hasn't been submitted or approved */
+    self.canEditDueDate = ko.pureComputed(function() {
+        return !!config.updateReportDueDateUrl &&
+            !PublicationStatus.isReadOnly(report.publicationStatus) &&
+            !ReportStatus.isCancelled(report.status);
+    });
+
+    /** Displays a modal allowing the due date of this report to be changed */
+    self.editDueDate = function() {
+        var modalTemplate = $(config.dueDateModalSelector || '#edit-due-date-modal-template');
+        var $modal = $(modalTemplate.text());
+        $(document.body).append($modal);
+
+        var dueDateViewModel = new EditReportDueDateViewModel(self, {
+            saveCallback: function(dueDate) {
+                blockUIWithMessage("Saving due date");
+                return reportService.saveReportDueDate(report.reportId, dueDate).done(function() {
+                    self.dueDate(dueDate);
+                    blockUIWithMessage("Due date saved.  Reloading page....");
+                    self.reloadPage();
+
+                });
+            },
+            closeCallback: function() {
+                $modal.modal('hide');
+            }
+        });
+
+        ko.applyBindings(dueDateViewModel, $modal[0]);
+        $modal.validationEngine({promptPosition:'topLeft'});
+
+        $modal.modal({backdrop:'static', keyboard:true}).on('hidden.bs.modal', function() {
+            // clean up event handlers and dispose of the modal
+            $modal.validationEngine('detach');
+            ko.cleanNode($modal[0]);
+            $modal.remove();
+        }).modal('show');
+    };
 
     self.showReportStatusChangeModal = function(options) {
 
@@ -434,7 +536,7 @@ var ReportViewModel = function(report, config) {
     };
 };
 
-var ReportsViewModel = function(reports, projects, availableReports, reportOwner, config) {
+var ReportsViewModel = function(reports, projects, availableReports, reportOwner, categorizedReports, config) {
     var self = this;
     self.projects = projects;
     self.allReports = ko.observableArray(reports);
@@ -445,6 +547,28 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
     self.attachHelp = function(element) {
         $(element).find('.helphover').popover();
     };
+
+    // If a report category depends on another report category, then reports in the dependent
+    // category are readonly if any of the reports in the category it depends that fall into the
+    // same reporting period have not been submitted.
+    // This is to prevent users from entering data into a report that is dependent on another report that has not yet been submitted.
+    if (config.dependsOn) {
+        let dependsOnReports = categorizedReports[config.dependsOn];
+
+        for (let i=0; i<reports.length; i++) {
+            let report = reports[i];
+
+            let hasEditableDependency = false;
+            for (let j=0; j<dependsOnReports.length; j++) {
+                let dependsOnReport = dependsOnReports[j];
+
+                if (dependsOnReport.toDate > report.fromDate && dependsOnReport.toDate <= report.toDate) {
+                    hasEditableDependency = hasEditableDependency || !PublicationStatus.isReadOnly(dependsOnReport.publicationStatus);
+                }
+            }
+            report.status = ReportStatus.READ_ONLY;
+        }
+    }
 
     self.filteredReports = ko.computed(function() {
 
@@ -464,10 +588,8 @@ var ReportsViewModel = function(reports, projects, availableReports, reportOwner
         });
         filteredReports.sort(function(r1, r2) {
 
-            var result = ( ( r1.dueDate() == r2.dueDate() ) ? 0 : ( ( r1.dueDate() > r2.dueDate() ) ? 1 : -1 ) );
-            if (result === 0) {
-                result = ( ( r1.toDate() == r2.toDate() ) ? 0 : ( ( r1.toDate() > r2.toDate() ) ? 1 : -1 ) );
-            }
+            let result = ( ( r1.toDate() == r2.toDate() ) ? 0 : ( ( r1.toDate() > r2.toDate() ) ? 1 : -1 ) );
+
             if (result === 0) {
                 result = ( ( r1.type == r2.type ) ? 0 : ( ( r1.type > r2.type ) ? 1 : -1 ) );
             }
@@ -638,12 +760,12 @@ var CategorisedReportsViewModel = function(allReports, order, availableReports, 
     _.each(order, function(category) {
         var reports = categorizedReports[category.category];
         if (reports && reports.length > 0) {
-            var reportsOptions = _.extend({}, config, {rejectionReasonCategoryOptions:category.rejectionReasonCategoryOptions})
+            var reportsOptions = _.extend({}, config, {rejectionReasonCategoryOptions:category.rejectionReasonCategoryOptions, dependsOn:category.dependsOn});
             self.reportsByCategory.push({
                 title:category.category,
                 description:ko.observable(category.description).extend({markdown:true}),
                 banner:ko.observable(category.banner).extend({markdown:true}),
-                model:new ReportsViewModel(reports, undefined, availableReports, reportOwner, reportsOptions)
+                model:new ReportsViewModel(reports, undefined, availableReports, reportOwner, categorizedReports, reportsOptions)
             });
         }
 
