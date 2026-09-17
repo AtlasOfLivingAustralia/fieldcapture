@@ -716,7 +716,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -727,7 +727,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -746,7 +746,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -771,7 +771,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -1742,7 +1742,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -1753,7 +1753,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -1772,7 +1772,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -1797,7 +1797,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -2257,7 +2257,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -2268,7 +2268,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -2287,7 +2287,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -2312,7 +2312,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -2857,7 +2857,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -2868,7 +2868,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -2887,7 +2887,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -2912,7 +2912,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -3709,7 +3709,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -3720,7 +3720,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -3739,7 +3739,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -3764,7 +3764,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -4542,7 +4542,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -4553,7 +4553,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -4572,7 +4572,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -4597,7 +4597,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -5345,7 +5345,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -5356,7 +5356,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -5375,7 +5375,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -5400,7 +5400,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -6288,7 +6288,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -6299,7 +6299,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -6318,7 +6318,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -6343,7 +6343,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -7001,7 +7001,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -7012,7 +7012,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -7031,7 +7031,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -7056,7 +7056,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -7922,7 +7922,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -7933,7 +7933,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -7952,7 +7952,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -7977,7 +7977,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -8711,7 +8711,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -8722,7 +8722,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -8741,7 +8741,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -8766,7 +8766,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -9535,7 +9535,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -9546,7 +9546,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -9565,7 +9565,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -9590,7 +9590,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -10257,7 +10257,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -10268,7 +10268,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -10287,7 +10287,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -10312,7 +10312,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -11623,7 +11623,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -11634,7 +11634,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -11653,7 +11653,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -11678,7 +11678,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -12297,7 +12297,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -12308,7 +12308,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -12327,7 +12327,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -12352,7 +12352,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -13783,7 +13783,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -13794,7 +13794,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -13813,7 +13813,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -13838,7 +13838,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -14463,7 +14463,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -14474,7 +14474,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -14493,7 +14493,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -14518,7 +14518,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -15617,7 +15617,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -15628,7 +15628,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -15647,7 +15647,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -15672,7 +15672,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -16287,7 +16287,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -16298,7 +16298,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -16317,7 +16317,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -16342,7 +16342,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -17196,7 +17196,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -17207,7 +17207,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -17226,7 +17226,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -17251,7 +17251,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -17984,7 +17984,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -17995,7 +17995,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -18014,7 +18014,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -18039,7 +18039,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -18804,7 +18804,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -18815,7 +18815,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -18834,7 +18834,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -18859,7 +18859,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -19596,7 +19596,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -19607,7 +19607,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -19626,7 +19626,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -19651,7 +19651,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -20391,7 +20391,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -20402,7 +20402,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -20421,7 +20421,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -20446,7 +20446,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -21195,7 +21195,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -21206,7 +21206,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -21225,7 +21225,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -21250,7 +21250,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -22147,7 +22147,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -22158,7 +22158,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -22177,7 +22177,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -22202,7 +22202,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -22821,7 +22821,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -22832,7 +22832,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -22851,7 +22851,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -22876,7 +22876,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -23927,7 +23927,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -23938,7 +23938,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -23957,7 +23957,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -23982,7 +23982,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -30510,7 +30510,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -30521,7 +30521,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -30540,7 +30540,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -30565,7 +30565,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -31119,7 +31119,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -31130,7 +31130,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -31149,7 +31149,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -31174,7 +31174,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -31984,7 +31984,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -31995,7 +31995,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -32014,7 +32014,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -32039,7 +32039,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -33363,7 +33363,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -33374,7 +33374,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -33393,7 +33393,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -33418,7 +33418,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -34031,7 +34031,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -34042,7 +34042,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -34061,7 +34061,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -34086,7 +34086,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -35171,7 +35171,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -35182,7 +35182,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -35201,7 +35201,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -35226,7 +35226,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -36070,7 +36070,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -36081,7 +36081,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -36100,7 +36100,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -36125,7 +36125,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -36750,7 +36750,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -36761,7 +36761,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -36780,7 +36780,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -36805,7 +36805,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -37403,7 +37403,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -37414,7 +37414,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -37433,7 +37433,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -37458,7 +37458,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -37916,7 +37916,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -37927,7 +37927,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -37946,7 +37946,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -37971,7 +37971,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -39212,7 +39212,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -39223,7 +39223,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -39242,7 +39242,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -39267,7 +39267,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -40286,7 +40286,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": "required,min[0]"
@@ -40297,7 +40297,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
@@ -40316,7 +40316,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Individuals\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "validate": [
@@ -40341,7 +40341,7 @@
                 "behaviour": [
                   {
                     "condition": "participationIndividualsOrGroups == \"Groups\"",
-                    "type": "enable"
+                    "type": "enable_and_clear"
                   }
                 ],
                 "constraints": [
