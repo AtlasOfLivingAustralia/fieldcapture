@@ -1058,6 +1058,40 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         ['userName':null, 'userId':userId, 'class':UserDetails, 'displayName':null, 'isAdmin':false, 'isCaseManager':false, 'isEditor':false, 'hasViewAccess':true]
     }
 
+    def "The ajaxUpdateReportDueDate action delegates to the project service to save the new due date"() {
+        setup:
+        String projectId = 'p1'
+
+        when:
+        request.method = 'POST'
+        request.json = [reportId:'r1', dueDate:'2021-07-31T14:00:00Z']
+        controller.ajaxUpdateReportDueDate(projectId)
+
+        then:
+        1 * projectService.updateReportDueDate(projectId, [reportId:'r1', dueDate:'2021-07-31T14:00:00Z']) >> [success:true, dueDate:'2021-07-31T14:00:00Z']
+
+        and:
+        response.status == HttpStatus.SC_OK
+        response.json == [success:true, dueDate:'2021-07-31T14:00:00Z']
+    }
+
+    def "The ajaxUpdateReportDueDate action returns an error if the due date cannot be saved"() {
+        setup:
+        String projectId = 'p1'
+
+        when:
+        request.method = 'POST'
+        request.json = [reportId:'r1', dueDate:'2021-07-31T14:00:00Z']
+        controller.ajaxUpdateReportDueDate(projectId)
+
+        then:
+        1 * projectService.updateReportDueDate(projectId, _) >> [success:false, error:'Invalid reportId supplied']
+
+        and:
+        response.status == HttpStatus.SC_UNPROCESSABLE_ENTITY
+        response.json == [success:false, error:'Invalid reportId supplied']
+    }
+
     private def stubUserPermissions(userId, projectId, editor, admin, grantManager, canView) {
         userServiceStub.getUser() >> [userId:userId]
         projectService.isUserAdminForProject(userId, projectId) >> admin

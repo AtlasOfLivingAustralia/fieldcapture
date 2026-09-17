@@ -87,9 +87,18 @@ table td.report-name, table th.report-name {
 }
 table td.report-start, table th.report-start {
     width:13%;
+    max-width:8em;
+    white-space: normal;
 }
 table td.report-end, table th.report-end {
     width:12%;
+    max-width:8em;
+    white-space: normal;
+}
+table td.report-due, table th.report-due {
+    width:12%;
+    max-width:8em;
+    white-space: normal;
 }
 table td.report-status, table th.report-status {
     width:20%;

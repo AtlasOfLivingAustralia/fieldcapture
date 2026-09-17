@@ -28,7 +28,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
     EmailService emailService = Mock(EmailService)
     AuditService auditService = Mock(AuditService)
     ProjectConfigurationService projectConfigurationService = Mock(ProjectConfigurationService)
-    ProgramConfig projectConfig = new ProgramConfig([activityBasedReporting: true, reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43])
+    ProgramConfig projectConfig = new ProgramConfig([activityBasedReporting: true, reportingPeriod:6, reportingPeriodAlignedToCalendar: true, reportDueDatePeriod:"P43D"])
     ProgramService programService = Mock(ProgramService)
     CacheService cacheService = Mock(CacheService)
     LockService lockService = Mock(LockService)
@@ -36,7 +36,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
     RoleService roleService = Mock(RoleService)
 
     Map reportConfig = [
-            weekDaysToCompleteReport:projectConfig.weekDaysToCompleteReport,
+            reportDueDatePeriod:projectConfig.reportDueDatePeriod,
             reportType:ReportService.REPORT_TYPE_STAGE_REPORT,
             reportingPeriodInMonths: projectConfig.reportingPeriod,
             reportsAlignedToCalendar: projectConfig.reportingPeriodAlignedToCalendar,
@@ -404,6 +404,48 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
         1 * webService.getJson({ it.contains("permissions/getMembersForProject/" + projectId) }) >> projectRoles
         1 * reportService.approveReport(reportId, reportDetails.activityIds, reportDetails.reason, project, projectRoles, EmailTemplate.DEFAULT_REPORT_APPROVED_EMAIL_TEMPLATE) >> [success:true]
+    }
+
+    def "the project service should delegate to the report service to update a report due date"() {
+        given:
+        def projectId = 'project1'
+        Map project = [projectId: projectId, planStatus: ProjectService.PLAN_APPROVED]
+        webService.getJson(_) >> project
+        String reportId = 'r1'
+        Map report = [reportId: reportId, name: 'Report 1']
+        Map reportDetails = [reportId: reportId, dueDate: '2021-07-31T14:00:00Z']
+        reportService.getReportsForProject(_) >> [report]
+
+        when:
+        def result = service.updateReportDueDate(projectId, reportDetails)
+
+        then:
+        1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
+        1 * webService.getJson({ it.contains("permissions/getMembersForProject/" + projectId) }) >> []
+        1 * reportService.updateDueDate(report, reportDetails.dueDate) >> [success: true, dueDate: reportDetails.dueDate]
+
+        and:
+        result.success == true
+        result.dueDate == '2021-07-31T14:00:00Z'
+    }
+
+    def "the due date of a report that doesn't belong to the project cannot be updated"() {
+        given:
+        def projectId = 'project1'
+        Map project = [projectId: projectId, planStatus: ProjectService.PLAN_APPROVED]
+        webService.getJson(_) >> project
+        Map reportDetails = [reportId: 'r2', dueDate: '2021-07-31T14:00:00Z']
+        reportService.getReportsForProject(_) >> [[reportId: 'r1', name: 'Report 1']]
+
+        when:
+        def result = service.updateReportDueDate(projectId, reportDetails)
+
+        then:
+        0 * reportService.updateDueDate(_, _)
+
+        and:
+        result.success == false
+        result.error == 'Invalid reportId supplied'
     }
 
     def "the project service should delegate to the report service to return a report"() {

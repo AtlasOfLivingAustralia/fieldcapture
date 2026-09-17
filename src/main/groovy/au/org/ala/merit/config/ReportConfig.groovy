@@ -2,18 +2,22 @@ package au.org.ala.merit.config
 
 import au.org.ala.merit.DateUtils
 import au.org.ala.merit.reports.ReportOwner
+import groovy.util.logging.Slf4j
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
-import org.joda.time.DateTimeZone
 import org.joda.time.Interval
-import org.joda.time.Period
 import org.joda.time.PeriodType
 
+import java.time.Instant
 import java.time.Month
+import org.joda.time.Period
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 /**
  * Parameters that specify how a sequence of reports should be generated.
  */
+@Slf4j
 class ReportConfig {
 
     int minimumReportDurationInDays = 7
@@ -76,8 +80,20 @@ class ReportConfig {
     /** Type of report.  "Activity" or "Administrative" */
     String reportType = null
 
-    /** Specifies a due date for the report after the end of the reporting period */
-    Integer weekDaysToCompleteReport = 0
+    /**
+     * Specifies a due date for the report after the end of the reporting period.
+     * The value should be supplied as a java.time.Period string, e.g. "P1M" for 1 month after the end of the reporting period.
+     */
+    String reportDueDatePeriod = null
+
+    /**
+     * If specified, the owner end date will be reduced this period before generating reports.
+     * The business reason for this option is to allow the last progress report to finish
+     * before the end of the project so the final report is due after it, reducing issues that
+     * occur when the final report is started before the progress reports are complete.
+     * The value should be supplied as a java.time.Period string, e.g. "P1M" for 1 month after the end of the reporting period.
+     */
+    String bufferForLastReportEndDate = null
 
     String category = null
 
@@ -110,6 +126,13 @@ class ReportConfig {
 
     /** Identifier attached to generated reports to identify this configuration */
     String label = null
+
+    /**
+     * If this value is assigned the value of another report config category, then
+     * reports in this category will only become editable when all reports in the dependency category have been submitted.
+     * This is used to enforce a reporting order when data from one report category is used in another.
+     */
+    String dependsOn = false
 
     /**
      * For reports with multiple=false and no reportingPeriodInMonths supplied, this property acts to suppress
@@ -179,7 +202,14 @@ class ReportConfig {
     }
 
     DateTime getPeriodEnd(ReportOwner reportOwner) {
-        return periodEnd ? DateUtils.parse(periodEnd) : reportOwner.getPeriodEnd()
+        DateTime end = periodEnd ? DateUtils.parse(periodEnd) : reportOwner.getPeriodEnd()
+        if (bufferForLastReportEndDate) {
+            Period buffer = bufferForLastReportEndDate()
+            if (buffer) {
+                end = end.minus(buffer)
+            }
+        }
+        end
     }
 
     /**
@@ -212,5 +242,33 @@ class ReportConfig {
 
     Month getCalendarAlignmentMonth() {
         Month.of(calendarAlignmentMonth)
+    }
+
+    Period bufferForLastReportEndDate() {
+        Period result = null
+        if (bufferForLastReportEndDate) {
+            try {
+                java.time.Period parsedPeriod = java.time.Period.parse(bufferForLastReportEndDate)
+                result = new Period(parsedPeriod.getYears(), parsedPeriod.getMonths(), 0, parsedPeriod.getDays(), 0, 0, 0, 0)
+            }
+            catch (Exception e) {
+                log.error("Invalid buffer for last report end date specified "+bufferForLastReportEndDate)
+            }
+        }
+        result
+    }
+
+    Period reportDueDatePeriod() {
+        Period result = null
+        if (reportDueDatePeriod) {
+            try {
+                java.time.Period parsedPeriod = java.time.Period.parse(reportDueDatePeriod)
+                result = new Period(parsedPeriod.getYears(), parsedPeriod.getMonths(), 0, parsedPeriod.getDays(), 0, 0, 0, 0)
+            }
+            catch (Exception e) {
+                log.error("Invalid report due date period specified "+reportDueDatePeriod)
+            }
+        }
+        result
     }
 }

@@ -247,8 +247,8 @@ class ReportGenerator {
         report.putAll(reportOwner.id)
 
 
-        if (reportConfig.weekDaysToCompleteReport) {
-            report.dueDate = DateUtils.format(endDate.plusDays(reportConfig.weekDaysToCompleteReport).withZone(DateTimeZone.UTC))
+        if (reportConfig.reportDueDatePeriod && reportConfig.reportDueDatePeriod() != null) {
+            report.dueDate = DateUtils.format(endDate.plus(reportConfig.reportDueDatePeriod()).withZone(DateTimeZone.UTC))
         }
 
         report
