@@ -50,6 +50,8 @@ describe("Tests for editing the due date of a report", function () {
 
     var config;
     var report;
+    let originalBlockUI;
+    let originalUnblockUI;
 
     beforeEach(function () {
         config = {
@@ -63,6 +65,15 @@ describe("Tests for editing the due date of a report", function () {
             toDate: '2020-06-29T14:00:00Z',
             dueDate: '2020-07-31T14:00:00Z'
         };
+        originalBlockUI = $.blockUI;
+        originalUnblockUI = $.unblockUI;
+        $.blockUI = function () {};
+        $.unblockUI = function () {};
+    });
+
+    afterEach(function () {
+        $.blockUI = originalBlockUI;
+        $.unblockUI = originalUnblockUI;
     });
 
     it("will allow the due date of a report that hasn't been submitted to be edited", function () {
@@ -196,6 +207,7 @@ describe("Tests for editing the due date of a report", function () {
             });
 
             var viewModel = new ReportViewModel(report, config);
+            spyOn(viewModel, 'reloadPage');
             viewModel.editDueDate();
 
             var $modal = $('#edit-due-date-modal');
@@ -216,6 +228,7 @@ describe("Tests for editing the due date of a report", function () {
             // The report displayed in the reports table should be updated with the new due date.
             expect(viewModel.dueDate()).toEqual(payload.dueDate);
             expect(viewModel.dueDate.formattedDate()).toEqual('31-08-2020');
+            expect(viewModel.reloadPage).toHaveBeenCalled();
         });
     });
 });

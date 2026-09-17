@@ -104,6 +104,11 @@ var ReportViewModel = function(report, config) {
     var self = this;
     var reportService = new ReportService(config);
 
+    /** Reloads the page.  Exposed on the view model so it can be stubbed during tests. */
+    self.reloadPage = function() {
+        window.location.reload();
+    };
+
     self.description = report.description || report.name;
     self.fromDate = ko.observable(report.fromDate).extend({simpleDate:false});
     self.toDate =  ko.observable(report.toDate).extend({simpleDate:false});
@@ -334,7 +339,7 @@ var ReportViewModel = function(report, config) {
                 return reportService.saveReportDueDate(report.reportId, dueDate).done(function() {
                     self.dueDate(dueDate);
                     blockUIWithMessage("Due date saved.  Reloading page....");
-                    window.location.reload();
+                    self.reloadPage();
 
                 });
             },
