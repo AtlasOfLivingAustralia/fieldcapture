@@ -776,7 +776,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         DateTime now = DateUtils.parse("2021-07-01T00:00:00Z")
         Map expectedCriteria = [
                 publicationStatus: ["", PublicationStatus.NOT_APPROVED],
-                dateProperty: 'toDate',
+                dateProperty: 'dueDate',
                 startDate: "2021-07-01T00:00:00Z",
                 endDate: "2021-07-08T00:00:00Z",
                 pagination: [max: 10, offset: 20]
