@@ -120,7 +120,7 @@ var ReportViewModel = function(report, config) {
         // day but we want to show the previous day on the label.
         var label;
         if (config.reportOwner && config.reportOwner.endDate) {
-            if (config.isLast && report.toDate <= config.reportOwner.endDate) {
+            if (config.isLast && report.toDate == config.reportOwner.endDate) {
                 label = convertToSimpleDate(report.toDate);
             }
         }
