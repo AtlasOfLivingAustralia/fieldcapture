@@ -526,9 +526,16 @@ class ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'readOnly', redirectController = 'home', redirectAction = 'index')
-    def downloadShapefile(String id) {
+    def downloadSite(String id) {
+        List allowedFormats = ['shp', 'geojson']
+        String siteIds = params.siteIds ?: ""
+        String format = params.format
+        if (format !in allowedFormats) {
+            render status: 400, text: "Invalid format specified. Must be one of: ${allowedFormats.join(',')}"
+            return
+        }
 
-        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "project/${id}.shp"
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "project/${id}.${format}?siteIds=${siteIds}"
         def resp = webService.proxyGetRequest(response, url, true, true, 960000)
         if (resp.status != 200) {
             render view: '/error', model: [error: resp.error]

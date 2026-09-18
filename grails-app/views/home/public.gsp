@@ -67,6 +67,7 @@
         </a>
     </div>
     <asset:javascript src="common-bs4.js"/>
+    <asset:javascript src="leaflet-manifest.js"/>
     <asset:javascript src="homepage.js"/>
     <asset:deferredScripts/>
     <script>

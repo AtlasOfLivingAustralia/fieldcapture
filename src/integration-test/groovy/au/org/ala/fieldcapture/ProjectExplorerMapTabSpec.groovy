@@ -2,7 +2,6 @@ package au.org.ala.fieldcapture
 
 import pages.AdminTools
 import pages.ProjectExplorer
-import spock.lang.Ignore
 
 class ProjectExplorerMapTabSpec extends StubbedCasSpec {
 
@@ -39,7 +38,7 @@ class ProjectExplorerMapTabSpec extends StubbedCasSpec {
 
         and:
         waitFor 10, {
-            $('#mapView img[src*="measle"]').size() ==  1
+            $('#mapView .leaflet-google-mutant img').size() >  1
         }
 
 
