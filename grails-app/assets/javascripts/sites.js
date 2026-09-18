@@ -1570,7 +1570,7 @@ function BulkCreateSiteViewModel (alaMap, config) {
 
     self.isFeatureDeleteDisabled = function() {
         var site = this;
-        return !self.isSiteCreatedOrLoading.apply(site) || site.features().length <= 1;
+        return self.isSiteCreatedOrLoading.apply(site) || site.features().length <= 1;
     }
 
     self.fadeIn = function(element) {
