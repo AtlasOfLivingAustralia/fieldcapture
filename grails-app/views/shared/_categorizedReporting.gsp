@@ -55,7 +55,7 @@
 
     <g:if test="${isAdmin || fc.userIsSupportOfficerOrAdmin()}">
         <p>
-            <button class="btn btn-success btn-sm" data-bind="enable:complete,click:submitReport"
+            <button class="btn btn-success btn-sm" data-bind="enable:complete && report.editable,click:submitReport"
                     title="The reporting form must be marked as complete before this report can be submitted.">Submit report</button>
         </p>
 

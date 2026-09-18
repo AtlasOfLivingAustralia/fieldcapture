@@ -177,7 +177,7 @@ class SettingService {
      * @param substitutionModel values to substitute into the page.
      * @return the settings page after substitutions have been made.
      */
-    def getSettingText(SettingPageType type, substitutionModel) {
+    def getSettingText(SettingPageType type, Map substitutionModel) {
         String templateText = getSettingText(type)
         GStringTemplateEngine templateEngine = new GStringTemplateEngine();
         return templateEngine.createTemplate(templateText).make(substitutionModel).toString()
