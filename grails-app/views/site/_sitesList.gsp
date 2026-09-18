@@ -16,7 +16,15 @@
                     <span>Actions:</span>
                     <a data-bind="click: $root.addSite" id="addSite" class="btn btn-sm" type="button" title="Create a new site for your project"><i class="fa fa-plus"></i> New</a>
                     <a data-bind="click: $root.bulkCreateSites" id="bulkCreateSites" type="button" class="btn btn-sm" title="Create multiple sites"><i class="fa fa-clone" aria-hidden="true"></i> Bulk load</a>
-                    <a data-bind="click: $root.downloadShapefile" id="siteDownload" type="button" class="btn btn-sm" title="Download your project sites in shapefile format"><i class="fa fa-download"></i> Download</a>
+                      <div class="btn-group" role="group" title="Download selected sites in specific formats">
+                        <button type="button" class="btn btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                          <i class="fa fa-download"></i> Download
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="#" data-bind="click: $root.downloadShapefile">as Shapefile</a></li>
+                          <li><a class="dropdown-item" href="#" data-bind="click: $root.downloadGeoJSON">as GeoJSON</a></li>
+                        </ul>
+                      </div>
                     <button data-bind="click: $root.removeSelectedSites, enable:$root.selectedSiteIds().length > 0"  id="siteDeleted" type="button" class="btn btn-sm" title="Delete selected sites"><i class="fa fa-trash"></i> Delete</button>
                 </div>
         </div>
@@ -26,7 +34,10 @@
             <table id="sites-table" class="sites-table table w-100">
                 <thead>
                 <tr>
-                    <th><input type="checkbox" id="select-all-sites"></th>
+                    <th>
+                        <input type="checkbox" id="select-all-sites" data-bind="checked: selectAll">
+                        <fc:iconHelp html="true">Use this selector or the individual site selectors to show or hide sites on the map. You can also use them to download or delete selected sites.</fc:iconHelp>
+                    </th>
                     <th></th>
                     <th>Type <fc:iconHelp html="true">Planning site (P), Reporting site (R) or EMSA site created with the Monitor app (E)</fc:iconHelp><br/>
                         <select data-bind="value:typeFilter, options:typeOptions">
@@ -41,7 +52,7 @@
                 </thead>
                 <tbody data-bind="foreach: sites">
                 <tr>
-                    <th><input type="checkbox" name="select-site" data-bind="checked:selected, enable:!readOnly"></th>
+                    <th><input type="checkbox" name="select-site" data-bind="checked:selected"></th>
                     <td>
                         <g:if test="${editable}">
                             <span>

@@ -51,7 +51,7 @@
                 createBlogEntryUrl: "${createLink(controller: 'blog', action:'create', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId, fragment: 'overview')])}",
                 editBlogEntryUrl: "${createLink(controller: 'blog', action:'edit', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId, fragment: 'overview')])}",
                 deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[projectId:project.projectId])}",
-                shapefileDownloadUrl: "${createLink(controller:'project', action:'downloadShapefile', id:project.projectId)}",
+                siteDownloadUrl: "${createLink(controller:'project', action:'downloadSite', id:project.projectId)}",
                 regenerateStageReportsUrl: "${createLink(controller:'project', action:'regenerateStageReports', id:project.projectId)}",
                 previewStageReportUrl: "${createLink(controller:'project', action:'previewStageReport')}",
                 projectReportUrl: "${createLink(controller:'project', action:'projectReport', id:project.projectId)}",

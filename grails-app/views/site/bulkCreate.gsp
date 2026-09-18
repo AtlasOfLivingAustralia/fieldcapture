@@ -64,6 +64,8 @@
                                         attr: {id: 'site-selection-' + $index()}">
                                     <label class="form-check-label" data-bind="attr: {for: 'site-selection-' + $index()}">Select site</label>
                                     <div class="float-end">
+                                        <span class="badge rounded-pill text-bg-success" data-bind="visible: $root.isSiteValid.apply($data)">Valid</span>
+                                        <span class="badge rounded-pill text-bg-danger" data-bind="visible: !$root.isSiteValid.apply($data)">Invalid</span>
                                         <span class="badge rounded-pill text-bg-success" data-bind="visible: $parent.isSitePublished.apply($data)">Published</span>
                                         <span class="badge rounded-pill text-bg-warning" data-bind="visible: !$parent.isSitePublished.apply($data)">Draft</span>
                                     </div>
@@ -96,19 +98,27 @@
                                                     <tr>
                                                         <th>Name</th>
                                                         <th>Type</th>
+                                                        <th>Status
+                                                            <a href="#" tabindex="0" class="helphover" data-bind="popover: {content:'Displays if a geometry is valid or invalid. If a geometry is invalid, then you can either edit the geometry or unpack it into individual geometries. Unpacking is only possible if the geometry is a multi-geometry such as MultiPolygon, MultiPoint etc.', placement:'top', trigger:'hover', delay: {show: 300, hide: 0}}">
+                                                                <i class="fa fa-question-circle">&nbsp;</i>
+                                                            </a>
+                                                        </th>
                                                         <th>Actions</th>
                                                     </tr>
                                                     </thead>
-                                                    <tbody data-bind="foreach: {data: features, afterAdd: $root.fadeIn, beforeRemove: $root.fadeOut, afterRender: $root.enablePopovers}">
+                                                    <tbody data-bind="foreach: {data: features, afterRender: $root.enablePopovers}">
                                                     <tr data-bind="event: {mouseover: $root.highlightFeature, mouseout: $root.unhighlightFeature}, mouseoverBubble: false, mouseoutBubble: false">
                                                         <td data-bind="text: properties.name"></td>
                                                         <td data-bind="text: $root.getFeatureType($data)"></td>
                                                         <td>
+                                                            <span class="badge text-bg-success" data-bind="visible: $root.isFeatureValid.apply($data)">Valid</span>
+                                                            <span class="badge text-bg-danger" data-bind="visible: $root.isFeatureInvalid.apply($data)">Invalid</span>
+                                                        </td>
+                                                        <td>
                                                             <button class="btn btn-sm btn-secondary"
                                                                     data-bind="click: $root.unpackFeature.bind($data, $parent),
-                                                                    visible: $root.isFeatureUnpackVisible.apply($data)"
-                                                                    title="Unpack geometries into individual geometry on this site.
-                                                                    For example, MultiPolygon are converted to a list of Polygons or MultiPoint to a list of Points">
+                                                                    visible: $root.isFeatureUnpackVisible.apply($data),
+                                                                    popover: {content:'Unpack geometries into individual geometry on this site. For example, MultiPolygon are converted to a list of Polygons or MultiPoint to a list of Points.', placement:'top', trigger:'hover', delay: {show: 300, hide: 0}}">
                                                                 <i class="fa fa-chain-broken" aria-hidden="true"></i>
                                                             </button>
                                                             <button class="btn btn-sm btn-secondary" data-bind="click: $root.zoomToFeature.bind($data)" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-delay='{"show": 300, "hide": 0}' data-bs-content="Zoom to this geometry on the map."><i class="fa fa-search-plus" aria-hidden="true"></i></button>
@@ -151,11 +161,16 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <div class="form-check">
+                                        <div class="form-check mb-2">
                                             <input class="form-check-input" type="checkbox" id="select-all" data-bind="checked: selectAll, disable: isSelectAllDisabled">
                                             <label class="form-check-label" for="select-all">Select all</label>
                                         </div>
-                                        <div class="my-2">
+                                        <div class="mb-2" data-bind="visible: uploading">
+                                            <div class="alert alert-primary" role="alert">
+                                                Processing files, please wait
+                                            </div>
+                                        </div>
+                                        <div class="mb-2">
                                             <div class="progress-stacked" data-bind="visible: uploading">
                                                 <div class="progress" role="progressbar" aria-label="Number of successfully created site(s)"  data-bind="style: {width: successfulSitesPercentage() + '%'}, visible: successfulSitesPercentage() > 0">
                                                     <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"><!--ko text: countSuccess --> <!-- /ko --></div>
@@ -185,12 +200,7 @@
             </div>
         </div>
     </div>
-    <asset:javascript src="base-bs4.js"/>
-    <asset:javascript src="knockout/knockout-latest.js"/>
-    <asset:javascript src="knockout-mapping/knockout.mapping.js"/>
-    <asset:javascript src="leaflet-manifest.js"/>
-    <asset:javascript src="fieldcapture-application.js"/>
-    <asset:javascript src="sites.js"/>
+    <asset:javascript src="bulk-create-manifiest.js"/>
     <script type="application/javascript">
         function initMap() {
             var mapId = 'alaMap',

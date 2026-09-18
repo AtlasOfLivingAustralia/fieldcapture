@@ -1237,12 +1237,9 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             }
 
         });
-        $(config.selectAllSelector).change(function() {
-            var checkbox = this;
-            // This lets knockout update the bindings correctly.
-            $sitesTable.find('tbody tr :checkbox').trigger('click');
-        });
+
         sitesViewModel.sitesFiltered(visibleIndicies());
+        sitesViewModel.selectAll(true);
         var $sitePhotoPoints = $(config.photoPointSelector);
         $sitePhotoPoints.find('a').click(function(e) {
             e.preventDefault();

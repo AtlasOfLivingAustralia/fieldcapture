@@ -569,7 +569,7 @@ var AlaMapAdapter = function(map, options) {
         }
     };
     var options = _.defaults(options, defaults);
-
+    self.alaMap = map;
     self.featureIndex = {};
     self.featureLayer = null;
 
@@ -584,6 +584,10 @@ var AlaMapAdapter = function(map, options) {
         return feature.siteId || feature.id || feature.properties.id || feature.properties.siteId;
     };
 
+    self.getStyleForType = function(type) {
+        type = type || 'compound';
+        return options.styles[type] || options.styles.compound;
+    }
 
     self.addFeature = function(feature) {
         self.featureLayer.on('layeradd', function(e) {
@@ -765,6 +769,19 @@ var createMap = function(options) {
 var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId) {
 
     var self = this;
+    self.selectAll = ko.pureComputed({
+        read: function() {
+            return self.displayedSites().every(site => site.selected());
+        },
+        write: function(value) {
+            if (value) {
+                var siteIds = self.sites.filter(site => self.isSiteSelectable(site)).map(site => site.transients.tempSiteId);
+                self.selectedSiteIds(siteIds);
+            }
+            else
+                self.selectedSiteIds([]);
+        }
+    });
     // sites
     self.features = [];
     if (mapFeatures.features) {
@@ -791,7 +808,14 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
     self.sites = $.map(sites, function (site, i) {
         site.feature = findFeatureForSite(site);// || (site.extent ? site.extent.geometry : null);
         site.selected = ko.observable(false);
-
+        site.selected.subscribe(function(newValue) {
+            if (newValue) {
+                self.showSite(site);
+            }
+            else {
+                self.hideSite(site);
+            }
+        });
         if (!site.type) {
             site.type = 'worksArea';
         }
@@ -883,11 +907,34 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
                 self.displayedSites.push(self.sites[indicies[i]]);
             }
         }
+
+        self.selectAll(true);
         self.displaySites();
         previousIndicies.splice(0, previousIndicies.length);
         Array.prototype.push.apply(previousIndicies, indicies);
 
     };
+
+    self.hideSite = function(site) {
+        var siteId = site.siteId;
+        var layers = map.featureIndex[siteId];
+        if (layers) {
+            layers.forEach(layer => {
+                map.alaMap.hideLayer(layer);
+            });
+        }
+    }
+
+    self.showSite = function(site) {
+        var siteId = site.siteId;
+        var layers = map.featureIndex[siteId],
+            style = map.getStyleForType(site.type);
+        if (layers) {
+            layers.forEach(layer => {
+                map.alaMap.showLayer(layer, style);
+            });
+        }
+    }
 
     self.displayAllSites = function() {
         var indicies = [];
@@ -898,11 +945,17 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
     };
 
     self.highlightSite = function(index) {
-        map.highlightFeatureById(self.sites[index].siteId);
+        var site = self.sites[index];
+        if (site.selected()) {
+            map.highlightFeatureById(site.siteId);
+        }
     };
 
     self.unHighlightSite = function(index) {
-        map.unHighlightFeatureById(self.sites[index].siteId);
+        var site = self.sites[index];
+        if (site.selected()) {
+            map.unHighlightFeatureById(site.siteId);
+        }
     };
 
     self.displaySites = function () {
@@ -939,9 +992,18 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
 
 
     this.removeSelectedSites = function () {
-        bootbox.confirm("Are you sure you want to remove these sites?", function (result) {
+        var isROrESelected  = self.displayedSites().some(site => site.selected() && (site.filterType === 'R' || site.filterType === 'E')),
+            message = isROrESelected ? "Some of the selected sites are reporting sites or sites created via the Monitor App. These sites cannot be deleted. Click OK to remove the selected planning sites ONLY. Click Cancel to refine the selection further." : "Are you sure you want to remove the selected sites?",
+            sitesIdsToRemove = self.displayedSites().filter(site => site.selected() && site.filterType === 'P').map(site => site.siteId);
+
+        if(sitesIdsToRemove.length === 0) {
+            bootbox.alert("No planning sites were selected for deletion. Please refine your selection and try again.");
+            return;
+        }
+
+        bootbox.confirm(message, function (result) {
             if (result) {
-                var siteIds = self.selectedSiteIds();
+                var siteIds = sitesIdsToRemove;
 
                 $.ajax({
                     url: fcConfig.sitesDeleteUrl,
@@ -1015,8 +1077,15 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
     this.addExistingSite = function () {
         document.location.href = fcConfig.siteSelectUrl;
     };
+
     this.downloadShapefile = function() {
-        window.open(fcConfig.shapefileDownloadUrl, '_blank');
+        var selectedSites = self.selectedSiteIds()? self.selectedSiteIds().join(',') : '';
+        window.open(fcConfig.siteDownloadUrl + '?siteIds=' + selectedSites + "&format=shp", '_blank');
+    };
+
+    this.downloadGeoJSON = function() {
+        var selectedSites = self.selectedSiteIds()? self.selectedSiteIds().join(',') : '';
+        window.open(fcConfig.siteDownloadUrl + '?siteIds=' + selectedSites + '&format=geojson', '_blank');
     };
     self.triggerGeocoding = function () {
         ko.utils.arrayForEach(self.sites, function (site) {
@@ -1035,10 +1104,24 @@ function BulkCreateSiteViewModel (alaMap, config) {
         defaultSiteValues = {
             type: 'worksArea',
             projects: projects
-        }, ignoreSiteSelectionChange = false;
+        };
     self.sites = ko.observableArray([]);
     self.selectedSites = ko.observableArray([]);
-    self.selectAll = ko.observable(false);
+    self.selectAll = ko.pureComputed({
+        read: function() {
+            var selectableSites = self.sites().filter(site => self.isSiteSelectable(site)).map(site => site.transients.tempSiteId()),
+                selectedSites = self.selectedSites();
+            return selectableSites.length > 0 && selectableSites.every(id => selectedSites.indexOf(id) >= 0);
+        },
+        write: function(value) {
+            if (value) {
+                var selectedSites = self.sites().filter(site => self.isSiteSelectable(site)).map(site => site.transients.tempSiteId());
+                self.selectedSites(selectedSites);
+            }
+            else
+                self.selectedSites([]);
+        }
+    })
     self.uploading = ko.observable(false);
     self.countSuccess = ko.observable(0);
     self.countError = ko.observable(0);
@@ -1192,7 +1275,7 @@ function BulkCreateSiteViewModel (alaMap, config) {
             return Promise.reject();
         }
 
-        if (!featureCollection.features.every(feature => turf.booleanValid(feature))) {
+        if (!self.isSiteValid.apply(site)) {
             alert("One or more geometries for site " + site.name() + " are invalid and cannot be saved. Please edit and try again.");
             return Promise.reject();
         }
@@ -1347,7 +1430,7 @@ function BulkCreateSiteViewModel (alaMap, config) {
     }
 
     self.isSiteSelectable = function(site) {
-        return !self.isSitePublished.apply(site);
+        return !self.isSitePublished.apply(site) && self.isSiteValid.apply(site);
     }
 
     self.isSelectAll = function() {
@@ -1450,9 +1533,13 @@ function BulkCreateSiteViewModel (alaMap, config) {
     }
 
     // element controls
-    self.isSiteDisabled = function() {
+    self.isSiteCreatedOrLoading = function() {
         var site = this;
         return site.transients.siteCreated() || site.transients.loading();
+    }
+    self.isSiteDisabled = function() {
+        var site = this;
+        return site.transients.siteCreated() || !self.isSiteValid.apply(site) || site.transients.loading();
     }
 
     self.isSitePublished = function() {
@@ -1473,7 +1560,7 @@ function BulkCreateSiteViewModel (alaMap, config) {
         var feature = this,
             site = self.findSiteByTempSiteId(feature.properties.tempSiteId);
 
-        return !self.isSiteDisabled.apply(site) && self.isFeatureSplittable.apply(feature);
+        return !self.isSiteCreatedOrLoading.apply(site) && self.isFeatureSplittable.apply(feature);
     }
 
     self.isViewDisabled = function() {
@@ -1483,7 +1570,7 @@ function BulkCreateSiteViewModel (alaMap, config) {
 
     self.isFeatureDeleteDisabled = function() {
         var site = this;
-        return self.isSiteDisabled.apply(site) || site.features().length <= 1;
+        return !self.isSiteCreatedOrLoading.apply(site) || site.features().length <= 1;
     }
 
     self.fadeIn = function(element) {
@@ -1502,31 +1589,24 @@ function BulkCreateSiteViewModel (alaMap, config) {
         [...popovers].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
     }
 
-    // observable subscriptions
-    self.updateSelectAll = function() {
-        ignoreSiteSelectionChange = true;
-        self.selectAll(self.isSelectAll());
-        ignoreSiteSelectionChange = false;
+    self.isFeatureValid = function() {
+        var feature = this;
+        return feature.geometry && feature.geometry.type && turf.booleanValid(feature);
     }
 
-    self.handleSelectAll = function(newValue) {
-        if (ignoreSiteSelectionChange)
-            return;
-
-        if (newValue) {
-            var sites = self.selectableSites(),
-                siteIds = sites.map(site => site.transients.tempSiteId());
-
-            self.selectedSites(siteIds);
-        } else {
-            self.selectedSites([]);
-        }
+    self.isFeatureInvalid = function() {
+        var feature = this;
+        return feature.geometry && feature.geometry.type && !turf.booleanValid(feature);
     }
 
-    self.selectedSites.subscribe(self.updateSelectAll);
-    self.selectAll.subscribe(self.handleSelectAll);
-    self.sites.subscribe(self.updateSelectAll);
+    self.isSiteValid = function() {
+        var site = this;
+        return site.features().length > 0 && site.features().every(function(feature) {
+            return self.isFeatureValid.apply(feature);
+        });
+    }
 
+    // ala map subscriptions
     alaMap.subscribe(self.updateSites);
 }
 
