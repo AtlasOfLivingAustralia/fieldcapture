@@ -383,6 +383,46 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         1 * reportService.submitReport(reportId, reportDetails.activityIds, project, projectRoles, EmailTemplate.DEFAULT_REPORT_SUBMITTED_EMAIL_TEMPLATE) >> [success:true]
     }
 
+    def "the project service will send a report reminder email to the project grant managers"() {
+        given:
+        String projectId = 'project1'
+        String reportId = 'r1'
+        List projectRoles = [[userId:'1', role:RoleService.GRANT_MANAGER_ROLE]]
+        Map project = [projectId: projectId, planStatus: ProjectService.PLAN_APPROVED]
+        Map report = [reportId: reportId, name:'Report 1']
+        webService.getJson(_) >> project
+        reportService.getReportsForProject(_) >> [report]
+
+        when:
+        Map result = service.sendReportReminderEmail([projectId:projectId, reportId:reportId], EmailTemplate.PROJECT_REPORT_DUE_SOON_REMINDER_EMAIL_TEMPLATE)
+
+        then:
+        1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
+        1 * webService.getJson({ it.contains("permissions/getMembersForProject/" + projectId) }) >> projectRoles
+        1 * emailService.sendEmail(EmailTemplate.PROJECT_REPORT_DUE_SOON_REMINDER_EMAIL_TEMPLATE, [project:project, report:report], projectRoles, RoleService.GRANT_MANAGER_ROLE)
+
+        and:
+        result.success == true
+    }
+
+    def "the project service will not send a report reminder email if the report cannot be found"() {
+        given:
+        String projectId = 'project1'
+        Map project = [projectId: projectId, planStatus: ProjectService.PLAN_APPROVED]
+        webService.getJson(_) >> project
+        reportService.getReportsForProject(_) >> [[reportId:'r2']]
+
+        when:
+        Map result = service.sendReportReminderEmail([projectId:projectId, reportId:'r1'], EmailTemplate.PROJECT_REPORT_OVERDUE_REMINDER_EMAIL_TEMPLATE)
+
+        then:
+        0 * emailService.sendEmail(_, _, _, _)
+
+        and:
+        result.success == false
+        result.error == 'Invalid reportId supplied'
+    }
+
     def "the project service should delegate to the report service to approve a report"() {
         given:
         def projectId = 'project1'

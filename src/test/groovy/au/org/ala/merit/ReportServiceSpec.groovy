@@ -6,6 +6,8 @@ import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportOwner
 import au.org.ala.web.AuthService
 import grails.testing.services.ServiceUnitTest
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import spock.lang.Specification
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
@@ -768,5 +770,52 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         and:
         result.success == false
         result.error == 'Error updating report'
+    }
+    def "The report service can find reports that are due in the next 7 days"() {
+        setup:
+        DateTime now = DateUtils.parse("2021-07-01T00:00:00Z")
+        Map expectedCriteria = [
+                publicationStatus: ["", PublicationStatus.NOT_APPROVED],
+                dateProperty: 'toDate',
+                startDate: "2021-07-01T00:00:00Z",
+                endDate: "2021-07-08T00:00:00Z",
+                pagination: [max: 10, offset: 20]
+        ]
+        List reports = [[reportId: 'r1'], [reportId: 'r2']]
+
+        when:
+        List results = service.findReportsDueInTheNext7Days(20, 10, now)
+
+        then:
+        1 * webService.doPost({ it.endsWith('report/search') }, expectedCriteria) >> [resp: reports]
+
+        and:
+        results == reports
+    }
+
+    def "The report service will use the current date to find reports due in the next 7 days if no date is supplied"() {
+        setup:
+        DateTime now = DateUtils.now()
+
+        when:
+        service.findReportsDueInTheNext7Days(0, 100, null)
+
+        then:
+        1 * webService.doPost({ it.endsWith('report/search') }, { Map criteria ->
+            DateUtils.parse(criteria.startDate).isAfter(now.minusMinutes(1)) &&
+            DateUtils.parse(criteria.endDate).isAfter(now.plusDays(7).minusMinutes(1)) &&
+            criteria.pagination == [max: 100, offset: 0]
+        }) >> [resp: []]
+    }
+
+    def "An empty list is returned if no reports are due in the next 7 days"() {
+        when:
+        List results = service.findReportsDueInTheNext7Days(0, 100, DateUtils.now())
+
+        then:
+        1 * webService.doPost(_, _) >> null
+
+        and:
+        results == []
     }
 }
