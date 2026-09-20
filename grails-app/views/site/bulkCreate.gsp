@@ -200,7 +200,8 @@
             </div>
         </div>
     </div>
-    <asset:javascript src="bulk-create-manifiest.js"/>
+    <asset:javascript src="leaflet-manifest.js"/>
+    <asset:javascript src="bulk-create-manifest.js"/>
     <script type="application/javascript">
         function initMap() {
             var mapId = 'alaMap',
