@@ -25,7 +25,7 @@
             featureService: "${createLink(controller: 'proxy', action:'feature')}",
             sitesPhotoPointsUrl:"${createLink(controller:'project', action:'projectSitePhotos', id:project.projectId)}",
             poiIconUrl: "${assetPath(src: '/icons/poi.png')}",
-            useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION}
+            useGoogleBaseMap: true
             },
             here = window.location.href;
     </script>

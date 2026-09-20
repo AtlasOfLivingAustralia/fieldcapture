@@ -308,7 +308,7 @@ assets {
                 '**/splaytree-ts.umd.js','**/robust-predicates/esm/**', '**/incircle.js','**/polyclip-ts.umd.js',
                 '**/leaflet-geoman.js', '**/index.js', '**/Leaflet.GoogleMutant.js', '**/cli.js',
                 'leaflet-manifest.js', '**/vendor-ext/**', '**/vendor-external/**', '**/vendor/**',
-                '**/ala-map*.js', '**/@turf/**'
+                '**/ala-map*.js', '**/@turf/**', 'bulk-create-manifest.js'
             ]
     ] //Example Exclude GLOB pattern
     includes = ['webjars/**/images/*']
