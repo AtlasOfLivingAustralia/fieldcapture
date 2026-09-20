@@ -200,6 +200,7 @@
             </div>
         </div>
     </div>
+    <asset:javascript src="base-bs4.js"/>
     <asset:javascript src="leaflet-manifest.js"/>
     <asset:javascript src="bulk-create-manifest.js"/>
     <script type="application/javascript">
