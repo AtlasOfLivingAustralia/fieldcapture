@@ -93,8 +93,9 @@ class ReportService {
         log.info("name: " + existingReport.name + " - " + report.name)
         log.info("fromDate: " + existingReport.fromDate + " - " + report.fromDate)
         log.info("toDate: " + existingReport.toDate + " - " + report.toDate)
+        log.info("dueDate: " + existingReport.dueDate + " - " + report.dueDate)
         // Don't change any due dates that have been overridden by a grant manager
-        if (existingReport.dueDateManuallyAssigned) {
+        if (report.dueDate == null) {
             report.dueDate = existingReport.dueDate
         }
         if (excludesNotApproved(existingReport)) {
@@ -183,6 +184,7 @@ class ReportService {
     boolean needsRegeneration(Map report1, Map report2) {
         return report1.fromDate != report2.fromDate ||
                report1.toDate != report2.toDate ||
+               report1.dueDate != report2.dueDate ||
                report1.name != report2.name ||
                report1.description != report2.description ||
                report1.type != report2.type ||
