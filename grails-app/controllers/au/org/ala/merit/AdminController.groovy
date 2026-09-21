@@ -174,8 +174,8 @@ class AdminController {
         SettingPageType type = SettingPageType.getForName(id)
 
         if (type) {
-            content = settingService.getSettingText(type, suffix)
-            title = settingService.getSettingTitle(type, suffix)
+            content = settingService.getSettingText(type, (String)suffix)
+            title = settingService.getSettingTitle(type, (String)suffix)
         } else {
             render(status: 404, text: "No settings type found for: ${id}")
             return

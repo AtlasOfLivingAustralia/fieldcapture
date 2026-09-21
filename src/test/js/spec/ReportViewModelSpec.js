@@ -16,7 +16,7 @@ describe("Tests for the ReportViewModel", function () {
         report.toDate = '2020-06-30T14:00:00Z';
         var viewModel = new ReportViewModel(report, config);
 
-        // Even though the report toDate is actuall 12am 1 July 2020 AEST, it should be displayed as June 30.
+        // Even though the report toDate is actually 12am 1 July 2020 AEST, it should be displayed as June 30.
         expect(viewModel.toDateLabel()).toBe('30-06-2020');
 
     });

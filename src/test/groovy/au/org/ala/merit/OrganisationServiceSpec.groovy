@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.hub.HubSettings
 import grails.testing.services.ServiceUnitTest
 import groovy.time.TimeCategory
@@ -19,8 +20,10 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 	def metadataService = Mock(MetadataService)
 	def documentService = Mock(DocumentService)
 	AbnLookupService abnLookupService = Mock(AbnLookupService)
+	EmailService emailService = Mock(EmailService)
 
 	def setup() {
+		service.emailService = emailService
         service.projectService = projectService
 		service.activityService = activityService
 		service.webService = webService
@@ -258,6 +261,26 @@ class OrganisationServiceSpec extends Specification implements ServiceUnitTest<O
 
 	private Map activity(id, prjId, type, startDate, endDate) {
 		return [activityId:id, projectId: prjId, type:type, plannedStartDate: startDate, plannedEndDate: endDate]
+	}
+
+	def "the organisation service will send a report reminder email to the organisation grant managers"() {
+		setup:
+		String organisationId = 'o1'
+		String reportId = 'r1'
+		Map organisation = [organisationId:organisationId, name:'Org 1']
+		Map report = [reportId:reportId, activityId:'a1', organisationId:organisationId]
+		List members = [[userId:'1', role:RoleService.GRANT_MANAGER_ROLE]]
+
+		when:
+		service.sendReportReminderEmail([organisationId:organisationId, reportId:reportId], EmailTemplate.ORGANISATION_REPORT_DUE_TODAY_REMINDER_EMAIL_TEMPLATE)
+
+		then:
+		1 * webService.getJson2({it.contains("organisation/"+organisationId)}) >> [resp:organisation]
+		1 * reportService.findReportsForOrganisation(organisationId) >> []
+		1 * documentService.search([organisationId:organisationId, public:true]) >> [:]
+		1 * userService.getMembersOfOrganisation(organisationId) >> members
+		1 * reportService.get(reportId) >> report
+		1 * emailService.sendEmail(EmailTemplate.ORGANISATION_REPORT_DUE_TODAY_REMINDER_EMAIL_TEMPLATE, [organisation:organisation, report:report], members, RoleService.GRANT_MANAGER_ROLE)
 	}
 
 	private Map organisationWithProjects() {

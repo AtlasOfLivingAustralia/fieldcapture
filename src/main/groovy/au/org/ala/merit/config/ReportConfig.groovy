@@ -206,7 +206,10 @@ class ReportConfig {
         if (bufferForLastReportEndDate) {
             Period buffer = bufferForLastReportEndDate()
             if (buffer) {
-                end = end.minus(buffer)
+                // The "minus one day" display rule is used on reports except for the
+                // report that lines up with the owner end date.  Because this no longer does
+                // we need to add a day to the end date so that the report covers the full period.
+                end = end.minus(buffer).plusDays(1)
             }
         }
         end
