@@ -774,12 +774,7 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
             return self.displayedSites().every(site => site.selected());
         },
         write: function(value) {
-            if (value) {
-                var siteIds = self.sites.filter(site => self.isSiteSelectable(site)).map(site => site.transients.tempSiteId);
-                self.selectedSiteIds(siteIds);
-            }
-            else
-                self.selectedSiteIds([]);
+            self.displayedSites().forEach(site => site.selected(value));
         }
     });
     // sites
