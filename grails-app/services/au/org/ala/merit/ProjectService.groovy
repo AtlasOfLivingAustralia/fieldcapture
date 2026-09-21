@@ -831,6 +831,15 @@ class ProjectService  {
         reportService.createAdjustmentReport(reportId, adjustmentReason, reportInformation.config, reportInformation.project, reportInformation.roles, emailTemplate)
     }
 
+    Map sendReportReminderEmail(Map reportDetails, EmailTemplate emailTemplate) {
+        Map reportInformation = prepareReport(reportDetails.projectId, reportDetails)
+        if (reportInformation.error) {
+            return [success:false, error:reportInformation.error]
+        }
+        emailService.sendEmail(emailTemplate, [project:reportInformation.project, report:reportInformation.report], reportInformation.roles, RoleService.GRANT_MANAGER_ROLE)
+        [success:true]
+    }
+
     /**
      * Deletes the activities associated with a report.
      */

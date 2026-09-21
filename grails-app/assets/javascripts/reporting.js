@@ -206,7 +206,7 @@ var ReportViewModel = function(report, config) {
     let dueDate = moment(report.dueDate).add(1, 'days');
 
     self.isDueToday = report.dueDate && now.isAfter(dueDate.clone().subtract(1, 'days')) && now.isBefore(dueDate);
-    self.isDueSoon = report.dueDate && now.isBefore(dueDate.clone().subtract(1, 'days')) && now.isAfter(dueDate.clone().subtract(7, 'days'));
+    self.isDueSoon = report.dueDate && now.isBefore(dueDate.clone().subtract(1, 'days')) && now.isAfter(dueDate.clone().subtract(8, 'days'));
     self.isOverdue = report.dueDate && now.isAfter(dueDate);
 
     self.approvalTemplate = function() {
