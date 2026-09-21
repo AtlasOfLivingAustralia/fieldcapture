@@ -23,7 +23,7 @@ class ReportReminderEmailTask {
     @Autowired
     OrganisationService organisationService
 
-    @Scheduled(cron = "1 2 1  * * ?") // Runs every day at 1:02am
+    @Scheduled(cron = '${app.reportReminderTask.cronExpression}') // Runs every day at 1:02am by default
     void checkForReportEmailsToSend() {
         DateTime now = DateUtils.now()
 
