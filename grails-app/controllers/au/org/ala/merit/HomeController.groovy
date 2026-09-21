@@ -329,8 +329,8 @@ class HomeController {
 
     private renderStaticPage(SettingPageType settingType, String suffix = null, showNews = false) {
 
-        def content = settingService.getSettingText(settingType, suffix)
-        String title = settingService.getSettingTitle(settingType, suffix)
+        def content = settingService.getSettingText(settingType, (String)suffix)
+        String title = settingService.getSettingTitle(settingType, (String)suffix)
 
         render view: 'about', model: [settingType: settingType, content: content, suffix: suffix, showNews: showNews, title: title]
     }
