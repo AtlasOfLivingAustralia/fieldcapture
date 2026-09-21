@@ -95,7 +95,7 @@ class ReportService {
         log.info("toDate: " + existingReport.toDate + " - " + report.toDate)
         log.info("dueDate: " + existingReport.dueDate + " - " + report.dueDate)
         // Don't change any due dates that have been overridden by a grant manager
-        if (report.dueDate == null) {
+        if (report.dueDate == null && existingReport.dueDate) {
             report.dueDate = existingReport.dueDate
         }
         if (excludesNotApproved(existingReport)) {
