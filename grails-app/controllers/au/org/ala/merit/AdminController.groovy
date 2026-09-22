@@ -170,7 +170,7 @@ class AdminController {
         String suffix = params.suffix
         String returnTo = params.returnTo
         String returnLabel = GrailsNameUtils.getScriptName(returnAction).replaceAll('-',' ').capitalize()
-        def returnUrl = buildReturnToUrl(params.returnTo, suffix)
+        def returnUrl = buildReturnToUrl(id, returnTo, suffix)
         SettingPageType type = SettingPageType.getForName(id)
 
         if (type) {
@@ -191,15 +191,16 @@ class AdminController {
                 suffix: suffix] )
     }
 
-    private String buildReturnToUrl(String returnTo, String suffix) {
+    private String buildReturnToUrl(String id, String returnTo, String suffix) {
 
         if (!returnTo) {
             return g.createLink(controller:'admin', action:'staticPages', absolute: true )
         }
         String returnController = ( params.returnTo.equals(null) || params.returnTo.equals("staticPages")) ? "admin" : 'home'
-        String returnAction = params.returnTo in ['about', 'help', 'contacts', 'helpDocuments'] ? params.returnTo : 'staticPages'
+        String returnAction = params.returnTo in ['about', 'help', 'contacts', 'helpDocuments', 'staticPage'] ? params.returnTo : 'staticPages'
+        id = returnAction in ['staticPage'] ? id : null
         Map params = suffix ? (returnAction == "helpDocuments" ? [category:suffix] : [suffix:suffix]) : [:]
-        String returnUrl = g.createLink(controller:returnController, action:returnAction, params:params, absolute: true)
+        String returnUrl = g.createLink(controller:returnController, action:returnAction, id: id, params:params, absolute: true)
         returnUrl
     }
 
@@ -209,10 +210,10 @@ class AdminController {
         def settingKey = params.settingKey
         String suffix = params.suffix
 
-        def returnUrl = buildReturnToUrl(params.returnTo, suffix)
+        def returnUrl
         if (settingKey) {
             SettingPageType type = SettingPageType.getForKey(settingKey)
-
+            returnUrl = buildReturnToUrl(type.name, params.returnTo, suffix)
             if (type) {
                 settingService.setSettingText(type, suffix, text)
                 flash.message = "${settingKey} content saved."
@@ -220,6 +221,9 @@ class AdminController {
                 throw new RuntimeException("Undefined setting key!")
                 flash.message = "Error: Undefined setting key - ${settingKey}"
             }
+        }
+        else {
+            returnUrl = buildReturnToUrl(null, 'staticPages', null)
         }
 
         redirect(uri: returnUrl)

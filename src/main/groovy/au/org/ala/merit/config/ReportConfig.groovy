@@ -86,6 +86,9 @@ class ReportConfig {
      */
     String reportDueDatePeriod = null
 
+    /** If set to true, the system will send reminder emails to the report owner when the report is due soon, due today, or overdue. */
+    boolean sendReportReminderEmails = true
+
     /**
      * If specified, the owner end date will be reduced this period before generating reports.
      * The business reason for this option is to allow the last progress report to finish
