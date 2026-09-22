@@ -202,7 +202,7 @@ if (!pdfgen.baseURL){
     pdfgen.baseURL="https://pdfgen.ala.org.au/"
 }
 app.http.header.hostName = "X-ALA-hostName"
-app.reportReminderTask.cronExpression = "1 2 1  * * ?"
+app.reportReminderTask.cronExpression = "1 * 8 * * ?"
 abn.abnLookupToken = "Insert abn Token here"
 abn.abnUrl= "https://abr.business.gov.au/json/AbnDetails.aspx?abn="
 lists.baseURL = "https://lists-ws.test.ala.org.au"

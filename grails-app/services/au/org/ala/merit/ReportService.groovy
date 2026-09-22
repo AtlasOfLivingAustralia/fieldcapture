@@ -1155,9 +1155,8 @@ class ReportService {
     }
 
 
-    List<Map> findReportsDueInTheNext7Days(int offset, int max, DateTime now = null) {
+    List<Map> findReportsDueInRange(int offset, int max, DateTime from, DateTime to) {
 
-        now = now ?: DateUtils.now()
         List submittedApprovedOrCancelled = ["", PublicationStatus.NOT_APPROVED]
 
         Map pagination = [
@@ -1167,8 +1166,8 @@ class ReportService {
         Map criteria = [
                 publicationStatus: submittedApprovedOrCancelled,
                 dateProperty: 'dueDate',
-                startDate: DateUtils.format(now.withZone(DateTimeZone.UTC)),
-                endDate: DateUtils.format(now.plusDays(7).withZone(DateTimeZone.UTC)),
+                startDate: DateUtils.format(from.withZone(DateTimeZone.UTC)),
+                endDate: DateUtils.format(to.withZone(DateTimeZone.UTC)),
                 pagination: pagination
         ]
         search(criteria)

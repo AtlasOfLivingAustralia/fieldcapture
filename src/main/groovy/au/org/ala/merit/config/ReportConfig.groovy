@@ -7,12 +7,9 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
 import org.joda.time.Interval
 import org.joda.time.PeriodType
-
-import java.time.Instant
 import java.time.Month
 import org.joda.time.Period
-import java.time.ZoneId
-import java.time.ZonedDateTime
+
 
 /**
  * Parameters that specify how a sequence of reports should be generated.

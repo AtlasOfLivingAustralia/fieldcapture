@@ -248,7 +248,13 @@ class ReportGenerator {
 
 
         if (reportConfig.reportDueDatePeriod && reportConfig.reportDueDatePeriod() != null) {
-            report.dueDate = DateUtils.format(endDate.plus(reportConfig.reportDueDatePeriod()).withZone(DateTimeZone.UTC))
+            // We subtract a day from the due date because due dates are often manually overridden
+            // and when they do the day is supplied as <<date>>T00:00:00+1000 whereas by default
+            // generated dates will be <<date+1>>T00:00:00+1000.
+            // (i.e. midnight on the day of the due date, rather than the end of the day of the due date)
+            // So we can treat menaully edited and generated dates the same, it's easier to generate
+            // them in the same way they would be edited.
+            report.dueDate = DateUtils.format(endDate.plus(reportConfig.reportDueDatePeriod().minusDays(1)).withZone(DateTimeZone.UTC))
         }
 
         report
