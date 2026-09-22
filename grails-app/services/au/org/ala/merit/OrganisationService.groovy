@@ -213,6 +213,10 @@ class OrganisationService {
 
     }
 
+    ReportConfig findOrganisationReportConfigurationForReport(Map organisation, Map report) {
+        def reportConfig = organisation.config?.organisationReports?.find{it.activityType == report.activityType}
+        return reportConfig ? new ReportConfig(reportConfig) : null
+    }
 
     private void regenerateOrganisationReports(Map organisation, List<String> reportCategories = null) {
 
