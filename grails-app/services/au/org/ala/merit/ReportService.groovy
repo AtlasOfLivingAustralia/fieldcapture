@@ -98,6 +98,13 @@ class ReportService {
         if (report.dueDate == null && existingReport.dueDate) {
             report.dueDate = existingReport.dueDate
         }
+        // If the due date has been changed, then reset the email reminder flags so they
+        // can be resent as necessary
+        if (report.dueDate && existingReport.dueDate && existingReport.dueDate != report.dueDate) {
+            report.dueTodayEmailSentDate = null
+            report.dueSoonEmailSentDate = null
+            report.overDueEmailSentDate = null
+        }
         if (excludesNotApproved(existingReport)) {
 
             boolean approved = isApproved(existingReport)
@@ -532,7 +539,7 @@ class ReportService {
             return [success:false, error:'The due date of a submitted or approved report cannot be changed']
         }
 
-        Map resp = update([reportId:report.reportId, dueDate:dueDate, dueDateManuallyAssigned:true])
+        Map resp = update([reportId:report.reportId, dueDate:dueDate, dueTodayEmailSentDate:null, dueSoonEmailSentDate:null, overDueEmailSentDate:null])
         if (resp?.error) {
             return [success:false, error:resp.error]
         }
