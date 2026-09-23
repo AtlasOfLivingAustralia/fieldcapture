@@ -3,6 +3,7 @@ package au.org.ala.merit
 import au.org.ala.merit.config.EmailTemplate
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
+import grails.core.GrailsApplication
 import groovy.util.logging.Slf4j
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -28,16 +29,42 @@ class ReportReminderEmailTask {
     @Autowired
     ProjectConfigurationService projectConfigurationService
 
+    @Autowired
+    UserService userService
+
+    @Autowired
+    SettingService settingService
+
+    @Autowired
+    GrailsApplication grailsApplication
+
     @Scheduled(cron = '${app.reportReminderTask.cronExpression}') // Runs every day at 1:02am by default
+    void runReportReminderEmailTask() {
+        log.info("Starting Report Reminder Email Task")
+        try {
+            String systemEmail = grailsApplication.config.getProperty("fieldcapture.system.email.address")
+            UserDetails user = new UserDetails("reportReminderTask", systemEmail, "merit")
+            userService.withUser(user) {
+                settingService.withDefaultHub {
+                    checkForReportEmailsToSend()
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while checking for report emails to send: ${e.message}", e)
+        }
+        log.info("Finished Report Reminder Email Task")
+    }
     void checkForReportEmailsToSend() {
         DateTime now = DateUtils.now()
+        DateTime from = now.minusDays(2)
+        DateTime to = now.plusDays(7)
 
         int offset = 0
         int max = 100
         List<Map> reports
         Map configurationCache = [:] // Cache for program/organisation configurations to avoid repeated lookups
         do {
-            reports = reportService.findReportsDueInTheNext7Days(offset, max, now)
+            reports = reportService.findReportsDueInRange(offset, max, from, to)
             reports.each { report ->
                 try {
                     checkAndSendReportReminderEmail(report, now, configurationCache)
@@ -87,25 +114,31 @@ class ReportReminderEmailTask {
             return
         }
 
+        // Due dates are stored as midnight on the day they are due so when we
+        // are checking if a report is overdue we need to check if the due date is before yesterday.
+        // Similarly reports due today will have the same date as today, but the time
+        // will be 00:00 so we need to check if the due date is before now (but not a full
+        // day before now).
         DateTime dueDate = DateUtils.parse(report.dueDate)
-        if (dueDate.isBefore(now)) {
+        if (dueDate.plusDays(1).isBefore(now)) {
             if (!report.overDueEmailSentDate) {
+                log.info("Report ${report.reportId} is overdue. Sending email.")
                 sendReportReminderEmail(report, getOverdueEmailTemplate(report))
                 reportService.update([reportId: report.reportId, overDueEmailSentDate: DateUtils.format(now.withZone(DateTimeZone.UTC))])
             }
-            log.info("Report ${report.reportId} is overdue. Sending email.")
-        } else if (dueDate.isBefore(now.plusDays(1))) {
+
+        } else if (dueDate.isBefore(now)) {
             if (!report.dueTodayEmailSentDate) {
+                log.info("Report ${report.reportId} is due today.  Sending email.")
                 sendReportReminderEmail(report, getDueTodayEmailTemplate(report))
                 reportService.update([reportId: report.reportId, dueTodayEmailSentDate: DateUtils.format(now.withZone(DateTimeZone.UTC))])
             }
-            log.info("Report ${report.reportId} is due today.  Sending email.")
-        } else if (dueDate.isBefore(now.plusDays(7))) {
+        } else if (dueDate.minusDays(7).isBefore(now)) {
             if (!report.dueSoonEmailSentDate) {
+                log.info("Report ${report.reportId} is due in the next 7 days. Sending email.")
                 sendReportReminderEmail(report, getDueSoonEmailTemplate(report))
                 reportService.update([reportId: report.reportId, dueSoonEmailSentDate: DateUtils.format(now.withZone(DateTimeZone.UTC))])
             }
-            log.info("Report ${report.reportId} is due in the next 7 days. Sending email.")
         } else {
             log.info("Report ${report.reportId} is not due in the next 7 days. Not sending email.")
         }

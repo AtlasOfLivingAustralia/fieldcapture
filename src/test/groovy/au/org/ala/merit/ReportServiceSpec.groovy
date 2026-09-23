@@ -73,10 +73,10 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
     }
 
     def reports() {
-        [[reportId:'1', fromDate: '2014-12-31T13:00:00Z', toDate: '2015-06-30T14:00:00Z', submissionDate: '2015-06-30T14:00:00Z', dueDate: '2015-08-12T14:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'],
-         [reportId:'2', fromDate: '2015-06-30T14:00:00Z', toDate: '2015-12-31T13:00:00Z', submissionDate: '2015-12-31T13:00:00Z', dueDate: '2016-02-12T13:00:00Z', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'],
-         [reportId:'3', fromDate: '2015-12-31T13:00:00Z', toDate: '2016-06-30T14:00:00Z', submissionDate: '2016-06-30T14:00:00Z', dueDate: '2016-08-12T14:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'],
-         [reportId:'4', fromDate: '2016-06-30T14:00:00Z', toDate: '2016-12-31T13:00:00Z', submissionDate: '2016-12-31T13:00:00Z', dueDate: '2017-02-12T13:00:00Z', type: 'Activity', name: 'Stage 4', description: "Stage 4 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports']]
+        [[reportId:'1', fromDate: '2014-12-31T13:00:00Z', toDate: '2015-06-30T14:00:00Z', submissionDate: '2015-06-30T14:00:00Z', dueDate: '2015-08-11T14:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'],
+         [reportId:'2', fromDate: '2015-06-30T14:00:00Z', toDate: '2015-12-31T13:00:00Z', submissionDate: '2015-12-31T13:00:00Z', dueDate: '2016-02-11T13:00:00Z', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'],
+         [reportId:'3', fromDate: '2015-12-31T13:00:00Z', toDate: '2016-06-30T14:00:00Z', submissionDate: '2016-06-30T14:00:00Z', dueDate: '2016-08-11T14:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'],
+         [reportId:'4', fromDate: '2016-06-30T14:00:00Z', toDate: '2016-12-31T13:00:00Z', submissionDate: '2016-12-31T13:00:00Z', dueDate: '2017-02-11T13:00:00Z', type: 'Activity', name: 'Stage 4', description: "Stage 4 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports']]
 
     }
 
@@ -94,10 +94,10 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
 
         then:
         0 * webService.doDelete(*_)
-        1 * webService.doPost(_, [fromDate: '2014-12-31T13:00:00Z', toDate: '2015-06-30T14:00:00Z', submissionDate: '2015-06-30T14:00:00Z', dueDate: '2015-07-31T14:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
-        1 * webService.doPost(_, [fromDate: '2015-06-30T14:00:00Z', toDate: '2015-12-31T13:00:00Z', submissionDate: '2015-12-31T13:00:00Z', dueDate: '2016-01-31T13:00:00Z', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
-        1 * webService.doPost(_, [fromDate: '2015-12-31T13:00:00Z', toDate: '2016-06-30T14:00:00Z', submissionDate: '2016-06-30T14:00:00Z', dueDate: '2016-07-31T14:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
-        1 * webService.doPost(_, [fromDate: '2016-06-30T14:00:00Z', toDate: '2016-12-31T23:59:59Z', submissionDate: '2016-12-31T23:59:59Z', dueDate: '2017-01-31T13:00:00Z', type: 'Activity', name: 'Stage 4', description: "Stage 4 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost(_, [fromDate: '2014-12-31T13:00:00Z', toDate: '2015-06-30T14:00:00Z', submissionDate: '2015-06-30T14:00:00Z', dueDate: '2015-07-30T14:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost(_, [fromDate: '2015-06-30T14:00:00Z', toDate: '2015-12-31T13:00:00Z', submissionDate: '2015-12-31T13:00:00Z', dueDate: '2016-01-30T13:00:00Z', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost(_, [fromDate: '2015-12-31T13:00:00Z', toDate: '2016-06-30T14:00:00Z', submissionDate: '2016-06-30T14:00:00Z', dueDate: '2016-07-30T14:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost(_, [fromDate: '2016-06-30T14:00:00Z', toDate: '2016-12-31T23:59:59Z', submissionDate: '2016-12-31T23:59:59Z', dueDate: '2017-01-30T13:00:00Z', type: 'Activity', name: 'Stage 4', description: "Stage 4 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
         0 * webService._
     }
 
@@ -112,11 +112,11 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
 
         then:
         0 * webService.doDelete(*_)
-        1 * webService.doPost(_, [reportId:'1', fromDate: '2014-06-30T14:00:00Z', toDate: '2014-12-31T13:00:00Z', submissionDate: '2014-12-31T13:00:00Z', dueDate: '2015-02-12T13:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
-        1 * webService.doPost(_, [reportId:'2', fromDate: '2014-12-31T13:00:00Z', toDate: '2015-06-30T14:00:00Z', submissionDate: '2015-06-30T14:00:00Z', dueDate: '2015-08-12T14:00:00Z', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
-        1 * webService.doPost(_, [reportId:'3', fromDate: '2015-06-30T14:00:00Z', toDate: '2015-12-31T13:00:00Z', submissionDate: '2015-12-31T13:00:00Z', dueDate: '2016-02-12T13:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
-        1 * webService.doPost(_, [reportId:'4', fromDate: '2015-12-31T13:00:00Z', toDate: '2016-06-30T14:00:00Z', submissionDate: '2016-06-30T14:00:00Z', dueDate: '2016-08-12T14:00:00Z', type: 'Activity', name: 'Stage 4', description: "Stage 4 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
-        1 * webService.doPost(_, [fromDate: '2016-06-30T14:00:00Z', toDate: '2016-12-31T23:59:59Z', submissionDate: '2016-12-31T23:59:59Z', dueDate: '2017-02-12T13:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost(_, [reportId:'1', fromDate: '2014-06-30T14:00:00Z', toDate: '2014-12-31T13:00:00Z', submissionDate: '2014-12-31T13:00:00Z', dueDate: '2015-02-11T13:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost(_, [reportId:'2', fromDate: '2014-12-31T13:00:00Z', toDate: '2015-06-30T14:00:00Z', submissionDate: '2015-06-30T14:00:00Z', dueDate: '2015-08-11T14:00:00Z', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost(_, [reportId:'3', fromDate: '2015-06-30T14:00:00Z', toDate: '2015-12-31T13:00:00Z', submissionDate: '2015-12-31T13:00:00Z', dueDate: '2016-02-11T13:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost(_, [reportId:'4', fromDate: '2015-12-31T13:00:00Z', toDate: '2016-06-30T14:00:00Z', submissionDate: '2016-06-30T14:00:00Z', dueDate: '2016-08-11T14:00:00Z', type: 'Activity', name: 'Stage 4', description: "Stage 4 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost(_, [fromDate: '2016-06-30T14:00:00Z', toDate: '2016-12-31T23:59:59Z', submissionDate: '2016-12-31T23:59:59Z', dueDate: '2017-02-11T13:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
         0 * webService._
     }
 
@@ -131,9 +131,9 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         regenerateAllStageReportsForProject('p1', 6, true, "P43D")
 
         then:
-        1 * webService.doPost(_, [reportId:'1', fromDate: '2015-08-01T00:00:00Z', toDate: '2015-12-31T13:00:00Z', submissionDate: '2015-12-31T13:00:00Z', dueDate: '2016-02-12T13:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
-        1 * webService.doPost(_, [reportId:'2', fromDate: '2015-12-31T13:00:00Z', toDate: '2016-06-30T14:00:00Z', submissionDate: '2016-06-30T14:00:00Z', dueDate: '2016-08-12T14:00:00Z', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
-        1 * webService.doPost(_, [reportId:'3', fromDate: '2016-06-30T14:00:00Z', toDate: '2016-12-31T23:59:59Z', submissionDate: '2016-12-31T23:59:59Z', dueDate: '2017-02-12T13:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost(_, [reportId:'1', fromDate: '2015-08-01T00:00:00Z', toDate: '2015-12-31T13:00:00Z', submissionDate: '2015-12-31T13:00:00Z', dueDate: '2016-02-11T13:00:00Z', type: 'Activity', name: 'Stage 1', description: "Stage 1 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost(_, [reportId:'2', fromDate: '2015-12-31T13:00:00Z', toDate: '2016-06-30T14:00:00Z', submissionDate: '2016-06-30T14:00:00Z', dueDate: '2016-08-11T14:00:00Z', type: 'Activity', name: 'Stage 2', description: "Stage 2 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost(_, [reportId:'3', fromDate: '2016-06-30T14:00:00Z', toDate: '2016-12-31T23:59:59Z', submissionDate: '2016-12-31T23:59:59Z', dueDate: '2017-02-11T13:00:00Z', type: 'Activity', name: 'Stage 3', description: "Stage 3 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports'])
         1 * webService.doDelete({ it.endsWith('/report/4')})
         0 * webService._
 
@@ -151,7 +151,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
 
         then: "a new report should be added at the end of the project"
 
-        1 * webService.doPost(_, [fromDate: '2016-12-31T13:00:00Z', toDate: '2017-07-01T00:00:00Z', submissionDate: '2017-07-01T00:00:00Z', dueDate: '2017-08-12T14:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost(_, [fromDate: '2016-12-31T13:00:00Z', toDate: '2017-07-01T00:00:00Z', submissionDate: '2017-07-01T00:00:00Z', dueDate: '2017-08-11T14:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports', 'generatedBy':'Stage reports'])
         0 * webService._
 
     }
@@ -182,7 +182,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         regenerateAllStageReportsForProject('p1', 6, true, "P43D")
 
         then: "a new report should be added to the end"
-        1 * webService.doPost({it.endsWith('/report/')}, [fromDate: '2016-12-31T13:00:00Z', toDate: '2017-07-01T00:00:00Z', submissionDate:'2017-07-01T00:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", projectId: 'p1', dueDate: '2017-08-12T14:00:00Z', category:'Stage reports', 'generatedBy':'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost({it.endsWith('/report/')}, [fromDate: '2016-12-31T13:00:00Z', toDate: '2017-07-01T00:00:00Z', submissionDate:'2017-07-01T00:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", projectId: 'p1', dueDate: '2017-08-11T14:00:00Z', category:'Stage reports', 'generatedBy':'Stage reports', 'generatedBy':'Stage reports'])
 
         0 * webService._
     }
@@ -221,7 +221,7 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         regenerateAllStageReportsForProject('p1', 6, true, "P43D")
 
         then: "a new report is added to the end of the schedule"
-        1 * webService.doPost({it.endsWith('/report/')}, [fromDate: '2016-12-31T13:00:00Z', toDate: '2017-01-07T00:00:00Z', submissionDate: '2017-01-07T00:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", dueDate:'2017-08-12T14:00:00Z', projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports', 'generatedBy':'Stage reports'])
+        1 * webService.doPost({it.endsWith('/report/')}, [fromDate: '2016-12-31T13:00:00Z', toDate: '2017-01-07T00:00:00Z', submissionDate: '2017-01-07T00:00:00Z', type: 'Activity', name: 'Stage 5', description: "Stage 5 for project", dueDate:'2017-08-11T14:00:00Z', projectId: 'p1', category:'Stage reports', 'generatedBy':'Stage reports', 'generatedBy':'Stage reports'])
 
         and: "no other reports should not be changed"
         0 * webService._
@@ -771,20 +771,21 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         result.success == false
         result.error == 'Error updating report'
     }
-    def "The report service can find reports that are due in the next 7 days"() {
+    def "The report service can find reports that are due in a supplied date range"() {
         setup:
-        DateTime now = DateUtils.parse("2021-07-01T00:00:00Z")
+        DateTime from = DateUtils.parse("2021-06-29T00:00:00Z")
+        DateTime to = DateUtils.parse("2021-07-08T00:00:00Z")
         Map expectedCriteria = [
                 publicationStatus: ["", PublicationStatus.NOT_APPROVED],
                 dateProperty: 'dueDate',
-                startDate: "2021-07-01T00:00:00Z",
+                startDate: "2021-06-29T00:00:00Z",
                 endDate: "2021-07-08T00:00:00Z",
                 pagination: [max: 10, offset: 20]
         ]
         List reports = [[reportId: 'r1'], [reportId: 'r2']]
 
         when:
-        List results = service.findReportsDueInTheNext7Days(20, 10, now)
+        List results = service.findReportsDueInRange(20, 10, from, to)
 
         then:
         1 * webService.doPost({ it.endsWith('report/search') }, expectedCriteria) >> [resp: reports]
@@ -793,24 +794,25 @@ class ReportServiceSpec extends Specification implements ServiceUnitTest<ReportS
         results == reports
     }
 
-    def "The report service will use the current date to find reports due in the next 7 days if no date is supplied"() {
+    def "The supplied date range is converted to UTC when searching for reports due in a range"() {
         setup:
-        DateTime now = DateUtils.now()
+        DateTime from = DateUtils.parse("2021-07-01T00:00:00+10:00")
+        DateTime to = DateUtils.parse("2021-07-08T00:00:00+10:00")
 
         when:
-        service.findReportsDueInTheNext7Days(0, 100, null)
+        service.findReportsDueInRange(0, 100, from, to)
 
         then:
         1 * webService.doPost({ it.endsWith('report/search') }, { Map criteria ->
-            DateUtils.parse(criteria.startDate).isAfter(now.minusMinutes(1)) &&
-            DateUtils.parse(criteria.endDate).isAfter(now.plusDays(7).minusMinutes(1)) &&
+            criteria.startDate == "2021-06-30T14:00:00Z" &&
+            criteria.endDate == "2021-07-07T14:00:00Z" &&
             criteria.pagination == [max: 100, offset: 0]
         }) >> [resp: []]
     }
 
-    def "An empty list is returned if no reports are due in the next 7 days"() {
+    def "An empty list is returned if no reports are due in the supplied date range"() {
         when:
-        List results = service.findReportsDueInTheNext7Days(0, 100, DateUtils.now())
+        List results = service.findReportsDueInRange(0, 100, DateUtils.now().minusDays(2), DateUtils.now().plusDays(7))
 
         then:
         1 * webService.doPost(_, _) >> null
