@@ -409,7 +409,7 @@
             }
 
             // some old site has both coordinates and pid. delete pid if feature is valid.
-            if (properties.pid && turf.booleanValid(feature))
+            if (properties.pid && ALA.MapUtils.validateGeoJSON(feature))
                 delete properties.pid;
 
             switch (siteGeometry.type) {

@@ -314,6 +314,7 @@ var GenericLocation = function (l) {
 };
 
 function SiteViewModelWithMapIntegration (siteData, projectId, options) {
+    const simplificationTolerance = 0.0001; // Tolerance for simplifying geometries for display on the map
     var self = this,
         alaMap,
         deferredUpdate = ko.observable(false).extend({rateLimit: {timeout: 1000, method: 'notifyWhenChangesStop'}}),
@@ -321,7 +322,7 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
             styleProperty: 'type',
             styles: {
                 compound: {
-                    color: '#f00',
+                    color: '#000',
                     fillOpacity: 0.2,
                     weight: 3
                 },
@@ -383,9 +384,9 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
         //retrieve the current shape if exists
         if (self.features().length > 0) {
             var featureCollection = convertSiteToFeatureCollection(site);
-            if (featureCollection.features.every ( feature => turf.booleanValid(feature) )) {
+            if (ALA.MapUtils.validateGeoJSON(featureCollection)) {
                 try {
-                    featureCollection = turf.simplify(featureCollection, {tolerance: 0.0001, highQuality: false});
+                    featureCollection = turf.simplify(featureCollection, {tolerance: simplificationTolerance, highQuality: false});
                 }
                 catch (e) {
                     console.error("Error simplifying geometry for display on map", e);
@@ -398,9 +399,9 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
                 console.error("Invalid feature collection", featureCollection);
         } else {
             var feature = convertSiteGeometryToFeature(site.extent.geometry);
-            if (turf.booleanValid(feature)) {
+            if (ALA.MapUtils.validateGeoJSON(feature)) {
                 try {
-                    feature = turf.simplify(feature, {tolerance: 0.0001, highQuality: false});
+                    feature = turf.simplify(feature, {tolerance: simplificationTolerance, highQuality: false});
                 }
                 catch (e) {
                     console.error("Error simplifying geometry for display on map", e);
@@ -557,7 +558,7 @@ var AlaMapAdapter = function(map, options) {
         styleProperty: 'type',
         styles: {
             compound: {
-                color: '#f00',
+                color: '#000',
                 fillOpacity: 0.2,
                 weight: 3
             },
@@ -1586,19 +1587,21 @@ function BulkCreateSiteViewModel (alaMap, config) {
 
     self.isFeatureValid = function() {
         var feature = this;
-        return feature.geometry && feature.geometry.type && turf.booleanValid(feature);
+        return ALA.MapUtils.validateGeoJSON(feature);
     }
 
     self.isFeatureInvalid = function() {
         var feature = this;
-        return feature.geometry && feature.geometry.type && !turf.booleanValid(feature);
+        return !ALA.MapUtils.validateGeoJSON(feature);
     }
 
     self.isSiteValid = function() {
-        var site = this;
-        return site.features().length > 0 && site.features().every(function(feature) {
-            return self.isFeatureValid.apply(feature);
-        });
+        var site = this, fc = {
+            type: 'FeatureCollection',
+            properties: {},
+            features: site.features()
+        };
+        return ALA.MapUtils.validateGeoJSON(fc);
     }
 
     // ala map subscriptions
