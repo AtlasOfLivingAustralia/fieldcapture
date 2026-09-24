@@ -1244,9 +1244,7 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
     self.outcomeTargets = ko.observableArray();
 
     self.sortedOutcomeTargets = ko.computed(function() {
-        return _.sortBy(self.outcomeTargets(), function(target) {
-            return target.serviceLabel + target.scoreLabel;
-        });
+        return sortTargetMeasures(self.outcomeTargets());
     })
 
     self.addOutcomeTarget = function(outputTarget) {
@@ -1344,7 +1342,7 @@ function ServiceOutcomeTargetsViewModel(serviceIds, outputTargets, forecastPerio
         self.serviceId = scoreInfo ? scoreInfo.serviceId : null;
         self.scoreLabel = scoreInfo ? scoreInfo.score.label : "Unsupported target measure";
         self.serviceLabel = scoreInfo ? scoreInfo.service.name : "Unsupported service";
-
+        self.label = self.serviceLabel + " - " + self.scoreLabel; // Used for sorting
         self.selectedTargetMeasure = ko.computed(function() {
             return _.find(selectedTargetMeasures(), function(service) {
                 return self.scoreId == service.scoreId;
