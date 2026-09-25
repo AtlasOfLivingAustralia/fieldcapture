@@ -4,7 +4,7 @@ let settings = [{
     dateCreated: now,
     lastUpdated: now,
     value: 'Dear MERIT User, \r\n' +
-        'the ${report.name} for project ${project.grantId} is due on ${report.dueDate}. \r\n' +
+        'the ${report.name} for project ${project.name} (${project.grantId}) is due on $\{report.dueDate}. \r' +
         'You can access the report by logging into MERIT and then clicking onto this link https://fieldcapture.ala.org.au/project/editReport/${project.projectId}?reportId=${report.reportId}.\r\n' +
         'If you are experiencing problems submitting your report by this date, please contact your Departmental contract manager. Please do not reply to this email.\r\n',
     key: 'meritfielddata.report.dueSoon.emailBody'
@@ -22,7 +22,7 @@ let settings = [{
         dateCreated: now,
         lastUpdated: now,
         value: 'Dear MERIT User, \r\n' +
-            'the ${report.name} for project ${project.grantId} was due on ${Class.forName("au.org.ala.merit.DateUtils").isoToDisplayFormat(report.dueDate)} and is now overdue. \r\n' +
+            'the ${report.name} for project ${project.name} (${project.grantId}) was due on ${Class.forName("au.org.ala.merit.DateUtils").isoToDisplayFormat(report.dueDate)} and is now overdue. \r\n' +
             'You can access the report by logging into MERIT and then clicking onto this link https://fieldcapture.ala.org.au/project/editReport/${project.projectId}?reportId=${report.reportId}. \r\n' +
             'If you are experiencing problems submitting your report, please contact your Departmental contract manager as a priority. \r\n' +
             'Please do not reply to this email.',
@@ -40,7 +40,7 @@ let settings = [{
         dateCreated: now,
         lastUpdated: now,
         value: 'Dear MERIT User, \r\n' +
-            'the ${report.name} for project ${project.grantId} is due today. \r\n' +
+            'the ${report.name} for project ${project.name} (${project.grantId}) is due today. \r\n' +
             'You can access the report by logging into MERIT and then clicking onto this link https://fieldcapture.ala.org.au/project/editReport/${project.projectId}?reportId=${report.reportId}\r\n' +
             'If you are experiencing problems submitting your report by today, please contact your Departmental contract manager as a priority. \r\n' +
             'Please do not reply to this email.',

@@ -745,7 +745,7 @@ function MERIPlan(project, projectService, config) {
     };
 
     self.attachValidation = function() {
-        $('#project-details-validation').validationEngine('attach', {autoPositionUpdate:true});
+        $('#project-details-validation').validationEngine('attach', {autoPositionUpdate:true,promptPosition:inline});
     };
 
     self.meriPlanHistoryVisible = ko.observable(false);
@@ -2707,7 +2707,9 @@ var Report = function (report) {
         }
         var due = moment(report.dueDate);
 
-        return moment(now).diff(due, 'days');
+        // Due dates are set to midnight of the day they are due unlike
+        // report periods (which are set to midnight of the next day)
+        return moment(now).subtract(1, 'days').diff(due, 'days');
 
     };
 
