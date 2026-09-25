@@ -10,6 +10,7 @@ class SiteController {
     def siteService, projectService, activityService, metadataService, userService, searchService, importService, webService, projectConfigurationService
     SettingService settingService
     SpatialService spatialService
+    ProgramService programService
     static defaultAction = "index"
     static allowedMethods = ['isGeometryWithinAustralia': 'POST']
 
@@ -28,7 +29,7 @@ class SiteController {
             flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${params.projectId}"
             redirect(controller:'project', action:'index', id: params.projectId)
         }
-        Map model = [create:true, project:project, documents:[]] + editSiteModelData(null, project)
+        Map model = [create:true, project:project, documents:[], enablePOI: isPOIEnabledInProjectProgram([project])] + editSiteModelData(null, project)
         render view: 'edit', model: model
     }
 
@@ -120,15 +121,30 @@ class SiteController {
         }
 
         Map site = result.site
+        result.enablePOI = isPOIEnabledInSite(site)
         Map project = null
         // Don't allow a site to be a project area if it:
         // 1) Isn't associated with a project
         // 2) Is associated with more than one project.
-        if (site.projects && site.projects.size() == 1) {
-            result.project = project = projectService.get(site.projects[0], 'all')
+        if (site.projects && site.projects.size() > 0) {
+            List projects = site.projects.collect { projectService.get(it, 'all') }
+            if (!result.enablePOI) {
+                result.enablePOI = isPOIEnabledInProjectProgram(projects)
+            }
+
+            result.project = project = projects[0]
         }
         result += editSiteModelData(site, project)
         result
+    }
+
+    private static boolean isPOIEnabledInSite (Map site) {
+        site?.poi?.size() > 0
+    }
+
+    private boolean isPOIEnabledInProjectProgram (projects) {
+        List programs = projects.programId.unique().collect { programService.get(it) }
+        programs?.any { it.config?.enablePOI }
     }
 
     private Map editSiteModelData(Map site, Map project) {

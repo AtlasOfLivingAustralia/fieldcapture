@@ -1226,7 +1226,7 @@ class ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'editor')
-    def getSpeciesRecordsFromActivity (String activityId, String groupBy, String operator) {
+        def getSpeciesRecordsFromActivity (String activityId, String groupBy, String operator) {
         if(!activityId) {
             render status: HttpStatus.SC_BAD_REQUEST, text: [message: 'Activity ID must be supplied'] as JSON
             return

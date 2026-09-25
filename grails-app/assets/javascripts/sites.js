@@ -317,6 +317,7 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
     const simplificationTolerance = 0.0001; // Tolerance for simplifying geometries for display on the map
     var self = this,
         alaMap,
+        featureLayer,
         deferredUpdate = ko.observable(false).extend({rateLimit: {timeout: 1000, method: 'notifyWhenChangesStop'}}),
         options = {
             styleProperty: 'type',
@@ -350,9 +351,17 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
             var poi =self.poi()[i],
                 transient = poi.getTransient();
 
-            transient.marker = addMarker(poi.geometry().decimalLatitude(), poi.geometry().decimalLongitude(), poi.name(), poi.dragEvent);
+            transient.marker = addMarker(poi.geometry().decimalLatitude(), poi.geometry().decimalLongitude(),
+                poi.name(), poi.dragEvent, self.removePOIMarkerHandler(poi), poi.poiId(), poi.hasPhotoPointDocuments);
         }
     };
+
+    self.removePOIMarkerHandler = function(poi) {
+        return function() {
+            self.poi.remove(poi);
+        }
+    }
+
     self.newPOI = function(){
         //get the center of the map
         var lngLat = getMapCentre();
@@ -415,9 +424,46 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
         alaMap.fitBounds();
     };
 
+    function findPOIMarkerIcon () {
+        if (!featureLayer)
+            return
+
+        var toRemove = [];
+        featureLayer.eachLayer(function (layer) {
+            if (layer instanceof L.Marker && layer.feature && layer.feature.properties && layer.feature.properties.type === 'poi') {
+                layer.setIcon(createPOIIcon());
+                var poi = findPOI(layer.feature.properties.poiId);
+                if (poi){
+                    configureMarker(layer, poi.name(), poi.poiId(), poi.dragEvent, self.removePOIMarkerHandler(poi), poi.hasPhotoPointDocuments);
+                }
+                else
+                    toRemove.push(layer);
+            }
+        });
+
+        if (toRemove.length > 0) {
+            toRemove.forEach(function (layer) {
+                featureLayer.removeLayer(layer);
+            });
+        }
+    };
+
+    function findPOI(poiId) {
+        return self.poi().find(poi => poi.poiId() === poiId);
+    };
+
+    function findFeatureLayer(){
+        alaMap.getMapImpl().eachLayer(function (layer) {
+            if (layer instanceof L.FeatureGroup) {
+                featureLayer = layer;
+            }
+        });
+    }
+
     self.mapInitialised = function(map) {
-        alaMap = map;
+        self.alaMap = alaMap = map;
         var leafletMap = alaMap.getMapImpl();
+        findFeatureLayer();
         // set geoman style to match the site type style
         if (leafletMap.pm && leafletMap.pm.setGlobalOptions) {
             leafletMap.pm.setGlobalOptions(geomanOptions);
@@ -426,6 +472,7 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
 
         self.renderPOIs();
         self.renderOnMap();
+        alaMap.subscribe(findPOIMarkerIcon);
         deferredUpdate.subscribe(self.updateGeometry);
         alaMap.registerListener('pm:globaleditmodetoggled', modeListener);
         alaMap.registerListener('pm:globaldragmodetoggled', modeListener);
