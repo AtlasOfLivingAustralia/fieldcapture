@@ -957,3 +957,6 @@ if (db.setting.findOne({key: roleMappingSetting.key})) {
     print('Inserted role protocol mapping setting.');
 }
 
+
+db.activityForm.update({name:'Herbarium Determinations - Field'}, {$set:{tags:['survey']}})
+db.activityForm.update({name:'Herbarium Determinations'}, {$set:{tags:['survey']}})
