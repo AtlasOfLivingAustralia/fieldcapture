@@ -20,40 +20,6 @@ var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
         return activity.siteId == site.siteId && !activity.isComplete();
     });
     self.reportingComplete = incompleteActivities.length == 0;
-
-
-    function getSiteBounds(siteId) {
-        // Only works for polygon sites.
-        var features = map.featureIndex[siteId];
-
-        var bounds = new google.maps.LatLngBounds();
-        if (features && _.isArray(features)) {
-            for (var i=0; i<features.length; i++) {
-                var feature = features[i];
-                if (feature && _.isFunction(feature.getPath)) {
-                    feature.getPath().forEach(function(element) {
-                        bounds.extend(element)
-                    });
-                }
-            }
-        }
-
-        return bounds;
-    }
-
-    var bounds = getSiteBounds(site.siteId);
-    /**
-     * Calculates a position for the info window located in the top middle of the sites bounds.
-     * @param bounds a LatLngBounds object containing the bounds of the site.
-     * @return a lat lng literal representing the top middle of the sites bounds.
-     */
-    function calculateInfoWindowPosition(bounds) {
-        var east = bounds.getNorthEast().lng();
-        var west = bounds.getSouthWest().lng();
-        var middle = west + (east - west)/2;
-        return {lat:bounds.getNorthEast().lat(), lng:middle};
-    };
-
     function getSiteInfoHtml() {
         var siteInfoTemplate = document.getElementById('info-window-template');
         ko.applyBindings(self, siteInfoTemplate);
@@ -61,6 +27,7 @@ var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
         ko.cleanNode(siteInfoTemplate);
         return siteInfoHtml;
     }
+
     var colour = '#BB4411'
     if (currentStage.isReadOnly()) {
         colour = 'grey';
@@ -68,40 +35,29 @@ var SiteStatusModel = function(site, currentStage, map, sitesViewModel) {
     else if (self.reportingComplete) {
         colour = 'green';
     }
-    var featureDisplayOptions = {strokeColor:colour,fillColor:colour,fillOpacity:0.3,strokeWeight:1,zIndex:1,editable:false};
 
+    var featureDisplayOptions = {color:colour,fillOpacity:0.3,weight:1};
     var activity = incompleteActivities.length >= 0 ? incompleteActivities[0] : null;
     if (!activity) {
         activity = _.find(currentStage.activities, function(activity) {
             return activity.siteId == site.siteId;
         });
     }
-    var siteInfoWindow = new google.maps.InfoWindow({content:getSiteInfoHtml(), position:calculateInfoWindowPosition(bounds)});
 
+    var siteInfoHTML = getSiteInfoHtml();
     var features = map.featureIndex[site.siteId];
     if (_.isArray(features)) {
 
         _.each(features, function(feature) {
-            feature.setOptions(featureDisplayOptions);
-
-            google.maps.event.clearInstanceListeners(feature);
-
-            google.maps.event.addListener(feature, 'mouseover', function (event) {
-                siteInfoWindow.open(map.map, feature);
-                _.each(features, function(feature) {
-                    feature.setOptions({fillOpacity: 0.8});
-
-                });
-            });
-            google.maps.event.addListener(feature, 'mouseout', function (event) {
-                _.each(features, function(feature) {
-                    feature.setOptions({fillOpacity: 0.3});
-                });
-                siteInfoWindow.close();
-            });
+            feature.off('click');
+            feature.setStyle(featureDisplayOptions);
+            if (feature.getTooltip())
+                feature.setTooltipContent(siteInfoHTML);
+            else
+                feature.bindTooltip(siteInfoHTML);
 
             if (activity) {
-                google.maps.event.addListener(feature, 'click', function(event) {
+                feature.on('click', function(e) {
                     window.location.href = activity.editActivityUrl();
                 });
             }

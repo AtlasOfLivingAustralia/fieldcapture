@@ -25,6 +25,8 @@ class SpatialServiceSpec extends Specification implements AutowiredTest{
         service.grailsApplication = grailsApplication
         grailsApplication.config.spatial.layersUrl= ''
         grailsApplication.config.ecodata.baseUrl= ''
+        grailsApplication.config.layers.countries.fid = 'cl22'
+        grailsApplication.config.layers.countries.displayNamesForAustralia = ['Australia', 'Commonwealth of Australia']
     }
 
     def cleanup() {
@@ -89,5 +91,65 @@ class SpatialServiceSpec extends Specification implements AutowiredTest{
         then:
         1 * webService.getJson2("/shape/geojson/$pid") >> [statusCode:HttpStatus.SC_OK, resp:[type:"Point", coordinates:[-35, 100]]]
         result.statusCode == HttpStatus.SC_OK
+    }
+
+    void "isGeometryWithinAustralia returns success when geometry intersects only Australian country names"() {
+        given:
+        Map shape = [type: 'Point', coordinates: [151.21, -33.87]]
+
+        when:
+        Map result = service.isGeometryWithinAustralia(shape)
+
+        then:
+        1 * webService.doPost('site/standardiseGeoJSON', shape, true) >> [
+                statusCode: org.springframework.http.HttpStatus.OK.value(),
+                resp: shape
+        ]
+        1 * webService.doPost('/intersect/geojson/cl22', shape, true) >> [
+                statusCode: org.springframework.http.HttpStatus.OK.value(),
+                resp: [[name: 'Australia']]
+        ]
+        result.success == true
+        result.message == 'Geometry is within Australia'
+    }
+
+    void "isGeometryWithinAustralia returns failure when geometry intersects a non-Australian country"() {
+        given:
+        Map shape = [type: 'Polygon', coordinates: [[[151.0, -33.0], [152.0, -33.0], [152.0, -34.0], [151.0, -34.0], [151.0, -33.0]]]]
+
+        when:
+        Map result = service.isGeometryWithinAustralia(shape)
+
+        then:
+        1 * webService.doPost('site/standardiseGeoJSON', shape, true) >> [
+                statusCode: org.springframework.http.HttpStatus.OK.value(),
+                resp: shape
+        ]
+        1 * webService.doPost('/intersect/geojson/cl22', shape, true) >> [
+                statusCode: org.springframework.http.HttpStatus.OK.value(),
+                resp: [[name: 'Australia'], [name: 'New Zealand']]
+        ]
+        result.success == false
+        result.message == 'Geometry is not within Australia. Intersects with: New Zealand'
+    }
+
+    void "isGeometryWithinAustralia returns error response when intersect call fails"() {
+        given:
+        Map shape = [type: 'Point', coordinates: [100.0, 0.0]]
+
+        when:
+        Map result = service.isGeometryWithinAustralia(shape)
+
+        then:
+        1 * webService.doPost('site/standardiseGeoJSON', shape, true) >> [
+                statusCode: org.springframework.http.HttpStatus.OK.value(),
+                resp: shape
+        ]
+        1 * webService.doPost('/intersect/geojson/cl22', shape, true) >> [
+                statusCode: org.springframework.http.HttpStatus.BAD_GATEWAY.value(),
+                error: 'spatial service unavailable'
+        ]
+        result.success == false
+        result.message == 'An error occurred while checking if geometry is within Australia: spatial service unavailable'
     }
 }

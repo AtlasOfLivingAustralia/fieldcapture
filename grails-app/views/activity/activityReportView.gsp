@@ -29,7 +29,7 @@
         context:<fc:modelAsJavascript model="${context}"/>,
         imageLeafletViewer: '${createLink(controller: 'resource', action: 'imageviewer', absolute: true)}',
         readonly:true,
-        useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
+        useGoogleBaseMap: true,
         prepopUrlPrefix:"${grailsApplication.config.getProperty('grails.serverURL')}",
         projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:activity.projectId, params:[activityId:activity.activityId])}",
         returnTo: "${returnTo}"
@@ -137,6 +137,7 @@
     <g:render template="/shared/pdfInstructions"/>
 </g:if>
 <asset:javascript src="common-bs4.js"/>
+<asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="forms-manifest.js"/>
 
 <script>
@@ -174,7 +175,9 @@
             var formFeatures = new ecodata.forms.FeatureCollection(reportSite ? reportSite.features : []);
             fcConfig.featureCollection = formFeatures;
 
-            var mapOptions = {};
+            var mapOptions = {
+                readonly: fcConfig.readonly
+            };
             if (fcConfig.useGoogleBaseMap) {
                 mapOptions.baseLayersName = 'Google'; // Default is Open Street Maps
             }

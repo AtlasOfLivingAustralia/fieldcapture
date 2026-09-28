@@ -3,7 +3,6 @@
 //= require sites
 //= require attach-document-no-ui
 //= require reporting
-//= require leaflet-manifest
 //= require blog
 //= require leaflet-heatmap/heatmap.js
 //= require leaflet-heatmap/leaflet-heatmap.js
