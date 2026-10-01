@@ -6,7 +6,7 @@ import au.org.ala.merit.reports.Reef2050PlanActionReportConfig
 import grails.converters.JSON
 import grails.validation.Validateable
 
-import javax.persistence.Transient
+import jakarta.persistence.Transient
 
 /**
  * The Reef2050PlanActionReportSummaryCommand is responsible for returning a List of available report configurations

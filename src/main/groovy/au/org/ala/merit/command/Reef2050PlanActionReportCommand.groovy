@@ -15,7 +15,7 @@ import org.apache.commons.logging.LogFactory
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 
-import javax.persistence.Transient
+import jakarta.persistence.Transient
 import java.text.DecimalFormat
 import java.util.regex.Matcher
 

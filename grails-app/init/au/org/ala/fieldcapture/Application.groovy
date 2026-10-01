@@ -56,8 +56,7 @@ class Application extends GrailsAutoConfiguration {
 
     @Override
     void onShutdown(Map<String, Object> event) {
-        log.info("Shutting down - destroying the cache manager")
-        applicationContext.grailsCacheManager.destroy()
+
     }
 
     @Bean

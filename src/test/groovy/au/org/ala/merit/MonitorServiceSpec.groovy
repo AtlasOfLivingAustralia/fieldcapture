@@ -3,7 +3,7 @@ package au.org.ala.merit
 import grails.testing.services.ServiceUnitTest
 import spock.lang.Specification
 
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse
 
 class MonitorServiceSpec extends Specification implements ServiceUnitTest<MonitorService> {
 

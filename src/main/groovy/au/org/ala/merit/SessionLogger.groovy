@@ -4,8 +4,8 @@ package au.org.ala.merit
 import org.apache.commons.logging.LogFactory
 import org.joda.time.DateTime
 
-import javax.servlet.http.HttpSessionEvent
-import javax.servlet.http.HttpSessionListener
+import jakarta.servlet.http.HttpSessionEvent
+import jakarta.servlet.http.HttpSessionListener
 
 
 /**

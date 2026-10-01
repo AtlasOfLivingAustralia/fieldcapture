@@ -1,13 +1,11 @@
 package au.org.ala.merit
 
-
+import au.org.ala.ecodata.utils.ExcelUtils
 import com.vividsolutions.jts.geom.Geometry
 import com.vividsolutions.jts.geom.GeometryCollection
 import com.vividsolutions.jts.geom.GeometryFactory
 import com.vividsolutions.jts.geom.Point
 import grails.converters.JSON
-import grails.core.GrailsApplication
-import grails.plugins.csv.CSVMapReader
 import groovy.util.logging.Slf4j
 import org.apache.http.HttpStatus
 import org.geotools.geojson.geom.GeometryJSON
@@ -58,7 +56,8 @@ class ImportService {
         try {
 
             def line = 0
-            new CSVMapReader(reader).each { map ->
+            List<Map> rows = ExcelUtils.readCsvToListOfMaps(reader)
+            rows.each { map ->
 
                 line++
 
@@ -326,7 +325,8 @@ class ImportService {
             def projectRows = []
             String currentGrantId
             String currentExternalId
-            new CSVMapReader(reader).eachWithIndex { rowMap, i ->
+            List<Map> rows = readCsvToListOfMaps(reader)
+            rows.eachWithIndex { rowMap, i ->
 
                 currentGrantId = rowMap[GmsMapper.GRANT_ID_COLUMN]
                 currentExternalId = rowMap[GmsMapper.EXTERNAL_ID_COLUMN]

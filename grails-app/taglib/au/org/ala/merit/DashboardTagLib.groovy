@@ -1,7 +1,5 @@
 package au.org.ala.merit
 
-import org.grails.plugins.google.visualization.GoogleVisualization
-
 /**
  * Renders output scores for display on a project or program dashboard.
  */
@@ -249,7 +247,7 @@ class DashboardTagLib {
                 if (attrs.chartOptions) {
                     options.putAll(attrs.chartOptions)
                 }
-                out << gvisualization.pieCoreChart(options)
+                renderVisualization('PieChart', 'corechart', options)
                 break;
             case 'barchart':
 
@@ -267,7 +265,7 @@ class DashboardTagLib {
                 if (attrs.chartOptions) {
                     options.putAll(attrs.chartOptions)
                 }
-                out << gvisualization.barCoreChart(options)
+                renderVisualization('BarChart', 'corechart', options)
                 break;
         }
         if (!attrs.omitTitle) {
@@ -279,5 +277,39 @@ class DashboardTagLib {
     def chartFont() {
 
         return [fontSize:10]
+    }
+
+    /**
+     * Emits the JavaScript to draw a Google Charts visualization, replacing the discontinued
+     * grails-google-visualization plugin's taglib. Relies on the page including the Google
+     * loader (https://www.google.com/jsapi), as the dashboard pages already do.
+     *
+     * @param chartObject the google.visualization object name (e.g. PieChart, BarChart, Table)
+     * @param packageName the Google Charts package to load (e.g. corechart, table)
+     * @param attrs elementId, columns ([[type, label], ...]), data (list of rows) plus any
+     *        chart options which are passed through to chart.draw()
+     */
+    private void renderVisualization(String chartObject, String packageName, Map attrs) {
+        String elementId = attrs.elementId
+        List columns = attrs.columns ?: []
+        List data = attrs.data ?: []
+        Map options = new LinkedHashMap(attrs)
+        ['elementId', 'columns', 'data', 'dynamicLoading'].each { options.remove(it) }
+
+        String name = elementId?.replaceAll(/[^a-zA-Z0-9_]/, '_')
+        StringBuilder js = new StringBuilder()
+        js << "<script type=\"text/javascript\">\n"
+        js << "google.load('visualization', '1', {'packages': ['${packageName}'], 'callback': draw_${name}});\n"
+        js << "function draw_${name}() {\n"
+        js << "    var data_${name} = new google.visualization.DataTable();\n"
+        columns.each { col ->
+            js << "    data_${name}.addColumn('${col[0]}', ${JsonOutput.toJson(col[1]?.toString())});\n"
+        }
+        js << "    data_${name}.addRows(${JsonOutput.toJson(data)});\n"
+        js << "    var chart_${name} = new google.visualization.${chartObject}(document.getElementById(${JsonOutput.toJson(elementId)}));\n"
+        js << "    chart_${name}.draw(data_${name}, ${JsonOutput.toJson(options)});\n"
+        js << "}\n"
+        js << "</script>"
+        out << js.toString()
     }
 }

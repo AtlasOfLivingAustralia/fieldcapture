@@ -1,6 +1,6 @@
 package au.org.ala.merit
 
-
+import au.org.ala.ecodata.utils.ExcelUtils
 import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
 import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
@@ -15,7 +15,6 @@ import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
 import org.grails.plugin.cache.GrailsCacheManager
-import org.grails.plugins.excelimport.ExcelImportService
 import org.joda.time.Period
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.web.multipart.MultipartHttpServletRequest
@@ -44,7 +43,6 @@ class AdminController {
     def roleService
     def userService
     RisksService risksService
-    ExcelImportService excelImportService
     AbnLookupService abnLookupService
 
     def index() {}
@@ -695,7 +693,7 @@ class AdminController {
                     return
                 }
 
-                List data = excelImportService.convertColumnMapConfigManyRows(workbook, config)
+                List data = ExcelUtils.convertColumnMapConfigManyRows(workbook, config)
                 data.each { Map row ->
                     Map project = projectService.get(row.projectId)
                     if (!project) {

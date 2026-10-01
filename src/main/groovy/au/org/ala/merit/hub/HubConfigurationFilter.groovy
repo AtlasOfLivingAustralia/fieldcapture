@@ -2,7 +2,7 @@ package au.org.ala.merit.hub
 
 import au.org.ala.merit.SettingService
 
-import javax.servlet.*
+import jakarta.servlet.*
 
 /**
  * Exposes some thread local configuration based on the URL.

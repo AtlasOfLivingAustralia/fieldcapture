@@ -58,8 +58,6 @@
     Skip to main content
 </a>
 
-<g:set var="introText"><fc:getSettingContent settingType="${SettingPageType.INTRO}"/></g:set>
-<g:set var="userLoggedIn"><fc:userIsLoggedIn/></g:set>
 <g:if test="${fc.announcementContent()}">
     <div id="announcement">
         <fc:announcementContent/>
@@ -171,10 +169,6 @@
         <div class="${containerType}">
             <div class="large-space-before">
                 <button class="btn btn-mini" id="toggleFluid">toggle fixed/fluid width</button>
-                <g:if test="${userLoggedIn && introText}">
-                    <button class="btn btn-mini" type="button" data-bs-toggle="modal"
-                            data-bs-target="#introPopup">display user intro</button>
-                </g:if>
             </div>
         </div>
 

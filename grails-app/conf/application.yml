@@ -31,7 +31,8 @@ spring:
         - '**/*.js'
 management:
   endpoints:
-    enabled-by-default: false
+    access:
+      default: none
 
 grails:
   controllers:

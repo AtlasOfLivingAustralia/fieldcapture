@@ -1,11 +1,12 @@
 package au.org.ala.merit
 
+import au.org.ala.ecodata.utils.CookieUtils
 import groovy.util.logging.Slf4j
 
 @Slf4j
 class ErrorController {
 
-    def settingService, cookieService
+    def settingService
     def response404() {
         loadRecentHub()
         render view:'/404'
@@ -23,7 +24,7 @@ class ErrorController {
     private void loadRecentHub() {
         try {
 
-            def hub = cookieService.getCookie(SettingService.LAST_ACCESSED_HUB)
+            def hub = CookieUtils.getCookie(SettingService.LAST_ACCESSED_HUB)
             settingService.loadHubConfig(hub)
         }
         catch(Throwable t) {

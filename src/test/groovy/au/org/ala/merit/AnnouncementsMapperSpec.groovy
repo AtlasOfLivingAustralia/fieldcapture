@@ -19,8 +19,7 @@ class AnnouncementsMapperSpec extends Specification {
     def response
 
     def setup() {
-        excelImportService = new ExcelImportService()
-        announcementsMapper = new AnnouncementsMapper(excelImportService)
+        announcementsMapper = new AnnouncementsMapper()
         response = new MockHttpServletResponse()
     }
 

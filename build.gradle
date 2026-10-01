@@ -1,15 +1,17 @@
 buildscript {
     repositories {
         mavenLocal()
+        mavenCentral()
         maven { url "https://repo.grails.org/grails/core" }
         maven { url "https://nexus.ala.org.au/content/groups/public/" }
         gradlePluginPortal()
     }
     dependencies {
-        classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
+
         classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:2.0"
-        classpath 'org.grails.plugins:quartz:2.0.13'
-        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:$assetPipelineVersion"
+        //classpath 'org.apache.grails:grails-quartz'
+        classpath "org.apache.grails:grails-gradle-plugins:$grailsVersion"
+        classpath "cloud.wondrify:asset-pipeline-gradle:$assetPipelineVersion"
         classpath 'com.bmuschko:gradle-clover-plugin:3.0.1'
         classpath 'com.github.tomakehurst:wiremock-jre8-standalone:2.28.0'
     }
@@ -32,10 +34,11 @@ apply plugin:"eclipse"
 apply plugin:"idea"
 apply plugin:"war"
 apply plugin: "groovy"
-apply plugin:"org.grails.grails-web"
+apply plugin:"org.apache.grails.gradle.grails-web"
+apply plugin:"org.apache.grails.gradle.grails-gsp"
 apply plugin:"com.github.erdi.webdriver-binaries"
-apply plugin:"asset-pipeline"
-apply plugin:"org.grails.grails-gsp"
+apply plugin:"cloud.wondrify.asset-pipeline"
+
 
 if (Boolean.valueOf(enableClover)) {
     apply from: "${project.projectDir}/gradle/clover.gradle"
@@ -81,35 +84,32 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     implementation "org.springframework.boot:spring-boot-starter-logging"
     implementation "org.springframework.boot:spring-boot-autoconfigure"
-    implementation "org.grails:grails-core"
+    implementation "org.apache.grails:grails-core"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-tomcat"
-    implementation "org.grails:grails-web-boot"
-    implementation "org.grails:grails-logging"
-    implementation "org.grails:grails-plugin-rest"
-    implementation "org.grails:grails-plugin-databinding"
-    implementation "org.grails:grails-plugin-i18n"
-    implementation "org.grails:grails-plugin-services"
-    implementation "org.grails:grails-plugin-url-mappings"
-    implementation "org.grails:grails-plugin-interceptors"
-    implementation "org.grails.plugins:cache"
-    implementation "org.grails.plugins:cache-ehcache:3.0.0"
-    implementation "org.grails.plugins:async"
-    implementation "org.grails.plugins:scaffolding"
-    implementation "org.grails.plugins:events"
-    implementation "org.grails.plugins:gsp"
-    implementation 'dk.glasius:external-config:3.0.0'
+    implementation "org.apache.grails:grails-web-boot"
+    implementation "org.apache.grails:grails-logging"
+    implementation "org.apache.grails:grails-rest-transforms"
+    implementation "org.apache.grails:grails-databinding"
+    implementation "org.apache.grails:grails-services"
+    implementation "org.apache.grails:grails-url-mappings"
+    implementation "org.apache.grails:grails-interceptors"
+    implementation "org.apache.grails:grails-cache"
+    implementation "org.ehcache:ehcache:3.10.8"
+    implementation "org.apache.grails:grails-async"
+    implementation "org.apache.grails:grails-scaffolding"
+    implementation "org.apache.grails:grails-events"
+    implementation "org.apache.grails:grails-gsp"
     implementation "org.grails.plugins:ala-auth:$alaSecurityLibsVersion"
     implementation "org.grails.plugins:ala-ws-security-plugin:$alaSecurityLibsVersion"
     implementation "org.grails.plugins:ala-ws-plugin:$alaSecurityLibsVersion"
     implementation "au.org.ala:userdetails-service-client:$alaSecurityLibsVersion"
     implementation "com.github.ben-manes.caffeine:caffeine:3.1.6"
-    runtimeOnly "org.grails.plugins:ala-bootstrap3:4.0.0"
     implementation 'org.grails.plugins:excel-export:2.1'
-    implementation 'org.grails.plugins:mail:2.0.0'
+    implementation 'org.grails.plugins:grails-mail:5.0.3'
     implementation 'javax.mail:javax.mail-api:1.6.2'
     implementation 'com.sun.mail:javax.mail:1.6.2'
-    implementation 'org.grails.plugins:quartz:2.0.13'
+    //implementation 'org.apache.grails:grails-quartz:2.0.13'
     implementation 'org.quartz-scheduler:quartz:2.2.1'
     implementation "com.openhtmltopdf:openhtmltopdf-core:${openhtmltopdfversion}"
     implementation "com.openhtmltopdf:openhtmltopdf-pdfbox:${openhtmltopdfversion}"
@@ -126,32 +126,31 @@ dependencies {
     implementation "org.apache.httpcomponents:httpmime:4.2.1"
     implementation "org.apache.pdfbox:pdfbox:2.0.4"
     implementation 'org.grails.plugins:excel-export:2.1'
-    implementation 'org.grails.plugins:excel-import:3.0.2'
 
     implementation 'au.com.bytecode:opencsv:2.4'
-    implementation 'org.grails.plugins:csv:1.0.1'
 
-    implementation "org.grails.plugins:grails-google-visualization:2.2.1"
     implementation 'javax.media:jai-core:1.1.3'
 
     implementation ('net.sourceforge.nekohtml:nekohtml:1.9.22'){
         exclude module: "xercesImpl"
     }
-    implementation 'org.grails.plugins:grails-cookie:2.0.3'
 
     implementation 'org.apache.poi:ooxml-schemas:1.4'
     implementation 'org.apache.poi:poi:4.1.2'
     implementation 'org.apache.poi:poi-ooxml:4.1.2'
     implementation 'org.apache.poi:poi-ooxml-schemas:4.1.2'
-    implementation 'org.codehaus.groovy:groovy-dateutil:2.5.0'
+    implementation('org.apache.groovy:groovy-dateutil:4.0.24') {
+        exclude module: "groovy"
+    }
 
-    implementation 'au.org.ala:ala-cas-client:2.5'
-    implementation "org.grails.plugins:converters"
-    implementation "org.grails:grails-plugin-codecs"
-    implementation "commons-io:commons-io:2.6"
-    implementation "com.bertramlabs.plugins:asset-pipeline-grails:$assetPipelineVersion"
+    implementation "org.apache.grails:grails-converters"
+    implementation "org.apache.grails:grails-codecs"
+    implementation 'commons-io:commons-io:2.20.0'
+    implementation "cloud.wondrify:asset-pipeline-core:$assetPipelineVersion"
+    implementation "cloud.wondrify:asset-pipeline-grails:$assetPipelineVersion"
+
     implementation "org.commonmark:commonmark:0.24.0"
-    implementation "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20240325.1"
+    implementation 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20260101.1'
 
     // Used to get a token that can be used to access the BDR API hosted in Azure
     implementation platform('com.azure:azure-sdk-bom:1.2.28')
@@ -164,23 +163,21 @@ dependencies {
     implementation(platform("software.amazon.awssdk:bom:2.27.21"))
     implementation 'software.amazon.awssdk:cognitoidentity'
 
-    compileOnly "io.micronaut:micronaut-inject-groovy"
-    console "org.grails:grails-console"
-    profile "org.grails.profiles:web"
+    console "org.apache.grails:grails-console"
+    profile "org.apache.grails.profiles:web"
     runtimeOnly "org.glassfish.web:el-impl:2.1.2-b03"
     runtimeOnly "com.h2database:h2"
     runtimeOnly "javax.xml.bind:jaxb-api:2.3.1"
 
     runtimeOnly "net.java.dev.jna:jna:4.5.1"
     runtimeOnly("org.springframework.boot:spring-boot-properties-migrator")
-    testImplementation("io.micronaut:micronaut-inject-groovy")
     testImplementation "com.codeborne:phantomjsdriver:1.3.0"
     testImplementation "com.icegreen:greenmail:1.5.14"
-    testImplementation "org.grails:grails-gorm-testing-support"
-    testImplementation ("org.grails.plugins:geb") {
-        exclude module: "grails-core"
+    testImplementation "org.apache.grails:grails-testing-support-datamapping"
+    testImplementation ("org.apache.grails:grails-geb") {
+        exclude module:'grails-core'
     }
-    testImplementation "org.grails:grails-web-testing-support"
+    testImplementation "org.apache.grails:grails-testing-support-web"
     testImplementation(platform('org.junit:junit-bom:5.9.1'))
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
     testImplementation "org.pac4j:pac4j-jwt:5.4.3"
@@ -196,12 +193,10 @@ dependencies {
     testImplementation "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
     testRuntimeOnly "net.sourceforge.htmlunit:htmlunit:2.18"
 
-    assets "com.bertramlabs.plugins:less-asset-pipeline:$assetPipelineVersion"
-
     providedCompile "io.methvin:directory-watcher:0.4.0"
 
     if (!Boolean.valueOf(inplace)) {
-        implementation "org.grails.plugins:ecodata-client-plugin:9.2-grants-SNAPSHOT"
+        implementation "org.grails.plugins:ecodata-client-plugin:10.0-SNAPSHOT"
     }
 }
 
@@ -326,7 +321,6 @@ integrationTest {
 bootJar {
     duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     enabled = true
-    classifier = 'exec'
     launchScript()
 }
 
@@ -336,7 +330,6 @@ bootWar {
 
 if (Boolean.valueOf(inplace)) {
     grails {
-        exploded = true
         plugins {
             implementation(project(':ecodata-client-plugin'))
         }

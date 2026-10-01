@@ -445,7 +445,7 @@ class OrganisationController {
 
         def announcements = findOrganisationAnnouncements(organisation)
 
-        new AnnouncementsMapper(excelImportService).announcementsToExcel(response, announcements)
+        new AnnouncementsMapper().announcementsToExcel(response, announcements)
     }
 
     @PreAuthorise(accessLevel = 'admin')
@@ -453,7 +453,7 @@ class OrganisationController {
         if (request.respondsTo('getFile')) {
             def file = request.getFile('announcementsTemplate')
             if (file) {
-                def announcements = new AnnouncementsMapper(excelImportService).excelToAnnouncements(file.inputStream)
+                def announcements = new AnnouncementsMapper().excelToAnnouncements(file.inputStream)
 
                 respond announcements
                 return

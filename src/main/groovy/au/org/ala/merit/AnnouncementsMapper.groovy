@@ -1,19 +1,17 @@
 package au.org.ala.merit
 
-import au.org.ala.merit.DateUtils
+import au.org.ala.ecodata.utils.ExcelUtils
+import jakarta.servlet.http.HttpServletResponse
 import org.apache.poi.hssf.util.HSSFColor
 import org.apache.poi.ss.usermodel.*
 import org.apache.poi.ss.util.CellReference
 import org.apache.poi.xssf.usermodel.XSSFDataFormat
-import org.grails.plugins.excelimport.ExcelImportService
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.LocalDate
 import pl.touk.excel.export.WebXlsxExporter
 import pl.touk.excel.export.XlsxExporter
 import pl.touk.excel.export.getters.PropertyGetter
-
-import javax.servlet.http.HttpServletResponse
 
 /**
  * Responsible for mapping project announcements to Excel format and back.
@@ -79,10 +77,8 @@ class AnnouncementsMapper {
 
         ]
 
-    def excelImportService
 
-    public AnnouncementsMapper(ExcelImportService excelImportService) {
-        this.excelImportService = excelImportService
+    public AnnouncementsMapper() {
     }
 
     public void announcementsToExcel(HttpServletResponse response, announcements) {
@@ -183,7 +179,7 @@ class AnnouncementsMapper {
         ]
 
         Workbook workbook = WorkbookFactory.create(excelIn)
-        def announcements = excelImportService.columns(workbook, config)
+        def announcements = ExcelUtils.columns(workbook, config)
         announcements.each { announcement ->
             announcement.eventDate = parseDisplayDate(announcement.eventDate)
             announcement.grantAnnouncementDate = parseDisplayDate(announcement.grantAnnouncementDate)

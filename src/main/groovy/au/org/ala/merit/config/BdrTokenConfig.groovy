@@ -34,7 +34,7 @@ class BdrTokenConfig {
     @Value('${bdr.allowUnsignedIdTokens:false}')
     boolean allowUnsignedIdTokens
 
-    @Bean
+    @Bean(autowireCandidate = false)
     OidcConfiguration bdrOidcConfiguration(@Qualifier("oidcResourceRetriever") ResourceRetriever jwtResourceRetriever) {
         OidcConfiguration config = new OidcConfiguration()
         config.setClientId(clientId)
@@ -47,14 +47,14 @@ class BdrTokenConfig {
         return config
     }
 
-    @Bean
+    @Bean(autowireCandidate = false)
     TokenClient bdrTokenClient(
             @Autowired(required = false) OidcConfiguration bdrOidcConfiguration
     ) {
         new TokenClient(bdrOidcConfiguration)
     }
 
-    @Bean
+    @Bean(autowireCandidate = false)
     TokenService oidcBdrTokenService(
             @Autowired(required = false) OidcConfiguration bdrOidcConfiguration,
             @Autowired(required = false) SessionStoreFactory sessionStoreFactory,

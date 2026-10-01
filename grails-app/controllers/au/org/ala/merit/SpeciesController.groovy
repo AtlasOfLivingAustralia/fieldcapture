@@ -2,7 +2,7 @@ package au.org.ala.merit
 
 import grails.converters.JSON
 
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse
 
 
 class SpeciesController {
