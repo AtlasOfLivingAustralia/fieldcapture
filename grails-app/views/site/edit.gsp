@@ -80,26 +80,7 @@
         </div>
 
     </div>
-    <g:if env="development">
-    <div class="${containerType}">
-        <div class="expandable-debug">
-            <hr />
-            <h3>Debug</h3>
-            <div>
-                <h4>KO model</h4>
-                <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
-                <h4>Activities</h4>
-                <pre>${site?.activities?.encodeAsHTML()}</pre>
-                <h4>Site</h4>
-                <pre>${site?.encodeAsHTML()}</pre>
-                <h4>Projects</h4>
-                <pre>${projects?.encodeAsHTML()}</pre>
-                <h4>Features</h4>
-                <pre>${mapFeatures}</pre>
-            </div>
-        </div>
-    </div>
-    </g:if>
+
 
 <asset:script>
     $(function(){
