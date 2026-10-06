@@ -693,7 +693,7 @@ class AdminController {
                     return
                 }
 
-                List data = ExcelUtils.convertColumnMapConfigManyRows(workbook, config)
+                List data = ExcelUtils.convertColumnMapManyRows(workbook, config)
                 data.each { Map row ->
                     Map project = projectService.get(row.projectId)
                     if (!project) {

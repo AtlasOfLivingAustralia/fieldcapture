@@ -325,7 +325,7 @@ class ImportService {
             def projectRows = []
             String currentGrantId
             String currentExternalId
-            List<Map> rows = readCsvToListOfMaps(reader)
+            List<Map> rows = ExcelUtils.readCsvToListOfMaps(reader)
             rows.eachWithIndex { rowMap, i ->
 
                 currentGrantId = rowMap[GmsMapper.GRANT_ID_COLUMN]

@@ -24,7 +24,7 @@ class ErrorController {
     private void loadRecentHub() {
         try {
 
-            def hub = CookieUtils.getCookie(SettingService.LAST_ACCESSED_HUB)
+            def hub = CookieUtils.getCookieValue(SettingService.LAST_ACCESSED_HUB)
             settingService.loadHubConfig(hub)
         }
         catch(Throwable t) {

@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.ecodata.utils.ExcelUtils
 import au.org.ala.merit.config.ProgramConfig
 import grails.converters.JSON
 import grails.core.GrailsApplication
@@ -10,7 +11,7 @@ import org.apache.poi.ss.util.CellReference
 
 class ActivityController {
 
-    def activityService, siteService, projectService, metadataService, userService, excelImportService, webService, speciesService, documentService, reportService, programService, projectConfigurationService
+    def activityService, siteService, projectService, metadataService, userService, webService, speciesService, documentService, reportService, programService, projectConfigurationService
     GrailsApplication grailsApplication
 
     static ignore = ['action','controller','id']
@@ -471,7 +472,7 @@ class ActivityController {
                         columnMap:columnMap
                 ]
                 Workbook workbook = WorkbookFactory.create(file.inputStream)
-                def data = excelImportService.convertColumnMapConfigManyRows(workbook, config)
+                def data = ExcelUtils.convertColumnMapManyRows(workbook, config)
                 def result
                 if (!data) {
                     response.status = 400
@@ -527,7 +528,7 @@ class ActivityController {
                 ]
                 Workbook workbook = WorkbookFactory.create(file.inputStream)
 
-                def data = excelImportService.convertColumnMapConfigManyRows(workbook, config)
+                def data = ExcelUtils.convertColumnMapManyRows(workbook, config)
                 data.each { row ->
                     for (entry in row) {
                         if (entry.value instanceof org.joda.time.LocalDate) {

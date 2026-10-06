@@ -3,7 +3,6 @@ package au.org.ala.merit
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
-import org.grails.plugins.excelimport.ExcelImportService
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
 import org.springframework.mock.web.MockHttpServletResponse

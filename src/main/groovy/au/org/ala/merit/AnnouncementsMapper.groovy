@@ -5,13 +5,11 @@ import jakarta.servlet.http.HttpServletResponse
 import org.apache.poi.hssf.util.HSSFColor
 import org.apache.poi.ss.usermodel.*
 import org.apache.poi.ss.util.CellReference
+import org.apache.poi.xssf.streaming.SXSSFWorkbook
 import org.apache.poi.xssf.usermodel.XSSFDataFormat
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.LocalDate
-import pl.touk.excel.export.WebXlsxExporter
-import pl.touk.excel.export.XlsxExporter
-import pl.touk.excel.export.getters.PropertyGetter
 
 /**
  * Responsible for mapping project announcements to Excel format and back.
@@ -25,11 +23,11 @@ class AnnouncementsMapper {
      * A formatter for use with the Grails Excel Export Plugin to convert ISO formatted dates
      * to Java Dates so the cell style can be set correctly
      */
-    static class DisplayDateFormatter extends PropertyGetter<String, String> {
+    static class DisplayDateFormatter {
+        private String propertyName
         DisplayDateFormatter(String propertyName) {
-            super(propertyName)
+            this.propertyName = propertyName
         }
-        @Override
         protected String format(String isoDate) {
             if (!isoDate) {
                 return ''
@@ -50,6 +48,10 @@ class AnnouncementsMapper {
                 return ''
             }
             def date
+            if (displayDate instanceof Date) {
+                // POI returns dates at midnight in the default timezone
+                displayDate = LocalDate.fromDateFields(displayDate)
+            }
             if (displayDate instanceof LocalDate) {
                 date = displayDate.toDateTimeAtStartOfDay(DateTimeZone.UTC)
             }
@@ -94,46 +96,73 @@ class AnnouncementsMapper {
             }
         }
 
-        def fileName = 'announcements_'+DateUtils.displayFormat(new DateTime())+XlsxExporter.filenameSuffix
+        def fileName = 'announcements_'+DateUtils.displayFormat(new DateTime())+".xlsx"
 
+        // Inlined Apache POI replacement for the discontinued excel-export plugin's WebXlsxExporter.
+        response.setHeader('Content-Disposition', 'attachment; filename="'+fileName+'"')
+        response.contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
-        def exporter = new WebXlsxExporter()
+        SXSSFWorkbook workbook = new SXSSFWorkbook()
+        try {
+            Sheet sheet = workbook.createSheet(DEFAULT_SHEET)
 
-        exporter.with {
+            // Write the header row
+            Row headerRow = sheet.createRow(0)
             CellStyle headerStyle = headerStyle(workbook)
-            CellStyle dateStyle = dateStyle(workbook)
-
-            setDateCellFormat('dd-mm-yyyy')
-            setWorksheetName(DEFAULT_SHEET)
-            setResponseHeaders(response, fileName)
-            fillHeader(headers)
+            headers.eachWithIndex{ header, index ->
+                Cell cell = headerRow.createCell(index)
+                cell.setCellValue(header)
+            }
             styleRow(sheet, 0, headerStyle)
+
+            CellStyle dateStyle = dateStyle(workbook)
             sheet.setDefaultColumnStyle(3, dateStyle)
             sheet.setDefaultColumnStyle(6, dateStyle)
-            add(announcements, properties)
+            announcements.eachWithIndex { announcement, rowIndex ->
+                Row row = sheet.createRow(rowIndex + 1)
+                properties.eachWithIndex { property, colIndex ->
+                    Cell cell = row.createCell(colIndex)
+                    def value
+                    if (property instanceof DisplayDateFormatter) {
+                        value = property.format(announcement[property.propertyName])
+                    }
+                    else {
+                        value = announcement[property]
+                    }
+                    if (value instanceof Number) {
+                        cell.setCellValue(value.doubleValue())
+                    }
+                    else {
+                        cell.setCellValue(value?.toString() ?: '')
+                    }
+                }
+            }
+
             styleColumn(sheet, 3, dateStyle)
             styleColumn(sheet, 6, dateStyle)
 
-            sizeColumns(workbook)
             workbook.write(response.outputStream)
+        }
+        finally {
+            workbook.close()
         }
 
         response.outputStream.flush()
     }
 
-    def styleRow(Sheet sheet, int row, CellStyle style) {
+    def static styleRow(Sheet sheet, int row, CellStyle style) {
         sheet.getRow(row).cellIterator().toList().each {
             it.setCellStyle(style)
         }
     }
 
-    def styleColumn(Sheet sheet, int column, CellStyle style) {
+    def static styleColumn(Sheet sheet, int column, CellStyle style) {
         for (int i=1; i<sheet.lastRowNum; i++) {
             sheet.getRow(i).getCell(column).setCellStyle(style)
         }
     }
 
-    private CellStyle headerStyle(Workbook workbook) {
+    private static CellStyle headerStyle(Workbook workbook) {
         CellStyle headerStyle = workbook.createCellStyle()
         headerStyle.setFillBackgroundColor(IndexedColors.BLACK.getIndex())
         headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND)
@@ -144,25 +173,12 @@ class AnnouncementsMapper {
         headerStyle.setFont(font)
         return headerStyle
     }
-    private CellStyle dateStyle(Workbook workbook) {
+    private static CellStyle dateStyle(Workbook workbook) {
         CellStyle dateCellStyle = workbook.createCellStyle()
         XSSFDataFormat dateFormat = workbook.createDataFormat()
         dateCellStyle.dataFormat = dateFormat.getFormat('dd-mm-yyyy')
 
         return dateCellStyle
-    }
-
-    def sizeColumns(workbook) {
-        for (Sheet sheet:workbook) {
-            // For table upload templates, the validation sheet may have no rows if nothing needs validation.
-            def row = sheet.getRow(0)
-            if (row) {
-                int columns = row.getLastCellNum()
-                for (int col = 0; col < columns; col++) {
-                    sheet.autoSizeColumn(col);
-                }
-            }
-        }
     }
 
 
@@ -179,7 +195,7 @@ class AnnouncementsMapper {
         ]
 
         Workbook workbook = WorkbookFactory.create(excelIn)
-        def announcements = ExcelUtils.columns(workbook, config)
+        def announcements = ExcelUtils.convertColumnMapManyRows(workbook, config)
         announcements.each { announcement ->
             announcement.eventDate = parseDisplayDate(announcement.eventDate)
             announcement.grantAnnouncementDate = parseDisplayDate(announcement.grantAnnouncementDate)
