@@ -23,14 +23,16 @@ class UrlMappings {
 
         }
 
-        "/$hub/$controller/$id?"(parseRequest:true) {
+        "/$hub/$controller/$id?" {
+            parseRequest = true
             constraints {
                 hub validator: {val, obj -> isHubValid(val)}
             }
             action = [GET: "get", POST: "upload", PUT: "upload", DELETE: "delete"]
         }
 
-        "/$controller/$id?"(parseRequest:true) {
+        "/$controller/$id?" {
+            parseRequest = true
             action = [GET: "get", POST: "upload", PUT: "upload", DELETE: "delete"]
         }
 
