@@ -12,6 +12,7 @@ import grails.util.Environment
 import grails.util.Metadata
 import groovy.util.logging.Slf4j
 import net.sf.json.JSONNull
+import org.apache.grails.core.plugins.PluginDiscovery
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
@@ -60,7 +61,8 @@ class Application extends GrailsAutoConfiguration {
     }
 
     @Bean
-    GrailsApplicationPostProcessor grailsApplicationPostProcessor() {
+    @Override
+    GrailsApplicationPostProcessor grailsApplicationPostProcessor(PluginDiscovery pluginDiscovery) {
 
         // We are overriding the GrailsApplicationPostProcessor because we need a lifecycle hook after
         // the configuration has been read, but before the plugin lifecycle bean initialisation has started.
@@ -68,7 +70,7 @@ class Application extends GrailsAutoConfiguration {
         // cache directory store can only be configured via an environment variable.
         // To keep the configuration in one place, we are reading the config, and setting the system property
         // so it can be read during cache initialisation.
-        return new GrailsApplicationPostProcessor( this, applicationContext, classes() as Class[]) {
+        return new GrailsApplicationPostProcessor( this, applicationContext, pluginDiscovery, classes() as Class[]) {
             @Override
             protected void customizeGrailsApplication(GrailsApplication grailsApplication) {
                 String applicationName =  Metadata.current.getApplicationName()
