@@ -40,6 +40,7 @@ class ProjectIndex extends ReloadablePage {
     }
 
     void openActivitiesTab() {
+        waitFor{activitiesTab.displayed}
         activitiesTab.click()
         waitFor { plansAndReports.displayed }
     }
