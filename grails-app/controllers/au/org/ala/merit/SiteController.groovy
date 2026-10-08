@@ -61,7 +61,7 @@ class SiteController {
             // Filter visible activities to those the user has access to.
             List activities = site.activities?.findAll{activity -> userProjects.find{it.projectId == activity.projectId}}
             if (activities) {
-                siteService.addPhotoPointPhotosForSites([site], activities, selectedProject?[selectedProject]:userProjects)
+                siteService.addPhotoPointPhotosForSites([site], activities, selectedProject ? [selectedProject] : userProjects)
             }
 
             Map tabs = [

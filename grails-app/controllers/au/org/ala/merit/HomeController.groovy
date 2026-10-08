@@ -5,7 +5,7 @@ import grails.converters.JSON
 import grails.core.GrailsApplication
 import org.apache.commons.lang.StringUtils
 
-import javax.servlet.http.Cookie
+import jakarta.servlet.http.Cookie
 import java.text.SimpleDateFormat
 
 class HomeController {

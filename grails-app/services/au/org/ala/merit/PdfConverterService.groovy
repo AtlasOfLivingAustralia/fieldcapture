@@ -4,7 +4,7 @@ import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import org.jsoup.Jsoup
 import org.jsoup.helper.W3CDom
 
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 
 
 class PdfConverterService {

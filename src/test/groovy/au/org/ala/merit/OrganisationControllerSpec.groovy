@@ -5,7 +5,6 @@ import au.org.ala.merit.reports.ReportLifecycleListener
 import au.org.ala.merit.util.ProjectGroupingHelper
 import grails.converters.JSON
 import org.apache.http.HttpStatus
-import org.grails.plugins.excelimport.ExcelImportService
 import org.grails.web.converters.marshaller.json.CollectionMarshaller
 import org.grails.web.converters.marshaller.json.MapMarshaller
 import org.springframework.mock.web.MockMultipartFile
@@ -430,7 +429,6 @@ class OrganisationControllerSpec extends Specification implements ControllerUnit
         setup:
         def testOrg = testOrganisation(true)
         organisationService.get(_,_) >> testOrg
-        controller.setExcelImportService(new ExcelImportService())
         setupOrganisationAdmin()
         request.addFile(new MockMultipartFile('announcementsTemplate', getClass().getResourceAsStream('/announcements.xlsx')))
 

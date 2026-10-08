@@ -6,7 +6,7 @@ import au.org.ala.merit.ProjectService
 import grails.validation.Validateable
 import org.apache.http.HttpStatus
 
-import javax.persistence.Transient
+import jakarta.persistence.Transient
 
 /**
  * The MeriPlanReportCommand assembles the necessary data to display the MERI plan for a project.

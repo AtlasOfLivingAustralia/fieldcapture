@@ -30,9 +30,9 @@ jacocoTestReport {
     }
 
     reports {
-        xml.enabled false
-        csv.enabled false
-        html.destination file("${buildDir}/reports/jacocoHtml")
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('reports/jacocoHtml')
     }
 }
 

@@ -4,9 +4,6 @@ import grails.converters.JSON
 import grails.web.mapping.LinkGenerator
 import org.springframework.context.MessageSource
 
-import javax.xml.bind.DatatypeConverter
-import java.text.SimpleDateFormat
-
 class CommonService {
 
     LinkGenerator grailsLinkGenerator
@@ -20,13 +17,6 @@ class CommonService {
             params += (i?'&':'') + k + '=' + vL.collect { URLEncoder.encode(String.valueOf(it), "UTF-8") }.join("&${k}=")
         }
         params
-    }
-
-    def simpleDateLocalTime(String dateStr) {
-        if (!dateStr) { return '' }
-        def cal = DatatypeConverter.parseDateTime(dateStr)
-        def date = cal.getTime()
-        new SimpleDateFormat("dd/MM/yy").format(date)
     }
 
     /**

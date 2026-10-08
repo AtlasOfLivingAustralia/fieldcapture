@@ -2,14 +2,13 @@ package au.org.ala.merit
 
 import au.org.ala.merit.config.ProgramConfig
 import grails.converters.JSON
+import grails.testing.web.controllers.ControllerUnitTest
 import org.apache.http.HttpStatus
-import org.grails.plugins.excelimport.ExcelImportService
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import org.springframework.mock.web.MockMultipartFile
 import spock.lang.Specification
-import grails.testing.web.controllers.ControllerUnitTest
 
 /**
  * Tests for the ActivityController
@@ -23,7 +22,6 @@ class ActivityControllerSpec extends Specification implements ControllerUnitTest
     def metadataService = Mock(MetadataService)
     def reportService = Mock(ReportService)
     def siteService = Mock(SiteService)
-    def excelImportService = Mock(ExcelImportService)
     def speciesService = Mock(SpeciesService)
     def projectConfigurationService = Mock(ProjectConfigurationService)
 
@@ -35,7 +33,6 @@ class ActivityControllerSpec extends Specification implements ControllerUnitTest
         controller.metadataService = metadataService
         controller.reportService = reportService
         controller.siteService = siteService
-        controller.excelImportService = excelImportService
         controller.speciesService = speciesService
         controller.projectConfigurationService = projectConfigurationService
 
@@ -534,7 +531,6 @@ class ActivityControllerSpec extends Specification implements ControllerUnitTest
 
     def "Successfully able to import Flora species with a correct sheet name in the spreadsheet"() {
         setup:
-        controller.setExcelImportService(new ExcelImportService())
         request.addFile(new MockMultipartFile('data', getClass().getResourceAsStream('/floraSurveyTest.xlsx')))
 
         params.type = 'RLP - Flora survey'
@@ -562,7 +558,6 @@ class ActivityControllerSpec extends Specification implements ControllerUnitTest
 
     def "Not able to import Flora species with incorrect sheet name in the spreadsheet"() {
         setup:
-        controller.setExcelImportService(new ExcelImportService())
         request.addFile(new MockMultipartFile('data', getClass().getResourceAsStream('/floraSurveyTest.xlsx')))
 
         params.type = 'RLP  Flora survey'
@@ -593,7 +588,6 @@ class ActivityControllerSpec extends Specification implements ControllerUnitTest
         def projectId = "222"
         def programId = "333"
         def project = [projectId:projectId, associatedProgram:'Programme 1', associatedSubProgram:'Sub-Programme 1', programId:programId]
-        def model = model.project
         ProgramConfig programConfig = new ProgramConfig(projectReports:[[activityType:'type', adjustmentActivityType:'adjustment']])
 
         when:

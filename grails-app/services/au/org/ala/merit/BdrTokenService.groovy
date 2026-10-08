@@ -15,7 +15,7 @@ import software.amazon.awssdk.services.cognitoidentity.model.GetIdResponse
 import software.amazon.awssdk.services.cognitoidentity.model.GetOpenIdTokenRequest
 import software.amazon.awssdk.services.cognitoidentity.model.GetOpenIdTokenResponse
 
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 
 /**
  * The BdrTokenService is responsible for obtaining a bearer token we can present to the BDR API.
