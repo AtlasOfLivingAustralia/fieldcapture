@@ -27,6 +27,10 @@ enum SettingPageType {
     FOOTER ("footer","Footer","fielddata.footer.text"),
     ANNOUNCEMENT ("announcement","Announcement","fielddata.announcement.text"),
     HELP ("help","Help","fielddata.help.text"),
+    HELP_ADMIN ("help_admin","MERIT Site Admin Help","fielddata.help.text."+ RoleService.HUB_ADMIN_ROLE),
+    HELP_SUPPORT_OFFICER ("help_support_officer","MERIT Support Officer Help","fielddata.help.text."+ RoleService.HUB_SUPPORT_OFFICER_ROLE),
+    HELP_OFFICER ("help_officer","MERIT Officer Help","fielddata.help.text."+ RoleService.HUB_OFFICER_ROLE),
+    HELP_DOCUMENTS("help_documents","MERIT Help Documents","fielddata.help.documents"),
     NEWS ("news","News","fielddata.news.text"),
     CONTACTS ("contacts","Contacts","fielddata.contacts.text"),
     INTRO ("intro","User Introduction","fielddata.introduction.text"),
@@ -88,6 +92,18 @@ enum SettingPageType {
     RLP_CORE_SERVICES_REPORT_RETURNED_EMAIL_BODY('rlpCSReportReturnedEmailBody', 'RLP Core Services Report returned email body text', 'fielddata.rlp.cs_report.returned.emailBody'),
     REPORT_ADJUSTED_EMAIL_SUBJECT_LINE('reportAdjustedEmailSubject', 'Report has been adjusted email subject line text', 'fielddata.report.adjusted.emailSubject'),
     REPORT_ADJUSTED_EMAIL_BODY('reportAdjustedEmailBody', 'Report has been adjusted email body text', 'fielddata.report.adjusted.emailBody'),
+    PROJECT_REPORT_OVERDUE_EMAIL_SUBJECT_LINE('reportOverdueEmailSubject', 'Report is overdue email subject line text', 'fielddata.report.overdue.emailSubject'),
+    PROJECT_REPORT_OVERDUE_EMAIL_BODY('reportOverdueEmailBody', 'Report is overdue email body text', 'fielddata.report.overdue.emailBody'),
+    PROJECT_REPORT_DUE_TODAY_EMAIL_SUBJECT_LINE('reportDueTodayEmailSubject', 'Report is due today email subject line text', 'fielddata.report.dueToday.emailSubject'),
+    PROJECT_REPORT_DUE_TODAY_EMAIL_BODY('reportDueTodayEmailBody', 'Report is due today email body text', 'fielddata.report.dueToday.emailBody'),
+    PROJECT_REPORT_DUE_SOON_EMAIL_SUBJECT_LINE('reportDueSoonEmailSubject', 'Report is due soon email subject line text', 'fielddata.report.dueSoon.emailSubject'),
+    PROJECT_REPORT_DUE_SOON_EMAIL_BODY('reportDueSoonEmailBody', 'Report is due soon email body text', 'fielddata.report.dueSoon.emailBody'),
+    ORGANISATION_REPORT_OVERDUE_EMAIL_SUBJECT('organisationReportOverdueEmailSubject', 'Organisation Report is overdue email subject line text', 'fielddata.organisation_report.overdue.emailSubject'),
+    ORGANISATION_REPORT_OVERDUE_EMAIL_BODY('organisationReportOverdueEmailBody', 'Organisation Report is overdue email body text', 'fielddata.organisation_report.overdue.emailBody'),
+    ORGANISATION_REPORT_DUE_TODAY_EMAIL_SUBJECT('organisationReportDueTodayEmailSubject', 'Organisation Report is due today email subject line text', 'fielddata.organisation_report.dueToday.emailSubject'),
+    ORGANISATION_REPORT_DUE_TODAY_EMAIL_BODY('organisationReportDueTodayEmailBody', 'Organisation Report is due today email body text', 'fielddata.organisation_report.dueToday.emailBody'),
+    ORGANISATION_REPORT_DUE_SOON_EMAIL_SUBJECT('organisationReportDueSoonEmailSubject', 'Organisation Report is due soon email subject line text', 'fielddata.organisation_report.dueSoon.emailSubject'),
+    ORGANISATION_REPORT_DUE_SOON_EMAIL_BODY('organisationReportDueSoonEmailBody', 'Organisation Report is due soon email body text', 'fielddata.organisation_report.dueSoon.emailBody'),
     REPORT_ADJUSTMENT_INSTRUCTIONS('reportAdjustmentInstructions', 'Instructions for pre-configuring the adjustment report', 'fielddata.report.adjustment.instructions'),
     RISKS_AND_THREATS_EMAIL_SUBJECT('risksAndThreatsSubject', 'Subject line of the email notifying changes to risks and threats', 'fielddata.risk_changes.emailSubject'),
     RISKS_AND_THREATS_EMAIL_BODY('risksAndThreatsBody', 'Body text of the email notifying changes to risks and threats', 'fielddata.risk_changes.emailBody'),
@@ -138,5 +154,16 @@ enum SettingPageType {
                 return s
             }
         }
+    }
+
+    /**
+     * If there is a defined type with the supplied suffix, return that type. Otherwise return the parent type.
+     * MERIT help pages have defined types for role suffixes, but help document content pages do not as they
+     * are dynamically created by users tagging help documents.
+     */
+    static SettingPageType getForSuffix(SettingPageType parent, String suffix) {
+        String key = parent.key + '.' + suffix
+        SettingPageType result = getForKey(key) ?: parent
+        result
     }
 }

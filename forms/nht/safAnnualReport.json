@@ -231,19 +231,8 @@
                 "dataType": "list",
                 "columns": [
                   {
-                    "dataType": "stringList",
-                    "name": "communicationMaterialType",
-                    "constraints": [
-                      "Advertising",
-                      "Extension materials",
-                      "Flyers and brochures",
-                      "Media release",
-                      "Newsletters",
-                      "Newspaper articles",
-                      "Publishing reports",
-                      "Social media",
-                      "Other"
-                    ]
+                    "dataType": "text",
+                    "name": "communicationMaterialType"
                   },
                   {
                     "dataType": "text",
@@ -259,7 +248,8 @@
                   },
                   {
                     "dataType": "text",
-                    "name": "link"
+                    "name": "link",
+                    "validate": "url"
                   }
                 ]
               },
@@ -664,7 +654,7 @@
                 "columns": [
                   {
                     "source": "communicationMaterialType",
-                    "type": "selectOne",
+                    "type": "text",
                     "width": "15%",
                     "title": "Type of Communications Material",
                     "readonly": true
@@ -695,7 +685,7 @@
                     "source": "link",
                     "type": "text",
                     "width": "20%",
-                    "title": "URL/link",
+                    "title": "URL/link<br>(Please copy and paste the URL/link from your browser)",
                     "readonly": true
                   }
                 ]

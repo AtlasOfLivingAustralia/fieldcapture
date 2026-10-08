@@ -93,6 +93,18 @@ class ReportService {
         log.info("name: " + existingReport.name + " - " + report.name)
         log.info("fromDate: " + existingReport.fromDate + " - " + report.fromDate)
         log.info("toDate: " + existingReport.toDate + " - " + report.toDate)
+        log.info("dueDate: " + existingReport.dueDate + " - " + report.dueDate)
+        // Don't change any due dates that have been overridden by a grant manager
+        if (report.dueDate == null && existingReport.dueDate) {
+            report.dueDate = existingReport.dueDate
+        }
+        // If the due date has been changed, then reset the email reminder flags so they
+        // can be resent as necessary
+        if (report.dueDate && existingReport.dueDate && existingReport.dueDate != report.dueDate) {
+            report.dueTodayEmailSentDate = null
+            report.dueSoonEmailSentDate = null
+            report.overDueEmailSentDate = null
+        }
         if (excludesNotApproved(existingReport)) {
 
             boolean approved = isApproved(existingReport)
@@ -151,9 +163,9 @@ class ReportService {
      * the targets can be aligned to reports if required.
      * (Previously MERIT only supported targets per financial year)
      */
-    List<Map> generateTargetPeriods(ReportConfig reportConfig, ReportOwner reportOwner, String formatString = null) {
+    List<Map> generateTargetPeriods(ReportConfig reportConfig, ReportOwner reportOwner, String formatString = null, int startSequence = 0, DateTime latestApprovedReportEndDate = null) {
         List<Map> reports = new ReportGenerator().generateReports(
-                reportConfig, reportOwner, 0, null)
+                reportConfig, reportOwner, startSequence, latestApprovedReportEndDate)
         Closure fromDateFormatter = {
             formatString ? DateUtils.format(DateUtils.parse(it), formatString, DateTimeZone.default) : it
         }
@@ -163,12 +175,23 @@ class ReportService {
             formatString ? DateUtils.format(toDate, formatString, DateTimeZone.default) : it
         }
 
-        reports.collect{[label:fromDateFormatter(it.fromDate) +' - '+toDateFormatter(it.toDate), value:it.toDate]}
+        reports.collect {
+            String period = it.name
+            if (formatString || !reportConfig.reportNameFormat) {
+                period = "${fromDateFormatter(it.fromDate)} - ${toDateFormatter(it.toDate)}"
+            }
+            [
+                    period: period,
+                    periodStart: it.fromDate,
+                    periodEnd: it.toDate
+            ]
+        }
     }
 
     boolean needsRegeneration(Map report1, Map report2) {
         return report1.fromDate != report2.fromDate ||
                report1.toDate != report2.toDate ||
+               report1.dueDate != report2.dueDate ||
                report1.name != report2.name ||
                report1.description != report2.description ||
                report1.type != report2.type ||
@@ -499,6 +522,28 @@ class ReportService {
 
     def update(report) {
         webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl')+"report/"+report.reportId, report)
+    }
+
+    /**
+     * Updates the due date of a report.  Due dates changed in this way are flagged as manually assigned
+     * so they won't be overwritten if the reports for the report owner are regenerated.
+     * @param report the report to update.
+     * @param dueDate the new due date, formatted as an ISO 8601 date string.
+     * @return a Map containing a boolean flag "success" and a String "error" if success == false
+     */
+    Map updateDueDate(Map report, String dueDate) {
+        if (!dueDate) {
+            return [success:false, error:'A due date must be supplied']
+        }
+        if (excludesNotApproved(report)) {
+            return [success:false, error:'The due date of a submitted or approved report cannot be changed']
+        }
+
+        Map resp = update([reportId:report.reportId, dueDate:dueDate, dueTodayEmailSentDate:null, dueSoonEmailSentDate:null, overDueEmailSentDate:null])
+        if (resp?.error) {
+            return [success:false, error:resp.error]
+        }
+        [success:true, dueDate:dueDate]
     }
 
     Map reset(String reportId) {
@@ -1114,6 +1159,25 @@ class ReportService {
         Map report = webService.doPost(url, params)
 
         return report
+    }
+
+
+    List<Map> findReportsDueInRange(int offset, int max, DateTime from, DateTime to) {
+
+        List submittedApprovedOrCancelled = ["", PublicationStatus.NOT_APPROVED]
+
+        Map pagination = [
+                max: max,
+                offset: offset
+        ]
+        Map criteria = [
+                publicationStatus: submittedApprovedOrCancelled,
+                dateProperty: 'dueDate',
+                startDate: DateUtils.format(from.withZone(DateTimeZone.UTC)),
+                endDate: DateUtils.format(to.withZone(DateTimeZone.UTC)),
+                pagination: pagination
+        ]
+        search(criteria)
     }
 
 }

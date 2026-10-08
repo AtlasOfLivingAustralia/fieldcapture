@@ -211,6 +211,7 @@ var Master = function (activityId, config) {
         };
         // This was an observable but it's causing dirty checks to fail when the context changes state.
         context.lifecycleState = {state:'initialising'};
+        context.reportData = self.modelAsJSON;
         var config = _.defaults(options, defaults);
         var viewModel = new config.constructorFunction(output, config.model.dataModel, context, config);
         context.lifecycleState.state = 'modelCreated';
@@ -696,6 +697,11 @@ var ReportNavigationViewModel = function(reportMaster, activityViewModel, option
         }
         if (progress == ActivityProgress.started) {
             scrollToFirstInvalidField(validationContainer);
+        }
+        else {
+            setTimeout(function() {
+                $(validationContainer).validationEngine('hideAll');
+            }, 0); // Some of the data bindings will trigger validations on page load which we don't want for new forms.
         }
     }
 };

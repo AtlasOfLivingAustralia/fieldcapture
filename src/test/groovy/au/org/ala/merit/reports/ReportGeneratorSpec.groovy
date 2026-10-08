@@ -4,6 +4,7 @@ import au.org.ala.merit.DateUtils
 import au.org.ala.merit.config.ReportConfig
 import org.joda.time.DateTime
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class ReportGeneratorSpec extends Specification {
 
@@ -720,5 +721,96 @@ class ReportGeneratorSpec extends Specification {
         '2024-03-01T14:00:00Z' | '2026-06-30T14:00:00Z'
         '2024-06-29T14:00:00Z' | '2026-06-30T14:00:00Z'
 
+    }
+
+    def "The bufferForLastReportEndDate configuration can be used to reduce the period end date for reports"() {
+        setup:
+        ReportGenerator generator = new ReportGenerator()
+        ReportConfig config = new ReportConfig(
+                reportingPeriodInMonths: 3,
+                reportsAlignedToCalendar: true,
+                activityType: 'Progress Report',
+                category: 'Progress Reporting',
+                reportNameFormat: "Progress Report %1\$d",
+                reportDescriptionFormat: "Progress Report %1\$d"
+        )
+        ReportOwner owner = new ReportOwner(id:[projectId:'p1'], name:'Project 1', periodStart: '2020-06-30T14:00:00Z', periodEnd: '2021-06-30T14:00:00Z')
+
+        when: "No buffer is specified"
+        DateTime periodEnd = config.getPeriodEnd(owner)
+
+        then: "The period end matches the owner period end"
+        periodEnd == DateUtils.parse('2021-06-30T14:00:00Z')
+
+        when: "A buffer of 1 month is specified"
+        config.bufferForLastReportEndDate = "P1M"
+        periodEnd = config.getPeriodEnd(owner)
+
+        then: "The period end is reduced by 1 month and a day (to deal with the way project end dates work)"
+        periodEnd == DateUtils.parse('2021-05-31T14:00:00Z')
+
+        when: "A buffer of 3 months is specified and reports are generated"
+        config.bufferForLastReportEndDate = "P3M"
+        periodEnd = config.getPeriodEnd(owner)
+        List reports = generator.generateReports(config, owner, 0, null)
+
+        then: "The period end is reduced by 3 months (and a day) and the final period report is not generated"
+        periodEnd == DateUtils.parse('2021-03-31T14:00:00Z')
+        reports.size() == 3
+        reports[0].toDate == '2020-09-30T14:00:00Z'
+        reports[1].toDate == '2020-12-31T13:00:00Z'
+        reports[2].toDate == '2021-03-31T14:00:00Z'
+    }
+
+    def "No due date is assigned to generated reports if no reportDueDatePeriod is configured"() {
+        setup:
+        ReportGenerator generator = new ReportGenerator()
+        ReportConfig config = new ReportConfig(
+                reportingPeriodInMonths: 3,
+                reportsAlignedToCalendar: true,
+                activityType: 'Progress Report',
+                category: 'Progress Reporting',
+                reportNameFormat: "Progress Report %1\$d",
+                reportDescriptionFormat: "Progress Report %1\$d"
+        )
+        ReportOwner owner = new ReportOwner(id:[projectId:'p1'], name:'Project 1', periodStart: '2020-06-30T14:00:00Z', periodEnd: '2021-06-30T14:00:00Z')
+
+        when:
+        List reports = generator.generateReports(config, owner, 0, null)
+
+        then:
+        reports.size() == 4
+        reports.every { !it.dueDate }
+    }
+
+    @Unroll
+    def "The due date of a generated report is the report end date plus the reportDueDatePeriod, less one day (#reportDueDatePeriod)"() {
+        setup:
+        ReportGenerator generator = new ReportGenerator()
+        ReportConfig config = new ReportConfig(
+                reportingPeriodInMonths: 3,
+                reportsAlignedToCalendar: true,
+                activityType: 'Progress Report',
+                category: 'Progress Reporting',
+                reportNameFormat: "Progress Report %1\$d",
+                reportDescriptionFormat: "Progress Report %1\$d",
+                reportDueDatePeriod: reportDueDatePeriod
+        )
+        ReportOwner owner = new ReportOwner(id:[projectId:'p1'], name:'Project 1', periodStart: '2020-06-30T14:00:00Z', periodEnd: '2021-06-30T14:00:00Z')
+
+        when:
+        List reports = generator.generateReports(config, owner, 0, null)
+
+        then: """Report end dates are the last instant of the reporting period whereas due dates are
+                 stored as midnight on the day the report is due, hence the reduction by a day"""
+        reports.size() == 4
+        reports*.toDate == ['2020-09-30T14:00:00Z', '2020-12-31T13:00:00Z', '2021-03-31T13:00:00Z', '2021-06-30T14:00:00Z']
+        reports*.dueDate == expectedDueDates
+
+        where:
+        reportDueDatePeriod | expectedDueDates
+        "P1M"               | ['2020-10-30T13:00:00Z', '2021-01-30T13:00:00Z', '2021-04-29T14:00:00Z', '2021-07-30T14:00:00Z']
+        "P43D"              | ['2020-11-11T13:00:00Z', '2021-02-11T13:00:00Z', '2021-05-12T14:00:00Z', '2021-08-11T14:00:00Z']
+        "P1D"               | ['2020-09-30T14:00:00Z', '2020-12-31T13:00:00Z', '2021-03-31T13:00:00Z', '2021-06-30T14:00:00Z']
     }
 }

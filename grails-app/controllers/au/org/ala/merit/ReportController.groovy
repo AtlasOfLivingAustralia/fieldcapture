@@ -8,6 +8,7 @@ import org.apache.http.HttpStatus
 import org.joda.time.DateTime
 import org.joda.time.Interval
 import org.joda.time.Period
+import org.springframework.beans.factory.annotation.Autowired
 
 import java.text.ParseException
 

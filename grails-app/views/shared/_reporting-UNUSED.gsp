@@ -186,6 +186,6 @@ $(function() {
     var reports = <fc:modelAsJavascript model="${reports?:[]}"/>;
     var addHocReportTypes = <fc:modelAsJavascript model="${adHocReportTypes}"/>;
     var reportOwner = fcConfig.reportOwner;
-    ko.applyBindings(new ReportsViewModel(reports, fcConfig.projects, addHocReportTypes, reportOwner, fcConfig), document.getElementById('reporting-content'));
+    ko.applyBindings(new ReportsViewModel(reports, fcConfig.projects, addHocReportTypes, reportOwner, [], fcConfig), document.getElementById('reporting-content'));
 });
 </asset:script>

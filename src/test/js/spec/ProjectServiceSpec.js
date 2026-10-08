@@ -34,7 +34,7 @@ describe("ProjectService Spec", function () {
         var options = {excludeFinancialYearData: false};
         var projectService = new ProjectService(project, options);
 
-        expect(projectService.getBudgetHeaders()).toEqual(
+        expect(projectService.getBudgetHeaders().map(function(value) { return value.period; })).toEqual(
             ['2019/2020', '2020/2021', '2021/2022', '2022/2023', '2023/2024']);
     });
 

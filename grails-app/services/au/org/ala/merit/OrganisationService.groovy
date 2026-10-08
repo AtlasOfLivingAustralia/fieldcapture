@@ -213,6 +213,10 @@ class OrganisationService {
 
     }
 
+    ReportConfig findOrganisationReportConfigurationForReport(Map organisation, Map report) {
+        def reportConfig = organisation.config?.organisationReports?.find{it.activityType == report.activityType}
+        return reportConfig ? new ReportConfig(reportConfig) : null
+    }
 
     private void regenerateOrganisationReports(Map organisation, List<String> reportCategories = null) {
 
@@ -373,6 +377,11 @@ class OrganisationService {
         result
     }
 
+    void sendReportReminderEmail(Map reportDetails, EmailTemplate emailTemplate) {
+        Map reportInformation = setupReportLifeCycleChange(reportDetails.organisationId, reportDetails.reportId)
+        emailService.sendEmail(emailTemplate, [organisation:reportInformation.organisation, report:reportInformation.report], reportInformation.members, RoleService.GRANT_MANAGER_ROLE)
+    }
+
     /**
      * Performs the common setup required for a report lifecycle state change (e.g. submit/approve/return)
      * @param organisationId the ID of the program that owns the report
@@ -386,7 +395,7 @@ class OrganisationService {
         // All MU reports are of type "Single Activity" at the moment.
         List reportActivities = [report.activityId]
 
-        [organisation:organisation, reportActivities:reportActivities, members:members]
+        [organisation:organisation, reportActivities:reportActivities, members:members, report:report]
     }
 
     Map getAbnDetails(String abnNumber){

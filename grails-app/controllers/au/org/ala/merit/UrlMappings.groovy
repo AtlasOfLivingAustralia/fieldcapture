@@ -133,6 +133,11 @@ class UrlMappings {
             action = 'download'
         }
 
+        "/home/help/$suffix" {
+            controller = 'home'
+            action = 'help'
+        }
+
         "500"(view:'/error')
         "404"(view:'/404')
         "/$hub/$controller/ws/$action/$id" {

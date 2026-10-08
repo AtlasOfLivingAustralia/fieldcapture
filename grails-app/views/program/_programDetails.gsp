@@ -52,6 +52,22 @@
         </div>
     </div>
 
+    <div class="mb-3 row required">
+
+        <label class="col-sm-3" for="start-date">Start date <fc:iconHelp><g:message code="program.startDate.help"/></fc:iconHelp></label>
+
+        <div class="col-sm-9">
+            <fc:datePicker class="form-control dateControl" id="start-date" name="start-date" bs4="bs4" targetField="startDate.date" data-validation-engine="validate[required]" autocomplete="off"/>
+        </div>
+    </div>
+    <div class="mb-3 row required">
+        <label class="col-sm-3" for="end-date">End date <fc:iconHelp><g:message code="program.endDate.help"/></fc:iconHelp></label>
+
+        <div class="col-sm-9">
+            <fc:datePicker class="form-control dateControl" id="end-date" name="end-date" bs4="bs4" targetField="endDate.date" data-validation-engine="validate[required,future[start-date]]" autocomplete="off"/>
+        </div>
+    </div>
+
     <div class="mb-3 row">
         <label class="col-form-label col-sm-3" for="url">External ids: <fc:iconHelp><g:message
                 code="program.externalIds.help"/></fc:iconHelp></label>

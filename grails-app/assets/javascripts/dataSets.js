@@ -44,8 +44,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
     }
 
     function isDownloadableMonitorDataSet(dataSet) {
-
-        if (dataSet.collectionApp !== MONITOR_APP) {
+        if (!dataSet.orgMintedIdentifier) {
             return false;
         }
         var protocolId = dataSet.protocol;
@@ -74,7 +73,8 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
         this.viewUrl = config.viewDataSetUrl + '?dataSetId=' + dataSet.dataSetId;
         this.copyUrl = config.copyDataSetUrl + '?dataSetId=' + dataSet.dataSetId;
         this.name = dataSet.name;
-        this.createdIn = dataSet.collectionApp === MONITOR_APP ? MONITOR_APP : 'MERIT';
+        this.isMonitorDataSet = dataSet.orgMintedIdentifier != null;
+        this.createdIn = !this.isMonitorDataSet && dataSet.collectionApp == MONITOR_APP ? 'MERIT' : dataSet.collectionApp || '' ;
         this.progress = dataSet.progress;
         this.dateCreated = ko.observable(dataSet.dateCreated).extend({simpleDate: false});
         this.lastUpdated = ko.observable(dataSet.lastUpdated).extend({simpleDate: false});
@@ -107,7 +107,7 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
                    dataSet.surveyId.survey_metadata.survey_details.survey_model === plotSelectionModelName;
         }
 
-        this.canResync = this.createdIn == MONITOR_APP && // Resyncing only makes sense for Monitor data sets
+        this.canResync = this.isMonitorDataSet && // Resyncing only makes sense for Monitor data sets
                         !this.isReadOnly && // Once data has been published we shouldn't change it
                         !dataSet.reportId && // Once data has been copied into a report we shouldn't change it
                          dataSet.surveyId &&
@@ -129,13 +129,12 @@ var DataSetsViewModel =function(dataSets, projectService, config) {
             this.downloadUrl = config.downloadDataSetUrl + '/' + dataSet.dataSetId;
         }
 
-        this.isMonitorDataSet = this.createdIn === MONITOR_APP;
         if (this.isMonitorDataSet) {
             if (this.progress === ActivityProgress.planned) {
                 var now = moment();
                 var creationDate = moment(dataSet.dateCreated);
 
-                if (creationDate.add(1, 'minutes').isBefore(now)) {
+                if (creationDate.add(5, 'minutes').isBefore(now)) {
                     this.progress = 'sync error';
                 }
                 else {
@@ -162,6 +161,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     var self = this;
     var config = _.defaults({validationContainerSelector:'.validationEngineContainer'}, options);
     dataSet = dataSet || {};
+    self.isMonitorDataSet = dataSet.orgMintedIdentifier != null;
     self.dateCreated = dataSet.dateCreated;
     self.dataSetId = dataSet.dataSetId;
     self.surveyId = dataSet.surveyId; // Data set summaries created by a submission from the Monitor app will have a surveyId
@@ -184,7 +184,6 @@ var DataSetViewModel = function(dataSet, projectService, options) {
         }
     });
 
-    self.projectBaselines = options.projectBaselines;
     self.type = ko.observable(dataSet.type);
     self.baselines = ko.observableArray(dataSet.baselines);
     self.otherDataSetType = ko.observable(dataSet.otherDataSetType);
@@ -208,6 +207,16 @@ var DataSetViewModel = function(dataSet, projectService, options) {
             return serviceAndOutcome.label == self.serviceAndOutcomes();
         });
         return selectedOutcome && selectedOutcome.serviceId;
+    });
+
+    self.projectBaselines = ko.computed(function() {
+        const serviceId = self.serviceId();
+        if (!serviceId) {
+            return options.projectBaselines;
+        }
+        return _.filter(options.projectBaselines, function(baseline) {
+            return _.contains(baseline.serviceIds, serviceId);
+        })
     });
 
     self.disableBaseline = function(e) {
@@ -310,6 +319,12 @@ var DataSetViewModel = function(dataSet, projectService, options) {
             }
         }
     };
+    self.validateCollectionApp = function() {
+        let app = self.collectionApp();
+        if (!self.isMonitorDataSet && (app && app.toLowerCase() === MONITOR_APP.toLowerCase())) {
+            return "This dataset was not created in the Monitor App. Please change to another value or leave this field blank if unsure"
+        }
+    }
 
     self.isAutoCreated = dataSet.surveyId != null;
 
@@ -329,7 +344,7 @@ var DataSetViewModel = function(dataSet, projectService, options) {
                     'grantId', 'projectName', 'programName', 'validate', 'save', 'cancel',
                         'investmentOtherSelected', 'siteUrl', 'isAutoCreated', 'serviceAndOutcomes',
                         'projectOutcomeList', 'projectBaselines', 'projectProtocols', 'disableBaseline',
-                        'disableIndicator', 'protocolLabel']});
+                        'disableIndicator', 'protocolLabel', 'isMonitorDataSet']});
             projectService.saveDataSet(dataSet).done(function() {
                 // return to project
                 window.location.href = config.returnToUrl;
@@ -352,7 +367,8 @@ var DataSetViewModel = function(dataSet, projectService, options) {
     }
 
     self.attachValidation = function () {
-        $(config.validationContainerSelector).validationEngine();
+        $(config.validationContainerSelector).validationEngine({promptPosition:"topLeft"});
         window.uniqueName = self.uniqueName; // Setup the validation function for the name field.
+        window.validateCollectionApp = self.validateCollectionApp;
     }
 };

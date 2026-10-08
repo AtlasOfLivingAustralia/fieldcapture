@@ -135,4 +135,20 @@ var ReportService = function(config) {
         });
 
     };
+
+    /**
+     * Saves a new due date against a report.
+     * @param reportId the id of the report to update.
+     * @param dueDate the new due date as an ISO 8601 formatted String.
+     * @returns a jQuery promise that will be resolved when the due date has been saved.
+     */
+    self.saveReportDueDate = function(reportId, dueDate) {
+        return $.ajax({
+            url: config.updateReportDueDateUrl,
+            type: 'POST',
+            data: JSON.stringify({reportId:reportId, dueDate:dueDate}),
+            dataType: 'json',
+            contentType: 'application/json'
+        });
+    };
 }

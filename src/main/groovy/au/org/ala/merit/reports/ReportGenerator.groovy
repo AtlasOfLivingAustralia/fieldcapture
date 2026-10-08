@@ -247,8 +247,14 @@ class ReportGenerator {
         report.putAll(reportOwner.id)
 
 
-        if (reportConfig.weekDaysToCompleteReport) {
-            report.dueDate = DateUtils.format(endDate.plusDays(reportConfig.weekDaysToCompleteReport).withZone(DateTimeZone.UTC))
+        if (reportConfig.reportDueDatePeriod && reportConfig.reportDueDatePeriod() != null) {
+            // We subtract a day from the due date because due dates are often manually overridden
+            // and when they do the day is supplied as <<date>>T00:00:00+1000 whereas by default
+            // generated dates will be <<date+1>>T00:00:00+1000.
+            // (i.e. midnight on the day of the due date, rather than the end of the day of the due date)
+            // So we can treat menaully edited and generated dates the same, it's easier to generate
+            // them in the same way they would be edited.
+            report.dueDate = DateUtils.format(endDate.plus(reportConfig.reportDueDatePeriod().minusDays(1)).withZone(DateTimeZone.UTC))
         }
 
         report
@@ -338,6 +344,6 @@ class ReportGenerator {
         // the sequence number of this report based on "number of reports per financial year"
         int sequenceInFinancialYear = periodInMonths ? Math.floor(((endOfReport.getMonthOfYear()+5)%12)/config.reportingPeriodInMonths)+1 : 1
 
-        return sprintf(pattern, sequenceNo, fromDate.toDate(), toDate.toDate(), owner.name, financialYear, periodDescription, sequenceInFinancialYear)
+        return sprintf(pattern, sequenceNo, fromDate.toDate(), toDate.minusHours(1).toDate(), owner.name, financialYear, periodDescription, sequenceInFinancialYear)
     }
 }

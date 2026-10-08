@@ -262,17 +262,17 @@ class UserService {
     }
 
     /**
-     * MERIT has three special roles granted to administrators, grant managers and researchers
-     * @param role the role to check.
-     * @param userId the id of the user to check.  If null, the currently logged in userid will be used.
-     * @return true if the user has the supplied role.
+     * Performs some common checks (is the role valid, is the user an ALA admin) then
+     * delegates to the supplied closure for any additional checks.  If the closure is not supplied, false is returned.
+     * @param role The hub role to check for
+     * @param userId The userId to check for.  If null, the currently logged in user will be used.
+     * @param extraCheck A closure that will be called to perform any additional checks.  It will be passed the role and userId as parameters.
+     * @return true if the user passes the checks, false otherwise.
      */
-    private boolean doesUserHaveHubRole(String role, String userId = null) {
+    private boolean hubRoleCheck(String role, String userId = null, Closure extraCheck = null) {
         if (!(role in RoleService.MERIT_HUB_ROLES)) {
             throw new IllegalArgumentException("Role "+role+" not supported as a hub role")
         }
-
-        String ecodataAclAccessLevel = convertHubRoleToAccessLevel(role)
 
         HubSettings settings = SettingService.getHubConfig()
         userId = userId ?: getUser()?.userId
@@ -282,8 +282,33 @@ class UserService {
         if (userIsAlaAdmin(userId)) {
             return true
         }
+        if (extraCheck) {
+            return extraCheck(userId, settings)
+        }
+        return false
+    }
 
-        return ecodataAclAccessLevel == settings.userPermissions?.find({it.userId == userId})?.role
+    boolean checkHubRole(String role, String userId = null) {
+        hubRoleCheck(role, userId) { String resolvedUserId, HubSettings settings ->
+            String ecodataAclAccessLevel = convertHubRoleToAccessLevel(role)
+            String userHubRole = settings.userPermissions?.find({ it.userId == resolvedUserId })?.role
+            List orderedRoles = [RoleService.PROJECT_READ_ONLY_ROLE, RoleService.GRANT_MANAGER_ROLE, RoleService.PROJECT_MODERATOR_ROLE, RoleService.PROJECT_ADMIN_ROLE]
+
+            return orderedRoles.indexOf(userHubRole) >= orderedRoles.indexOf(ecodataAclAccessLevel)
+        }
+    }
+
+    /**
+     * MERIT has three special roles granted to administrators, grant managers and researchers
+     * @param role the role to check.
+     * @param userId the id of the user to check.  If null, the currently logged in userid will be used.
+     * @return true if the user has the supplied role.
+     */
+    private boolean doesUserHaveHubRole(String role, String userId = null) {
+        hubRoleCheck(role, userId) { String resolvedUserId, HubSettings settings ->
+            String ecodataAclAccessLevel = convertHubRoleToAccessLevel(role)
+            ecodataAclAccessLevel == settings.userPermissions?.find({it.userId == resolvedUserId})?.role
+        }
     }
 
     private Map checkRoles(String userId, String role) {

@@ -28,7 +28,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
     EmailService emailService = Mock(EmailService)
     AuditService auditService = Mock(AuditService)
     ProjectConfigurationService projectConfigurationService = Mock(ProjectConfigurationService)
-    ProgramConfig projectConfig = new ProgramConfig([activityBasedReporting: true, reportingPeriod:6, reportingPeriodAlignedToCalendar: true, weekDaysToCompleteReport:43])
+    ProgramConfig projectConfig = new ProgramConfig([activityBasedReporting: true, reportingPeriod:6, reportingPeriodAlignedToCalendar: true, reportDueDatePeriod:"P43D"])
     ProgramService programService = Mock(ProgramService)
     CacheService cacheService = Mock(CacheService)
     LockService lockService = Mock(LockService)
@@ -36,7 +36,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
     RoleService roleService = Mock(RoleService)
 
     Map reportConfig = [
-            weekDaysToCompleteReport:projectConfig.weekDaysToCompleteReport,
+            reportDueDatePeriod:projectConfig.reportDueDatePeriod,
             reportType:ReportService.REPORT_TYPE_STAGE_REPORT,
             reportingPeriodInMonths: projectConfig.reportingPeriod,
             reportsAlignedToCalendar: projectConfig.reportingPeriodAlignedToCalendar,
@@ -316,7 +316,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
 
         then:
         result.message == 'success'
-        1 * webService.doPost({it.endsWith("project/"+projectId)}, [planStatus:ProjectService.PLAN_NOT_APPROVED]) >> [resp:[status:'ok']]
+        1 * webService.doPost({it.endsWith("project/"+projectId)}, [planStatus:ProjectService.PLAN_NOT_APPROVED, progress:ActivityService.PROGRESS_STARTED]) >> [resp:[status:'ok']]
         1 * webService.getJson({it.contains("permissions/getMembersForProject/"+projectId)}) >> projectRoles
         1 * emailService.sendEmail(EmailTemplate.DEFAULT_PLAN_RETURNED_EMAIL_TEMPLATE,_,projectRoles, RoleService.GRANT_MANAGER_ROLE,  null)
     }
@@ -383,6 +383,46 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         1 * reportService.submitReport(reportId, reportDetails.activityIds, project, projectRoles, EmailTemplate.DEFAULT_REPORT_SUBMITTED_EMAIL_TEMPLATE) >> [success:true]
     }
 
+    def "the project service will send a report reminder email to the project grant managers"() {
+        given:
+        String projectId = 'project1'
+        String reportId = 'r1'
+        List projectRoles = [[userId:'1', role:RoleService.GRANT_MANAGER_ROLE]]
+        Map project = [projectId: projectId, planStatus: ProjectService.PLAN_APPROVED]
+        Map report = [reportId: reportId, name:'Report 1']
+        webService.getJson(_) >> project
+        reportService.getReportsForProject(_) >> [report]
+
+        when:
+        Map result = service.sendReportReminderEmail([projectId:projectId, reportId:reportId], EmailTemplate.PROJECT_REPORT_DUE_SOON_REMINDER_EMAIL_TEMPLATE)
+
+        then:
+        1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
+        1 * webService.getJson({ it.contains("permissions/getMembersForProject/" + projectId) }) >> projectRoles
+        1 * emailService.sendEmail(EmailTemplate.PROJECT_REPORT_DUE_SOON_REMINDER_EMAIL_TEMPLATE, [project:project, report:report], projectRoles, RoleService.GRANT_MANAGER_ROLE)
+
+        and:
+        result.success == true
+    }
+
+    def "the project service will not send a report reminder email if the report cannot be found"() {
+        given:
+        String projectId = 'project1'
+        Map project = [projectId: projectId, planStatus: ProjectService.PLAN_APPROVED]
+        webService.getJson(_) >> project
+        reportService.getReportsForProject(_) >> [[reportId:'r2']]
+
+        when:
+        Map result = service.sendReportReminderEmail([projectId:projectId, reportId:'r1'], EmailTemplate.PROJECT_REPORT_OVERDUE_REMINDER_EMAIL_TEMPLATE)
+
+        then:
+        0 * emailService.sendEmail(_, _, _, _)
+
+        and:
+        result.success == false
+        result.error == 'Invalid reportId supplied'
+    }
+
     def "the project service should delegate to the report service to approve a report"() {
         given:
         def projectId = 'project1'
@@ -404,6 +444,48 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
         1 * webService.getJson({ it.contains("permissions/getMembersForProject/" + projectId) }) >> projectRoles
         1 * reportService.approveReport(reportId, reportDetails.activityIds, reportDetails.reason, project, projectRoles, EmailTemplate.DEFAULT_REPORT_APPROVED_EMAIL_TEMPLATE) >> [success:true]
+    }
+
+    def "the project service should delegate to the report service to update a report due date"() {
+        given:
+        def projectId = 'project1'
+        Map project = [projectId: projectId, planStatus: ProjectService.PLAN_APPROVED]
+        webService.getJson(_) >> project
+        String reportId = 'r1'
+        Map report = [reportId: reportId, name: 'Report 1']
+        Map reportDetails = [reportId: reportId, dueDate: '2021-07-31T14:00:00Z']
+        reportService.getReportsForProject(_) >> [report]
+
+        when:
+        def result = service.updateReportDueDate(projectId, reportDetails)
+
+        then:
+        1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([:])
+        1 * webService.getJson({ it.contains("permissions/getMembersForProject/" + projectId) }) >> []
+        1 * reportService.updateDueDate(report, reportDetails.dueDate) >> [success: true, dueDate: reportDetails.dueDate]
+
+        and:
+        result.success == true
+        result.dueDate == '2021-07-31T14:00:00Z'
+    }
+
+    def "the due date of a report that doesn't belong to the project cannot be updated"() {
+        given:
+        def projectId = 'project1'
+        Map project = [projectId: projectId, planStatus: ProjectService.PLAN_APPROVED]
+        webService.getJson(_) >> project
+        Map reportDetails = [reportId: 'r2', dueDate: '2021-07-31T14:00:00Z']
+        reportService.getReportsForProject(_) >> [[reportId: 'r1', name: 'Report 1']]
+
+        when:
+        def result = service.updateReportDueDate(projectId, reportDetails)
+
+        then:
+        0 * reportService.updateDueDate(_, _)
+
+        and:
+        result.success == false
+        result.error == 'Invalid reportId supplied'
     }
 
     def "the project service should delegate to the report service to return a report"() {
@@ -1290,7 +1372,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         Map activityData = [:]
 
         when:
-        Map filteredModel = service.filterOutputModel(activityModel, project, activityData)
+        Map filteredModel = service.filterOutputModel(activityModel, project, activityData, true)
 
         then:
         metadataService.getProjectServices() >> services
@@ -1312,7 +1394,7 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         Map activityData = [:]
 
         when:
-        Map filteredModel = service.filterOutputModel(activityModel, project, activityData)
+        Map filteredModel = service.filterOutputModel(activityModel, project, activityData, true)
 
         then:
         metadataService.getProjectServices() >> services
@@ -1539,6 +1621,211 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
         result == ['1':1, '2':2, '3':0]
     }
 
+    def "scoresForReport returns an empty map if the report cannot be found"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'nonExistentReport'
+
+        when:
+        Map result = service.scoresForReport(projectId, reportId, ['1', '2'])
+
+        then:
+        1 * webService.getJson('project/' + projectId + '?includeDeleted=false') >> [reports: [[reportId: 'r1', fromDate: '2022-01-01T00:00:00Z', toDate: '2022-07-01T00:00:00Z']]]
+        0 * reportService.dateHistogramForScores(*_)
+        0 * projectConfigurationService.getProjectConfiguration(*_)
+
+        result == [:]
+    }
+
+    def "scoresForReport derives scoreIds from project services when scoreIds is null or empty"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+        String fromDate = '2021-12-31T13:00:00Z'
+        String toDate = '2022-06-30T14:00:00Z'
+
+        Map project = [
+                projectId: projectId,
+                reports: [[reportId: reportId, fromDate: fromDate, toDate: toDate]]
+        ]
+        Map flatProject = [
+                projectId: projectId,
+                custom: [details: [serviceIds: [1, 2]]],
+                outputTargets: [
+                        [scoreId: '1', target: '10'],
+                        [scoreId: '2', target: '20']
+                ]
+        ]
+        List services = [
+                [id: 1, name: 'Service 1', outputs: [[sectionName: 'Output 1']], scores: [[scoreId: '1', label: 'Score 1', isOutputTarget: true]]],
+                [id: 2, name: 'Service 2', outputs: [[sectionName: 'Output 2']], scores: [[scoreId: '2', label: 'Score 2', isOutputTarget: true]]]
+        ]
+        List report = [
+                [group: '2022-01 - 2022-06', results: [[scoreId: '1', count: 1, result: [result: 5]], [scoreId: '2', count: 1, result: [result: 15]]]]
+        ]
+        Map resp = [status: 200, resp: report]
+
+        when:
+        Map result = service.scoresForReport(projectId, reportId, null)
+
+        then:
+        1 * webService.getJson('project/' + projectId + '?includeDeleted=false') >> project
+        1 * webService.getJson('project/' + projectId + '?view=flat&includeDeleted=false') >> flatProject
+        1 * projectConfigurationService.getProjectConfiguration(flatProject) >> setupMockServiceProgramConfig(services)
+        1 * reportService.dateHistogramForScores(projectId, [fromDate, toDate], 'YYYY-MM', ['1', '2']) >> resp
+
+        result == ['1': 5, '2': 15]
+    }
+
+    def "scoresForReport includes targets and period targets when includeTargets is true"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+        String fromDate = '2021-12-31T13:00:00Z'
+        String toDate = '2022-06-30T14:00:00Z'
+
+        Map project = [
+                projectId: projectId,
+                reports: [[reportId: reportId, fromDate: fromDate, toDate: toDate]]
+        ]
+        Map flatProject = [
+                projectId: projectId,
+                custom: [details: [serviceIds: [1, 2]]],
+                outputTargets: [
+                        [
+                                scoreId: 'score_1',
+                                target: '100',
+                                periodTargets: [
+                                        [periodStart: '2021-12-31T13:00:00Z', periodEnd: '2022-06-30T14:00:00Z', target: 20],
+                                        [periodStart: '2022-06-30T14:00:00Z', periodEnd: '2022-12-31T13:00:00Z', target: 30]
+                                ]
+                        ],
+                        [
+                                scoreId: 'score_2',
+                                target: '50'
+                        ]
+                ]
+        ]
+        List services = [
+                [id: 1, name: 'Service 1', outputs: [[sectionName: 'Output 1']], scores: [[scoreId: 'score_1', label: 'Score 1 Label', isOutputTarget: true]]],
+                [id: 2, name: 'Service 2', outputs: [[sectionName: 'Output 2']], scores: [[scoreId: 'score_2', label: 'Score 2 Label', isOutputTarget: true]]]
+        ]
+        List report = [
+                [group: '2022-01 - 2022-06', results: [[scoreId: 'score_1', count: 1, result: [result: 15]]]]
+        ]
+        Map resp = [status: 200, resp: report]
+
+        when:
+        Map result = service.scoresForReport(projectId, reportId, null, true)
+
+        then:
+        1 * webService.getJson('project/' + projectId + '?includeDeleted=false') >> project
+        1 * webService.getJson('project/' + projectId + '?view=flat&includeDeleted=false') >> flatProject
+        1 * projectConfigurationService.getProjectConfiguration(flatProject) >> setupMockServiceProgramConfig(services)
+        1 * reportService.dateHistogramForScores(projectId, [fromDate, toDate], 'YYYY-MM', ['score_1', 'score_2']) >> resp
+
+        result == [
+                targetMeasures: [
+                        [
+                                scoreId: 'score_1',
+                                service: 'Service 1',
+                                targetMeasure: 'Score 1 Label',
+                                projectTarget: new BigDecimal('100'),
+                                periodTarget: 20,
+                                periodResult: 15
+                        ],
+                        [
+                                scoreId: 'score_2',
+                                service: 'Service 2',
+                                targetMeasure: 'Score 2 Label',
+                                projectTarget: new BigDecimal('50'),
+                                periodTarget: null,
+                                periodResult: 0
+                        ]
+                ]
+        ]
+    }
+
+    def "scoresForReport with includeTargets derives scoreIds from project services even if scoreIds are supplied"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+        String fromDate = '2021-12-31T13:00:00Z'
+        String toDate = '2022-06-30T14:00:00Z'
+
+        Map project = [
+                projectId: projectId,
+                reports: [[reportId: reportId, fromDate: fromDate, toDate: toDate]]
+        ]
+        Map flatProject = [
+                projectId: projectId,
+                custom: [details: [serviceIds: [1]]],
+                outputTargets: [
+                        [scoreId: 'score_1', target: '10']
+                ]
+        ]
+        List services = [
+                [id: 1, name: 'Service 1', outputs: [[sectionName: 'Output 1']], scores: [[scoreId: 'score_1', label: 'Score 1 Label', isOutputTarget: true]]]
+        ]
+        List report = [
+                [group: '2022-01 - 2022-06', results: [[scoreId: 'score_1', count: 1, result: [result: 8]]]]
+        ]
+        Map resp = [status: 200, resp: report]
+
+        when:
+        Map result = service.scoresForReport(projectId, reportId, ['dummy_score_id'], true)
+
+        then:
+        1 * webService.getJson('project/' + projectId + '?includeDeleted=false') >> project
+        1 * webService.getJson('project/' + projectId + '?view=flat&includeDeleted=false') >> flatProject
+        1 * projectConfigurationService.getProjectConfiguration(flatProject) >> setupMockServiceProgramConfig(services)
+        1 * reportService.dateHistogramForScores(projectId, [fromDate, toDate], 'YYYY-MM', ['score_1']) >> resp
+
+        result == [
+                targetMeasures: [
+                        [
+                                scoreId: 'score_1',
+                                service: 'Service 1',
+                                targetMeasure: 'Score 1 Label',
+                                projectTarget: new BigDecimal('10'),
+                                periodTarget: null,
+                                periodResult: 8
+                        ]
+                ]
+        ]
+    }
+
+    def "scoresForReport with includeTargets returns empty targetMeasures if project has no services"() {
+        setup:
+        String projectId = 'p1'
+        String reportId = 'r1'
+        String fromDate = '2021-12-31T13:00:00Z'
+        String toDate = '2022-06-30T14:00:00Z'
+
+        Map project = [
+                projectId: projectId,
+                reports: [[reportId: reportId, fromDate: fromDate, toDate: toDate]]
+        ]
+        Map flatProject = [
+                projectId: projectId,
+                custom: [details: [serviceIds: []]],
+                outputTargets: []
+        ]
+        List report = []
+        Map resp = [status: 200, resp: report]
+
+        when:
+        Map result = service.scoresForReport(projectId, reportId, null, true)
+
+        then:
+        1 * webService.getJson('project/' + projectId + '?includeDeleted=false') >> project
+        1 * webService.getJson('project/' + projectId + '?view=flat&includeDeleted=false') >> flatProject
+        1 * projectConfigurationService.getProjectConfiguration(flatProject) >> setupMockServiceProgramConfig([])
+        1 * reportService.dateHistogramForScores(projectId, [fromDate, toDate], 'YYYY-MM', []) >> resp
+
+        result == [targetMeasures: []]
+    }
+
     def "Plot Selection / Visits should not be displayed in data sets"() {
         setup:
         List dataSets = [
@@ -1723,6 +2010,156 @@ class ProjectServiceSpec extends Specification implements ServiceUnitTest<Projec
                             reportsAlignedToCalendar: false]
 
         [projectReports:[reportConfig], autogeneratedActivities: false, activityBasedReporting:true]
+    }
+
+    def "generateTargetPeriods returns null if no targetsConfig is configured"() {
+        given:
+        Map project = [projectId: 'p1', name: 'Project 1', plannedStartDate: '2023-01-01T00:00:00Z', plannedEndDate: '2025-01-01T00:00:00Z']
+        ProgramConfig config = new ProgramConfig([:])
+
+        when:
+        List result = service.generateTargetPeriods(project, config)
+
+        then:
+        result == null
+    }
+
+    def "generateTargetPeriods generates periods for the full project duration when no reports are submitted"() {
+        given:
+        Map targetsConfig = [
+                periodGenerationConfig: [reportingPeriodInMonths: 6, reportsAlignedToCalendar: true, reportType: 'Activity'],
+                periodLabelFormat: 'MMM yyyy'
+        ]
+        ProgramConfig config = new ProgramConfig([targetsConfig: targetsConfig])
+        Map project = [
+                projectId: 'p1',
+                name: 'Project 1',
+                plannedStartDate: '2023-01-01T00:00:00Z',
+                plannedEndDate: '2024-01-01T00:00:00Z',
+                reports: [],
+                outputTargets: [[periodTargets: []]]
+        ]
+
+        List generatedPeriods = [[period: 'Jan 2023 - Jun 2023', periodStart: '2023-01-01T00:00:00Z', periodEnd: '2023-07-01T00:00:00Z'],
+                                 [period: 'Jul 2023 - Dec 2023', periodStart: '2023-07-01T00:00:00Z', periodEnd: '2024-01-01T00:00:00Z']]
+
+        when:
+        List result = service.generateTargetPeriods(project, config)
+
+        then:
+        1 * reportService.generateTargetPeriods(_, _, 'MMM yyyy', 1, null) >> generatedPeriods
+        result == generatedPeriods
+    }
+
+    def "generateTargetPeriods preserves existing periods before the last approved report and regenerates only subsequent periods"() {
+        given:
+        Map targetsConfig = [
+                periodGenerationConfig: [reportingPeriodInMonths: 6, reportsAlignedToCalendar: true, reportType: 'Activity'],
+                periodLabelFormat: 'MMM yyyy'
+        ]
+        ProgramConfig config = new ProgramConfig([targetsConfig: targetsConfig])
+
+        List existingPeriodTargets = [
+                [period: 'Jan 2023 - Jun 2023', periodStart: '2023-01-01T00:00:00Z', periodEnd: '2023-07-01T00:00:00Z'],
+                [period: 'Jul 2023 - Dec 2023', periodStart: '2023-07-01T00:00:00Z', periodEnd: '2024-01-01T00:00:00Z'],
+                [period: 'Jan 2024 - Jun 2024', periodStart: '2024-01-01T00:00:00Z', periodEnd: '2024-07-01T00:00:00Z']
+        ]
+
+        Map project = [
+                projectId: 'p1',
+                name: 'Project 1',
+                plannedStartDate: '2023-01-01T00:00:00Z',
+                plannedEndDate: '2025-01-01T00:00:00Z',
+                reports: [
+                        [fromDate: '2023-01-01T00:00:00Z', toDate: '2023-07-01T00:00:00Z', publicationStatus: PublicationStatus.APPROVED],
+                        [fromDate: '2023-07-01T00:00:00Z', toDate: '2024-01-01T00:00:00Z', publicationStatus: PublicationStatus.NOT_APPROVED],
+                        [fromDate: '2024-01-01T00:00:00Z', toDate: '2024-07-01T00:00:00Z', publicationStatus: PublicationStatus.NOT_APPROVED]
+                ],
+                outputTargets: [[periodTargets: existingPeriodTargets]]
+        ]
+
+        List newPeriods = [[period: 'Jul 2023 - Dec 2023', periodStart: '2023-07-01T00:00:00Z', periodEnd: '2024-01-01T00:00:00Z'],
+                           [period: 'Jan 2024 - Jun 2024', periodStart: '2024-01-01T00:00:00Z', periodEnd: '2024-07-01T00:00:00Z'],
+                           [period: 'Jul 2024 - Dec 2024', periodStart: '2024-07-01T00:00:00Z', periodEnd: '2025-01-01T00:00:00Z']]
+
+        when:
+        List result = service.generateTargetPeriods(project, config)
+
+        then:
+        _ * reportService.excludesNotApproved(_) >> { Map report -> PublicationStatus.isReadOnly(report.publicationStatus) }
+        1 * reportService.generateTargetPeriods(_, _, 'MMM yyyy', _, { it != null }) >> newPeriods
+        result != null
+        // The first period (before the approved report) should be preserved from existing periods
+        result[0].period == 'Jan 2023 - Jun 2023'
+        // Regenerated periods follow after the preserved ones
+        result.size() == 4
+    }
+
+    def "generateTargetPeriods handles submitted and cancelled reports as read-only"() {
+        given:
+        Map targetsConfig = [
+                periodGenerationConfig: [reportingPeriodInMonths: 6, reportsAlignedToCalendar: true, reportType: 'Activity'],
+                periodLabelFormat: 'MMM yyyy'
+        ]
+        ProgramConfig config = new ProgramConfig([targetsConfig: targetsConfig])
+
+        List existingPeriodTargets = [
+                [period: 'Jan 2023 - Jun 2023', periodStart: '2023-01-01T00:00:00Z', periodEnd: '2023-07-01T00:00:00Z'],
+                [period: 'Jul 2023 - Dec 2023', periodStart: '2023-07-01T00:00:00Z', periodEnd: '2024-01-01T00:00:00Z']
+        ]
+
+        Map project = [
+                projectId: 'p1',
+                name: 'Project 1',
+                plannedStartDate: '2023-01-01T00:00:00Z',
+                plannedEndDate: '2025-01-01T00:00:00Z',
+                reports: [
+                        [fromDate: '2023-01-01T00:00:00Z', toDate: '2023-07-01T00:00:00Z', publicationStatus: PublicationStatus.SUBMITTED],
+                        [fromDate: '2023-07-01T00:00:00Z', toDate: '2024-01-01T00:00:00Z', publicationStatus: PublicationStatus.CANCELLED]
+                ],
+                outputTargets: [[periodTargets: existingPeriodTargets]]
+        ]
+
+        List newPeriods = [[period: 'Jan 2024 - Jun 2024', periodStart: '2024-01-01T00:00:00Z', periodEnd: '2024-07-01T00:00:00Z']]
+
+        when:
+        List result = service.generateTargetPeriods(project, config)
+
+        then:
+        _ * reportService.excludesNotApproved(_) >> { Map report -> PublicationStatus.isReadOnly(report.publicationStatus) }
+        // The last cancelled report's toDate is used as the latestApprovedReportPeriodEnd
+        1 * reportService.generateTargetPeriods(_, _, 'MMM yyyy', _, { it != null }) >> newPeriods
+        // Both existing periods are preserved (before the last read-only report end date) plus new generated periods
+        result.size() == 3
+        result[0].period == 'Jan 2023 - Jun 2023'
+        result[1].period == 'Jul 2023 - Dec 2023'
+        result[2].period == 'Jan 2024 - Jun 2024'
+    }
+
+    def "generateTargetPeriods generates all periods when no reports exist on the project"() {
+        given:
+        Map targetsConfig = [
+                periodGenerationConfig: [reportingPeriodInMonths: 6, reportsAlignedToCalendar: true, reportType: 'Activity'],
+                periodLabelFormat: 'MMM yyyy'
+        ]
+        ProgramConfig config = new ProgramConfig([targetsConfig: targetsConfig])
+        Map project = [
+                projectId: 'p1',
+                name: 'Project 1',
+                plannedStartDate: '2023-01-01T00:00:00Z',
+                plannedEndDate: '2024-01-01T00:00:00Z',
+                reports: null,
+                outputTargets: [[periodTargets: []]]
+        ]
+
+        List generatedPeriods = [[period: 'Jan 2023 - Jun 2023', periodStart: '2023-01-01T00:00:00Z', periodEnd: '2023-07-01T00:00:00Z']]
+
+        when:
+        List result = service.generateTargetPeriods(project, config)
+
+        then:
+        1 * reportService.generateTargetPeriods(_, _, 'MMM yyyy', 1, null) >> generatedPeriods
+        result == generatedPeriods
     }
 
 

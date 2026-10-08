@@ -141,8 +141,9 @@ class ReadOnlyFirstNationsPeopleInvolvement extends Module {
 
 class ReadOnlyServiceOutcomeTarget extends Module {
     static content = {
-        outcomes { $('.service span') }
-        target { $('.score span') }
+        outcomes { $('.service span, .outcomes span') }
+        target { $('.score span, .target span') }
+        periodTargets(required:false) { $('td.forecast span') }
     }
 }
 class ReadOnlyServiceOutcomeTargets extends Module {
@@ -186,6 +187,7 @@ class ReadOnlyMeriPlan extends Module {
         secondaryOutcomes(required: false) { $('table.secondary-outcome tbody tr').moduleList(ReadOnlyOutcomeRow) }
         shortTermOutcomes(required: false) { $('tbody[data-bind*="shortTermOutcomes"] tr').moduleList(ReadOnlyProjectOutcomeRow) }
         mediumTermOutcomes(required: false) {  $('tbody[data-bind*="midTermOutcomes"] tr').moduleList(ReadOnlyProjectOutcomeRow) }
+        projectTermOutcomes(required: false) {  $('tbody[data-bind*="projectTermOutcomes"] tr').moduleList(ReadOnlyProjectOutcomeRow) }
         projectName(required: false) { $('span[data-bind*="details.name"]') }
         projectDescription(required: false) { $('span[data-bind*="details.description"]') }
         rationale(required: false) { $('[data-bind*="details.rationale"]') }
@@ -200,7 +202,7 @@ class ReadOnlyMeriPlan extends Module {
         reviewMethodology(required: false) { $('span[data-bind*="projectEvaluationApproach"]') }
         nationalAndRegionalPlans(required: false) { $('table.plans-view tbody tr').moduleList(ReadOnlyPlanRow) }
         projectServices(required: false) { $('table.service-targets-view tbody tr').moduleList(ReadOnlyServiceTargetRow) }
-        serviceOutcomeTargets(required: false) { $('table.service-outcomes-targets-view').module(ReadOnlyServiceOutcomes) }
+        serviceOutcomeTargets(required: false) { $('table.service-outcomes-targets-view, table.service-outcomes-targets-with-forecasts-view').module(ReadOnlyServiceOutcomes) }
         serviceForecasts(required: false) { $('table.forecasts').module(ReadOnlyServiceForecasts) }
 
         objectivesList(required: false) { $('#objectives-list') }

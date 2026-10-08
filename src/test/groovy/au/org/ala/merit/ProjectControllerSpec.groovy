@@ -321,7 +321,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         1 * projectService.doesReportBelongToProject(projectId, reportId) >> true
         1 * reportService.activityReportModel(reportId, ReportService.ReportMode.VIEW, null) >> activityReportModel
         1 * reportService.reportLifeCycleListener(_) >> new ReportLifecycleListener()
-        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
+        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity, true) >> activityReportModel.metaModel
         1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
 
         view == '/activity/activityReportView'
@@ -346,7 +346,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         1 * projectService.doesReportBelongToProject(projectId, reportId) >> true
         1 * reportService.activityReportModel(reportId, ReportService.ReportMode.EDIT, null) >> activityReportModel
         1 * reportService.reportLifeCycleListener(_) >> new ReportLifecycleListener()
-        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
+        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity, true) >> activityReportModel.metaModel
         1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
 
         view == '/activity/activityReport'
@@ -376,7 +376,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         // Override the default behaviour from setup
         1 * projectService.getProgramConfiguration(project) >> new ProgramConfig([requiresActivityLocking: true])
         0 * reportService.lockForEditing(_)
-        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
+        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity, false) >> activityReportModel.metaModel
 
         and: "the user should be redirected to the report view"
         response.redirectUrl == '/project/viewReport/'+projectId+"?reportId="+reportId+"&attemptedEdit=true"
@@ -401,7 +401,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         1 * projectService.doesReportBelongToProject(projectId, reportId) >> true
         1 * reportService.reportLifeCycleListener(_) >> new ReportLifecycleListener()
         1 * reportService.lockForEditing(project.reports[0])
-        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
+        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity, true) >> activityReportModel.metaModel
 
         view == '/activity/activityReport'
     }
@@ -425,7 +425,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         1 * projectService.doesReportBelongToProject(projectId, reportId) >> true
         1 * reportService.reportLifeCycleListener(_) >> new ReportLifecycleListener()
         0 * reportService.lockForEditing(project.reports[0])
-        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity) >> activityReportModel.metaModel
+        1 * projectService.filterOutputModel(activityReportModel.metaModel, project, activityReportModel.activity, true) >> activityReportModel.metaModel
 
         view == '/activity/activityReport'
     }
@@ -973,7 +973,7 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
         controller.scoresForReport(projectId)
 
         then:
-        1 * projectService.scoresForReport(projectId, reportId, scoreIds) >> result
+        1 * projectService.scoresForReport(projectId, reportId, scoreIds, null) >> result
         response.json == result
     }
 
@@ -1056,6 +1056,40 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
     private Map stubReadOnly(userId, projectId) {
         stubUserPermissions(userId, projectId, false, false, false, true)
         ['userName':null, 'userId':userId, 'class':UserDetails, 'displayName':null, 'isAdmin':false, 'isCaseManager':false, 'isEditor':false, 'hasViewAccess':true]
+    }
+
+    def "The ajaxUpdateReportDueDate action delegates to the project service to save the new due date"() {
+        setup:
+        String projectId = 'p1'
+
+        when:
+        request.method = 'POST'
+        request.json = [reportId:'r1', dueDate:'2021-07-31T14:00:00Z']
+        controller.ajaxUpdateReportDueDate(projectId)
+
+        then:
+        1 * projectService.updateReportDueDate(projectId, [reportId:'r1', dueDate:'2021-07-31T14:00:00Z']) >> [success:true, dueDate:'2021-07-31T14:00:00Z']
+
+        and:
+        response.status == HttpStatus.SC_OK
+        response.json == [success:true, dueDate:'2021-07-31T14:00:00Z']
+    }
+
+    def "The ajaxUpdateReportDueDate action returns an error if the due date cannot be saved"() {
+        setup:
+        String projectId = 'p1'
+
+        when:
+        request.method = 'POST'
+        request.json = [reportId:'r1', dueDate:'2021-07-31T14:00:00Z']
+        controller.ajaxUpdateReportDueDate(projectId)
+
+        then:
+        1 * projectService.updateReportDueDate(projectId, _) >> [success:false, error:'Invalid reportId supplied']
+
+        and:
+        response.status == HttpStatus.SC_UNPROCESSABLE_ENTITY
+        response.json == [success:false, error:'Invalid reportId supplied']
     }
 
     private def stubUserPermissions(userId, projectId, editor, admin, grantManager, canView) {

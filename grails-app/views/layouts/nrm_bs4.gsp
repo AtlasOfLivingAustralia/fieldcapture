@@ -132,8 +132,8 @@
                 <div class="collapse navbar-collapse" id="nav-items">
                     <ul class="nav navbar-nav me-auto">
                         <fc:navbar active="${pageProperty(name: 'page.topLevelNav')}"
-                                   items="${['home', 'projectExplorer', 'about', 'help', 'contacts']}"/>
-
+                                   items="${['home', 'projectExplorer', 'about', 'contacts']}"/>
+                        <fc:helpMenu/>
                     </ul>
                     <form class="d-flex align-items-center">
                         %{--                        <span id="buttonBar">--}%

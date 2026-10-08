@@ -310,7 +310,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         then:
         waitFor {
             meriPlan.keyThreats[0].relatedOutcomes.find('option').collect{it.value()} == ["MT1", "MT2", "ST1"]
-            meriPlan.keyThreats[0].targetMeasures.find('option').collect{it.value()}.containsAll(["score_42", "score_43", "score_44"])
+            meriPlan.keyThreats[0].targetMeasures.find('option').collect{it.value()}.containsAll(["score_43"])
         }
 
         when:
@@ -432,14 +432,30 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         resp.resp.data.searchMeritProjects.totalCount == 1
 
         def result = resp.resp.data.searchMeritProjects.results[0]
+
         // Assert outcome targets match what was set
-        result.meriPlan.outputTargets[0].targetMeasure.label == "Number of communication materials published"
-        result.meriPlan.outputTargets[0].targetMeasure.service.name == "Communication materials"
-        result.meriPlan.outputTargets[0].target == 1
+        result.meriPlan.outputTargets[0].targetMeasure.label == "Number of baseline data sets collected and/or synthesised"
+        result.meriPlan.outputTargets[0].targetMeasure.service.name == "Collecting, or synthesising baseline data"
+        result.meriPlan.outputTargets[0].target == 2
         result.meriPlan.outputTargets[0].outcomeTargets.size() == 1
-        result.meriPlan.outputTargets[0].outcomeTargets[0].target == 1
-        result.meriPlan.outputTargets[0].outcomeTargets[0].relatedOutcomes == ["ST1"]
+        result.meriPlan.outputTargets[0].outcomeTargets[0].target == 2
+        result.meriPlan.outputTargets[0].outcomeTargets[0].relatedOutcomes == ["MT1"]
         result.meriPlan.outputTargets[0].periodTargets == [
+                [period: "2018/2019", target: 1.0],
+                [period: "2019/2020", target: 2.0],
+                [period: "2020/2021", target: 3.0],
+                [period: "2021/2022", target: 4.0],
+                [period: "2022/2023", target: 5.0],
+                [period: "2023/2024", target: 0.0]
+        ]
+
+        result.meriPlan.outputTargets[1].targetMeasure.label == "Number of communication materials published"
+        result.meriPlan.outputTargets[1].targetMeasure.service.name == "Communication materials"
+        result.meriPlan.outputTargets[1].target == 1
+        result.meriPlan.outputTargets[1].outcomeTargets.size() == 1
+        result.meriPlan.outputTargets[1].outcomeTargets[0].target == 1
+        result.meriPlan.outputTargets[1].outcomeTargets[0].relatedOutcomes == ["ST1"]
+        result.meriPlan.outputTargets[1].periodTargets == [
             [period: "2018/2019", target: 5.0],
             [period: "2019/2020", target: 4.0],
             [period: "2020/2021", target: 3.0],
@@ -448,34 +464,19 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
             [period: "2023/2024", target: 0.0]
         ]
 
-        result.meriPlan.outputTargets[1].targetMeasure.label == "Area (ha) surveyed for weeds"
-        result.meriPlan.outputTargets[1].targetMeasure.service.name == "Weed distribution survey"
-        result.meriPlan.outputTargets[1].target == 3
-        result.meriPlan.outputTargets[1].outcomeTargets.size() == 1
-        result.meriPlan.outputTargets[1].outcomeTargets[0].target == 3
-        result.meriPlan.outputTargets[1].outcomeTargets[0].relatedOutcomes == ["MT1"]
-        result.meriPlan.outputTargets[1].periodTargets == [
+        result.meriPlan.outputTargets[2].targetMeasure.label == "Area (ha) surveyed for weeds"
+        result.meriPlan.outputTargets[2].targetMeasure.service.name == "Weed distribution survey"
+        result.meriPlan.outputTargets[2].target == 3
+        result.meriPlan.outputTargets[2].outcomeTargets.size() == 1
+        result.meriPlan.outputTargets[2].outcomeTargets[0].target == 3
+        result.meriPlan.outputTargets[2].outcomeTargets[0].relatedOutcomes == ["MT1"]
+        result.meriPlan.outputTargets[2].periodTargets == [
             [period: "2018/2019", target: 6.0],
             [period: "2019/2020", target: 7.0],
             [period: "2020/2021", target: 8.0],
             [period: "2021/2022", target: 9.0],
             [period: "2022/2023", target: 0.0],
             [period: "2023/2024", target: 0.0]
-        ]
-
-        result.meriPlan.outputTargets[2].targetMeasure.label == "Number of baseline data sets collected and/or synthesised"
-        result.meriPlan.outputTargets[2].targetMeasure.service.name == "Collecting, or synthesising baseline data"
-        result.meriPlan.outputTargets[2].target == 2
-        result.meriPlan.outputTargets[2].outcomeTargets.size() == 1
-        result.meriPlan.outputTargets[2].outcomeTargets[0].target == 2
-        result.meriPlan.outputTargets[2].outcomeTargets[0].relatedOutcomes == ["MT1"]
-        result.meriPlan.outputTargets[2].periodTargets == [
-                [period: "2018/2019", target: 1.0],
-                [period: "2019/2020", target: 2.0],
-                [period: "2020/2021", target: 3.0],
-                [period: "2021/2022", target: 4.0],
-                [period: "2022/2023", target: 5.0],
-                [period: "2023/2024", target: 0.0]
         ]
 
         result.name == "MERI plan edited name"
@@ -503,7 +504,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         result.meriPlan.partnerships[0].partnerName == "partner name"
         result.meriPlan.partnerships[0].description == "partnership"
         result.meriPlan.partnerships[0].partnerOrganisationType == "Trust"
-        result.meriPlan.baselines[0].code == "B2"
+        result.meriPlan.baselines[0].code == "B1"
         result.meriPlan.baselines[0].description == "Project baseline 1"
         result.meriPlan.baselines[0].relatedOutcomes == ["MT1"]
         result.meriPlan.baselines[0].existsOrToBeEstablished == "Needs to be collected"
@@ -517,7 +518,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         result.meriPlan.monitoringMethodology[0].targetMeasures[0].targetMeasureId == "score_42"
         result.meriPlan.monitoringMethodology[0].targetMeasures[0].service.name == "Collecting, or synthesising baseline data"
         result.meriPlan.monitoringMethodology[0].targetMeasures[0].label == "Number of baseline data sets collected and/or synthesised"
-        result.meriPlan.monitoringMethodology[0].relatedBaseline == "B2"
+        result.meriPlan.monitoringMethodology[0].relatedBaseline == "B1"
         result.meriPlan.monitoringMethodology[0].emsaModules == ["Category 1"]
         result.meriPlan.monitoringMethodology[0].evidence == "Evidence 2"
 

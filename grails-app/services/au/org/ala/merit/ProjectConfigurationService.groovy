@@ -164,7 +164,7 @@ class ProjectConfigurationService {
 
         programConfig.projectReports = [
                 [
-                        weekDaysToCompleteReport:programConfig.weekDaysToCompleteReport,
+                        periodToCompleteReport:programConfig.weekDaysToCompleteReport ? "P"+programConfig.weekDaysToCompleteReport+"D" : null,
                         reportType:ReportService.REPORT_TYPE_STAGE_REPORT,
                         reportingPeriodInMonths: reportingPeriodInMonths,
                         reportsAlignedToCalendar: Boolean.valueOf(programConfig.reportingPeriodAlignedToCalendar),

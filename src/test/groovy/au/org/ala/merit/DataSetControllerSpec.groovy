@@ -42,15 +42,16 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
 
         then:
         1 * projectService.get('p1') >> project
+        1 * projectService.getProjectServices(project) >> [[id:"1", scores:[[scoreId:'s1', label:'score 1'], [scoreId:'s2', label:'score 2']]]]
         1 * projectService.getProgramConfiguration(project) >> programConfig
         1 * projectService.getAllProjectOutcomes(project) >> ["1", "2"]
         1 * projectService.listProjectInvestmentPriorities(project) >> ["p1"]
         1 * projectService.listProjectProtocols(project) >> [["name":"p1", "externalId":"p1"]]
-        1 * projectService.listProjectBaselines(project) >> [["code":"b1", baseline:"a baseline"]]
+        1 * projectService.listProjectBaselines(project) >> [["code":"b1", baseline:"a baseline", relatedTargetMeasures: ["s1"]]]
 
         model == [project:project, projectId:'p1', programName:"program 1", supportsOutcomeTargets:false,
                   priorities:["p1"], outcomes:["1", "2"], projectOutcomes:[],
-                    projectBaselines:[[label:"b1 - a baseline", value:"b1"]],
+                    projectBaselines:[[label:"b1 - a baseline", value:"b1", serviceIds:["1"]]],
                     projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']], dataSetNames:['d1', 'd2'], serviceBaselineIndicatorOptions:[:]]
 
     }
@@ -95,7 +96,7 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
 
         model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"], supportsOutcomeTargets: true,
                   outcomes:["1", "2"], projectOutcomes:[], dataSet:existingDataSets[1],
-                  projectBaselines:[[label:"b1 - a baseline", value:"b1"]],
+                  projectBaselines:[[label:"b1 - a baseline", value:"b1", serviceIds:[]]],
                   projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']], dataSetNames: ['data set 1', 'data set 3'], serviceBaselineIndicatorOptions:[:]]
     }
 
@@ -160,7 +161,7 @@ class DataSetControllerSpec extends Specification implements ControllerUnitTest<
 
         model == [project:project, projectId:'p1', programName:"program 1", priorities:["p1"], supportsOutcomeTargets: false,
                   outcomes:["1", "2"], projectOutcomes:[], dataSet:existingDataSets[1],
-                  projectBaselines:[[label:"b1 - a baseline", value:"b1"]],
+                  projectBaselines:[[label:"b1 - a baseline", value:"b1", serviceIds:[]]],
                   projectProtocols:[[label:"p1", value:"p1"], [label:'Other', value:'other']], dataSetNames: ['data set 1', 'data set 2', 'data set 3'], serviceBaselineIndicatorOptions:[:]]
     }
 

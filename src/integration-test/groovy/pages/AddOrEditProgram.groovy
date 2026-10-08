@@ -9,6 +9,8 @@ class AddOrEditProgram extends Module {
         newParentProgramId { $('.select2-selection')}
         name { $('#name') }
         description { $('#description') }
+        startDate { $('#start-date') }
+        endDate { $('#end-date') }
         url { $('#url') }
         socialMediaDropdown { $('#addSocialMedia') }
         attachProgramLogoButton { $('[data-role=logo]') }

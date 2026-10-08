@@ -17,7 +17,7 @@ class SpatialService {
     private static final String DELETE_SHAPE_PATH = "/shape/upload"
     private static final String UPLOAD_SHAPE_PATH = "/shape/upload/shp"
     private static final String SHAPE_GEOJSON_PATH = "/shape/geojson"
-
+    private static final String SPATIAL_FEATURES_PATH = "/spatial/features"
 
     /**
      * Deletes the user uploaded (i.e. not a "known shape") object (site) from the spatial portal
@@ -71,6 +71,26 @@ class SpatialService {
     Map objectGeometry(String spatialPortalObjectId) {
         String getGeoJsonUrl = "${grailsApplication.config.getProperty('spatial.layersUrl')}${SHAPE_GEOJSON_PATH}"
         webService.getJson2("${getGeoJsonUrl}/${spatialPortalObjectId}")
+    }
+
+    List getStateNames() {
+
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + SPATIAL_FEATURES_PATH
+        String statesLayerId = grailsApplication.config.getProperty('layers.states')
+        Map params = [layerId: statesLayerId]
+
+        Map resp = webService.getJson(url, params)
+        resp?.resp?.collect{it.name}
+    }
+
+    Map getElectoratesWithStates() {
+        String electoratesLayerId = grailsApplication.config.getProperty('layers.elect')
+        String statesLayerId = grailsApplication.config.getProperty('layers.states')
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + SPATIAL_FEATURES_PATH
+        Map params = [layerId: electoratesLayerId, intersectWith: statesLayerId]
+
+        Map resp = webService.getJson(url, params)
+        resp?.resp?.collectEntries{[(it.name): it[statesLayerId]?[0]]} // We know each electorate only intersects with one state, so we can just take the first one
     }
 
 

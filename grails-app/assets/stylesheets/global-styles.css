@@ -979,4 +979,8 @@ input.invisibleValidationHolder {
     border-width: 5px;
 }
 
+.next-to-heading {
+	display: inline-block;
+	margin-left: 10px;
+}
 

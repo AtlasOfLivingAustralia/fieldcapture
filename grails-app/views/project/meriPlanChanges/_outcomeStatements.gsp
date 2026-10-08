@@ -24,7 +24,7 @@
         </g:each>
         </tbody>
     </g:if>
-    <g:else>
+    <g:elseif test="${outcomeType == 'short'}">
         <tbody>
         <g:set var="max" value="${Math.max(project.custom.details.outcomes.shortTermOutcomes.size(), changed.custom.details.outcomes?.shortTermOutcomes?.size()?:0)}"/>
         <g:each in="${(0..<max)}" var="i">
@@ -36,5 +36,19 @@
             </tr>
         </g:each>
         </tbody>
-    </g:else>
+    </g:elseif>
+    <g:elseif test="${outcomeType == 'project'}">
+        <tbody>
+        <g:set var="max" value="${Math.max(project.custom.details.outcomes.projectTermOutcomes.size(), changed.custom.details.outcomes?.projectTermOutcomes?.size()?:0)}"/>
+        <g:each in="${(0..<max)}" var="i">
+            <tr>
+                <td class="code"><fc:renderComparison changed="${changed.custom.details.outcomes.projectTermOutcomes ?: []}" i="${i}" original="${project.custom.details.outcomes.projectTermOutcomes ?: []}" property="code"/> </td>
+                <td class="outcome"><fc:renderComparison changed="${changed.custom.details.outcomes.projectTermOutcomes ?: []}" i="${i}" original="${project.custom.details.outcomes.projectTermOutcomes ?: []}" property="description"/> </td>
+                <td class="investment-priority"><fc:renderComparisonList changed="${changed.custom.details.outcomes.projectTermOutcomes ?: []}" i="${i}" original="${project.custom.details.outcomes.projectTermOutcomes ?: []}" property="assets"/> </td>
+                <td class="medium-term-outcome"><fc:renderComparison changed="${changed.custom.details.outcomes.projectTermOutcomes ?: []}" i="${i}" original="${project.custom.details.outcomes.projectTermOutcomes ?: []}" property="relatedOutcome"/> </td>
+            </tr>
+        </g:each>
+        </tbody>
+    </g:elseif>
+
 </table>

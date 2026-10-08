@@ -15,6 +15,7 @@
     <script>
     var fcConfig = {
         serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
+        i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
         ownerViewUrl: "${ownerViewURL}",
         bieUrl: "${grailsApplication.config.getProperty('bie.baseURL')}",
         imageLocation:"${assetPath(src:'/')}",
@@ -172,14 +173,14 @@
             var reportSite =  <fc:modelAsJavascript model="${reportSite}" default="{}"/>
             var formFeatures = new ecodata.forms.FeatureCollection(reportSite ? reportSite.features : []);
             fcConfig.featureCollection = formFeatures;
-            <g:if test="${!printView}">
+
             var mapOptions = {};
             if (fcConfig.useGoogleBaseMap) {
                 mapOptions.baseLayersName = 'Google'; // Default is Open Street Maps
             }
             // Initialise our map so we can supply options (otherwise it's initialised  with  defaults)
             ecodata.forms.maps.featureMap(mapOptions);
-            </g:if>
+
         }
 
         $('.imageList a[target="_photo"]').attr('rel', 'gallery').fancybox({type:'image', autoSize:true, nextEffect:'fade', preload:0, 'prevEffect':'fade'});
