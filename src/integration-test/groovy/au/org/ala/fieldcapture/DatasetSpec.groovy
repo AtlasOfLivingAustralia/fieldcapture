@@ -250,8 +250,8 @@ class DatasetSpec extends StubbedCasSpec{
             // This test is failing sometimes on actions due to what seems to be a validation error - trying to track it down.
             def result = js.exec("return \$('div.formError')")
             println result
-            result = js.exec("return \$('div.formError').next()")?.collect{[it.getAttribute('name'), it.getAttribute('id'), it.getAttribute('data-bind'), it.getText(), it.toJson()]}
-            println result
+            def result2 = js.exec("return \$('div.formError').next()")?.collect{[it.getAttribute('name'), it.getAttribute('id'), it.getAttribute('data-bind'), it.getText(), it.toJson()]}
+            println result2
 
             at RlpProjectPage
         }
