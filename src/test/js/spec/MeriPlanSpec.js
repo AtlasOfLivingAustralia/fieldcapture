@@ -853,7 +853,8 @@ describe("Loading the MERI plan is handled correctly", function () {
         meriPlan.threats.rows()[0].relatedTargetMeasures(["2"]);
         viewModel.selectedServiceWatcher();
         expect(meriPlan.serviceOutcomes.outcomeTargets().length).toEqual(3);
-        newOutcomeTarget = meriPlan.serviceOutcomes.outcomeTargets()[2];
+        // Because of the sorting this new one won't necessarily be the last one in the list, so we need to find it by scoreId
+        newOutcomeTarget = _.find(meriPlan.serviceOutcomes.outcomeTargets(), {scoreId: "2"});
         expect(newOutcomeTarget.scoreId).toEqual("2")
         expect(newOutcomeTarget.serviceLabel).toEqual("Service 2");
         expect(newOutcomeTarget.scoreLabel).toEqual("Score 2");
