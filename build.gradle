@@ -9,7 +9,6 @@ buildscript {
     dependencies {
 
         classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:2.0"
-        //classpath 'org.apache.grails:grails-quartz'
         classpath "org.apache.grails:grails-gradle-plugins:$grailsVersion"
         classpath "cloud.wondrify:asset-pipeline-gradle:$assetPipelineVersion"
         classpath 'com.bmuschko:gradle-clover-plugin:3.0.1'
