@@ -2,12 +2,10 @@ package au.org.ala.merit
 
 import grails.converters.JSON
 import grails.web.mapping.LinkGenerator
-import org.springframework.context.MessageSource
 
 class CommonService {
 
     LinkGenerator grailsLinkGenerator
-    MessageSource messageSource
 
     def buildUrlParamsFromMap(map) {
         if (!map) return ''
@@ -35,9 +33,5 @@ class CommonService {
             featuresMap.features << feature
         }
         return featuresMap as JSON
-    }
-
-    def i18n(Locale locale) {
-        messageSource.getMergedProperties(locale)?.properties
     }
 }

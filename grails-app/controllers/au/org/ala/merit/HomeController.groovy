@@ -320,13 +320,6 @@ class HomeController {
         }
     }
 
-    def i18n() {
-        if (request.isGet()) {
-            Map props = commonService.i18n(request.locale)
-            render props as JSON
-        }
-    }
-
     private renderStaticPage(SettingPageType settingType, String suffix = null, showNews = false) {
 
         def content = settingService.getSettingText(settingType, (String)suffix)

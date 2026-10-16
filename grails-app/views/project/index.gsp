@@ -106,7 +106,7 @@
                 manageEMSASiteDataSetsUrl: "${createLink(controller:'project', action:'index', id:project.projectId, params:[manageEMSASiteDataSets:true])}",
                 unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}",
                 projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:project.projectId)}",
-                i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
+                i18nURL: "${g.createLink(controller: 'i18n', action: 'messages')}",
                 returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}",
                 reportsHistoryUrl:"${createLink(controller: 'report', action:'reportingHistory')}",
                 monitoringProtocolsUrl:"${createLink(action:'monitoringProtocolFormCategories', id: project.projectId)}",
