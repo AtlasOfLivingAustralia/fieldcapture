@@ -79,7 +79,7 @@ jobs:
           GPR_USER: ${{env.GITHUB_ACTOR}}
           GPR_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-      - name: Install javascript packages using the gradle clientInstall plugin
+      - name: Install javascript packages using the gradle clientInstall task
         run: ./gradlew clientInstall
         env:
           GPR_USER: ${{env.GITHUB_ACTOR}}

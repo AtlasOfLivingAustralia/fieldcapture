@@ -18,7 +18,6 @@ buildscript {
 
 plugins {
     id 'war'
-    id "com.magnetichq.client-dependencies" version "2.0.0"
     id 'jacoco'
     id 'com.williamhill.wiremock' version '0.4.1'
     id 'com.skillsjars.gradle-plugin' version '0.1.4'
@@ -270,57 +269,82 @@ wiremock {
     params "--port=8018 --global-response-templating --local-response-templating"
 }
 
-clientDependencies {
-    installDir = "grails-app/assets/vendor-ext"
-    npm {
-        'bootstrap'('5.3.8', transitive:false) {
-            include 'js/bootstrap.bundle.js', 'css/bootstrap.css'
-        }
-        'bootbox'('6.0.4', transitive: false) {
-            include 'bootbox.js'
-        }
-        'jquery'('3.6.0')
-        'font-awesome'('4.7.0')
-        'knockout'('3.5.1', from:'build/output')
-        'knockout-mapping'('2.6.0')
-        'bootstrap-datepicker'('1.9.0')
-        'select2'('4.0.13')
-        'underscore'('1.12.1') {
-            include 'underscore.js'
-        }
-        'datatables.net'("1.13.11")
-        'datatables.net-bs4'("1.13.11")
-        "datatables.net-buttons"("2.4.2", transitive: false)
-        "datatables.net-buttons-dt"("2.4.2", transitive: false)
-        'datatables.net-buttons-bs4'("2.4.2", transitive: false)
-        '@danielfarrell/bootstrap-combobox'('1.1.8', transitive:false)
-        'fancybox'('3.0.1')
-        "fuelux"("3.17.2", transitive:false)
-        "fuse.js"("6.4.6", transitive:false)
-        "leaflet"("0.7.7")
-        "select2-theme-bootstrap4"("1.0.2") // The bootstrap 5 theme overflows containers and this theme still looks OK
-        "slickgrid"("2.4.38")
-        "jquery-appear-original"("0.4.1", transitive:false)
-        "jquery-file-download"("1.4.6", from: "src/Scripts") {
-            include "jquery.fileDownload.js"
-        }
-        "jquery.shorten"("1.0.0", from: "src")
-        "js-cookie"("3.0.0")
-        "@taitems/jquery-gantt"("1.1.2")
-        "jstimezonedetect"("1.0.7")
-        "jszip"("3.7.1", transitive:false)
-        "pdfmake"("0.1.36", from: "build", transitive:false)
-        "typeahead.js"("0.11.1")
-        'frigus02-vkbeautify'("1.0.1") {
-            include "vkbeautify.js"
-        }
+// Third party javascript/css libraries are declared in client-dependencies/package.json, installed with npm and
+// copied into grails-app/assets/vendor-ext using the layout produced by the (now Gradle 9 incompatible)
+// client-dependencies plugin: each package is copied from its "dist" or "release" folder if present.
+def clientDependenciesDir = file('client-dependencies')
+def clientNodeModulesDir = new File(clientDependenciesDir, 'node_modules')
+def vendorExtDir = file('grails-app/assets/vendor-ext')
 
+// "from" overrides the folder in the package to copy, "include" restricts the files copied.
+def clientDependencyOverrides = [
+        'bootstrap'           : [include: ['js/bootstrap.bundle.js', 'css/bootstrap.css']],
+        'bootbox'             : [include: ['bootbox.js']],
+        'knockout'            : [from: 'build/output'],
+        'underscore'          : [include: ['underscore.js']],
+        'jquery-file-download': [from: 'src/Scripts', include: ['jquery.fileDownload.js']],
+        'jquery.shorten'      : [from: 'src'],
+        'pdfmake'             : [from: 'build'],
+        'frigus02-vkbeautify' : [include: ['vkbeautify.js']]
+]
+def clientDependencyIncludes = ['css', 'js', 'eot', 'svg', 'ttf', 'woff', 'woff2', 'ts', 'jpg', 'jpeg', 'png', 'gif'].collect { "**/*.${it}" }
+def clientDependencyExcludes = ['**/*.min.js', '**/*.min.css', '**/*.map', '**/Gruntfile.js', 'gulpfile.js', 'source/**']
+def clientDependencySourceDir = { File packageDir, String from ->
+    if (from != null) {
+        return new File(packageDir, from)
     }
-    bower {
-        'html5shiv'("3.7.3", transitive:false)
-        "blockui"("2.69")
-        'jquery-ui'('1.12.1')
+    String releaseFolder = ['dist', 'release'].find { new File(packageDir, it).directory }
+    releaseFolder ? new File(packageDir, releaseFolder) : packageDir
+}
+
+tasks.register('clientNpmInstall', Exec) {
+    group = 'client dependencies'
+    description = 'Installs the npm packages declared in client-dependencies/package.json'
+    mustRunAfter 'clientClean'
+    workingDir clientDependenciesDir
+    String npm = System.getProperty('os.name').toLowerCase().contains('windows') ? 'npm.cmd' : 'npm'
+    commandLine npm, 'ci', '--no-audit', '--no-fund'
+    inputs.files(new File(clientDependenciesDir, 'package.json'), new File(clientDependenciesDir, 'package-lock.json'), new File(clientDependenciesDir, '.npmrc'))
+    outputs.dir(clientNodeModulesDir)
+}
+
+tasks.register('clientInstall', Sync) {
+    group = 'client dependencies'
+    description = 'Installs client dependencies into grails-app/assets/vendor-ext'
+    dependsOn 'clientNpmInstall'
+    mustRunAfter 'clientClean'
+    into vendorExtDir
+    includeEmptyDirs = false
+    def packageJson = new groovy.json.JsonSlurper().parse(new File(clientDependenciesDir, 'package.json'))
+    packageJson.dependencies.keySet().each { String packageName ->
+        Map override = clientDependencyOverrides[packageName] ?: [:]
+        from({ clientDependencySourceDir(new File(clientNodeModulesDir, packageName), override.from as String) }) {
+            into packageName
+            exclude '**/node_modules/**'
+            if (override.include) {
+                include override.include
+            } else {
+                include clientDependencyIncludes
+                exclude clientDependencyExcludes
+            }
+        }
     }
+}
+
+tasks.register('clientClean', Delete) {
+    group = 'client dependencies'
+    description = 'Removes the installed client dependencies'
+    delete vendorExtDir, clientNodeModulesDir
+}
+
+tasks.register('clientRefresh') {
+    group = 'client dependencies'
+    description = 'Removes and re-installs the client dependencies'
+    dependsOn 'clientClean', 'clientInstall'
+}
+
+tasks.matching { it.name in ['run', 'bootRun', 'assetCompile', 'integrationTest', 'karmaRun', 'karmaWatch'] }.configureEach {
+    dependsOn 'clientInstall'
 }
 
 assets {

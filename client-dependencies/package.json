@@ -1,0 +1,45 @@
+{
+  "name": "fieldcapture-client-dependencies",
+  "version": "1.0.0",
+  "description": "Third party javascript/css libraries copied into grails-app/assets/vendor-ext by the gradle clientInstall task",
+  "private": true,
+  "dependencies": {
+    "@danielfarrell/bootstrap-combobox": "1.1.8",
+    "@taitems/jquery-gantt": "1.1.2",
+    "bootbox": "6.0.4",
+    "bootstrap": "5.3.8",
+    "bootstrap-datepicker": "1.9.0",
+    "datatables.net": "1.13.11",
+    "datatables.net-bs4": "1.13.11",
+    "datatables.net-buttons": "2.4.2",
+    "datatables.net-buttons-bs4": "2.4.2",
+    "datatables.net-buttons-dt": "2.4.2",
+    "fancybox": "3.0.1",
+    "font-awesome": "4.7.0",
+    "frigus02-vkbeautify": "1.0.1",
+    "fuelux": "3.17.2",
+    "fuse.js": "6.4.6",
+    "jquery": "3.6.2",
+    "jquery-appear-original": "0.4.1",
+    "jquery-file-download": "1.4.6",
+    "jquery-ui": "1.13.2",
+    "jquery.shorten": "1.0.0",
+    "js-cookie": "3.0.7",
+    "jstimezonedetect": "1.0.7",
+    "jszip": "3.8.0",
+    "knockout": "3.5.3",
+    "knockout-mapping": "2.6.0",
+    "pdfmake": "0.3.6",
+    "select2": "4.0.13",
+    "select2-theme-bootstrap4": "1.0.2",
+    "slickgrid": "2.4.38",
+    "typeahead.js": "0.11.1",
+    "underscore": "1.13.8"
+  },
+  "overrides": {
+    "fuelux": {
+      "bootstrap": "$bootstrap",
+      "jquery": "$jquery"
+    }
+  }
+}
