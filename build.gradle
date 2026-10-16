@@ -36,8 +36,8 @@ apply plugin:"com.github.erdi.webdriver-binaries"
 apply plugin:"cloud.wondrify.asset-pipeline"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
 
