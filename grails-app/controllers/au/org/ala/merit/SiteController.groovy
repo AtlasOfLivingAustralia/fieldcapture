@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.command.CreateSiteFromShapefileCommand
 import grails.converters.JSON
 import org.apache.commons.io.FilenameUtils
@@ -86,8 +87,8 @@ class SiteController {
         if (selectedProject) {
 
             Map project = projectService.get(selectedProject.projectId)
-            Map config = projectConfigurationService.getProjectConfiguration(project)
-            if (config.projectTemplate != ProjectController.RLP_TEMPLATE) {
+            ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+            if (config.getProjectTemplate() != ProgramConfig.ProjectTemplate.RLP) {
                 def user = userService.getUser()
                 if (user) {
                     user = user.properties

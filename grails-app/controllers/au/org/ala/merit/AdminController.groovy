@@ -17,7 +17,6 @@ import org.apache.poi.ss.util.CellReference
 import org.grails.plugin.cache.GrailsCacheManager
 import org.joda.time.Period
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
-import org.springframework.web.multipart.MultipartHttpServletRequest
 
 @PreAuthorise(accessLevel = 'officer', redirectController = "home")
 @Slf4j
@@ -72,12 +71,10 @@ class AdminController {
 
         def results
 
-        if (request instanceof MultipartHttpServletRequest) {
-            def file = request.getFile('projectData')
-            if (file) {
-                results = importService.importUserPermissionsCsv(file.inputStream)
-                flash.message = results?.message
-            }
+        def file = request.getFile('projectData')
+        if (file) {
+            results = importService.importUserPermissionsCsv(file.inputStream)
+            flash.message = results?.message
         }
 
         render(view:'bulkLoadUserPermissions', model:[user: user, results: results])
@@ -427,7 +424,7 @@ class AdminController {
         Boolean update = params.getBoolean('update')
         def file
         if (preview) {
-            if (request instanceof MultipartHttpServletRequest) {
+            if (request.contentType?.toLowerCase(Locale.ROOT)?.startsWith('multipart/form-data')) {
                 def tmp = request.getFile('projectData')
                 file = File.createTempFile(tmp.originalFilename, '.csv')
                 tmp.transferTo(file)

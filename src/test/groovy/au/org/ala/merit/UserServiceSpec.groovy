@@ -231,13 +231,13 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         HubSettings hubSettings = new HubSettings(userPermissions:[])
 
         if (readOnlyRole) {
-            hubSettings.userPermissions << [userId:userId, role:RoleService.PROJECT_READ_ONLY_ROLE]
+            hubSettings.get('userPermissions') << [userId:userId, role:RoleService.PROJECT_READ_ONLY_ROLE]
         }
         if (fcOfficerRole) {
-            hubSettings.userPermissions << [userId:userId, role:RoleService.GRANT_MANAGER_ROLE]
+            hubSettings.get('userPermissions') << [userId:userId, role:RoleService.GRANT_MANAGER_ROLE]
         }
         if (fcAdminRole) {
-            hubSettings.userPermissions << [userId:userId, role:RoleService.PROJECT_ADMIN_ROLE]
+            hubSettings.get('userPermissions') << [userId:userId, role:RoleService.PROJECT_ADMIN_ROLE]
         }
         SettingService.setHubConfig(hubSettings)
 
@@ -440,7 +440,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         setup: "Mock a user with the grant manager role"
         String userId = 'gm1'
         HubSettings hubSettings = new HubSettings(userPermissions:[])
-        hubSettings.userPermissions << [userId:userId, role:RoleService.GRANT_MANAGER_ROLE]
+        hubSettings.get('userPermissions') << [userId:userId, role:RoleService.GRANT_MANAGER_ROLE]
         SettingService.setHubConfig(hubSettings)
         authService.userDetails() >> [userId:"u1"]
         authService.userInRole("ROLE_ADMIN") >> false
@@ -464,7 +464,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         setup: "Mock a user with the grant manager role"
         String addingUserId = 'gm1'
         HubSettings hubSettings = new HubSettings(userPermissions:[])
-        hubSettings.userPermissions << [userId:addingUserId, role:RoleService.GRANT_MANAGER_ROLE]
+        hubSettings.get('userPermissions') << [userId:addingUserId, role:RoleService.GRANT_MANAGER_ROLE]
         SettingService.setHubConfig(hubSettings)
         String toAddUserId = 'u1'
         authService.userDetails() >> [userId:addingUserId]
@@ -490,8 +490,8 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         String userIdToAdd = 'gm1'
         String loggedInUserId = 'u1'
         HubSettings hubSettings = new HubSettings(userPermissions:[])
-        hubSettings.userPermissions << [userId:loggedInUserId, role:RoleService.GRANT_MANAGER_ROLE]
-        hubSettings.userPermissions << [userId:userIdToAdd, role:RoleService.GRANT_MANAGER_ROLE]
+        hubSettings.get('userPermissions') << [userId:loggedInUserId, role:RoleService.GRANT_MANAGER_ROLE]
+        hubSettings.get('userPermissions') << [userId:userIdToAdd, role:RoleService.GRANT_MANAGER_ROLE]
 
         SettingService.setHubConfig(hubSettings)
         authService.userDetails() >> [userId:loggedInUserId]
@@ -652,7 +652,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         setup:
         String userId = 'u1'
         HubSettings hubSettings = new HubSettings(userPermissions:[])
-        hubSettings.userPermissions << [userId:userId, role:hubAccessLevel]
+        hubSettings.get('userPermissions') << [userId:userId, role:hubAccessLevel]
 
         SettingService.setHubConfig(hubSettings)
 
@@ -673,7 +673,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         setup:
         String userId = 'u1'
         HubSettings hubSettings = new HubSettings(userPermissions:[])
-        hubSettings.userPermissions << [userId:userId, role:hubAccessLevel]
+        hubSettings.get('userPermissions') << [userId:userId, role:hubAccessLevel]
 
         SettingService.setHubConfig(hubSettings)
 
@@ -695,7 +695,7 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         String userId = 'u1'
         HubSettings hubSettings = new HubSettings(userPermissions:[])
         if (userAccessLevel) {
-            hubSettings.userPermissions << [userId:userId, role:userAccessLevel]
+            hubSettings.get('userPermissions') << [userId:userId, role:userAccessLevel]
         }
         SettingService.setHubConfig(hubSettings)
 

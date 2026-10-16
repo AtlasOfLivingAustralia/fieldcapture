@@ -2145,18 +2145,18 @@ class ProjectService  {
         Map projectSites = siteService.getProjectSites(projectId)
         if (projectSites && !projectSites.error) {
             List sites = projectSites.sites
-            Map projectArea = projectSites?.find { it.properties?.type == SiteService.SITE_TYPE_PROJECT_AREA }
+            Map projectArea = projectSites?.find { it.getOrDefault('properties', null)?.type == SiteService.SITE_TYPE_PROJECT_AREA }
             if (projectArea) {
                 result.projectArea = projectArea
             }
 
             sites?.each { site ->
-                if (site.properties?.type == 'compound') {
-                    site.properties.category = 'Reporting Sites'
+                if (site.getOrDefault('properties', null)?.type == 'compound') {
+                    site.getOrDefault('properties', null)?.category = 'Reporting Sites'
                     result.features << site
                 }
-                else if (site.properties?.type != SiteService.SITE_TYPE_PROJECT_AREA) {
-                    site.properties.category = 'Planning Sites'
+                else if (site.getOrDefault('properties', null)?.type != SiteService.SITE_TYPE_PROJECT_AREA) {
+                    site.getOrDefault('properties', null)?.category = 'Planning Sites'
                     result.features << site
                 }
             }

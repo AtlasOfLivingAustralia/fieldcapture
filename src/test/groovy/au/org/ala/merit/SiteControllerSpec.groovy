@@ -278,7 +278,7 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         1 * userService.getUser() >> [userId:"u1"]
         1 * projectService.canUserViewProject("u1", "p1") >> true
         1 * projectService.get("p1") >> project
-        1 * projectConfigurationService.getProjectConfiguration(project) >> [projectTemplate:ProjectController.RLP_TEMPLATE]
+        1 * projectConfigurationService.getProjectConfiguration(project) >> new ProgramConfig([projectTemplate:ProjectController.RLP_TEMPLATE])
 
         and:
         model.site == site

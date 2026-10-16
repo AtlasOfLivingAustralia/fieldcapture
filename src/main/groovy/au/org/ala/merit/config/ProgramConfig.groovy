@@ -25,6 +25,7 @@ class ProgramConfig implements Map {
     enum ProjectTemplate {
         ESP,
         RLP,
+        MERI,
         DEFAULT
     }
 
@@ -45,12 +46,13 @@ class ProgramConfig implements Map {
 
     ProjectTemplate getProjectTemplate() {
         ProjectTemplate template = ProjectTemplate.DEFAULT
-        if (config.projectTemplate) {
-            template = ProjectTemplate.valueOf(config.projectTemplate?.toUpperCase())
-
-            if (!template) {
-                log.warn("Invalid projectTemplate specified in configuration: "+config.projectTemplate+". Using default")
-                template = ProjectTemplate.DEFAULT
+        String configuredTemplate = config.projectTemplate
+        if (configuredTemplate) {
+            try {
+                template = ProjectTemplate.valueOf(configuredTemplate.toUpperCase())
+            }
+            catch (IllegalArgumentException e) {
+                log.warn("Invalid projectTemplate specified in configuration: "+configuredTemplate+". Using default")
             }
         }
         template
@@ -102,13 +104,32 @@ class ProgramConfig implements Map {
 
 
 
-    boolean projectsMustStartAndEndOnContractDates
+    /*
+     * Note: configuration items are stored in the delegate Map.  Since Groovy 5, declared fields/getters take
+     * precedence over map entries during property access on classes implementing Map, so configuration items
+     * are exposed as getters that delegate to the map (and return null if the item is not configured).
+     * Items without a setter must be modified using put(key, value) rather than property assignment
+     * (which will throw a ReadOnlyPropertyException).
+     *
+     * The projectTemplate configuration item is exposed as a ProjectTemplate via getProjectTemplate() above.
+     */
 
-    String projectTemplate
+    Boolean getProjectsMustStartAndEndOnContractDates() {
+        config.projectsMustStartAndEndOnContractDates
+    }
 
     /** A list of activities that can be undertaken by projects run under this program */
-    List<String> activities
-    String speciesConfiguration
+    List getActivities() {
+        config.activities
+    }
+
+    void setActivities(List activities) {
+        config.activities = activities
+    }
+
+    String getSpeciesConfiguration() {
+        config.speciesConfiguration
+    }
 
 
     /**
@@ -125,8 +146,18 @@ class ProgramConfig implements Map {
         return reportConfig ? new ReportConfig(reportConfig) : null
     }
 
-    boolean activitiesRequireLocking
-    String activityNavigationMode // stay on page or return
+    Boolean getActivitiesRequireLocking() {
+        config.activitiesRequireLocking
+    }
+
+    /** stay on page or return */
+    String getActivityNavigationMode() {
+        config.activityNavigationMode
+    }
+
+    void setActivityNavigationMode(String activityNavigationMode) {
+        config.activityNavigationMode = activityNavigationMode
+    }
 
     boolean includesContent(ProjectContent content) {
         !config.excludes || !config.excludes.contains(content.toString())
@@ -135,16 +166,24 @@ class ProgramConfig implements Map {
     /**
      * This flag controls whether a grant/project manager can return a meri plan to a project officer for further work
      * or whether a MERIT admin needs to return it. */
-    boolean requireMeritAdminToReturnMeriPlan = false
+    Boolean getRequireMeritAdminToReturnMeriPlan() {
+        config.requireMeritAdminToReturnMeriPlan
+    }
 
-    /** This flag controls whether projects under this program are visible by users without directly assigned access or an elevated role in the MERIT hub */
-    String visibility = "public"
+    /** This flag controls whether projects under this program are visible by users without directly assigned access or an elevated role in the MERIT hub ("public" or "private") */
+    String getVisibility() {
+        config.visibility
+    }
 
     /** This flag controls whether a user with the MERIT read only role can view projects when the visibility is set to "private" */
-    boolean readOnlyUsersCanViewWhenPrivate = false
+    Boolean getReadOnlyUsersCanViewWhenPrivate() {
+        config.readOnlyUsersCanViewWhenPrivate
+    }
 
     /** This flag controls whether the project is using the new meri plan template(2023) */
-    boolean supportsMeriPlanComparison = false
+    Boolean getSupportsMeriPlanComparison() {
+        config.supportsMeriPlanComparison
+    }
 
     boolean supportsOutcomeTargets() {
         Map template = config.meriPlanContents?.find{ it.template?.startsWith("serviceOutcomeTargets")}
@@ -152,7 +191,9 @@ class ProgramConfig implements Map {
     }
 
     /** This flag controls whether the invoice field in the dashboard is shown */
-    boolean showsDashboardInvoiceField = true
+    Boolean getShowsDashboardInvoiceField() {
+        config.showsDashboardInvoiceField
+    }
 
     String riskModel()  {
         config?.riskModel ?: getProjectTemplate() == ProjectTemplate.RLP ? "rlp" : "merit"
@@ -166,7 +207,9 @@ class ProgramConfig implements Map {
         config?.generateReportsOnMeriPlanApproval ?: false
     }
 
-    boolean showReportDueDates = false
+    Boolean getShowReportDueDates() {
+        config.showReportDueDates
+    }
 
 }
 

@@ -142,7 +142,7 @@ class ProjectController {
                              themes                : config.themes,
                              config                : config,
                              projectContent        : content.model,
-                             showAlternateTemplate : template && (template != config.projectTemplate) // If the template has been specified and isn't the default, provide navigation back to the default.
+                             showAlternateTemplate : template && (template != projectTemplate(config, null)) // If the template has been specified and isn't the default, provide navigation back to the default.
                 ]
                 render view: content.view, model: model
             }
@@ -273,7 +273,7 @@ class ProjectController {
 
             model = buildRLPTargetsModel(rlpModel, project)
         }
-        else if (config?.projectTemplate == ESP_TEMPLATE && !user?.hasViewAccess) {
+        else if (config?.getProjectTemplate() == ProgramConfig.ProjectTemplate.ESP && !user?.hasViewAccess) {
             project.remove('sites')
             project.remove('activities')
             model.overview.datesHidden = true
@@ -320,12 +320,12 @@ class ProjectController {
         model
     }
 
-    private String projectTemplate(Map config, String template) {
+    private String projectTemplate(ProgramConfig config, String template) {
         // Allow FC_OFFICERS and above to select a different reporting template
         if (template && userService.userIsSiteAdmin()) {
             return template
         }
-        return config.projectTemplate
+        return config.getProjectTemplate().name().toLowerCase()
     }
     /**
      * Designed for an ajax call - this returns only a template not a full HTML page.

@@ -19,8 +19,8 @@ environments:
 spring:
   servlet:
     multipart:
-      max-file-size: 1024MB
-      max-request-size: 1024MB
+      max-file-size: 64MB
+      max-request-size: 64MB
   devtools:
     livereload:
       enabled: true
@@ -33,9 +33,3 @@ management:
   endpoints:
     access:
       default: none
-
-grails:
-  controllers:
-    upload:
-      maxFileSize: 1024000000
-      maxRequestSize: 1024000000

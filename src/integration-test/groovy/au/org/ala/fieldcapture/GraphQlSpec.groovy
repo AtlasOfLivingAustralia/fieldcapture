@@ -867,9 +867,9 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         s1.geoJson.type == "Feature"
         s1.geoJson.geometry.type == "Point"
         s1.geoJson.geometry.coordinates == [149.0651491, -35.2592449]
-        s1.geoJson.properties.name == "CTMAUA4788"
-        s1.geoJson.properties.id == "1464a447-81bb-4da0-b389-a50ee57b9d3c"
-        s1.geoJson.properties.type == "surveyArea"
+        s1.geoJson.get('properties').name == "CTMAUA4788"
+        s1.geoJson.get('properties').id == "1464a447-81bb-4da0-b389-a50ee57b9d3c"
+        s1.geoJson.get('properties').type == "surveyArea"
         // Middle site (CTMSEH9999 - Control (null), Polygon)
         def s7 = sites[6]
         s7.siteId == "19b6d086-71d2-4eca-b99c-73b64919d5fa"
@@ -881,9 +881,9 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         s7.geoJson.type == "Feature"
         s7.geoJson.geometry.type == "Polygon"
         s7.geoJson.geometry.coordinates[0][0] == [149.0651602, -35.2592455]
-        s7.geoJson.properties.name == "CTMSEH9999 - Control (null)"
-        s7.geoJson.properties.id == "19b6d086-71d2-4eca-b99c-73b64919d5fa"
-        s7.geoJson.properties.type == "surveyArea"
+        s7.geoJson.get('properties').name == "CTMSEH9999 - Control (null)"
+        s7.geoJson.get('properties').id == "19b6d086-71d2-4eca-b99c-73b64919d5fa"
+        s7.geoJson.get('properties').type == "surveyArea"
         // Last site (CTMAUA1235 - Control (100 x 100), FeatureCollection)
         def s27 = sites[26]
         s27.siteId == "3193ff15-b4f0-42b5-b3f5-f634de5dbb16"
@@ -896,9 +896,9 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         s27.geoJson.features instanceof List
         s27.geoJson.features[0].type == "Feature"
         s27.geoJson.features[0].geometry.type == "Polygon"
-        s27.geoJson.features[0].properties.name == "CTMAUA1235 - Control (100 x 100)"
-        s27.geoJson.features[0].properties.externalId == "12"
-        s27.geoJson.features[0].properties.description == "CTMAUA1235 - Control (100 x 100)"
+        s27.geoJson.features[0].get('properties').name == "CTMAUA1235 - Control (100 x 100)"
+        s27.geoJson.features[0].get('properties').externalId == "12"
+        s27.geoJson.features[0].get('properties').description == "CTMAUA1235 - Control (100 x 100)"
         // Check all sites have required fields
         sites.each { site ->
             site.siteId != null

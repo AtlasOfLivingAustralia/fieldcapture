@@ -23,12 +23,15 @@ class HubSettings extends JSONObject {
     }
 
     public boolean overridesHomePage() {
-        return optString('homePagePath', null) as boolean
+        return !!optString('homePagePath', null)
     }
 
     List getUserPermissions() {
-        JSONArray permissions = optJSONArray('userPermissions')
-        new ArrayList(permissions)
+        Object permissions = opt('userPermissions')
+        if (permissions instanceof JSONArray || permissions instanceof Collection) {
+            return new ArrayList(permissions as Collection)
+        }
+        []
     }
 
     /**

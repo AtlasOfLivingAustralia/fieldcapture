@@ -21,10 +21,8 @@ plugins {
     id "com.magnetichq.client-dependencies" version "2.0.0"
     id 'jacoco'
     id 'com.williamhill.wiremock' version '0.4.1'
+    id 'com.skillsjars.gradle-plugin' version '0.1.4'
 }
-sourceCompatibility = '11'
-targetCompatibility = '17'
-
 version "$meritVersion"
 group "au.org.ala"
 description "Fieldcapture"
@@ -37,6 +35,11 @@ apply plugin:"org.apache.grails.gradle.grails-web"
 apply plugin:"org.apache.grails.gradle.grails-gsp"
 apply plugin:"com.github.erdi.webdriver-binaries"
 apply plugin:"cloud.wondrify.asset-pipeline"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
 
 
 if (Boolean.valueOf(enableClover)) {
@@ -103,6 +106,8 @@ dependencies {
             }
         }
     }
+    skill 'org.apache.grails.skills:grails-developer:8.0.0'
+    skill 'org.apache.grails.skills:grails-8-upgrade:8.0.0'
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     implementation "org.springframework.boot:spring-boot-starter-logging"
     implementation "org.springframework.boot:spring-boot-autoconfigure"
@@ -165,7 +170,7 @@ dependencies {
 
     implementation "org.apache.poi:poi-ooxml:$apachePoiVersion"
     implementation "org.apache.poi:poi-ooxml-full:$apachePoiVersion"
-    implementation('org.apache.groovy:groovy-dateutil:4.0.24') {
+    implementation('org.apache.groovy:groovy-dateutil') {
         exclude module: "groovy"
     }
 
@@ -348,7 +353,6 @@ integrationTest {
 bootJar {
     duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     enabled = true
-    launchScript()
 }
 
 bootWar {
@@ -390,4 +394,8 @@ bootRun.dependsOn(_Events)
 
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor snapshotCacheTime as Integer, 'seconds'
+}
+
+skillsjars {
+    outputDir = layout.projectDirectory.dir('.agents/skills')
 }
