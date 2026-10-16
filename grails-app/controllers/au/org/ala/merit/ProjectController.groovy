@@ -15,6 +15,7 @@ import org.apache.http.HttpStatus
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
 import org.joda.time.DateTime
+import org.springframework.web.multipart.support.MultipartResolutionDelegate
 
 import static ReportService.ReportMode
 
@@ -717,7 +718,7 @@ class ProjectController {
     @PreAuthorise(accessLevel = 'admin')
     def uploadMeriPlan(String id) {
         Map result
-        if (request.respondsTo('getFile')) {
+        if (MultipartResolutionDelegate.isMultipartRequest(request)) {
             def file = request.getFile('meriPlan')
             if (file) {
                 Map project = projectService.get(id)

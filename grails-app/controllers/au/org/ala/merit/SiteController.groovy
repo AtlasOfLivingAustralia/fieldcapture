@@ -7,6 +7,8 @@ import org.apache.commons.io.FilenameUtils
 import org.apache.commons.io.IOUtils
 import org.apache.http.HttpStatus
 import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.multipart.support.MultipartResolutionDelegate
+
 import static grails.async.Promises.task
 
 class SiteController {
@@ -303,7 +305,7 @@ class SiteController {
             flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${projectId}"
             redirect(controller:'project', action:'index', id: projectId)
         }
-        else if (request.respondsTo('getFile')) {
+        else if (MultipartResolutionDelegate.isMultipartRequest(request)) {
 
             MultipartFile file = request.getFile("shapefile")
 

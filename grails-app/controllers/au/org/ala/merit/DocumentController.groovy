@@ -5,6 +5,7 @@ import grails.converters.JSON
 import grails.core.GrailsApplication
 import groovy.json.JsonSlurper
 import org.apache.http.HttpStatus
+import org.springframework.web.multipart.support.MultipartResolutionDelegate
 import org.springframework.web.util.UriComponents
 import org.springframework.web.util.UriComponentsBuilder
 import org.springframework.web.util.UriUtils
@@ -56,7 +57,7 @@ class DocumentController {
      */
     def documentUpdate(String id) {
 
-        if (request.respondsTo('getFile')) {
+        if (MultipartResolutionDelegate.isMultipartRequest(request)) {
             def f = request.getFile('files')
             def originalFilename = f.getOriginalFilename()
             if(originalFilename){

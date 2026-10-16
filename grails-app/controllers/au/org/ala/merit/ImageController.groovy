@@ -5,6 +5,7 @@ import groovy.util.logging.Slf4j
 import org.apache.commons.io.FilenameUtils
 import org.springframework.http.HttpHeaders
 import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.multipart.support.MultipartResolutionDelegate
 
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -45,7 +46,7 @@ class ImageController {
         log.debug "-------------------------------upload action"
         params.each { log.debug it.toString() }
         def result = []
-        if (request.respondsTo('getFile')) {
+        if (MultipartResolutionDelegate.isMultipartRequest(request)) {
             MultipartFile file = request.getFile('files')
             //println "file is " + file
             if (file?.size) {  // will only have size if a file was selected

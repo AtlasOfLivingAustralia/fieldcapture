@@ -7,6 +7,7 @@ import au.org.ala.merit.command.ViewOrganisationReportCommand
 import au.org.ala.merit.util.ProjectGroupingHelper
 import grails.converters.JSON
 import org.apache.http.HttpStatus
+import org.springframework.web.multipart.support.MultipartResolutionDelegate
 
 /**
  * Extends the plugin OrganisationController to support Green Army project reporting.
@@ -450,7 +451,7 @@ class OrganisationController {
 
     @PreAuthorise(accessLevel = 'admin')
     def bulkUploadAnnouncements(String id) {
-        if (request.respondsTo('getFile')) {
+        if (MultipartResolutionDelegate.isMultipartRequest(request)) {
             def file = request.getFile('announcementsTemplate')
             if (file) {
                 def announcements = new AnnouncementsMapper().excelToAnnouncements(file.inputStream)

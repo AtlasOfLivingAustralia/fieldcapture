@@ -17,6 +17,7 @@ import org.apache.poi.ss.util.CellReference
 import org.grails.plugin.cache.GrailsCacheManager
 import org.joda.time.Period
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
+import org.springframework.web.multipart.support.MultipartResolutionDelegate
 
 @PreAuthorise(accessLevel = 'officer', redirectController = "home")
 @Slf4j
@@ -492,7 +493,7 @@ class AdminController {
     @PreAuthorise(accessLevel = 'alaAdmin')
     def bulkUploadSites() {
 
-        if (request.respondsTo('getFile')) {
+        if (MultipartResolutionDelegate.isMultipartRequest(request)) {
             def f = request.getFile('shapefile')
 
             boolean matchProjectsOnly = params.getBoolean('matchProjectsOnly', false)
@@ -545,7 +546,7 @@ class AdminController {
 
     def bulkUploadESPSites() {
 
-        if (request.respondsTo('getFile')) {
+        if (MultipartResolutionDelegate.isMultipartRequest(request)) {
             def f = request.getFile('shapefile')
 
             def result =  importService.bulkImportESPSites(f)
@@ -654,7 +655,7 @@ class AdminController {
     def organisationModifications() {
 
         Map results = [:]
-        if (request.respondsTo('getFile')) {
+        if (MultipartResolutionDelegate.isMultipartRequest(request)) {
             boolean validateOnly = params.validateOnly != null // checkbox passes "on" if ticked, nothing if not.
             def file = request.getFile('orgData')
 
