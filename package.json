@@ -8,7 +8,7 @@
   "dependencies": {
     "bootstrap": "5.3.8",
     "slickgrid": "^2.4.34",
-    "@atlasoflivingaustralia/ecodata-client-plugin": "6.2.0-pre.2023-08-22.f397d6f5"
+    "@atlasoflivingaustralia/ecodata-client-plugin": "9.1.0-pre.2026-10-16.sha-fac9a83f"
   },
   "devDependencies": {
     "@metahub/karma-jasmine-jquery": "^2.0.1",
