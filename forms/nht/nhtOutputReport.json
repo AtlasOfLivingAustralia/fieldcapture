@@ -6964,25 +6964,9 @@
                         ]
                       },
                       {
-                        "dataType": "text",
-                        "name": "hostType",
-                        "validate": "required",
-                        "constraints": [
-                          "Flora",
-                          "Fauna",
-                          "Ecological community"
-                        ]
-                      },
-                      {
-                        "dataType": "text",
-                        "name": "affectedGroup",
-                        "validate": "required",
-                        "constraints":  [
-                          "Birds",
-                          "Animals",
-                          "Amphibians",
-                          "Native plants"
-                        ]
+                        "dataType": "species",
+                        "name": "hostSpecies",
+                        "validate": "required"
                       },
                       {
                         "dataType": "feature",
@@ -7950,21 +7934,17 @@
                           {
                             "type": "selectOne",
                             "source": "disease",
-                            "title" : "Pathogen type recorded"
+                            "title" : "Disease / pathogen type recorded"
                           },
                           {
-                            "type": "selectOne",
-                            "source": "hostType",
-                            "title": "Host (flora/fauna/ecological community) affected"
-                          },
-                          {
-                            "type": "selectOne",
-                            "source": "affectedGroup",
-                            "title" : "Type of species affected"
+                            "type": "speciesSelect",
+                            "source": "hostSpecies",
+                            "title": "Host affected"
                           },
                           {
                             "type": "col",
-                            "title" : "Extent (ha/km)",
+                            "title" : "Disease / pathogen extent (ha/km)",
+                            "helpText": "Please ensure the extent reported (ha/km) falls within the area identified in the 'Sites covered by survey' field.",
                             "items":  [
                               {
                                 "type": "feature",
@@ -7996,7 +7976,7 @@
                           {
                             "type": "selectOne",
                             "source": "severity",
-                            "title" : "Severity"
+                            "title" : "Disease / pathogen severity"
                           },
                           {
                             "type": "selectOne",
