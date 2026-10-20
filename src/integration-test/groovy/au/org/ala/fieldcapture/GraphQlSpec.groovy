@@ -699,7 +699,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         def ds1 = dataSetSummaries[0]
         ds1.publicationStatus == null
         ds1.sizeUnknown == true
-        ds1.endDate == "2024-02-01T02:00:00Z"
+        ds1.endDate == "2024-02-01T13:00:00Z"
         ds1.type == "Baseline"
         ds1.collectorType == null
         ds1.qa == null
@@ -723,7 +723,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         ds1.progress == "FINISHED"
         ds1.storageType == null
         ds1.publicationUrl == "Biodiversity Data Repository (URL pending)"
-        ds1.startDate == "2024-01-31T02:00:00Z"
+        ds1.startDate == "2024-01-31T13:00:00Z"
         ds1.threatenedSpeciesIndex == "No"
         ds1.status == "ACTIVE"
         // Second data set
@@ -918,7 +918,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         {
             meritProject(projectId: \"a0f57791-e858-4f33-ae8e-7e3e3fffb447\") {
                 projectId
-                reports(pagination: {max: 20, offset: 0, sort:"dateCrated", order:asc, }) {
+                reports(pagination: {max: 20, offset: 0, sort:"dateCreated", order:asc, }) {
                    totalCount
                    results {
                       publicationStatus
