@@ -50,6 +50,7 @@
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
+    <asset:stylesheet src="leaflet-manifest.css"/>
     <asset:stylesheet src="organisation.css" />
 </head>
 <body>
@@ -106,6 +107,7 @@
 </asset:script>
 
 <asset:javascript src="common-bs4.js"/>
+<asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="organisation-manifest.js"/>
 <asset:deferredScripts/>
 

@@ -1,4 +1,4 @@
-//= require common-bs4
+
 //= require wms
 //= require mapWithFeatures.js
 //= require fancybox/js/jquery.fancybox

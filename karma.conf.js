@@ -43,6 +43,7 @@ module.exports = function (config) {
             'grails-app/assets/vendor/amplifyjs/amplify.min.js',
             'grails-app/assets/vendor-ext/frigus02-vkbeautify/vkbeautify.js',
             'grails-app/assets/vendor-ext/bootstrap/js/bootstrap.bundle.js',
+            'grails-app/assets/vendor-ext/leaflet/leaflet-src.js',
             "node_modules/moment/moment.js",
             "node_modules/moment-timezone/builds/moment-timezone-with-data.js",
             'grails-app/assets/javascripts/*.js',

@@ -2333,7 +2333,7 @@ table select {
 
 .projectInfoWindow > div {
     padding-left:20px;
-    text-indent:-20px;
+    text-indent:-10px;
 }
 
 .projectInfoWindow > div a.btn {

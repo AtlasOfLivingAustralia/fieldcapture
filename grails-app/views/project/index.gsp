@@ -24,6 +24,7 @@
                 activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
                 activityViewUrl: "${createLink(controller: 'activity', action: 'index')}",
                 siteCreateUrl: "${createLink(controller: 'site', action: 'createForProject', params: [projectId:project.projectId])}",
+                bulkCreateSitesUrl: "${createLink(controller: 'site', action: 'bulkCreate', params: [id: project.projectId])}",
                 siteSelectUrl: "${createLink(controller: 'site', action: 'select', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId)])}",
                 siteUploadUrl: "${createLink(controller: 'site', action: 'siteUpload', id: project.projectId)}",
                 starProjectUrl: "${createLink(controller: 'project', action: 'starProject')}",
@@ -50,7 +51,7 @@
                 createBlogEntryUrl: "${createLink(controller: 'blog', action:'create', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId, fragment: 'overview')])}",
                 editBlogEntryUrl: "${createLink(controller: 'blog', action:'edit', params:[projectId:project.projectId, returnTo:createLink(controller: 'project', action: 'index', id: project.projectId, fragment: 'overview')])}",
                 deleteBlogEntryUrl: "${createLink(controller: 'blog', action:'delete', params:[projectId:project.projectId])}",
-                shapefileDownloadUrl: "${createLink(controller:'project', action:'downloadShapefile', id:project.projectId)}",
+                siteDownloadUrl: "${createLink(controller:'project', action:'downloadSite', id:project.projectId)}",
                 regenerateStageReportsUrl: "${createLink(controller:'project', action:'regenerateStageReports', id:project.projectId)}",
                 previewStageReportUrl: "${createLink(controller:'project', action:'previewStageReport')}",
                 projectReportUrl: "${createLink(controller:'project', action:'projectReport', id:project.projectId)}",
@@ -88,7 +89,7 @@
                 listOfElectoratesUrl: "${createLink(controller:'project', action:'spatialFeatures', params: [layerId: "${grailsApplication.config.getProperty('layers.elect')}", intersectWith: "${grailsApplication.config.getProperty('layers.states')}"])}",
                 spinnerUrl: "${asset.assetPath(src:'loading.gif')}",
                 projectSitesUrl: "${createLink(action:'ajaxProjectSites', id:project.projectId)}",
-                useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
+                useGoogleBaseMap: true,
                 meriPlanUploadUrl: "${createLink(controller:'project', action:'uploadMeriPlan', id:project.projectId)}",
                 leafletIconPath: "${assetPath(src:'leaflet-0.7.7/images')}",
                 approvedMeriPlanHistoryUrl: "${createLink(action:"approvedMeriPlanHistory", id:project.projectId)}",
@@ -550,6 +551,7 @@ var config = {
 
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
+<asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="tab-init.js"/>
 <asset:javascript src="select2/js/select2.full.js"/>
 <asset:javascript src="select2-dropdown-placement-override.js"/>
@@ -559,7 +561,6 @@ var config = {
 
 <asset:javascript src="forms-manifest.js"/>
 <asset:javascript src="speciesModel.js"/>
-<asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="feature.js"/>
 <asset:deferredScripts/>
 </body>

@@ -83,6 +83,7 @@
 <g:render template="/shared/pdfInstructions"/>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="projects.js"/>
+<asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="forms-manifest.js"/>
 <asset:javascript src="speciesModel.js"/>
 <asset:deferredScripts/>
