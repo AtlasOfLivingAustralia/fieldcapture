@@ -17,7 +17,6 @@
     "fancybox": "3.0.1",
     "font-awesome": "4.7.0",
     "frigus02-vkbeautify": "1.0.1",
-    "fuelux": "3.17.2",
     "fuse.js": "6.4.6",
     "jquery": "3.6.2",
     "jquery-appear-original": "0.4.1",
@@ -36,11 +35,5 @@
     "slickgrid": "2.4.38",
     "typeahead.js": "0.11.1",
     "underscore": "1.13.8"
-  },
-  "overrides": {
-    "fuelux": {
-      "bootstrap": "$bootstrap",
-      "jquery": "$jquery"
-    }
   }
 }
