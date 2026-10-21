@@ -29,6 +29,7 @@
     "jszip": "3.8.0",
     "knockout": "3.5.3",
     "knockout-mapping": "2.6.0",
+    "leaflet": "1.9.4",
     "pdfmake": "0.3.6",
     "select2": "4.0.13",
     "select2-theme-bootstrap4": "1.0.2",
