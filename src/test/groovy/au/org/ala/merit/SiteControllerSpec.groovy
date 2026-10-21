@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.merit.config.ProgramConfig
 import grails.converters.JSON
 import grails.testing.web.controllers.ControllerUnitTest
 import net.sf.json.JSONNull
