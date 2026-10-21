@@ -324,9 +324,14 @@ function autoSaveModel(viewModel, saveUrl, options) {
 
         var json = config.serializeModel();
 
-        // Store data locally in case the save fails.
-        amplify.store(config.storageKey, json);
-        amplify.store(config.storageKey+'-updated', new Date().toISOStringNoMillis());
+        try {
+            // Store data locally in case the save fails.
+            amplify.store(config.storageKey, json);
+            amplify.store(config.storageKey+'-updated', new Date().toISOStringNoMillis());
+        }
+        catch (e) {
+            console.error('Failed to save data locally via amplify: ' + e);
+        }
 
         var result = $.Deferred();
         var invokeCallbacksAndRejectResult = function(data) {

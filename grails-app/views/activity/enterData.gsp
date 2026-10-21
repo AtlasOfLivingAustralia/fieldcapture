@@ -232,6 +232,7 @@
 <g:render template="/shared/attachDocument"/>
 
 <asset:javascript src="common-bs4.js"/>
+<asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="enterActivityData.js"/>
 
 <script type="text/javascript">

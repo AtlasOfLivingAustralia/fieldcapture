@@ -60,6 +60,7 @@
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="attach-document-no-ui.js"/>
+<asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="program.js"/>
 <asset:javascript src="forms-knockout-bindings.js"/>
 <asset:javascript src="select2/js/select2.full.js"/>

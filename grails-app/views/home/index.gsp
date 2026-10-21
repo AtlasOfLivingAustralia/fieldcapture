@@ -23,6 +23,7 @@
     <script type="text/javascript" src="//www.google.com/jsapi"></script>
     <asset:stylesheet src="homepage.css"/>
     <asset:stylesheet src="common-bs4.css"/>
+    <asset:stylesheet src="leaflet-manifest.css"/>
 </head>
 <body>
 <div id="wrapper" class="${containerType}">
@@ -56,6 +57,7 @@
 </div>
 
 <asset:javascript src="common-bs4.js"/>
+<asset:javascript src="leaflet-manifest.js"/>
 <asset:javascript src="projectExplorer.js"/>
 
 <asset:deferredScripts/>

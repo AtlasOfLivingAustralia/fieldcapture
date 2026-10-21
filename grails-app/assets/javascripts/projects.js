@@ -25,7 +25,6 @@
 //= require_self
 //= require prettytextdiff/jquery.pretty-text-diff.min.js
 //= require prettytextdiff/diff_match_patch.js
-//= require htmldiff.js
 
 /*
     Utilities for managing project representations.
@@ -1131,6 +1130,7 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
 
         var mapOptions = {
             zoomToBounds:true,
+            zoomToObject: true,
             zoomLimit:16,
             highlightOnHover:true,
             features:[],
@@ -1139,7 +1139,9 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             leafletIconPath:options.leafletIconPath,
             useAlaMap: config.useAlaMap,
             useGoogleBaseMap: config.useGoogleBaseMap,
-            fullscreenControl:false
+            fullscreenControl:false,
+            wmsLayerUrl: fcConfig.spatialWmsUrl + '/wms/reflect?',
+            wmsFeatureUrl: fcConfig.spatialWms + '?featureId='
         };
 
         var map = createMap(mapOptions);
@@ -1235,12 +1237,9 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             }
 
         });
-        $(config.selectAllSelector).change(function() {
-            var checkbox = this;
-            // This lets knockout update the bindings correctly.
-            $sitesTable.find('tbody tr :checkbox').trigger('click');
-        });
+
         sitesViewModel.sitesFiltered(visibleIndicies());
+        sitesViewModel.selectAll(true);
         var $sitePhotoPoints = $(config.photoPointSelector);
         $sitePhotoPoints.find('a').click(function(e) {
             e.preventDefault();
