@@ -22,8 +22,6 @@ spring:
       max-file-size: 64MB
       max-request-size: 64MB
   devtools:
-    livereload:
-      enabled: true
     restart:
       additional-exclude:
         - '**/*.gsp'
