@@ -7,7 +7,6 @@ import com.drew.metadata.Metadata
 import com.drew.metadata.exif.ExifSubIFDDirectory
 import com.drew.metadata.exif.GpsDirectory
 import groovy.util.logging.Slf4j
-import groovyx.net.http.HttpResponseDecorator
 import grails.core.GrailsApplication
 import org.apache.http.HttpStatus
 

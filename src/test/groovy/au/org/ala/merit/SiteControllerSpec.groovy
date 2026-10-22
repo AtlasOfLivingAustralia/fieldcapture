@@ -1,9 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.config.ProgramConfig
-import grails.converters.JSON
 import grails.testing.web.controllers.ControllerUnitTest
-import net.sf.json.JSONNull
 import spock.lang.Specification
 
 class SiteControllerSpec extends Specification implements ControllerUnitTest<SiteController>{
@@ -21,10 +19,6 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         controller.settingService = settingService
         controller.projectConfigurationService = projectConfigurationService
 
-        // From Bootstrap.groovy
-        JSON.createNamedConfig("nullSafe", { cfg ->
-            cfg.registerObjectMarshaller(JSONNull, {return ""})
-        })
     }
 
     def "the site controller can return site data as geojson"() {

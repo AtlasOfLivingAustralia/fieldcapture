@@ -8,7 +8,7 @@ import grails.converters.JSON
 import grails.web.servlet.mvc.GrailsParameterMap
 import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
-import org.apache.commons.lang.WordUtils
+import org.apache.commons.text.WordUtils
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
 

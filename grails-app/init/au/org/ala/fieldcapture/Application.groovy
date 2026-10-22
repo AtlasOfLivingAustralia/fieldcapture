@@ -13,7 +13,6 @@ import grails.util.Environment
 import grails.util.Metadata
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
-import net.sf.json.JSONNull
 import org.apache.grails.core.plugins.PluginDiscovery
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -42,9 +41,6 @@ class Application extends GrailsAutoConfiguration {
     @Override
     void onStartup(Map<String, Object> event) {
         log.info("On startup...")
-        JSON.createNamedConfig("nullSafe", { cfg ->
-            cfg.registerObjectMarshaller(JSONNull, {return ""})
-        })
 
         JSON.createNamedConfig("clientSideFormattedDates", { cfg ->
             DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy")

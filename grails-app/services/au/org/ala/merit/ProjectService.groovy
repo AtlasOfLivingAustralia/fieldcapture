@@ -10,7 +10,7 @@ import au.org.ala.merit.reports.ReportOwner
 import grails.converters.JSON
 import grails.plugin.cache.Cacheable
 import groovy.util.logging.Slf4j
-import org.apache.commons.lang.CharUtils
+import org.apache.commons.lang3.CharUtils
 import org.apache.http.HttpStatus
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject

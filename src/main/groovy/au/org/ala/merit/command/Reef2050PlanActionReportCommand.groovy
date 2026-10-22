@@ -113,10 +113,8 @@ class Reef2050PlanActionReportCommand extends Reef2050PlanActionReportConfig imp
             searchCriteria.publicationStatus = PublicationStatus.APPROVED
         }
 
-        Map resp
-        JSON.use("nullSafe") {
-            resp = activityService.search(searchCriteria)
-        }
+        Map resp = activityService.search(searchCriteria)
+
         List activities = []
         if (!resp || resp.error) {
             getErrors().reject("Error finding activities")

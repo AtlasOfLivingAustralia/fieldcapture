@@ -69,7 +69,7 @@ repositories {
 
 def openhtmltopdfversion = '1.0.10'
 def geoToolsVersion = "11.1"
-def metadataExtractorVersion = "2.6.2"
+def metadataExtractorVersion = "2.18.0"
 def imgscalrVersion = "4.2"
 def httpmimeVersion = "4.2.1"
 def jtsVersion = "1.8"
@@ -146,18 +146,20 @@ dependencies {
     implementation 'com.sun.mail:javax.mail:1.6.2'
     implementation "com.openhtmltopdf:openhtmltopdf-core:${openhtmltopdfversion}"
     implementation "com.openhtmltopdf:openhtmltopdf-pdfbox:${openhtmltopdfversion}"
-    implementation "org.jsoup:jsoup:1.14.3"
+    implementation 'org.jsoup:jsoup:1.23.2'
     implementation "org.geotools:gt-geojson:${geoToolsVersion}"
     implementation "com.drewnoakes:metadata-extractor:${metadataExtractorVersion}"
     implementation "org.imgscalr:imgscalr-lib:${imgscalrVersion}"
     implementation "com.vividsolutions:jts:${jtsVersion}"
     implementation "org.geotools.xsd:gt-xsd-kml:${geoToolsVersion}"
     implementation 'joda-time:joda-time:2.3'
-    implementation "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
+    //implementation "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
+    implementation 'org.apache.commons:commons-lang3:3.18.0'
+    implementation 'org.apache.commons:commons-text:1.12.0'
     implementation "org.apache.httpcomponents:httpcore:4.4.13"
-    implementation "org.apache.httpcomponents:httpclient:4.5.7"
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
     implementation "org.apache.httpcomponents:httpmime:4.2.1"
-    implementation "org.apache.pdfbox:pdfbox:2.0.4"
+    implementation 'org.apache.pdfbox:pdfbox:2.0.24'
 
     implementation 'au.com.bytecode:opencsv:2.4'
 
@@ -211,10 +213,9 @@ dependencies {
     testImplementation testFixtures("org.apache.grails:grails-geb")
     testImplementation(platform('org.junit:junit-bom:5.9.1'))
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
-    testImplementation "org.pac4j:pac4j-jwt:5.4.3"
-    testImplementation "com.github.tomakehurst:wiremock-jre8-standalone:2.28.0"
+    testImplementation 'org.pac4j:pac4j-jwt:6.3.3'
+    testImplementation 'com.github.tomakehurst:wiremock-jre8-standalone:2.35.1'
     implementation "org.hibernate:hibernate-validator:6.2.0.Final"
-    testImplementation "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
     testImplementation "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
     testImplementation "org.seleniumhq.selenium:selenium-remote-driver:$seleniumVersion"
     testImplementation "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
@@ -222,7 +223,6 @@ dependencies {
     testRuntimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
     testRuntimeOnly "org.seleniumhq.selenium:selenium-safari-driver:$seleniumSafariDriverVersion"
     testImplementation "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
-    testRuntimeOnly "net.sourceforge.htmlunit:htmlunit:2.18"
 
     providedCompile "io.methvin:directory-watcher:0.4.0"
 
@@ -409,7 +409,7 @@ if (Boolean.valueOf(inplace)) {
     bootRun.dependsOn("ecodata-client-plugin:_Events")
 }
 
-task _Events {
+tasks.register('_Events') {
     doLast {
         println "Running Events.groovy script"
         println "${project.projectDir}/Events.groovy"
@@ -425,9 +425,9 @@ integrationTest {
     //failFast = true
 }
 
-assetCompile.dependsOn(_Events)
-compileGroovy.dependsOn(_Events)
-bootRun.dependsOn(_Events)
+assetCompile.dependsOn('_Events')
+compileGroovy.dependsOn('_Events')
+bootRun.dependsOn('_Events')
 
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor snapshotCacheTime as Integer, 'seconds'
