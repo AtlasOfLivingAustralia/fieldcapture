@@ -90,6 +90,10 @@ for (let i = 0; i < scores.length; i++) {
         audit(score, score.scoreId, 'au.org.ala.ecodata.Score', adminUserId, null, 'Insert');
         db.score.insertOne(score);
     }
+    else {
+        db.score.replaceOne({ scoreId: score.scoreId }, score);
+        audit(score, score.scoreId, 'au.org.ala.ecodata.Score', adminUserId, null, 'Update');
+    }
 }
 
 // Link service to programs
