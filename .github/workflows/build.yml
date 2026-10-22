@@ -60,6 +60,9 @@ jobs:
           sudo chmod o+xw /data/fieldcapture
           sudo chmod o+xw /data/fieldcapture/cache
 
+      - name: Pre-pull MongoDB Image due to startup timeouts
+        run: docker pull mongo:8.0.4
+
       - name: Install and start mongodb
         uses: supercharge/mongodb-github-action@315db7fe45ac2880b7758f1933e6e5d59afd5e94 #1.12.1
         with:
