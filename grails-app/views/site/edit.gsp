@@ -1,4 +1,3 @@
-<%@ page import="net.sf.json.JSON; org.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>

@@ -1,4 +1,5 @@
 package au.org.ala.merit
+import groovy.json.JsonOutput
 
 /**
  * Renders output scores for display on a project or program dashboard.
