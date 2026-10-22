@@ -14,53 +14,63 @@ const newOutputs = [
 
 addService(serviceName, NumberInt(59), undefined, undefined, newOutputs, adminUserId);
 
-// Define the score
+// Define the scores
+const completedScoreId = 'b7c0e5f8-29e2-4e44-aff1-327f259d81c6';
+const invoicedScoreId = '238f1520-242c-4ac0-b72e-1d1e00047519';
 const scores = [
     {
-        scoreId: 'b7c0e5f8-29e2-4e44-aff1-327f259d81c6',
-        label: 'Number of days building structures/facilities/infrastructure',
+        scoreId: completedScoreId,
+        label: 'Total number of structures or facilities built/maintained/renovated completed for this reporting period',
         status: 'active',
         isOutputTarget: true,
         category: "Reporting",
-        outputType: 'Number of days building structures/facilities/infrastructure',
+        entity: 'Activity',
+        outputType: sectionName,
         configuration: {
             childAggregations: [
                 {
                     filter: {
                         property: "name",
-                        filterValue: "Infrastructure survey",
+                        filterValue: sectionName,
                         type: "filter"
                     },
                     childAggregations: [
                         {
-                            property: "data.totalSurveysBaseline",
+                            property: "data.totalNoOfStructures",
                             type: "SUM"
                         }
                     ]
                 }
             ]
         },
+        relatedScores: [
+            {
+                description: 'Invoiced by',
+                scoreId: invoicedScoreId
+            }
+        ],
         dateCreated: ISODate('2026-08-17T11:00:11.160Z'),
         lastUpdated: ISODate('2026-08-17T11:00:11.160Z')
     },
     {
-        scoreId: '238f1520-242c-4ac0-b72e-1d1e00047519',
-        label: 'Number of days renovating or maintaining structures/facilities/infrastructure',
+        scoreId: invoicedScoreId,
+        label: 'Total number of structures or facilities built/maintained/renovated invoiced for this reporting period',
         status: 'active',
-        isOutputTarget: true,
+        isOutputTarget: false,
         category: "Reporting",
-        outputType: 'Number of days renovating or maintaining structures/facilities/infrastructure',
+        entity: 'Activity',
+        outputType: sectionName,
         configuration: {
             childAggregations: [
                 {
                     filter: {
                         property: "name",
-                        filterValue: "Infrastructure survey",
+                        filterValue: sectionName,
                         type: "filter"
                     },
                     childAggregations: [
                         {
-                            property: "data.totalSurveysBaseline",
+                            property: "data.totalNoOfStructuresInvoiced",
                             type: "SUM"
                         }
                     ]
@@ -70,7 +80,7 @@ const scores = [
         dateCreated: ISODate('2026-08-17T11:00:11.160Z'),
         lastUpdated: ISODate('2026-08-17T11:00:11.160Z')
     }
-];;
+];
 
 // Insert score if it doesn't already exist
 for (let i = 0; i < scores.length; i++) {
