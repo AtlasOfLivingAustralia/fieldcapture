@@ -2077,7 +2077,7 @@ class ProjectService  {
      *     services: [ <list of scores and targets for each of the project services> ]
      * ]
      */
-    Map getServiceDashboardData(String projectId, boolean approvedDataOnly) {
+    Map getServiceDashboardData(String projectId, boolean approvedDataOnly, ProgramConfig config = null) {
 
         List<Score> projectServices = getProjectServicesWithTargets(projectId, config)
 
