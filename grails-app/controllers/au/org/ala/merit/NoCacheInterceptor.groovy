@@ -34,7 +34,6 @@ class NoCacheInterceptor implements GrailsConfigurationAware {
 
     boolean before() {
         if (applyCachingHeaders) {
-            println("Applying caching headers to response for request ${request.forwardURI}")
             response.setHeader(HEADER_PRAGMA, "no-cache")
             response.setDateHeader(HEADER_EXPIRES, 1L)
             response.setHeader(HEADER_CACHE_CONTROL, "no-cache")
