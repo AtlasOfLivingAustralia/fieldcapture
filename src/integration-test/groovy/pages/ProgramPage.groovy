@@ -73,6 +73,12 @@ class ProgramPage extends Page {
         adminTabContent.editButton.click()
     }
 
+    void openProgramOutcomes() {
+        adminTab.click()
+        waitFor { adminTabContent.displayed }
+        adminTabContent.openProgramOutcomes()
+    }
+
     void addSubProgram() {
         adminTab.click()
         waitFor { adminTabContent.displayed }

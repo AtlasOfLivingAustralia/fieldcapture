@@ -187,4 +187,45 @@ class ProgramServiceSpec extends Specification implements AutowiredTest{
         1 * webService.doPost({it.endsWith('program/')}, [name:"Program 1", description:"Program description 1", hubId:"merit"])
     }
 
+    def "findAllProgramOutcomesInUse returns all outcome descriptions used in projects for a program"() {
+        given:
+        String programId = 'p1'
+        service.searchService = Mock(SearchService)
+        Map searchResult = [
+                hits: [
+                        hits: [
+                                [
+                                        _source: [
+                                                custom: [
+                                                        details: [
+                                                                outcomes: [
+                                                                        primaryOutcome: [description: "Primary Outcome"],
+                                                                        secondaryOutcomes: [description: ["Secondary Outcome 1", "Secondary Outcome 2"]],
+                                                                        midTermOutcomes: [description: ["Mid Term Outcome"]],
+                                                                        shortTermOutcomes: [description: ["Short Term Outcome 1", "Short Term Outcome 2"]]
+                                                                ]
+                                                        ]
+                                                ]
+                                        ]
+                                ]
+                        ]
+                ]
+        ]
+        service.searchService.allProjects({it.fq == 'programId:'+programId}) >> searchResult
+
+        when:
+        Set<String> outcomes = service.findAllProgramOutcomesInUse(programId)
+
+        then:
+        outcomes == [
+                "Primary Outcome",
+                "Secondary Outcome 1",
+                "Secondary Outcome 2",
+                "Mid Term Outcome",
+                "Short Term Outcome 1",
+                "Short Term Outcome 2"
+        ] as Set
+    }
+
+
 }

@@ -470,3 +470,197 @@ ManageTagsViewModel = function(tags, options) {
         });
     }
 };
+
+ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
+    investmentPriorities = investmentPriorities || [];
+
+    function InvestmentPriority(investmentPriority, isNew) {
+        const self = this;
+        self.isNew = isNew;
+        self.investmentPriorityId = investmentPriority.investmentPriorityId;
+        self.type = ko.observable(investmentPriority.type);
+        self.name = ko.observable(investmentPriority.name);
+        self.description = ko.observable(investmentPriority.description);
+        self.categories = ko.observableArray(investmentPriority.categories);
+        self.managementUnits = ko.observableArray(investmentPriority.managementUnits);
+        self.originalTerm = investmentPriority;
+        self.managementUnitLabels = ko.pureComputed(function() {
+            return _.reduce(self.managementUnits(), function (memo, managementUnitId) {
+                var muObj = _.find(options.availableManagementUnits, function (managementUnit) {
+                    return managementUnitId === managementUnit.managementUnitId;
+                });
+                let result = memo;
+                if (result) {
+                    result += ",\n";
+                }
+                result += muObj ? muObj.name : managementUnitId;
+                return result;
+
+            }, "");
+        });
+
+        self.availableCategories = ko.pureComputed(function() {
+            return (options.categoriesByType || {})[self.type()];
+        });
+
+        self.investmentPriorityTypes = options.availableTypes;
+
+        self.saveable = ko.pureComputed(function() {
+            let saveable = isNew ||
+                self.name() != investmentPriority.name ||
+                self.type() != investmentPriority.type ||
+                !_.isEqual(self.categories(), investmentPriority.categories) ||
+                !_.isEqual(self.managementUnits(), investmentPriority.managementUnits);
+            return saveable;
+        });
+
+        self.toJSON = function() {
+            return {
+                investmentPriorityId: investmentPriority.investmentPriorityId,
+                type: self.type(),
+                name: self.name(),
+                description: self.description(),
+                categories: self.categories(),
+                managementUnits: self.managementUnits()
+            };
+        }
+    }
+
+    let self = this;
+    self.investmentPriorities = _.map(investmentPriorities, function(investmentPriority) {
+        return new InvestmentPriority(investmentPriority);
+    });
+
+    self.filter = ko.observable();
+    self.matchedInvestmentPriorities = ko.observable(investmentPriorities.length);
+    self.table = null;
+    self.availableCategories = options.availableCategories || [];
+    self.availableManagementUnits = options.availableManagementUnits || [];
+
+    self.canAddNewInvestmentPriority = ko.pureComputed(function() {
+        return self.matchedInvestmentPriorities() == 0;
+    });
+    self.editableInvestmentPriority = ko.observable();
+    self.edit = function(investmentPriority) {
+        self.editableInvestmentPriority(investmentPriority);
+        $(options.modalSelector).modal('show').on('hidden.bs.modal', function () {
+            self.editableInvestmentPriority(undefined);
+        });
+    }
+
+    self.showUpdateCategory = function() {
+        $(options.categoryUpdateModalSelector).modal('show');
+    }
+    self.newInvestmentPriority = function() {
+        let searchTerm = self.table.search();
+        let newInvestmentPriority = new InvestmentPriority({name:searchTerm}, true);
+        self.editableInvestmentPriority(newInvestmentPriority);
+
+        $(options.modalSelector).modal('show');
+    }
+
+    // We are doing page reloads as an alternative to manually syncing this model with the
+    // data tables API.
+    self.deleteInvestmentPriority = function(investmentPriority) {
+        if (confirm("Are you sure you want to delete this investment priority?")) {
+            blockUIWithMessage("Deleting investment priority...");
+
+            $.post({
+                url: fcConfig.deleteInvestmentPriorityUrl,
+                data: JSON.stringify(investmentPriority),
+                contentType: 'application/json'
+            }).done(function(response) {
+                if (response.error) {
+                    $.unblockUI();
+                    bootbox.alert('Error deleting investment priority: ' + response.error);
+                } else {
+                    blockUIWithMessage("Reloading page...");
+                    window.location.reload();
+                }
+            }).fail(function() {
+                $.unblockUI();
+                bootbox.alert("An error was encountered deleting the investment priority. Please try again.");
+            });
+        }
+    };
+    self.updateInvestmentPriority = function(investmentPriority) {
+        self.saveInvestmentPriority(investmentPriority, "Updating investment priority...");
+    };
+
+    self.addInvestmentPriority = function(newInvestmentPriority) {
+        self.saveInvestmentPriority(newInvestmentPriority, "Adding investment priority...");
+    }
+
+    self.saveInvestmentPriority = function(investmentPriorityToSave, message) {
+        let investmentPriority = investmentPriorityToSave.toJSON();
+
+        if (investmentPriority.name) {
+            blockUIWithMessage(message);
+            $.post({
+                url: fcConfig.saveInvestmentPriorityUrl,
+                data: JSON.stringify(investmentPriority),
+                contentType: 'application/json'
+            }).done(function (response) {
+                if (!response.error) {
+                    blockUIWithMessage("Reloading page...");
+                    window.location.reload();
+                } else {
+                    $.unblockUI();
+                    alert('Error adding tag: ' + response.error);
+                }
+            }).fail(function (xhr) {
+                let message = "An error was encountered saving the investment priority. Please try again.";
+                if (xhr && xhr.status == 422) {
+                    let response = xhr.responseJSON;
+                    let messages = _.map(response.errors, function (error) {
+                        return error.message;
+                    });
+                    message = _.reduce(messages, function (memo, message) {
+                        return memo + '\n' + message
+                    }, "");
+                }
+                $.unblockUI();
+                alert(message);
+            });
+        }
+    }
+
+    self.initialiseDataTable = function(tableSelector) {
+        var table = $(tableSelector).DataTable({
+            columnDefs: [
+                {
+                    targets: 0,
+                    visible: false,
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    targets: 1,
+                    orderable: true
+                },
+                {
+                    targets: 2,
+                    orderable: true
+                },
+                {
+                    targets: 3,
+                    orderable: true
+                },
+                {
+                    targets: 4,
+                    orderable:false
+                }
+            ],
+            buttons: [{extend:'copy', title:null}],
+            dom: '<"header"lfB>rtip'
+        });
+        self.table = table;
+        table.on('search.dt', function(e) {
+
+            let pageInfo = table.page.info();
+            self.matchedInvestmentPriorities(pageInfo.recordsDisplay);
+        }).on('draw.dt', function() {
+
+        });
+    }
+};

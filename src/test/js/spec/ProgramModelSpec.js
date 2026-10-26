@@ -25,4 +25,6 @@ describe("ProgramModel Spec", function () {
         expect(model.programId).toEqual(program.programId);
 
     });
+
+
 });

@@ -2,6 +2,7 @@ package au.org.ala.merit
 
 import au.org.ala.ecodata.utils.ExcelUtils
 import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
+import au.org.ala.merit.command.SaveInvestmentPriorityCommand
 import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import grails.util.Environment
@@ -22,7 +23,7 @@ import org.springframework.web.multipart.support.MultipartResolutionDelegate
 @PreAuthorise(accessLevel = 'officer', redirectController = "home")
 @Slf4j
 class AdminController {
-    static allowedMethods = [ searchUserDetails: "GET", removeUserDetails:"POST", updateTag: "POST", addTag: "POST", deleteTag: "POST"]
+    static allowedMethods = [ searchUserDetails: "GET", removeUserDetails:"POST", updateTag: "POST", addTag: "POST", deleteTag: "POST", saveInvestmentPriority: "POST", investmentPriorities: "GET", addCategoryToInvestmentPriorities: "POST"]
     static responseFormats = ['json', 'xml']
 
     BlogService blogService
@@ -44,6 +45,7 @@ class AdminController {
     def userService
     RisksService risksService
     AbnLookupService abnLookupService
+    ManagementUnitService managementUnitService
 
     def index() {}
 
@@ -617,6 +619,69 @@ class AdminController {
 
     def manageTags() {
         [tags:projectService.getProjectTags()]
+    }
+
+    def investmentPriorities() {
+        List investmentPriorities = metadataService.findInvestmentPriorities()
+        Map<String, List<Map>> investmentPrioritiesByType = investmentPriorities.groupBy{it.type}
+        List availableTypes = new ArrayList(investmentPrioritiesByType.keySet()).sort()
+
+        Map<String, List> categoriesByType = investmentPrioritiesByType?.collectEntries{ String type, List priorities -> [(type): distinctCategories(priorities)]}
+        List managementUnits = managementUnitService.list().collect{[managementUnitId:it.managementUnitId, name:it.name]}
+        [investmentPriorities:investmentPriorities,
+         availableTypes:availableTypes,
+         categoriesByType:categoriesByType,
+         managementUnits: managementUnits
+        ]
+    }
+
+    def saveInvestmentPriority(SaveInvestmentPriorityCommand command) {
+        if (command.hasErrors()) {
+            respond command.errors
+        }
+        else {
+            Map result = command.save()
+            respond result
+        }
+    }
+
+    def updateInvestmentPriorityCategory() {
+
+        Map results = [:]
+        if (request.respondsTo('getFile')) {
+            def file = request.getFile('investmentPriorities')
+
+            if (file) {
+                def columnMap = [
+                        'A': 'investmentPriorityId'
+                ]
+
+                def config = [
+                        sheet    : "Sheet1",
+                        startRow : 1,
+                        columnMap: columnMap
+                ]
+                Workbook workbook = WorkbookFactory.create(file.inputStream)
+
+                List data = excelImportService.convertColumnMapConfigManyRows(workbook, config)
+
+                results = metadataService.updateInvestmentPriorityCategory(params.category, data.collect{it.investmentPriorityId})
+
+
+            }
+            redirect action:"investmentPriorities", model:[results:results]
+        }
+        else {
+            redirect action:"investmentPriorities"
+        }
+
+    }
+
+    private List distinctCategories(List<Map> investmentPriorities) {
+        Set categories = new HashSet()
+        investmentPriorities.each{ categories.addAll(it.categories) }
+        List result = new ArrayList(categories).sort()
+        result
     }
 
     def updateTag() {

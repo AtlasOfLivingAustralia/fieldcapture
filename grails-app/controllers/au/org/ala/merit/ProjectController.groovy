@@ -163,7 +163,6 @@ class ProjectController {
     protected Map projectContent(Map project, user, String template, ProgramConfig config, boolean manageEMSASiteDataSets) {
         project.themes = new JSONArray(config.themes ?: [])
         project.assets = config.assets ?: []
-        project.priorities = new JSONArray(config.priorities ?: [])
         project.outcomes = new JSONArray(config.outcomes ?: [])
         project.hasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
         boolean canRegenerateReports = projectService.canRegenerateReports(project)
@@ -240,7 +239,7 @@ class ProjectController {
             model.serviceDelivery = [label: 'Dashboard', visible: serviceDeliveryVisible, type: 'tab', template: 'rlpServiceDashboard', includeInvoiced:showDashboardInvoiceField]
             if (model.serviceDelivery.visible) {
                 // This can be a slow call so don't make it if the data won't be displayed
-                model.serviceDelivery.servicesDashboard = projectService.getServiceDashboardData(project.projectId, false)
+                model.serviceDelivery.servicesDashboard = projectService.getServiceDashboardData(project.projectId, false, config)
             }
 
             model.site.useAlaMap = true
@@ -1165,7 +1164,10 @@ class ProjectController {
      */
     @PreAuthorise(accessLevel = 'readOnly')
     def listProjectInvestmentPriorities(String id) {
-        List investmentPriorities = projectService.listProjectInvestmentPriorities(id)
+        List investmentPriorities = projectService.listProjectInvestmentPriorities(id)?.collect {
+            it.name
+        }
+
         investmentPriorities <<  "Other"
         render investmentPriorities as JSON
     }

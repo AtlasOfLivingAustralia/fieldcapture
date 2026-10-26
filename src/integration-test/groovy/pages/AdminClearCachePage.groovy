@@ -20,6 +20,7 @@ class AdminClearCachePage extends ReloadablePage {
         programListCache(required:false){$('#programList')}
         serviceListCache(required:false){$('#serviceList')}
         protocolListCache(required:false){$('#monitoringProtocols')}
+        investmentPriorityCategoriesCache(required: false) { $('#investmentPriorityCategories') }
     }
 
     void clearHomePageStatistics(){
@@ -56,6 +57,14 @@ class AdminClearCachePage extends ReloadablePage {
     void clearHomePageDocuments() {
         if (homePageDocuments.displayed) {
             homePageDocuments.click()
+
+            waitFor { hasBeenReloaded() }
+        }
+    }
+
+    void clearInvestmentPriorityCategoriesCache() {
+        if (investmentPriorityCategoriesCache.displayed) {
+            investmentPriorityCategoriesCache.click()
 
             waitFor { hasBeenReloaded() }
         }

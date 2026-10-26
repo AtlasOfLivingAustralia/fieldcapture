@@ -1,6 +1,7 @@
 print("This script is expected to be executed with a working directory containing this script");
 print("Current working dir: "+process.cwd());
 load('../data_common/loadMeritHub.js');
+load('../data_common/createInvestmentPriorities.js');
 load('../data_common/insertData.js');
 load('../data/settingDefaults.js')
 
@@ -52,6 +53,11 @@ createProject({name:'project 4', projectId:"project_4", programId:'program_1',ma
     ],
     custom:{"details":
             {
+                "assets": [
+                    {
+                        description:"ip2"
+                    }
+                ],
                 "objectives":
                     {
                         "rows1": [

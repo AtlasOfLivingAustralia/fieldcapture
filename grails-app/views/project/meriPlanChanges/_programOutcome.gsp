@@ -17,7 +17,15 @@
             <span id="program-outcome-assets">
             <g:set var="max" value="${Math.max(project.custom.details.outcomes?.primaryOutcome?.assets?.size(), changed.custom.details.outcomes?.primaryOutcome?.assets?.size()?:0)}"/>
             <g:each in="${(0..<max)}" var="i">
-                <span><fc:renderComparison changed="${changed.custom.details.outcomes?.primaryOutcome.assets ?: []}" i="${i}" original="${project.custom.details.outcomes?.primaryOutcome.assets ?: []}"/> </span>
+                <span>
+                    <fc:renderComparison
+                            changed="${changed.custom.details.outcomes?.primaryOutcome.assets ?: []}"
+                            i="${i}"
+                            original="${project.custom.details.outcomes?.primaryOutcome.assets ?: []}"
+                            objectList="${investmentPriorities}"
+                            idProperty="investmentPriorityId"
+                            labelProperty="name"
+                    /> </span>
             </g:each>
             </span>
         </td>

@@ -137,6 +137,47 @@ ProgramViewModel = function (props, options) {
     return self;
 };
 
+var Outcome = function(outcome, options) {
+    var self = this;
+    outcome = outcome || {};
+    self.type = ko.observable(outcome.type);
+    self.outcome = ko.observable(outcome.outcome);
+    self.shortDescription = ko.observable(outcome.shortDescription);
+    self.category = ko.observable(outcome.category);
+    self.priorityCategories = ko.observableArray(outcome.priorityCategories);
+    self.priorityCategoryOptions = options.priorityCategories || [];
+    self.isReadOnly = options.outcomesInUse.indexOf(outcome.outcome) >= 0;
+
+
+    self.typeOptions = [
+        { value:"", label:"Primary and/or secondary", supportsCategories:true},
+        { value:"primary", label:"Primary only", supportsCategories:true},
+        { value:"secondary", label:"Secondary only", supportsCategories:true},
+        { value:"medium", label:"Medium term", supportsCategories:false},
+        { value:"short", label:"Short term", supportsCategories:false}
+    ];
+
+    self.outcomeTypeSupportsCategories = ko.pureComputed(function(value) {
+        let type = self.typeOptions.find(function(value) {
+            return value.value === self.type();
+        });
+
+        return type ? type.supportsCategories : false;
+    })
+
+    self.toJSON = function() {
+        return {
+            type:self.type(),
+            outcome:self.outcome(),
+            shortDescription:self.shortDescription(),
+            category:self.category(),
+            priorities:_.map(self.priorities(), function(priority) {
+                return {category:priority};
+            })
+        };
+    }
+}
+
 var ProgramPageViewModel = function(props, options) {
     var self = this;
     _.extend(self, new ProgramViewModel(props, options));
@@ -147,8 +188,9 @@ var ProgramPageViewModel = function(props, options) {
     var themes = props.themes || [];
 
     self.config = ko.observable(vkbeautify.json(config));
-    self.outcomes = ko.observable(vkbeautify.json(outcomes));
-    self.priorities = ko.observable(vkbeautify.json(priorities));
+    self.outcomes = ko.observableArray(_.map(outcomes, function (outcome) {
+        return new Outcome(outcome, {priorityCategories: options.priorityCategories, outcomesInUse: options.outcomesInUse});
+    }));
     self.themes = ko.observable(vkbeautify.json(themes));
 
     var projectOutputReportCategory = 'Outputs Reporting';
@@ -309,10 +351,18 @@ var ProgramPageViewModel = function(props, options) {
 
     };
 
+    self.addNewOutcome = function() {
+        self.outcomes.push(new Outcome({}, {priorityCategories: options.priorityCategories, outcomesInUse: options.outcomesInUse}));
+    };
+
+    self.removeOutcome = function(outcome) {
+        self.outcomes.remove(outcome);
+    }
+
     self.saveProgramOutcomes = function() {
         var outcomes;
         try {
-            outcomes = JSON.parse(self.outcomes());
+            outcomes = ko.toJS(self.outcomes());
         }
         catch (e) {
             bootbox.alert("Invalid JSON");
@@ -323,19 +373,6 @@ var ProgramPageViewModel = function(props, options) {
         });
     };
 
-    self.saveProgramPriorities = function() {
-        var priorities;
-        try {
-            priorities = JSON.parse(self.priorities());
-        }
-        catch (e) {
-            bootbox.alert("Invalid JSON");
-            return;
-        }
-        saveProgram({priorities:priorities}).done(function() {
-            bootbox.alert("Program priorities saved!");
-        });
-    };
     self.saveProgramThemes = function() {
         var themes;
         try {

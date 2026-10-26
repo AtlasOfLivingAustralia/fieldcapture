@@ -51,9 +51,9 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         meriPlan = openMeriPlanEditTab()
 
         waitFor {
-            meriPlan.asset.find('[value="Euastacus jagara (Freshwater crayfish)"')
+            meriPlan.asset.find('[value="ip22"]')
         }
-        meriPlan.asset = "Euastacus jagara (Freshwater crayfish)"
+        meriPlan.asset = "ip22"
         meriPlan.shortTermOutcomes[0].outcome.value("Short term outcome 1")
         meriPlan.projectDescription = "MERI plan edited description"
         meriPlan.relatedProjects = "Related projects"
@@ -96,7 +96,7 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         meriPlan = openMeriPlanEditTab()
 
         then:
-        meriPlan.asset == "Euastacus jagara (Freshwater crayfish)"
+        meriPlan.asset == "ip22"
         meriPlan.assetType.text() == "Priority Invertebrate Species"
         meriPlan.shortTermOutcomes[0].outcome.value() == "Short term outcome 1"
         meriPlan.projectDescription == "MERI plan edited description"
@@ -185,14 +185,14 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
         meriPlan.secondaryOutcomes[0].outcome = "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
         meriPlan.hideFloatingSave()
         meriPlan.primaryPriorityUnstyled[0].click()
-        meriPlan.secondaryOutcomes[0].click()
+        meriPlan.secondaryOutcomes[0].outcomePriorities[0].check()
         meriPlan.shortTermOutcomes[0].outcome.value("Short term outcome 1")
         waitFor {
             meriPlan.assetType.find('[value="Priority Invertebrate Species"')
-            meriPlan.asset.find('[value="Euastacus jagara (Freshwater crayfish)"')
+            meriPlan.asset.find('[value="ip22"')
         }
         meriPlan.assetType = "Priority Invertebrate Species"
-        meriPlan.asset = "Euastacus jagara (Freshwater crayfish)"
+        meriPlan.asset = "ip22"
 
         meriPlan.projectPartnerships[0].name = 'partner name'
         meriPlan.projectPartnerships[0].partnership = 'partnership'
@@ -225,12 +225,12 @@ class MERIPlanForBushfireNRMandStateSpec extends StubbedCasSpec {
 
         then:
         meriPlan.primaryOutcome.value().contains("Threatened") // Direct comparison fails due to &nbsp in the HTML due to the length of the options
-        meriPlan.primaryPriorityUnstyled[0].text() == "Numenius madagascariensis (Eastern Curlew, Far Eastern Curlew)"
+        meriPlan.primaryPriorityUnstyled[0].text() == "Anthochaera phrygia"
         meriPlan.secondaryOutcomes[0].outcome.value().contains("Threatened")
-        meriPlan.secondaryOutcomes[0].priorityUnstyle.text() == "Numenius madagascariensis (Eastern Curlew, Far Eastern Curlew)"
+        meriPlan.secondaryOutcomes[0].outcomePriorities[0].value() == "ip2"
         meriPlan.shortTermOutcomes[0].outcome.value() == "Short term outcome 1"
         meriPlan.assetType == "Priority Invertebrate Species"
-        meriPlan.asset == "Euastacus jagara (Freshwater crayfish)"
+        meriPlan.asset == "ip22"
 
         meriPlan.projectPartnerships[0].name == 'partner name'
         meriPlan.projectPartnerships[0].partnership == 'partnership'

@@ -1741,12 +1741,14 @@ class ProjectService  {
      * ]
      *
      */
-    List<Map> getProjectServicesWithTargets(String projectId) {
+    List<Map> getProjectServicesWithTargets(String projectId, ProgramConfig config = null) {
         Map project = get(projectId, 'flat')
 
         List serviceIds = project.custom?.details?.serviceIds?.collect{it as Integer}
 
-        ProgramConfig config = projectConfigurationService.getProjectConfiguration(project)
+        if (!config) {
+            config = projectConfigurationService.getProjectConfiguration(project)
+        }
         List<Map> supportedServices = config.services
         List projectServices = supportedServices?.findAll {it.id in serviceIds }
         List targets = project.outputTargets
@@ -2077,8 +2079,7 @@ class ProjectService  {
      */
     Map getServiceDashboardData(String projectId, boolean approvedDataOnly) {
 
-        List<Score> projectServices = getProjectServicesWithTargets(projectId)
-        // The dashboard only displays scores with non zero targets.
+        List<Score> projectServices = getProjectServicesWithTargets(projectId, config)
 
         List scoreIds = projectServices.collect {it.scores?.findAll{it.target}?.collect{ score ->
             if (score.relatedScores) {
@@ -2239,16 +2240,20 @@ class ProjectService  {
      * @param projectId the project of interest
      * @return a List of outcomes selected in the project MERI plan
      */
-    List listProjectInvestmentPriorities(Map project) {
+    List listProjectInvestmentPriorities(Map project, Map programConfig = null) {
+        if (!programConfig) {
+            programConfig = getProgramConfiguration(project)
+        }
         List primaryPriorities = project?.custom?.details?.outcomes?.primaryOutcome?.assets ?: []
         List secondaryPriorities = project?.custom?.details?.outcomes?.secondaryOutcomes?.collect{it.assets}?.flatten() ?: []
-        List allPriorities = primaryPriorities + secondaryPriorities
-        allPriorities.findAll{it}.unique()
-    }
+        List assets = project?.custom?.details?.assets?.collect{it.description}?.findAll{it}
+        List allPriorities = primaryPriorities + secondaryPriorities + assets
 
-    /** Returns all assets identified in the project MERI plan */
-    List listProjectAssets(Map project) {
-        project?.custom?.details?.assets?.collect{it.description}?.findAll{it}
+        List investmentPriorityIds = allPriorities.findAll{it}.unique()
+        investmentPriorityIds.collect { String investmentPriorityId ->
+            programConfig.priorities.find{it.investmentPriorityId == investmentPriorityId}
+        }
+
     }
 
     List listProjectBaselines(Map project) {

@@ -15,15 +15,14 @@
         </td>
         <td class="priority">
             <!-- ko if:!details.outcomes.secondaryOutcomeSupportsMultiplePriorities($data.description()) -->
-            <span data-bind="text:asset"></span>
+            <span data-bind="text:details.outcomes.priorityLabel(asset())"></span>
             <!-- /ko -->
 
             <!-- ko if:details.outcomes.secondaryOutcomeSupportsMultiplePriorities($data.description()) -->
             <ul data-bind="foreach:assets">
-                <li data-bind="text:$data"></li>
+                <li data-bind="text:details.outcomes.priorityLabel($data)"></li>
             </ul>
             <!-- /ko -->
-        </span>
         </td>
     </tr>
 

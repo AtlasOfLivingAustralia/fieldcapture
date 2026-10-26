@@ -1,24 +1,26 @@
 print("This script is expected to be executed with a working directory containing this script");
 print("Current working dir: " + process.cwd());
+load('../data_common/createInvestmentPriorities.js');
 load('../data_common/loadMeritHub.js');
 load('../data_common/insertData.js');
 load('../data/settingDefaults.js');
 load('../data/monitorRoleMapping.js');
 load('../data_common/createServices.js');
+
 loadActivityForms();
 
-var config = {
+let config = {
     optionalProjectContent: ["Risks and Threats", "MERI Plan"],
     requiresActivityLocking: true
 };
 createProgram({programId: 'original', config: config});
 
-var config = {
+config = {
     projectTemplate: 'rlp'
 };
 createProgram({programId: 'rlp', config: config});
 
-var config = {
+config = {
     projectTemplate: "rlp",
     meriPlanTemplate: "configurableMeriPlan",
     meriPlanContents: [
@@ -601,54 +603,12 @@ config.meriPlanContents = [
         }
     }
 ];
-var priorities = [
-    {
-        "category": "Priority Natural Asset",
-        "priority": "Gondwana Rainforests of Australia World Heritage Area"
-    },
-    {
-        "category": "Additional Priority Natural Asset",
-        "priority": "Great Sandy National Park"
-    },
-    {
-        "category": "Threatened Ecological Community",
-        "priority": "Lowland Rainforest of Subtropical Australia"
-    },
-    {
-        "category": "Priority Vertebrate Animals",
-        "priority": "Pseudomugil mellis (Honey Blue-eye)"
-    },
-    {
-        "category": "Additional Priority Species",
-        "priority": "Pezoporus wallicus (ground parrot)"
-    },
-    {
-        "category": "Priority Invertebrate Species",
-        "priority": "Euastacus jagara (Freshwater crayfish)"
-    },
-    {
-        "category": "Priority Plants",
-        "priority": "Bertya ernestiana (Mt Barney bertya-shrub)"
-    },
-    {
-        "category": "Additional Priority Plants",
-        "priority": "Pseudanthus pauciflorus subsp. pauciflorus"
-    },
-    {
-        "category": "Threatened Species",
-        "priority": "Numenius madagascariensis (Eastern Curlew, Far Eastern Curlew)"
-    },
-    {
-        "category": "Land Management",
-        "priority": "Soil acidification"
-    }
-];
+
 createProgram({programId: "bushfireProgram", name: "New Bushfire Program", description: "", config: config});
 db.managementUnit.insert({
     managementUnitId: "bushfireManagement",
     name: "New Bushfire Management",
     config: {},
-    priorities: priorities,
     status: "active"
 });
 createProject({
@@ -782,11 +742,7 @@ config.meriPlanContents = [
 ];
 var outcomes = [
     {
-        "priorities": [
-            {
-                "category": "Threatened Species"
-            }
-        ],
+        "priorityCategories": ["Threatened Species"],
         "targeted": true,
         "supportsMultiplePrioritiesAsPrimary": true,
         "shortDescription": "Threatened Species Strategy",
@@ -795,11 +751,7 @@ var outcomes = [
         "outcome": "2. By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
     },
     {
-        "priorities": [
-            {
-                "category": "World Heritage Sites"
-            }
-        ],
+        "priorityCategories": ["World Heritage Sites"],
         "targeted": true,
         "shortDescription": "World Heritage Areas",
         "supportsMultiplePrioritiesAsPrimary": true,
@@ -808,11 +760,7 @@ var outcomes = [
         "outcome": "3. By 2023, invasive species management has reduced threats to the natural heritage Outstanding Universal Value of World Heritage properties through the implementation of priority actions."
     },
     {
-        "priorities": [
-            {
-                "category": "Threatened Ecological Communities"
-            }
-        ],
+        "priorityCategories": ["Threatened Ecological Communities"],
         "targeted": true,
         "supportsMultiplePrioritiesAsPrimary": true,
         "shortDescription": "Threatened Ecological Communities",
@@ -821,11 +769,7 @@ var outcomes = [
         "outcome": "4. By 2023, the implementation of priority actions is leading to an improvement in the condition of EPBC Act listed Threatened Ecological Communities."
     },
     {
-        "priorities": [
-            {
-                "category": "Land Management"
-            }
-        ],
+        "priorityCategories": ["Land Management"],
         "targeted": true,
         "shortDescription": "Soil Condition",
         "type": "secondary",
@@ -834,11 +778,7 @@ var outcomes = [
         "outcome": "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
     },
     {
-        "priorities": [
-            {
-                "category": "Sustainable Agriculture"
-            }
-        ],
+        "priorityCategories": ["Sustainable Agriculture"],
         "shortDescription": "Climate / Weather Adaption",
         "type": "secondary",
         "category": "agriculture",
@@ -846,11 +786,7 @@ var outcomes = [
         "outcome": "6. By 2023, there is an increase in the capacity of agriculture systems to adapt to significant changes in climate and market demands for information on provenance and sustainable production."
     },
     {
-        "priorities": [
-            {
-                "category": "Bushfires"
-            }
-        ],
+        "priorityCategories": ["Bushfires"],
         "shortDescription": "Bushfire Recovery",
         "type": "secondary",
         "category": "bushfires",
@@ -863,7 +799,6 @@ db.managementUnit.insert({
     managementUnitId: "bushfireManagement1",
     name: "New Bushfire Management1",
     config: {},
-    priorities: priorities,
     status: "active"
 });
 createProgram({
@@ -989,11 +924,7 @@ config.meriPlanContents = [
 ];
 outcomes = [
     {
-        "priorities": [
-            {
-                "category": "Land Management"
-            }
-        ],
+        "priorityCategories": ["Land Management"],
         "targeted": true,
         "shortDescription": "Soil Condition",
         "supportsMultiplePrioritiesAsPrimary": true,
@@ -1002,11 +933,7 @@ outcomes = [
         "outcome": "5. By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation."
     },
     {
-        "priorities": [
-            {
-                "category": "Sustainable Agriculture"
-            }
-        ],
+        "priorityCategories": ["Sustainable Agriculture"],
         "shortDescription": "Climate / Weather Adaption",
         "supportsMultiplePrioritiesAsPrimary": true,
         "type": "primary",

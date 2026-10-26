@@ -31,6 +31,8 @@
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>
+    <asset:stylesheet src="select2/css/select2.css"/>
+    <asset:stylesheet src="select2-theme-bootstrap4/select2-bootstrap.css"/>
     <asset:stylesheet src="program.css"/>
     <asset:stylesheet src="leaflet-manifest.css"/>
 
@@ -108,11 +110,17 @@
     $(function () {
         var program =<fc:modelAsJavascript model="${program}"/>;
         var config = _.extend({reportingConfigSelector:'#reporting form'}, fcConfig);
+        <g:if test="${content.admin.visible}">
+        config.priorityCategories = <fc:modelAsJavascript model="${content.admin.priorityCategories}" default="[]"/>;
+        config.outcomesInUse = <fc:modelAsJavascript model="${content.admin.outcomesInUse}" default="[]"/>;
+        </g:if>
+
         var programViewModel = new ProgramPageViewModel(program, config);
 
         ko.applyBindings(programViewModel);
         programViewModel.initialise(); // Needs to happen after data binding.
         $('#loading').hide();
+
 
         $('#admin-tab').on('shown.bs.tab', function() {
             var storedAdminTab = amplify.store('program-admin-tab-state');
@@ -150,6 +158,8 @@
 </asset:script>
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="leaflet-manifest.js"/>
+<asset:javascript src="select2/js/select2.full.js"/>
+<asset:javascript src="forms-knockout-bindings.js"/>
 <asset:javascript src="program.js"/>
 <asset:deferredScripts/>
 

@@ -73,7 +73,7 @@ function MERIPlan(project, projectService, config) {
             outputTargets:meriPlan.outputTargets,
             description:meriPlan.description,
             outcomes:project.outcomes,
-            priorities:project.priorities
+            priorities:config.priorities
         };
 
         // Detach the old DetailsViewModel from the autosave / window listener routine.
@@ -363,16 +363,14 @@ function MERIPlan(project, projectService, config) {
      * @returns {Array}
      */
     self.priorityAssets = function(category) {
-        var matchingPriorities = _.filter(project.priorities || [], function (priority) {
+        var matchingPriorities = _.filter(config.priorities || [], function (priority) {
             if (_.isArray(category)) {
-                return _.find(category, function(cat) { return priority.category == cat; });
+                return _.find(category, function(cat) { return _.contains(priority.categories, cat)} );
             } else {
-                return (!category || category == priority.category);
+                return (!category || _.contains(priority.categories, category));
             }
         });
-        return _.map(matchingPriorities, function(priority) {
-            return priority.priority;
-        });
+        return matchingPriorities;
     };
 
     /**
@@ -381,9 +379,10 @@ function MERIPlan(project, projectService, config) {
      * @param filter (optional) if supplied, only categories in this array will be returned.
      */
     self.assetCategories = function(filter) {
-        var categories = _.map(project.priorities || [], function(priority) {
-            return priority.category;
+        var categories = _.map(config.priorities || [], function(priority) {
+            return priority.categories;
         });
+        categories = _.flatten(categories);
         categories = _.uniq(categories);
         if (filter) {
             categories = _.filter(filter, function(category) {
@@ -394,15 +393,26 @@ function MERIPlan(project, projectService, config) {
     }
 
     /**
-     * Returns the asset category assoociated with the supplied asset.
+     * Returns the asset category associated with the supplied asset.
      * @param asset the asset to check.
+     * @param formCategories
      * @returns {*}
      */
-    self.assetCategory = function(asset) {
-        var result = _.find(project.priorities || [], function(priority) {
-            return priority.priority == asset;
+    self.assetCategory = function(asset, formCategories) {
+        var result = _.find(config.priorities || [], function(priority) {
+            return priority.investmentPriorityId === asset;
         });
-        return result && result.category;
+        if (result && result.categories) {
+            if (formCategories) {
+                return _.find(formCategories, function(category) {
+                    return _.contains(result.categories, category);
+                })
+            }
+            else {
+                return result.categories[0];
+            }
+        }
+        return null;
     };
 
     self.programObjectives = config.programObjectives || [];
@@ -1121,7 +1131,7 @@ function DetailsViewModel(o, project, budgetHeaders, risks, allServices, selecte
     var outcomesConfig = {
         outcomeStatements:config.outcomeStatementsConfig,
         outcomes:project.outcomes,
-        priorities:project.priorities,
+        priorities:config.priorities,
         bieUrl: config.bieUrl,
         searchBieUrl: config.searchBieUrl,
         speciesListUrl: config.speciesListUrl,
@@ -2050,7 +2060,7 @@ function OutcomesViewModel(outcomes, options) {
         return selectedOutcome;
     }
 
-    self.outcomePriorities = function (outcomeText) {
+    self.outcomePriorities = function (outcomeText, investmentPriorityIds) {
 
         var outcome = _.find(config.outcomes, function (outcome) {
             return outcome.outcome == outcomeText;
@@ -2058,16 +2068,36 @@ function OutcomesViewModel(outcomes, options) {
         if (!outcome) {
             return [];
         }
-        var priorities = [];
-        _.each(config.priorities, function (priority) {
-            _.each(outcome.priorities, function (outcomePriority) {
-                if (priority.category == outcomePriority.category) {
-                    priorities.push(priority.priority);
-                }
-            });
+        // This function exists to handle the case where an investment
+        // priority has been selected for the project but the configuration
+        // has changed such that the priority is no longer associated with
+        // the program outcomes.  It prevents it from being removed from the MERI plan in this case.
+        function isSelected(priority) {
+            investmentPriorityIds = ko.utils.unwrapObservable(investmentPriorityIds);
+            if (Array.isArray(investmentPriorityIds)) {
+                return investmentPriorityIds && investmentPriorityIds.indexOf(priority.investmentPriorityId) >= 0;
+            }
+            else {
+                return investmentPriorityIds === priority;
+            }
+        }
 
+        var priorityCategories = outcome.priorityCategories;
+        // Return the list of priorities that have at least one category in common with the selected outcome.
+        var priorities = _.filter(config.priorities, function (priority) {
+            return isSelected(priority.investmentPriorityId) || _.any(priorityCategories, function (category) {
+                return priority.categories.indexOf(category) >= 0;
+            });
         });
         return priorities;
+    };
+
+    self.priorityLabel = function(investmentPriorityId) {
+        const id = ko.utils.unwrapObservable(investmentPriorityId);
+        let investmentPriority = _.find(config.priorities, function(priority) {
+            return priority.investmentPriorityId === id;
+        });
+        return investmentPriority ? investmentPriority.name : investmentPriorityId;
     };
 
     var supportsConfiguration = function(outcomeText, configItemName) {
@@ -2126,7 +2156,11 @@ function OutcomesViewModel(outcomes, options) {
 
         }
 
-        return _.uniq(priorities);
+        priorities = _.uniq(priorities);
+        let result = _.filter(config.priorities, function(priority) {
+            return priorities.indexOf(priority.investmentPriorityId) >= 0;
+        });
+        return result;
     }).extend({ rateLimit: 50 });
 
     self.toJSON = function () {
