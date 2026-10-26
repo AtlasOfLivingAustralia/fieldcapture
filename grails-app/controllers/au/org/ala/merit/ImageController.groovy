@@ -3,9 +3,9 @@ package au.org.ala.merit
 import grails.converters.JSON
 import groovy.util.logging.Slf4j
 import org.apache.commons.io.FilenameUtils
-import org.springframework.http.HttpHeaders
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.support.MultipartResolutionDelegate
+import au.org.ala.ecodata.utils.ResponseCacheHeaderUtils
 
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -113,10 +113,7 @@ class ImageController {
 
         def ext = FilenameUtils.getExtension(params.id)
 
-        long ONE_WEEK_IN_SECONDS = 60*60*24*7
-        response.setHeader(HttpHeaders.PRAGMA, "")
-        response.setDateHeader(HttpHeaders.EXPIRES, ONE_WEEK_IN_SECONDS*1000+System.currentTimeMillis())
-        response.setHeader(HttpHeaders.CACHE_CONTROL, "max-age="+ONE_WEEK_IN_SECONDS)
+        ResponseCacheHeaderUtils.applyCacheHeaders(response, ResponseCacheHeaderUtils.ONE_WEEK_IN_SECONDS)
         response.contentType = 'image/' + ext
         response.outputStream << new FileInputStream(f)
         response.outputStream.flush()

@@ -9,6 +9,7 @@ import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportLifecycleListener
 import au.org.ala.merit.reports.ReportGenerationOptions
+import au.org.ala.ecodata.utils.ResponseCacheHeaderUtils
 import grails.converters.JSON
 import grails.core.GrailsApplication
 import org.apache.http.HttpStatus
@@ -1200,6 +1201,10 @@ class ProjectController {
             ]
         }?.unique()?.sort { it.label }
 
+        if (categories) {
+            ResponseCacheHeaderUtils.applyCacheHeaders(response, ResponseCacheHeaderUtils.ONE_DAY_IN_SECONDS)
+        }
+
         render categories as JSON
     }
 
@@ -1292,6 +1297,7 @@ class ProjectController {
     }
 
     def spatialFeatures (String layerId, String intersectWith) {
+        ResponseCacheHeaderUtils.applyCacheHeaders(response, ResponseCacheHeaderUtils.ONE_WEEK_IN_SECONDS)
         webService.proxyGetRequest(response, grailsApplication.config.getProperty('ecodata.baseUrl') + "spatial/features?layerId=${layerId}&intersectWith=${intersectWith?:''}", false, true, 120000)
         return null
     }

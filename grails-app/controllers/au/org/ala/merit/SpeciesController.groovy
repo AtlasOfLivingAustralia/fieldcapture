@@ -2,26 +2,18 @@ package au.org.ala.merit
 
 import grails.converters.JSON
 
-import jakarta.servlet.http.HttpServletResponse
-
+import au.org.ala.ecodata.utils.ResponseCacheHeaderUtils
 
 class SpeciesController {
 
     SpeciesService speciesService
     WebService webService
 
-    private int ONE_DAY_IN_SECONDS = 60*60*24
-    private String CACHE_FOR_A_DAY = 'public, max-age='+Integer.toString(ONE_DAY_IN_SECONDS)
-
-    private void addCachingHeaders(HttpServletResponse response) {
-        response.setHeader('Cache-Control', CACHE_FOR_A_DAY)
-    }
-
     def speciesProfile(String id) {
 
         Map result = speciesService.speciesProfile(id)
         if (result && result.scientificName) {
-            addCachingHeaders(response)
+            ResponseCacheHeaderUtils.applyCacheHeaders(response, ResponseCacheHeaderUtils.ONE_DAY_IN_SECONDS)
         }
         render result as JSON
     }
@@ -30,7 +22,7 @@ class SpeciesController {
 
         String url = speciesService.speciesImageThumbnailUrl(id)
         if (url) {
-            addCachingHeaders(response)
+            ResponseCacheHeaderUtils.applyCacheHeaders(response, ResponseCacheHeaderUtils.ONE_DAY_IN_SECONDS)
             webService.proxyGetRequest(response, url)
         }
         else {
@@ -43,7 +35,6 @@ class SpeciesController {
     def searchBie() {
 
         Map results = speciesService.searchBie(params.q, params.fq, params.limit ?: 10)
-        println results
         render results as JSON
     }
 }

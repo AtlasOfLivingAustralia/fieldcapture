@@ -1,13 +1,9 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.config.ProgramConfig
+import au.org.ala.ecodata.utils.ResponseCacheHeaderUtils
 import grails.converters.JSON
-import grails.plugin.cache.Cacheable
 import org.apache.http.HttpStatus
-import org.springframework.web.multipart.MultipartFile
-import org.springframework.web.multipart.support.MultipartResolutionDelegate
-
-import static grails.async.Promises.task
 
 class SiteController {
 
@@ -598,7 +594,6 @@ class SiteController {
         }
     }
 
-    @Cacheable('regionList')
     def regionList() {
         def knownShapeConfig = settingService.getJson(SettingPageType.LAYERS_FOR_KNOWN_SHAPES)
         if (!knownShapeConfig) {
@@ -609,6 +604,7 @@ class SiteController {
         knownShapeConfig = [regions: knownShapeConfig.collect { layer ->
             [key: layer.id, value: layer.name]
         }]
+        ResponseCacheHeaderUtils.applyCacheHeaders(response, ResponseCacheHeaderUtils.ONE_DAY_IN_SECONDS)
 
         render knownShapeConfig as JSON
     }

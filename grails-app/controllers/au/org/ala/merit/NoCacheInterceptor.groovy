@@ -10,15 +10,21 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class NoCacheInterceptor implements GrailsConfigurationAware {
 
-    private static final String HEADER_PRAGMA = "Pragma";
-    private static final String HEADER_EXPIRES = "Expires";
-    private static final String HEADER_CACHE_CONTROL = "Cache-Control";
+    private static final String HEADER_PRAGMA = "Pragma"
+    private static final String HEADER_EXPIRES = "Expires"
+    private static final String HEADER_CACHE_CONTROL = "Cache-Control"
     private String applyCachingHeaders
 
     int order = HIGHEST_PRECEDENCE + 30
 
     NoCacheInterceptor() {
-        matchAll().excludes(controller: "species").excludes(controller:'document', action:'download').excludes(controller:'i18n', action:'messages')
+        matchAll()
+                .excludes(controller: "species")
+                .excludes(controller:'document', action:'download')
+                .excludes(controller:'i18n', action:'messages')
+                .excludes(controller:'project', action:'spatialFeatures')
+                .excludes(controller:'image', action:'get')
+                .excludes(controller:'site', action:'regionList')
     }
 
     @Override
@@ -28,10 +34,11 @@ class NoCacheInterceptor implements GrailsConfigurationAware {
 
     boolean before() {
         if (applyCachingHeaders) {
-            response.setHeader(HEADER_PRAGMA, "no-cache");
-            response.setDateHeader(HEADER_EXPIRES, 1L);
-            response.setHeader(HEADER_CACHE_CONTROL, "no-cache");
-            response.addHeader(HEADER_CACHE_CONTROL, "no-store");
+            println("Applying caching headers to response for request ${request.forwardURI}")
+            response.setHeader(HEADER_PRAGMA, "no-cache")
+            response.setDateHeader(HEADER_EXPIRES, 1L)
+            response.setHeader(HEADER_CACHE_CONTROL, "no-cache")
+            response.addHeader(HEADER_CACHE_CONTROL, "no-store")
         }
         true
     }
