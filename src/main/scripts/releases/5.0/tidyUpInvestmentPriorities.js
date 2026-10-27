@@ -1,4 +1,4 @@
-load('../../../utils/audit.js');
+load('../../utils/audit.js');
 load('./investmentPriorityMapping.js');
 const adminUserId = "system";
 
