@@ -70,7 +70,7 @@
                     <span data-bind="text: categories().join(', ')"></span>
                 </td>
                 <td class="management-units">
-                    <textarea aria-labelledby="management-units" name="management-units" class="form-control" readonly data-bind="text: managementUnitLabels()" rows="4"></textarea>
+                    <textarea aria-labelledby="management-units" name="management-units" class="form-control border-0 rounded-0" readonly data-bind="text: managementUnitLabels()" ></textarea>
                 </td>
 
                 <td class="actions">
@@ -188,6 +188,7 @@
 
         // This needs to be done after the table is rendered by the applyBindings call.
         viewModel.initialiseDataTable('table.investment-priorities');
+        viewModel.attachValidation();
 
     });
 
