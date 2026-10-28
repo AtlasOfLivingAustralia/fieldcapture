@@ -4,7 +4,6 @@ import geb.Module
 import geb.module.Checkbox
 import geb.module.FormElement
 import groovy.util.logging.Slf4j
-import io.micronaut.core.util.ArgumentUtils
 import org.openqa.selenium.ElementClickInterceptedException
 import org.openqa.selenium.StaleElementReferenceException
 
