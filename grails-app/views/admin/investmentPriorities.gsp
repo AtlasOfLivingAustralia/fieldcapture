@@ -188,7 +188,6 @@
 
         // This needs to be done after the table is rendered by the applyBindings call.
         viewModel.initialiseDataTable('table.investment-priorities');
-        viewModel.attachValidation();
 
     });
 
