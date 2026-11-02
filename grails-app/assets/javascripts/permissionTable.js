@@ -77,7 +77,12 @@ function initialise(roles, currentUserId, hubId, containerId) {
         "ajax": {"url": fcConfig.getMembersForHubPaginatedUrl + "/" + hubId,
             "type": "POST"},
         "columns":col,
-        dom: 'lrtip',
+        layout: {
+            topStart: 'pageLength',
+            topEnd: null,
+            bottomStart: 'info',
+            bottomEnd: 'paging'
+        },
         "language": {
             "emptyTable": "The email you searched for is not registered in MERIT or does not have elevated permissions"
         }

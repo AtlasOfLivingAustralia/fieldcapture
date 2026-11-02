@@ -38,7 +38,7 @@ module.exports = function (config) {
             'grails-app/assets/vendor-ext/underscore/underscore.js',
             'grails-app/assets/vendor/wmd/showdown.js',
             'grails-app/assets/vendor/wmd/wmd.js',
-            'grails-app/assets/vendor-ext/datatables.net/js/jquery.dataTables.js',
+            'grails-app/assets/vendor-ext/datatables.net/js/dataTables.js',
             'grails-app/assets/vendor-ext/jquery-appear-original/index.js',
             'grails-app/assets/vendor/amplifyjs/amplify.min.js',
             'grails-app/assets/vendor-ext/frigus02-vkbeautify/vkbeautify.js',

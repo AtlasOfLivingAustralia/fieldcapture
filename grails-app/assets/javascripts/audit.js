@@ -1,11 +1,10 @@
-//= require datatables.net/js/jquery.dataTables.js
-//= require datatables.net-bs4/js/dataTables.bootstrap4.js
+//= require datatables.net/js/dataTables.js
+//= require datatables.net-bs5/js/dataTables.bootstrap5.js
 //= require datatables.net-buttons/js/dataTables.buttons.js
-//= require datatables.net-buttons-dt/js/buttons.dataTables.js
 //= require datatables.net-buttons/js/buttons.colVis.js
 //= require datatables.net-buttons/js/buttons.html5.js
 //= require datatables.net-buttons/js/buttons.print.js
-//= require datatables.net-buttons-bs4/js/buttons.bootstrap4.js
+//= require datatables.net-buttons-bs5/js/buttons.bootstrap5.js
 //= require datatables/dataTables.moment.js
 //= require prettytextdiff/jquery.pretty-text-diff.min.js
 //= require prettytextdiff/diff_match_patch.js

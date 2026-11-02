@@ -17,12 +17,6 @@
         overflow-x: auto;
     }
 
-    div.dt-buttons {
-        position: relative;
-        float: left;
-        margin-right: 0.8rem;
-    }
-
     </style>
 </head>
 <table id="outputTargets" class="table table-striped w-100">
@@ -45,7 +39,12 @@
             "order":[[0, 'asc']],
             "autoWidth":false,
             "columns": columns,
-            "dom": 'Blfrtip',
+            "layout": {
+                topStart: ['buttons', 'pageLength'],
+                topEnd: 'search',
+                bottomStart: 'info',
+                bottomEnd: 'paging'
+            },
             buttons: [
                 'copy',
                 {
