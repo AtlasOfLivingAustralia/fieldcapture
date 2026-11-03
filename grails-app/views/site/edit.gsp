@@ -43,7 +43,7 @@
         sitePageUrl : "${createLink(action: 'index', id: site?.siteId)}",
         homePageUrl : "${createLink(controller: 'home', action: 'index')}",
         ajaxUpdateUrl: "${createLink(action: 'ajaxUpdate', id: site?.siteId)}",
-        returnTo: "${params.returnTo ?: createLink(controller: 'project', action: 'index', id: project?.projectId)}"
+        returnTo: "${returnTo ?: createLink(controller: 'project', action: 'index', id: project?.projectId)}"
         },
         here = window.location.href;
 
@@ -140,6 +140,11 @@
             if ($('#validation-container').validationEngine('validate')) {
                 // sync view model with map drawings
                 siteViewModel.updateGeometry();
+                if (siteViewModel.features().length === 0) {
+                    alert('Please draw a feature on the map before saving.');
+                    return;
+                }
+
                 siteViewModel.saveWithErrorDetection(
                     function (data) {
                         if(data.status == 'created'){

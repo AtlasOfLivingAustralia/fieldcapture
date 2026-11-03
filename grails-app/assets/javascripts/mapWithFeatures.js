@@ -415,10 +415,12 @@
             switch (siteGeometry.type) {
                 case 'point':
                     geometry.type = ALA.MapConstants.DRAW_TYPE.POINT_TYPE;
+                    properties.point_type = properties.type = 'point';
                     break;
                 case 'pid':
                     geometry.type = ALA.MapConstants.DRAW_TYPE.POINT_TYPE;
                     properties.pid = siteGeometry.pid;
+                    properties.fid = siteGeometry.fid;
                     properties.point_type = properties.type = 'pid';
                     break;
                 case 'Circle':

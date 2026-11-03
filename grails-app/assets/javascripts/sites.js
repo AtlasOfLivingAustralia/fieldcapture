@@ -502,27 +502,35 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
 
     self.updateGeometry = function () {
         var featureCollection = alaMap.getGeoJSON(), bounds = alaMap.getBounds(), boundsGeoJSON, updated = false;
-        if (featureCollection && featureCollection.features && featureCollection.features.length > 0) {
+        if (featureCollection && featureCollection.features) {
             featureCollection.features = filterOutPOIsFromFeatures(featureCollection.features);
             if (featureCollection.features !== self.features()) {
                 self.features(featureCollection.features);
-                var area = ALA.MapUtils.calculateAreaKmSq(featureCollection);
-                boundsGeoJSON = convertLatLngBoundsToGeoJson(bounds);
-                if (boundsGeoJSON) {
-                    self.extent().geometry().coordinates(boundsGeoJSON.coordinates);
-                    self.extent().source('drawn');
-                    self.extent().geometry().type(boundsGeoJSON.type);
+                if ( featureCollection.features.length > 0 ) {
+                    var area = ALA.MapUtils.calculateAreaKmSq(featureCollection);
+                    boundsGeoJSON = convertLatLngBoundsToGeoJson(bounds);
+                    if (boundsGeoJSON) {
+                        self.extent().geometry().coordinates(boundsGeoJSON.coordinates);
+                        self.extent().source('drawn');
+                        self.extent().geometry().type(boundsGeoJSON.type);
+                    }
+
+                    if (area) {
+                        self.extent().geometry().areaKmSq(area);
+                    }
+
+                    // get centre of the shapes
+                    var centre = bounds.getCenter();
+                    if (centre) {
+                        self.extent().geometry().centre([centre.lng, centre.lat]);
+                    }
                 }
 
-                if (area) {
-                    self.extent().geometry().areaKmSq(area);
-                }
-
-                // get centre of the shapes
-                var centre = bounds.getCenter();
-                if (centre) {
-                    self.extent().geometry().centre([centre.lng, centre.lat]);
-                }
+                // clear certain attributes
+                self.extent().geometry().fid("");
+                self.extent().geometry().pid("");
+                self.extent().geometry().layerName("");
+                self.extent().geometry().type("");
 
                 updated = true;
             }
@@ -638,6 +646,9 @@ var AlaMapAdapter = function(map, options) {
     }
 
     self.addFeature = function(feature) {
+        if (!ALA.MapUtils.validateGeoJSON(feature)) {
+            feature = convertSiteGeometryToFeature(feature);
+        }
         self.featureLayer.on('layeradd', function(e) {
             var layer = e.layer;
             var id = getId(feature);

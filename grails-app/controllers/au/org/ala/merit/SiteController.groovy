@@ -11,6 +11,7 @@ class SiteController {
     SettingService settingService
     SpatialService spatialService
     ProgramService programService
+    CommonService commonService
     static defaultAction = "index"
     static allowedMethods = ['isGeometryWithinAustralia': 'POST']
 
@@ -134,6 +135,7 @@ class SiteController {
 
             result.project = project = projects[0]
         }
+        result.returnTo = commonService.isRedirectSafe(params.returnTo) ? params.returnTo : createLink(controller: 'project', action: 'index', id: project?.projectId)
         result += editSiteModelData(site, project)
         result
     }
