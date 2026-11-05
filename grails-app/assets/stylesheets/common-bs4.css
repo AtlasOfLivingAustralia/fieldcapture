@@ -113,3 +113,20 @@ table td.report-status, table th.report-status {
 .customBorder {
     border-bottom: 1px solid #eeeeee;
 }
+
+/** The mode switcher for DataTables fuzzy search is overly emphasised and not needed, so hide it. */
+.fuzzyToolTip {
+    display: none !important;
+}
+
+.number-circle {
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    padding: 2px;
+    background: #fff;
+    border: 1px solid #666;
+    color: #666;
+    text-align: center;
+    font: 12px Arial, sans-serif;
+}

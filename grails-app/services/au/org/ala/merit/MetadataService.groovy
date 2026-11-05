@@ -10,6 +10,7 @@ class MetadataService {
 
     GrailsCacheManager grailsCacheManager
     SettingService settingService
+    SearchService searchService
 
     static final String PROJECT_SERVICES_CACHE_REGION = 'projectServices'
     static final String PROJECT_SERVICES_KEY = 'projectServices'
@@ -366,6 +367,13 @@ class MetadataService {
         result.resp ?: []
     }
 
+    Map investmentPriorityProjectCount() {
+        String facet = 'meriPlanAssetFacet'
+        int FACET_LIMIT = 10000
+        Map result = searchService.customFacetSearch(facet, FACET_LIMIT, '*:*')
+        result
+    }
+
     @Cacheable("investmentPriorityCategories")
     List<String> getInvestmentPriorityCategories() {
         findInvestmentPriorities().collect{it.categories}.flatten().unique()
@@ -379,6 +387,11 @@ class MetadataService {
     int deleteInvestmentPriority(String investmentPriorityId) {
         String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/deleteInvestmentPriority/$investmentPriorityId"
         webService.doDelete(url)
+    }
+
+    Map mergeInvestmentPriorities(String investmentPriorityIdToDelete, String investmentPriorityIdToReplaceWith) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/mergeInvestmentPriorities"
+        webService.doPost(url, [investmentPriorityIdToDelete:investmentPriorityIdToDelete, investmentPriorityIdToReplaceWith:investmentPriorityIdToReplaceWith])
     }
 
     Map updateInvestmentPriorityCategory(String category, List<String> investmentPriorityIds) {

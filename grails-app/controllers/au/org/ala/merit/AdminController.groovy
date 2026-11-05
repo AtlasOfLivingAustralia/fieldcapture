@@ -1,6 +1,7 @@
 package au.org.ala.merit
 
 import au.org.ala.ecodata.utils.ExcelUtils
+import au.org.ala.merit.command.MergeInvestmentPriorityCommand
 import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
 import au.org.ala.merit.command.SaveInvestmentPriorityCommand
 import au.org.ala.merit.hub.HubSettings
@@ -23,7 +24,7 @@ import org.springframework.web.multipart.support.MultipartResolutionDelegate
 @PreAuthorise(accessLevel = 'officer', redirectController = "home")
 @Slf4j
 class AdminController {
-    static allowedMethods = [ searchUserDetails: "GET", removeUserDetails:"POST", updateTag: "POST", addTag: "POST", deleteTag: "POST", saveInvestmentPriority: "POST", investmentPriorities: "GET", addCategoryToInvestmentPriorities: "POST"]
+    static allowedMethods = [ searchUserDetails: "GET", removeUserDetails:"POST", updateTag: "POST", addTag: "POST", deleteTag: "POST", saveInvestmentPriority: "POST", "deleteInvestmentPriority": "POST", investmentPriorities: "GET", addCategoryToInvestmentPriorities: "POST"]
     static responseFormats = ['json', 'xml']
 
     BlogService blogService
@@ -635,6 +636,25 @@ class AdminController {
         ]
     }
 
+    /**
+     * Queries elasticsearch and returns the count of projects using each investment priority
+     * @return
+     */
+    def investmentPriorityProjectCount() {
+        def result = metadataService.investmentPriorityProjectCount()
+        render result as JSON
+    }
+
+    def mergeInvestmentPriority(MergeInvestmentPriorityCommand command) {
+        if (command.hasErrors()) {
+            respond command.errors
+        }
+        else {
+            Map result = command.merge()
+            respond result
+        }
+    }
+
     def saveInvestmentPriority(SaveInvestmentPriorityCommand command) {
         if (command.hasErrors()) {
             respond command.errors
@@ -643,6 +663,17 @@ class AdminController {
             Map result = command.save()
             respond result
         }
+    }
+
+    def deleteInvestmentPriority(String id) {
+        if (!id) {
+            respond([status: HttpStatus.SC_BAD_REQUEST], [error:"Missing property id"])
+            return
+        }
+
+        int result = metadataService.deleteInvestmentPriority(id)
+        Map response = [success: result == HttpStatus.SC_OK, deletedCount: result]
+        respond response
     }
 
     def updateInvestmentPriorityCategory() {

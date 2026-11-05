@@ -5,8 +5,11 @@
     <title>Manage Investment Priorities | MERIT</title>
     <script>
         window.fcConfig = {
+            i18nURL: "${g.createLink(controller: 'i18n', action: 'messages')}",
             saveInvestmentPriorityUrl: "${g.createLink(action: 'saveInvestmentPriority')}",
+            mergeInvestmentPriorityUrl: "${g.createLink(action: 'mergeInvestmentPriority')}",
             deleteInvestmentPriorityUrl: "${g.createLink(action: 'deleteInvestmentPriority')}",
+            investmentPriorityProjectCountUrl: "${g.createLink(action: 'investmentPriorityProjectCount')}",
         }
     </script>
     <asset:stylesheet src="common-bs4.css"/>
@@ -52,6 +55,7 @@
                 <th class="name">Name</th>
                 <th class="categories">Categories <fc:iconHelp>Program outcomes specify a list of categories that define the investment priority categories associated with that outcome</fc:iconHelp></th>
                 <th id="management-units" class="management-units">Management units <fc:iconHelp>Management unit/s in which this investment priority occurs</fc:iconHelp></th>
+                <th class="project-count">Project Count <fc:iconHelp>The number of projects investing in this investment priority.  Note this does not include hidden projects.</fc:iconHelp></th>
                 <th class="actions"><span class="visually-hidden">Actions</span></th>
             </tr>
             </thead>
@@ -72,16 +76,24 @@
                 <td class="management-units">
                     <textarea aria-labelledby="management-units" name="management-units" class="form-control border-0 rounded-0" readonly data-bind="text: managementUnitLabels()" ></textarea>
                 </td>
-
+                <td class="project-count">
+                    <div data-bind="if:projectCount" class="d-flex justify-content-center">
+                        <div class="number-circle" data-bind="text:projectCount"></div>
+                    </div>
+                </td>
                 <td class="actions">
                     <button class="btn btn-mini edit-investment-priority" title="Edit this investment priority" type="button" data-bind="click:$parent.edit"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-mini delete-investment-priority" disabled title="Delete this investment priority" type="button" data-bind="enable:!$parent.projectCountFailed() && !projectCount(), click:$parent.deleteInvestmentPriority"><i class="fa fa-trash"></i></button>
                 </td>
             </tr>
             </tbody>
-            <tfoot data-bind="if: canAddNewInvestmentPriority">
+            <tfoot>
             <tr>
-                <td colspan="6" class="admin-actions">
-                    <button type="button" class="btn btn-sm btn-success" disabled data-bind="enable:canAddNewInvestmentPriority, click:newInvestmentPriority">
+                <td colspan="7" class="admin-actions">
+                    <button id="add-investment-priority" type="button" class="btn btn-sm btn-success" disabled data-bind="enable:canAddNewInvestmentPriority, click:newInvestmentPriority"
+                            data-bs-placement="right"
+                            data-bs-custom-class="investment-priority-tooltip-width"
+                            data-bs-toggle="tooltip" title="Fuzzy search is enabled.  If you are confident of your spelling, you can disable fuzzy search to create a new Investment Priority">
                         <i class="fa fa-plus"></i> Add new investment priority</button>
                 </td>
             </tr>
@@ -99,20 +111,21 @@
                 </div>
                 <div class="modal-body">
                     <form>
-                        <div class="mb-3">
-                            <label for="type" class="form-label">Type of investment priority <fc:iconHelp>This value is used for the investment priority type facet on the Project Explorer</fc:iconHelp></label>
-                            <select id="type" class="form-select form-select-sm" data-bind="value:type, options:investmentPriorityTypes">
-                            </select>
-                        </div>
+                        <div class="alert alert-danger" data-bind="visible:duplicate">An investment priority with this name already exists.</div>
+                        <div class="alert alert-warning" data-bind="visible:duplicate() && !isNew">This investment priority can be removed and projects that reference it can be updated to use the existing one by using the 'Delete and Replace' button below.  This cannot be undone.</div>
                         <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
-                            <input type="text" id="name" class="form-control form-control-sm" data-bind="value:name">
+                            <input type="text" id="name" class="form-control form-control-sm" data-bind="value:name" data-validation-engine="validate[required]"/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="type" class="form-label">Type of investment priority <fc:iconHelp>This value is used for the investment priority type facet on the Project Explorer</fc:iconHelp></label>
+                            <select id="type" class="form-select form-select-sm" data-bind="value:type, options:investmentPriorityTypes" data-validation-engine="validate[required]"></select>
                         </div>
                         <div class="mb-3">
                             <label for="categories" class="form-label">Categories <fc:iconHelp>Investment priority categories are used to restrict the investment priorities available for selection for a specific program</fc:iconHelp></label>
                             <select id="categories" multiple="multiple" class="form-select form-select-sm"
                                     style="width:100%" <%-- select 2 needs this hint --%>
-                                    data-bind="options: availableCategories, enabled: editable(), multiSelect2:{value: categories}"></select>
+                                    data-bind="options: availableCategories, enabled: editable(), multiSelect2:{value: categories}" data-validation-engine="validate[required]" data-validation-message="A priority cannot be used unless it has at least one category"></select>
                         </div>
                         <div class="mb-3">
                             <label for="management-unit" class="form-label">Management units <fc:iconHelp>If a project is assigned to a Management Unit, only investment priorities in that management unit will be available for selection.  Leave this blank for investment priorities that should be available in all management units</fc:iconHelp></label>
@@ -123,11 +136,16 @@
                                     data-bind="options: $parent.availableManagementUnits, optionsValue:'managementUnitId', optionsText:'name', enabled: editable(), multiSelect2:{value: managementUnits}"></select>
 
                         </div>
+
                     </form>
                 </div>
+
+
                 <div class="modal-footer">
+
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" data-bind="enable:saveable, click:function() { isNew ? $parent.addInvestmentPriority(this) : $parent.updateInvestmentPriority(this) }">Save changes</button>
+                    <button type="button" class="btn btn-primary" data-bind="visible: isNew || !duplicate(), enable:saveable, click:function() { isNew ? $parent.addInvestmentPriority(this) : $parent.updateInvestmentPriority(this) }">Save changes</button>
+                    <button type="button" class="btn btn-danger" data-bind="visible: !isNew && duplicate(), click:function() { $parent.mergeInvestmentPriority(this) }">Delete and replace</button>
                 </div>
             </div>
         </div>
@@ -180,7 +198,9 @@
             categoriesByType: <fc:modelAsJavascript model="${categoriesByType}"/>,
             availableManagementUnits: <fc:modelAsJavascript model="${managementUnits}"/>,
             modalSelector:'#editInvestmentPriority',
-            categoryUpdateModalSelector:'#editCategory'
+            categoryUpdateModalSelector:'#editCategory',
+            addInvestmentPrioritySelector:'#add-investment-priority',
+
         }, window.fcConfig);
 
         const viewModel = new ManageInvestmentPrioritiesViewModel(investmentPriorities, config);
@@ -188,6 +208,7 @@
 
         // This needs to be done after the table is rendered by the applyBindings call.
         viewModel.initialiseDataTable('table.investment-priorities');
+        $('.helphover').popover();
 
     });
 

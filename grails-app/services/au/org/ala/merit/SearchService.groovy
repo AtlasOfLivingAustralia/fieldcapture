@@ -147,10 +147,22 @@ class SearchService {
         }
     }
 
+    def customFacetSearch(String facetName, Integer facetLimit, String query) {
+        Map queryParams = [query: query, facets: facetName, flimit: facetLimit ?:FACET_LIMIT, fsort: "term", omitSource:true]
+        configureProjectQuery(queryParams, true)
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'search/elasticHome' + commonService.buildUrlParamsFromMap(queryParams)
+        Map result = webService.getJson(url)
+        result?.facets[facetName] ?: [:]
+    }
+
     private void configureProjectQuery(params, boolean useDefaultFacetQuery = true) {
-        params.flimit = FACET_LIMIT
-        params.fsort = "term"
-        //params.offset = 0
+        if (!params.flimit) {
+            params.flimit = FACET_LIMIT
+        }
+        if (!params.fsort) {
+            params.fsort = "term"
+        }
+
         params.query = params.query ?: "docType:project"
         handleDateFilters(params)
         if (useDefaultFacetQuery) {
