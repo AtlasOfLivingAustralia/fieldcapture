@@ -1,5 +1,5 @@
 package au.org.ala.fieldcapture
-
+import geb.module.FormElement
 import pages.ManageInvestmentPriorities
 import pages.MeriPlanPDFPage
 import pages.RlpProjectPage
@@ -56,20 +56,20 @@ class InvestmentPrioritySpec extends StubbedCasSpec {
         when:
         to ManageInvestmentPriorities
 
-        then: "The add investment priority button is not visible"
-        !addInvestmentPriorityButton.displayed
+        then: "The add investment priority button is not enabled"
+        !addInvestmentPriorityButton.module(FormElement).enabled
 
         when:
         investmentPrioritiesTable.search("New Investment Priority", 0)
 
-        then: "The add investment priority button is visible"
-        addInvestmentPriorityButton.displayed
+        then: "The add investment priority button is enabled"
+        addInvestmentPriorityButton.module(FormElement).enabled
 
         when: "The button is pressed and we complete a dialog is displayed and pre-populated with the search term"
         addNewInvestmentPriority()
 
         then:
-        addOrEditInvestmentPriority.name == "New Investment Priority"
+        addOrEditInvestmentPriority.name == "new investment priority" // The fuzzy search plugin converts the search term to lower case and removes punctuation
 
         when:
         addOrEditInvestmentPriority.type = "species"
@@ -85,7 +85,7 @@ class InvestmentPrioritySpec extends StubbedCasSpec {
 
         then:
         getInvestmentPrioritiesCount() == 1
-        investmentPriorityRows[0].name == "New Investment Priority"
+        investmentPriorityRows[0].name == "new investment priority"
         investmentPriorityRows[0].type == "species"
         investmentPriorityRows[0].categories == "Threatened Species"
         investmentPriorityRows[0].managementUnits == "Test management unit"

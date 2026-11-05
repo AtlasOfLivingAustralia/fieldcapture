@@ -576,7 +576,7 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
         $(options.categoryUpdateModalSelector).modal('show');
     }
     self.newInvestmentPriority = function() {
-        let searchTerm = self.table.search.fuzzy();
+        let searchTerm = getRawSearchTerm();
         self.doCreateOrEdit(new InvestmentPriority({name:searchTerm}), true);
     }
 
@@ -666,7 +666,6 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
                     contentType: 'application/json'
                 }).done(function (response) {
                     if (!response.error) {
-                        console.log(response);
                         bootbox.alert("The investment priority has been merged successfully.  The page will now reload.", function() {
                             blockUIWithMessage("Reloading page...");
                             window.location.reload();
@@ -719,8 +718,22 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
     };
 
     function fuzzySearchEnabled() {
-        var toggle = $('div.dt-search button.toggleSearch').get(0);
+        let toggle = fuzzySearchToggleSelector().get(0);
         return toggle.hasAttribute('blurred');
+    }
+
+    function searchInputSelector() {
+        return $('div.dt-search input');
+    }
+
+    function fuzzySearchToggleSelector() {
+        return $('div.dt-search button.toggleSearch');
+    }
+
+    function getRawSearchTerm() {
+        // The API returns a lowercase version of the search term, but we want to use the original case
+        // for the new investment priority name.
+        return searchInputSelector().val();
     }
 
     self.projectCountFailed = ko.observable(false);
@@ -793,16 +806,14 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
                     // The fuzzySearch plugin calls input.off() to remove the default DataTables search handlers, but
                     // with jQuery present that is a no-op, so the default (exact) search handlers keep firing and
                     // conflict with the plugin.  Remove them explicitly.
-                    var $container = $(new $.fn.dataTable.Api(settings).table().container());
-                    $container.find('div.dt-search input')
-                        .off('keyup.DT search.DT input.DT paste.DT cut.DT mouseup.DT');
+                    searchInputSelector().off('keyup.DT search.DT input.DT paste.DT cut.DT mouseup.DT');
 
                     // The fuzzySearch plugin defaults to exact matching and has no option to change that.  Its toggle
                     // button is created in an init.dt handler that runs after initComplete, so defer clicking it until
                     // then to switch the default mode to fuzzy.  A native click is used as the plugin binds listeners
                     // with addEventListener.
                     setTimeout(function () {
-                        var toggle = $container.find('div.dt-search button.toggleSearch').get(0);
+                        let toggle = fuzzySearchToggleSelector().get(0);
                         if (toggle && !toggle.hasAttribute('blurred')) {
                             toggle.click();
                         }

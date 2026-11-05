@@ -59,10 +59,10 @@ class ManageInvestmentPriorities extends ReloadablePage {
 
     static url = 'admin/investmentPriorities'
 
-    static at = { title.startsWith("Manage Investment Priorities | MERIT") }
+    static at = { title.startsWith("Manage Investment Priorities | MERIT") && investmentPrioritiesTable.displayed}
 
     static content = {
-        investmentPrioritiesTable { $('.dataTables_wrapper').module(DataTable) }
+        investmentPrioritiesTable { $('table.investment-priorities').closest('div.dt-container').module(DataTable) }
         addInvestmentPriorityButton(required:false) { $("[data-bind*=newInvestmentPriority]") }
         addOrEditCategoryButton { $("[data-bind*=showUpdateCategory]") }
         addOrEditInvestmentPriority { $('#editInvestmentPriority').module AddOrEditInvestmentPriorityModule }

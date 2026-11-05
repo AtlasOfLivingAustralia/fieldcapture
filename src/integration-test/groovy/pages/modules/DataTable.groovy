@@ -3,15 +3,15 @@ package pages.modules
 class DataTable extends geb.Module {
 
     static content = {
-        table { $('table.data-table') }
+        table { $('table') }
         headers { table.$('thead th') }
         rows { table.$('tbody tr') }
         getCell { rowIndex, colIndex -> rows[rowIndex].$('td', colIndex) }
 
-        searchField { $('.dataTables_filter input[type=search]') }
-        nextButton { $('button.data-table-next') }
-        previousButton { $('button.data-table-previous') }
-        showingXtoYofZEntries(required:false) { $('div.dataTables_info') }
+        searchField { $('.dt-search input[type=search]') }
+        nextButton { $('button.next') }
+        previousButton { $('button.previous') }
+        showingXtoYofZEntries(required:false) { $('div.dt-info') }
 
     }
 
@@ -21,7 +21,7 @@ class DataTable extends geb.Module {
         }
         String toParse = showingXtoYofZEntries.text()
 
-        def matcher = (toParse =~ /of (\d+) entries/)
+        def matcher = (toParse =~ /of (\d+) entr/) // Can be "entries" or "entry" depending on the number of results
         if (matcher.find()) {
             return Integer.parseInt(matcher.group(1))
         } else {

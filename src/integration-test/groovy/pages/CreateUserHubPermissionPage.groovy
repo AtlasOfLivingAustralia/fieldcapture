@@ -15,7 +15,7 @@ class CreateUserHubPermissionPage extends Page {
         permission {$("#addUserRole")}
         expiryDate { $("#expiryDate")}
         hubEmail { $("#email")}
-        permissions { $("tr.odd, tr.even").moduleList(HubPermissionsTableRow) }
+        permissions { $("tbody tr").moduleList(HubPermissionsTableRow) }
 
 
     }
