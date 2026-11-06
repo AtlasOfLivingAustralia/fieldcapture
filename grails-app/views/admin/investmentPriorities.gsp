@@ -200,6 +200,7 @@
             modalSelector:'#editInvestmentPriority',
             categoryUpdateModalSelector:'#editCategory',
             addInvestmentPrioritySelector:'#add-investment-priority',
+            fuzzySearchThreshold: ${params.fuzzySearchThreshold ? params.fuzzySearchThreshold as Double : 0.5},
 
         }, window.fcConfig);
 

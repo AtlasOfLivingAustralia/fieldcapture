@@ -799,7 +799,8 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
                     bottomEnd: 'paging'
                 },
                 fuzzySearch: {
-                    toggleSmart: true
+                    toggleSmart: true,
+                    threshold: options.fuzzySearchThreshold || 0.5
                 },
                 stateSave: true,
                 initComplete: function (settings) {
