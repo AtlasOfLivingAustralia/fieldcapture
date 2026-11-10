@@ -171,9 +171,7 @@ var Outcome = function(outcome, options) {
             outcome:self.outcome(),
             shortDescription:self.shortDescription(),
             category:self.category(),
-            priorities:_.map(self.priorities(), function(priority) {
-                return {category:priority};
-            })
+            priorityCategories: self.priorityCategories()
         };
     }
 }
@@ -184,7 +182,6 @@ var ProgramPageViewModel = function(props, options) {
 
     var config = props.config || {};
     var outcomes = props.outcomes || [];
-    var priorities = props.priorities || [];
     var themes = props.themes || [];
 
     self.config = ko.observable(vkbeautify.json(config));

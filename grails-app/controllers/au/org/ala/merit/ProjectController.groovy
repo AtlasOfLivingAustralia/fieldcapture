@@ -400,7 +400,6 @@ class ProjectController {
 
         log.debug "json=" + (values as JSON).toString()
         log.debug "id=${id} class=${id?.getClass()}"
-        def projectSite = values.remove("projectSite")
         def documents = values.remove('documents')
         def links = values.remove('links')
         def result = projectService.update(id, values, false)
@@ -421,27 +420,21 @@ class ProjectController {
                 documentService.saveLink(link)
             }
         }
-        if (projectSite && !result.error) {
-            if (!id) id = result.resp.projectId
-            if (!projectSite.projects)
-                projectSite.projects = [id]
-            else if (!projectSite.projects.contains(id))
-                projectSite.projects += id
-            def siteResult = siteService.updateRaw(values.projectSiteId, projectSite)
-            if (siteResult.status == 'error')
-                result = [error: 'SiteService failed']
-            else if (siteResult.status == 'created') {
-                def updateResult = projectService.update(id, [projectSiteId: siteResult.id])
-                if (updateResult.error) result = updateResult
-            }
-        }
+
         if (result.error) {
-            render result as JSON
+            if (result.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY) {
+                result = JSON.parse(result.detail)
+                render HttpStatus.SC_UNPROCESSABLE_ENTITY, text:result as JSON, contentType: 'application/json'
+            }
+            else {
+                render status: result.statusCode, text:result as JSON
+            }
+
         } else {
             if (result.resp) {
                 render result.resp as JSON
             } else {
-                render statusCode:HttpStatus.SC_NOT_MODIFIED, resp:[message:'No modication made']
+                render statusCode:HttpStatus.SC_NOT_MODIFIED, resp:[message:'No modification made']
             }
         }
     }
