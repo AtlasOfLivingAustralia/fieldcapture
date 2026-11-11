@@ -34,6 +34,7 @@
     "select2-theme-bootstrap4": "1.0.2",
     "slickgrid": "2.4.38",
     "typeahead.js": "0.11.1",
-    "underscore": "1.13.8"
+    "underscore": "1.13.8",
+    "leaflet.heat": "1.0.0"
   }
 }
