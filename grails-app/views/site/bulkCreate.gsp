@@ -221,6 +221,7 @@
                     maxZoom: 23,
                     maxAutoZoom: 21,
                     showReset: false,
+                    showFitBoundsToggle: true,
                     allowSearchLocationByAddress: false,
                     allowSearchRegionByAddress: false,
                     useMyLocation: false,

@@ -6,6 +6,7 @@ import grails.web.mapping.LinkGenerator
 class CommonService {
 
     LinkGenerator grailsLinkGenerator
+    WebService webService
 
     def buildUrlParamsFromMap(map) {
         if (!map) return ''
@@ -33,5 +34,28 @@ class CommonService {
             featuresMap.features << feature
         }
         return featuresMap as JSON
+    }
+
+    /**
+     * Validate redirect URL.
+     * If returnTo is relative, then it is valid.
+     * If returnTo is absolute, then host name should be in the allowed list.
+     * @param returnTo
+     * @return
+     */
+    boolean isRedirectSafe(String returnTo) {
+        if (returnTo) {
+            try {
+                URI uri = new URI(returnTo)
+                if (uri.isAbsolute())
+                    return ['http', 'https'].contains(uri.scheme?.toLowerCase()) &&
+                            uri.host != null && webService.isValidDomain(uri.host)
+                return uri.rawAuthority == null && !returnTo.startsWith('//')
+            } catch (Exception ex) {
+                return false
+            }
+        }
+
+        return false
     }
 }

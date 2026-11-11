@@ -11,6 +11,7 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
     ProjectService projectService = Mock(ProjectService)
     SettingService settingService = Mock(SettingService)
     ProjectConfigurationService projectConfigurationService = Mock(ProjectConfigurationService)
+    WebService webService = Mock(WebService)
 
     def setup() {
         controller.siteService = siteService
@@ -18,6 +19,7 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         controller.projectService = projectService
         controller.settingService = settingService
         controller.projectConfigurationService = projectConfigurationService
+        controller.webService = webService
 
     }
 
@@ -223,5 +225,80 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
 
         then:
         response.json == [regions: [[key: 'layerA', value: 'Layer A'], [key: 'layerB', value: 'Layer B']]]
+    }
+
+    def "downloadShapefile proxies shp download for users with project edit access"() {
+        given:
+        String siteId = 's1'
+        controller.grailsApplication.config.ecodata.baseUrl = 'https://ecodata.example/'
+
+        when:
+        controller.downloadShapefile(siteId)
+
+        then:
+        1 * siteService.get(siteId) >> [siteId: siteId, projects: [[projectId: 'p1']]]
+        1 * userService.getCurrentUserId() >> 'u1'
+        1 * projectService.canUserEditProject('u1', 'p1') >> true
+        1 * webService.proxyGetRequest(response, 'https://ecodata.example/site/s1.shp', true, true, 960000) >> [status: 200]
+        0 * webService.getJson2(_)
+        response.redirectedUrl == null
+    }
+
+    def "downloadShapefile returns geojson attachment when geojson response is available"() {
+        given:
+        String siteId = 's1'
+        params.format = 'geojson'
+        controller.grailsApplication.config.ecodata.baseUrl = 'https://ecodata.example/'
+
+        when:
+        controller.downloadShapefile(siteId)
+
+        then:
+        1 * siteService.get(siteId) >> [siteId: siteId, projects: [[projectId: 'p1']]]
+        1 * userService.getCurrentUserId() >> 'u1'
+        1 * projectService.canUserEditProject('u1', 'p1') >> true
+        1 * webService.getJson2('https://ecodata.example/site/s1.geojson') >> [statusCode: 200, resp: [type: 'Feature', properties: [name: 'site']]]
+        0 * webService.proxyGetRequest(_, _, _, _, _)
+
+        and:
+        response.contentType == 'application/octet-stream'
+        response.getHeader('Content-Disposition') == 'Attachment;Filename="s1.geojson"'
+        response.text.contains('"type":"Feature"')
+    }
+
+    def "downloadShapefile redirects to home when user cannot access site"() {
+        given:
+        String siteId = 's1'
+        controller.grailsApplication.config.ecodata.baseUrl = 'https://ecodata.example/'
+
+        when:
+        controller.downloadShapefile(siteId)
+
+        then:
+        1 * siteService.get(siteId) >> [siteId: siteId, projects: [[projectId: 'p1']]]
+        1 * userService.getCurrentUserId() >> 'u1'
+        1 * projectService.canUserEditProject('u1', 'p1') >> false
+        1 * webService.proxyGetRequest(response, 'https://ecodata.example/site/s1.shp', true, true, 960000) >> [status: 200]
+        response.redirectedUrl == '/home/index'
+        flash.message == "Access denied: User does not have permission to view site: ${siteId}"
+    }
+
+    def "downloadShapefile renders error view when shapefile proxy request fails"() {
+        given:
+        String siteId = 's1'
+        controller.grailsApplication.config.ecodata.baseUrl = 'https://ecodata.example/'
+
+        when:
+        controller.downloadShapefile(siteId)
+
+        then:
+        1 * siteService.get(siteId) >> [siteId: siteId, projects: [[projectId: 'p1']]]
+        1 * userService.getCurrentUserId() >> 'u1'
+        1 * projectService.canUserEditProject('u1', 'p1') >> true
+        1 * webService.proxyGetRequest(response, 'https://ecodata.example/site/s1.shp', true, true, 960000) >> [status: 500, error: 'Download failed']
+
+        and:
+        view == '/error'
+        model.error == 'Download failed'
     }
 }

@@ -1138,7 +1138,7 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             wmsServerUrl: config.wmsServerUrl,
             leafletIconPath:options.leafletIconPath,
             useAlaMap: config.useAlaMap,
-            useGoogleBaseMap: config.useGoogleBaseMap,
+            useGoogleBaseMap: true,
             fullscreenControl:false,
             wmsLayerUrl: fcConfig.spatialWmsUrl + '/wms/reflect?',
             wmsFeatureUrl: fcConfig.spatialWms + '?featureId='
