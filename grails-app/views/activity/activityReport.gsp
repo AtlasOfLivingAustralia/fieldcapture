@@ -35,7 +35,7 @@
                 noImageUrl: "${assetPath(src:'nophoto.png')}",
                 context:<fc:modelAsJavascript model="${context}"/>,
                 prepopUrlPrefix:"${grailsApplication.config.getProperty('grails.serverURL')}",
-                useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
+                useGoogleBaseMap: true,
                 unlockActivityUrl: "${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>",
                 projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:activity.projectId, params:[activityId:activity.activityId])}",
                 initialScrollPositionDelay: "${grailsApplication.config.getProperty('reports.initialScrollPositionDelay') ?: 1000}",

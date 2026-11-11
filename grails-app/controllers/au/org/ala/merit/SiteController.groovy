@@ -181,7 +181,7 @@ class SiteController {
     }
 
     def downloadShapefile(String id) {
-
+        String format = params.get('format') ?: 'shp'
         def site = siteService.get(id)
         if (site) {
             // permissions check - can't use annotation as we have to know the projectId in order to lookup access right
@@ -190,8 +190,24 @@ class SiteController {
                 redirect(controller: 'home', action: 'index')
             }
         }
-        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "site/${id}.shp"
-        def resp = webService.proxyGetRequest(response, url, true, true,960000)
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "site/${id}.${format}"
+        def resp = [:]
+        switch (format) {
+            case 'shp':
+                resp = webService.proxyGetRequest(response, url, true, true,960000)
+                break
+            case 'geojson':
+                resp = webService.getJson2(url)
+                resp.status = resp.statusCode
+                if (resp.resp) {
+                    response.setContentType("application/octet-stream")
+                    response.setHeader('Content-Disposition', "Attachment;Filename=\"${site.siteId}.geojson\"")
+                    response.outputStream << (resp.resp as JSON).toString()
+                    response.outputStream.flush()
+                    return;
+                }
+                break
+        }
         if (resp.status != 200) {
             render view:'/error', model:[error:resp.error]
         }

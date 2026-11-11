@@ -389,44 +389,22 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
             return;
         }
 
-        var site = self.toJS();
-        //retrieve the current shape if exists
-        if (self.features().length > 0) {
-            var featureCollection = convertSiteToFeatureCollection(site);
-            if (ALA.MapUtils.validateGeoJSON(featureCollection)) {
-                try {
-                    featureCollection = turf.simplify(featureCollection, {tolerance: simplificationTolerance, highQuality: false});
-                }
-                catch (e) {
-                    console.error("Error simplifying geometry for display on map", e);
-                    console.log("Falling back to unsimplified geometry");
-                }
-
-                alaMap.setGeoJSON(featureCollection, layerOptions);
-            }
-            else
-                console.error("Invalid feature collection", featureCollection);
-        } else {
-            var feature = convertSiteGeometryToFeature(site.extent.geometry);
-            if (ALA.MapUtils.validateGeoJSON(feature)) {
-                try {
-                    feature = turf.simplify(feature, {tolerance: simplificationTolerance, highQuality: false});
-                }
-                catch (e) {
-                    console.error("Error simplifying geometry for display on map", e);
-                    console.log("Falling back to unsimplified geometry");
-                }
-
-                alaMap.setGeoJSON(feature, layerOptions);
-            }
+        var site = self.toJS(),
+            featureCollection = convertSiteToFeatureCollection(site);
+        try {
+            featureCollection = turf.simplify(featureCollection, {tolerance: simplificationTolerance, highQuality: false});
+        } catch (e) {
+            console.error("Error simplifying geometry for display on map", e);
+            console.log("Falling back to unsimplified geometry");
         }
 
+        alaMap.setGeoJSON(featureCollection, layerOptions);
         alaMap.fitBounds();
     };
 
     function findPOIMarkerIcon () {
         if (!featureLayer)
-            return
+            return;
 
         var toRemove = [];
         featureLayer.eachLayer(function (layer) {
@@ -646,9 +624,23 @@ var AlaMapAdapter = function(map, options) {
     }
 
     self.addFeature = function(feature) {
-        if (!ALA.MapUtils.validateGeoJSON(feature)) {
-            feature = convertSiteGeometryToFeature(feature);
+        if (isOldSite(feature)) {
+            feature = convertOldSiteToFeatureCollection(feature);
         }
+        else if (isSiteGeometry(feature)) {
+            feature = convertOldSiteToFeatureCollection({
+                extent: {
+                    source: "drawn",
+                    geometry: feature
+                }
+            });
+        }
+
+        if (!feature) {
+            console.error("[ALA-Map] Unable to add feature to map, feature is null or undefined.");
+            return;
+        }
+
         self.featureLayer.on('layeradd', function(e) {
             var layer = e.layer;
             var id = getId(feature);
@@ -664,7 +656,12 @@ var AlaMapAdapter = function(map, options) {
             self.featureIndex[id].push(layer);
         });
 
-        map.setGeoJSON(feature);
+        try {
+            map.setGeoJSON(feature);
+        } catch (e) {
+            console.error("[ALA-Map] Error adding feature to map:", e);
+        }
+
         self.featureLayer.off("layeradd");
     };
 
@@ -1034,7 +1031,7 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
                 }
                 $.each(site.poi, function(j, poi) {
                     if (poi.geometry) {
-                        map.addMarker(poi.geometry.decimalLatitude, poi.geometry.decimalLongitude, poi.name, {poiIconUrl: fcConfig.poiIconUrl});
+                        map.addPOI(poi.geometry.decimalLatitude, poi.geometry.decimalLongitude, poi.name, {poiIconUrl: fcConfig.poiIconUrl});
                     }
 
                 });

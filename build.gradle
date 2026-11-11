@@ -287,7 +287,7 @@ clientDependencies {
         'frigus02-vkbeautify'("1.0.1") {
             include "vkbeautify.js"
         }
-
+        "leaflet.heat"("1.0.0")
     }
     bower {
         'html5shiv'("3.7.3", transitive:false)
