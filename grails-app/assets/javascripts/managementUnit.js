@@ -4,8 +4,7 @@
 //= require attach-document-no-ui
 //= require reporting
 //= require blog
-//= require leaflet-heatmap/heatmap.js
-//= require leaflet-heatmap/leaflet-heatmap.js
+//= require leaflet.heat/leaflet-heat-global.js
 //= require reportService
 
 
@@ -345,17 +344,10 @@ var ManagementUnitPageViewModel = function(props, options) {
         var cfg = {
             "radius": 15,
             "gradient": { 0.25: "rgb(0,0,255)", 0.4: "rgb(0,255,0)", 0.7: "rgb(0,255,0)", 0.9: "rgb(0,255,0)"},
-            "useLocalExtrema": true,
-            latField: 'lat',
-            lngField: 'lon',
-            valueField: 'count'
+            "useLocalExtrema": true
         };
 
-        var heatmapLayer = new HeatmapOverlay(cfg);
-
-        map.featureLayer.addLayer(heatmapLayer)
-
-        heatmapLayer.setData(heatPoints);
+       L.heatLayer(heatPoints.data.map(function (p) { return [p.lat, p.lon, p.count]; }), cfg).addTo(map.alaMap);
     };
 
     var tabs = {

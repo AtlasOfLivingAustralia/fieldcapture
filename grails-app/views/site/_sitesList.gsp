@@ -16,7 +16,7 @@
                     <span>Actions:</span>
                     <a data-bind="click: $root.addSite" id="addSite" class="btn btn-sm" type="button" title="Create a new site for your project"><i class="fa fa-plus"></i> New</a>
                     <a data-bind="click: $root.bulkCreateSites" id="bulkCreateSites" type="button" class="btn btn-sm" title="Create multiple sites"><i class="fa fa-clone" aria-hidden="true"></i> Bulk load</a>
-                      <div class="btn-group" role="group" title="Download selected sites in specific formats">
+                    <div class="btn-group" role="group" title="Download selected sites in specific formats">
                         <button type="button" class="btn btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                           <i class="fa fa-download"></i> Download
                         </button>
@@ -24,7 +24,7 @@
                           <li><a class="dropdown-item" href="#" data-bind="click: $root.downloadShapefile">as Shapefile</a></li>
                           <li><a class="dropdown-item" href="#" data-bind="click: $root.downloadGeoJSON">as GeoJSON</a></li>
                         </ul>
-                      </div>
+                    </div>
                     <button data-bind="click: $root.removeSelectedSites, enable:$root.selectedSiteIds().length > 0"  id="siteDeleted" type="button" class="btn btn-sm" title="Delete selected sites"><i class="fa fa-trash"></i> Delete</button>
                 </div>
         </div>

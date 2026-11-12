@@ -61,7 +61,7 @@ map = {
             drawControl: true,
             singleDraw: false,
             showReset: false,
-            draggableMarkers: true,
+            draggableMarkers: false,
             singleMarker: false,
             showFitBoundsToggle: true,
             useMyLocation: false,
@@ -94,14 +94,7 @@ map = {
                     method: 'POST',
                     url: config.validateShapesUrl,
                     data: JSON.stringify(geojson),
-                    contentType: 'application/json',
-                    success: function (data) {
-                        if (data.success)
-                            // do not remove the shape, it is valid
-                            return {remove: false, message: data.message};
-                        else
-                            return {remove: true, message: data.message};
-                    }
+                    contentType: 'application/json'
                 })
             },
             style: {
@@ -185,33 +178,51 @@ function getMapCentre(){
 
 var markersArray = [];
 
-function addMarker(lat, lng, name, dragEvent){
+    function configureMarker(marker, name, poiId, dragEvent, removeEvent, hasPhotoPointDocuments) {
+        var options = {
+            allowRemoval: true
+        }
+
+        marker.feature = marker.feature || {type: 'Feature'};
+        marker.feature.properties = marker.feature.properties || {};
+        marker.feature.properties.type = 'poi';
+        marker.feature.properties.name = name;
+        marker.feature.properties.poiId = poiId;
+
+        if (hasPhotoPointDocuments) {
+            options.allowRemoval = false;
+        }
+
+        marker.on('pm:dragend', function () {
+            var latlng = marker.getLatLng();
+            dragEvent(latlng.lat, latlng.lng);
+        });
+
+        removeEvent && marker.on('pm:remove', removeEvent);
+        marker.pm.setOptions(options);
+    }
+
+    function addMarker(lat, lng, name, dragEvent, removeEvent, poiId, hasPhotoPointDocuments) {
     var config = {
-        draggable: true
     };
 
     if (fcConfig.poiIconUrl) {
-        config.icon = L.icon({
-            iconUrl: fcConfig.poiIconUrl,
-            iconSize: [32, 26],
-            iconAnchor: [16, 26],
-            popupAnchor: [0, -26]
-        });
+        config.icon = createPOIIcon();
     }
 
     var marker = map.alaMap.addMarker(lat, lng, name, config);
-
-    marker.feature = marker.feature || {type: 'Feature'};
-    marker.feature.properties = marker.feature.properties || {};
-    marker.feature.properties.type = 'poi';
-
-    marker.on('moveend', function() {
-        var latlng = marker.getLatLng();
-        dragEvent(latlng.lat,latlng.lng);
-    });
-
+    configureMarker(marker, name, poiId, dragEvent, removeEvent, hasPhotoPointDocuments);
     markersArray.push(marker);
     return marker;
+}
+
+function createPOIIcon() {
+    return L.icon({
+        iconUrl: fcConfig.poiIconUrl,
+        iconSize: [32, 26],
+        iconAnchor: [16, 26],
+        popupAnchor: [0, -26]
+    });
 }
 
 function removeMarkers(){
@@ -231,8 +242,10 @@ function zoomToShapeBounds(){
 windows.init_map = init;
 windows.getMapCentre = getMapCentre;
 windows.addMarker = addMarker;
+windows.configureMarker = configureMarker;
 windows.removeMarkers = removeMarkers;
 windows.zoomToShapeBounds = zoomToShapeBounds;
+windows.createPOIIcon = createPOIIcon;
 
 }(this));
 

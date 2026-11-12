@@ -10,6 +10,8 @@ class SiteController {
     def siteService, projectService, activityService, metadataService, userService, searchService, importService, webService, projectConfigurationService
     SettingService settingService
     SpatialService spatialService
+    ProgramService programService
+    CommonService commonService
     static defaultAction = "index"
     static allowedMethods = ['isGeometryWithinAustralia': 'POST']
 
@@ -28,7 +30,7 @@ class SiteController {
             flash.message = "Access denied: User does not have <b>editor</b> permission for projectId ${params.projectId}"
             redirect(controller:'project', action:'index', id: params.projectId)
         }
-        Map model = [create:true, project:project, documents:[]] + editSiteModelData(null, project)
+        Map model = [create:true, project:project, documents:[], enablePOI: isPOIEnabledInProjectProgram([project])] + editSiteModelData(null, project)
         render view: 'edit', model: model
     }
 
@@ -120,6 +122,7 @@ class SiteController {
         }
 
         Map site = result.site
+        result.enablePOI = isPOIEnabledInSite(site)
         Map project = null
         // Don't allow a site to be a project area if it:
         // 1) Isn't associated with a project
@@ -127,8 +130,26 @@ class SiteController {
         if (site.projects && site.projects.size() == 1) {
             result.project = project = projectService.get(site.projects[0], 'all')
         }
+
+        // Enable POI if any of the associated projects have POI enabled in their program.
+        if (site.projects && site.projects.size() > 0) {
+            List projects = site.projects.collect { projectService.get(it, 'all') }
+            if (!result.enablePOI) {
+                result.enablePOI = isPOIEnabledInProjectProgram(projects)
+            }
+        }
+        result.returnTo = commonService.isRedirectSafe(params.returnTo) ? params.returnTo : createLink(controller: 'project', action: 'index', id: project?.projectId)
         result += editSiteModelData(site, project)
         result
+    }
+
+    private static boolean isPOIEnabledInSite (Map site) {
+        site?.poi?.size() > 0
+    }
+
+    private boolean isPOIEnabledInProjectProgram (projects) {
+        List programs = projects?.programId?.findAll()?.unique()?.collect { programService.get(it) }
+        programs?.any { it.config?.enablePOI }
     }
 
     private Map editSiteModelData(Map site, Map project) {
@@ -163,7 +184,7 @@ class SiteController {
     }
 
     def downloadShapefile(String id) {
-
+        String format = params.get('format') ?: 'shp'
         def site = siteService.get(id)
         if (site) {
             // permissions check - can't use annotation as we have to know the projectId in order to lookup access right
@@ -172,8 +193,24 @@ class SiteController {
                 redirect(controller: 'home', action: 'index')
             }
         }
-        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "site/${id}.shp"
-        def resp = webService.proxyGetRequest(response, url, true, true,960000)
+        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "site/${id}.${format}"
+        def resp = [:]
+        switch (format) {
+            case 'shp':
+                resp = webService.proxyGetRequest(response, url, true, true,960000)
+                break
+            case 'geojson':
+                resp = webService.getJson2(url)
+                resp.status = resp.statusCode
+                if (resp.resp) {
+                    response.setContentType("application/octet-stream")
+                    response.setHeader('Content-Disposition', "Attachment;Filename=\"${site.siteId}.geojson\"")
+                    response.outputStream << (resp.resp as JSON).toString()
+                    response.outputStream.flush()
+                    return;
+                }
+                break
+        }
         if (resp.status != 200) {
             render view:'/error', model:[error:resp.error]
         }

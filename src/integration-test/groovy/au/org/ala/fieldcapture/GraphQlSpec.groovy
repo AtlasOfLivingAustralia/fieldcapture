@@ -862,7 +862,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         s1.dateCreated == "2024-02-21T03:32:58Z"
         s1.lastUpdated == "2024-11-04T05:51:44Z"
         s1.name == "CTMAUA4788"
-        s1.purposeCode == null
+        s1.purposeCode == "EMSA"
         s1.areaM2 == 0.0
         s1.geoJson.type == "Feature"
         s1.geoJson.geometry.type == "Point"
@@ -876,7 +876,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         s7.dateCreated == "2024-02-28T00:39:57Z"
         s7.lastUpdated == "2024-11-04T05:57:29Z"
         s7.name == "CTMSEH9999 - Control (null)"
-        s7.purposeCode == null
+        s7.purposeCode == "EMSA"
         s7.areaM2 == 9978.271536165266
         s7.geoJson.type == "Feature"
         s7.geoJson.geometry.type == "Polygon"
@@ -890,7 +890,7 @@ class GraphQlSpec extends StubbedCasSpec implements GrailsUnitTest {
         s27.dateCreated == "2024-05-15T06:48:25Z"
         s27.lastUpdated == "2024-11-04T06:24:55Z"
         s27.name == "CTMAUA1235 - Control (100 x 100)"
-        s27.purposeCode == null
+        s27.purposeCode == "EMSA"
         s27.areaM2 == 19956.561344448724
         s27.geoJson.type == "FeatureCollection"
         s27.geoJson.features instanceof List

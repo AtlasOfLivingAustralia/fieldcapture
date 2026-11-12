@@ -64,9 +64,15 @@
                             <g:link action="edit" id="${site.siteId}"><button type="button" class="btn btn-sm me-1"><i class="fa fa-edit"></i> Edit Site</button></g:link>
                         </g:if>
 
-                        <a href="${g.createLink(action:'downloadShapefile', id:site.siteId)}">
-                            <button type="button" class="btn btn-sm"><i class="fa fa-download"></i> Download ShapeFile</button>
-                        </a>
+                        <div class="btn-group" role="group" title="Download selected sites in specific formats">
+                            <button type="button" class="btn btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-download"></i> Download
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="${g.createLink(action:'downloadShapefile', id:site.siteId, params:[format:'shp'])}">as Shapefile</a></li>
+                                <li><a class="dropdown-item" target="_blank" href="${g.createLink(action:'downloadShapefile', id:site.siteId, params:[format:'geojson'])}">as GeoJSON</a></li>
+                            </ul>
+                        </div>
                         <g:if test="${site?.extent?.geometry?.pid}">
                             <a href="${grailsApplication.config.getProperty('spatial.baseUrl')}/?pid=${site.extent.geometry.pid}" class=" ms-1 btn btn-sm"><i class="fa fa-external-link"></i> View in Spatial Portal</a>
                         </g:if>
