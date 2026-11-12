@@ -23,6 +23,7 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         controller.settingService = settingService
         controller.projectConfigurationService = projectConfigurationService
         controller.webService = webService
+        controller.commonService = commonService
 
     }
 
