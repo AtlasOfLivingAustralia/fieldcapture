@@ -2114,7 +2114,7 @@ function OutcomesViewModel(outcomes, options) {
 
     self.priorityLabel = function(investmentPriorityId) {
         const id = ko.utils.unwrapObservable(investmentPriorityId);
-        let investmentPriority = _.find(availablePriorities, function(priority) {
+        let investmentPriority = _.find(config.priorities, function(priority) {
             return priority.investmentPriorityId === id;
         });
         return investmentPriority ? investmentPriority.name : investmentPriorityId;
