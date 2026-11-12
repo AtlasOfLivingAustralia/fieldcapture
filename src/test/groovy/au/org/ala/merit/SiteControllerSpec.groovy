@@ -12,11 +12,14 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
     SettingService settingService = Mock(SettingService)
     ProjectConfigurationService projectConfigurationService = Mock(ProjectConfigurationService)
     WebService webService = Mock(WebService)
+    CommonService commonService = Mock(CommonService)
+    ProgramService programService = Mock(ProgramService)
 
     def setup() {
         controller.siteService = siteService
         controller.userService = userService
         controller.projectService = projectService
+        controller.programService = programService
         controller.settingService = settingService
         controller.projectConfigurationService = projectConfigurationService
         controller.webService = webService
@@ -88,7 +91,7 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         then:
         1 * siteService.getRaw(siteId) >> [site:site]
         1 * projectService.canUserEditProject(_, project.projectId) >> true
-        1 * projectService.get(project.projectId, 'all') >> project
+        2 * projectService.get(project.projectId, 'all') >> project
         0 * projectService.hasProjectArea(project) >> false
 
         and:
@@ -109,7 +112,7 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         then:
         1 * siteService.getRaw(siteId) >> [site:site]
         2 * projectService.canUserEditProject(_, _) >> true
-        0 * projectService.get(project.projectId, 'all') >> project
+        1 * projectService.get(project.projectId, 'all') >> project
         0 * projectService.hasProjectArea(project) >> false
 
         and:
@@ -146,7 +149,7 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         then:
         1 * siteService.getRaw(siteId) >> [site:site]
         1 * projectService.canUserEditProject(_, _) >> true
-        1 * projectService.get(project.projectId, 'all') >> project
+        2 * projectService.get(project.projectId, 'all') >> project
         1 * projectService.hasProjectArea(project) >> true
 
         and:
@@ -167,7 +170,7 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         then:
         1 * siteService.getRaw(siteId) >> [site:site]
         1 * projectService.canUserEditProject(_, _) >> true
-        1 * projectService.get(project.projectId, 'all') >> project
+        2 * projectService.get(project.projectId, 'all') >> project
         1 * projectService.hasProjectArea(project) >> false
 
         and:
