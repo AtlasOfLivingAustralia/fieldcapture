@@ -381,7 +381,15 @@ function autoSaveModel(viewModel, saveUrl, options) {
                     }
                 }
                 result.resolve();
-            }).fail(saveFailureHandler).fail(invokeCallbacksAndRejectResult);
+            }).fail(function(error) {
+                if (error && error.status === 422) {
+                    errorCallback(error.responseJSON);
+                }
+                else {
+                    saveFailureHandler(error);
+                }
+
+            }).fail(invokeCallbacksAndRejectResult);
         }).fail(saveFailureHandler).fail(invokeCallbacksAndRejectResult);
 
         return result;

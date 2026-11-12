@@ -685,6 +685,20 @@ function MERIPlan(project, projectService, config) {
                     document.location.reload();
                 });
             }
+            else if (data.errors) {
+                let errors = data.errors;
+                for (let i = 0; i < errors.length; i++) {
+                    let error = errors[i];
+                    // If the error.field contains the assets (investment priorities) take action to
+                    // remove the deleted investment priority from the MERI plan and show a validation error on the select box.
+                    if (error.field && error.field.indexOf('assets') >= 0) {
+                        let deletedInvestmentPriorityId = error['rejected-value'];
+                        $('select:has(option[value="'+deletedInvestmentPriorityId+'"]:checked').validationEngine("showPrompt", error.message, "topRight", true);
+                        self.meriPlan().outcomes.removePriority(deletedInvestmentPriorityId);
+
+                    }
+                }
+            }
         });
 
     };
@@ -2060,6 +2074,12 @@ function OutcomesViewModel(outcomes, options) {
         return selectedOutcome;
     }
 
+    self.availablePriorities = ko.observableArray(config.priorities);
+    self.removePriority = function (investmentPriorityId) {
+        self.availablePriorities.remove(function(ip) {
+            return ip.investmentPriorityId === investmentPriorityId;
+        });
+    }
     self.outcomePriorities = function (outcomeText, investmentPriorityIds) {
 
         var outcome = _.find(config.outcomes, function (outcome) {
@@ -2084,7 +2104,7 @@ function OutcomesViewModel(outcomes, options) {
 
         var priorityCategories = outcome.priorityCategories;
         // Return the list of priorities that have at least one category in common with the selected outcome.
-        var priorities = _.filter(config.priorities, function (priority) {
+        var priorities = _.filter(self.availablePriorities(), function (priority) {
             return isSelected(priority.investmentPriorityId) || _.any(priorityCategories, function (category) {
                 return priority.categories.indexOf(category) >= 0;
             });
@@ -2094,7 +2114,7 @@ function OutcomesViewModel(outcomes, options) {
 
     self.priorityLabel = function(investmentPriorityId) {
         const id = ko.utils.unwrapObservable(investmentPriorityId);
-        let investmentPriority = _.find(config.priorities, function(priority) {
+        let investmentPriority = _.find(availablePriorities, function(priority) {
             return priority.investmentPriorityId === id;
         });
         return investmentPriority ? investmentPriority.name : investmentPriorityId;

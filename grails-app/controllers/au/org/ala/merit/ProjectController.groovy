@@ -424,7 +424,8 @@ class ProjectController {
         if (result.error) {
             if (result.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY) {
                 result = JSON.parse(result.detail)
-                render HttpStatus.SC_UNPROCESSABLE_ENTITY, text:result as JSON, contentType: 'application/json'
+                String errors = (result as JSON).toString()
+                render status:HttpStatus.SC_UNPROCESSABLE_ENTITY, text:errors, contentType: 'application/json'
             }
             else {
                 render status: result.statusCode, text:result as JSON
