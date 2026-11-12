@@ -4,6 +4,7 @@ let roleMapping = {
             "a9cb9e38-690f-41c9-8151-06108caf539d": true,
             "b201a011-c60f-4af1-9a23-0b3b87e2ed9b": true,
             "0512ce08-51d3-4fe2-9555-428842acb27f": true,
+            "7b021e4a-6fff-483d-b544-c2c6c7e39d0d": true,
             "b4907ab2-1172-42f1-afe8-f94bcd25a4e2": true,
             "01689a85-ddef-491b-a0ca-e53f5c1d2413": true,
             "d7179862-1be3-49fc-8ec9-2e219c6f3854": true,
@@ -82,6 +83,7 @@ let roleMapping = {
             "a9cb9e38-690f-41c9-8151-06108caf539d": false,
             "b201a011-c60f-4af1-9a23-0b3b87e2ed9b": false,
             "0512ce08-51d3-4fe2-9555-428842acb27f": false,
+            "7b021e4a-6fff-483d-b544-c2c6c7e39d0d": false,
             "b4907ab2-1172-42f1-afe8-f94bcd25a4e2": false,
             "01689a85-ddef-491b-a0ca-e53f5c1d2413": false,
             "d7179862-1be3-49fc-8ec9-2e219c6f3854": true,
@@ -160,6 +162,7 @@ let roleMapping = {
             "a9cb9e38-690f-41c9-8151-06108caf539d": false,
             "b201a011-c60f-4af1-9a23-0b3b87e2ed9b": false,
             "0512ce08-51d3-4fe2-9555-428842acb27f": false,
+            "7b021e4a-6fff-483d-b544-c2c6c7e39d0d": false,
             "b4907ab2-1172-42f1-afe8-f94bcd25a4e2": false,
             "01689a85-ddef-491b-a0ca-e53f5c1d2413": false,
             "d7179862-1be3-49fc-8ec9-2e219c6f3854": true,
@@ -240,6 +243,7 @@ let roleMapping = {
             "a9cb9e38-690f-41c9-8151-06108caf539d": true,
             "b201a011-c60f-4af1-9a23-0b3b87e2ed9b": true,
             "0512ce08-51d3-4fe2-9555-428842acb27f": true,
+            "7b021e4a-6fff-483d-b544-c2c6c7e39d0d": true,
             "b4907ab2-1172-42f1-afe8-f94bcd25a4e2": true,
             "01689a85-ddef-491b-a0ca-e53f5c1d2413": true,
             "d7179862-1be3-49fc-8ec9-2e219c6f3854": true,
@@ -318,6 +322,7 @@ let roleMapping = {
             "a9cb9e38-690f-41c9-8151-06108caf539d": true,
             "b201a011-c60f-4af1-9a23-0b3b87e2ed9b": true,
             "0512ce08-51d3-4fe2-9555-428842acb27f": false,
+            "7b021e4a-6fff-483d-b544-c2c6c7e39d0d": false,
             "b4907ab2-1172-42f1-afe8-f94bcd25a4e2": false,
             "01689a85-ddef-491b-a0ca-e53f5c1d2413": false,
             "d7179862-1be3-49fc-8ec9-2e219c6f3854": true,
@@ -396,6 +401,7 @@ let roleMapping = {
             "a9cb9e38-690f-41c9-8151-06108caf539d": true,
             "b201a011-c60f-4af1-9a23-0b3b87e2ed9b": true,
             "0512ce08-51d3-4fe2-9555-428842acb27f": false,
+            "7b021e4a-6fff-483d-b544-c2c6c7e39d0d": false,
             "b4907ab2-1172-42f1-afe8-f94bcd25a4e2": false,
             "01689a85-ddef-491b-a0ca-e53f5c1d2413": false,
             "d7179862-1be3-49fc-8ec9-2e219c6f3854": true,
@@ -476,6 +482,7 @@ let roleMapping = {
             "a9cb9e38-690f-41c9-8151-06108caf539d": true,
             "b201a011-c60f-4af1-9a23-0b3b87e2ed9b": true,
             "0512ce08-51d3-4fe2-9555-428842acb27f": true,
+            "7b021e4a-6fff-483d-b544-c2c6c7e39d0d": true,
             "b4907ab2-1172-42f1-afe8-f94bcd25a4e2": true,
             "01689a85-ddef-491b-a0ca-e53f5c1d2413": true,
             "e15db26f-55de-4459-841b-d7ef87dea5cd": true,
@@ -554,6 +561,7 @@ let roleMapping = {
             "a9cb9e38-690f-41c9-8151-06108caf539d": false,
             "b201a011-c60f-4af1-9a23-0b3b87e2ed9b": false,
             "0512ce08-51d3-4fe2-9555-428842acb27f": true,
+            "7b021e4a-6fff-483d-b544-c2c6c7e39d0d": true,
             "b4907ab2-1172-42f1-afe8-f94bcd25a4e2": true,
             "01689a85-ddef-491b-a0ca-e53f5c1d2413": true,
             "e15db26f-55de-4459-841b-d7ef87dea5cd": true,
@@ -632,6 +640,7 @@ let roleMapping = {
             "a9cb9e38-690f-41c9-8151-06108caf539d": false,
             "b201a011-c60f-4af1-9a23-0b3b87e2ed9b": false,
             "0512ce08-51d3-4fe2-9555-428842acb27f": true,
+            "7b021e4a-6fff-483d-b544-c2c6c7e39d0d": true,
             "b4907ab2-1172-42f1-afe8-f94bcd25a4e2": true,
             "01689a85-ddef-491b-a0ca-e53f5c1d2413": true,
             "e15db26f-55de-4459-841b-d7ef87dea5cd": false,
@@ -712,6 +721,7 @@ let roleMapping = {
             "a9cb9e38-690f-41c9-8151-06108caf539d": true,
             "b201a011-c60f-4af1-9a23-0b3b87e2ed9b": true,
             "0512ce08-51d3-4fe2-9555-428842acb27f": true,
+            "7b021e4a-6fff-483d-b544-c2c6c7e39d0d": true,
             "b4907ab2-1172-42f1-afe8-f94bcd25a4e2": true,
             "01689a85-ddef-491b-a0ca-e53f5c1d2413": true,
             "d7179862-1be3-49fc-8ec9-2e219c6f3854": true,
@@ -790,6 +800,7 @@ let roleMapping = {
             "a9cb9e38-690f-41c9-8151-06108caf539d": true,
             "b201a011-c60f-4af1-9a23-0b3b87e2ed9b": true,
             "0512ce08-51d3-4fe2-9555-428842acb27f": false,
+            "7b021e4a-6fff-483d-b544-c2c6c7e39d0d": false,
             "b4907ab2-1172-42f1-afe8-f94bcd25a4e2": false,
             "01689a85-ddef-491b-a0ca-e53f5c1d2413": false,
             "d7179862-1be3-49fc-8ec9-2e219c6f3854": true,
@@ -868,6 +879,7 @@ let roleMapping = {
             "a9cb9e38-690f-41c9-8151-06108caf539d": true,
             "b201a011-c60f-4af1-9a23-0b3b87e2ed9b": true,
             "0512ce08-51d3-4fe2-9555-428842acb27f": false,
+            "7b021e4a-6fff-483d-b544-c2c6c7e39d0d": false,
             "b4907ab2-1172-42f1-afe8-f94bcd25a4e2": false,
             "01689a85-ddef-491b-a0ca-e53f5c1d2413": false,
             "d7179862-1be3-49fc-8ec9-2e219c6f3854": true,
@@ -958,5 +970,6 @@ if (db.setting.findOne({key: roleMappingSetting.key})) {
 }
 
 
-db.activityForm.update({name:'Herbarium Determinations - Field'}, {$set:{tags:['survey']}})
-db.activityForm.update({name:'Herbarium Determinations'}, {$set:{tags:['survey']}})
+db.activityForm.update({'externalIds.externalId':'01689a85-ddef-491b-a0ca-e53f5c1d2413'}, {$set:{tags:['survey']}}); // In Field Determinations
+db.activityForm.update({'externalIds.externalId':'0512ce08-51d3-4fe2-9555-428842acb27f'}, {$set:{tags:['survey']}}); // Post Field Collection Determinations
+db.activityForm.update({'externalIds.externalId':'7b021e4a-6fff-483d-b544-c2c6c7e39d0d'}, {$set:{tags:['survey']}}); // Floristics - EMSA Approved Botanist
