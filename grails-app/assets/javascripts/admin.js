@@ -824,9 +824,11 @@ ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
 
             self.table = table;
             let tooltipShown = false;
+            let addInvestmentPriorityButton = $(options.addInvestmentPrioritySelector);
+            addInvestmentPriorityButton.tooltip({trigger: 'manual', container: 'body', placement: 'right'});
             table.on('search.dt', function (e) {
 
-                let addInvestmentPriorityButton = $(options.addInvestmentPrioritySelector);
+
                 let pageInfo = table.page.info();
                 self.matchedInvestmentPriorities(pageInfo.recordsDisplay);
                 if (pageInfo.recordsDisplay > 0 && table.search.fuzzy() && fuzzySearchEnabled()) {
