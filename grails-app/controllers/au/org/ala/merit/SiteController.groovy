@@ -127,13 +127,16 @@ class SiteController {
         // Don't allow a site to be a project area if it:
         // 1) Isn't associated with a project
         // 2) Is associated with more than one project.
+        if (site.projects && site.projects.size() == 1) {
+            result.project = project = projectService.get(site.projects[0], 'all')
+        }
+
+        // Enable POI if any of the associated projects have POI enabled in their program.
         if (site.projects && site.projects.size() > 0) {
             List projects = site.projects.collect { projectService.get(it, 'all') }
             if (!result.enablePOI) {
                 result.enablePOI = isPOIEnabledInProjectProgram(projects)
             }
-
-            result.project = project = projects[0]
         }
         result.returnTo = commonService.isRedirectSafe(params.returnTo) ? params.returnTo : createLink(controller: 'project', action: 'index', id: project?.projectId)
         result += editSiteModelData(site, project)
@@ -145,7 +148,7 @@ class SiteController {
     }
 
     private boolean isPOIEnabledInProjectProgram (projects) {
-        List programs = projects.programId.unique().collect { programService.get(it) }
+        List programs = projects?.programId?.findAll()?.unique()?.collect { programService.get(it) }
         programs?.any { it.config?.enablePOI }
     }
 
