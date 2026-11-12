@@ -4,7 +4,6 @@
 //= require attach-document-no-ui
 //= require reporting
 //= require blog
-//= require leaflet.heat/leaflet-heat-global.js
 //= require reportService
 
 
