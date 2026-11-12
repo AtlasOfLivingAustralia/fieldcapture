@@ -154,6 +154,8 @@ function addInvestmentPriority(priority, project) {
 
     let existingPriority = db.investmentPriority.findOne({name: priorityName});
     if (!existingPriority) {
+        // ensure there are no duplicates in the categories array
+        categories = [...new Set(categories)];
         investmentPriority = {
             dateCreated: ISODate(),
             lastUpdated: ISODate(),
