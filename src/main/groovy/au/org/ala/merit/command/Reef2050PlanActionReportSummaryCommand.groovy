@@ -6,7 +6,7 @@ import au.org.ala.merit.reports.Reef2050PlanActionReportConfig
 import grails.converters.JSON
 import grails.validation.Validateable
 
-import javax.persistence.Transient
+import jakarta.persistence.Transient
 
 /**
  * The Reef2050PlanActionReportSummaryCommand is responsible for returning a List of available report configurations
@@ -45,10 +45,8 @@ class Reef2050PlanActionReportSummaryCommand implements Validateable{
 
         List availableReports = []
 
-        Map resp = null
-        JSON.use("nullSafe") {
-            resp = activityService.search(searchCriteria)
-        }
+        Map resp = activityService.search(searchCriteria)
+
         List activities = resp?.resp?.activities
         if (activities) {
             List reportDates = activities.collect { it.plannedEndDate }.unique().sort()

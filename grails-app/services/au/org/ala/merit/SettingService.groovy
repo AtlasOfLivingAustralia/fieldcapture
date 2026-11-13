@@ -1,5 +1,6 @@
 package au.org.ala.merit
 
+import au.org.ala.ecodata.utils.CookieUtils
 import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import grails.util.Holders
@@ -31,7 +32,7 @@ class SettingService {
         return localHubConfig.get()
     }
 
-    def webService, cacheService, cookieService
+    def webService, cacheService
     def grailsApplication
 
 
@@ -67,18 +68,18 @@ class SettingService {
     def loadHubConfig(String hub) {
 
         // Don't want the cookie secure in dev environments as HTTPS is generally not used.
-        boolean useSecureCookie = grailsApplication.config.getProperty('server.servlet.session.cookie.secure', Boolean, false)
+        boolean useSecureCookie = grailsApplication.config.getProperty('server.servlet.session.cookie.secure', Boolean, true)
         if (!hub) {
             hub = grailsApplication.config.getProperty('app.default.hub', String, 'default')
-            String previousHub = cookieService.getCookie(LAST_ACCESSED_HUB)
+            String previousHub = CookieUtils.getCookieValue(LAST_ACCESSED_HUB)
             if (!previousHub) {
-                cookieService.setCookie(LAST_ACCESSED_HUB, hub, -1, '/', null, useSecureCookie, true)
+                CookieUtils.setCookieValue(LAST_ACCESSED_HUB, hub, -1, '/', null, useSecureCookie, true)
             }
         }
         else {
             // Store the most recently accessed hub in a cookie so that 404 errors can be presented with the
             // correct skin.
-            cookieService.setCookie(LAST_ACCESSED_HUB, hub, -1, '/', null, useSecureCookie, true)
+            CookieUtils.setCookieValue(LAST_ACCESSED_HUB, hub, -1, '/', null, useSecureCookie, true)
         }
 
         def settings = getHubSettings(hub)

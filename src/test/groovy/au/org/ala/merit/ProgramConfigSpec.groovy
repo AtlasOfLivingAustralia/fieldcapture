@@ -64,4 +64,19 @@ class ProgramConfigSpec extends Specification {
         then:
         programConfig.riskModel() == "ag"
     }
+
+    void "The project template is parsed case insensitively and defaults if missing or invalid"() {
+        expect:
+        new ProgramConfig(projectTemplate: configuredTemplate).getProjectTemplate() == expected
+
+        where:
+        configuredTemplate | expected
+        'esp'              | ProgramConfig.ProjectTemplate.ESP
+        'rlp'              | ProgramConfig.ProjectTemplate.RLP
+        'meri'             | ProgramConfig.ProjectTemplate.MERI
+        'RLP'              | ProgramConfig.ProjectTemplate.RLP
+        null               | ProgramConfig.ProjectTemplate.DEFAULT
+        ''                 | ProgramConfig.ProjectTemplate.DEFAULT
+        'invalid'          | ProgramConfig.ProjectTemplate.DEFAULT
+    }
 }

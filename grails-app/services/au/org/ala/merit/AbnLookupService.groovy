@@ -2,7 +2,7 @@ package au.org.ala.merit
 
 import groovy.json.JsonSlurper
 import grails.core.GrailsApplication
-import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang3.StringUtils
 
 /**
  * Using ABN: ABR Web Services API to get abn, and EntityName

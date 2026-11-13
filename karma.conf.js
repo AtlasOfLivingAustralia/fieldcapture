@@ -46,6 +46,7 @@ module.exports = function (config) {
             'grails-app/assets/vendor-ext/leaflet/leaflet-src.js',
             "node_modules/moment/moment.js",
             "node_modules/moment-timezone/builds/moment-timezone-with-data.js",
+            'node_modules/@atlasoflivingaustralia/ecodata-client-plugin/grails-app/assets/javascripts/i18n.js',
             'grails-app/assets/javascripts/*.js',
             'grails-app/assets/components/components.js',
             'grails-app/assets/components/compile/*.js',

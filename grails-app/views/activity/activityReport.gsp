@@ -14,7 +14,7 @@
     <script type="text/javascript" src="${grailsApplication.config.getProperty('google.maps.url')}"></script>
     <script type="text/javascript">
         var fcConfig = {
-                i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
+                i18nURL: "${g.createLink(controller: 'i18n', action: 'messages')}",
                 serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
                 activityUpdateUrl: "${saveReportUrl}",
                 contextViewUrl: "${contextViewUrl}/",
@@ -35,7 +35,7 @@
                 noImageUrl: "${assetPath(src:'nophoto.png')}",
                 context:<fc:modelAsJavascript model="${context}"/>,
                 prepopUrlPrefix:"${grailsApplication.config.getProperty('grails.serverURL')}",
-                useGoogleBaseMap: ${grails.util.Environment.current == grails.util.Environment.PRODUCTION},
+                useGoogleBaseMap: true,
                 unlockActivityUrl: "${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>",
                 projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:activity.projectId, params:[activityId:activity.activityId])}",
                 initialScrollPositionDelay: "${grailsApplication.config.getProperty('reports.initialScrollPositionDelay') ?: 1000}",

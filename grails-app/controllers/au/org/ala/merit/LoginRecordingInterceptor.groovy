@@ -33,11 +33,12 @@ class LoginRecordingInterceptor {
         if (!session.getAttribute(LOGIN_RECORDED)) {
             String userId = userService.getCurrentUserId()
             HubSettings hub = SettingService.hubConfig
+            String hubId = hub?.hubId
             // Only record a login if a user is logged in and we have a hubId
-            if (userId && hub) {
-                boolean success = userService.recordUserLogin(userId, hub.hubId)
+            if (userId && hubId) {
+                boolean success = userService.recordUserLogin(userId, hubId)
                 session.setAttribute(LOGIN_RECORDED, success)
-                String expiryDate = userService.checkUserExpirationDetails(userId, hub.hubId)
+                String expiryDate = userService.checkUserExpirationDetails(userId, hubId)
                 session.setAttribute(EXPIRY_DATE, expiryDate)
             }
         }

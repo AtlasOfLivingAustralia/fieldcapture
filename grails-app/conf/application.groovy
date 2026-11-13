@@ -1,3 +1,5 @@
+import org.grails.web.config.http.GrailsFilters
+
 /******************************************************************************\
  *  CONFIG MANAGEMENT
  \******************************************************************************/
@@ -250,6 +252,7 @@ security {
         enabled = true
         discoveryUrl = "${auth.baseUrl}/cas/oidc/.well-known"
         requiredClaims = ["sub", "iat", "exp", "jti", "client_id"]
+        GrailsFilters.GRAILS_WEB_REQUEST_FILTER.order - 1
     }
 }
 bdr.api.url="https://changeMe.org.au/api"

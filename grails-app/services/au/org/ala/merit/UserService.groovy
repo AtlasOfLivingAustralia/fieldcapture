@@ -11,7 +11,7 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.springframework.web.context.request.RequestContextHolder
 
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 
 @Slf4j
 class UserService {

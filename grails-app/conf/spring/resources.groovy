@@ -1,7 +1,6 @@
 import au.org.ala.merit.CheckRisksAndThreatsTask
 import au.org.ala.merit.MeritServletContextConfig
 import au.org.ala.merit.ReportReminderEmailTask
-import au.org.ala.merit.config.BdrTokenConfig
 import au.org.ala.merit.StatisticsFactory
 import au.org.ala.merit.hub.HubAwareLinkGenerator
 import au.org.ala.merit.reports.GrantsReportLifecycleListener
@@ -16,7 +15,7 @@ beans = {
     task.'annotation-driven'('proxy-target-class': true)
 
     // Overriding the default grailsLinkGenerator with our class that can include the hub path in generated URLs
-    grailsLinkGenerator(HubAwareLinkGenerator, grailsApplication.config.getProperty('grails.serverURL'))
+    grailsLinkGenerator(HubAwareLinkGenerator, grailsApplication.config.getProperty('grails.serverURL'), ref('assetProcessorService'))
 
     statisticsFactory(StatisticsFactory)
 
@@ -33,6 +32,5 @@ beans = {
     RegionalCapacityServicesReport(RegionalCapacityServicesReportLifecycleListener)
 
     meritServletContextConfig(MeritServletContextConfig)
-    bdrTokenConfig(BdrTokenConfig)
     reportReminderEmailJob(ReportReminderEmailTask)
 }

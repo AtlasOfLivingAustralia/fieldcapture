@@ -34,6 +34,7 @@
                 spatialBaseUrl: "${grailsApplication.config.getProperty('spatial.baseUrl')}",
                 spatialWmsCacheUrl: "${grailsApplication.config.getProperty('spatial.wms.cache.url')}",
                 spatialWmsUrl: "${grailsApplication.config.getProperty('spatial.wms.url')}",
+                spatialWms: "${createLink(controller: 'proxy', action: 'feature')}",
                 geoserverUrl: "${grailsApplication.config.getProperty('spatial.geoserverUrl')}",
                 sldPolgonDefaultUrl: "${grailsApplication.config.getProperty('sld.polgon.default.url')}",
                 sldPolgonHighlightUrl: "${grailsApplication.config.getProperty('sld.polgon.highlight.url')}",
@@ -107,7 +108,7 @@
                 manageEMSASiteDataSetsUrl: "${createLink(controller:'project', action:'index', id:project.projectId, params:[manageEMSASiteDataSets:true])}",
                 unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}",
                 projectTargetsAndScoresUrl: "${createLink(controller:'project', action:'targetsAndScoresForActivity', id:project.projectId)}",
-                i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
+                i18nURL: "${g.createLink(controller: 'i18n', action: 'messages')}",
                 returnTo: "${createLink(controller: 'project', action: 'index', id: project.projectId)}",
                 reportsHistoryUrl:"${createLink(controller: 'report', action:'reportingHistory')}",
                 monitoringProtocolsUrl:"${createLink(action:'monitoringProtocolFormCategories', id: project.projectId)}",
@@ -118,6 +119,7 @@
                 speciesImageUrl:"${createLink(controller:'species', action:'speciesImage')}",
                 speciesProfileUrl:"${createLink(controller:'species', action:'speciesProfile')}",
                 minutesToIngestDataSet: ${grailsApplication.config.getProperty('bdr.api.minutesToIngestDataSet', Integer, 30)},
+                poiIconUrl: "${assetPath(src: '/icons/poi.png')}"
 
             },
             here = "${createLink(action:'index', id: project.projectId)}";
@@ -298,7 +300,7 @@ var config = {
     wmsServerUrl: fcConfig.geoserverUrl,
     spinnerUrl: fcConfig.spinnerUrl,
     sitesPhotoPointsUrl:fcConfig.sitesPhotoPointsUrl,
-    useGoogleBaseMap: fcConfig.useGoogleBaseMap && supportsGoogleMutant(),
+    useGoogleBaseMap: true,
     meriStorageKey:PROJECT_DETAILS_KEY,
     activityBasedReporting: ${Boolean.valueOf(projectContent.admin.config.activityBasedReporting)},
             minimumProjectEndDate: '${projectContent.admin.minimumProjectEndDate?:null}',
@@ -459,7 +461,7 @@ var config = {
                 };
                 if (config.useAlaMap) {
                     sitesTabOptions.mapFeatures = {};
-                    sitesTabOptions.useGoogleBaseMap = config.useGoogleBaseMap;
+                    sitesTabOptions.useGoogleBaseMap = true;
                     var sitesList = $('#'+sitesTabOptions.bindingElementId);
                     sitesList.children().hide();
                     sitesList.append('<image class="sites-spinner" width="50" height="50" src="'+sitesTabOptions.spinnerUrl+'" alt="Loading"/>');

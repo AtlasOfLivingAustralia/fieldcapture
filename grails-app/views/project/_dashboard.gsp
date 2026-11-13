@@ -18,7 +18,7 @@
                         <div class="well well-small">
                             <h3>${metric.key}</h3>
                             <g:each in="${metric.value}" var="score">
-                                <fc:renderScore score="${score}"></fc:renderScore>
+                                <fc:renderScore score="${score}"/>
                             </g:each>
                         </div><!-- /.well -->
 

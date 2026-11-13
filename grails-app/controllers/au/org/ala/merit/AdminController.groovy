@@ -1,6 +1,6 @@
 package au.org.ala.merit
 
-
+import au.org.ala.ecodata.utils.ExcelUtils
 import au.org.ala.merit.command.Reef2050PlanActionReportSummaryCommand
 import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
@@ -15,10 +15,9 @@ import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
 import org.grails.plugin.cache.GrailsCacheManager
-import org.grails.plugins.excelimport.ExcelImportService
 import org.joda.time.Period
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
-import org.springframework.web.multipart.MultipartHttpServletRequest
+import org.springframework.web.multipart.support.MultipartResolutionDelegate
 
 @PreAuthorise(accessLevel = 'officer', redirectController = "home")
 @Slf4j
@@ -44,7 +43,6 @@ class AdminController {
     def roleService
     def userService
     RisksService risksService
-    ExcelImportService excelImportService
     AbnLookupService abnLookupService
 
     def index() {}
@@ -74,12 +72,10 @@ class AdminController {
 
         def results
 
-        if (request instanceof MultipartHttpServletRequest) {
-            def file = request.getFile('projectData')
-            if (file) {
-                results = importService.importUserPermissionsCsv(file.inputStream)
-                flash.message = results?.message
-            }
+        def file = MultipartResolutionDelegate.isMultipartRequest(request) ? request.getFile('projectData') : null
+        if (file) {
+            results = importService.importUserPermissionsCsv(file.inputStream)
+            flash.message = results?.message
         }
 
         render(view:'bulkLoadUserPermissions', model:[user: user, results: results])
@@ -429,7 +425,7 @@ class AdminController {
         Boolean update = params.getBoolean('update')
         def file
         if (preview) {
-            if (request instanceof MultipartHttpServletRequest) {
+            if (request.contentType?.toLowerCase(Locale.ROOT)?.startsWith('multipart/form-data')) {
                 def tmp = request.getFile('projectData')
                 file = File.createTempFile(tmp.originalFilename, '.csv')
                 tmp.transferTo(file)
@@ -497,7 +493,7 @@ class AdminController {
     @PreAuthorise(accessLevel = 'alaAdmin')
     def bulkUploadSites() {
 
-        if (request.respondsTo('getFile')) {
+        if (MultipartResolutionDelegate.isMultipartRequest(request)) {
             def f = request.getFile('shapefile')
 
             boolean matchProjectsOnly = params.getBoolean('matchProjectsOnly', false)
@@ -550,7 +546,7 @@ class AdminController {
 
     def bulkUploadESPSites() {
 
-        if (request.respondsTo('getFile')) {
+        if (MultipartResolutionDelegate.isMultipartRequest(request)) {
             def f = request.getFile('shapefile')
 
             def result =  importService.bulkImportESPSites(f)
@@ -659,7 +655,7 @@ class AdminController {
     def organisationModifications() {
 
         Map results = [:]
-        if (request.respondsTo('getFile')) {
+        if (MultipartResolutionDelegate.isMultipartRequest(request)) {
             boolean validateOnly = params.validateOnly != null // checkbox passes "on" if ticked, nothing if not.
             def file = request.getFile('orgData')
 
@@ -695,7 +691,7 @@ class AdminController {
                     return
                 }
 
-                List data = excelImportService.convertColumnMapConfigManyRows(workbook, config)
+                List data = ExcelUtils.convertColumnMapManyRows(workbook, config)
                 data.each { Map row ->
                     Map project = projectService.get(row.projectId)
                     if (!project) {

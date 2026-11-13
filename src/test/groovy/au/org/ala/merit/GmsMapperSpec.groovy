@@ -1,9 +1,8 @@
 package au.org.ala.merit
 
 import au.com.bytecode.opencsv.CSVReader
+import au.org.ala.ecodata.utils.ExcelUtils
 import grails.converters.JSON
-import grails.plugins.csv.CSVMapReader
-import grails.plugins.csv.CSVReaderUtils
 import spock.lang.Specification
 
 /**
@@ -45,8 +44,7 @@ class GmsMapperSpec extends Specification{
     def "gms data can be mapped to MERIT"() {
 
         setup:
-        CSVMapReader reader = new CSVMapReader(new InputStreamReader(getClass().getResourceAsStream('/gmsMappingTestData1.csv'), 'cp1252'))
-        def rows = reader.readAll()
+        List<Map> rows = ExcelUtils.readCsvToListOfMaps(new InputStreamReader(getClass().getResourceAsStream('/gmsMappingTestData1.csv'), 'cp1252'))
 
         when:
         def projectDetails = gmsMapper.mapProject(rows)
@@ -116,8 +114,7 @@ class GmsMapperSpec extends Specification{
     def "a separate activity will be created per distinct type description and dates"() {
 
         setup:
-        CSVMapReader reader = new CSVMapReader(new InputStreamReader(getClass().getResourceAsStream('/gmsMappingTestData2.csv'), 'cp1252'))
-        def rows = reader.readAll()
+        List<Map> rows = ExcelUtils.readCsvToListOfMaps(new InputStreamReader(getClass().getResourceAsStream('/gmsMappingTestData2.csv'), 'cp1252'))
 
         when:
         def projectDetails = gmsMapper.mapProject(rows)
@@ -375,8 +372,7 @@ class GmsMapperSpec extends Specification{
 
         when:
         gmsMapper.buildMeritImportCSVTemplate(writer)
-        CSVReader reader = CSVReaderUtils.toCsvReader(writer.toString(),[:])
-        List<String[]> lines = reader.readAll()
+        List<String[]> lines = new CSVReader(new StringReader(writer.toString())).readAll()
 
         then: "We are just checking every value in the spreadsheet is mappable and has a description"
         lines.size() == 4

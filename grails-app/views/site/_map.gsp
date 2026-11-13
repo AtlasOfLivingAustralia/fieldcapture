@@ -81,7 +81,7 @@
                     <div class="well well-small">
                          <div style="padding-top:10px;" data-bind="template: { name: extent().source, data: extent }"></div>
                     </div>
-
+                    <g:if test="${enablePOI}">
                     <div class="well well-small">
                         <h4>Points of interest
                             <fc:iconHelp title="Points of interest">You can specify any number of points
@@ -102,6 +102,7 @@
                             <button type="button" data-bind="click: newPOI, visible: poi.length > 0" class="btn btn-sm">Add another POI</button>
                         </div>
                     </div>
+                    </g:if>
                 </div>
             </div>
 
@@ -109,6 +110,7 @@
 <script type="text/html" id="none">
     %{--<span>Choose a type</span>--}%
 </script>
+    <g:if test="${enablePOI}">
     <script type="text/html" id="poi">
     <div class="drawLocationDiv row">
         <div class="col-sm-12 ps-4 ms-2">
@@ -150,7 +152,7 @@
         </div>
     </div>
     </script>
-
+    </g:if>
     <script type="text/html" id="drawn">
     <div id="drawnLocationDiv" class="drawLocationDiv row">
         <div class="col-sm-10 ms-3">

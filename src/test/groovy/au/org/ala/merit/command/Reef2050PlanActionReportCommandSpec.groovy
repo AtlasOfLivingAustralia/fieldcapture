@@ -20,7 +20,6 @@ class Reef2050PlanActionReportCommandSpec extends Specification {
 
     def setup() {
         createCommand()
-        JSON.createNamedConfig("nullSafe", { })
     }
 
     private Reef2050PlanActionReportCommand createCommand(Map properties = [:]) {

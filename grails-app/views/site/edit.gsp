@@ -1,4 +1,3 @@
-<%@ page import="net.sf.json.JSON; org.grails.web.json.JSONArray" contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,7 +42,7 @@
         sitePageUrl : "${createLink(action: 'index', id: site?.siteId)}",
         homePageUrl : "${createLink(controller: 'home', action: 'index')}",
         ajaxUpdateUrl: "${createLink(action: 'ajaxUpdate', id: site?.siteId)}",
-        returnTo: "${params.returnTo ?: createLink(controller: 'project', action: 'index', id: project?.projectId)}"
+        returnTo: "${returnTo ?: createLink(controller: 'project', action: 'index', id: project?.projectId)}"
         },
         here = window.location.href;
 
@@ -82,26 +81,7 @@
         </div>
 
     </div>
-    <g:if env="development">
-    <div class="${containerType}">
-        <div class="expandable-debug">
-            <hr />
-            <h3>Debug</h3>
-            <div>
-                <h4>KO model</h4>
-                <pre data-bind="text:ko.toJSON($root,null,2)"></pre>
-                <h4>Activities</h4>
-                <pre>${site?.activities?.encodeAsHTML()}</pre>
-                <h4>Site</h4>
-                <pre>${site?.encodeAsHTML()}</pre>
-                <h4>Projects</h4>
-                <pre>${projects?.encodeAsHTML()}</pre>
-                <h4>Features</h4>
-                <pre>${mapFeatures}</pre>
-            </div>
-        </div>
-    </div>
-    </g:if>
+
 
 <asset:script>
     $(function(){
@@ -140,6 +120,11 @@
             if ($('#validation-container').validationEngine('validate')) {
                 // sync view model with map drawings
                 siteViewModel.updateGeometry();
+                if (siteViewModel.features().length === 0) {
+                    alert('Please draw a feature on the map before saving.');
+                    return;
+                }
+
                 siteViewModel.saveWithErrorDetection(
                     function (data) {
                         if(data.status == 'created'){

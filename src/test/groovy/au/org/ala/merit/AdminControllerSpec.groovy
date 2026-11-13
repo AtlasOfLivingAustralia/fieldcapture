@@ -3,7 +3,6 @@ package au.org.ala.merit
 import au.com.bytecode.opencsv.CSVReader
 import au.org.ala.merit.hub.HubSettings
 import au.org.ala.web.AuthService
-import grails.plugins.csv.CSVReaderUtils
 import grails.web.http.HttpHeaders
 import org.apache.http.HttpStatus
 import spock.lang.Specification
@@ -130,7 +129,7 @@ class AdminControllerSpec extends Specification implements ControllerUnitTest<Ad
     def "The AdminController can download an example CSV for MERIT import"() {
         when:
         controller.meritImportCSVTemplate()
-        CSVReader reader = CSVReaderUtils.toCsvReader(response.text,[:])
+        CSVReader reader = new CSVReader(new StringReader(response.text))
         List<String[]> lines = reader.readAll()
 
         then:
