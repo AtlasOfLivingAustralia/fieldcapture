@@ -1,7 +1,6 @@
 import au.org.ala.merit.CheckRisksAndThreatsTask
 import au.org.ala.merit.MeritServletContextConfig
 import au.org.ala.merit.ReportReminderEmailTask
-import au.org.ala.merit.config.BdrTokenConfig
 import au.org.ala.merit.StatisticsFactory
 import au.org.ala.merit.hub.HubAwareLinkGenerator
 import au.org.ala.merit.reports.GrantsReportLifecycleListener
@@ -33,6 +32,5 @@ beans = {
     RegionalCapacityServicesReport(RegionalCapacityServicesReportLifecycleListener)
 
     meritServletContextConfig(MeritServletContextConfig)
-    bdrTokenConfig(BdrTokenConfig)
     reportReminderEmailJob(ReportReminderEmailTask)
 }

@@ -5,8 +5,8 @@ import jakarta.servlet.http.HttpServletResponse
 import org.apache.poi.hssf.util.HSSFColor
 import org.apache.poi.ss.usermodel.*
 import org.apache.poi.ss.util.CellReference
-import org.apache.poi.xssf.streaming.SXSSFWorkbook
 import org.apache.poi.xssf.usermodel.XSSFDataFormat
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.LocalDate
@@ -102,7 +102,7 @@ class AnnouncementsMapper {
         response.setHeader('Content-Disposition', 'attachment; filename="'+fileName+'"')
         response.contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
-        SXSSFWorkbook workbook = new SXSSFWorkbook()
+        XSSFWorkbook workbook = new XSSFWorkbook()
         try {
             Sheet sheet = workbook.createSheet(DEFAULT_SHEET)
 

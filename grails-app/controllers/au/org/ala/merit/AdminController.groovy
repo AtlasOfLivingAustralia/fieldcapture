@@ -75,7 +75,7 @@ class AdminController {
 
         def results
 
-        def file = request.getFile('projectData')
+        def file = MultipartResolutionDelegate.isMultipartRequest(request) ? request.getFile('projectData') : null
         if (file) {
             results = importService.importUserPermissionsCsv(file.inputStream)
             flash.message = results?.message

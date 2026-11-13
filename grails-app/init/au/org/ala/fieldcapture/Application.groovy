@@ -2,6 +2,7 @@ package au.org.ala.fieldcapture
 
 import asset.pipeline.AssetPipelineConfigHolder
 import au.org.ala.ecodata.forms.TemplateFileAssetResolver
+import au.org.ala.merit.config.BdrTokenConfig
 import grails.boot.GrailsApp
 import grails.boot.config.GrailsApplicationPostProcessor
 import grails.boot.config.GrailsAutoConfiguration
@@ -19,8 +20,11 @@ import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Import
 
 @Slf4j
+// BdrTokenConfig must be imported here: beans in resources.groovy are registered after @Configuration classes are processed, so its @Bean methods would be ignored.
+@Import(BdrTokenConfig)
 class Application extends GrailsAutoConfiguration {
 
     private static final String EHCACHE_DIRECTORY_CONFIG_ITEM = "ehcache.directory"

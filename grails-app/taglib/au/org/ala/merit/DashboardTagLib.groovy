@@ -304,11 +304,11 @@ class DashboardTagLib {
         js << "function draw_${name}() {\n"
         js << "    var data_${name} = new google.visualization.DataTable();\n"
         columns.each { col ->
-            js << "    data_${name}.addColumn('${col[0]}', ${JsonOutput.toJson(col[1]?.toString())});\n"
+            js << "    data_${name}.addColumn('${col[0]}', ${JsonOutput.toJson(col[1]?.toString()).replace('<', '\\u003c')});\n"
         }
-        js << "    data_${name}.addRows(${JsonOutput.toJson(data)});\n"
-        js << "    var chart_${name} = new google.visualization.${chartObject}(document.getElementById(${JsonOutput.toJson(elementId)}));\n"
-        js << "    chart_${name}.draw(data_${name}, ${JsonOutput.toJson(options)});\n"
+        js << "    data_${name}.addRows(${JsonOutput.toJson(data).replace('<', '\\u003c')});\n"
+        js << "    var chart_${name} = new google.visualization.${chartObject}(document.getElementById(${JsonOutput.toJson(elementId).replace('<', '\\u003c')}));\n"
+        js << "    chart_${name}.draw(data_${name}, ${JsonOutput.toJson(options).replace('<', '\\u003c')});\n"
         js << "}\n"
         js << "</script>"
         out << js.toString()
