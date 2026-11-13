@@ -21,6 +21,7 @@ plugins {
     id 'jacoco'
     id 'com.williamhill.wiremock' version '0.4.1'
     id 'com.skillsjars.gradle-plugin' version '0.1.4'
+    id 'com.github.node-gradle.node' version '7.1.0'
 }
 version "$meritVersion"
 group "au.org.ala"
@@ -297,13 +298,18 @@ def clientDependencySourceDir = { File packageDir, String from ->
     releaseFolder ? new File(packageDir, releaseFolder) : packageDir
 }
 
-tasks.register('clientNpmInstall', Exec) {
+// Node/npm are downloaded by the gradle-node-plugin so the build doesn't depend on npm being on the PATH.
+node {
+    download = true
+    version = '24.11.1'
+    nodeProjectDir = clientDependenciesDir
+}
+
+tasks.register('clientNpmInstall', com.github.gradle.node.npm.task.NpmTask) {
     group = 'client dependencies'
     description = 'Installs the npm packages declared in client-dependencies/package.json'
     mustRunAfter 'clientClean'
-    workingDir clientDependenciesDir
-    String npm = System.getProperty('os.name').toLowerCase().contains('windows') ? 'npm.cmd' : 'npm'
-    commandLine npm, 'ci', '--no-audit', '--no-fund'
+    args = ['ci', '--no-audit', '--no-fund']
     inputs.files(new File(clientDependenciesDir, 'package.json'), new File(clientDependenciesDir, 'package-lock.json'), new File(clientDependenciesDir, '.npmrc'))
     outputs.dir(clientNodeModulesDir)
 }
