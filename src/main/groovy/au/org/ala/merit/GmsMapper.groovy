@@ -1,7 +1,7 @@
 package au.org.ala.merit
 
 import au.com.bytecode.opencsv.CSVWriter
-import org.apache.commons.lang.WordUtils
+import org.apache.commons.text.WordUtils
 import org.apache.commons.validator.routines.EmailValidator
 
 import java.text.DecimalFormat

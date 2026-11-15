@@ -10,7 +10,7 @@
             getMembersForHubPaginatedUrl: "${createLink(controller: 'user', action: 'getMembersForHubPaginated')}",
             removeHubUserUrl: "${createLink(controller: 'user', action: 'removeUserWithHubRole')}",
             updateHubUser: "${createLink(controller: 'user', action: 'addUserToHub')}",
-            i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
+            i18nURL: "${g.createLink(controller: 'i18n', action: 'messages')}",
         };
     </script>
     <asset:stylesheet src="common-bs4.css"/>

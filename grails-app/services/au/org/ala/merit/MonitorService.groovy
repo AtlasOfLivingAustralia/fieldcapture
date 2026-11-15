@@ -2,7 +2,7 @@ package au.org.ala.merit
 
 import grails.core.GrailsApplication
 
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse
 
 /**
  * Responsible for the interface to the Monitor system

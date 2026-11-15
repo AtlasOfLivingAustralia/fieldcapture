@@ -4,7 +4,6 @@ import au.org.ala.merit.MetadataService
 import au.org.ala.merit.ProgramService
 import au.org.ala.merit.ProjectService
 import au.org.ala.merit.ReportService
-import org.apache.tools.ant.Project
 import spock.lang.Specification
 
 class ProjectGroupingHelperSpec extends Specification {

@@ -16,8 +16,6 @@ class Reef2050PlanActionReportSummaryCommandSpec extends Specification implement
         command = new Reef2050PlanActionReportSummaryCommand()
         activityService = Mock(ActivityService)
         command.activityService = activityService
-
-        JSON.createNamedConfig("nullSafe", { })
     }
 
     def "The summary command will default to finding data for approved activities only"() {

@@ -30,11 +30,11 @@
             <td class="index"><span data-bind="text:${i}+1"></span></td>
             <td colspan="${(numPeriods+2)/2}" class="service">
 
-                <fc:renderComparisonService programConfig="${config}" changed="${changedTarget?[changedTarget]:[]}" i="${0}" original="${originalTarget?[originalTarget]:[]}"/>
+                <fc:renderComparisonService programConfig="${config}" changed="${changedTarget ? [changedTarget] : []}" i="${0}" original="${originalTarget ? [originalTarget] : []}"/>
             </td>
             <td colspan="${(numPeriods % 2 == 0) ? (numPeriods+2)/2 : (numPeriods+3)/2}" class="score">
 
-                <fc:renderComparisonScoreLabel config="${config}" changed="${changedTarget?[changedTarget]:[]}" i="${0}" original="${originalTarget?[originalTarget]:[]}" property="scoreId"/>
+                <fc:renderComparisonScoreLabel config="${config}" changed="${changedTarget ? [changedTarget] : []}" i="${0}" original="${originalTarget ? [originalTarget] : []}" property="scoreId"/>
             </td>
         </tr>
         <tr class="sub-heading">

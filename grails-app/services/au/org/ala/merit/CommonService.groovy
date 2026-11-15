@@ -2,15 +2,11 @@ package au.org.ala.merit
 
 import grails.converters.JSON
 import grails.web.mapping.LinkGenerator
-import org.springframework.context.MessageSource
-
-import javax.xml.bind.DatatypeConverter
-import java.text.SimpleDateFormat
 
 class CommonService {
 
     LinkGenerator grailsLinkGenerator
-    MessageSource messageSource
+    WebService webService
 
     def buildUrlParamsFromMap(map) {
         if (!map) return ''
@@ -20,13 +16,6 @@ class CommonService {
             params += (i?'&':'') + k + '=' + vL.collect { URLEncoder.encode(String.valueOf(it), "UTF-8") }.join("&${k}=")
         }
         params
-    }
-
-    def simpleDateLocalTime(String dateStr) {
-        if (!dateStr) { return '' }
-        def cal = DatatypeConverter.parseDateTime(dateStr)
-        def date = cal.getTime()
-        new SimpleDateFormat("dd/MM/yy").format(date)
     }
 
     /**
@@ -47,7 +36,26 @@ class CommonService {
         return featuresMap as JSON
     }
 
-    def i18n(Locale locale) {
-        messageSource.getMergedProperties(locale)?.properties
+    /**
+     * Validate redirect URL.
+     * If returnTo is relative, then it is valid.
+     * If returnTo is absolute, then host name should be in the allowed list.
+     * @param returnTo
+     * @return
+     */
+    boolean isRedirectSafe(String returnTo) {
+        if (returnTo) {
+            try {
+                URI uri = new URI(returnTo)
+                if (uri.isAbsolute())
+                    return ['http', 'https'].contains(uri.scheme?.toLowerCase()) &&
+                            uri.host != null && webService.isValidDomain(uri.host)
+                return uri.rawAuthority == null && !returnTo.startsWith('//')
+            } catch (Exception ex) {
+                return false
+            }
+        }
+
+        return false
     }
 }

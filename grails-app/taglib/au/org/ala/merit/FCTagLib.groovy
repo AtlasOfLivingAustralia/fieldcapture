@@ -1,6 +1,5 @@
 package au.org.ala.merit
 
-import au.org.ala.cas.util.AuthenticationCookieUtils
 import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.util.MarkdownUtils
 import au.org.ala.web.AuthService
@@ -9,7 +8,7 @@ import grails.converters.JSON
 import grails.web.servlet.mvc.GrailsParameterMap
 import groovy.util.logging.Slf4j
 import groovy.xml.MarkupBuilder
-import org.apache.commons.lang.WordUtils
+import org.apache.commons.text.WordUtils
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
 
@@ -465,12 +464,6 @@ class FCTagLib {
 
     def loginUrl = {attrs, body ->
         out << authService.loginUrl(attrs.loginReturnToUrl)
-    }
-
-    def userIsLoggedIn = { attr ->
-        if (AuthenticationCookieUtils.cookieExists(request, AuthenticationCookieUtils.ALA_AUTH_COOKIE)) {
-            out << true
-        }
     }
 
     /**

@@ -9,7 +9,7 @@ fi
 
 BRANCH=$3
 if [ -z $BRANCH ]; then
-    BRANCH=dev
+    BRANCH=feature/grails8
 fi
 
 ECODATA_LOCAL_DIR=$2
@@ -44,7 +44,20 @@ cd $ECODATA_LOCAL_DIR
 echo "Starting ecodata from `pwd`"
 ls -la
 GRADLE_OPTS="-Xmx1g" ./gradlew bootRun "-Dorg.gradle.jvmargs=-Xmx1g" -Dgrails.env=meritfunctionaltest &
-sleep 360
+
+WAIT_TIMEOUT=300
+WAIT_INTERVAL=5
+SECONDS_WAITED=0
+until (echo > /dev/tcp/127.0.0.1/8080) >/dev/null 2>&1; do
+    if [ "$SECONDS_WAITED" -ge "$WAIT_TIMEOUT" ]; then
+        echo "Timed out waiting for ecodata to start on port 8080" >&2
+        kill %2
+        kill %1
+        exit 1
+    fi
+    sleep "$WAIT_INTERVAL"
+    SECONDS_WAITED=$((SECONDS_WAITED + WAIT_INTERVAL))
+done
 
 
 cd $MERIT_DIR

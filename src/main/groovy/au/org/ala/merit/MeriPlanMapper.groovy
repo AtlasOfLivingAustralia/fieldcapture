@@ -1,7 +1,6 @@
 package au.org.ala.merit
 
-import org.apache.commons.lang.StringUtils
-import org.apache.poi.hssf.usermodel.HSSFCell
+import org.apache.commons.lang3.StringUtils
 import org.apache.poi.ss.usermodel.*
 import org.apache.poi.ss.util.CellReference
 import org.apache.poi.xssf.usermodel.XSSFCell

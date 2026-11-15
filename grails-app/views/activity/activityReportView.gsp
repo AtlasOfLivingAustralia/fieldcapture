@@ -15,7 +15,7 @@
     <script>
     var fcConfig = {
         serverUrl: "${grailsApplication.config.getProperty('grails.serverURL')}",
-        i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
+        i18nURL: "${g.createLink(controller: 'i18n', action: 'messages')}",
         ownerViewUrl: "${ownerViewURL}",
         bieUrl: "${grailsApplication.config.getProperty('bie.baseURL')}",
         imageLocation:"${assetPath(src:'/')}",

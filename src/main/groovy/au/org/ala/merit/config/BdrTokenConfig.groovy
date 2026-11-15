@@ -34,7 +34,7 @@ class BdrTokenConfig {
     @Value('${bdr.allowUnsignedIdTokens:false}')
     boolean allowUnsignedIdTokens
 
-    @Bean
+    @Bean(defaultCandidate = false)
     OidcConfiguration bdrOidcConfiguration(@Qualifier("oidcResourceRetriever") ResourceRetriever jwtResourceRetriever) {
         OidcConfiguration config = new OidcConfiguration()
         config.setClientId(clientId)
@@ -47,21 +47,22 @@ class BdrTokenConfig {
         return config
     }
 
-    @Bean
+    @Bean(defaultCandidate = false)
     TokenClient bdrTokenClient(
-            @Autowired(required = false) OidcConfiguration bdrOidcConfiguration
+            @Qualifier("bdrOidcConfiguration") OidcConfiguration bdrOidcConfiguration
     ) {
         new TokenClient(bdrOidcConfiguration)
     }
 
-    @Bean
+    @Bean(defaultCandidate = false)
     TokenService oidcBdrTokenService(
-            @Autowired(required = false) OidcConfiguration bdrOidcConfiguration,
+            @Qualifier("bdrOidcConfiguration") OidcConfiguration bdrOidcConfiguration,
             @Autowired(required = false) SessionStoreFactory sessionStoreFactory,
-            @Autowired TokenClient tokenClient
+            @Qualifier("bdrTokenClient") TokenClient tokenClient
     ) {
+        // The cast selects the SessionStoreFactory constructor if no factory is available
         new TokenService(bdrOidcConfiguration,
-                sessionStoreFactory, tokenClient, clientId, clientSecret, jwtScopes, cacheTokens)
+                (SessionStoreFactory) sessionStoreFactory, tokenClient, clientId, clientSecret, jwtScopes, cacheTokens)
     }
 
 }

@@ -1,7 +1,7 @@
 
 <div class="tab-pane" id="mapView">
     <div class="map-box">
-        <div id="map" style="width: 100%; height: 100%;"></div>
+        <div id="map" style="width: 100%; height: 100%;" data-leaflet-img="${assetPath(src: 'leaflet/images/')}"></div>
     </div>
     <div style=" float: right;" id="map-info">
         <span id="numberOfProjects">${projectCount ?: 0}</span> projects with <span id="numberOfSites">[calculating]</span>
@@ -181,7 +181,7 @@
 
             initialiseMap(features, mapOptions);
 
-            //setupHeatMap(heatMapPoints);
+            setupHeatMap(heatMapPoints);
             features.length > 0 ? showLegends(legends) : "";
 
             }).fail(function (request, status, error) {
@@ -217,6 +217,7 @@
                     scrollwheel: false,
                     assignNameEnabled: false,
                     zoomLimit:16,
+                    spatialWmsUrl: "${grailsApplication.config.getProperty('spatial.wms.url')}",
                     featureService: "${createLink(controller: 'proxy', action:'feature')}",
                     wmsServer: "${grailsApplication.config.getProperty('spatial.geoserverUrl')}"
                 },

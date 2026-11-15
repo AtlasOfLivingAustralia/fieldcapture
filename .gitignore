@@ -44,4 +44,5 @@
 /.gradle/
 /grails-app/assets/components/compile/templates.js
 /grails-app/assets/vendor-ext
+/client-dependencies/node_modules
 /ehcache/

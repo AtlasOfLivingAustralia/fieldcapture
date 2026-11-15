@@ -27,11 +27,11 @@
             <td class="index"><span data-bind="text:${i}+1"></span></td>
             <td class="service">
 
-                <fc:renderComparisonService programConfig="${config}"  changed="${changedTarget?[changedTarget]:[]}" i="${0}" original="${originalTarget?[originalTarget]:[]}"/>
+                <fc:renderComparisonService programConfig="${config}"  changed="${changedTarget ? [changedTarget] : []}" i="${0}" original="${originalTarget ? [originalTarget] : []}"/>
             </td>
             <td class="score">
 
-                <fc:renderComparisonScoreLabel config="${config}" changed="${changedTarget?[changedTarget]:[]}" i="${0}" original="${originalTarget?[originalTarget]:[]}" property="scoreId"/>
+                <fc:renderComparisonScoreLabel config="${config}" changed="${changedTarget ? [changedTarget] : []}" i="${0}" original="${originalTarget ? [originalTarget] : []}" property="scoreId"/>
             </td>
         </tr>
         <tr>

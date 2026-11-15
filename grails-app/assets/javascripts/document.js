@@ -294,7 +294,7 @@ function DocumentViewModel (doc, owner, settings) {
     };
 
     this.modelForSaving = function() {
-        var result =  ko.mapping.toJS(self, {'ignore':['embeddedVideoVisible', 'embeddedVideoData', 'iframe','helper', 'progress', 'hasPreview', 'error', 'fileLabel', 'file', 'complete', 'fileButtonText', 'roles', 'stages','reports','reportName','maxStages', 'settings', 'thirdPartyConsentDeclarationRequired', 'saveEnabled', 'saveHelp', 'fileReady', 'hasPublicRole']});
+        var result =  ko.mapping.toJS(self, {'ignore':['embeddedVideoVisible', 'embeddedVideoData', 'iframe','helper', 'progress', 'hasPreview', 'error', 'fileLabel', 'file', 'complete', 'fileButtonText', 'roles', 'stages','reports','reportName','maxStages', 'settings', 'thirdPartyConsentDeclarationRequired', 'saveEnabled', 'saveHelp', 'fileReady', 'hasPublicRole', 'uploadDate']});
         if (result.stage === undefined) {
             result.stage = null;
         }

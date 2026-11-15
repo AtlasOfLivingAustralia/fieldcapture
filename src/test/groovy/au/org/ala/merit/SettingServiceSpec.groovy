@@ -1,18 +1,15 @@
 package au.org.ala.merit
 
-import grails.plugin.cookie.CookieService
 import grails.testing.services.ServiceUnitTest
 import spock.lang.Specification
 
 
 class SettingServiceSpec extends Specification implements ServiceUnitTest<SettingService> {
 
-    CookieService cookieService = Mock(CookieService)
     WebService webService = Mock(WebService)
     CacheService cacheService = Stub(CacheService)
 
     def setup() {
-        service.cookieService = cookieService
         service.webService = webService
         service.cacheService = cacheService
         cacheService.get(_, {}) >> {String key, Closure closure -> closure() }
@@ -26,7 +23,6 @@ class SettingServiceSpec extends Specification implements ServiceUnitTest<Settin
         service.loadHubConfig(hub)
 
         then:
-        1 * cookieService.setCookie(SettingService.LAST_ACCESSED_HUB, hub, -1, '/', null,false, true)
         1 * webService.getJson({it.endsWith('hub/findByUrlPath/'+hub)}) >> [urlPath:hub]
         SettingService.getHubConfig().urlPath == hub
     }

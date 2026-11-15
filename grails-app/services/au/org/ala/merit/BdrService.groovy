@@ -5,7 +5,7 @@ import grails.converters.JSON
 import grails.core.GrailsApplication
 import groovy.util.logging.Slf4j
 
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse
 
 /**
  * Interface to the BDR system - used to retrieve data submitted for MERIT projects via the Monitor application.

@@ -1,3 +1,5 @@
+import org.grails.web.config.http.GrailsFilters
+
 /******************************************************************************\
  *  CONFIG MANAGEMENT
  \******************************************************************************/
@@ -111,7 +113,7 @@ if(!spatial.geoserverUrl){
     spatial.geoserverUrl = spatial.baseUrl + "/geoserver"
 }
 if (!spatial.wms.url) {
-    spatial.wms.url = spatial.baseUrl + "/geoserver/ALA/wms?"
+    spatial.wms.url = spatial.baseUrl + "/geoserver/wms?"
 }
 if (!spatial.wms.cache.url) {
     spatial.wms.cache.url = spatial.baseUrl + "/geoserver/gwc/service/wms?"
@@ -250,6 +252,7 @@ security {
         enabled = true
         discoveryUrl = "${auth.baseUrl}/cas/oidc/.well-known"
         requiredClaims = ["sub", "iat", "exp", "jti", "client_id"]
+        GrailsFilters.GRAILS_WEB_REQUEST_FILTER.order - 1
     }
 }
 bdr.api.url="https://changeMe.org.au/api"

@@ -45,7 +45,7 @@
             returnTo: '${g.createLink(action:'index', id:"${organisation.organisationId}")}',
             dashboardCategoryUrl: "${g.createLink(controller: 'report', action: 'activityOutputs', params: [fq:'organisationFacet:'+organisation.name])}",
             reportOwner: {organisationId:'${organisation.organisationId}'},
-            i18nURL: "${g.createLink(controller: 'home', action: 'i18n')}",
+            i18nURL: "${g.createLink(controller: 'i18n', action: 'messages')}",
             projects : <fc:modelAsJavascript model="${organisation.projects}"/>
         };
     </script>
@@ -108,6 +108,7 @@
 
 <asset:javascript src="common-bs4.js"/>
 <asset:javascript src="leaflet-manifest.js"/>
+<asset:javascript src="leaflet.heat/leaflet-heat-global.js"/>
 <asset:javascript src="organisation-manifest.js"/>
 <asset:deferredScripts/>
 

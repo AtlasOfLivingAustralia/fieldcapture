@@ -3,9 +3,9 @@ package au.org.ala.merit
 import au.org.ala.merit.hub.HubSettings
 import grails.converters.JSON
 import grails.core.GrailsApplication
-import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang3.StringUtils
 
-import javax.servlet.http.Cookie
+import jakarta.servlet.http.Cookie
 import java.text.SimpleDateFormat
 
 class HomeController {
@@ -317,13 +317,6 @@ class HomeController {
         } else {
             response.sendError(404)
             return
-        }
-    }
-
-    def i18n() {
-        if (request.isGet()) {
-            Map props = commonService.i18n(request.locale)
-            render props as JSON
         }
     }
 

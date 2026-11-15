@@ -9,12 +9,14 @@ import au.org.ala.merit.config.ProgramConfig
 import au.org.ala.merit.config.ReportConfig
 import au.org.ala.merit.reports.ReportLifecycleListener
 import au.org.ala.merit.reports.ReportGenerationOptions
+import au.org.ala.ecodata.utils.ResponseCacheHeaderUtils
 import grails.converters.JSON
 import grails.core.GrailsApplication
 import org.apache.http.HttpStatus
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
 import org.joda.time.DateTime
+import org.springframework.web.multipart.support.MultipartResolutionDelegate
 
 import static ReportService.ReportMode
 
@@ -142,7 +144,7 @@ class ProjectController {
                              themes                : config.themes,
                              config                : config,
                              projectContent        : content.model,
-                             showAlternateTemplate : template && (template != config.projectTemplate) // If the template has been specified and isn't the default, provide navigation back to the default.
+                             showAlternateTemplate : template && (template != projectTemplate(config, null)) // If the template has been specified and isn't the default, provide navigation back to the default.
                 ]
                 render view: content.view, model: model
             }
@@ -273,7 +275,7 @@ class ProjectController {
 
             model = buildRLPTargetsModel(rlpModel, project)
         }
-        else if (config?.projectTemplate == ESP_TEMPLATE && !user?.hasViewAccess) {
+        else if (config?.getProjectTemplate() == ProgramConfig.ProjectTemplate.ESP && !user?.hasViewAccess) {
             project.remove('sites')
             project.remove('activities')
             model.overview.datesHidden = true
@@ -320,12 +322,12 @@ class ProjectController {
         model
     }
 
-    private String projectTemplate(Map config, String template) {
+    private String projectTemplate(ProgramConfig config, String template) {
         // Allow FC_OFFICERS and above to select a different reporting template
         if (template && userService.userIsSiteAdmin()) {
             return template
         }
-        return config.projectTemplate
+        return config.getProjectTemplate().name().toLowerCase()
     }
     /**
      * Designed for an ajax call - this returns only a template not a full HTML page.
@@ -724,7 +726,7 @@ class ProjectController {
     @PreAuthorise(accessLevel = 'admin')
     def uploadMeriPlan(String id) {
         Map result
-        if (request.respondsTo('getFile')) {
+        if (MultipartResolutionDelegate.isMultipartRequest(request)) {
             def file = request.getFile('meriPlan')
             if (file) {
                 Map project = projectService.get(id)
@@ -1199,6 +1201,10 @@ class ProjectController {
             ]
         }?.unique()?.sort { it.label }
 
+        if (categories) {
+            ResponseCacheHeaderUtils.applyCacheHeaders(response, ResponseCacheHeaderUtils.ONE_DAY_IN_SECONDS)
+        }
+
         render categories as JSON
     }
 
@@ -1226,7 +1232,7 @@ class ProjectController {
     }
 
     @PreAuthorise(accessLevel = 'editor')
-    def getSpeciesRecordsFromActivity (String activityId, String groupBy, String operator) {
+        def getSpeciesRecordsFromActivity (String activityId, String groupBy, String operator) {
         if(!activityId) {
             render status: HttpStatus.SC_BAD_REQUEST, text: [message: 'Activity ID must be supplied'] as JSON
             return
@@ -1291,6 +1297,7 @@ class ProjectController {
     }
 
     def spatialFeatures (String layerId, String intersectWith) {
+        ResponseCacheHeaderUtils.applyCacheHeaders(response, ResponseCacheHeaderUtils.ONE_WEEK_IN_SECONDS)
         webService.proxyGetRequest(response, grailsApplication.config.getProperty('ecodata.baseUrl') + "spatial/features?layerId=${layerId}&intersectWith=${intersectWith?:''}", false, true, 120000)
         return null
     }

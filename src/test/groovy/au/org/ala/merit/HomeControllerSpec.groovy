@@ -5,7 +5,7 @@ import org.joda.time.DateTime
 import spock.lang.Specification
 import grails.testing.web.controllers.ControllerUnitTest
 
-import javax.servlet.http.Cookie
+import jakarta.servlet.http.Cookie
 
 /** Tests the HomeController */
 class HomeControllerSpec extends Specification implements ControllerUnitTest<HomeController>{

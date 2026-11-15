@@ -28,7 +28,7 @@
                 approveReportUrl: "${createLink(controller: 'project', action: 'ajaxApproveReport', id:project.projectId)}/",
                 featuresService: "${createLink(controller: 'proxy', action: 'features')}",
                 featureService: "${createLink(controller: 'proxy', action: 'feature')}",
-                spatialWms: "${grailsApplication.config.getProperty('spatial.geoserverUrl')}",
+                spatialWms: "${createLink(controller: 'proxy', action: 'feature')}",
                 tabbedActivityUrl: "${createLink(controller: 'activity', action:'ajaxLoadActivityForm')}",
                 dashboardUrl:"${createLink(action:'projectDashboard', id:project.projectId)}",
                 searchBieUrl:"${createLink(controller:'species', action:'searchBie')}",
@@ -330,6 +330,7 @@
             highlightOnHover:true,
             features:[],
             featureService: fcConfig.featureService,
+            spatialWmsUrl: "${grailsApplication.config.getProperty('spatial.wms.url')}",
             wmsServer:fcConfig.spatialWmsUrl,
             mapContainer: "map"
         };

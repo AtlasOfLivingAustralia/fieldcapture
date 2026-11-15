@@ -15,7 +15,7 @@ import org.apache.commons.logging.LogFactory
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 
-import javax.persistence.Transient
+import jakarta.persistence.Transient
 import java.text.DecimalFormat
 import java.util.regex.Matcher
 
@@ -113,10 +113,8 @@ class Reef2050PlanActionReportCommand extends Reef2050PlanActionReportConfig imp
             searchCriteria.publicationStatus = PublicationStatus.APPROVED
         }
 
-        Map resp
-        JSON.use("nullSafe") {
-            resp = activityService.search(searchCriteria)
-        }
+        Map resp = activityService.search(searchCriteria)
+
         List activities = []
         if (!resp || resp.error) {
             getErrors().reject("Error finding activities")
