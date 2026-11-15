@@ -39,6 +39,7 @@
         unlockActivityUrl:"${createLink(controller:'activity', action:'ajaxUnlock')}/<fc:currentUserId/>",
         projectActivitiesUrl:"${createLink(controller:'project', action:'searchActivities', id:activity.projectId)}",
         healthCheckUrl:"${createLink(controller:'ajax', action:'keepSessionAlive')}",
+        spatialWmsUrl: "${grailsApplication.config.getProperty('spatial.wms.url')}",
         prepopUrlPrefix:"${grailsApplication.config.getProperty('grails.serverURL')}"
 
         },

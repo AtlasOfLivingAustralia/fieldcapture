@@ -67,7 +67,7 @@ map = {
             useMyLocation: false,
             allowSearchLocationByAddress: false,
             allowSearchRegionByAddress: false,
-            wmsLayerUrl: config.spatialWmsUrl + '/wms/reflect?',
+            wmsLayerUrl: config.spatialWmsUrl,
             wmsFeatureUrl: config.featureService + '?featureId=',
             otherLayers: {
                 Roadmap: googleLayer,

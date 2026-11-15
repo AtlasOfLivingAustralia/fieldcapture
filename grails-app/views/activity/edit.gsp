@@ -19,6 +19,7 @@
         activityDeleteUrl: "${createLink(controller: 'activity', action: 'ajaxDelete')}",
         projectViewUrl: "${createLink(controller: 'project', action: 'index')}/",
         siteViewUrl: "${createLink(controller: 'site', action: 'index')}/",
+        spatialWmsUrl: "${grailsApplication.config.getProperty('spatial.wms.url')}",
         saveOuputTargetsUrl: "${createLink(controller:'project', action:'ajaxUpdate', id:activity.projectId)}"
         },
         here = document.location.href;

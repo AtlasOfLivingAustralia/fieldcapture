@@ -206,10 +206,12 @@
                     mapContainerId:'smallMap',
                     useGoogleBaseMap:fcConfig.useGoogleBaseMap,
                     featureServiceUrl: fcConfig.featureService,
-                    wmsLayerUrl: fcConfig.spatialWmsUrl + '/wms/reflect?',
+                    wmsLayerUrl: fcConfig.spatialWmsUrl,
                     wmsFeatureUrl: fcConfig.spatialWms + '?featureId='
                 });
 
+                mapFeatures.style = getStyleForSite(site);
+                mapFeatures.sldBody = getSldBodyForSite(site);
                 map.replaceAllFeatures([mapFeatures]);
                 _.each(site.poi || [], function(poi) {
                     if (poi.geometry) {

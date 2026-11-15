@@ -40,6 +40,7 @@
         <g:else>
             pageUrl : "${grailsApplication.config.getProperty('grails.serverName')}${createLink(controller:'site', action:'create', params:[checkForState:true])}",
         </g:else>
+        spatialWmsUrl: "${grailsApplication.config.getProperty('spatial.wms.url')}",
         sitePageUrl : "${createLink(action: 'index', id: site?.siteId)}",
         homePageUrl : "${createLink(controller: 'home', action: 'index')}",
         ajaxUpdateUrl: "${createLink(action: 'ajaxUpdate', id: site?.siteId)}",

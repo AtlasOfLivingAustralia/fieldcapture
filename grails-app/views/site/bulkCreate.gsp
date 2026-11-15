@@ -231,7 +231,7 @@
                     assignNameEnabled: true,
                     addGeometryFromLocalFile: true,
                     flattenMultiGeometries: true,
-                    wmsLayerUrl: fcConfig.spatialWmsUrl + '/wms/reflect?',
+                    wmsLayerUrl: fcConfig.spatialWmsUrl,
                     wmsFeatureUrl: fcConfig.featureService + '?featureId=',
                     otherLayers: {
                         Roadmap: googleLayer,
