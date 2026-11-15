@@ -451,7 +451,8 @@ function ActivityHeaderViewModel (activity, site, project, metaModel, themes, co
         projectViewUrl:fcConfig.projectViewUrl,
         siteViewUrl:fcConfig.siteViewUrl,
         featureServiceUrl:fcConfig.featureServiceUrl,
-        wmsServerUrl:fcConfig.wmsServerUrl
+        wmsServerUrl:fcConfig.wmsServerUrl,
+        spatialWmsUrl:fcConfig.spatialWmsUrl
     };
     var options = _.extend({}, defaults, config);
 
@@ -563,6 +564,7 @@ function ActivityHeaderViewModel (activity, site, project, metaModel, themes, co
                     zoomLimit:16,
                     featureService: options.featureServiceUrl,
                     wmsServer: options.wmsServerUrl,
+                    spatialWmsUrl: options.spatialWmsUrl,
                     polygonMarkerAreaKm2:-1
                 },
                 mapFeatures

@@ -390,7 +390,13 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
         }
 
         var site = self.toJS(),
-            featureCollection = convertSiteToFeatureCollection(site);
+            featureCollection = convertSiteToFeatureCollection(site),
+            layerOptions = {
+                style: getStyleForSite(site),
+                wmsOptions: {
+                    SLD_BODY: getSldBodyForSite(site)
+                }
+            };
         try {
             featureCollection = turf.simplify(featureCollection, {tolerance: simplificationTolerance, highQuality: false});
         } catch (e) {
@@ -624,6 +630,14 @@ var AlaMapAdapter = function(map, options) {
     }
 
     self.addFeature = function(feature) {
+        // fill colour and other style properties decided by properties on the feature.
+        var layerOptions = {
+            style: feature.style,
+            wmsOptions: {
+                SLD_BODY: feature.sldBody
+            }
+        };
+
         if (isOldSite(feature)) {
             feature = convertOldSiteToFeatureCollection(feature);
         }
@@ -644,12 +658,6 @@ var AlaMapAdapter = function(map, options) {
         self.featureLayer.on('layeradd', function(e) {
             var layer = e.layer;
             var id = getId(feature);
-            if (options.styleProperty && feature.properties && feature.properties[options.styleProperty]) {
-                var prop = feature.properties[options.styleProperty];
-                if (options.styles[prop] && _.isFunction(layer.setStyle)) {
-                    layer.setStyle(options.styles[prop]);
-                }
-            }
             if (!self.featureIndex[id]) {
                 self.featureIndex[id] = [];
             }
@@ -657,7 +665,7 @@ var AlaMapAdapter = function(map, options) {
         });
 
         try {
-            map.setGeoJSON(feature);
+            map.setGeoJSON(feature, layerOptions);
         } catch (e) {
             console.error("[ALA-Map] Error adding feature to map:", e);
         }
@@ -721,6 +729,14 @@ var AlaMapAdapter = function(map, options) {
             else if (options.icon) {
                 layer.setIcon(createHighlightIcon(layer));
             }
+            else if (layer.setOpacity) {
+                if (!layer._originalOptions || !layer._originalOptions.opacity) {
+                    layer._originalOptions = layer._originalOptions || {};
+                    layer._originalOptions.opacity = options.opacity;
+                }
+
+                layer.setOpacity(1);
+            }
         }
     }
 
@@ -744,6 +760,11 @@ var AlaMapAdapter = function(map, options) {
             }
             else if (layer.options && layer.options.icon) {
                 layer.setIcon(createNormalIcon(layer));
+            }
+            else if (layer.setOpacity) {
+                if (layer._originalOptions && layer._originalOptions.opacity !== undefined) {
+                    layer.setOpacity(layer._originalOptions.opacity);
+                }
             }
         }
     }
@@ -1017,6 +1038,12 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
             if (f) {
                 f.popup = obj.name;
                 f.id = obj.siteId;
+                if (!f.sldBody) {
+                    f.purposeCode = getSitePurposeCode(obj);
+                    f.style = getStyleForSite(obj);
+                    f.sldBody = getSldBodyForSite(obj);
+                }
+
             }
             return f;
         });
