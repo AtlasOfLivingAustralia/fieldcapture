@@ -330,6 +330,7 @@
             highlightOnHover:true,
             features:[],
             featureService: fcConfig.featureService,
+            spatialWmsUrl: "${grailsApplication.config.getProperty('spatial.wms.url')}",
             wmsServer:fcConfig.spatialWmsUrl,
             mapContainer: "map"
         };

@@ -79,6 +79,19 @@
         wmsServer: "http://spatial-dev.ala.org.au/geoserver",
         // Default size (in km2) below which a marker will be added to a polygon to increase it's visibility
         polygonMarkerAreaKm2 : 0.01,
+        styles: {
+            compound: {
+                color: '#000',
+                fillOpacity: 0.2,
+                weight: 3
+            },
+            worksArea: {
+                color: '#0f0',
+                fillOpacity: 0.2,
+                weight: 3
+            }
+        },
+
         // init map and load features
         init: function (options, features) {
             var self = this,
@@ -96,7 +109,7 @@
                     singleMarker: false,
                     markerOrShapeNotBoth: false,
                     assignNameEnabled: !!options.assignNameEnabled,
-                    wmsLayerUrl: options.spatialWmsUrl + '/wms/reflect?',
+                    wmsLayerUrl: options.spatialWmsUrl,
                     wmsFeatureUrl: options.featureService + '?featureId=',
                     otherLayers: {
                         Roadmap: googleLayer,
@@ -172,17 +185,18 @@
             var self = this, loc = site.extent.geometry;
             if(loc != null && loc.type != null){
                 var geoJSON = self.convertOldSiteToFeatureCollection(site),
-                    style = geoJSON.properties && geoJSON.properties.style || {
-                        color: self.overlayOptions.strokeColor,
-                        fillOpacity: self.overlayOptions.fillOpacity,
-                        weight: self.overlayOptions.strokeWeight
+                    layerOptions = {
+                        style: self.getStyleForSite(site),
+                        wmsOptions: {
+                            SLD_BODY: self.getSldBodyForSite(site)
+                        }
                     };
 
                 if (geoJSON.properties && geoJSON.properties.style) {
                     delete geoJSON.properties.style;
                 }
 
-                var layerGroup = self.map.setGeoJSON(geoJSON);
+                var layerGroup = self.map.setGeoJSON(geoJSON, layerOptions);
                 layerGroup.eachLayer(function(layer) {
                     self.addFeature(layer, loc);
                     self.allMarkers.push(layer);
@@ -192,10 +206,6 @@
                         }
                     });
                 });
-
-                if (layerGroup && layerGroup.setStyle) {
-                    layerGroup.setStyle(style);
-                }
             }
         },
         // loads the features
@@ -204,10 +214,15 @@
                 return;
             }
 
-            var self = this, convertedFeatures = {type: 'FeatureCollection', features: []};
+            var self = this;
             $.each(features, function (i,loc) {
                 if(loc != null) {
-                    var geoJSON = loc;
+                    var geoJSON = loc, layerOptions = {
+                        style: map.getStyleForSite(loc),
+                        wmsOptions: {
+                            sld_body: map.getSldBodyForSite(loc)
+                        }
+                    };
                     if (map.isOldSite(loc)) {
                         geoJSON = self.convertOldSiteToFeatureCollection(loc).features[0];
                     }
@@ -219,32 +234,29 @@
                             }
                         }).features[0];
                     }
+                    else if (loc.properties) {
+                        layerOptions = {
+                            style: map.getStyleForSite(loc.properties),
+                            wmsOptions: {
+                                sld_body: map.getSldBodyForSite(loc.properties)
+                            }
+                        }
+                    }
 
                     geoJSON.properties = geoJSON.properties || {};
                     geoJSON.properties.loc = loc;
-                    convertedFeatures.features.push(geoJSON);
+                    var layerGroup = self.map.setGeoJSON(geoJSON, layerOptions);
+                    layerGroup.eachLayer(function(layer) {
+                        var geoJSON = layer.toGeoJSON();
+                        self.addFeature(layer, geoJSON.properties.loc);
+                        self.allMarkers.push(layer);
+                        layer.on("wmslayer:metadataupdated", function (data) {
+                            if (!loc.areaKmSq) {
+                                loc.areaKmSq = data.area_km ? data.area_km : 0;
+                            }
+                        });
+                    });
                 }
-            });
-
-            var layerGroup = self.map.setGeoJSON(convertedFeatures);
-            layerGroup.eachLayer(function(layer) {
-                var geoJSON = layer.toGeoJSON(),
-                    style = geoJSON.properties && geoJSON.properties.style || {
-                        color: self.overlayOptions.strokeColor,
-                        fillOpacity: self.overlayOptions.fillOpacity,
-                        weight: self.overlayOptions.strokeWeight
-                    };
-
-                self.addFeature(layer, geoJSON.properties.loc);
-                self.allMarkers.push(layer);
-                layer.on("wmslayer:metadataupdated", function (data) {
-                    if (!loc.areaKmSq) {
-                        loc.areaKmSq = data.area_km ? data.area_km : 0;
-                    }
-                });
-
-                 if (layer.setStyle)
-                     layer.setStyle(style);
             });
 
             self.map.fitBounds();
@@ -710,6 +722,41 @@
         },
         isSiteGeometry: function (geometry) {
             return geometry && (geometry.centre && geometry.centre.length === 2);
+        },
+        getSitePurposeCode: function (site) {
+            if (!site)
+                return null;
+
+            var purposeCode = 'P';
+            if (site.externalIds && site.externalIds[0] && site.externalIds[0].idType && site.externalIds[0].idType.indexOf('MONITOR') >= 0) {
+                purposeCode = 'E';
+            }
+            else if (site.type === 'compound') {
+                purposeCode = 'R';
+            }
+
+            return purposeCode;
+        },
+        getStyleForPurposeCode: function (purposeCode) {
+            switch (purposeCode) {
+                default:
+                case 'P':
+                    return map.styles.worksArea;
+                case 'R':
+                case 'E':
+                    return map.styles.compound;
+            }
+        },
+        getStyleForSite: function (site) {
+            var purposeCode = map.getSitePurposeCode(site);
+            return map.getStyleForPurposeCode(purposeCode);
+        },
+        getSldBodyForStyle: function (style) {
+            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><StyledLayerDescriptor version=\"1.0.0\" xmlns=\"http://www.opengis.net/sld\"><NamedLayer><Name>ALA:Objects</Name><UserStyle><FeatureTypeStyle><Rule><Title>Polygon</Title><PolygonSymbolizer><Fill><CssParameter name=\"fill\">" + style.color + "</CssParameter></Fill></PolygonSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>"
+        },
+        getSldBodyForSite: function (site) {
+            var style = map.getStyleForSite(site);
+            return map.getSldBodyForStyle(style);
         }
     };
 
@@ -779,6 +826,10 @@
     windows.convertSiteToFeatureCollection = map.convertSiteToFeatureCollection;
     windows.isOldSite = map.isOldSite;
     windows.isSiteGeometry = map.isSiteGeometry;
+    windows.getSldBodyForSite = map.getSldBodyForSite;
+    windows.getStyleForSite = map.getStyleForSite;
+    windows.getStyleForPurposeCode = map.getStyleForPurposeCode;
+    windows.getSitePurposeCode = map.getSitePurposeCode;
     map.addMarker = addMarker;
     map.removeMarkers = removeMarkers;
     windows.alaMap = map;

@@ -233,7 +233,7 @@ function initSiteViewModel() {
         featuresService: "${createLink(controller: 'proxy', action: 'features')}",
         featureService: "${createLink(controller: 'proxy', action: 'feature')}",
         validateShapesUrl: "${createLink(controller: 'site', action: 'isGeometryWithinAustralia')}",
-        spatialWms: '${grailsApplication.config.getProperty('spatial.geoserverUrl')}',
+        spatialWms: '${grailsApplication.config.getProperty('spatial.wms.url')}',
         knownShapeConfig: <fc:modelAsJavascript model="${knownShapeConfig}" default="[]"/>
     };
 

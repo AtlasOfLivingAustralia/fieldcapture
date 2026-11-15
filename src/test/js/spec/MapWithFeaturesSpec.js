@@ -605,3 +605,71 @@ describe("mapWithFeatures isStandardBoundingBoxPolygon", function() {
     });
 });
 
+describe("mapWithFeatures site style helpers", function () {
+    it("getSitePurposeCode returns null when site is missing", function () {
+        expect(alaMap.getSitePurposeCode(null)).toBeNull();
+        expect(alaMap.getSitePurposeCode(undefined)).toBeNull();
+    });
+
+    it("getSitePurposeCode returns E for monitor external ids", function () {
+        var site = {
+            externalIds: [{idType: "MONITORING-123"}]
+        };
+
+        expect(alaMap.getSitePurposeCode(site)).toBe("E");
+    });
+
+    it("getSitePurposeCode returns R for compound sites", function () {
+        var site = {
+            type: "compound"
+        };
+
+        expect(alaMap.getSitePurposeCode(site)).toBe("R");
+    });
+
+    it("getSitePurposeCode defaults to P when no monitor id or compound type", function () {
+        var site = {
+            type: "normal",
+            externalIds: [{idType: "SOME_OTHER_TYPE"}]
+        };
+
+        expect(alaMap.getSitePurposeCode(site)).toBe("P");
+    });
+
+    it("getStyleForPurposeCode maps P to worksArea", function () {
+        expect(alaMap.getStyleForPurposeCode("P")).toBe(alaMap.styles.worksArea);
+    });
+
+    it("getStyleForPurposeCode maps R and E to compound", function () {
+        expect(alaMap.getStyleForPurposeCode("R")).toBe(alaMap.styles.compound);
+        expect(alaMap.getStyleForPurposeCode("E")).toBe(alaMap.styles.compound);
+    });
+
+    it("getStyleForPurposeCode defaults unknown purpose codes to worksArea", function () {
+        expect(alaMap.getStyleForPurposeCode("UNKNOWN")).toBe(alaMap.styles.worksArea);
+    });
+
+    it("getStyleForSite delegates via purpose code helper", function () {
+        var site = {
+            type: "compound"
+        };
+
+        expect(alaMap.getStyleForSite(site)).toBe(alaMap.styles.compound);
+    });
+
+    it("getSldBodyForStyle embeds the style color", function () {
+        var sldBody = alaMap.getSldBodyForStyle({color: "#123abc"});
+
+        expect(sldBody).toContain("<CssParameter name=\"fill\">#123abc</CssParameter>");
+    });
+
+    it("getSldBodyForSite builds SLD based on the site style", function () {
+        var site = {
+            type: "compound"
+        };
+
+        var sldBody = alaMap.getSldBodyForSite(site);
+
+        expect(sldBody).toContain("<CssParameter name=\"fill\">#000</CssParameter>");
+    });
+});
