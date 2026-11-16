@@ -1176,7 +1176,7 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
 };
 
 function BulkCreateSiteViewModel (alaMap, config) {
-    const DEFAULT_MAX_ZOOM = 21;
+    const DEFAULT_MAX_ZOOM = 21, PRECISION = 8;
     var self = this,
         projects = [config.projectId],
         defaultSiteValues = {
@@ -1341,7 +1341,7 @@ function BulkCreateSiteViewModel (alaMap, config) {
     self.createSite = function() {
         var site = this,
             layers = alaMap.findLayersByProperty('tempSiteId', site.transients.tempSiteId()),
-            featureCollection = L.featureGroup(layers).toGeoJSON(),
+            featureCollection = L.featureGroup(layers).toGeoJSON(PRECISION),
             data, resolve, reject,
             promise = new Promise((res, rej ) => {
                 resolve = res;

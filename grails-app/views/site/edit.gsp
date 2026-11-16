@@ -146,6 +146,12 @@
                     return;
                 }
 
+                var siteGeoJSON = convertSiteToFeatureCollection(siteViewModel.toJS());
+                if (!ALA.MapUtils.validateGeoJSON(siteGeoJSON)) {
+                    alert('The drawn shape is invalid. Please check the shape and try again.');
+                    return;
+                }
+
                 siteViewModel.saveWithErrorDetection(
                     function (data) {
                         if(data.status == 'created'){
