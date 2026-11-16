@@ -102,12 +102,12 @@ class SpatialService {
      * @return
      */
     Map isGeometryWithinAustralia(Map shape) {
-        shape = sanitiseGeoJSON(shape)
         Map fixedGeoJSON = webService.doPost(grailsApplication.config.getProperty('ecodata.baseUrl') + "site/standardiseGeoJSON", shape, true)?.resp
         if (!fixedGeoJSON) {
             return [success: false, message: "Failed to standardise geometry"]
         }
 
+        shape = sanitiseGeoJSON(shape)
         String url = grailsApplication.config.getProperty('spatial.layersUrl')+GEOJSON_INTERSECT_URL_PREFIX
         String fid = grailsApplication.config.getProperty('layers.countries.fid')
         List displayNamesForAustralia = grailsApplication.config.getProperty('layers.countries.displayNamesForAustralia', List)
@@ -126,7 +126,8 @@ class SpatialService {
             }
         } else {
             response.success = false
-            response.message = "An error occurred while checking if geometry is within Australia: ${resp?.error}"
+            response.message = "Spatial Portal error occurred while checking geometry is within Australia"
+            log.debug("Spatial Portal error while checking geometry is within Australia: ${resp?.error}")
         }
 
         return response
