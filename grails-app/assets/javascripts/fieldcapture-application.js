@@ -382,14 +382,17 @@ function autoSaveModel(viewModel, saveUrl, options) {
                 }
                 result.resolve();
             }).fail(function(error) {
-                if (error && error.status === 422) {
-                    errorCallback(error.responseJSON);
+                var validationError = error && error.status === 422;
+                if (validationError && (typeof errorCallback === 'function' || typeof config.errorCallback === 'function')) {
+                    if (config.blockUIOnSave) {
+                        $.unblockUI();
+                    }
                 }
                 else {
                     saveFailureHandler(error);
                 }
-
-            }).fail(invokeCallbacksAndRejectResult);
+                invokeCallbacksAndRejectResult(validationError ? error.responseJSON : error);
+            });
         }).fail(saveFailureHandler).fail(invokeCallbacksAndRejectResult);
 
         return result;
