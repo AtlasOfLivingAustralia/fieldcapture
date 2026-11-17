@@ -41,6 +41,7 @@
     var heatZoomHandler = null;
     var resetControl = null;
     var legendControl = null;
+    const HEATMAP_POINT_THRESHOLD = 100
 
     function generateMap(facetList, markBy, mapOptions) {
 
@@ -97,7 +98,7 @@
                         legend.count = facet.count;
                         legends.push(legend);
                     });
-                    var useHeatMap = (!facetsUsed && geoPoints.projects.length > 250 && (!geoPoints.selectedFacetTerms || geoPoints.selectedFacetTerms.length == 0));
+
                     $.each(geoPoints.projects, function(j, project) {
 
                         var projectId = project.projectId
@@ -123,6 +124,7 @@
                                             popupContent: generatePopup(projectLinkPrefix,projectId,projectName,project.org,siteLinkPrefix,el.siteId, el.siteName),
                                             color: "-1",
                                             coordinates: [lon, lat],
+                                            centre: [lon, lat],
                                             latitude: lat,
                                             longitude: lon
                                         }
@@ -142,15 +144,14 @@
                                             projectIdMap[projectId] = true;
                                         }
 
-                                        if (useHeatMap) {
-                                            heatMapPoints.push(latLng);
-                                        }
+                                        heatMapPoints.push(latLng);
                                     }
                                 }
 
                             });
                         }
                     });
+
 
                     if (facetList && facetList.length > 0) {
                         // convert projectIdMap to a list and add to global var
@@ -181,7 +182,8 @@
 
             initialiseMap(features, mapOptions);
 
-            setupHeatMap(heatMapPoints);
+            if (heatMapPoints.length >= HEATMAP_POINT_THRESHOLD)
+                setupHeatMap(heatMapPoints);
             features.length > 0 ? showLegends(legends) : "";
 
             }).fail(function (request, status, error) {
@@ -249,7 +251,7 @@
 
     function setupHeatMap(heatMapPoints) {
         var mapImpl = alaMap.map.getMapImpl();
-        var ZOOM_THRESHOLD = 8;
+        var ZOOM_THRESHOLD = 6;
 
         if (heatLayer) {
             mapImpl.removeLayer(heatLayer);

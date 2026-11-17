@@ -218,7 +218,7 @@
             $.each(features, function (i,loc) {
                 if(loc != null) {
                     var geoJSON = loc, layerOptions = {
-                        style: map.getStyleForSite(loc),
+                        style: loc.style || map.getStyleForSite(loc),
                         wmsOptions: {
                             sld_body: map.getSldBodyForSite(loc)
                         }
