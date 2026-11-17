@@ -1,7 +1,6 @@
 package au.org.ala.merit
 
 import au.org.ala.merit.hub.HubSettings
-import au.org.ala.web.CASRoles
 import grails.plugin.cache.CacheEvict
 import grails.plugin.cache.Cacheable
 import groovy.util.logging.Slf4j
@@ -254,7 +253,7 @@ class UserService {
             return result
         }
         def submittingUser = authService.userDetails()
-        if (!projectService.isUserAdminForProject(submittingUser.userId, projectId)) {
+        if (!isUserAdminForProject(submittingUser.userId, projectId)) {
             return [error:'Permission denied']
         }
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/addUserAsRoleToProject?userId=${userId}&projectId=${projectId}&role=${role}"
@@ -554,12 +553,12 @@ class UserService {
     }
 
     boolean isUserAdminForProject(userId, projectId) {
-        if (userIsSiteAdmin()) {
+        if (userIsSiteAdmin(userId)) {
            return true
         }
-        def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "permissions/isUserAdminForProject?projectId=${projectId}&userId=${userId}"
-        def results = webService.getJson(url)
-        return results?.userIsAdmin
+        // The PROJECT_MODERATOR role is used to mean the user is both a project admin and determiner so we check for both roles here.
+        String role = getEntityRole(userId, projectId)?.role
+        role in [RoleService.PROJECT_ADMIN_ROLE, RoleService.PROJECT_MODERATOR_ROLE]
     }
 
     def isUserCaseManagerForProject(userId, projectId) {
