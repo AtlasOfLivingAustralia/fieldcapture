@@ -214,7 +214,7 @@
                 return;
             }
 
-            var self = this;
+            var self = this, convertedFeatures = {type: 'FeatureCollection', features: []};
             $.each(features, function (i,loc) {
                 if(loc != null) {
                     var geoJSON = loc, layerOptions = {
@@ -245,18 +245,30 @@
 
                     geoJSON.properties = geoJSON.properties || {};
                     geoJSON.properties.loc = loc;
-                    var layerGroup = self.map.setGeoJSON(geoJSON, layerOptions);
-                    layerGroup.eachLayer(function(layer) {
-                        var geoJSON = layer.toGeoJSON();
-                        self.addFeature(layer, geoJSON.properties.loc);
-                        self.allMarkers.push(layer);
-                        layer.on("wmslayer:metadataupdated", function (data) {
-                            if (!loc.areaKmSq) {
-                                loc.areaKmSq = data.area_km ? data.area_km : 0;
-                            }
-                        });
+                    geoJSON.properties.style = layerOptions.style;
+                    geoJSON.properties.wmsOptions = layerOptions.wmsOptions;
+                    convertedFeatures.features.push(geoJSON);
+                }
+            });
+
+            var layerGroup = self.map.setGeoJSON(convertedFeatures);
+            layerGroup.eachLayer(function(layer) {
+                var geoJSON = layer.toGeoJSON();
+                if (layer.setStyle) {
+                    layer.setStyle(geoJSON.properties.style);
+                }
+                else if (layer instanceof L.TileLayer.SmartWMS) {
+                    layer.setParams(geoJSON.properties.wmsOptions);
+                    layer.on("wmslayer:metadataupdated", function (data) {
+                        var loc = geoJSON.properties.loc;
+                        if (loc && !loc.areaKmSq) {
+                            loc.areaKmSq = data.area_km ? data.area_km : 0;
+                        }
                     });
                 }
+
+                self.addFeature(layer, geoJSON.properties.loc);
+                self.allMarkers.push(layer);
             });
 
             self.map.fitBounds();
