@@ -24,7 +24,7 @@ import org.springframework.web.multipart.support.MultipartResolutionDelegate
 @PreAuthorise(accessLevel = 'officer', redirectController = "home")
 @Slf4j
 class AdminController {
-    static allowedMethods = [ searchUserDetails: "GET", removeUserDetails:"POST", updateTag: "POST", addTag: "POST", deleteTag: "POST", saveInvestmentPriority: "POST", "deleteInvestmentPriority": "POST", investmentPriorities: "GET", addCategoryToInvestmentPriorities: "POST"]
+    static allowedMethods = [ searchUserDetails: "GET", removeUserDetails:"POST", updateTag: "POST", addTag: "POST", deleteTag: "POST", saveInvestmentPriority: "POST", deleteInvestmentPriority: "POST", mergeInvestmentPriority: "POST", investmentPriorities: "GET", updateInvestmentPriorityCategory: "POST"]
     static responseFormats = ['json', 'xml']
 
     BlogService blogService
