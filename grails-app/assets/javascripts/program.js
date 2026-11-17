@@ -146,7 +146,7 @@ var Outcome = function(outcome, options) {
     self.category = ko.observable(outcome.category);
     self.priorityCategories = ko.observableArray(outcome.priorityCategories);
     self.priorityCategoryOptions = options.priorityCategories || [];
-    self.isReadOnly = options.outcomesInUse.indexOf(outcome.outcome) >= 0;
+    self.isReadOnly = (options.outcomesInUse || []).indexOf(outcome.outcome) >= 0;
 
 
     self.typeOptions = [
