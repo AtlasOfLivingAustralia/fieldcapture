@@ -166,13 +166,13 @@ var Outcome = function(outcome, options) {
     })
 
     self.toJSON = function() {
-        return {
+        return _.extend({}, outcome, {
             type:self.type(),
             outcome:self.outcome(),
             shortDescription:self.shortDescription(),
             category:self.category(),
             priorityCategories: self.priorityCategories()
-        };
+        });
     }
 }
 
