@@ -274,10 +274,11 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         response.text.contains('"type":"Feature"')
     }
 
-    def "downloadShapefile redirects to home when user cannot access site"() {
+    def "downloadShapefile redirects to home when user cannot access site"(String format) {
         given:
         String siteId = 's1'
         controller.grailsApplication.config.ecodata.baseUrl = 'https://ecodata.example/'
+        params.format = format
 
         when:
         controller.downloadShapefile(siteId)
@@ -286,9 +287,13 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         1 * siteService.get(siteId) >> [siteId: siteId, projects: [[projectId: 'p1']]]
         1 * userService.getCurrentUserId() >> 'u1'
         1 * projectService.canUserEditProject('u1', 'p1') >> false
-        1 * webService.proxyGetRequest(response, 'https://ecodata.example/site/s1.shp', true, true, 960000) >> [status: 200]
+        0 * webService.proxyGetRequest(response, 'https://ecodata.example/site/s1.shp', true, true, 960000) >> [status: 200]
+        0 * webService.getJson2(_)
         response.redirectedUrl == '/home/index'
         flash.message == "Access denied: User does not have permission to view site: ${siteId}"
+
+        where:
+        format << ["shp", "geojson"]
     }
 
     def "downloadShapefile renders error view when shapefile proxy request fails"() {

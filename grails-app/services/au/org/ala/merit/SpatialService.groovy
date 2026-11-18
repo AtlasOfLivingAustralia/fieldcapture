@@ -107,7 +107,7 @@ class SpatialService {
             return [success: false, message: "Failed to standardise geometry"]
         }
 
-        shape = sanitiseGeoJSON(shape)
+        fixedGeoJSON = sanitiseGeoJSON(fixedGeoJSON)
         String url = grailsApplication.config.getProperty('spatial.layersUrl')+GEOJSON_INTERSECT_URL_PREFIX
         String fid = grailsApplication.config.getProperty('layers.countries.fid')
         List displayNamesForAustralia = grailsApplication.config.getProperty('layers.countries.displayNamesForAustralia', List)

@@ -83,7 +83,6 @@
             var projectIdMap = {};
             var geoPoints = data;
             var legends = [];
-            var heatMapPoints = [];
 
             if (geoPoints.total) {
                 if (geoPoints.total > 0) {
@@ -109,12 +108,10 @@
 
                                 var lat = parseFloat(el.loc.lat);
                                 var lon = parseFloat(el.loc.lon);
-                                var latLng = L.latLng(lat, lon);
                                 if (!isNaN(lat) && !isNaN(lon)) {
                                     if (lat >= -90 && lat <=90 && lon >= -180 && lon <= 180) {
-
                                         var point = {
-                                            type: POINT,
+                                            type: "Feature",
                                             properties: {
                                                 point_type: CIRCLEMARKER,
                                                 projectId: projectId,
@@ -125,8 +122,11 @@
                                                 legendName: el.legendName,
                                                 createPopupContent: generatePopup
                                             },
-                                            coordinates: [lon, lat]
-                                        }
+                                            geometry: {
+                                                type: POINT,
+                                                coordinates: [lon, lat]
+                                            }
+                                        };
 
                                         if(el.index !== undefined && el.index != null){
                                             point.properties.style = {
@@ -168,7 +168,7 @@
 
 
             var numSitesHtml = "";
-            var siteCount = features.length || heatMapPoints.length;
+            var siteCount = features.length;
             if(siteCount > 0){
                 numSitesHtml = siteCount + " sites";
             } else {
@@ -177,6 +177,7 @@
             $("#numberOfSites").html(numSitesHtml);
             features.length > 0 ? showLegends(legends) : "";
             initialiseMap([], mapOptions);
+            siteRendering && siteRendering.dispose();
             siteRendering = setupSiteRendering(
                 alaMap.map,
                 features
@@ -230,13 +231,19 @@
             var mode = map.getZoom() <= zoomThreshold ? 'heat' : 'markers';
 
             clearActiveLayer();
-            featureLayer.clearLayers();
+            (featureLayer.getLayers() || []).forEach(function(layer) {
+                if (layer instanceof L.CircleMarker) {
+                    featureLayer.removeLayer(layer);
+                }
+            });
+            alaMap.allMarkers = [];
+            alaMap.featureIndex = {};
             activeMode = mode;
             var bounds = map.getBounds().pad(0.5);
             var pointsInBounds = points.filter(function(point) {
                 var latLng = L.latLng(
-                    point.coordinates[1],
-                    point.coordinates[0]
+                    point.geometry.coordinates[1],
+                    point.geometry.coordinates[0]
                 );
 
                 var boundsContains = bounds.contains(latLng),
@@ -254,8 +261,8 @@
             if (mode === 'heat' && points.length > HEATMAP_POINT_THRESHOLD) {
                 activeLayer = L.heatLayer(pointsInBounds.map(function(point) {
                     return [
-                        point.coordinates[1],
-                        point.coordinates[0],
+                        point.geometry.coordinates[1],
+                        point.geometry.coordinates[0],
                         1
                     ];
                 }), {

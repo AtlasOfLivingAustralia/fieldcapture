@@ -191,6 +191,7 @@ class SiteController {
             if (!isUserMemberOfSiteProjects(site)) {
                 flash.message = "Access denied: User does not have permission to view site: ${id}"
                 redirect(controller: 'home', action: 'index')
+                return
             }
         }
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + "site/${id}.${format}"
