@@ -1171,12 +1171,12 @@ class FCTagLib {
         if (toConvert instanceof List) {
             return toConvert.collect{ String id ->
                 def match = objectList.find{it[idProperty] == id}
-                match ? match[labelProperty] : unmatchedValue
+                match ? match[labelProperty] : (attrs.containsKey('unmatchedValue') ? unmatchedValue : id)
             }
         }
         else {
             def match = objectList.find{it[idProperty] == toConvert}
-            return match ? match[labelProperty] : unmatchedValue
+            return match ? match[labelProperty] : (attrs.containsKey('unmatchedValue') ? unmatchedValue : toConvert)
         }
     }
 
