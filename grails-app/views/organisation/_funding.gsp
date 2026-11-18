@@ -12,7 +12,7 @@
                 Current funding<fc:iconHelp>The current funding is used to calculate the Indigenous supply chain performance metric on the dashboard and is determined by the most recent non-zero funding amount starting from the current year</fc:iconHelp>
             </th>
             <!-- ko foreach: headers -->
-            <th class="budget-amount"><div data-bind="text:data.label"></div>$</th>
+            <th class="budget-amount"><div data-bind="text:data.period"></div>$</th>
             <!-- /ko -->
 
         </tr>
