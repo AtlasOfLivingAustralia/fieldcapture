@@ -154,7 +154,8 @@ var Outcome = function(outcome, options) {
         { value:"primary", label:"Primary only", supportsCategories:true},
         { value:"secondary", label:"Secondary only", supportsCategories:true},
         { value:"medium", label:"Medium term", supportsCategories:false},
-        { value:"short", label:"Short term", supportsCategories:false}
+        { value:"short", label:"Short term", supportsCategories:false},
+        { value:"project", label:"Project term", supportsCategories:false}
     ];
 
     self.outcomeTypeSupportsCategories = ko.pureComputed(function(value) {
