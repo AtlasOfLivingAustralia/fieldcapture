@@ -396,7 +396,9 @@ class MetadataService {
 
     Map updateInvestmentPriorityCategory(String category, List<String> investmentPriorityIds) {
         String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/updateInvestmentPriorityCategory"
-        webService.doPost(url, [category:category, investmentPriorityIds:investmentPriorityIds])
+        Map resp = webService.doPost(url, [category:category, investmentPriorityIds:investmentPriorityIds])
+        grailsCacheManager.getCache('investmentPriorityCategories')?.clear()
+        resp
     }
 
 
