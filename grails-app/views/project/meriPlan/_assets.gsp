@@ -46,7 +46,7 @@
     <g:if test="${autoSelectCategory}">
         <td class="asset-category required">
                 <select type="text" class="form-select form-select-sm" readonly="readonly" placeholder="${categoryPlaceholder ?:"Select an asset..."}"
-                        data-bind="value:category, options:[$root.assetCategory(description(), ${priorityCategories})], disable: $parent.isProjectDetailsLocked()"></select>
+                        data-bind="value:category, options:[$root.assetCategory(description(), <fc:modelAsJavascript model="${priorityCategories}" default="null"/>)], disable: $parent.isProjectDetailsLocked()"></select>
 
         </td>
     </g:if>
