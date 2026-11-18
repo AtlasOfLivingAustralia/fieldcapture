@@ -170,12 +170,15 @@
             self.featureIndex = {};
             self.allMarkers = [];
         },
-        replaceAllFeatures: function(features) {
+        replaceAllFeatures: function(features, doNotFitBounds) {
+            doNotFitBounds = doNotFitBounds || false;
             this.features.features = features;
             this.locationsLoaded = 0;
-            this.map.clearMarkers();
-            this.map.clearLayers();
-            this.load(features);
+            if (!doNotFitBounds) {
+                this.map.clearMarkers();
+                this.map.clearLayers();
+            }
+            this.load(features, doNotFitBounds);
         },
         mapSite: function(site){
             var self = this;
@@ -209,7 +212,7 @@
             }
         },
         // loads the features
-        load: function(features) {
+        load: function(features, doNotFitBounds) {
             if(features === undefined || features.length == 0){
                 return;
             }
@@ -236,7 +239,7 @@
                     }
                     else if (loc.properties) {
                         layerOptions = {
-                            style: map.getStyleForSite(loc.properties),
+                            style: loc.properties.style || map.getStyleForSite(loc.properties),
                             wmsOptions: {
                                 sld_body: map.getSldBodyForSite(loc.properties)
                             }
@@ -267,11 +270,19 @@
                     });
                 }
 
+                if (typeof geoJSON.properties.createPopupContent === 'function' && layer.bindPopup) {
+                    layer.unbindPopup();
+                    layer.once('click', function (e) {
+                        e.originalEvent.stopPropagation();
+                        layer.bindPopup(geoJSON.properties.createPopupContent(), { autoPan: false, keepInView: false}).openPopup(e.latlng);
+                    });
+                }
+
                 self.addFeature(layer, geoJSON.properties.loc);
                 self.allMarkers.push(layer);
             });
 
-            self.map.fitBounds();
+            !doNotFitBounds && self.map.fitBounds();
         },
         addFeature: function (layer, loc) {
             var self = this;
