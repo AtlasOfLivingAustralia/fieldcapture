@@ -2095,7 +2095,7 @@ function OutcomesViewModel(outcomes, options) {
         function isSelected(priority) {
             investmentPriorityIds = ko.utils.unwrapObservable(investmentPriorityIds);
             if (Array.isArray(investmentPriorityIds)) {
-                return investmentPriorityIds && investmentPriorityIds.indexOf(priority.investmentPriorityId) >= 0;
+                return investmentPriorityIds.indexOf(priority) >= 0;
             }
             else {
                 return investmentPriorityIds === priority;
