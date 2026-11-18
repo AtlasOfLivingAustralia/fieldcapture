@@ -645,6 +645,7 @@ class AdminController {
         render result as JSON
     }
 
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
     def mergeInvestmentPriority(MergeInvestmentPriorityCommand command) {
         if (command.hasErrors()) {
             respond command.errors
@@ -655,6 +656,7 @@ class AdminController {
         }
     }
 
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
     def saveInvestmentPriority(SaveInvestmentPriorityCommand command) {
         if (command.hasErrors()) {
             respond command.errors
@@ -665,6 +667,7 @@ class AdminController {
         }
     }
 
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
     def deleteInvestmentPriority(String id) {
         if (!id) {
             respond([status: HttpStatus.SC_BAD_REQUEST], [error:"Missing property id"])
@@ -676,6 +679,7 @@ class AdminController {
         respond response
     }
 
+    @PreAuthorise(accessLevel = 'siteAdmin', redirectController = "admin")
     def updateInvestmentPriorityCategory() {
 
         Map results = [:]
