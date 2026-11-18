@@ -202,7 +202,7 @@
 
     function setupSiteRendering(mapAla, points) {
         var map = mapAla.getMapImpl();
-        var zoomThreshold = 6;
+        var zoomThreshold = 8;
         var activeMode = null;
         var featureLayer = null;
         mapAla.setZoomToObject(false);
@@ -239,7 +239,7 @@
             alaMap.allMarkers = [];
             alaMap.featureIndex = {};
             activeMode = mode;
-            var bounds = map.getBounds().pad(0.5);
+            var bounds = map.getBounds().pad(0.1);
             var pointsInBounds = points.filter(function(point) {
                 var latLng = L.latLng(
                     point.geometry.coordinates[1],
