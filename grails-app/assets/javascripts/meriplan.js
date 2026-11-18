@@ -693,7 +693,7 @@ function MERIPlan(project, projectService, config) {
                     // remove the deleted investment priority from the MERI plan and show a validation error on the select box.
                     if (error.field && error.field.indexOf('assets') >= 0) {
                         let deletedInvestmentPriorityId = error['rejected-value'];
-                        $('select:has(option[value="'+deletedInvestmentPriorityId+'"]:checked').validationEngine("showPrompt", error.message, "topRight", true);
+                        $('select:has(option[value="'+deletedInvestmentPriorityId+'"]:checked)').validationEngine("showPrompt", error.message, "topRight", true);
                         self.meriPlan().outcomes.removePriority(deletedInvestmentPriorityId);
 
                     }
