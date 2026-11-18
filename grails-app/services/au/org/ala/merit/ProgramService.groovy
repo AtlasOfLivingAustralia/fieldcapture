@@ -298,8 +298,9 @@ class ProgramService {
         List outcomeFields = [
                 'custom.details.outcomes.primaryOutcome.description',
                 'custom.details.outcomes.secondaryOutcomes.description',
-                'custom.details.outcomes.midTermOutcomes.description',
-                'custom.details.outcomes.shortTermOutcomes.description',
+                'custom.details.outcomes.midTermOutcomes.relatedOutcome',
+                'custom.details.outcomes.shortTermOutcomes.relatedOutcome',
+                'custom.details.outcomes.projectTermOutcomes.relatedOutcome'
         ]
         Map params = [fq: 'programId:' + programId, include: outcomeFields]
         Map result = searchService.allProjects(params)
@@ -308,13 +309,28 @@ class ProgramService {
             Map outcomes = hit._source?.custom?.details?.outcomes ?: [:]
 
             outcomes.each { k, v ->
-                if (v?.description) {
-                    // Projects have a single primary outcome but can have multiple secondary, midTerm and shortTerm outcomes
-                    if (k == 'primaryOutcome') {
-                        outcomesInUse << v.description
-                    } else {
-                        outcomesInUse.addAll(v.description)
-                    }
+                switch (k) {
+                    case 'primaryOutcome':
+                        if (v?.description) {
+                            outcomesInUse << v.description
+                        }
+                        break
+                    case 'secondaryOutcomes':
+                        v?.each { Map outcome ->
+                            if (outcome?.description) {
+                                outcomesInUse << outcome.description
+                            }
+                        }
+                        break
+                    case 'midTermOutcomes':
+                    case 'shortTermOutcomes':
+                    case 'projectTermOutcomes':
+                        v?.each { Map outcome ->
+                           if (outcome?.relatedOutcome) {
+                                outcomesInUse << outcome.relatedOutcome
+                           }
+                        }
+                        break
                 }
             }
         }
