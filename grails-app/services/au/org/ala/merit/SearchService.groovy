@@ -92,9 +92,10 @@ class SearchService {
 
         def url = grailsApplication.config.getProperty('ecodata.baseUrl') + 'search/elasticGeo' + commonService.buildUrlParamsFromMap(searchParams)
         log.debug "url = $url"
-        Map result = webService.getJson2(url)
+        Map result = webService.getJson2(url, 60000)
 
         Map geoData = result.resp
+        removeUnnecessarySiteProperties(geoData)
         // Reduce precision of coordinates to 1 decimal place.
         if (reducePrecision) {
             reducePrecisionOfPoints(1, geoData)
@@ -110,6 +111,14 @@ class SearchService {
                     site.loc.lon = (site.loc.lon as BigDecimal).setScale(numberOfDecimalPlaces, RoundingMode.HALF_UP)
                     site.loc.lat = (site.loc.lat as BigDecimal).setScale(numberOfDecimalPlaces, RoundingMode.HALF_UP)
                 }
+            }
+        }
+    }
+
+    private void removeUnnecessarySiteProperties(Map geoData) {
+        geoData?.projects?.each { project ->
+            project.geo?.each { site ->
+                site.remove("geometry")
             }
         }
     }
