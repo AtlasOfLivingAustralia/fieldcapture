@@ -250,9 +250,15 @@
     }
 
     function setupHeatMap(heatMapPoints) {
-        var mapImpl = alaMap.map.getMapImpl();
+        var mapImpl = alaMap.map.getMapImpl(),
+            featureLayer;
         var ZOOM_THRESHOLD = 6;
 
+        mapImpl.eachLayer(function(layer) {
+            if (layer instanceof L.FeatureGroup) {
+                featureLayer = layer;
+            }
+        })
         if (heatLayer) {
             mapImpl.removeLayer(heatLayer);
             heatLayer = null;
@@ -263,20 +269,9 @@
         }
 
         var toggleMarkers = function(visible) {
-            $.each(alaMap.featureIndex, function(id, featureGroup) {
-                $.each(featureGroup, function(i, feature) {
-                    if (!feature || !mapImpl.hasLayer) {
-                        return;
-                    }
-                    if (visible) {
-                        if (!mapImpl.hasLayer(feature)) {
-                            mapImpl.addLayer(feature);
-                        }
-                    }
-                    else if (mapImpl.hasLayer(feature)) {
-                        mapImpl.removeLayer(feature);
-                    }
-                });
+            featureLayer.setStyle({
+                opacity: visible ? 0.5 : 0,
+                fillOpacity: visible ? 0.5 : 0
             });
         };
 

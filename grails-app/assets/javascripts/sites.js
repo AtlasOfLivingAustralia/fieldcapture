@@ -828,17 +828,16 @@ var createMap = function(options) {
     if (options.leafletIconPath) {
         L.Icon.Default.imagePath = options.leafletIconPath;
     }
-    if (options.useGoogleBaseMap) {
-        var googleLayer = L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'roadmap'});
-        var otherLayers = {
-            Roadmap: googleLayer,
-            Hybrid: L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'hybrid'}),
-            Terrain: L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'terrain'})
-        };
 
-        options.baseLayer = googleLayer;
-        options.otherLayers = otherLayers;
-    }
+    var googleLayer = L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'roadmap'});
+    var otherLayers = {
+        Roadmap: googleLayer,
+        Hybrid: L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'hybrid'}),
+        Terrain: L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'terrain'})
+    };
+
+    options.baseLayer = googleLayer;
+    options.otherLayers = otherLayers;
 
     map = new AlaMapAdapter(new ALA.Map(mapContainerId, options), options);
     return map;
