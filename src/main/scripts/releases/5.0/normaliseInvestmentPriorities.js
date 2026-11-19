@@ -390,6 +390,23 @@ function replaceInvestmentPrioritiesWithIds(project) {
             audit(project, project.projectId, 'au.org.ala.ecodata.Project', adminUserId);
         }
     }
+
+    let dataSets = project.custom.dataSets;
+    if (dataSets) {
+        for (let i = 0; i < dataSets.length; i++) {
+            let dataSet = dataSets[i];
+            if (dataSet.investmentPriorities) {
+                if (processInvestmentPriority(dataSet, 'investmentPriorities', project)) {
+                    changed = true;
+                }
+            }
+        }
+        if (changed) {
+            //print("Updating project " + project.projectId);
+            db.project.replaceOne({projectId: project.projectId}, project);
+            audit(project, project.projectId, 'au.org.ala.ecodata.Project', adminUserId);
+        }
+    }
 }
 
 

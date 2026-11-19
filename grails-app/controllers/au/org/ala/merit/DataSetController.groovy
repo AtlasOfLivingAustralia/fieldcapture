@@ -194,6 +194,13 @@ class DataSetController {
 
         Map projectData = projectData(id)
         Map dataSet = projectData.project?.custom?.dataSets?.find{it.dataSetId == dataSetId}
+
+        // If the data set has investment priorities, convert the investment priority ids to names for display in the view.
+        dataSet.investmentPriorities = dataSet.investmentPriorities?.collect{ String investmentPriorityId ->
+            Map ip = projectData.priorities.find{it.investmentPriorityId == investmentPriorityId}
+            ip?.name
+        }
+
         if (!dataSet) {
             render status: HttpStatus.NOT_FOUND
         }
