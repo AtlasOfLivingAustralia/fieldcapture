@@ -200,9 +200,10 @@ class ProgramServiceSpec extends Specification implements AutowiredTest{
                                                         details: [
                                                                 outcomes: [
                                                                         primaryOutcome: [description: "Primary Outcome"],
-                                                                        secondaryOutcomes: [description: ["Secondary Outcome 1", "Secondary Outcome 2"]],
-                                                                        midTermOutcomes: [description: ["Mid Term Outcome"]],
-                                                                        shortTermOutcomes: [description: ["Short Term Outcome 1", "Short Term Outcome 2"]]
+                                                                        secondaryOutcomes: [[description: "Secondary Outcome 1"], ["description":"Secondary Outcome 2"]],
+                                                                        midTermOutcomes: [[relatedOutcome: "Mid Term Outcome"]],
+                                                                        shortTermOutcomes: [[relatedOutcome: "Short Term Outcome 1"], [relatedOutcome: "Short Term Outcome 2"]],
+                                                                        projectTermOutcomes: [[relatedOutcome: "Project Term Outcome"]]
                                                                 ]
                                                         ]
                                                 ]
@@ -223,7 +224,8 @@ class ProgramServiceSpec extends Specification implements AutowiredTest{
                 "Secondary Outcome 2",
                 "Mid Term Outcome",
                 "Short Term Outcome 1",
-                "Short Term Outcome 2"
+                "Short Term Outcome 2",
+                "Project Term Outcome"
         ] as Set
     }
 

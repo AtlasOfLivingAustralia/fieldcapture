@@ -92,7 +92,8 @@ class ProjectConfigurationService {
         // Outcomes are defined by the program (optionally replaced by the project)
         programConfig.outcomes = projectConfig.outcomes ?: (program.outcomes ?: [])
 
-        programConfig.priorities = getInvestmentPriorities(project, programConfig.outcomes) ?: []
+        programConfig.priorities = getInvestmentPrioritiesForOutcomes(programConfig.outcomes)
+
         programConfig.themes = program.themes ?: []
         programConfig.program = program
 
@@ -110,11 +111,6 @@ class ProjectConfigurationService {
             // management units but not others)
             programConfig.priorities = programConfig.priorities.findAll{
                 !it.managementUnits || it.managementUnits?.contains(project.managementUnitId)
-            }
-
-            // If the program doesn't define outcomes, use ones for the management unit.
-            if (!programConfig.outcomes && managementUnit.outcomes) {
-                programConfig.outcomes = managementUnit.outcomes
             }
 
             // Allow management units to override project reporting frequency
@@ -143,6 +139,10 @@ class ProjectConfigurationService {
                     }
                 }
             }
+        }
+        List orphanedPriorities = getOrphanedProjectInvestmentPriorities(project, programConfig.priorities)
+        if (orphanedPriorities) {
+            programConfig.priorities.addAll(orphanedPriorities)
         }
         programConfig
     }
@@ -212,19 +212,19 @@ class ProjectConfigurationService {
      * @param project the Project of interest
      * @param programOutcomes the set of outcomes and their categories configured for the program.
      */
-    private List<Map> getInvestmentPriorities(Map project, List programOutcomes) {
-        List<Map> investmentPriorities = getInvestmentPrioritiesForOutcomes(programOutcomes)
+    private List<Map> getOrphanedProjectInvestmentPriorities(Map project, List programInvestmentPriorities) {
 
         List<String> recordedInvestmentPriorityIds = getInvestmentPrioritiesForProject(project)
 
-        List<String> orphanedPriorities = recordedInvestmentPriorityIds.findAll{ String id ->
-            !investmentPriorities.find{ it.investmentPriorityId == id }
+        List<String> orphanedPriorityIds = recordedInvestmentPriorityIds.findAll{ String id ->
+            !programInvestmentPriorities.find{ it.investmentPriorityId == id }
         }
-        if (orphanedPriorities) {
+        List orphanedPriorities = []
+        if (orphanedPriorityIds) {
             log.warn("Project ${project.projectId} has recorded investment priorities that are not associated with any program outcomes. These priorities will still be available for selection but should be reviewed. Orphaned priority ids: ${orphanedPriorities}")
-            investmentPriorities += metadataService.findInvestmentPriorities([investmentPriorityId:orphanedPriorities])
+            orphanedPriorities += metadataService.findInvestmentPriorities([investmentPriorityId:orphanedPriorityIds])
         }
-        investmentPriorities
+        orphanedPriorities
     }
 
     private List<Map> getInvestmentPrioritiesForOutcomes(List outcomes) {
@@ -235,7 +235,7 @@ class ProjectConfigurationService {
 
     }
 
-    List <String> getInvestmentPrioritiesForProject(Map project) {
+    private List <String> getInvestmentPrioritiesForProject(Map project) {
         List investmentPriorities = []
         Map meriPlan = project.custom?.details
         if (meriPlan) {
