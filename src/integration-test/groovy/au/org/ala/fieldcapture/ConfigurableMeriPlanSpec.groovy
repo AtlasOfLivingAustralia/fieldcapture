@@ -396,66 +396,73 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
         withWindow([close:true], "meri-plan-report") {
             at MeriPlanPDFPage
             closePrintInstructions()
-            page.meriPlan.projectName.text() == "MERI plan edited name"
-            page.meriPlan.projectDescription.text() == "MERI plan edited description"
-            page.meriPlan.priorityPlace.supportsPriorityPlaces.text() == 'Yes'
-            page.meriPlan.priorityPlace.priorityPlace.text() == 'Priority place 1'
-            page.meriPlan.firstNationsPeopleInvolvement.supportsFirstNationsPeopleInvolvement.text() == 'Yes'
-            page.meriPlan.firstNationsPeopleInvolvement.firstNationsPeopleInvolvement.text() == 'Leading'
+            assert page.meriPlan.projectName.text() == "MERI plan edited name"
+            assert page.meriPlan.projectDescription.text() == "MERI plan edited description"
+            assert page.meriPlan.priorityPlace.supportsPriorityPlaces.text() == 'Yes'
+            assert page.meriPlan.priorityPlace.priorityPlace.text() == 'Priority place 1'
+            assert page.meriPlan.firstNationsPeopleInvolvement.supportsFirstNationsPeopleInvolvement.text() == 'Yes'
+            assert page.meriPlan.firstNationsPeopleInvolvement.firstNationsPeopleInvolvement.text() == 'Leading'
 
-            page.meriPlan.primaryOutcome.text() == "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
-            page.meriPlan.primaryPriority.text() == "ip1"
-            page.meriPlan.secondaryOutcomes[0].outcome.text() == "By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
-            page.meriPlan.secondaryOutcomes[0].priority.text() == "Swainsona recta"
-            page.meriPlan.mediumTermOutcomes.size() == 2
-            page.meriPlan.mediumTermOutcomes[0].outcome.text() == "Medium term outcome 1"
-            page.meriPlan.mediumTermOutcomes[0].priority.text() == "Swainsona recta"
-            page.meriPlan.mediumTermOutcomes[0].relatedProgramOutcomes.text() == "Medium term outcome 1"
-            page.meriPlan.mediumTermOutcomes[1].outcome.text() == "Medium term outcome 2"
-            page.meriPlan.mediumTermOutcomes[1].priority.text() == "Ginini Flats Wetland Complex"
-            page.meriPlan.mediumTermOutcomes[1].relatedProgramOutcomes.text() == "Medium term outcome 2"
-            page.meriPlan.shortTermOutcomes.size() == 1
-            page.meriPlan.shortTermOutcomes[0].outcome.text() == "Short term outcome 1"
-            page.meriPlan.shortTermOutcomes[0].priority.text() == "Swainsona recta"
-            page.meriPlan.shortTermOutcomes[0].relatedProgramOutcomes.text() == "Short term outcome 3"
+            assert page.meriPlan.primaryOutcome.text() == "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions"
+            assert page.meriPlan.primaryPriority.text() == "Ginini Flats Wetland Complex"
+            assert page.meriPlan.secondaryOutcomes[0].outcome.text() == "By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved."
+            assert page.meriPlan.secondaryOutcomes[0].priority.text() == "Swainsona recta"
+            assert page.meriPlan.mediumTermOutcomes.size() == 2
+            interact {
+                moveToElement(page.meriPlan.mediumTermOutcomes[0].outcome)
+            }
+            assert page.meriPlan.mediumTermOutcomes[0].outcome.text() == "Medium term outcome 1"
+            assert page.meriPlan.mediumTermOutcomes[0].priority.text() == "Swainsona recta"
+            assert page.meriPlan.mediumTermOutcomes[0].relatedProgramOutcomes.text() == "Medium term outcome 1"
+            assert page.meriPlan.mediumTermOutcomes[1].outcome.text() == "Medium term outcome 2"
+            assert page.meriPlan.mediumTermOutcomes[1].priority.text() == "Ginini Flats Wetland Complex"
+            assert page.meriPlan.mediumTermOutcomes[1].relatedProgramOutcomes.text() == "Medium term outcome 2"
+            assert page.meriPlan.shortTermOutcomes.size() == 1
+            assert page.meriPlan.shortTermOutcomes[0].outcome.text() == "Short term outcome 1"
+            assert page.meriPlan.shortTermOutcomes[0].priority.text() == "Swainsona recta"
+            assert page.meriPlan.shortTermOutcomes[0].relatedProgramOutcomes.text() == "Short term outcome 3"
 
-            page.meriPlan.keyThreats[0].threatCode.text() == "Key threat 2"
-            page.meriPlan.keyThreats[0].threat.text() == "Threat 1"
-            page.meriPlan.keyThreats[0].intervention.text() == "Intervention 1"
-            page.meriPlan.keyThreats[0].targetMeasures.text() == 'Communication materials - Number of communication materials published'
-            page.meriPlan.keyThreats[0].evidence.text() == "Evidence 1"
-            page.meriPlan.keyThreats[0].relatedOutcomes.text() == 'ST1'
-            page.meriPlan.projectMethodology.text() == "Project assumptions 1"
-            page.meriPlan.projectPartnerships[0].name == 'partner name'
-            page.meriPlan.projectPartnerships[0].partnership == 'partnership'
-            page.meriPlan.projectPartnerships[0].orgType == 'Trust'
-            page.meriPlan.extendedBaseline.projectBaselines[0].outcome.text() == "MT1"
-            page.meriPlan.extendedBaseline.projectBaselines[0].monitoringData.text() == "Needs to be collected"
-            page.meriPlan.extendedBaseline.projectBaselines[0].baseline.text() == "Project baseline 1"
-            page.meriPlan.extendedBaseline.projectBaselines[0].targetMeasures.text() == 'Weed distribution survey - Area (ha) surveyed for weeds'
-            page.meriPlan.extendedBaseline.projectBaselines[0].methodProtocols.text() == 'Category 1'
-            page.meriPlan.extendedBaseline.projectBaselines[0].evidence.text() == "Baseline Evidence 1"
-            page.meriPlan.monitoringIndicators[0].methodProtocols.text() == 'Category 1'
-            page.meriPlan.monitoringIndicators[0].indicator.text() == "Indicator 1"
-            page.meriPlan.monitoringIndicators[0].targetMeasures.text() == 'Collecting, or synthesising baseline data - Number of baseline data sets collected and/or synthesised'
-            page.meriPlan.monitoringIndicators[0].evidence.text() == "Evidence 2"
-            page.meriPlan.reviewMethodology.text() == "Review methodology"
-            page.meriPlan.nationalAndRegionalPlans[0].name.text() == "Plan 1"
-            page.meriPlan.nationalAndRegionalPlans[0].section.text() == "Section 1"
-            page.meriPlan.nationalAndRegionalPlans[0].alignment.text() == "Alignment 1"
-            page.meriPlan.nationalAndRegionalPlans[0].documentUrl.text() == "http://www.test.org"
-            page.meriPlan.serviceOutcomeTargets.serviceAndTargets[0].service.text() == "Collecting, or synthesising baseline data"
-            page.meriPlan.serviceOutcomeTargets.serviceAndTargets[0].targetMeasure.text() == "Number of baseline data sets collected and/or synthesised"
-            //page.meriPlan.serviceOutcomeTargets.outcomeTargets[0].outcomes.text() == "ST1,MT1"
-            // CI environment is only expecting ST1 here - need to investigate.
-            page.meriPlan.serviceOutcomeTargets.outcomeTargets[0].outcomes.text() == "ST1"
-            page.meriPlan.serviceOutcomeTargets.outcomeTargets[0].target.text() == "2"
-            page.meriPlan.serviceOutcomeTargets.serviceAndTargets[1].service.text() == "Weed distribution survey"
-            page.meriPlan.serviceOutcomeTargets.serviceAndTargets[1].targetMeasure.text() == "Area (ha) surveyed for weeds"
-            page.meriPlan.serviceOutcomeTargets.outcomeTargets[1].outcomes.text() == "MT1"
-            page.meriPlan.serviceOutcomeTargets.outcomeTargets[1].target.text() == "1"
+            assert page.meriPlan.keyThreats[0].threatCode.text() == "Key threat 2"
+            assert page.meriPlan.keyThreats[0].threat.text() == "Threat 1"
+            assert page.meriPlan.keyThreats[0].intervention.text() == "Intervention 1"
+            assert page.meriPlan.keyThreats[0].targetMeasures.text() == 'Communication materials - Number of communication materials published'
+            assert page.meriPlan.keyThreats[0].evidence.text() == "Evidence 1"
+            assert page.meriPlan.keyThreats[0].relatedOutcomes.text() == 'ST1'
+            assert page.meriPlan.projectMethodology.text() == "Project assumptions 1"
+            assert page.meriPlan.projectPartnerships[0].name == 'partner name'
+            assert page.meriPlan.projectPartnerships[0].partnership == 'partnership'
+            assert page.meriPlan.projectPartnerships[0].orgType == 'Trust'
+            assert page.meriPlan.extendedBaseline.projectBaselines[0].outcome.text() == "MT1"
+            assert page.meriPlan.extendedBaseline.projectBaselines[0].monitoringData.text() == "Needs to be collected"
+            assert page.meriPlan.extendedBaseline.projectBaselines[0].baseline.text() == "Project baseline 1"
+            assert page.meriPlan.extendedBaseline.projectBaselines[0].targetMeasures.text() == 'Weed distribution survey - Area (ha) surveyed for weeds'
+            assert page.meriPlan.extendedBaseline.projectBaselines[0].methodProtocols.text() == 'Category 1'
+            assert page.meriPlan.extendedBaseline.projectBaselines[0].evidence.text() == "Baseline Evidence 1"
+            assert page.meriPlan.monitoringIndicators[0].methodProtocols.text() == 'Category 1'
+            assert page.meriPlan.monitoringIndicators[0].indicator.text() == "Indicator 1"
+            assert page.meriPlan.monitoringIndicators[0].targetMeasures.text() == 'Collecting, or synthesising baseline data - Number of baseline data sets collected and/or synthesised'
+            assert page.meriPlan.monitoringIndicators[0].evidence.text() == "Evidence 2"
+            assert page.meriPlan.reviewMethodology.text() == "Review methodology"
+            assert page.meriPlan.nationalAndRegionalPlans[0].name.text() == "Plan 1"
+            assert page.meriPlan.nationalAndRegionalPlans[0].section.text() == "Section 1"
+            assert page.meriPlan.nationalAndRegionalPlans[0].alignment.text() == "Alignment 1"
+            assert page.meriPlan.nationalAndRegionalPlans[0].documentUrl.text() == "http://www.test.org"
+            assert page.meriPlan.serviceOutcomeTargets.serviceAndTargets[0].service.text() == "Collecting, or synthesising baseline data"
+            assert page.meriPlan.serviceOutcomeTargets.serviceAndTargets[0].targetMeasure.text() == "Number of baseline data sets collected and/or synthesised"
+            assert page.meriPlan.serviceOutcomeTargets.outcomeTargets[0].outcomes.text() == "MT1"
+            assert page.meriPlan.serviceOutcomeTargets.outcomeTargets[0].target.text() == "2"
+            assert page.meriPlan.serviceOutcomeTargets.serviceAndTargets[1].service.text() == "Communication materials"
+            assert page.meriPlan.serviceOutcomeTargets.serviceAndTargets[1].targetMeasure.text() == "Number of communication materials published"
+            assert page.meriPlan.serviceOutcomeTargets.outcomeTargets[1].outcomes.text() == "ST1"
+            assert page.meriPlan.serviceOutcomeTargets.outcomeTargets[1].target.text() == "1"
 
-            page.meriPlan.serviceForecasts.displayed == false
+            assert page.meriPlan.serviceOutcomeTargets.serviceAndTargets[2].service.text() == "Weed distribution survey"
+            assert page.meriPlan.serviceOutcomeTargets.serviceAndTargets[2].targetMeasure.text() == "Area (ha) surveyed for weeds"
+            assert page.meriPlan.serviceOutcomeTargets.outcomeTargets[2].outcomes.text() == "MT1"
+            assert page.meriPlan.serviceOutcomeTargets.outcomeTargets[2].target.text() == "3"
+
+            assert page.meriPlan.serviceForecasts.displayed == false
+            true
         }
     }
 
@@ -679,27 +686,28 @@ class ConfigurableMeriPlanSpec extends StubbedCasSpec {
             closePrintInstructions()
 
 
-        page.meriPlan.assets[0].description.text() == "ip16"
-        waitFor { page.meriPlan.objectives() == ["objective 2", "Other objective"] }
+            assert page.meriPlan.assets[0].description.text() == "Soil carbon"
+            waitFor { page.meriPlan.objectives() == ["objective 2", "Other objective"] }
 
-            page.meriPlan.shortTermOutcomes[0].outcome.text() == "outcome 1"
-            page.meriPlan.projectDescription.text() == 'Project description'
+            assert page.meriPlan.shortTermOutcomes[0].outcome.text() == "outcome 1"
+            assert page.meriPlan.projectDescription.text() == 'Project description'
 
-        // Sometimes .text() returns an empty string if the element is not in the viewport.
-        // Trying this as a workaround.
-        interact {
-                moveToElement(page.meriPlan.activities)
-        }
-
-            page.meriPlan.projectMethodology.text() == 'Project Methodology'
-            page.meriPlan.monitoringIndicators[0].indicator.text() == "Indicator 1"
-            page.meriPlan.monitoringIndicators[0].approach.text() == 'Approach 1'
-            page.meriPlan.adaptiveManagement.text() == 'Adaptive management'
-            page.meriPlan.projectPartnerships[0].name == 'partner name'
-            page.meriPlan.projectPartnerships[0].partnership == 'partnership'
-            page.meriPlan.projectPartnerships[0].orgType == 'Trust'
-            page.meriPlan.activities() == ["activity 1", 'Other activity']
+            // Sometimes .text() returns an empty string if the element is not in the viewport.
+            // Trying this as a workaround.
+            interact {
+                    moveToElement(page.meriPlan.activities)
             }
+
+            assert page.meriPlan.projectMethodology.text() == 'Project Methodology'
+            assert page.meriPlan.monitoringIndicators[0].indicator.text() == "Indicator 1"
+            assert page.meriPlan.monitoringIndicators[0].approach.text() == 'Approach 1'
+            assert page.meriPlan.adaptiveManagement.text() == 'Adaptive management'
+            assert page.meriPlan.projectPartnerships[0].name == 'partner name'
+            assert page.meriPlan.projectPartnerships[0].partnership == 'partnership'
+            assert page.meriPlan.projectPartnerships[0].orgType == 'Trust'
+            assert page.meriPlan.activities() == ["activity 1", 'Other activity']
+            true
+        }
 
     }
 
