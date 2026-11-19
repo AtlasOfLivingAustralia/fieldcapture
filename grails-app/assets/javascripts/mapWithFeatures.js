@@ -123,6 +123,9 @@
                 };
             this.features = features;
             // handle options
+            if (options.style) {
+                config.style = options.style;
+            }
             if (options.mapContainer) {
                 this.containerId = options.mapContainer;
             }

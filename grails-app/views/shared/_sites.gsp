@@ -120,7 +120,12 @@
                                                 siteId: el.siteId,
                                                 siteName: el.siteName,
                                                 legendName: el.legendName,
-                                                createPopupContent: generatePopup
+                                                createPopupContent: generatePopup,
+                                                style: {
+                                                    fillColor: '#00f',
+                                                    color: '#00f',
+                                                    weight: 4
+                                                }
                                             },
                                             geometry: {
                                                 type: POINT,
@@ -258,16 +263,19 @@
                 return false;
             });
 
-            if (mode === 'heat' && points.length > HEATMAP_POINT_THRESHOLD) {
+            if (mode === 'heat' && pointsInBounds.length > HEATMAP_POINT_THRESHOLD) {
+                var multiplier = Math.min(10, points.length / pointsInBounds.length),
+                    boost = Math.pow(multiplier, 2);
                 activeLayer = L.heatLayer(pointsInBounds.map(function(point) {
                     return [
                         point.geometry.coordinates[1],
                         point.geometry.coordinates[0],
-                        1
+                        boost
                     ];
                 }), {
+                    max: 100,
                     maxZoom: 16,
-                    radius: 20,
+                    radius: Math.min(50, 20 * multiplier),
                     blur: 15
                 }).addTo(map);
 
@@ -309,7 +317,8 @@
             layer.excludeBounds = true;
             mapData.features.push(layer);
         });
-
+        // Zoom into Australia, current default is 3.
+        alaMap.defaultZoom = 4;
         init_map_with_features({
                     mapContainer: "map",
                     zoomToBounds:true,
