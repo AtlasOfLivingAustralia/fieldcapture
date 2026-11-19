@@ -362,14 +362,18 @@ function MERIPlan(project, projectService, config) {
      * @param category a string or array of strings of categories to match.  If not supplied all priorities will be returned.
      * @returns {Array}
      */
-    self.priorityAssets = function(category) {
+    self.priorityAssets = function(asset, category) {
         var matchingPriorities = _.filter(config.priorities || [], function (priority) {
+            if (priority.investmentPriorityId !== asset) {
+                return true;
+            }
             if (_.isArray(category)) {
                 return _.find(category, function(cat) { return _.contains(priority.categories, cat)} );
             } else {
                 return (!category || _.contains(priority.categories, category));
             }
         });
+
         return matchingPriorities;
     };
 

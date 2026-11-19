@@ -33,7 +33,7 @@
 
         <g:if test="${useCategorySelection}">
             <select class="form-select form-select-sm" data-validation-engine="validate[required]"
-                    data-bind="select2:{}, value:description, optionsCaption:'${placeHolder  ?: "Please select..."}', optionsText:'name',  optionsValue:'investmentPriorityId', options: $root.priorityAssets(category()), disable: !category() || $parent.isProjectDetailsLocked()">
+                    data-bind="select2:{}, value:description, optionsCaption:'${placeHolder  ?: "Please select..."}', optionsText:'name',  optionsValue:'investmentPriorityId', options: $root.priorityAssets(description, category()), disable: !category() || $parent.isProjectDetailsLocked()">
             </select>
         </g:if>
         <g:else>
