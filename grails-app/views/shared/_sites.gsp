@@ -1,7 +1,7 @@
 
 <div class="tab-pane" id="mapView">
     <div class="map-box">
-        <div id="map" style="width: 100%; height: 100%;"></div>
+        <div id="map" style="width: 100%; height: 100%;" data-leaflet-img="${assetPath(src: 'leaflet/images/')}"></div>
     </div>
     <div style=" float: right;" id="map-info">
         <span id="numberOfProjects">${projectCount ?: 0}</span> projects with <span id="numberOfSites">[calculating]</span>
@@ -36,11 +36,15 @@
 </div>
 
 <asset:script>
-
+    const HEATMAP_POINT_THRESHOLD = 100, POINT = "Point", CIRCLEMARKER = "CircleMarker";
+    var projectLinkPrefix = "${createLink(controller:'project')}/";
+    var siteLinkPrefix = "${createLink(controller:'site')}/";
     var heatLayer = null;
     var heatZoomHandler = null;
     var resetControl = null;
     var legendControl = null;
+    var siteRendering = null;
+    var activeLayer = null;
 
     function generateMap(facetList, markBy, mapOptions) {
 
@@ -79,12 +83,8 @@
             var projectIdMap = {};
             var geoPoints = data;
             var legends = [];
-            var heatMapPoints = [];
 
             if (geoPoints.total) {
-                var projectLinkPrefix = "${createLink(controller:'project')}/";
-                var siteLinkPrefix = "${createLink(controller:'site')}/";
-
                 if (geoPoints.total > 0) {
                     var staticColors =
                             ['#458B00','#FF0000','#FF00FF','#282828','#8B4513','#FF8000','#1E90FF','#a549f6','#20988e','#afaec9',
@@ -97,7 +97,7 @@
                         legend.count = facet.count;
                         legends.push(legend);
                     });
-                    var useHeatMap = (!facetsUsed && geoPoints.projects.length > 250 && (!geoPoints.selectedFacetTerms || geoPoints.selectedFacetTerms.length == 0));
+
                     $.each(geoPoints.projects, function(j, project) {
 
                         var projectId = project.projectId
@@ -108,42 +108,43 @@
 
                                 var lat = parseFloat(el.loc.lat);
                                 var lon = parseFloat(el.loc.lon);
-                                var latLng = L.latLng(lat, lon);
                                 if (!isNaN(lat) && !isNaN(lon)) {
                                     if (lat >= -90 && lat <=90 && lon >= -180 && lon <= 180) {
-
                                         var point = {
-                                            type: "Point",
-                                            point_type: "CircleMarker",
-                                            projectId: projectId,
-                                            projectName: projectName,
-                                            siteId: el.siteId,
-                                            siteName: el.siteName,
-                                            legendName: el.legendName,
-                                            popupContent: generatePopup(projectLinkPrefix,projectId,projectName,project.org,siteLinkPrefix,el.siteId, el.siteName),
-                                            color: "-1",
-                                            coordinates: [lon, lat],
-                                            latitude: lat,
-                                            longitude: lon
-                                        }
+                                            type: "Feature",
+                                            properties: {
+                                                point_type: CIRCLEMARKER,
+                                                projectId: projectId,
+                                                projectName: projectName,
+                                                orgName: el.orgName,
+                                                siteId: el.siteId,
+                                                siteName: el.siteName,
+                                                legendName: el.legendName,
+                                                createPopupContent: generatePopup,
+                                                style: {
+                                                    fillColor: '#00f',
+                                                    color: '#00f',
+                                                    weight: 4
+                                                }
+                                            },
+                                            geometry: {
+                                                type: POINT,
+                                                coordinates: [lon, lat]
+                                            }
+                                        };
 
                                         if(el.index !== undefined && el.index != null){
-                                            point.style = {
+                                            point.properties.style = {
                                                 color: legends[el.index].color,
                                                 weight: 2,
                                                 fillOpacity: 0.5
                                             };
-                                            // point.color = legends[el.index].color;
-                                            point.legendName = el.legendName;
+                                            point.properties.legendName = el.legendName;
                                         }
                                         features.push(point);
 
                                         if (projectId) {
                                             projectIdMap[projectId] = true;
-                                        }
-
-                                        if (useHeatMap) {
-                                            heatMapPoints.push(latLng);
                                         }
                                     }
                                 }
@@ -151,6 +152,7 @@
                             });
                         }
                     });
+
 
                     if (facetList && facetList.length > 0) {
                         // convert projectIdMap to a list and add to global var
@@ -171,23 +173,128 @@
 
 
             var numSitesHtml = "";
-            var siteCount = features.length || heatMapPoints.length;
+            var siteCount = features.length;
             if(siteCount > 0){
                 numSitesHtml = siteCount + " sites";
             } else {
                 numSitesHtml = "0 sites <span class=\"label bg-danger\">No georeferenced points for the selected projects</span>";
             }
             $("#numberOfSites").html(numSitesHtml);
-
-            initialiseMap(features, mapOptions);
-
-            //setupHeatMap(heatMapPoints);
             features.length > 0 ? showLegends(legends) : "";
+            initialiseMap([], mapOptions);
+            siteRendering && siteRendering.dispose();
+            siteRendering = setupSiteRendering(
+                alaMap.map,
+                features
+            );
 
             }).fail(function (request, status, error) {
                 console.error("AJAX error", status, error);
             });
     }
+
+    function isFacetSelected(){
+        return $('#mapchange').val() != "-1";
+    }
+
+    function selectedLegends() {
+        var selected = [];
+        $('input[type="checkbox"][class="legendSelection"]:checked').each(function() {
+            selected.push($(this).val());
+        });
+        return selected;
+    }
+
+    function setupSiteRendering(mapAla, points) {
+        var map = mapAla.getMapImpl();
+        var zoomThreshold = 8;
+        var activeMode = null;
+        var featureLayer = null;
+        mapAla.setZoomToObject(false);
+        map.eachLayer(function(layer) {
+            if (layer instanceof L.FeatureGroup) {
+                featureLayer = layer;
+            }
+        });
+
+        function clearActiveLayer() {
+            if (!activeLayer) {
+                return;
+            }
+
+            map.removeLayer(activeLayer);
+
+            if (activeLayer instanceof L.LayerGroup) {
+                activeLayer.clearLayers();
+            }
+
+            activeLayer = null;
+        }
+
+        function render() {
+            var selections = selectedLegends();
+            var mode = map.getZoom() <= zoomThreshold ? 'heat' : 'markers';
+
+            clearActiveLayer();
+            (featureLayer.getLayers() || []).forEach(function(layer) {
+                if (layer instanceof L.CircleMarker) {
+                    featureLayer.removeLayer(layer);
+                }
+            });
+            alaMap.allMarkers = [];
+            alaMap.featureIndex = {};
+            activeMode = mode;
+            var bounds = map.getBounds().pad(0.1);
+            var pointsInBounds = points.filter(function(point) {
+                var latLng = L.latLng(
+                    point.geometry.coordinates[1],
+                    point.geometry.coordinates[0]
+                );
+
+                var boundsContains = bounds.contains(latLng),
+                    facetSelected = isFacetSelected();
+                if (boundsContains && !facetSelected) {
+                    return true;
+                }
+                else if (boundsContains && facetSelected) {
+                    return selections.indexOf(point.properties.legendName) >= 0;
+                }
+
+                return false;
+            });
+
+            if (mode === 'heat' && pointsInBounds.length > HEATMAP_POINT_THRESHOLD) {
+                var multiplier = Math.min(10, points.length / pointsInBounds.length),
+                    boost = Math.pow(multiplier, 2);
+                activeLayer = L.heatLayer(pointsInBounds.map(function(point) {
+                    return [
+                        point.geometry.coordinates[1],
+                        point.geometry.coordinates[0],
+                        boost
+                    ];
+                }), {
+                    max: 100,
+                    maxZoom: 16,
+                    radius: Math.min(50, 20 * multiplier),
+                    blur: 15
+                }).addTo(map);
+
+                return;
+            }
+
+            alaMap.replaceAllFeatures(pointsInBounds, true);
+        }
+
+        map.on('moveend', render);
+        render();
+        return {
+            render: render,
+            dispose: function dispose() {
+                map.off('moveend', render);
+                clearActiveLayer();
+            }
+        };
+    };
 
     function initialiseMap(features, mapOptions){
 
@@ -210,13 +317,15 @@
             layer.excludeBounds = true;
             mapData.features.push(layer);
         });
-
+        // Zoom into Australia, current default is 3.
+        alaMap.defaultZoom = 4;
         init_map_with_features({
                     mapContainer: "map",
                     zoomToBounds:true,
                     scrollwheel: false,
                     assignNameEnabled: false,
                     zoomLimit:16,
+                    spatialWmsUrl: "${grailsApplication.config.getProperty('spatial.wms.url')}",
                     featureService: "${createLink(controller: 'proxy', action:'feature')}",
                     wmsServer: "${grailsApplication.config.getProperty('spatial.geoserverUrl')}"
                 },
@@ -227,10 +336,12 @@
     }
 
 
-    function generatePopup(projectLinkPrefix, projectId, projectName, orgName, siteLinkPrefix, siteId, siteName){
-
-        //console.log('Generating popup for ' + siteId);
-
+    function generatePopup(){
+        var projectId = this.projectId,
+            projectName = this.projectName,
+            orgName = this.orgName,
+            siteId = this.siteId,
+            siteName = this.siteName;
         var html = "<div class='projectInfoWindow'>";
 
         if (projectId && projectName) {
@@ -244,76 +355,6 @@
 
         html+= "<div><i class='fa fa-map-marker'></i> Site: <a href='" +siteLinkPrefix + siteId + "'>" + siteName + "</a></div>";
         return html;
-    }
-
-    function setupHeatMap(heatMapPoints) {
-        var mapImpl = alaMap.map.getMapImpl();
-        var ZOOM_THRESHOLD = 8;
-
-        if (heatLayer) {
-            mapImpl.removeLayer(heatLayer);
-            heatLayer = null;
-        }
-        if (heatZoomHandler) {
-            mapImpl.off('zoomend', heatZoomHandler);
-            heatZoomHandler = null;
-        }
-
-        var toggleMarkers = function(visible) {
-            $.each(alaMap.featureIndex, function(id, featureGroup) {
-                $.each(featureGroup, function(i, feature) {
-                    if (!feature || !mapImpl.hasLayer) {
-                        return;
-                    }
-                    if (visible) {
-                        if (!mapImpl.hasLayer(feature)) {
-                            mapImpl.addLayer(feature);
-                        }
-                    }
-                    else if (mapImpl.hasLayer(feature)) {
-                        mapImpl.removeLayer(feature);
-                    }
-                });
-            });
-        };
-
-        alaMap.hideMarkers = function() {
-            toggleMarkers(false);
-        };
-        alaMap.showMarkers = function() {
-            toggleMarkers(true);
-        };
-
-        if (heatMapPoints.length === 0) {
-            return;
-        }
-
-        // Leaflet heat layer is optional; fall back to marker-only rendering if plugin is unavailable.
-        if (typeof L.heatLayer === 'function') {
-            heatLayer = L.heatLayer(heatMapPoints, {
-                maxZoom: 16,
-                radius: 20,
-                blur: 15
-            }).addTo(mapImpl);
-        }
-
-        heatZoomHandler = function() {
-            var oldZoom = alaMap.zoom;
-            var newZoom = mapImpl.getZoom();
-            alaMap.zoom = newZoom;
-
-            if ((!oldZoom || oldZoom > ZOOM_THRESHOLD) && newZoom <= ZOOM_THRESHOLD) {
-                alaMap.hideMarkers();
-            }
-            else if ((!oldZoom || oldZoom <= ZOOM_THRESHOLD) && newZoom > ZOOM_THRESHOLD) {
-                alaMap.showMarkers();
-            }
-        };
-        mapImpl.on('zoomend', heatZoomHandler);
-
-        if (mapImpl.getZoom() <= ZOOM_THRESHOLD) {
-            alaMap.hideMarkers();
-        }
     }
 
 
@@ -366,7 +407,10 @@
         });
         $('input[type="checkbox"][class="legendSelection"]').change(function() {
             var visible = $('#'+this.id).prop('checked');
+            // hides unselected legends on the map
             alaMap.toggleMarkerVisibility(this.value, visible);
+            // re-render heatmap if it is active, to ensure that the heatmap is only showing the selected legends
+            siteRendering.render();
         });
     }
 

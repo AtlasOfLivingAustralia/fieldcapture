@@ -57,7 +57,7 @@ class SearchServiceSpec extends Specification implements AutowiredTest{
         Map result = service.allProjectsWithSites(params, null, true)
 
         then:
-        1 * webService.getJson2(_) >> [resp: geoData, status: HttpStatus.SC_OK]
+        1 * webService.getJson2(_, _) >> [resp: geoData, status: HttpStatus.SC_OK]
 
         result.projects.size() == 1
         result.projects[0].geo.size() == 2
@@ -67,7 +67,7 @@ class SearchServiceSpec extends Specification implements AutowiredTest{
         result = service.allProjectsWithSites(params, null, false)
 
         then:
-        1 * webService.getJson2(_) >> [resp: geoData, status: HttpStatus.SC_OK]
+        1 * webService.getJson2(_, _) >> [resp: geoData, status: HttpStatus.SC_OK]
         result == geoData
     }
 

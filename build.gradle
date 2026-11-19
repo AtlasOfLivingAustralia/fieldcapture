@@ -201,7 +201,7 @@ dependencies {
     providedCompile "io.methvin:directory-watcher:0.4.0"
 
     if (!Boolean.valueOf(inplace)) {
-        implementation "org.grails.plugins:ecodata-client-plugin:9.4-SNAPSHOT"
+        implementation "org.grails.plugins:ecodata-client-plugin:9.4-SITES-SNAPSHOT"
     }
 }
 
@@ -287,7 +287,7 @@ clientDependencies {
         'frigus02-vkbeautify'("1.0.1") {
             include "vkbeautify.js"
         }
-
+        "leaflet.heat"("1.0.0")
     }
     bower {
         'html5shiv'("3.7.3", transitive:false)
@@ -308,7 +308,7 @@ assets {
                 '**/splaytree-ts.umd.js','**/robust-predicates/esm/**', '**/incircle.js','**/polyclip-ts.umd.js',
                 '**/leaflet-geoman.js', '**/index.js', '**/Leaflet.GoogleMutant.js', '**/cli.js',
                 'leaflet-manifest.js', '**/vendor-ext/**', '**/vendor-external/**', '**/vendor/**',
-                '**/ala-map*.js', '**/@turf/**', 'bulk-create-manifest.js'
+                '**/ala-map*.js', '**/@turf/**', 'bulk-create-manifest.js', '**/leaflet-heat.js', "**/leaflet-heat-global.js"
             ]
     ] //Example Exclude GLOB pattern
     includes = ['webjars/**/images/*']

@@ -150,6 +150,6 @@ class SpatialServiceSpec extends Specification implements AutowiredTest{
                 error: 'spatial service unavailable'
         ]
         result.success == false
-        result.message == 'An error occurred while checking if geometry is within Australia: spatial service unavailable'
+        result.message == 'Spatial Portal error occurred while checking geometry is within Australia'
     }
 }
