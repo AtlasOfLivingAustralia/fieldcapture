@@ -1,6 +1,7 @@
 load( "../../utils/audit.js");
 var newFacet = 'meriPlanAssetTypeFacet';
 var adminUserId = "system";
+let changed = false;
 let hub = db.hub.findOne({urlPath:'merit'});
 if (hub.adminFacets.indexOf(newFacet) < 0) {
     hub.adminFacets.push(newFacet);
