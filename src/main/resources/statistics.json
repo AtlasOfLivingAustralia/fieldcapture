@@ -113,7 +113,7 @@
       "type": "projectCount",
       "projectFilter": [
         "associatedProgramFacet:National Landcare Programme",
-        "meriPlanAssetTypeFacet:World Heritage area"
+        "meriPlanAssetTypeFacet:World Heritage Site"
       ]
     },
     "nlp9": {
