@@ -359,12 +359,13 @@ function MERIPlan(project, projectService, config) {
 
     /**
      * Returns a list of program priorities/assets that match the supplied category or categories.
+     * @param asset the currently selected asset.  This is used to include the currently selected asset from the list of matching assets, even if not present in the config
      * @param category a string or array of strings of categories to match.  If not supplied all priorities will be returned.
      * @returns {Array}
      */
     self.priorityAssets = function(asset, category) {
         var matchingPriorities = _.filter(config.priorities || [], function (priority) {
-            if (priority.investmentPriorityId !== asset) {
+            if (priority.investmentPriorityId === asset) {
                 return true;
             }
             if (_.isArray(category)) {

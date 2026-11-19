@@ -739,10 +739,10 @@ describe("Loading the MERI plan is handled correctly", function () {
         var viewModel = new MERIPlan(project, projectService, config);
 
         expect(viewModel.priorityAssets()).toEqual(config.priorities);
-        expect(viewModel.priorityAssets("Cat 1")).toEqual([config.priorities[0], config.priorities[1]]);
-        expect(viewModel.priorityAssets("Cat 2")).toEqual([config.priorities[2]]);
-        expect(viewModel.priorityAssets(["Cat 1", "Cat 2"])).toEqual([config.priorities[0], config.priorities[1], config.priorities[2]]);
-
+        expect(viewModel.priorityAssets(null, "Cat 1")).toEqual([config.priorities[0], config.priorities[1]]);
+        expect(viewModel.priorityAssets(null, "Cat 2")).toEqual([config.priorities[2]]);
+        expect(viewModel.priorityAssets(null, ["Cat 1", "Cat 2"])).toEqual([config.priorities[0], config.priorities[1], config.priorities[2]]);
+        expect(viewModel.priorityAssets("ip3", "Cat 1")).toEqual([config.priorities[0], config.priorities[1], config.priorities[2]]);
     });
 
     it("provides a list of asset categories for use as a select list by the assets section", function() {
