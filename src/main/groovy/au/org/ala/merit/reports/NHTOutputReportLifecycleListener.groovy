@@ -4,6 +4,7 @@ import au.org.ala.merit.ActivityService
 import au.org.ala.merit.ProjectService
 import au.org.ala.merit.PublicationStatus
 import au.org.ala.merit.SiteService
+import au.org.ala.merit.config.ProgramConfig
 import groovy.util.logging.Slf4j
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
@@ -43,6 +44,9 @@ class NHTOutputReportLifecycleListener extends ReportLifecycleListener {
         }
 
         List investmentPriorities = projectService.listProjectInvestmentPriorities(project.projectId)
+        investmentPriorities = investmentPriorities?.collect { Map investmentPriority ->
+            investmentPriority?.name
+        }
 
         List protocols = projectService.listProjectProtocols(project).collect {
             [label: it.name, value: it.externalId]
@@ -50,7 +54,7 @@ class NHTOutputReportLifecycleListener extends ReportLifecycleListener {
         protocols << [label:'Other', value:'other']
         return [
             protocols:protocols,
-            investmentPriorities:investmentPriorities
+            investmentPriorities:investmentPriorities ?: []
         ]
     }
 

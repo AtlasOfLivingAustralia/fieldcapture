@@ -75,6 +75,7 @@
         config.programName = "programName";
         config.programObjectives = <fc:modelAsJavascript model="${config.program?.config?.objectives ?: []}"/>;
         config.programActivities = <fc:modelAsJavascript model="${config.program?.config?.activities?.collect{it.name} ?: []}"/>;
+        config.priorities = <fc:modelAsJavascript model="${config.priorities ?: []}"/>
         config.excludeFinancialYearData = ${config.program?.config?.excludeFinancialYearData ?: false};
         config.useServiceOutcomesModel = ${config.program?.config?.meriPlanContents?.find{it.template == 'serviceOutcomeTargets'} != null};
 
@@ -96,7 +97,7 @@
         $("#primaryOutcome").prettyTextDiff({cleanup: true});
         $("#program-outcome-assets").prettyTextDiff({cleanup: true});
         $("#additional-benefits span").prettyTextDiff({cleanup: true});
-        $("#secondary-assets").prettyTextDiff({cleanup: true});
+        $(".secondary-assets").prettyTextDiff({cleanup: true});
         $("#outcome-statements td").prettyTextDiff({cleanup: true});
         $("#project-partnerships td").prettyTextDiff({cleanup: true});
         $("th.period-changes").prettyTextDiff({cleanup: true});

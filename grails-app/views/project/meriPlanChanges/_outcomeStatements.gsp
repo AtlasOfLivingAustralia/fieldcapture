@@ -18,7 +18,16 @@
             <tr>
                 <td class="code"><fc:renderComparison changed="${changed.custom.details.outcomes.midTermOutcomes ?: []}" i="${i}" original="${project.custom.details.outcomes.midTermOutcomes ?: []}" property="code"/> </td>
                 <td class="outcome"><fc:renderComparison changed="${changed.custom.details.outcomes.midTermOutcomes ?: []}" i="${i}" original="${project.custom.details.outcomes.midTermOutcomes ?: []}" property="description"/> </td>
-                <td class="investment-priority"><fc:renderComparisonList changed="${changed.custom.details.outcomes.midTermOutcomes ?: []}" i="${i}" original="${project.custom.details.outcomes.midTermOutcomes ?: []}" property="assets"/> </td>
+                <td class="investment-priority">
+                    <fc:renderComparisonList
+                            changed="${changed.custom.details.outcomes.midTermOutcomes ?: []}"
+                            i="${i}"
+                            original="${project.custom.details.outcomes.midTermOutcomes ?: []}"
+                            property="assets"
+                            objectList="${investmentPriorities}"
+                            idProperty="investmentPriorityId"
+                            labelProperty="name"
+                    /> </td>
                 <td class="medium-term-outcome"><fc:renderComparison changed="${changed.custom.details.outcomes.midTermOutcomes ?: []}" i="${i}" original="${project.custom.details.outcomes.midTermOutcomes ?: []}" property="relatedOutcome"/> </td>
             </tr>
         </g:each>
@@ -31,7 +40,14 @@
             <tr>
                 <td class="code"><fc:renderComparison changed="${changed.custom.details.outcomes.shortTermOutcomes ?: []}" i="${i}" original="${project.custom.details.outcomes.shortTermOutcomes ?: []}" property="code"/> </td>
                 <td class="outcome"><fc:renderComparison changed="${changed.custom.details.outcomes.shortTermOutcomes ?: []}" i="${i}" original="${project.custom.details.outcomes.shortTermOutcomes ?: []}" property="description"/> </td>
-                <td class="investment-priority"><fc:renderComparisonList changed="${changed.custom.details.outcomes.shortTermOutcomes ?: []}" i="${i}" original="${project.custom.details.outcomes.shortTermOutcomes ?: []}" property="assets"/> </td>
+                <td class="investment-priority">
+                    <fc:renderComparisonList changed="${changed.custom.details.outcomes.shortTermOutcomes ?: []}"
+                                             i="${i}"
+                                             original="${project.custom.details.outcomes.shortTermOutcomes ?: []}"
+                                             property="assets"
+                                             objectList="${investmentPriorities}"
+                                             idProperty="investmentPriorityId"
+                                             labelProperty="name"/> </td>
                 <td class="medium-term-outcome"><fc:renderComparison changed="${changed.custom.details.outcomes.shortTermOutcomes ?: []}" i="${i}" original="${project.custom.details.outcomes.shortTermOutcomes ?: []}" property="relatedOutcome"/> </td>
             </tr>
         </g:each>

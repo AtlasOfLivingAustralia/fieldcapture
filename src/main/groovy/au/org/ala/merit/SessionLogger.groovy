@@ -18,11 +18,15 @@ class SessionLogger implements HttpSessionListener {
 
     @Override
     void sessionCreated(HttpSessionEvent httpSessionEvent) {
-        log.info("${httpSessionEvent.session.id} created with lastAccessedTime=${new DateTime(httpSessionEvent.session.lastAccessedTime)}")
+        if (log.isTraceEnabled()) {
+            log.trace("${httpSessionEvent.session.id} created with lastAccessedTime=${new DateTime(httpSessionEvent.session.lastAccessedTime)}")
+        }
     }
 
     @Override
     void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
-        log.info("${httpSessionEvent.session.id} destroyed with lastAccessedTime=${new DateTime(httpSessionEvent.session.lastAccessedTime)}")
+        if (log.isTraceEnabled()) {
+            log.trace("${httpSessionEvent.session.id} destroyed with lastAccessedTime=${new DateTime(httpSessionEvent.session.lastAccessedTime)}")
+        }
     }
 }

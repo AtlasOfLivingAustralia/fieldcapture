@@ -140,71 +140,43 @@ var programDefaults = {
           "outcomes": [
               {
                   "outcome": "By 2023, there is restoration of, and reduction in threats to, the ecological character of Ramsar sites, through the implementation of priority actions",
-                  "priorities": [
-                      {
-                          "category": "Ramsar"
-                      }
-                  ],
+                  "priorityCategories": [ "Ramsar"],
                   "category": "environment",
                   "shortDescription": "Ramsar Sites"
               },
               {
                   "outcome": "By 2023, the trajectory of species targeted under the Threatened Species Strategy, and other EPBC Act priority species, is stabilised or improved.",
-                  "priorities": [
-                      {
-                          "category": "Threatened Species"
-                      }
-                  ],
+                  "priorityCategories": [ "Threatened Species" ],
                   "category": "environment",
                   "shortDescription": "Threatened Species Strategy"
               },
               {
                   "outcome": "By 2023, invasive species management has reduced threats to the natural heritage Outstanding Universal Value of World Heritage properties through the implementation of priority actions.",
-                  "priorities": [
-                      {
-                          "category": "World Heritage Sites"
-                      }
-                  ],
+                  "priorityCategories": [ "World Heritage Sites" ],
                   "category": "environment",
                   "shortDescription": "World Heritage Areas"
               },
               {
                   "outcome": "By 2023, the implementation of priority actions is leading to an improvement in the condition of EPBC Act listed Threatened Ecological Communities.",
-                  "priorities": [
-                      {
-                          "category": "Threatened Ecological Communities"
-                      }
-                  ],
+                  "priorityCategories": ["Threatened Ecological Communities"],
                   "category": "environment",
                   "shortDescription": "Threatened Ecological Communities"
               },
               {
                   "outcome": "By 2023, there is an increase in the awareness and adoption of land management practices that improve and protect the condition of soil, biodiversity and vegetation.",
-                  "priorities": [
-                      {
-                          "category": "Land Management"
-                      }
-                  ],
+                  "priorityCategories": ["Land Management"],
                   "category": "agriculture",
                   "shortDescription": "Soil Condition"
               },
               {
                   "outcome": "By 2023, there is an increase in the capacity of agriculture systems to adapt to significant changes in climate and market demands for information on provenance and sustainable production.",
-                  "priorities": [
-                      {
-                          "category": "Sustainable Agriculture"
-                      }
-                  ],
+                  "priorityCategories": ["Sustainable Agriculture"],
                   "category": "agriculture",
                   "shortDescription": "Climate / Weather Adaption"
               },
               {
                   "outcome": "Secondary",
-                  "priorities": [
-                      {
-                          "category":"None"
-                      }
-                  ],
+                  "priorityCategories": [],
                   "type":"secondary",
                   "category": "agriculture",
                   "shortDescription": "Climate / Weather Adaption"
@@ -248,92 +220,6 @@ var programDefaults = {
                   "outcome": "Program project outcome 2",
                   "type": "project",
                   "category": "Threatened Species"
-              }
-          ],
-          "priorities": [
-              {
-                  "category": "Ramsar",
-                  "priority": "Ginini Flats Wetland Complex"
-              },
-              {
-                  "category": "Threatened Species",
-                  "priority": "Anthochaera phrygia"
-              },
-              {
-                  "category": "Threatened Species",
-                  "priority": "Bettongia gaimardi"
-              },
-              {
-                  "category": "Threatened Species",
-                  "priority": "Botaurus poiciloptilus"
-              },
-              {
-                  "category": "Threatened Species",
-                  "priority": "Lathamus discolor"
-              },
-              {
-                  "category": "Threatened Species",
-                  "priority": "Rutidosis leptorrhynchoides"
-              },
-              {
-                  "category": "Threatened Species",
-                  "priority": "Swainsona recta"
-              },
-              {
-                  "category": "Threatened Ecological Communities",
-                  "priority": "Alpine Sphagnum Bogs and Associated Fens"
-              },
-              {
-                  "category": "Threatened Ecological Communities",
-                  "priority": "Natural Temperate Grassland of the South Eastern Highlands"
-              },
-              {
-                  "category": "Threatened Ecological Communities",
-                  "priority": "White Box-Yellow Box-Blakely's Red Gum Grassy Woodland and Derived Native Grassland"
-              },
-              {
-                  "category": "Soil Quality",
-                  "priority": "Soil acidification"
-              },
-              {
-                  "category": "Soil Quality",
-                  "priority": "Soil Carbon priority"
-              },
-              {
-                  "category": "Soil Quality",
-                  "priority": "Hillslope erosion priority"
-              },
-              {
-                  "category": "Soil Quality",
-                  "priority": "Wind erosion priority"
-              },
-              {
-                  "category": "Land Management",
-                  "priority": "Soil acidification"
-              },
-              {
-                  "category": "Land Management",
-                  "priority": "Soil carbon"
-              },
-              {
-                  "category": "Land Management",
-                  "priority": "Hillslope erosion"
-              },
-              {
-                  "category": "Land Management",
-                  "priority": "Wind erosion"
-              },
-              {
-                  "category": "Land Management",
-                  "priority": "Native vegetation and biodiversity on-farm"
-              },
-              {
-                  "category": "Sustainable Agriculture",
-                  "priority": "Climate change adaptation"
-              },
-              {
-                  "category": "Sustainable Agriculture",
-                  "priority": "Market traceability"
               }
           ],
           "programId": "test_program",

@@ -730,10 +730,6 @@ a.icon-link {
 #floating-save button {
 	top:5px;
 }
-.table thead th.sorting, .table thead th.sorting_asc, .table thead th.sorting_desc {
-	background-image: none;
-	position: relative;
-}
 
 .table thead th.sorting:after {
 	font-family: FontAwesome;
@@ -762,6 +758,49 @@ a.icon-link {
 	right: 5px;
 	top: 5px;
 	color: #337ab7;
+}
+
+/* DataTables 3 equivalents of the header styles above. DataTables renders the sort indicator in a
+ * .dt-column-order span inside a flex .dt-column-header div using CSS border triangles on :before/:after.
+ * These rules are loaded before the DataTables stylesheets so they use higher specificity to replace the
+ * triangles with the FontAwesome icons used elsewhere in the application. */
+div.dt-container table.table.dataTable {
+	margin-top: 6px;
+	margin-bottom: 6px;
+}
+table.table.dataTable > thead > tr > th {
+	background-color: #d9edf7;
+}
+table.table.dataTable > thead > tr > th[class*="dt-order"] .dt-column-order {
+	width: auto;
+	align-self: flex-start;
+}
+table.table.dataTable > thead > tr > th[class*="dt-order"] .dt-column-order:before {
+	position: static;
+	display: inline;
+	width: auto;
+	height: auto;
+	border: none;
+	font-family: FontAwesome;
+	opacity: 1;
+	content: "\f0dc";
+	color: rgba(51,122,183,0.5);
+}
+table.table.dataTable > thead > tr > th[class*="dt-order"] .dt-column-order:after {
+	display: none;
+}
+table.table.dataTable > thead > tr > th.dt-ordering-asc .dt-column-order:before {
+	font-size: large;
+	content: "\f0de";
+	color: #337ab7;
+}
+table.table.dataTable > thead > tr > th.dt-ordering-desc .dt-column-order:before {
+	font-size: large;
+	content: "\f0dd";
+	color: #337ab7;
+}
+table.table.dataTable > thead > tr > th.dt-orderable-none:not(.dt-ordering-asc, .dt-ordering-desc) .dt-column-order {
+	display: none;
 }
 
 .photo-slider li{ margin: 0 4px; }

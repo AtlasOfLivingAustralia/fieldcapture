@@ -18,6 +18,7 @@ class ProgramController {
     ActivityService activityService
     BlogService blogService
     ManagementUnitService managementUnitService
+    MetadataService metadataService
 
     def index(String id) {
         Map program = [:]
@@ -92,7 +93,7 @@ class ProgramController {
             }
         }
 
-        [about   : [label: 'Overview',visible: true, stopBinding: false, type: 'tab',
+        Map model = [about   : [label: 'Overview',visible: true, stopBinding: false, type: 'tab',
                     program: program,
                     primaryOutcomes: primaryOutcomes,
                     blog: [blogs: blogs?:[], editable: hasEditAccessOfBlog,
@@ -108,8 +109,12 @@ class ProgramController {
                       editable: hasEditAccessOfBlog
                       ]
                    ]]
+        if (hasAdminAccess) {
+            model.admin.priorityCategories = metadataService.getInvestmentPriorityCategories()
+            model.admin.outcomesInUse = programService.findAllProgramOutcomesInUse(program.programId)
+        }
+        model
     }
-
 
     @PreAuthorise(accessLevel='siteAdmin')
     def create() {

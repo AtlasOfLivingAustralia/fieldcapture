@@ -12,7 +12,7 @@ class OutcomeRow extends Module {
         outcome { $('.outcome-priority select') }
         priority { $('.priority select') }
         remove { $('i.fa-remove') }
-        priorityUnstyle{$('.list-unstyled')}
+        outcomePriorities{$('.list-unstyled input').moduleList(Checkbox)}
     }
 }
 
@@ -131,7 +131,7 @@ class BudgetRow extends Module {
 
 class AssetRow extends Module {
     static content = {
-        description { $('td.asset textarea') }
+        description { $('td.asset select') }
         remove { $('i.icon-remove') }
     }
 }

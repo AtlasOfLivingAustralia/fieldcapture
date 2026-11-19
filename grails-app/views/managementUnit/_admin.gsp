@@ -9,7 +9,6 @@
             <a class="nav-link" data-bs-toggle="pill" href="#reporting" role="tab">Reporting</a>
         </g:if>
         <g:if test="${fc.userIsAlaOrFcAdmin()}">
-            <a class="nav-link" data-bs-toggle="pill" href="#priorities" role="tab">Priorities</a>
             <a class="nav-link" data-bs-toggle="pill" href="#config" role="tab">Configuration</a>
         </g:if>
         <g:elseif test="${fc.userHasReadOnlyAccess()}">
@@ -139,13 +138,6 @@
                 <h4 style="display:inline-block">Management Unit configuration</h4> <button class="btn btn-success float-end" data-bind="click:saveManagementUnitConfiguration">Save Configuration</button>
 
                 <textarea rows="80" style="width:100%" data-bind="value:config">
-
-                </textarea>
-            </div>
-            <div class="tab-pane" id="priorities">
-                <h4 style="display:inline-block">Management Unit priorities</h4> <button class="btn btn-success float-end" data-bind="click:saveManagementUnitPriorities">Save Priorities</button>
-
-                <textarea rows="80" style="width:100%" data-bind="value:priorities">
 
                 </textarea>
             </div>

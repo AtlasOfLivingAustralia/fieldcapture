@@ -6,6 +6,6 @@ class DocumentsTabDocument extends Module {
 
     static content = {
         name(required:false) { $('span[data-bind*=name]').text() }
-        noDocumentsMessage(required:false) { $('td.dataTables_empty') }
+        noDocumentsMessage(required:false) { $('td.dt-empty') }
     }
 }

@@ -1,4 +1,5 @@
 //= require pagination.js
+//= require datatables.net-plugins/features/fuzzySearch/dist/dataTables.fuzzySearch.js
 //= require_self
 
 var ApprovableImage = function(doc) {
@@ -469,4 +470,382 @@ ManageTagsViewModel = function(tags, options) {
             self.newTag.term(table.search());
         });
     }
+};
+
+ManageInvestmentPrioritiesViewModel = function(investmentPriorities, options) {
+    investmentPriorities = investmentPriorities || [];
+    function editForm() {
+        return $(options.modalSelector).find('form');
+    }
+    function InvestmentPriority(investmentPriority) {
+        const self = this;
+        self.investmentPriorityId = investmentPriority.investmentPriorityId;
+        self.type = ko.observable(investmentPriority.type);
+        self.name = ko.observable(investmentPriority.name);
+        self.description = ko.observable(investmentPriority.description);
+        self.categories = ko.observableArray(investmentPriority.categories);
+        self.managementUnits = ko.observableArray(investmentPriority.managementUnits);
+        self.originalName = investmentPriority.name;
+        self.projectCount = ko.observable();
+        self.managementUnitLabels = ko.pureComputed(function() {
+            return _.reduce(self.managementUnits(), function (memo, managementUnitId) {
+                var muObj = _.find(options.availableManagementUnits, function (managementUnit) {
+                    return managementUnitId === managementUnit.managementUnitId;
+                });
+                let result = memo;
+                if (result) {
+                    result += ",\n";
+                }
+                result += muObj ? muObj.name : managementUnitId;
+                return result;
+
+            }, "");
+        });
+
+        self.toJSON = function() {
+            return {
+                investmentPriorityId: investmentPriority.investmentPriorityId,
+                type: self.type(),
+                name: self.name(),
+                description: self.description(),
+                categories: self.categories(),
+                managementUnits: self.managementUnits()
+            };
+        }
+    }
+
+    function EditableInvestmentPriority(investmentPriority, isNew) {
+        InvestmentPriority.apply(this, [investmentPriority, isNew]);
+        let self = this;
+        self.isNew = isNew;
+        self.investmentPriorityTypes = options.availableTypes;
+        self.availableCategories = ko.pureComputed(function() {
+            return (options.categoriesByType || {})[self.type()];
+        });
+        self.duplicate = ko.observable();
+        self.saveable = ko.pureComputed(function() {
+            let changed = isNew ||
+                self.name() !== investmentPriority.name ||
+                self.type() !== investmentPriority.type ||
+                !_.isEqual(self.categories(), investmentPriority.categories) ||
+                !_.isEqual(self.managementUnits(), investmentPriority.managementUnits);
+
+            return changed && !self.duplicate();
+        });
+    }
+
+    let self = this;
+    self.investmentPriorities = _.map(investmentPriorities, function(investmentPriority) {
+        return new InvestmentPriority(investmentPriority);
+    });
+
+    self.filter = ko.observable();
+    self.matchedInvestmentPriorities = ko.observable(investmentPriorities.length);
+    self.table = null;
+    self.availableCategories = options.availableCategories || [];
+    self.availableManagementUnits = options.availableManagementUnits || [];
+
+    self.canAddNewInvestmentPriority = ko.pureComputed(function() {
+        return self.matchedInvestmentPriorities() === 0;
+    });
+    self.editableInvestmentPriority = ko.observable();
+
+    self.doCreateOrEdit = function(investmentPriority, isNew) {
+        let editable = new EditableInvestmentPriority(investmentPriority.toJSON(), isNew);
+        let subscription = editable.name.subscribe(function(newName) {
+            let existing = self.findByName(newName, investmentPriority.investmentPriorityId);
+            editable.duplicate(existing);
+        });
+        self.editableInvestmentPriority(editable);
+        $(options.modalSelector).on('hidden.bs.modal', function () {
+            subscription.dispose();
+            self.editableInvestmentPriority(undefined);
+        }).on('shown.bs.modal', function() {
+            editForm().validationEngine('attach');
+        }).modal('show');
+
+    }
+
+    self.edit = function(investmentPriority) {
+        self.doCreateOrEdit(investmentPriority, false);
+    }
+
+    self.showFuzzySearchMessage = ko.observable(false);
+
+    self.showUpdateCategory = function() {
+        $(options.categoryUpdateModalSelector).modal('show');
+    }
+    self.newInvestmentPriority = function() {
+        let searchTerm = getRawSearchTerm();
+        self.doCreateOrEdit(new InvestmentPriority({name:searchTerm}), true);
+    }
+
+    self.validateName = function(name) {
+        if (self.findByName(name)) {
+            return "An investment priority with this name already exists.";
+        }
+    }
+
+    /**
+     * Finds an investment priority by name, optionally excluding a specific investment priority id from the search.
+     * Used to detect a duplicate name when editing an existing investment priority.
+     */
+    self.findByName = function(name, excludeId) {
+        let lowerName = name.toLowerCase();
+        return _.find(self.investmentPriorities, function(investmentPriority) {
+            return ko.utils.unwrapObservable(investmentPriority.name).toLowerCase() === lowerName && ko.utils.unwrapObservable(investmentPriority.investmentPriorityId) !== excludeId;
+        });
+    }
+
+    self.updateInvestmentPriority = function(investmentPriority) {
+        self.saveInvestmentPriority(investmentPriority, "Updating investment priority...");
+    };
+
+    self.addInvestmentPriority = function(newInvestmentPriority) {
+        self.saveInvestmentPriority(newInvestmentPriority, "Adding investment priority...");
+    }
+
+    self.saveInvestmentPriority = function(investmentPriorityToSave, message) {
+        let valid = editForm().validationEngine('validate');
+        if (!valid) {
+            return;
+        }
+        let investmentPriority = investmentPriorityToSave.toJSON();
+
+        if (investmentPriority.name) {
+            blockUIWithMessage(message);
+            $.post({
+                url: fcConfig.saveInvestmentPriorityUrl,
+                data: JSON.stringify(investmentPriority),
+                contentType: 'application/json'
+            }).done(function (response) {
+                if (!response.error) {
+                    blockUIWithMessage("Reloading page...");
+                    window.location.reload();
+                } else {
+                    $.unblockUI();
+                    alert('Error adding tag: ' + response.error);
+                }
+            }).fail(function (xhr) {
+                let message = "An error was encountered saving the investment priority. Please try again.";
+                if (xhr && xhr.status == 422) {
+                    let response = xhr.responseJSON;
+                    let messages = _.map(response.errors, function (error) {
+                        return error.message;
+                    });
+                    message = _.reduce(messages, function (memo, message) {
+                        return memo + '\n' + message
+                    }, "");
+                }
+                $.unblockUI();
+                alert(message);
+            });
+        }
+    }
+
+    self.mergeInvestmentPriority = function(investmentPriorityToDelete, message) {
+
+        let investmentPriorityIdToDelete = investmentPriorityToDelete.investmentPriorityId;
+        let investmentPriorityToReplaceWith = self.editableInvestmentPriority().duplicate().investmentPriorityId;
+
+        if (!investmentPriorityIdToDelete || !investmentPriorityToReplaceWith) {
+            alert("An error was encountered merging the investment priorities. Please try again.");
+            return;
+        }
+
+        bootbox.confirm("Are you sure you want to delete this investment priority and replace it with the existing one?  This cannot be undone.", function(result) {
+            if (result) {
+                blockUIWithMessage(message);
+                let data = {
+                    investmentPriorityIdToDelete: investmentPriorityIdToDelete,
+                    investmentPriorityIdToReplaceWith: investmentPriorityToReplaceWith
+                };
+                $.post({
+                    url: fcConfig.mergeInvestmentPriorityUrl,
+                    data: JSON.stringify(data),
+                    contentType: 'application/json'
+                }).done(function (response) {
+                    if (!response.error) {
+                        bootbox.alert("The investment priority has been merged successfully.  The page will now reload.", function() {
+                            blockUIWithMessage("Reloading page...");
+                            window.location.reload();
+                        });
+                    } else {
+                        $.unblockUI();
+                        alert('Error merging investment priority: ' + response.error);
+                    }
+                }).fail(function (xhr) {
+                    let message = "An error was encountered saving the investment priority. Please try again.";
+                    if (xhr && xhr.status == 422) {
+                        let response = xhr.responseJSON;
+                        let messages = _.map(response.errors, function (error) {
+                            return error.message;
+                        });
+                        message = _.reduce(messages, function (memo, message) {
+                            return memo + '\n' + message
+                        }, "");
+                    }
+                    $.unblockUI();
+                    alert(message);
+                });
+            }
+        });
+
+    }
+
+    // We are doing page reloads as an alternative to manually syncing this model with the
+    // data tables API.
+    self.deleteInvestmentPriority = function(investmentPriority) {
+        if (confirm("Are you sure you want to delete this investment priority?  This cannot be undone.")) {
+            blockUIWithMessage("Deleting investment priority...");
+            let investmentPriorityId = investmentPriority.investmentPriorityId;
+            $.post({
+                url: fcConfig.deleteInvestmentPriorityUrl + '/' + investmentPriorityId,
+                contentType: 'application/json'
+            }).done(function(response) {
+                if (!response.success) {
+                    $.unblockUI();
+                    bootbox.alert('The investment priority was unable to be deleted.   This is possibly because it is being used by a hidden project.');
+                } else {
+                    blockUIWithMessage("Reloading page...");
+                    window.location.reload();
+                }
+            }).fail(function() {
+                $.unblockUI();
+                bootbox.alert("An error was encountered deleting the investment priority. Please try again.");
+            });
+        }
+    };
+
+    function fuzzySearchEnabled() {
+        let toggle = fuzzySearchToggleSelector().get(0);
+        return toggle.hasAttribute('blurred');
+    }
+
+    function searchInputSelector() {
+        return $('div.dt-search input');
+    }
+
+    function fuzzySearchToggleSelector() {
+        return $('div.dt-search button.toggleSearch');
+    }
+
+    function getRawSearchTerm() {
+        // The API returns a lowercase version of the search term, but we want to use the original case
+        // for the new investment priority name.
+        return searchInputSelector().val();
+    }
+
+    self.projectCountFailed = ko.observable(false);
+    function initialiseProjectCounts() {
+        return $.get(fcConfig.investmentPriorityProjectCountUrl, function (data) {
+            if (data && data.terms) {
+                for (let i = 0; i < data.terms.length; i++) {
+                    let term = data.terms[i];
+                    let investmentPriority = self.findByName(term.term);
+                    if (investmentPriority) {
+                        investmentPriority.projectCount(term.count);
+                    }
+                }
+            } else {
+                self.projectCountFailed(true);
+            }
+        });
+    }
+    self.initialiseDataTable = function(tableSelector) {
+        // We want the project counts to be initialised before the table is created so
+        // that the sort functions correctly.
+        initialiseProjectCounts().always(function() {
+            var table = $(tableSelector).DataTable({
+                columnDefs: [
+                    {
+                        targets: 0,
+                        visible: false,
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        targets: 1,
+                        orderable: true
+                    },
+                    {
+                        targets: 2,
+                        orderable: true
+                    },
+                    {
+                        targets: 3,
+                        orderable: true
+                    },
+                    {
+                        targets: 4,
+                        orderable: false
+                    },
+                    {
+                        targets: 5,
+                        orderable: true,
+                        searchable: false
+                    },
+                    {
+                        targets: 6,
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                buttons: [{extend: 'copy', title: null}],
+                layout: {
+                    topStart: 'pageLength',
+                    topEnd: ['search', 'buttons'],
+                    bottomStart: 'info',
+                    bottomEnd: 'paging'
+                },
+                fuzzySearch: {
+                    toggleSmart: true,
+                    threshold: options.fuzzySearchThreshold || 0.5
+                },
+                stateSave: true,
+                initComplete: function (settings) {
+                    // The fuzzySearch plugin calls input.off() to remove the default DataTables search handlers, but
+                    // with jQuery present that is a no-op, so the default (exact) search handlers keep firing and
+                    // conflict with the plugin.  Remove them explicitly.
+                    searchInputSelector().off('keyup.DT search.DT input.DT paste.DT cut.DT mouseup.DT');
+
+                    // The fuzzySearch plugin defaults to exact matching and has no option to change that.  Its toggle
+                    // button is created in an init.dt handler that runs after initComplete, so defer clicking it until
+                    // then to switch the default mode to fuzzy.  A native click is used as the plugin binds listeners
+                    // with addEventListener.
+                    setTimeout(function () {
+                        let toggle = fuzzySearchToggleSelector().get(0);
+                        if (toggle && !toggle.hasAttribute('blurred')) {
+                            toggle.click();
+                        }
+                    }, 0);
+                }
+            });
+
+            self.table = table;
+            let tooltipShown = false;
+            let addInvestmentPriorityButton = $(options.addInvestmentPrioritySelector);
+            addInvestmentPriorityButton.tooltip({trigger: 'manual', container: 'body', placement: 'right'});
+            table.on('search.dt', function (e) {
+
+
+                let pageInfo = table.page.info();
+                self.matchedInvestmentPriorities(pageInfo.recordsDisplay);
+                if (pageInfo.recordsDisplay > 0 && table.search.fuzzy() && fuzzySearchEnabled()) {
+                    if (!tooltipShown) {
+                        addInvestmentPriorityButton.tooltip('show');
+                        tooltipShown = true;
+                    } else {
+                        addInvestmentPriorityButton.tooltip('update');
+                    }
+                } else {
+                    if (tooltipShown) {
+                        addInvestmentPriorityButton.tooltip('hide');
+                        tooltipShown = false;
+                    }
+                }
+            });
+        });
+    };
+
 };

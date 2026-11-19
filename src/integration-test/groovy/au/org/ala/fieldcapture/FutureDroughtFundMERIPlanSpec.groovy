@@ -67,7 +67,7 @@ class FutureDroughtFundMERIPlanSpec extends StubbedCasSpec {
 
         then:
         meriPlan.primaryOutcome.value().contains("land management") // Direct comparison fails due to &nbsp in the HTML due to the length of the options
-        meriPlan.primaryPriorityUnstyled[0].text() == "Soil acidification"
+        meriPlan.primaryPriorityUnstyled[0].text() == "Hillslope erosion"
 
         meriPlan.otherOutcomeColumn1[0].text() =="More primary producers preserve natural capital while also improving productivity and profitability"
         meriPlan.otherOutcomeColumn2[0].text() == "More primary producers and agricultural communities are experimenting with adaptive or transformative NRM practices, systems and approaches that link and contribute to building drought resilience"

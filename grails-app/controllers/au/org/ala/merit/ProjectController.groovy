@@ -163,7 +163,6 @@ class ProjectController {
     protected Map projectContent(Map project, user, String template, ProgramConfig config, boolean manageEMSASiteDataSets) {
         project.themes = new JSONArray(config.themes ?: [])
         project.assets = config.assets ?: []
-        project.priorities = new JSONArray(config.priorities ?: [])
         project.outcomes = new JSONArray(config.outcomes ?: [])
         project.hasApprovedOrSubmittedReports = reportService.includesSubmittedOrApprovedReports(project.reports)
         boolean canRegenerateReports = projectService.canRegenerateReports(project)
@@ -240,7 +239,7 @@ class ProjectController {
             model.serviceDelivery = [label: 'Dashboard', visible: serviceDeliveryVisible, type: 'tab', template: 'rlpServiceDashboard', includeInvoiced:showDashboardInvoiceField]
             if (model.serviceDelivery.visible) {
                 // This can be a slow call so don't make it if the data won't be displayed
-                model.serviceDelivery.servicesDashboard = projectService.getServiceDashboardData(project.projectId, false)
+                model.serviceDelivery.servicesDashboard = projectService.getServiceDashboardData(project.projectId, false, config)
             }
 
             model.site.useAlaMap = true
@@ -401,7 +400,6 @@ class ProjectController {
 
         log.debug "json=" + (values as JSON).toString()
         log.debug "id=${id} class=${id?.getClass()}"
-        def projectSite = values.remove("projectSite")
         def documents = values.remove('documents')
         def links = values.remove('links')
         def result = projectService.update(id, values, false)
@@ -422,27 +420,22 @@ class ProjectController {
                 documentService.saveLink(link)
             }
         }
-        if (projectSite && !result.error) {
-            if (!id) id = result.resp.projectId
-            if (!projectSite.projects)
-                projectSite.projects = [id]
-            else if (!projectSite.projects.contains(id))
-                projectSite.projects += id
-            def siteResult = siteService.updateRaw(values.projectSiteId, projectSite)
-            if (siteResult.status == 'error')
-                result = [error: 'SiteService failed']
-            else if (siteResult.status == 'created') {
-                def updateResult = projectService.update(id, [projectSiteId: siteResult.id])
-                if (updateResult.error) result = updateResult
-            }
-        }
+
         if (result.error) {
-            render result as JSON
+            if (result.statusCode == HttpStatus.SC_UNPROCESSABLE_ENTITY) {
+                result = JSON.parse(result.detail)
+                String errors = (result as JSON).toString()
+                render status:HttpStatus.SC_UNPROCESSABLE_ENTITY, text:errors, contentType: 'application/json'
+            }
+            else {
+                render status: result.statusCode, text:result as JSON
+            }
+
         } else {
             if (result.resp) {
                 render result.resp as JSON
             } else {
-                render statusCode:HttpStatus.SC_NOT_MODIFIED, resp:[message:'No modication made']
+                render statusCode:HttpStatus.SC_NOT_MODIFIED, resp:[message:'No modification made']
             }
         }
     }
@@ -1165,7 +1158,10 @@ class ProjectController {
      */
     @PreAuthorise(accessLevel = 'readOnly')
     def listProjectInvestmentPriorities(String id) {
-        List investmentPriorities = projectService.listProjectInvestmentPriorities(id)
+        List investmentPriorities = projectService.listProjectInvestmentPriorities(id)?.collect {
+            it.name
+        }
+
         investmentPriorities <<  "Other"
         render investmentPriorities as JSON
     }

@@ -750,14 +750,15 @@ class ProjectControllerSpec extends Specification implements ControllerUnitTest<
 
     def "The controller delegates to the projectService to list project priorities and returns a JSON encoded response"() {
         setup:
-        List expected = ['p1', 'p2', 'p3']
+        List investmentPriorities = [[name:'p1', investmentPriorityId:'p1'], [name:'p2', investmentPriorityId:'p2'], [name:'p3', investmentPriorityId:'p3']]
+        List expected = ['p1', 'p2', 'p3', 'Other']
         String projectId = 'p1'
 
         when:
         controller.listProjectInvestmentPriorities(projectId)
 
         then:
-        1 * projectService.listProjectInvestmentPriorities(projectId) >> expected
+        1 * projectService.listProjectInvestmentPriorities(projectId) >> investmentPriorities
 
         and:
         response.json == expected

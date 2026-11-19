@@ -7,6 +7,7 @@ import au.org.ala.merit.reports.ReportOwner
 import grails.core.GrailsApplication
 import grails.plugin.cache.Cacheable
 import groovy.util.logging.Slf4j
+import org.apache.http.HttpStatus
 import org.grails.web.json.JSONArray
 
 @Slf4j
@@ -72,6 +73,19 @@ class ManagementUnitService {
         mues
     }
 
+    @Cacheable("managementUnits")
+    List<Map> list() {
+        String url = "${grailsApplication.config.getProperty('ecodata.baseUrl')}managementUnit/list"
+        Map mu = webService.getJson2(url)
+        List results = []
+        if (mu?.statusCode == HttpStatus.SC_OK) {
+            results = mu.resp
+        }
+        else {
+            log.error("Error retrieving management units: ${mu?.statusCode} ${mu?.error}")
+        }
+        results
+    }
 
     Map getByName(String name) {
 

@@ -10,6 +10,7 @@ class MetadataService {
 
     GrailsCacheManager grailsCacheManager
     SettingService settingService
+    SearchService searchService
 
     static final String PROJECT_SERVICES_CACHE_REGION = 'projectServices'
     static final String PROJECT_SERVICES_KEY = 'projectServices'
@@ -356,4 +357,49 @@ class MetadataService {
 
         result
     }
+
+    List<Map> findInvestmentPriorities(Map criteria = [:]) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/investmentPriorities"
+        Map params = criteria
+
+        Map result = webService.doPost(url, params)
+
+        result.resp ?: []
+    }
+
+    Map investmentPriorityProjectCount() {
+        String facet = 'meriPlanAssetFacet'
+        int FACET_LIMIT = 10000
+        Map result = searchService.customFacetSearch(facet, FACET_LIMIT, '*:*')
+        result
+    }
+
+    @Cacheable("investmentPriorityCategories")
+    List<String> getInvestmentPriorityCategories() {
+        findInvestmentPriorities().collect{it.categories}.flatten().unique()
+    }
+
+    Map saveInvestmentPriority(Map investmentPriority) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/updateInvestmentPriority"
+        webService.doPost(url, investmentPriority)
+    }
+
+    int deleteInvestmentPriority(String investmentPriorityId) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/deleteInvestmentPriority/$investmentPriorityId"
+        webService.doDelete(url)
+    }
+
+    Map mergeInvestmentPriorities(String investmentPriorityIdToDelete, String investmentPriorityIdToReplaceWith) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/mergeInvestmentPriorities"
+        webService.doPost(url, [investmentPriorityIdToDelete:investmentPriorityIdToDelete, investmentPriorityIdToReplaceWith:investmentPriorityIdToReplaceWith])
+    }
+
+    Map updateInvestmentPriorityCategory(String category, List<String> investmentPriorityIds) {
+        String url = grailsApplication.config.getProperty('ecodata.baseUrl') + "metadata/updateInvestmentPriorityCategory"
+        Map resp = webService.doPost(url, [category:category, investmentPriorityIds:investmentPriorityIds])
+        grailsCacheManager.getCache('investmentPriorityCategories')?.clear()
+        resp
+    }
+
+
 }

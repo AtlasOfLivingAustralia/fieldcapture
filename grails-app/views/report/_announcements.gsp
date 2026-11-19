@@ -13,10 +13,6 @@
     #announcementsTable_wrapper {
         overflow-x: auto;
     }
-    div.dt-buttons {
-        position: relative;
-        float: left;
-    }
 
     </style>
 </head>
@@ -78,7 +74,12 @@
             "order":[[typeColumn, 'asc'], [scheduledDateColumn, 'asc']],
             "autoWidth": false,
             "columns": columns,
-            "dom": 'Blfrtip',
+            "layout": {
+                topStart: ['buttons', 'pageLength'],
+                topEnd: 'search',
+                bottomStart: 'info',
+                bottomEnd: 'paging'
+            },
             buttons: [
                 'copy',
                 {

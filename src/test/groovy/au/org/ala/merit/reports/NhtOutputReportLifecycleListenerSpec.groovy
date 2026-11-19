@@ -70,7 +70,7 @@ class NhtOutputReportLifecycleListenerSpec extends Specification {
         Map contextData = reportData.getContextData(project, report, activity)
 
         then:
-        1 * projectService.listProjectInvestmentPriorities(projectId) >> ['Investment priority 1']
+        1 * projectService.listProjectInvestmentPriorities(projectId) >> [[investmentPriorityId:'p1', name:'Investment priority 1']]
         contextData.investmentPriorities == ['Investment priority 1']
 
     }

@@ -2,9 +2,8 @@
 *= require base-bs4
 *= require bootstrap-datepicker/css/bootstrap-datepicker.css
 *= require jquery.validationEngine/3.1.0/validationEngine.jquery
-*= require datatables.net-bs4/css/dataTables.bootstrap4.css
-*= require datatables.net-buttons-dt/css/buttons.dataTables.css
-*= require datatables.net-buttons-bs4/css/buttons.bootstrap4.css
+*= require datatables.net-bs5/css/dataTables.bootstrap5.css
+*= require datatables.net-buttons-bs5/css/buttons.bootstrap5.css
 *= require blueimp/fileupload-9.28.0/jquery.fileupload.css
 *= require wmd/wmd.css
 */
@@ -113,4 +112,21 @@ table td.report-status, table th.report-status {
 
 .customBorder {
     border-bottom: 1px solid #eeeeee;
+}
+
+/** The mode switcher for DataTables fuzzy search is overly emphasised and not needed, so hide it. */
+.fuzzyToolTip {
+    display: none !important;
+}
+
+.number-circle {
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    padding: 2px;
+    background: #fff;
+    border: 1px solid #666;
+    color: #666;
+    text-align: center;
+    font: 12px Arial, sans-serif;
 }

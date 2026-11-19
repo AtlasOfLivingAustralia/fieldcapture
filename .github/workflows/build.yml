@@ -17,6 +17,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      mongo:
+        image: mongo:9.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.runCommand({ping: 1})'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
 
@@ -59,14 +70,6 @@ jobs:
           sudo chmod o+xw /data
           sudo chmod o+xw /data/fieldcapture
           sudo chmod o+xw /data/fieldcapture/cache
-
-      - name: Pre-pull MongoDB Image due to startup timeouts
-        run: docker pull mongo:8.0.4
-
-      - name: Install and start mongodb
-        uses: supercharge/mongodb-github-action@315db7fe45ac2880b7758f1933e6e5d59afd5e94 #1.12.1
-        with:
-          mongodb-version: '8.0'
 
       - name: Install mongosh
         run: |

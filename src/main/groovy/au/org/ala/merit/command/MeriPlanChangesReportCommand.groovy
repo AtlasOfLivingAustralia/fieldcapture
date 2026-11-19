@@ -85,6 +85,7 @@ class MeriPlanChangesReportCommand implements Validateable{
                      headerTemplate:'/project/configurableMeriPlanHeader',
                      meriPlanChangesTemplate:'/project/configurableMeriPlanChangesView',
                      changed:changed,
+                     investmentPriorities:metadataService.findInvestmentPriorities(),
                      user:[isAdmin:true]]
 
         }

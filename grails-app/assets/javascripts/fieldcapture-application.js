@@ -119,7 +119,7 @@ function showAlertWithSelector(message, alerttype, targetSelector) {
 }
 
 function blockUIWithMessage(message) {
-    $.blockUI({ message: message, fadeIn:0, fadeIn:0, baseZ:2000,
+    $.blockUI({ message: message, fadeIn:0, baseZ:2000,
         css: {
             border: 'none',
             padding: '15px',
@@ -381,7 +381,18 @@ function autoSaveModel(viewModel, saveUrl, options) {
                     }
                 }
                 result.resolve();
-            }).fail(saveFailureHandler).fail(invokeCallbacksAndRejectResult);
+            }).fail(function(error) {
+                var validationError = error && error.status === 422;
+                if (validationError && (typeof errorCallback === 'function' || typeof config.errorCallback === 'function')) {
+                    if (config.blockUIOnSave) {
+                        $.unblockUI();
+                    }
+                }
+                else {
+                    saveFailureHandler(error);
+                }
+                invokeCallbacksAndRejectResult(validationError ? error.responseJSON : error);
+            });
         }).fail(saveFailureHandler).fail(invokeCallbacksAndRejectResult);
 
         return result;

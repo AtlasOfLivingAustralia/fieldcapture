@@ -288,4 +288,53 @@ class ProgramService {
          resp
     }
 
+    /** Searches all projects in the specified program and returns a set of all the program outcomes
+     * that have been used in any project MERI plan..
+     *
+     * @param programId the program to search within.
+     * @return a Set of Strings representing the descriptions of all the outcomes in use by projects in the specified program.
+     */
+    Set<String> findAllProgramOutcomesInUse(String programId) {
+        List outcomeFields = [
+                'custom.details.outcomes.primaryOutcome.description',
+                'custom.details.outcomes.secondaryOutcomes.description',
+                'custom.details.outcomes.midTermOutcomes.relatedOutcome',
+                'custom.details.outcomes.shortTermOutcomes.relatedOutcome',
+                'custom.details.outcomes.projectTermOutcomes.relatedOutcome'
+        ]
+        Map params = [fq: 'programId:' + programId, include: outcomeFields]
+        Map result = searchService.allProjects(params)
+        Set outcomesInUse = new HashSet<String>()
+        result?.hits?.hits?.each { hit ->
+            Map outcomes = hit._source?.custom?.details?.outcomes ?: [:]
+
+            outcomes.each { k, v ->
+                switch (k) {
+                    case 'primaryOutcome':
+                        if (v?.description) {
+                            outcomesInUse << v.description
+                        }
+                        break
+                    case 'secondaryOutcomes':
+                        v?.each { Map outcome ->
+                            if (outcome?.description) {
+                                outcomesInUse << outcome.description
+                            }
+                        }
+                        break
+                    case 'midTermOutcomes':
+                    case 'shortTermOutcomes':
+                    case 'projectTermOutcomes':
+                        v?.each { Map outcome ->
+                           if (outcome?.relatedOutcome) {
+                                outcomesInUse << outcome.relatedOutcome
+                           }
+                        }
+                        break
+                }
+            }
+        }
+        outcomesInUse
+    }
+
 }

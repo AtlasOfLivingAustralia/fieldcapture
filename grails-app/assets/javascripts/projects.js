@@ -1201,15 +1201,7 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
         );
 
         var visibleIndicies = function() {
-            var settings = tableApi.settings()[0];
-            var start = settings._iDisplayStart;
-            var count = settings._iDisplayLength;
-
-            var visibleIndicies = [];
-            for (var i=start; i<Math.min(start+count, settings.aiDisplay.length); i++) {
-                visibleIndicies.push(settings.aiDisplay[i]);
-            }
-            return visibleIndicies;
+            return tableApi.rows({page: 'current', search: 'applied', order: 'applied'}).indexes().toArray();
         };
         sitesViewModel.typeFilter.subscribe(function(filterValue) {
 
