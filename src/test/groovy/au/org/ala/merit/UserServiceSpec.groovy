@@ -72,8 +72,30 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         where:
         role                            | url
         RoleService.GRANT_MANAGER_ROLE  | "/permissions/isUserCaseManagerForProject?projectId=2&userId=1"
-        RoleService.PROJECT_ADMIN_ROLE  | "/permissions/isUserAdminForProject?projectId=2&userId=1"
         RoleService.PROJECT_EDITOR_ROLE | "/permissions/canUserEditProject?projectId=2&userId=1"
+    }
+
+    def "ACL checks for the project admin should be delegated to appropriate web service calls"(String accessLevel, boolean expectedResult) {
+
+        setup:
+        String userId = '1'
+        String entityId = '2'
+        String role = RoleService.PROJECT_ADMIN_ROLE
+
+        when:
+        service.checkRole(userId, role, entityId, UserService.PROJECT )
+
+        then:
+        1 * webService.getJson("/permissions/getUserRolesForUserId/${userId}") >> [entityId:entityId, userId:userId, entityType:'au.org.ala.ecodata.Project', accessLevel:accessLevel]
+
+        where:
+        accessLevel                     | expectedResult
+        RoleService.PROJECT_ADMIN_ROLE  | true
+        RoleService.PROJECT_MODERATOR_ROLE | true
+        RoleService.GRANT_MANAGER_ROLE | false
+        RoleService.PROJECT_EDITOR_ROLE | false
+        RoleService.PROJECT_DETERMINER_ROLE | false
+        RoleService.PROJECT_DETERMINER_SURVEYOR_ROLE | false
     }
 
     def "ACL checks for management units should be delegated to appropriate web service calls for management units and programs"(String role, String entityType, String userRole, boolean expectedResult) {
@@ -502,7 +524,6 @@ class UserServiceSpec extends Specification implements ServiceUnitTest<UserServi
         Map result = service.addUserAsRoleToProject(userIdToAdd, "p1", 'caseManager')
 
         then:
-        1 * projectService.isUserAdminForProject(loggedInUserId, 'p1') >> true
         1 * webService.getJson({it.endsWith("permissions/addUserAsRoleToProject?userId=${userIdToAdd}&projectId=p1&role=caseManager")}) >> [statusCode:200]
 
         !result.error
