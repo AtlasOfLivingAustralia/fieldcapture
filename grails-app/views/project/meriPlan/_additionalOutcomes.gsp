@@ -16,15 +16,8 @@
         </td>
         <td class="priority">
             <!-- ko if:!details.outcomes.secondaryOutcomeSupportsMultiplePriorities($data.description()) -->
-
-            <!-- ko if:!details.outcomes.supportsSpeciesSearch($data.description()) -->
             <select data-bind="value:asset, options: details.outcomes.outcomePriorities(description(), asset), optionsText:'name', optionsValue:'investmentPriorityId', optionsCaption: 'Please select', select2:{preserveColumnWidth:48}, disable: $parent.isProjectDetailsLocked()" class="form-select form-select-sm asset" <g:if test="!disablePriorityValidation">data-validation-engine="validate[required]"></g:if></select>
-        <!-- /ko -->
-        <!-- ko if:details.outcomes.supportsSpeciesSearch($data.description()) -->
-            <g:render template="/shared/speciesSelect" model="${[bindingProperty:'speciesAsset']}"/>
-        <!-- /ko -->
-
-        <!-- /ko -->
+           <!-- /ko -->
             <!-- ko if:details.outcomes.secondaryOutcomeSupportsMultiplePriorities($data.description()) -->
             <g:if test="${renderPrioritiesWithSelect2}">
                 <select multiple="multiple" class="form-select form-select-sm" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(description(), assets), optionsText:'name', optionsValue:'investmentPriorityId', multiSelect2:{preserveColumnWidth:48, value:assets, tags:false}, disable: $parent.isProjectDetailsLocked()"></select>

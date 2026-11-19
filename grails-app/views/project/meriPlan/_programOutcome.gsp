@@ -19,15 +19,8 @@
         <td class="priority">
             <!-- ko if:!isAgricultureProject() && !details.outcomes.primaryOutcomeSupportsMultiplePriorities() -->
 
-            <!-- ko if:!details.outcomes.supportsSpeciesSearch(details.outcomes.primaryOutcome.description()) -->
             <select class="form-select form-select-sm asset w-100" data-validation-engine="validate[required]" data-bind="options:details.outcomes.outcomePriorities(details.outcomes.primaryOutcome.description(), details.outcomes.primaryOutcome.asset), optionsText:'name', optionsValue:'investmentPriorityId', optionsCaption: 'Please select', value:details.outcomes.primaryOutcome.asset, select2:{preserveColumnWidth:48},  disable: isProjectDetailsLocked()" >
             </select>
-            <!-- /ko -->
-            <!-- ko if:details.outcomes.supportsSpeciesSearch(details.outcomes.primaryOutcome.description()) -->
-
-            <g:render template="/shared/speciesSelect" model="${[bindingProperty:'details.outcomes.primaryOutcome.speciesAsset']}"/>
-
-            <!-- /ko -->
 
             <!-- /ko -->
             <!-- ko if:isAgricultureProject() || details.outcomes.primaryOutcomeSupportsMultiplePriorities() -->
