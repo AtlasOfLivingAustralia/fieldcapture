@@ -111,7 +111,7 @@ function BudgetRowViewModel(o, period) {
             var i = 0;
 
             // Find the current period.
-            while (i<period.length-1 && period[i].value <= currentDateString) {
+            while (i<period.length-1 && period[i].periodEnd <= currentDateString) {
                 i++;
             }
             total = parseFloat(self.costs()[i].dollar());

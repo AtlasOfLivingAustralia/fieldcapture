@@ -227,6 +227,7 @@ userDetails.web.url = "${auth.baseUrl}/userdetails/"
 userDetails.api.url = "${auth.baseUrl}/userdetails/userDetails/"
 user.registration.url = "${auth.baseUrl}/userdetails/registration/createAccount"
 monitor.core.baseUrl = "https://dev.core-api.monitor.tern.org.au/api"
+monitor.enableDeterminerRoles = true
 security {
     cas {
         enabled = false
