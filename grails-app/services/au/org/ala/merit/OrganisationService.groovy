@@ -162,7 +162,8 @@ class OrganisationService {
         List fundingHeaders = organisation.custom?.details?.funding?.headers
         String previousPeriod = ''
         fundingHeaders.findIndexOf {
-            String period = it.data.value
+            // For now handle both the old and new formats of the funding header periods.
+            String period = it.data.periodEnd ?: it.data.value
             boolean result = previousPeriod < periodEndDate && period >= periodEndDate
             previousPeriod = period
             result
