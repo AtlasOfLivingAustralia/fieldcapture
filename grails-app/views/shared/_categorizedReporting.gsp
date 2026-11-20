@@ -108,7 +108,7 @@
         <button type="button" data-bind="click:rejectReport" class="btn btn-sm btn-danger"><i
                 class="fa fa-remove icon-white"></i> More Information Required</button>
     </span>
-    </p>
+
 </g:if>
 </script>
 <script id="cancelled" type="text/html">
