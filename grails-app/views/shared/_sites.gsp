@@ -205,6 +205,17 @@
         return selected;
     }
 
+    function heatMax(map, latLngs, radius, blur, pct) {
+        var cell = (radius + blur) / 2, counts = {};
+        latLngs.forEach(function (ll) {
+            var p = map.latLngToContainerPoint(ll);
+            var k = Math.floor(p.x / cell) + ':' + Math.floor(p.y / cell);
+            counts[k] = (counts[k] || 0) + 1;
+        });
+        var v = Object.keys(counts).map(function (k) { return counts[k]; }).sort(function (a, b) { return a - b; });
+        return v.length ? Math.max(1, v[Math.floor(pct * (v.length - 1))]) : 1;
+    }
+
     function setupSiteRendering(mapAla, points) {
         var map = mapAla.getMapImpl();
         var zoomThreshold = 8;
@@ -245,38 +256,39 @@
             alaMap.featureIndex = {};
             activeMode = mode;
             var bounds = map.getBounds().pad(0.1);
+            var latLngs = []
             var pointsInBounds = points.filter(function(point) {
                 var latLng = L.latLng(
                     point.geometry.coordinates[1],
-                    point.geometry.coordinates[0]
+                    point.geometry.coordinates[0],
+                    1
                 );
 
                 var boundsContains = bounds.contains(latLng),
                     facetSelected = isFacetSelected();
                 if (boundsContains && !facetSelected) {
+                    latLngs.push(latLng);
                     return true;
                 }
                 else if (boundsContains && facetSelected) {
-                    return selections.indexOf(point.properties.legendName) >= 0;
+                    if(selections.indexOf(point.properties.legendName) >= 0) {
+                        latLngs.push(latLng);
+                        return true;
+                    }
                 }
 
                 return false;
             });
 
             if (mode === 'heat' && pointsInBounds.length > HEATMAP_POINT_THRESHOLD) {
-                var multiplier = Math.min(10, points.length / pointsInBounds.length),
-                    boost = Math.pow(multiplier, 2);
-                activeLayer = L.heatLayer(pointsInBounds.map(function(point) {
-                    return [
-                        point.geometry.coordinates[1],
-                        point.geometry.coordinates[0],
-                        boost
-                    ];
-                }), {
-                    max: 100,
-                    maxZoom: 16,
-                    radius: Math.min(50, 20 * multiplier),
-                    blur: 15
+                // var max = Math.max(4, Math.round(20 * pointsInBounds.length / points.length));
+                var radius = 25, blur = 15
+                activeLayer = L.heatLayer(latLngs, {
+                    max: heatMax(map, latLngs, radius, blur, 0.95),
+                    maxZoom: zoomThreshold,
+                    radius: radius,
+                    blur: blur,
+                    minOpacity: 0.05
                 }).addTo(map);
 
                 return;

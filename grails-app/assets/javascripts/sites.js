@@ -1056,7 +1056,7 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
                 }
                 $.each(site.poi, function(j, poi) {
                     if (poi.geometry) {
-                        map.addMarker(poi.geometry.decimalLatitude, poi.geometry.decimalLongitude, poi.name, {poiIconUrl: fcConfig.poiIconUrl});
+                        map.addPOI(poi.geometry.decimalLatitude, poi.geometry.decimalLongitude, poi.name, {poiIconUrl: fcConfig.poiIconUrl});
                     }
 
                 });
