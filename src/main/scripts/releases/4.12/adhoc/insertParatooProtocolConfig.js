@@ -81,10 +81,16 @@ var protocols = {
             "dataModel": {
                 "floristics-veg-voucher-full.host_species": {
                     "dataType": "species"
+                },
+                "floristics-veg-voucher-full.species_information": {
+                    "dataType": "species"
                 }
             },
             "viewModel": {
                 "floristics-veg-voucher-full.host_species": {
+                    "type": "speciesSelect"
+                },
+                "floristics-veg-voucher-full.species_information": {
                     "type": "speciesSelect"
                 }
             }
@@ -100,13 +106,25 @@ var protocols = {
                 "floristics-veg-virtual-voucher.host_species": {
                     "dataType": "species"
                 },
+                "floristics-veg-virtual-voucher.species_information": {
+                    "dataType": "species"
+                },
                 "floristics-veg-virtual-voucher.voucher_lite.host_species": {
+                    "dataType": "species"
+                },
+                "floristics-veg-virtual-voucher.voucher_lite.species_information": {
                     "dataType": "species"
                 },
                 "floristics-veg-virtual-voucher.voucher_full.host_species": {
                     "dataType": "species"
                 },
+                "floristics-veg-virtual-voucher.voucher_full.species_information": {
+                    "dataType": "species"
+                },
                 "floristics-veg-voucher-lite.host_species": {
+                    "dataType": "species"
+                },
+                "floristics-veg-voucher-lite.species_information": {
                     "dataType": "species"
                 }
             },
