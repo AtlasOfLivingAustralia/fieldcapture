@@ -252,7 +252,7 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         response.redirectedUrl == null
     }
 
-    def "downloadShapefile returns geojson attachment when geojson response is available"() {
+    def "downloadShapefile returns geojson attachment with site name as file name when geojson response is available"() {
         given:
         String siteId = 's1'
         params.format = 'geojson'
@@ -262,7 +262,7 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
         controller.downloadShapefile(siteId)
 
         then:
-        1 * siteService.get(siteId) >> [siteId: siteId, projects: [[projectId: 'p1']]]
+        1 * siteService.get(siteId) >> [siteId: siteId, name: "Site Name", projects: [[projectId: 'p1']]]
         1 * userService.getCurrentUserId() >> 'u1'
         1 * projectService.canUserEditProject('u1', 'p1') >> true
         1 * webService.getJson2('https://ecodata.example/site/s1.geojson') >> [statusCode: 200, resp: [type: 'Feature', properties: [name: 'site']]]
@@ -270,7 +270,7 @@ class SiteControllerSpec extends Specification implements ControllerUnitTest<Sit
 
         and:
         response.contentType == 'application/octet-stream'
-        response.getHeader('Content-Disposition') == 'Attachment;Filename="s1.geojson"'
+        response.getHeader('Content-Disposition') == 'Attachment;Filename="Site Name.geojson"'
         response.text.contains('"type":"Feature"')
     }
 
