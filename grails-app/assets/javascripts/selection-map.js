@@ -58,6 +58,7 @@ map = {
                 circle: true,
                 edit: true
             },
+            repairGeometry: true,
             drawControl: true,
             singleDraw: false,
             showReset: false,
