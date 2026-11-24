@@ -205,7 +205,7 @@ class SiteController {
                 resp.status = resp.statusCode
                 if (resp.resp) {
                     response.setContentType("application/octet-stream")
-                    response.setHeader('Content-Disposition', "Attachment;Filename=\"${site.siteId}.geojson\"")
+                    response.setHeader('Content-Disposition', "Attachment;Filename=\"${site.name}.geojson\"")
                     response.outputStream << (resp.resp as JSON).toString()
                     response.outputStream.flush()
                     return;

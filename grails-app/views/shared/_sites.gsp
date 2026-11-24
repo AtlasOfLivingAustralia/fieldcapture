@@ -281,10 +281,11 @@
             });
 
             if (mode === 'heat' && pointsInBounds.length > HEATMAP_POINT_THRESHOLD) {
-                // var max = Math.max(4, Math.round(20 * pointsInBounds.length / points.length));
-                var radius = 25, blur = 15
+                var radius = 25, blur = 15,
+                    max = heatMax(map, latLngs, radius, blur, 0.95),
+                    toZoom = zoomThreshold - map.getZoom();
                 activeLayer = L.heatLayer(latLngs, {
-                    max: heatMax(map, latLngs, radius, blur, 0.95),
+                    max: Math.floor(max / Math.pow(2, toZoom)),
                     maxZoom: zoomThreshold,
                     radius: radius,
                     blur: blur,
