@@ -135,7 +135,28 @@ class DashboardTagLib {
 
         out << "<strong class='helpText'>${label}${helpText(score, attrs)}</strong>"
         def result = score.result?.result ?: 0
-        def percentComplete = result / target * 100
+        boolean error = false
+        def percentComplete = 0d
+        try {
+            percentComplete = result / target * 100
+        }
+        catch (Exception e) {
+            error = true
+            try {
+                result = new BigDecimal(result)
+            }
+            catch (Exception e2) {
+                result = 0
+            }
+            try {
+                target = new BigDecimal(target)
+            }
+            catch (Exception e2) {
+                target = 0
+            }
+
+            log.warn("Found non-numeric target or result for score: "+score.label)
+        }
 
         String progressBarClass = (score.overDelivered) ? "bar progress-bar bg-$overDeliveredClass" : "bar progress-bar bg-$progressClass"
 
@@ -149,6 +170,9 @@ class DashboardTagLib {
 
         int maxDecimalPlaces = score.decimalPlaces != null ? score.decimalPlaces : 2
 
+        if (error) {
+            out << "<div class='alert alert-danger'>Error encoutered with ${score.label} - non-numeric target or result</div>"
+        }
         out << """
             <div class="progress progress-info active " style="position:relative">
                 <div class="${progressBarClass}" style="width: ${percentComplete}%;"></div>
