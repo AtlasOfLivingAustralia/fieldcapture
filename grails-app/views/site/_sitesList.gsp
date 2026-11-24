@@ -65,7 +65,7 @@
                     <td data-bind="text:filterType, title:filterTypeTitle">
                     </td>
 
-                    <td>
+                    <td class="site-name">
                         <a id="siteName" data-bind="text:name, attr: {href:'${createLink(controller: "site", action: "index")}' + '/' + siteId}"></a>
                     </td>
                     <td>
