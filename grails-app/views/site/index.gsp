@@ -185,7 +185,9 @@
 
 
         $(function(){
-
+            const INVALID_STYLE = {
+                color: "#f00"
+            };
             var site = <fc:modelAsJavascript model="${site}"/>;
             $('#selectedProject').change(function() {
                 var projectId = $(this).val();
@@ -213,6 +215,11 @@
                 mapFeatures.style = getStyleForSite(site);
                 mapFeatures.sldBody = getSldBodyForSite(site);
                 map.replaceAllFeatures([mapFeatures]);
+                var siteGeoJSON =map.alaMap.getGeoJSON();
+                if (!ALA.MapUtils.validateGeoJSON(siteGeoJSON)) {
+                    // colour the geometry red if invalid
+                    map.alaMap.setStyle(INVALID_STYLE);
+                }
                 _.each(site.poi || [], function(poi) {
                     if (poi.geometry) {
                         map.addPOI(poi.geometry.decimalLatitude, poi.geometry.decimalLongitude, poi.name, {

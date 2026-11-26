@@ -58,7 +58,6 @@ map = {
                 circle: true,
                 edit: true
             },
-            repairGeometry: true,
             drawControl: true,
             singleDraw: false,
             showReset: false,
@@ -84,7 +83,7 @@ map = {
             addGeometryFromLocalFile: true,
             simplifyImportedShapes: true,
             simplifyOptions: {
-                tolerance: 0.0001
+                tolerance: 0.001
             },
             flattenMultiGeometries: true,
             markerOrShapeNotBoth: false,

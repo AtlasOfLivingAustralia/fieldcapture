@@ -314,7 +314,7 @@ var GenericLocation = function (l) {
 };
 
 function SiteViewModelWithMapIntegration (siteData, projectId, options) {
-    const simplificationTolerance = 0.0001; // Tolerance for simplifying geometries for display on the map
+    const simplificationTolerance = 0.001; // Tolerance for simplifying geometries for display on the map
     var self = this,
         alaMap,
         featureLayer,
@@ -398,7 +398,7 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
                 }
             };
         try {
-            featureCollection = turf.simplify(featureCollection, {tolerance: simplificationTolerance, highQuality: false});
+            featureCollection = ALA.MapUtils.simplifyToValidGeoJSON(featureCollection, simplificationTolerance);
         } catch (e) {
             console.error("Error simplifying geometry for display on map", e);
             console.log("Falling back to unsimplified geometry");
@@ -406,6 +406,11 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
 
         alaMap.setGeoJSON(featureCollection, layerOptions);
         alaMap.fitBounds();
+
+        if (!ALA.MapUtils.validateGeoJSON(featureCollection)) {
+            console.warn("Site GeoJSON is not valid");
+            alaMap && alaMap.addRepairGeometryControl();
+        }
     };
 
     function findPOIMarkerIcon () {
@@ -590,7 +595,8 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
  * by the ALA map plugin.
  */
 var AlaMapAdapter = function(map, options) {
-    var self = this;
+    var self = this,
+        simplificationTolerance = 0.001;
 
     var defaults = {
         styleProperty: 'type',
@@ -607,7 +613,7 @@ var AlaMapAdapter = function(map, options) {
             }
         }
     };
-    var options = _.defaults(options, defaults);
+    options = _.defaults(options, defaults);
     self.alaMap = map;
     self.featureIndex = {};
     self.featureLayer = null;
@@ -664,7 +670,8 @@ var AlaMapAdapter = function(map, options) {
         });
 
         try {
-            map.setGeoJSON(feature, layerOptions);
+            var simplifiedFeature = ALA.MapUtils.simplifyToValidGeoJSON(feature, simplificationTolerance)
+            map.setGeoJSON(simplifiedFeature, layerOptions);
         } catch (e) {
             console.error("[ALA-Map] Error adding feature to map:", e);
         }
@@ -842,7 +849,9 @@ var createMap = function(options) {
     return map;
 };
 var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId) {
-
+    const INVALID_STYLE = {
+        color: "#f00"
+    };
     var self = this;
     self.selectAll = ko.pureComputed({
         read: function() {
@@ -1033,12 +1042,25 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
 
         var features = $.map(self.displayedSites(), function (obj, i) {
             var f = obj.feature;
+            var geoJSON = f;
+            if (isOldSite(geoJSON)) {
+                geoJSON = convertOldSiteToFeatureCollection(geoJSON);
+            }
+            else if (isSiteGeometry(geoJSON)) {
+                geoJSON = convertOldSiteToFeatureCollection({
+                    extent: {
+                        source: "drawn",
+                        geometry: geoJSON
+                    }
+                });
+            }
+
             if (f) {
                 f.popup = obj.name;
                 f.id = obj.siteId;
                 if (!f.sldBody) {
                     f.purposeCode = getSitePurposeCode(obj);
-                    f.style = getStyleForSite(obj);
+                    f.style = ALA.MapUtils.validateGeoJSON(geoJSON) ? getStyleForSite(obj) : INVALID_STYLE;
                     f.sldBody = getSldBodyForSite(obj);
                 }
 

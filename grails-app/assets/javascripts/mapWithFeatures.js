@@ -35,6 +35,7 @@
     var
     // represents the map and its associated properties and events
         map, prevMarker,
+        simplificationTolerance = 0.001,
 
     //  Urls are injected from config
         config = {};
@@ -202,7 +203,8 @@
                     delete geoJSON.properties.style;
                 }
 
-                var layerGroup = self.map.setGeoJSON(geoJSON, layerOptions);
+                var simplifiedGeoJSON =ALA.MapUtils.simplifyToValidGeoJSON(geoJSON, simplificationTolerance)
+                var layerGroup = self.map.setGeoJSON(simplifiedGeoJSON, layerOptions);
                 layerGroup.eachLayer(function(layer) {
                     self.addFeature(layer, loc);
                     self.allMarkers.push(layer);
@@ -257,7 +259,8 @@
                 }
             });
 
-            var layerGroup = self.map.setGeoJSON(convertedFeatures);
+            var simplifiedConvertedFeatures = ALA.MapUtils.simplifyToValidGeoJSON(convertedFeatures, simplificationTolerance);
+            var layerGroup = self.map.setGeoJSON(simplifiedConvertedFeatures);
             layerGroup.eachLayer(function(layer) {
                 var geoJSON = layer.toGeoJSON();
                 if (layer.setStyle) {
