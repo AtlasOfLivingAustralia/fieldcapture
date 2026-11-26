@@ -148,8 +148,8 @@ class SiteController {
     }
 
     private boolean isPOIEnabledInProjectProgram (projects) {
-        List programs = projects?.programId?.findAll()?.unique()?.collect { programService.get(it) }
-        programs?.any { it.config?.enablePOI }
+        List programConfigs = projects?.collect { projectConfigurationService.getProjectConfiguration(it) }
+        programConfigs?.any { it?.enablePOI }
     }
 
     private Map editSiteModelData(Map site, Map project) {

@@ -90,6 +90,11 @@
                 color: '#0f0',
                 fillOpacity: 0.2,
                 weight: 3
+            },
+            invalid: {
+                color: '#f00',
+                fillOpacity: 0.2,
+                weight: 3
             }
         },
 
@@ -193,7 +198,7 @@
             if(loc != null && loc.type != null){
                 var geoJSON = self.convertOldSiteToFeatureCollection(site),
                     layerOptions = {
-                        style: self.getStyleForSite(site),
+                        style: ALA.MapUtils.validateGeoJSON(geoJSON) ? self.getStyleForSite(site) : Object.assign({}, self.styles.invalid),
                         wmsOptions: {
                             SLD_BODY: self.getSldBodyForSite(site)
                         }
@@ -254,6 +259,10 @@
                     if (!geoJSON) {
                         return;
                     }
+
+                    if (!ALA.MapUtils.validateGeoJSON(geoJSON))
+                        layerOptions.style = Object.assign({}, map.styles.invalid);
+
                     geoJSON.properties = geoJSON.properties || {};
                     geoJSON.properties.loc = loc;
                     geoJSON.properties.style = layerOptions.style;

@@ -186,7 +186,9 @@
 
         $(function(){
             const INVALID_STYLE = {
-                color: "#f00"
+                color: "#f00",
+                fillOpacity: 0.2,
+                weight: 3
             };
             var site = <fc:modelAsJavascript model="${site}"/>;
             $('#selectedProject').change(function() {
