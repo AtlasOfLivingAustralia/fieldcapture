@@ -30,6 +30,7 @@
         speciesProfileUrl: "${createLink(controller: 'species', action: 'speciesProfile')}",
         excelOutputTemplateUrl:"${createLink(controller: 'activity', action:'excelOutputTemplate')}",
         imageLeafletViewer: '${createLink(controller: 'resource', action: 'imageviewer', absolute: true)}',
+        spatialWmsUrl: "${grailsApplication.config.getProperty('spatial.wms.url')}",
         project:<fc:modelAsJavascript model="${project}"/>,
         returnTo: "${createLink(controller: "project", action: "index", id: activity.projectId)}"
         },
@@ -190,6 +191,7 @@
                     mapContainer: "smallMap",
                     zoomToBounds:true,
                     zoomLimit:16,
+                    spatialWmsUrl: "${grailsApplication.config.getProperty('spatial.wms.url')}",
                     featureService: "${createLink(controller: 'proxy', action:'feature')}",
                     wmsServer: "${grailsApplication.config.getProperty('spatial.geoserverUrl')}"
                 },

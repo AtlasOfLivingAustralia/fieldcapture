@@ -38,7 +38,7 @@ var SiteViewModel = function (site, feature, options) {
         self.poi.remove(poi);
     };
     self.toJS = function(){
-        var js = ko.mapping.toJS(self, {ignore:self.ignore});
+        var js = ko.mapping.toJS(self, {ignore:self.ignore.concat['alaMap']});
         js.extent = self.extent().toJS();
         delete js.extentGeometryWatcher;
         delete js.isValid;
@@ -314,9 +314,10 @@ var GenericLocation = function (l) {
 };
 
 function SiteViewModelWithMapIntegration (siteData, projectId, options) {
-    const simplificationTolerance = 0.0001; // Tolerance for simplifying geometries for display on the map
+    const simplificationTolerance = 0.001; // Tolerance for simplifying geometries for display on the map
     var self = this,
         alaMap,
+        featureLayer,
         deferredUpdate = ko.observable(false).extend({rateLimit: {timeout: 1000, method: 'notifyWhenChangesStop'}}),
         options = {
             styleProperty: 'type',
@@ -328,6 +329,11 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
                 },
                 worksArea: {
                     color: '#0f0',
+                    fillOpacity: 0.2,
+                    weight: 3
+                },
+                invalid: {
+                    color: "#f00",
                     fillOpacity: 0.2,
                     weight: 3
                 }
@@ -350,9 +356,17 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
             var poi =self.poi()[i],
                 transient = poi.getTransient();
 
-            transient.marker = addMarker(poi.geometry().decimalLatitude(), poi.geometry().decimalLongitude(), poi.name(), poi.dragEvent);
+            transient.marker = addMarker(poi.geometry().decimalLatitude(), poi.geometry().decimalLongitude(),
+                poi.name(), poi.dragEvent, self.removePOIMarkerHandler(poi), poi.poiId(), poi.hasPhotoPointDocuments);
         }
     };
+
+    self.removePOIMarkerHandler = function(poi) {
+        return function() {
+            self.poi.remove(poi);
+        }
+    }
+
     self.newPOI = function(){
         //get the center of the map
         var lngLat = getMapCentre();
@@ -380,44 +394,70 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
             return;
         }
 
-        var site = self.toJS();
-        //retrieve the current shape if exists
-        if (self.features().length > 0) {
-            var featureCollection = convertSiteToFeatureCollection(site);
-            if (ALA.MapUtils.validateGeoJSON(featureCollection)) {
-                try {
-                    featureCollection = turf.simplify(featureCollection, {tolerance: simplificationTolerance, highQuality: false});
+        var site = self.toJS(),
+            featureCollection = convertSiteToFeatureCollection(site),
+            layerOptions = {
+                style: ALA.MapUtils.validateGeoJSON(featureCollection) ? getStyleForSite(site) : Object.assign({}, options.styles.invalid),
+                wmsOptions: {
+                    SLD_BODY: getSldBodyForSite(site)
                 }
-                catch (e) {
-                    console.error("Error simplifying geometry for display on map", e);
-                    console.log("Falling back to unsimplified geometry");
-                }
-
-                alaMap.setGeoJSON(featureCollection, layerOptions);
-            }
-            else
-                console.error("Invalid feature collection", featureCollection);
-        } else {
-            var feature = convertSiteGeometryToFeature(site.extent.geometry);
-            if (ALA.MapUtils.validateGeoJSON(feature)) {
-                try {
-                    feature = turf.simplify(feature, {tolerance: simplificationTolerance, highQuality: false});
-                }
-                catch (e) {
-                    console.error("Error simplifying geometry for display on map", e);
-                    console.log("Falling back to unsimplified geometry");
-                }
-
-                alaMap.setGeoJSON(feature, layerOptions);
-            }
+            };
+        try {
+            featureCollection = ALA.MapUtils.simplifyToValidGeoJSON(featureCollection, simplificationTolerance);
+        } catch (e) {
+            console.error("Error simplifying geometry for display on map", e);
+            console.log("Falling back to unsimplified geometry");
         }
 
+        alaMap.setGeoJSON(featureCollection, layerOptions);
         alaMap.fitBounds();
+
+        if (!ALA.MapUtils.validateGeoJSON(featureCollection)) {
+            console.warn("Site GeoJSON is not valid");
+            alaMap && alaMap.addRepairGeometryControl();
+        }
     };
 
+    function findPOIMarkerIcon () {
+        if (!featureLayer)
+            return;
+
+        var toRemove = [];
+        featureLayer.eachLayer(function (layer) {
+            if (layer instanceof L.Marker && layer.feature && layer.feature.properties && layer.feature.properties.type === 'poi') {
+                layer.setIcon(createPOIIcon());
+                var poi = findPOI(layer.feature.properties.poiId);
+                if (poi){
+                    configureMarker(layer, poi.name(), poi.poiId(), poi.dragEvent, self.removePOIMarkerHandler(poi), poi.hasPhotoPointDocuments);
+                }
+                else
+                    toRemove.push(layer);
+            }
+        });
+
+        if (toRemove.length > 0) {
+            toRemove.forEach(function (layer) {
+                featureLayer.removeLayer(layer);
+            });
+        }
+    };
+
+    function findPOI(poiId) {
+        return self.poi().find(poi => poi.poiId() === poiId);
+    };
+
+    function findFeatureLayer(){
+        alaMap.getMapImpl().eachLayer(function (layer) {
+            if (layer instanceof L.FeatureGroup) {
+                featureLayer = layer;
+            }
+        });
+    }
+
     self.mapInitialised = function(map) {
-        alaMap = map;
+        self.alaMap = alaMap = map;
         var leafletMap = alaMap.getMapImpl();
+        findFeatureLayer();
         // set geoman style to match the site type style
         if (leafletMap.pm && leafletMap.pm.setGlobalOptions) {
             leafletMap.pm.setGlobalOptions(geomanOptions);
@@ -426,6 +466,7 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
 
         self.renderPOIs();
         self.renderOnMap();
+        alaMap.subscribe(findPOIMarkerIcon);
         deferredUpdate.subscribe(self.updateGeometry);
         alaMap.registerListener('pm:globaleditmodetoggled', modeListener);
         alaMap.registerListener('pm:globaldragmodetoggled', modeListener);
@@ -455,27 +496,34 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
 
     self.updateGeometry = function () {
         var featureCollection = alaMap.getGeoJSON(), bounds = alaMap.getBounds(), boundsGeoJSON, updated = false;
-        if (featureCollection && featureCollection.features && featureCollection.features.length > 0) {
+        if (featureCollection && featureCollection.features) {
             featureCollection.features = filterOutPOIsFromFeatures(featureCollection.features);
             if (featureCollection.features !== self.features()) {
                 self.features(featureCollection.features);
-                var area = ALA.MapUtils.calculateAreaKmSq(featureCollection);
-                boundsGeoJSON = convertLatLngBoundsToGeoJson(bounds);
-                if (boundsGeoJSON) {
-                    self.extent().geometry().coordinates(boundsGeoJSON.coordinates);
-                    self.extent().source('drawn');
-                    self.extent().geometry().type(boundsGeoJSON.type);
+                if ( featureCollection.features.length > 0 ) {
+                    var area = ALA.MapUtils.calculateAreaKmSq(featureCollection);
+                    boundsGeoJSON = convertLatLngBoundsToGeoJson(bounds);
+                    if (boundsGeoJSON) {
+                        self.extent().geometry().coordinates(boundsGeoJSON.coordinates);
+                        self.extent().source('drawn');
+                        self.extent().geometry().type(boundsGeoJSON.type);
+                    }
+
+                    if (area) {
+                        self.extent().geometry().areaKmSq(area);
+                    }
+
+                    // get centre of the shapes
+                    var centre = bounds.getCenter();
+                    if (centre) {
+                        self.extent().geometry().centre([centre.lng, centre.lat]);
+                    }
                 }
 
-                if (area) {
-                    self.extent().geometry().areaKmSq(area);
-                }
-
-                // get centre of the shapes
-                var centre = bounds.getCenter();
-                if (centre) {
-                    self.extent().geometry().centre([centre.lng, centre.lat]);
-                }
+                // clear certain attributes
+                if (typeof self.extent().geometry().fid === 'function') self.extent().geometry().fid("");
+                if (typeof self.extent().geometry().pid === 'function') self.extent().geometry().pid("");
+                if (typeof self.extent().geometry().layerName === 'function') self.extent().geometry().layerName("");
 
                 updated = true;
             }
@@ -552,7 +600,8 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
  * by the ALA map plugin.
  */
 var AlaMapAdapter = function(map, options) {
-    var self = this;
+    var self = this,
+        simplificationTolerance = 0.001;
 
     var defaults = {
         styleProperty: 'type',
@@ -566,10 +615,15 @@ var AlaMapAdapter = function(map, options) {
                 color: '#0f0',
                 fillOpacity: 0.2,
                 weight: 3
+            },
+            invalid: {
+                color: '#f00',
+                fillOpacity: 0.2,
+                weight: 3
             }
         }
     };
-    var options = _.defaults(options, defaults);
+    options = _.defaults(options, defaults);
     self.alaMap = map;
     self.featureIndex = {};
     self.featureLayer = null;
@@ -591,22 +645,50 @@ var AlaMapAdapter = function(map, options) {
     }
 
     self.addFeature = function(feature) {
+        // fill colour and other style properties decided by properties on the feature.
+        var layerOptions = {
+            style: feature.style,
+            wmsOptions: {
+                SLD_BODY: feature.sldBody
+            }
+        };
+
+        if (isOldSite(feature)) {
+            feature = convertOldSiteToFeatureCollection(feature);
+        }
+        else if (isSiteGeometry(feature)) {
+            feature = convertOldSiteToFeatureCollection({
+                extent: {
+                    source: "drawn",
+                    geometry: feature
+                }
+            });
+        }
+
+        if (!ALA.MapUtils.validateGeoJSON(feature))
+            layerOptions.style = Object.assign({}, options.styles.invalid);
+
+        if (!feature) {
+            console.error("[ALA-Map] Unable to add feature to map, feature is null or undefined.");
+            return;
+        }
+
         self.featureLayer.on('layeradd', function(e) {
             var layer = e.layer;
             var id = getId(feature);
-            if (options.styleProperty && feature.properties && feature.properties[options.styleProperty]) {
-                var prop = feature.properties[options.styleProperty];
-                if (options.styles[prop] && _.isFunction(layer.setStyle)) {
-                    layer.setStyle(options.styles[prop]);
-                }
-            }
             if (!self.featureIndex[id]) {
                 self.featureIndex[id] = [];
             }
             self.featureIndex[id].push(layer);
         });
 
-        map.setGeoJSON(feature);
+        try {
+            var simplifiedFeature = ALA.MapUtils.simplifyToValidGeoJSON(feature, simplificationTolerance)
+            map.setGeoJSON(simplifiedFeature, layerOptions);
+        } catch (e) {
+            console.error("[ALA-Map] Error adding feature to map:", e);
+        }
+
         self.featureLayer.off("layeradd");
     };
 
@@ -666,6 +748,14 @@ var AlaMapAdapter = function(map, options) {
             else if (options.icon) {
                 layer.setIcon(createHighlightIcon(layer));
             }
+            else if (layer.setOpacity) {
+                if (!layer._originalOptions || !layer._originalOptions.opacity) {
+                    layer._originalOptions = layer._originalOptions || {};
+                    layer._originalOptions.opacity = options.opacity;
+                }
+
+                layer.setOpacity(1);
+            }
         }
     }
 
@@ -689,6 +779,11 @@ var AlaMapAdapter = function(map, options) {
             }
             else if (layer.options && layer.options.icon) {
                 layer.setIcon(createNormalIcon(layer));
+            }
+            else if (layer.setOpacity) {
+                if (layer._originalOptions && layer._originalOptions.opacity !== undefined) {
+                    layer.setOpacity(layer._originalOptions.opacity);
+                }
             }
         }
     }
@@ -752,23 +847,26 @@ var createMap = function(options) {
     if (options.leafletIconPath) {
         L.Icon.Default.imagePath = options.leafletIconPath;
     }
-    if (options.useGoogleBaseMap) {
-        var googleLayer = L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'roadmap'});
-        var otherLayers = {
-            Roadmap: googleLayer,
-            Hybrid: L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'hybrid'}),
-            Terrain: L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'terrain'})
-        };
 
-        options.baseLayer = googleLayer;
-        options.otherLayers = otherLayers;
-    }
+    var googleLayer = L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'roadmap'});
+    var otherLayers = {
+        Roadmap: googleLayer,
+        Hybrid: L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'hybrid'}),
+        Terrain: L.gridLayer.googleMutant({maxZoom: 21, nativeMaxZoom: 21, type:'terrain'})
+    };
+
+    options.baseLayer = googleLayer;
+    options.otherLayers = otherLayers;
 
     map = new AlaMapAdapter(new ALA.Map(mapContainerId, options), options);
     return map;
 };
 var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId) {
-
+    const INVALID_STYLE = {
+        color: "#f00",
+        fillOpacity: 0.2,
+        weight: 3
+    };
     var self = this;
     self.selectAll = ko.pureComputed({
         read: function() {
@@ -927,6 +1025,11 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
             style = map.getStyleForType(site.type);
         if (layers) {
             layers.forEach(layer => {
+                var geoJSON = layer.toGeoJSON();
+                if (!ALA.MapUtils.validateGeoJSON(geoJSON)) {
+                    style = Object.assign({}, INVALID_STYLE);
+                }
+
                 map.alaMap.showLayer(layer, style);
             });
         }
@@ -959,9 +1062,28 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
 
         var features = $.map(self.displayedSites(), function (obj, i) {
             var f = obj.feature;
+            var geoJSON = f;
+            if (isOldSite(geoJSON)) {
+                geoJSON = convertOldSiteToFeatureCollection(geoJSON);
+            }
+            else if (isSiteGeometry(geoJSON)) {
+                geoJSON = convertOldSiteToFeatureCollection({
+                    extent: {
+                        source: "drawn",
+                        geometry: geoJSON
+                    }
+                });
+            }
+
             if (f) {
                 f.popup = obj.name;
                 f.id = obj.siteId;
+                if (!f.sldBody) {
+                    f.purposeCode = getSitePurposeCode(obj);
+                    f.style = ALA.MapUtils.validateGeoJSON(geoJSON) ? getStyleForSite(obj) : Object.assign({}, INVALID_STYLE);
+                    f.sldBody = getSldBodyForSite(obj);
+                }
+
             }
             return f;
         });
@@ -976,7 +1098,7 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
                 }
                 $.each(site.poi, function(j, poi) {
                     if (poi.geometry) {
-                        map.addMarker(poi.geometry.decimalLatitude, poi.geometry.decimalLongitude, poi.name, {poiIconUrl: fcConfig.poiIconUrl});
+                        map.addPOI(poi.geometry.decimalLatitude, poi.geometry.decimalLongitude, poi.name, {poiIconUrl: fcConfig.poiIconUrl});
                     }
 
                 });
@@ -1094,7 +1216,7 @@ var SitesViewModel =  function(sites, map, mapFeatures, isUserEditor, projectId)
 };
 
 function BulkCreateSiteViewModel (alaMap, config) {
-    const DEFAULT_MAX_ZOOM = 21;
+    const DEFAULT_MAX_ZOOM = 21, PRECISION = 8;
     var self = this,
         projects = [config.projectId],
         defaultSiteValues = {
@@ -1259,7 +1381,7 @@ function BulkCreateSiteViewModel (alaMap, config) {
     self.createSite = function() {
         var site = this,
             layers = alaMap.findLayersByProperty('tempSiteId', site.transients.tempSiteId()),
-            featureCollection = L.featureGroup(layers).toGeoJSON(),
+            featureCollection = L.featureGroup(layers).toGeoJSON(PRECISION),
             data, resolve, reject,
             promise = new Promise((res, rej ) => {
                 resolve = res;

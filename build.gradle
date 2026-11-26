@@ -64,11 +64,8 @@ repositories {
 
 
 def openhtmltopdfversion = '1.0.10'
-def geoToolsVersion = "11.1"
 def metadataExtractorVersion = "2.6.2"
 def imgscalrVersion = "4.2"
-def httpmimeVersion = "4.2.1"
-def jtsVersion = "1.8"
 
 configurations {
     developmentOnly
@@ -117,7 +114,7 @@ dependencies {
     implementation "org.geotools:gt-geojson:${geoToolsVersion}"
     implementation "com.drewnoakes:metadata-extractor:${metadataExtractorVersion}"
     implementation "org.imgscalr:imgscalr-lib:${imgscalrVersion}"
-    implementation "com.vividsolutions:jts:${jtsVersion}"
+    implementation "org.locationtech.jts:jts-core:${jtsVersion}"
     implementation "org.geotools.xsd:gt-xsd-kml:${geoToolsVersion}"
     implementation 'joda-time:joda-time:2.3'
     implementation "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
@@ -201,7 +198,7 @@ dependencies {
     providedCompile "io.methvin:directory-watcher:0.4.0"
 
     if (!Boolean.valueOf(inplace)) {
-        implementation "org.grails.plugins:ecodata-client-plugin:9.4-SNAPSHOT"
+        implementation "org.grails.plugins:ecodata-client-plugin:9.5-SNAPSHOT"
     }
 }
 
@@ -287,7 +284,7 @@ clientDependencies {
         'frigus02-vkbeautify'("1.0.1") {
             include "vkbeautify.js"
         }
-
+        "leaflet.heat"("1.0.0")
     }
     bower {
         'html5shiv'("3.7.3", transitive:false)
@@ -308,7 +305,7 @@ assets {
                 '**/splaytree-ts.umd.js','**/robust-predicates/esm/**', '**/incircle.js','**/polyclip-ts.umd.js',
                 '**/leaflet-geoman.js', '**/index.js', '**/Leaflet.GoogleMutant.js', '**/cli.js',
                 'leaflet-manifest.js', '**/vendor-ext/**', '**/vendor-external/**', '**/vendor/**',
-                '**/ala-map*.js', '**/@turf/**', 'bulk-create-manifest.js'
+                '**/ala-map*.js', '**/@turf/**', 'bulk-create-manifest.js', '**/leaflet-heat.js', "**/leaflet-heat-global.js"
             ]
     ] //Example Exclude GLOB pattern
     includes = ['webjars/**/images/*']

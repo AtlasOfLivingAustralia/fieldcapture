@@ -221,6 +221,7 @@
                     maxZoom: 23,
                     maxAutoZoom: 21,
                     showReset: false,
+                    showFitBoundsToggle: true,
                     allowSearchLocationByAddress: false,
                     allowSearchRegionByAddress: false,
                     useMyLocation: false,
@@ -230,7 +231,7 @@
                     assignNameEnabled: true,
                     addGeometryFromLocalFile: true,
                     flattenMultiGeometries: true,
-                    wmsLayerUrl: fcConfig.spatialWmsUrl + '/wms/reflect?',
+                    wmsLayerUrl: fcConfig.spatialWmsUrl,
                     wmsFeatureUrl: fcConfig.featureService + '?featureId=',
                     otherLayers: {
                         Roadmap: googleLayer,

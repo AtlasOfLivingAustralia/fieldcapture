@@ -111,7 +111,7 @@ if(!spatial.geoserverUrl){
     spatial.geoserverUrl = spatial.baseUrl + "/geoserver"
 }
 if (!spatial.wms.url) {
-    spatial.wms.url = spatial.baseUrl + "/geoserver/ALA/wms?"
+    spatial.wms.url = spatial.baseUrl + "/geoserver/wms?"
 }
 if (!spatial.wms.cache.url) {
     spatial.wms.cache.url = spatial.baseUrl + "/geoserver/gwc/service/wms?"
@@ -288,7 +288,9 @@ sites.known_shapes = [
         [id:'cl927',name:'Australian states', previousLayers : [
                 "cl22": 'Australian states - pre 2024'
         ]],
-        [id:'cl959', name:'Local Gov. Areas'],
+        [id:'cl11014', name:'Local Gov. Areas', previousLayers : [
+                "cl959": 'Local Gov. Areas - pre 2025'
+        ]],
         [id:'cl11194', name:'Australian Marine Parks (2024)']
 ]
 

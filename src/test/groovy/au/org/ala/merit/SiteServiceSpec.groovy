@@ -114,4 +114,46 @@ class SiteServiceSpec extends Specification implements AutowiredTest{
         result.error != null
     }
 
+    def "the site service can create sites from the placemarks in a KML document"() {
+        setup:
+        String projectId = "projectId"
+        String kml = """<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <Folder>
+      <Placemark>
+        <name>Site 1</name>
+        <description>A polygon</description>
+        <Polygon><outerBoundaryIs><LinearRing>
+          <coordinates>153.27,-28.81 153.28,-28.81 153.28,-28.82 153.27,-28.81</coordinates>
+        </LinearRing></outerBoundaryIs></Polygon>
+      </Placemark>
+      <Placemark>
+        <name>Site 2</name>
+        <Point><coordinates>153.27,-28.81</coordinates></Point>
+      </Placemark>
+    </Folder>
+  </Document>
+</kml>"""
+
+        when:
+        service.createSitesFromKml(new ByteArrayInputStream(kml.getBytes('UTF-8')), projectId)
+
+        then:
+        1 * webService.doPost("site/", { Map site ->
+            site.name == 'Site 1' &&
+            site.description == 'A polygon' &&
+            site.projects == [projectId] &&
+            site.extent.source == 'drawn' &&
+            site.extent.geometry.type == 'Polygon' &&
+            site.extent.geometry.coordinates[0].size() == 4 &&
+            site.extent.geometry.coordinates[0][1] == [153.28, -28.81]
+        }) >> [statusCode: HttpStatus.SC_OK, resp:[siteId:'site1']]
+        1 * webService.doPost("site/", { Map site ->
+            site.name == 'Site 2' &&
+            site.extent.geometry.type == 'Point' &&
+            site.extent.geometry.coordinates == [153.27, -28.81]
+        }) >> [statusCode: HttpStatus.SC_OK, resp:[siteId:'site2']]
+    }
+
 }

@@ -103,6 +103,10 @@
 	background-color: #d9edf7;
 }
 
+#sites-table td.site-name {
+	word-wrap: anywhere;
+}
+
 .report-prototype th {
 	white-space: normal;
 }

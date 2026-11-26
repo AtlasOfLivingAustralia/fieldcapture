@@ -4,8 +4,6 @@
 //= require attach-document-no-ui
 //= require reporting
 //= require blog
-//= require leaflet-heatmap/heatmap.js
-//= require leaflet-heatmap/leaflet-heatmap.js
 //= require reportService
 
 
@@ -358,21 +356,32 @@ var ManagementUnitPageViewModel = function(props, options) {
          });
      };
 
-   var createHeatMap = function(map,heatPoints){
-        var cfg = {
-            "radius": 15,
-            "gradient": { 0.25: "rgb(0,0,255)", 0.4: "rgb(0,255,0)", 0.7: "rgb(0,255,0)", 0.9: "rgb(0,255,0)"},
-            "useLocalExtrema": true,
-            latField: 'lat',
-            lngField: 'lon',
-            valueField: 'count'
-        };
+    self.heatMax = function(map, latLngs, radius, blur, pct) {
+        var cell = (radius + blur) / 2, counts = {};
+        latLngs.forEach(function (ll) {
+            var p = map.latLngToContainerPoint(ll);
+            var k = Math.floor(p.x / cell) + ':' + Math.floor(p.y / cell);
+            counts[k] = (counts[k] || 0) + 1;
+        });
+        var v = Object.keys(counts).map(function (k) { return counts[k]; }).sort(function (a, b) { return a - b; });
+        return v.length ? Math.max(1, v[Math.floor(pct * (v.length - 1))]) : 1;
+    };
 
-        var heatmapLayer = new HeatmapOverlay(cfg);
+    var createHeatMap = function(map,heatPoints){
+       var latLngs = heatPoints.data.map(function (p) { return L.latLng(p.lat, p.lon, 1); }),
+           radius = 15, blur = 15,
+           lMap = map.alaMap.getMapImpl(),
+           max = self.heatMax(map.alaMap.getMapImpl(), latLngs, radius, blur, 0.95),
+           maxZoom = 8,
+           toZoom = maxZoom - lMap.getZoom(),
+           cfg = {
+                "max": max / Math.pow(2, toZoom),
+                "maxZoom": maxZoom,
+                "radius": radius,
+                "blur": blur
+           };
 
-        map.featureLayer.addLayer(heatmapLayer)
-
-        heatmapLayer.setData(heatPoints);
+       L.heatLayer(latLngs, cfg).addTo(map.alaMap.getMapImpl());
     };
 
     var tabs = {

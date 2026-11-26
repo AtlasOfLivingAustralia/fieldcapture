@@ -1138,13 +1138,18 @@ function ProjectPageViewModel(project, sites, activities, userRoles, config) {
             wmsServerUrl: config.wmsServerUrl,
             leafletIconPath:options.leafletIconPath,
             useAlaMap: config.useAlaMap,
-            useGoogleBaseMap: config.useGoogleBaseMap,
+            useGoogleBaseMap: true,
             fullscreenControl:false,
-            wmsLayerUrl: fcConfig.spatialWmsUrl + '/wms/reflect?',
+            wmsLayerUrl: fcConfig.spatialWmsUrl,
             wmsFeatureUrl: fcConfig.spatialWms + '?featureId='
         };
 
         var map = createMap(mapOptions);
+        // since map is created when the element was not visible, it requires a redraw to render base layer correctly
+        setTimeout(function (){
+            if (map && map.alaMap && map.alaMap.redraw)
+                map.alaMap.redraw();
+        }, 500);
 
         var sitesViewModel = new SitesViewModel(project.sites, map, options.mapFeatures, options.userIsEditor, project.projectId);
         ko.applyBindings(sitesViewModel, document.getElementById(options.bindingElementId));
