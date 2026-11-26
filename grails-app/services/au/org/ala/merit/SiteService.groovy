@@ -1,12 +1,12 @@
 package au.org.ala.merit
 
-import com.vividsolutions.jts.geom.Geometry
+import org.locationtech.jts.geom.Geometry
 import grails.converters.JSON
 import groovy.util.logging.Slf4j
 import org.apache.http.HttpStatus
 import org.geotools.geojson.geom.GeometryJSON
 import org.geotools.kml.v22.KMLConfiguration
-import org.geotools.xml.Parser
+import org.geotools.xsd.Parser
 import org.opengis.feature.simple.SimpleFeature
 import org.springframework.web.multipart.MultipartFile
 

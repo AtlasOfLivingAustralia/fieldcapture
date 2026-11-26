@@ -4,6 +4,7 @@ import au.org.ala.merit.hub.HubSettings
 import au.org.ala.merit.reports.ReportGenerationOptions
 import grails.converters.JSON
 import grails.testing.services.ServiceUnitTest
+import grails.testing.web.GrailsWebUnitTest
 import org.apache.http.HttpStatus
 import org.springframework.mock.web.MockMultipartFile
 import spock.lang.Specification
@@ -11,7 +12,7 @@ import spock.lang.Specification
 /**
  * Specification for the InputService.
  */
-class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportService> {
+class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportService>, GrailsWebUnitTest {
 
     def scores = [
             [scoreId:'1', label:'Area of revegetation works (Ha)', units:'Ha', externalId:'RVA', isOutputTarget:true],
@@ -291,6 +292,36 @@ class ImportServiceSpec extends Specification implements ServiceUnitTest<ImportS
                  GRANT_MGR_EMAIL: 'gm@test.org',
                  PORTFOLIO: 'Environment'
          ]]
+    }
+
+    def "a photo point can be created at the centroid of a site geometry"() {
+        setup:
+        Map site = [name:'Site 1', extent:[geometry:[type:'Polygon', coordinates:[[[0,0],[2,0],[2,2],[0,2],[0,0]]]]]]
+
+        when:
+        Map photopoint = service.createPhotoPoint(site)
+
+        then:
+        photopoint.name == 'Site 1 photo point'
+        photopoint.geometry.decimalLongitude == 1
+        photopoint.geometry.decimalLatitude == 1
+        photopoint.geometry.coordinates == [1, 1]
+    }
+
+    def "a project area can be created from the convex hull of the project sites"() {
+        setup:
+        List sites = [
+                [extent:[geometry:[type:'Point', coordinates:[0, 0]]]],
+                [extent:[geometry:[type:'Point', coordinates:[2, 0]]]],
+                [extent:[geometry:[type:'Polygon', coordinates:[[[0,1],[1,2],[2,1],[0,1]]]]]]
+        ]
+
+        when:
+        Map area = service.createProjectArea(sites)
+
+        then:
+        area.type == 'Polygon'
+        area.coordinates[0].collect{ it as List }.toSet() == [[0,0],[2,0],[2,1],[1,2],[0,1]].toSet()
     }
 
 }

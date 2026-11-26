@@ -64,11 +64,8 @@ repositories {
 
 
 def openhtmltopdfversion = '1.0.10'
-def geoToolsVersion = "11.1"
 def metadataExtractorVersion = "2.6.2"
 def imgscalrVersion = "4.2"
-def httpmimeVersion = "4.2.1"
-def jtsVersion = "1.8"
 
 configurations {
     developmentOnly
@@ -117,7 +114,7 @@ dependencies {
     implementation "org.geotools:gt-geojson:${geoToolsVersion}"
     implementation "com.drewnoakes:metadata-extractor:${metadataExtractorVersion}"
     implementation "org.imgscalr:imgscalr-lib:${imgscalrVersion}"
-    implementation "com.vividsolutions:jts:${jtsVersion}"
+    implementation "org.locationtech.jts:jts-core:${jtsVersion}"
     implementation "org.geotools.xsd:gt-xsd-kml:${geoToolsVersion}"
     implementation 'joda-time:joda-time:2.3'
     implementation "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
