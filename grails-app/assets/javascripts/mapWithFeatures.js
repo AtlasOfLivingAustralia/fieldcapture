@@ -225,7 +225,7 @@
             var self = this, convertedFeatures = {type: 'FeatureCollection', features: []};
             $.each(features, function (i,loc) {
                 if(loc != null) {
-                    var geoJSON = loc, layerOptions = {
+                    var geoJSON = {...loc, properties: {...loc.properties}}, layerOptions = {
                         style: loc.style || map.getStyleForSite(loc),
                         wmsOptions: {
                             sld_body: map.getSldBodyForSite(loc)
@@ -251,6 +251,9 @@
                         }
                     }
 
+                    if (!geoJSON) {
+                        return;
+                    }
                     geoJSON.properties = geoJSON.properties || {};
                     geoJSON.properties.loc = loc;
                     geoJSON.properties.style = layerOptions.style;

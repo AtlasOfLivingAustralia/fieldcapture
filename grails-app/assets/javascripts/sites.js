@@ -516,9 +516,9 @@ function SiteViewModelWithMapIntegration (siteData, projectId, options) {
                 }
 
                 // clear certain attributes
-                self.extent().geometry().fid("");
-                self.extent().geometry().pid("");
-                self.extent().geometry().layerName("");
+                if (typeof self.extent().geometry().fid === 'function') self.extent().geometry().fid("");
+                if (typeof self.extent().geometry().pid === 'function') self.extent().geometry().pid("");
+                if (typeof self.extent().geometry().layerName === 'function') self.extent().geometry().layerName("");
 
                 updated = true;
             }
